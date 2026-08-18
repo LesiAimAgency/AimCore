@@ -41,34 +41,6 @@ class MyTaskController extends Controller
                 $q->where('user_id', $user->id)
                     ->orWhere('assigned_to', $user->id);
             });
-        } elseif ($user->isManager() && !$user->isSuperAdmin()) {
-            $pendingQuery->where(function ($q) use ($user) {
-                $q->where('user_id', $user->id)
-                    ->orWhere('assigned_to', $user->id)
-                    ->orWhereHas('assignedUser', function ($q2) {
-                        $q2->where('role', 'employee');
-                    })
-                    ->orWhere(function ($q3) {
-                        $q3->whereNull('assigned_to')
-                           ->whereHas('creator', function ($q4) {
-                               $q4->where('role', 'employee');
-                           });
-                    });
-            });
-
-            $completedQuery->where(function ($q) use ($user) {
-                $q->where('user_id', $user->id)
-                    ->orWhere('assigned_to', $user->id)
-                    ->orWhereHas('assignedUser', function ($q2) {
-                        $q2->where('role', 'employee');
-                    })
-                    ->orWhere(function ($q3) {
-                        $q3->whereNull('assigned_to')
-                           ->whereHas('creator', function ($q4) {
-                               $q4->where('role', 'employee');
-                           });
-                    });
-            });
         }
 
         // Lấy danh sách tasks
@@ -89,19 +61,11 @@ class MyTaskController extends Controller
                 'remaining_gold' => $p->remainingGold(),
             ];
         });
-        $usersQuery = User::where('status', true)
+        $users = User::where('status', true)
             ->where('email', '!=', 'admin@example.com')
             ->where('level', '>', 0)
-            ->whereNotIn('role', ['super_admin', 'superadmin']);
-            
-        if ($user->isManager() && !$user->isSuperAdmin()) {
-            $usersQuery->where(function($q) use ($user) {
-                $q->where('id', $user->id)
-                  ->orWhere('role', 'employee');
-            });
-        }
-        
-        $users = $usersQuery->orderBy('name')
+            ->whereNotIn('role', ['super_admin', 'superadmin'])
+            ->orderBy('name')
             ->get(['id', 'name', 'email', 'role', 'department', 'level', 'gold']);
 
         $pendingCount = count($pendingTasks);
@@ -174,34 +138,6 @@ class MyTaskController extends Controller
                 $completedQuery->where(function ($q) use ($user) {
                     $q->where('user_id', $user->id)
                         ->orWhere('assigned_to', $user->id);
-                });
-            } elseif ($user->isManager() && !$user->isSuperAdmin()) {
-                $pendingQuery->where(function ($q) use ($user) {
-                    $q->where('user_id', $user->id)
-                        ->orWhere('assigned_to', $user->id)
-                        ->orWhereHas('assignedUser', function ($q2) {
-                            $q2->where('role', 'employee');
-                        })
-                        ->orWhere(function ($q3) {
-                            $q3->whereNull('assigned_to')
-                               ->whereHas('creator', function ($q4) {
-                                   $q4->where('role', 'employee');
-                               });
-                        });
-                });
-
-                $completedQuery->where(function ($q) use ($user) {
-                    $q->where('user_id', $user->id)
-                        ->orWhere('assigned_to', $user->id)
-                        ->orWhereHas('assignedUser', function ($q2) {
-                            $q2->where('role', 'employee');
-                        })
-                        ->orWhere(function ($q3) {
-                            $q3->whereNull('assigned_to')
-                               ->whereHas('creator', function ($q4) {
-                                   $q4->where('role', 'employee');
-                               });
-                        });
                 });
             }
 
@@ -776,20 +712,6 @@ class MyTaskController extends Controller
             $query->where(function ($q) use ($user) {
                 $q->where('user_id', $user->id)
                     ->orWhere('assigned_to', $user->id);
-            });
-        } elseif ($user->isManager() && !$user->isSuperAdmin()) {
-            $query->where(function ($q) use ($user) {
-                $q->where('user_id', $user->id)
-                    ->orWhere('assigned_to', $user->id)
-                    ->orWhereHas('assignedUser', function ($q2) {
-                        $q2->where('role', 'employee');
-                    })
-                    ->orWhere(function ($q3) {
-                        $q3->whereNull('assigned_to')
-                           ->whereHas('creator', function ($q4) {
-                               $q4->where('role', 'employee');
-                           });
-                    });
             });
         }
 
