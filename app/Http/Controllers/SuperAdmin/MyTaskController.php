@@ -768,11 +768,12 @@ class MyTaskController extends Controller
      */
     private function isUserAdminOrPm(User $user): bool
     {
-        return $user->isSuperAdmin()
+        return $user->isManager()
+            || $user->isSuperAdmin()
             || $user->level <= 1
             || $user->role === 'project_manager'
             || $user->role === 'super_admin'
-            || $user->hasRole(['super_admin', 'project_manager']);
+            || $user->hasRole(['super_admin', 'project_manager', 'manager']);
     }
 
     /**
