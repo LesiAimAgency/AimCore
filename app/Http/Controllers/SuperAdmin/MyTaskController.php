@@ -63,8 +63,6 @@ class MyTaskController extends Controller
         });
         $users = User::where('status', true)
             ->where('email', '!=', 'admin@example.com')
-            ->where('level', '>', 0)
-            ->whereNotIn('role', ['super_admin', 'superadmin'])
             ->orderBy('name')
             ->get(['id', 'name', 'email', 'role', 'department', 'level', 'gold']);
 
