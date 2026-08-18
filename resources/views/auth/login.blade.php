@@ -29,20 +29,20 @@
                 <form method="POST" action="{{ route('login') }}" class="space-y-6">
                     @csrf
                     
-                    <!-- Email Field -->
+                    <!-- Username Field -->
                     <div>
-                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                        <label for="username" class="block text-sm font-semibold text-gray-700 mb-2">Tên đăng nhập</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                 </svg>
                             </div>
-                            <input id="email" name="email" type="email" required 
-                                   class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001B4E] focus:border-[#001B4E] transition duration-200 {{ $errors->has('email') ? 'border-red-300' : '' }}" 
-                                   placeholder="admin@example.com" value="{{ old('email') }}">
+                            <input id="username" name="username" type="text" required 
+                                   class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001B4E] focus:border-[#001B4E] transition duration-200 {{ $errors->has('username') ? 'border-red-300' : '' }}" 
+                                   placeholder="admin" value="{{ old('username') }}">
                         </div>
-                        @error('email')
+                        @error('username')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
