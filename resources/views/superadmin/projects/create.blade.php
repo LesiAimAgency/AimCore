@@ -60,7 +60,7 @@
                                 <option value="website" {{ old('project_type') == 'website' ? 'selected' : '' }}>Lập trình Website</option>
                             </x-form.select>
                         </div>
-
+                        <div> </div>
                         <div id="website_options" class="hidden mt-4 p-4 bg-blue-50 border border-blue-100 rounded-lg">
                             <label class="flex items-center space-x-3">
                                 <input type="checkbox" name="create_website_now" value="1" class="form-checkbox h-5 w-5 text-blue-600 rounded">
