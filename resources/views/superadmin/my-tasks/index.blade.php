@@ -41,7 +41,7 @@
                 <select x-model="filterUser" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001B4E] outline-none text-sm bg-white cursor-pointer max-w-[150px]">
                     <option value="">Tất cả nhân sự</option>
                     <template x-for="u in users" :key="'user-filter-'+u.id">
-                        <option :value="u.id" x-text="u.name + ' (' + (u.department || 'Nhân sự') + ')'"></option>
+                        <option :value="u.id" x-text="u.name"></option>
                     </template>
                 </select>
             </template>
