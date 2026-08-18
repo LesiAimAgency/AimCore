@@ -13,7 +13,7 @@
             <!-- Logo/Brand -->
             <div class="text-center mb-8">
                 <div class="mx-auto mb-4 flex flex-col items-center">
-                    <img src="https://aimagency.vn/Logo.png" alt="Aim Agency Logo" class="h-24 w-auto mb-3 object-contain">
+                    <img src="https://aimagency.vn/Logo.png" alt="Aim Agency Logo" class="h-40 w-auto mb-3 object-contain">
                     <h2 class="text-3xl font-bold text-[#001B4E] uppercase tracking-wider font-sans">Aim Agency</h2>
                 </div>
                 <p class="text-gray-600">Đăng nhập để truy cập hệ thống quản trị</p>
