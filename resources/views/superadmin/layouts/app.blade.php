@@ -242,10 +242,10 @@
                         @endif
 
 
-                        <div class="text-right cursor-pointer group" onclick="document.getElementById('change-password-modal').classList.remove('hidden')" title="Đổi mật khẩu">
+                        <a href="{{ route('superadmin.users.edit', auth()->user()->id) }}" class="text-right cursor-pointer group" title="Sửa tài khoản">
                             <p class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">{{ auth()->user()->name }}</p>
                             <p class="text-xs text-indigo-600 font-medium group-hover:text-indigo-800 transition-colors">{{ auth()->user()->roles->first()?->display_name ?? (auth()->user()->department ?? 'Thành viên') }} (Sửa)</p>
-                        </div>
+                        </a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="text-sm text-gray-500 hover:text-red-600">
