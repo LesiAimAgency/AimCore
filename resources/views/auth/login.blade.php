@@ -13,7 +13,7 @@
             <!-- Logo/Brand -->
             <div class="text-center mb-8">
                 <div class="mx-auto mb-4 flex flex-col items-center">
-                    <img src="https://aimagency.vn/logo-xanh.png" alt="Aim Agency Logo" style="height: 250px;" class="h-40 w-auto mb-3 object-contain">
+                    <img src="https://aimagency.vn/logo-xanh.png" alt="Aim Agency Logo" style="height: 300px;" class="h-40 w-auto mb-3 object-contain">
                    
                 
             </div>
@@ -25,7 +25,7 @@
                     
                     <!-- Username Field -->
                     <div>
-                        <label for="username" class="block text-sm font-semibold text-gray-700 mb-2">Tên đăng nhập</label>
+                        <label for="username" class="block text-sm font-semibold text-gray-700 mb-2" style="text-align:left">Tên đăng nhập</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -43,7 +43,7 @@
 
                     <!-- Password Field -->
                     <div>
-                        <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Mật khẩu</label>
+                        <label for="password" class="block text-sm font-semibold text-gray-700 mb-2" style="text-align:left">Mật khẩu</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
