@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Bỏ qua nếu đường dẫn đã có sẵn chữ /public/ để tránh bị loop lặp vô hạn
+    RewriteCond %{REQUEST_URI} !^/public/
+    
+    # Chuyển tiếp toàn bộ (ẩn chữ public)
+    RewriteRule ^(.*)$ /public/$1 [L,QSA]
+</IfModule>
+
+# Cấu hình PHP Limits
+php_value max_execution_time 120
+php_value memory_limit 256M
+php_value upload_max_filesize 50M
+php_value post_max_size 50M

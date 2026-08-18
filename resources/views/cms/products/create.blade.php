@@ -1,0 +1,757 @@
+@extends('cms.layouts.app')
+
+@section('title', 'Thêm sản phẩm')
+@section('page-title', 'Thêm sản phẩm mới')
+
+@section('content')
+<form method="POST" action="{{ isset($currentProject) && $currentProject ? route('project.admin.products.store', $currentProject->code) : route('cms.products.store') }}" enctype="multipart/form-data" x-data="productForm()" @media-selected.window="handleMediaSelected($event)">
+    @csrf
+    
+    <!-- Header với nút Lưu/Hủy -->
+    <div class="bg-white rounded-lg shadow-sm p-4 mb-6 sticky top-0 z-10">
+        <div class="flex items-center justify-between">
+            <h1 class="text-xl font-bold text-gray-900">Thêm sản phẩm mới</h1>
+            <div class="flex gap-3">
+                <a href="{{ isset($currentProject) && $currentProject ? route('project.admin.products.index', $currentProject->code) : route('cms.products.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">Hủy</a>
+                <button type="submit" class="inline-flex items-center px-6 py-2 bg-[#98191F] text-white rounded-lg hover:bg-[#7a1419] transition">Lưu sản phẩm</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Cột trái: Form chính -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Thông tin cơ bản -->
+            <div class="bg-white rounded-lg shadow-sm p-6 space-y-4">
+                <h2 class="font-semibold text-gray-900 mb-4">Thông tin cơ bản</h2>
+                
+                <!-- Tên sản phẩm -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Tên sản phẩm *
+                    </label>
+                    <input type="text" name="name" id="product-name" value="{{ old('name') }}" 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#98191F] @error('name') border-red-500 @enderror"
+                           oninput="generateSlug()">
+                    @error('name')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">SKU *</label>
+                        <input type="text" name="sku" value="{{ old('sku') }}" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#98191F] @error('sku') border-red-500 @enderror">
+                        @error('sku')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
+                        <input type="text" name="slug" id="product-slug" value="{{ old('slug') }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#98191F]"
+                               placeholder="Tự động tạo từ tên sản phẩm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nội dung sản phẩm -->
+            <div class="bg-white rounded-lg shadow-sm p-6 space-y-6">
+                <h2 class="font-semibold text-gray-900 mb-4">Nội dung sản phẩm</h2>
+
+                <!-- Mô tả ngắn -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mô tả ngắn</label>
+                    <textarea name="short_description" rows="3" 
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#98191F]">{{ old('short_description') }}</textarea>
+                </div>
+
+                <!-- Mô tả đầy đủ -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Mô tả đầy đủ
+                    </label>
+                    <textarea name="description" class="tinymce-editor">{{ old('description') }}</textarea>
+                </div>
+
+
+            </div>
+
+            <!-- Dữ liệu sản phẩm - Tabs như WooCommerce -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <!-- Tab Headers -->
+                <div class="border-b border-gray-200">
+                    <div class="flex items-center justify-between px-6 py-3">
+                        <nav class="flex -mb-px">
+                            <button type="button" @click="activeTab = 'general'" 
+                                    :class="activeTab === 'general' ? 'border-[#98191F] text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                                    class="px-6 py-3 border-b-2 font-medium text-sm">
+                                Chung
+                            </button>
+                            <button type="button" @click="activeTab = 'inventory'" 
+                                    :class="activeTab === 'inventory' ? 'border-[#98191F] text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                                    class="px-6 py-3 border-b-2 font-medium text-sm">
+                                Kho hàng
+                            </button>
+                            <button type="button" @click="activeTab = 'variations'" x-show="productType === 'variable'"
+                                    :class="activeTab === 'variations' ? 'border-[#98191F] text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                                    class="px-6 py-3 border-b-2 font-medium text-sm">
+                                Biến thể
+                            </button>
+                        </nav>
+                        <div class="flex items-center gap-2">
+                            <label class="text-sm text-gray-600">Loại:</label>
+                            <select name="product_type" x-model="productType" class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#98191F]">
+                                <option value="simple">Đơn giản</option>
+                                <option value="variable">Biến thể</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="p-6">
+                    <!-- Tab Chung -->
+                    <div x-show="activeTab === 'general'" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Giá gốc (₫)</label>
+                                <input type="text" name="price" value="{{ old('price') }}" x-model="basePrice" @input="validateSalePrice()"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#98191F] input-number-format">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Giá khuyến mãi (₫)</label>
+                                <input type="text" name="sale_price" value="{{ old('sale_price') }}" x-model="salePrice" @input="validateSalePrice()"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#98191F] input-number-format">
+                                <p x-show="salePriceError" class="text-red-600 text-sm mt-1" x-text="salePriceError"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Kho hàng -->
+                    <div x-show="activeTab === 'inventory'" class="space-y-4">
+                        <div>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="manage_stock" value="1" class="rounded border-gray-300 text-blue-600">
+                                <span class="ml-2 text-sm text-gray-700">Quản lý tồn kho</span>
+                            </label>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Số lượng</label>
+                            <input type="number" name="stock_quantity" value="{{ old('stock_quantity', 0) }}"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#98191F]">
+                        </div>
+                    </div>
+
+                    <!-- Tab Biến thể -->
+                    <div x-show="activeTab === 'variations' && productType === 'variable'" class="space-y-4">
+                        <!-- Chọn thuộc tính -->
+                        <div class="border rounded-lg p-4 bg-gray-50">
+                            <h3 class="font-medium mb-3 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                </svg>
+                                Chọn thuộc tính biến thể
+                            </h3>
+                            <div class="max-h-64 overflow-y-auto space-y-3">
+                                @foreach($attributes ?? [] as $attr)
+                                <div class="bg-white p-3 rounded-lg border">
+                                    <label class="flex items-center mb-2 cursor-pointer">
+                                        <input type="checkbox" @change="toggleAttribute({{ $attr->id }})" class="rounded border-gray-300 text-blue-600">
+                                        <span class="ml-2 font-medium text-gray-900">{{ $attr->name }}</span>
+                                    </label>
+                                    <div class="ml-6 flex flex-wrap gap-2">
+                                        @foreach($attr->values as $value)
+                                        <label class="inline-flex items-center px-3 py-1.5 border rounded-lg hover:bg-red-50 hover:border-red-300 cursor-pointer transition">
+                                            <input type="checkbox" name="attributes[{{ $attr->id }}][]" value="{{ $value->id }}" 
+                                                   @change="updateSelectedAttributesCount()"
+                                                   class="rounded border-gray-300 text-blue-600 mr-2">
+                                            <span class="text-sm">{{ $value->value }}</span>
+                                        </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                            <div x-show="selectedAttributes === 0" class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                <p class="text-sm text-yellow-800 flex items-center">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                    </svg>
+                                    Vui lòng chọn thuộc tính để tạo biến thể
+                                </p>
+                            </div>
+                            <button type="button" @click="generateVariations()" 
+                                    x-show="selectedAttributes > 0"
+                                    class="mt-4 w-full inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Tạo biến thể tự động (<span x-text="selectedAttributes"></span> thuộc tính)
+                            </button>
+                        </div>
+
+                        <!-- Danh sách biến thể -->
+                        <div x-show="variations.length > 0">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="font-medium flex items-center">
+                                    <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                                    </svg>
+                                    Danh sách biến thể (<span x-text="variations.length"></span>)
+                                </h3>
+                                <button type="button" @click="variations = []" class="inline-flex items-center text-sm text-red-600 hover:text-red-800 transition">
+                                    Xóa tất cả
+                                </button>
+                            </div>
+                            <div class="space-y-2">
+                                <template x-for="(variation, index) in variations" :key="index">
+                                    <div class="border rounded-lg bg-white" x-data="{ open: false }">
+                                        <!-- Accordion Header -->
+                                        <div @click="open = !open" class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition">
+                                            <div class="flex items-center gap-3 flex-1">
+                                                <div class="w-12 h-12 rounded-lg border-2 overflow-hidden bg-gray-100 flex-shrink-0">
+                                                    <template x-if="variation.image">
+                                                        <img :src="variation.image" class="w-full h-full object-cover">
+                                                    </template>
+                                                    <template x-if="!variation.image">
+                                                        <div class="w-full h-full flex items-center justify-center text-gray-400">
+                                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                            </svg>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <h4 class="font-medium text-sm text-gray-900" x-text="variation.name"></h4>
+                                                    <div class="flex flex-wrap gap-1 mt-1">
+                                                        <template x-for="(attr, key) in variation.attributeDetails" :key="key">
+                                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-800">
+                                                                <span class="font-medium" x-text="attr.name"></span>:
+                                                                <span class="ml-1" x-text="attr.value"></span>
+                                                            </span>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <button type="button" @click.stop="variations.splice(index, 1)" 
+                                                        class="p-2 text-red-600 hover:bg-red-50 rounded transition">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                    </svg>
+                                                </button>
+                                                <svg class="w-5 h-5 text-gray-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Accordion Content -->
+                                        <div x-show="open" x-collapse class="border-t">
+                                            <div class="p-4 space-y-4">
+                                                <div class="grid grid-cols-4 gap-3">
+                                                    <div>
+                                                        <label class="text-xs font-medium text-gray-700 block mb-1">SKU</label>
+                                                        <input type="text" :name="'variations['+index+'][sku]'" x-model="variation.sku" 
+                                                               class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#98191F]">
+                                                    </div>
+                                                    <div>
+                                                        <label class="text-xs font-medium text-gray-700 block mb-1">Giá (₫)</label>
+                                                        <input type="number" :name="'variations['+index+'][price]'" x-model="variation.price" 
+                                                               @input="validateVariationPrice(index)"
+                                                               class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#98191F]">
+                                                    </div>
+                                                    <div>
+                                                        <label class="text-xs font-medium text-gray-700 block mb-1">Giá KM (₫)</label>
+                                                        <input type="number" :name="'variations['+index+'][sale_price]'" x-model="variation.sale_price" 
+                                                               @input="validateVariationPrice(index)" :max="variation.price"
+                                                               class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#98191F]">
+                                                        <p x-show="variation.priceError" class="text-red-600 text-xs mt-1" x-text="variation.priceError"></p>
+                                                    </div>
+                                                    <div>
+                                                        <label class="text-xs font-medium text-gray-700 block mb-1">Số lượng</label>
+                                                        <input type="number" :name="'variations['+index+'][stock_quantity]'" x-model="variation.stock_quantity" 
+                                                               class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-[#98191F]">
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <div x-data="{ 
+                                                        openMedia() { 
+                                                            selectVariationImage(index);
+                                                            $refs.mediaBtn.click();
+                                                        }
+                                                    }">
+                                                        <label class="text-xs font-medium text-gray-700 block mb-2">Ảnh đại diện</label>
+                                                        <div class="border-2 border-dashed rounded-lg overflow-hidden bg-gray-50 h-32 flex items-center justify-center mb-2">
+                                                            <template x-if="variation.image">
+                                                                <img :src="variation.image" class="w-full h-full object-cover">
+                                                            </template>
+                                                            <template x-if="!variation.image">
+                                                                <div class="text-center text-gray-400">
+                                                                    <svg class="w-8 h-8 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                                    </svg>
+                                                                    <p class="text-xs">Chưa có ảnh</p>
+                                                                </div>
+                                                            </template>
+                                                        </div>
+                                                        <div @click="selectVariationImage(index)">
+                                                            @include('cms.components.media-manager', ['slot' => 'Chọn ảnh'])
+                                                        </div>
+                                                        <input type="hidden" :name="'variations['+index+'][image]'" x-model="variation.image">
+                                                    </div>
+                                                    <div x-data="{ 
+                                                        openMedia() { 
+                                                            selectVariationGallery(index);
+                                                            $refs.mediaBtn.click();
+                                                        }
+                                                    }">
+                                                        <label class="text-xs font-medium text-gray-700 block mb-2">Gallery (<span x-text="(variation.gallery || []).length"></span>)</label>
+                                                        <div class="border-2 border-dashed rounded-lg p-2 bg-gray-50 h-32 overflow-y-auto mb-2">
+                                                            <div class="grid grid-cols-4 gap-1" x-show="variation.gallery && variation.gallery.length > 0">
+                                                                <template x-for="(img, imgIndex) in variation.gallery" :key="imgIndex">
+                                                                    <div class="relative aspect-square border rounded overflow-hidden group">
+                                                                        <img :src="img" class="w-full h-full object-cover">
+                                                                        <button type="button" @click.stop="removeVariationGalleryImage(index, imgIndex)" 
+                                                                                class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                                                                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                                            </svg>
+                                                                        </button>
+                                                                    </div>
+                                                                </template>
+                                                            </div>
+                                                            <div x-show="!variation.gallery || variation.gallery.length === 0" class="h-full flex items-center justify-center text-gray-400">
+                                                                <div class="text-center">
+                                                                    <svg class="w-6 h-6 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                                    </svg>
+                                                                    <p class="text-xs">Chưa có ảnh</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div @click="selectVariationGallery(index)">
+                                                            @include('cms.components.media-manager', ['slot' => '+ Thêm gallery'])
+                                                        </div>
+                                                        <input type="hidden" :name="'variations['+index+'][gallery]'" :value="JSON.stringify(variation.gallery || [])">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <input type="hidden" :name="'variations['+index+'][attributes]'" :value="JSON.stringify(variation.attributes)">
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phân tích SEO & Cài đặt SEO -->
+            @include('cms.components.seo-analyzer', ['model' => null, 'contentType' => 'sản phẩm'])
+        </div>
+
+        <!-- Cột phải: Sidebar -->
+        <div class="space-y-6">
+            <!-- Publish -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-semibold text-gray-900">Xuất bản</h2>
+                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-[#98191F] text-white rounded-lg hover:bg-[#7a1419] text-sm transition">
+                        Xuất bản
+                    </button>
+                </div>
+                
+                <div class="space-y-3 text-sm">
+                    <!-- Status -->
+                    <div class="flex items-center justify-between py-2 border-b">
+                        <span class="text-gray-600">Trạng thái:</span>
+                        <select name="status" class="px-2 py-1 border rounded text-sm">
+                            <option value="draft">Nháp</option>
+                            <option value="published">Đã xuất bản</option>
+                            <option value="archived">Lưu trữ</option>
+                        </select>
+                    </div>
+
+                    <!-- Visibility -->
+                    <div class="flex items-center justify-between py-2 border-b">
+                        <span class="text-gray-600">Hiển thị:</span>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="is_private" class="rounded border-gray-300 text-blue-600 mr-2">
+                            <span class="text-sm">Riêng tư</span>
+                        </label>
+                    </div>
+
+                    <!-- Publish Date -->
+                    <div class="py-2 border-b">
+                        <label class="block text-gray-600 text-sm mb-2">Xuất bản:</label>
+                        <input type="datetime-local" name="published_at" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#98191F] focus:border-[#98191F]">
+                    </div>
+
+                    <!-- Featured -->
+                    <div class="py-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="is_featured" value="1" class="rounded border-gray-300 text-blue-600">
+                            <span class="ml-2 text-gray-700">Sản phẩm nổi bật</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Ảnh đại diện -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="font-semibold text-gray-900 mb-4">Ảnh đại diện</h2>
+                <div class="space-y-3">
+                    @include('cms.components.media-picker', ['name' => 'featured_image', 'value' => old('featured_image')])
+                </div>
+            </div>
+
+            <!-- Gallery -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="font-semibold text-gray-900 mb-4">Gallery sản phẩm</h2>
+                <div class="space-y-3">
+                    <div class="grid grid-cols-3 gap-2" x-show="gallery.length > 0">
+                        <template x-for="(img, index) in gallery" :key="index">
+                            <div class="relative aspect-square border rounded-lg overflow-hidden group">
+                                <img :src="img.url" class="w-full h-full object-cover">
+                                <button type="button" @click="removeGalleryImage(index)" 
+                                        class="absolute top-1 right-1 inline-flex items-center justify-center bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                                <input type="hidden" name="gallery[]" :value="img.url">
+                            </div>
+                        </template>
+                    </div>
+                    <div @click="currentGalleryMode = true">
+                        @include('cms.components.media-manager', ['slot' => '+ Thêm ảnh gallery'])
+                    </div>
+                </div>
+            </div>
+
+            <!-- Danh mục -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-semibold text-gray-900">Danh mục sản phẩm</h2>
+                    <a href="{{ isset($currentProject) && $currentProject ? route('project.admin.categories.create', $currentProject->code) : route('cms.categories.create') }}" 
+                       target="_blank"
+                       class="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        + Thêm danh mục mới
+                    </a>
+                </div>
+                <div class="max-h-64 overflow-y-auto border rounded-lg p-3 space-y-2">
+                    @forelse($categories ?? [] as $cat)
+                    <label class="flex items-center p-2 hover:bg-gray-50 rounded cursor-pointer">
+                        <input type="checkbox" name="categories[]" value="{{ $cat->id }}" class="rounded border-gray-300 text-blue-600 mr-2">
+                        <span class="text-sm">{{ $cat->name }}</span>
+                    </label>
+                    @empty
+                    <div class="text-center py-4 text-gray-500 text-xs">
+                        Chưa có danh mục nào. <a href="{{ isset($currentProject) && $currentProject ? route('project.admin.categories.create', $currentProject->code) : route('cms.categories.create') }}" target="_blank" class="text-blue-600 hover:underline">Thêm mới</a>
+                    </div>
+                    @endforelse
+                </div>
+                <input type="hidden" name="product_category_id" id="mainCategory">
+                @error('product_category_id')<p class="text-red-600 text-sm mt-1">{{ $message }}</p>@enderror
+            </div>
+
+            <!-- Thương hiệu -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="font-semibold text-gray-900 mb-4">Thương hiệu</h2>
+                <div class="max-h-64 overflow-y-auto border rounded-lg p-3 space-y-2">
+                    @foreach($brands as $brand)
+                    <label class="flex items-center p-2 hover:bg-gray-50 rounded cursor-pointer">
+                        <input type="checkbox" name="brands[]" value="{{ $brand->id }}" class="rounded border-gray-300 text-blue-600 mr-2">
+                        <span class="text-sm">{{ $brand->name }}</span>
+                    </label>
+                    @endforeach
+                </div>
+                <input type="hidden" name="brand_id" id="mainBrand">
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script>
+function productForm() {
+    return {
+        slug: '',
+        featuredImage: null,
+        gallery: [],
+        currentGalleryMode: false,
+        currentVariationIndex: undefined,
+        currentVariationMode: undefined,
+        productType: 'simple',
+        activeTab: 'general',
+        basePrice: 0,
+        salePrice: 0,
+        salePriceError: '',
+        variations: [],
+        selectedAttributes: 0,
+        
+        handleMediaSelected(event) {
+            console.log('Media selected event:', event.detail);
+            const items = event.detail.files || [];
+            
+            if (items.length === 0) {
+                console.log('No files selected');
+                return;
+            }
+            
+            // Xử lý cho biến thể
+            if (this.currentVariationIndex !== undefined) {
+                if (this.currentVariationMode === 'image') {
+                    this.variations[this.currentVariationIndex].image = items[0].url;
+                    console.log('Set variation image:', items[0].url);
+                } else if (this.currentVariationMode === 'gallery') {
+                    if (!this.variations[this.currentVariationIndex].gallery) {
+                        this.variations[this.currentVariationIndex].gallery = [];
+                    }
+                    items.forEach(item => {
+                        if (!this.variations[this.currentVariationIndex].gallery.includes(item.url)) {
+                            this.variations[this.currentVariationIndex].gallery.push(item.url);
+                        }
+                    });
+                }
+                this.currentVariationIndex = undefined;
+                this.currentVariationMode = undefined;
+            } else {
+                // Xử lý cho sản phẩm chính
+                if (items.length === 1 && !this.currentGalleryMode) {
+                    this.featuredImage = items[0].url;
+                    console.log('Set featured image:', items[0].url);
+                    console.log('featuredImage value after set:', this.featuredImage);
+                    // Force Alpine.js to re-render
+                    this.$nextTick(() => {
+                        console.log('After nextTick, featuredImage:', this.featuredImage);
+                    });
+                } else {
+                    items.forEach(item => {
+                        if (!this.gallery.some(g => g.url === item.url)) {
+                            this.gallery.push({ id: item.id, url: item.url });
+                        }
+                    });
+                }
+                this.currentGalleryMode = false;
+            }
+        },
+        
+        init() {
+            // Auto set main category and brand
+            document.querySelectorAll('input[name="categories[]"]').forEach((cb) => {
+                cb.addEventListener('change', () => {
+                    const checked = document.querySelectorAll('input[name="categories[]"]:checked');
+                    if (checked.length > 0) {
+                        document.getElementById('mainCategory').value = checked[0].value;
+                    } else {
+                        document.getElementById('mainCategory').value = '';
+                    }
+                });
+            });
+            
+            document.querySelectorAll('input[name="brands[]"]').forEach((cb) => {
+                cb.addEventListener('change', () => {
+                    const checked = document.querySelectorAll('input[name="brands[]"]:checked');
+                    if (checked.length > 0) {
+                        document.getElementById('mainBrand').value = checked[0].value;
+                    } else {
+                        document.getElementById('mainBrand').value = '';
+                    }
+                });
+            });
+            
+            // Listen for media selection events
+            window.addEventListener('media-selected', (e) => {
+                this.handleMediaSelected(e);
+            });
+        },
+        
+
+        
+        generateSlug(name) {
+            if (!this.slug) {
+                try {
+                    const from = 'àáạảãâầấậhẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ';
+                    const to = 'aaaaaaaaaaaaaaaaaeeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuuyyyyydAAAAAAAAAAAAAAAAAEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYYD';
+                    let slug = name.toLowerCase().trim();
+                    for (let i = 0; i < from.length; i++) {
+                        slug = slug.replace(new RegExp(from[i], 'g'), to[i]);
+                    }
+                    this.slug = slug.replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+                } catch (error) {
+                    console.error('Slug generation error:', error);
+                    this.slug = name.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-');
+                }
+            }
+        },
+        
+        toggleAttribute(attrId) {
+            this.updateSelectedAttributesCount();
+        },
+        
+        updateSelectedAttributesCount() {
+            this.selectedAttributes = document.querySelectorAll('input[name^="attributes"]:checked').length;
+        },
+        
+        generateVariations() {
+            // Kiểm tra xem đã chọn thuộc tính chưa
+            const checkedInputs = document.querySelectorAll('input[name^="attributes"]:checked');
+            if (checkedInputs.length === 0) {
+                alert('Vui lòng chọn ít nhất một thuộc tính trước khi tạo biến thể!');
+                return;
+            }
+            
+            const selected = {};
+            const attrNames = {};
+            
+            document.querySelectorAll('input[name^="attributes"]:checked').forEach(input => {
+                const match = input.name.match(/attributes\[(\d+)\]/);
+                if (match) {
+                    const attrId = match[1];
+                    if (!selected[attrId]) {
+                        selected[attrId] = [];
+                        // Lấy tên thuộc tính
+                        const attrLabel = input.closest('.bg-white').querySelector('label span').textContent;
+                        attrNames[attrId] = attrLabel;
+                    }
+                    selected[attrId].push({
+                        id: input.value,
+                        value: input.parentElement.querySelector('span').textContent
+                    });
+                }
+            });
+            
+            const attrIds = Object.keys(selected);
+            const combinations = this.cartesian(Object.values(selected));
+            const baseSku = document.querySelector('[name="sku"]').value;
+            
+            this.variations = combinations.map((combo, i) => {
+                const attributeDetails = {};
+                combo.forEach((item, idx) => {
+                    const attrId = attrIds[idx];
+                    attributeDetails[attrId] = {
+                        name: attrNames[attrId],
+                        value: item.value
+                    };
+                });
+                
+                return {
+                    name: combo.map(c => c.value).join(' - '),
+                    sku: baseSku + '-' + (i+1),
+                    price: this.basePrice || 0,
+                    sale_price: 0,
+                    stock_quantity: 0,
+                    image: null,
+                    gallery: [],
+                    attributes: combo.map(c => c.id),
+                    attributeDetails: attributeDetails
+                };
+            });
+        },
+        
+        selectVariationImage(index) {
+            this.currentVariationIndex = index;
+            this.currentVariationMode = 'image';
+        },
+        
+        selectVariationGallery(index) {
+            this.currentVariationIndex = index;
+            this.currentVariationMode = 'gallery';
+        },
+        
+        removeVariationGalleryImage(varIndex, imgIndex) {
+            this.variations[varIndex].gallery.splice(imgIndex, 1);
+        },
+        
+        cartesian(arrays) {
+            return arrays.reduce((a, b) => 
+                a.flatMap(x => b.map(y => [...(Array.isArray(x) ? x : [x]), y])), [[]]
+            );
+        },
+        
+        removeGalleryImage(index) {
+            this.gallery.splice(index, 1);
+        },
+        
+        validateSalePrice() {
+            const maxPrice = 9999999999999.99; // Giới hạn tối đa cho decimal(15,2)
+            
+            // Kiểm tra giá trị tối đa
+            if (this.salePrice && parseFloat(this.salePrice) > maxPrice) {
+                this.salePriceError = 'Giá khuyến mãi không được vượt quá 9,999,999,999,999.99 VNĐ';
+                return;
+            }
+            
+            if (this.basePrice && parseFloat(this.basePrice) > maxPrice) {
+                // Cũng kiểm tra giá gốc nếu cần
+                this.salePriceError = 'Giá gốc không được vượt quá 9,999,999,999,999.99 VNĐ';
+                return;
+            }
+            
+            // Kiểm tra giá khuyến mãi phải nhỏ hơn giá gốc
+            if (this.salePrice && this.basePrice && parseFloat(this.salePrice) >= parseFloat(this.basePrice)) {
+                this.salePriceError = 'Giá khuyến mãi phải thấp hơn giá gốc';
+            } else {
+                this.salePriceError = '';
+            }
+        },
+        
+        validateVariationPrice(index) {
+            const variation = this.variations[index];
+            if (variation.sale_price && variation.price && parseFloat(variation.sale_price) >= parseFloat(variation.price)) {
+                variation.priceError = 'Giá KM phải thấp hơn giá gốc';
+            } else {
+                variation.priceError = '';
+            }
+        }
+    }
+}
+
+// Function to generate slug from product name
+function generateSlug() {
+    const nameInput = document.getElementById('product-name');
+    const slugInput = document.getElementById('product-slug');
+    
+    if (!nameInput || !slugInput) return;
+    
+    let str = nameInput.value;
+    
+    // Convert to lowercase
+    str = str.toLowerCase();
+    
+    // Remove Vietnamese accents
+    str = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    
+    // Replace đ with d
+    str = str.replace(/đ/g, 'd');
+    str = str.replace(/Đ/g, 'd');
+    
+    // Remove special characters except spaces and hyphens
+    str = str.replace(/[^a-z0-9\s-]/g, '');
+    
+    // Replace multiple spaces with single space
+    str = str.replace(/\s+/g, ' ');
+    
+    // Trim spaces
+    str = str.trim();
+    
+    // Replace spaces with hyphens
+    str = str.replace(/\s/g, '-');
+    
+    // Replace multiple hyphens with single hyphen
+    str = str.replace(/-+/g, '-');
+    
+    slugInput.value = str;
+}
+</script>
+@endsection

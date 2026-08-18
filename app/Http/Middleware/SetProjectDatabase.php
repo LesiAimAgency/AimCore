@@ -1,0 +1,166 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use App\Services\SettingsService;
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
+
+class SetProjectDatabase
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        $project = $request->attributes->get('project');
+
+        if ($project) {
+            // Enable database switching for project context
+            $this->setProjectDatabase($project, $request);
+
+            Log::debug("Project database context set for: {$project->code}");
+        }
+
+        $response = $next($request);
+
+        // Reset database after request
+        if ($project) {
+            $this->resetToMainDatabase();
+        }
+
+        return $response;
+    }
+
+    private function setProjectDatabase($project, Request $request)
+    {
+        $code = $project->code;
+
+        // Fallback to project ID if code is empty
+        if (empty($code)) {
+            $code = 'project_'.$project->id;
+        }
+
+        Log::debug("SetProjectDatabase: Setting up project context for {$code}, project_id: {$project->id}");
+
+        // Store main database name for later reset
+        $request->attributes->set('main_database', config('database.default'));
+
+        // Set tenant ID và project ID cho session TRƯỚC KHI query
+        // Trong shared database mode, sử dụng project_id làm tenant_id
+        // để đảm bảo BelongsToTenant trait filter đúng dữ liệu
+        session(['current_tenant_id' => $project->id]);
+        session(['current_project_id' => $project->id]);
+        app()->instance('current_project_id', $project->id);
+        app()->instance('current_tenant_id', $project->id);
+
+        // Clear settings cache để load lại từ project database
+        if (class_exists('\App\Services\SettingsService')) {
+            SettingsService::getInstance()->clearCache();
+        }
+
+        // SHARED HOSTING MODE: Always use main database with project_id scoping
+        $this->setupSharedDatabase($project, $code);
+    }
+
+    /**
+     * Setup project using shared database (single database for all projects)
+     */
+    private function setupSharedDatabase($project, $code)
+    {
+        Log::info("Using shared database for project: {$code}");
+
+        // Use the main database (same as application)
+        Config::set('database.connections.project', config('database.connections.mysql'));
+
+        try {
+            DB::purge('project');
+
+            // Test connection before switching
+            DB::connection('project')->getPdo();
+
+            // Set default connection to project for this request
+            DB::setDefaultConnection('project');
+            Config::set('database.default', 'project');
+
+            // Set project context for scoped queries
+            app()->instance('current_project_id', $project->id);
+            session(['current_project_id' => $project->id]);
+
+            Log::info("Successfully using shared database for project: {$code}");
+
+        } catch (\Exception $e) {
+            Log::error("Failed to setup shared database for project {$code}: ".$e->getMessage());
+            $this->fallbackToMainDatabase($project);
+        }
+    }
+
+    // COMMENTED OUT: Legacy multisite database setup
+    // This was trying to create separate databases which doesn't work on shared hosting
+    /*
+    private function setupMultisiteDatabase($project, $code)
+    {
+        Log::info("Using multisite database for project: {$code}");
+
+        // Use fixed multisite database configuration
+        Config::set('database.connections.project', [
+            'driver' => 'mysql',
+            'host' => env('MULTISITE_DB_HOST', '127.0.0.1'),
+            'port' => env('MULTISITE_DB_PORT', '3306'),
+            'database' => env('MULTISITE_DB_DATABASE', 'u712054581_Database_01'),
+            'username' => env('MULTISITE_DB_USERNAME', 'u712054581_Database_01'),
+            'password' => env('MULTISITE_DB_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ]);
+
+        try {
+            DB::purge('project');
+
+            // Test connection before switching
+            DB::connection('project')->getPdo();
+
+            // Set default connection to project for this request
+            DB::setDefaultConnection('project');
+            Config::set('database.default', 'project');
+
+            // Set project context for multisite queries
+            app()->instance('current_project_id', $project->id);
+            session(['current_project_id' => $project->id]);
+
+            Log::info("Successfully connected to multisite database for project: {$code}");
+
+        } catch (\Exception $e) {
+            Log::error("Failed to connect to multisite database for project {$code}: " . $e->getMessage());
+            $this->fallbackToMainDatabase($project);
+        }
+    }
+    */
+
+    private function fallbackToMainDatabase($project)
+    {
+        Log::warning("Falling back to main database with project scoping for project: {$project->code}");
+
+        // Use main database but set project context
+        Config::set('database.connections.project', config('database.connections.mysql'));
+        DB::purge('project');
+
+        // Set project ID for scoping queries
+        app()->instance('current_project_id', $project->id);
+        session(['fallback_project_id' => $project->id]);
+    }
+
+    private function resetToMainDatabase()
+    {
+        // Reset to mysql (main) connection
+        DB::setDefaultConnection('mysql');
+        Config::set('database.default', 'mysql');
+        DB::purge('project');
+
+        Log::debug('SetProjectDatabase: Reset to main database');
+    }
+}
