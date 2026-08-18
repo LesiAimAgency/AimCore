@@ -13,12 +13,7 @@
             <!-- Logo/Brand -->
             <div class="text-center mb-8">
                 <div class="mx-auto mb-4 flex flex-col items-center">
-                    <div class="w-20 h-20 bg-[#001B4E] rounded-2xl flex items-center justify-center mb-3 shadow-lg">
-                        <svg class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
-                            <circle cx="12" cy="12" r="4" />
-                        </svg>
-                    </div>
+                    <img src="{{ asset('logo.png') }}" alt="Aim Agency Logo" class="h-24 w-auto mb-3 object-contain">
                     <h2 class="text-3xl font-bold text-[#001B4E] uppercase tracking-wider font-sans">Aim Agency</h2>
                 </div>
                 <p class="text-gray-600">Đăng nhập để truy cập hệ thống quản trị</p>
