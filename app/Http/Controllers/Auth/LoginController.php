@@ -41,11 +41,11 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'username' => 'required|string',
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        if (Auth::attempt($request->only('username', 'password'), $request->boolean('remember'))) {
             $request->session()->regenerate();
 
             $user = auth()->user();
@@ -74,8 +74,8 @@ class LoginController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'Thông tin đăng nhập không chính xác.',
-        ])->onlyInput('email');
+            'username' => 'Thông tin đăng nhập không chính xác.',
+        ])->onlyInput('username');
     }
 
     public function logout(Request $request)
