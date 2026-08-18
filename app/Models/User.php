@@ -236,6 +236,21 @@ class User extends Authenticatable
         return isset($this->level) && $this->level === 1;
     }
 
+    public function isManager(): bool
+    {
+        return $this->role === 'manager' || $this->hasRole('manager');
+    }
+
+    public function isEmployee(): bool
+    {
+        return $this->role === 'employee' || $this->hasRole('employee');
+    }
+
+    public function isVisitor(): bool
+    {
+        return $this->role === 'visitor' || $this->hasRole('visitor');
+    }
+
     public function canAccessSuperAdmin(): bool
     {
         return isset($this->level) && \in_array($this->level, [0, 1, 2]);

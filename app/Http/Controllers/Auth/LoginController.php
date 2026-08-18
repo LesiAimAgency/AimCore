@@ -70,6 +70,11 @@ class LoginController extends Controller
                 return redirect('/employee');
             }
 
+            // Manager -> Manager panel
+            if (isset($user->role) && $user->role === 'manager') {
+                return redirect('/manager');
+            }
+
             return redirect('/superadmin');
         }
 

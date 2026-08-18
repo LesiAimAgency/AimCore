@@ -222,6 +222,9 @@ require __DIR__.'/superadmin.php';
 // Include Employee Routes
 require __DIR__.'/employee.php';
 
+// Include Manager Routes
+require __DIR__.'/manager.php';
+
 // Project routes are loaded separately in bootstrap/app.php with isolated session
 
 // Robots.txt
@@ -254,6 +257,10 @@ Route::get('/test-lang', function () {
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::middleware('auth')->group(function () {
+    Route::put('/user/password', [\App\Http\Controllers\Auth\PasswordController::class, 'update'])->name('user.password.update');
+});
 
 // Test routes for development
 if (app()->environment(['local', 'testing'])) {
