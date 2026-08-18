@@ -66,7 +66,7 @@
         }
         
         .logo-container img {
-            height: 80px;
+            height: 150px;
             object-fit: contain;
         }
 
@@ -140,7 +140,7 @@
         @media (max-width: 768px) {
             h1 { font-size: 3.5rem; }
             p { font-size: 1rem; }
-            .logo-container img { height: 60px; }
+            .logo-container img { height: 100px; }
         }
     </style>
 </head>
