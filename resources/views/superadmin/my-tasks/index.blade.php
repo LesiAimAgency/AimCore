@@ -561,7 +561,7 @@
                             >
                                 <option value="">-- Chọn nhân sự thực hiện --</option>
                                 <template x-for="u in users" :key="'assign-opt-'+u.id">
-                                    <option :value="u.id" x-text="u.name + ' — Phòng ' + (u.department || 'Nhân sự')"></option>
+                                    <option :value="u.id" x-text="u.name"></option>
                                 </template>
                             </select>
                             <p class="text-xs text-gray-400 mt-1">Chọn nhân sự thuộc phòng ban (Thiết kế, Thiết kế website, Quản lý dự án) để phân công.</p>
