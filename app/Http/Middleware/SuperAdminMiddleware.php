@@ -35,6 +35,11 @@ class SuperAdminMiddleware
             }
         }
 
+        // Cho phép Manager (Quản lý) truy cập các route superadmin (để quản lý users, v.v.)
+        if ($user->isManager()) {
+            return $next($request);
+        }
+
         abort(403, 'Bạn không có quyền truy cập SuperAdmin.');
     }
 

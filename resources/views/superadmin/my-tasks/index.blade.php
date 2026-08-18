@@ -720,7 +720,7 @@
                                 class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none bg-white"
                             >
                                 <template x-for="u in users" :key="'edit-assign-'+u.id">
-                                    <option :value="u.id" x-text="u.name + ' — Phòng ' + (u.department || 'Nhân sự')" :selected="u.id == editForm.assigned_to"></option>
+                                    <option :value="u.id" x-text="u.name" :selected="u.id == editForm.assigned_to"></option>
                                 </template>
                             </select>
                         </div>
@@ -903,7 +903,7 @@
                         >
                             <option value="">-- Chọn nhân sự mới --</option>
                             <template x-for="u in users" :key="'reassign-u-'+u.id">
-                                <option :value="u.id" x-text="u.name + ' — Phòng ' + (u.department || 'Nhân sự')"></option>
+                                <option :value="u.id" x-text="u.name"></option>
                             </template>
                         </select>
                         <p class="text-xs text-gray-400 mt-1">Công việc sẽ được tự động kích hoạt lại và chuyển sang hàng chờ của nhân sự mới.</p>

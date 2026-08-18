@@ -70,7 +70,13 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::all();
-        $managers = User::where('status', true)->get();
+        $managers = User::where('status', true)
+            ->where(function($q) {
+                $q->where('role', 'manager')
+                  ->orWhereHas('roles', function($q2) {
+                      $q2->where('name', 'manager');
+                  });
+            })->get();
         $departments = \App\Models\Department::where('status', 'active')->pluck('name');
 
         return view('cms.users.create', compact('roles', 'managers', 'departments'));
@@ -172,7 +178,14 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $roles = Role::all();
-        $managers = User::where('status', true)->where('id', '!=', $user->id)->get();
+        $managers = User::where('status', true)
+            ->where('id', '!=', $user->id)
+            ->where(function($q) {
+                $q->where('role', 'manager')
+                  ->orWhereHas('roles', function($q2) {
+                      $q2->where('name', 'manager');
+                  });
+            })->get();
         $departments = \App\Models\Department::where('status', 'active')->pluck('name');
         $user->load('roles');
 

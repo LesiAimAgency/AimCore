@@ -138,7 +138,7 @@
                 @endif
                 @endif
 
-                @if(auth()->user()->isSuperAdmin())
+                @if(auth()->user()->isSuperAdmin() || (method_exists(auth()->user(), 'isManager') && auth()->user()->isManager()) || (auth()->user()->employee && auth()->user()->employee->is_department_manager))
                 <div class="px-4 py-2 mt-4 text-[11px] font-bold text-[#8FA3C9] uppercase tracking-wider">Nội bộ</div>
                 <a href="{{ route('superadmin.departments.index') }}" class="flex items-center px-4 py-3 mb-2 text-gray-300 hover:bg-[#002D80] rounded-lg {{ request()->routeIs('superadmin.departments.*') ? 'bg-[#002D80]' : '' }}">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
