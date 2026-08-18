@@ -54,9 +54,9 @@
                                 @endphp
                                 @foreach($roles as $role)
                                     <label class="flex items-center gap-2 cursor-pointer">
-                                        <input type="checkbox" name="roles[]" value="{{ $role->id }}" 
+                                        <input type="radio" name="roles[]" value="{{ $role->id }}" 
                                                {{ in_array($role->id, $userRoles) ? 'checked' : '' }}
-                                               class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                               class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" required>
                                         <span class="text-sm text-gray-700">{{ $role->display_name ?? $role->name }}</span>
                                     </label>
                                 @endforeach

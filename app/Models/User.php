@@ -66,7 +66,7 @@ class User extends Authenticatable
     ];
 
     protected $attributes = [
-        'role' => 'cms',
+        'role' => 'visitor',
         'level' => 2,
     ];
 

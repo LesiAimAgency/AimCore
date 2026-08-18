@@ -128,6 +128,10 @@ class UserController extends Controller
         // Assign roles
         if (! empty($validated['roles'])) {
             $user->roles()->sync($validated['roles']);
+            $firstRole = Role::find($validated['roles'][0]);
+            if ($firstRole) {
+                $user->update(['role' => $firstRole->name]);
+            }
         }
 
         // Log activity (only if not in testing environment)
@@ -234,6 +238,14 @@ class UserController extends Controller
         // Update roles
         if (isset($validated['roles'])) {
             $user->roles()->sync($validated['roles']);
+            if (count($validated['roles']) > 0) {
+                $firstRole = Role::find($validated['roles'][0]);
+                if ($firstRole) {
+                    $user->update(['role' => $firstRole->name]);
+                }
+            } else {
+                $user->update(['role' => 'visitor']);
+            }
         }
 
         // Log activity (only if not in testing environment)
