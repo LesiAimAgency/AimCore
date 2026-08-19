@@ -1272,6 +1272,13 @@
         border-radius: 0.75rem !important;
         pointer-events: none !important;
     }
+    
+    /* Fix Flatpickr SVGs becoming huge due to Tailwind CSS reset */
+    .flatpickr-calendar svg {
+        width: 14px !important;
+        height: 14px !important;
+        display: inline-block !important;
+    }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 @endpush
