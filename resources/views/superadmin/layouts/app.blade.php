@@ -69,6 +69,7 @@
             background: #0040A0; 
         }
     </style>
+    @stack('styles')
 </head>
 <body class="bg-slate-50 font-sans text-gray-800">
     <div class="min-h-screen flex w-full">
