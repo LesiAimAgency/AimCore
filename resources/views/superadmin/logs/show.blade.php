@@ -30,15 +30,61 @@
         </div>
     </div>
 
-    <div class="bg-gray-900 rounded-lg shadow-sm overflow-hidden">
-        <div class="px-4 py-3 bg-gray-800 border-b border-gray-700 flex justify-between items-center">
-            <span class="text-xs font-mono text-gray-300">{{ $filename }}</span>
-            <span class="text-xs font-mono text-gray-500">{{ number_format(strlen($content) / 1024, 2) }} KB</span>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+            <span class="text-sm font-semibold text-gray-700">{{ $filename }}</span>
+            <span class="text-xs font-medium text-gray-500">{{ number_format(strlen($content) / 1024, 2) }} KB</span>
         </div>
-        <div class="p-4 overflow-x-auto">
-            <pre class="text-sm font-mono text-gray-300 whitespace-pre-wrap leading-relaxed">{{ $content }}</pre>
-            @if(empty(trim($content)))
+        
+        <div class="overflow-x-auto">
+            @if(empty($parsedLogs))
                 <div class="text-gray-500 text-center py-8 italic">File log trống. Chưa có lịch sử hoạt động nào được ghi lại.</div>
+            @else
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-48">Thời gian</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-48">Người dùng</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-64">Hành động</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Chi tiết thay đổi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($parsedLogs as $log)
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                @if(isset($log['time']))
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
+                                        {{ $log['time'] }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">{{ $log['user'] }}</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ str_contains(strtolower($log['action']), 'log') ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' }}">
+                                            {{ $log['action'] }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-600">
+                                        @if(is_array($log['changes']))
+                                            <div class="bg-gray-50 p-3 rounded-md border border-gray-100 font-mono text-xs overflow-x-auto">
+                                                @foreach($log['changes'] as $key => $value)
+                                                    <div class="mb-1 last:mb-0">
+                                                        <span class="font-semibold text-indigo-700">{{ $key }}:</span> 
+                                                        <span class="text-gray-800">{{ is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE) : $value }}</span>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @else
+                                            <span class="font-mono text-xs bg-gray-50 p-2 rounded block">{{ $log['changes'] }}</span>
+                                        @endif
+                                    </td>
+                                @else
+                                    <td colspan="4" class="px-6 py-4 text-sm font-mono text-red-500 whitespace-pre-wrap">{{ $log['raw'] }}</td>
+                                @endif
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             @endif
         </div>
     </div>
