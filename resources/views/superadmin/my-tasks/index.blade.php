@@ -1263,15 +1263,6 @@
     .task-ghost * {
         visibility: hidden !important;
     }
-    .task-fallback, .sortable-fallback, .task-drag {
-        opacity: 1 !important;
-        background-color: #ffffff !important;
-        box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.25), 0 0 0 2px #4f46e5 !important;
-        cursor: grabbing !important;
-        z-index: 999999 !important;
-        border-radius: 0.75rem !important;
-        pointer-events: none !important;
-    }
     
     /* Fix Flatpickr SVGs becoming huge due to Tailwind CSS reset */
     .flatpickr-calendar svg {
@@ -2131,11 +2122,6 @@ document.addEventListener('alpine:init', () => {
                 animation: 350,
                 easing: "cubic-bezier(0.25, 1, 0.5, 1)",
                 ghostClass: 'task-ghost',
-                dragClass: 'task-drag',
-                fallbackClass: 'task-fallback',
-                forceFallback: true,
-                fallbackOnBody: true,
-                fallbackTolerance: 3,
                 draggable: '[data-task-id]',
                 onStart: (evt) => {
                     this.isDragging = true;
