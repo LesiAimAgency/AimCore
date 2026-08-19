@@ -694,6 +694,12 @@ class MyTaskController extends Controller
             'action' => $action,
             'message' => $message,
         ], 3600);
+
+        // Đẩy thẳng vào System Logs (Log 7 ngày)
+        \App\Helpers\SuperAdminLogHelper::logActivity('MyTask: ' . $message, [
+            'action' => $action,
+            'ip' => request()->ip()
+        ]);
     }
 
     /**

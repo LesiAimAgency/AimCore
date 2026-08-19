@@ -71,5 +71,60 @@ class AppServiceProvider extends ServiceProvider
                 'ip_address' => $ip
             ]);
         });
+
+        // Log all model changes
+        Event::listen('eloquent.*', function ($eventName, array $data) {
+            // Only log saved/created/updated/deleted events
+            if (!preg_match('/^eloquent\.(created|updated|deleted): (.*)$/', $eventName, $matches)) {
+                return;
+            }
+
+            $action = $matches[1]; // created, updated, deleted
+            $modelClass = $matches[2];
+            $model = $data[0] ?? null;
+
+            // Ignore models that shouldn't be logged to avoid spam
+            $ignoredModels = [
+                'App\Models\Task', // Đã được log tay bên trong MyTaskController
+            ];
+
+            // Only log if we have a valid model, not ignored, and user is logged in
+            if (!$model || in_array($modelClass, $ignoredModels) || !auth()->check()) {
+                return;
+            }
+
+            // Only log if the user has access to superadmin (SuperAdmin, Manager, Dev, etc)
+            $user = auth()->user();
+            if (!$user->isSuperAdmin() && !$user->isManager() && $user->role !== 'dev' && !$user->hasRole('dev')) {
+                return;
+            }
+
+            // In case of updated, check if there are actual changes
+            if ($action === 'updated' && empty($model->getChanges())) {
+                return;
+            }
+
+            $changes = [];
+            if ($action === 'updated') {
+                $changes = $model->getChanges();
+                // Bỏ qua nếu chỉ là thay đổi updated_at
+                if (count($changes) === 1 && isset($changes['updated_at'])) {
+                    return;
+                }
+            } elseif ($action === 'created' || $action === 'deleted') {
+                $changes = $model->toArray();
+            }
+
+            $modelName = class_basename($modelClass);
+            $recordId = $model->id ?? 'unknown';
+            
+            $actionVi = [
+                'created' => 'Tạo mới',
+                'updated' => 'Cập nhật',
+                'deleted' => 'Xóa'
+            ][$action];
+
+            SuperAdminLogHelper::logActivity("{$actionVi} {$modelName} (ID: {$recordId})", $changes);
+        });
     }
 }
