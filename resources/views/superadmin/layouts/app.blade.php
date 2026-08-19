@@ -95,6 +95,7 @@
                     <span class="ml-3 font-medium">Việc của tôi</span>
                 </a>
 
+                @if(auth()->user()->isManager())
                 <a href="{{ route('superadmin.performance.ranking') }}" class="flex items-center px-4 py-3 mb-2 text-gray-300 hover:bg-[#002D80] rounded-lg {{ request()->routeIs('superadmin.performance.ranking') ? 'bg-[#002D80]' : '' }}">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -117,6 +118,7 @@
                     <span class="ml-3 font-medium">Bảng Vàng</span>
                 </a>
                 @endif
+                @endif
 
                 @if(auth()->user()->isSuperAdmin() || auth()->user()->hasPermission('manage-contracts') || auth()->user()->hasPermission('manage-projects') || auth()->user()->role === 'dev' || auth()->user()->hasRole('dev'))
                 <div class="px-4 py-2 mt-4 text-[11px] font-bold text-[#8FA3C9] uppercase tracking-wider">Khách hàng & Dự án</div>
@@ -138,8 +140,11 @@
                 @endif
                 @endif
 
-                @if(auth()->user()->isSuperAdmin() || (method_exists(auth()->user(), 'isManager') && auth()->user()->isManager()) || (auth()->user()->employee && auth()->user()->employee->is_department_manager))
+                @if(auth()->user()->isManager() || auth()->user()->isEmployee())
                 <div class="px-4 py-2 mt-4 text-[11px] font-bold text-[#8FA3C9] uppercase tracking-wider">Nội bộ</div>
+                @endif
+
+                @if(auth()->user()->isManager())
                 <a href="{{ route('superadmin.departments.index') }}" class="flex items-center px-4 py-3 mb-2 text-gray-300 hover:bg-[#002D80] rounded-lg {{ request()->routeIs('superadmin.departments.*') ? 'bg-[#002D80]' : '' }}">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
@@ -152,6 +157,15 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                     </svg>
                     <span class="ml-3 font-medium">Quản lý Nhân sự</span>
+                </a>
+                @endif
+
+                @if(auth()->user()->isManager() || auth()->user()->isEmployee())
+                <a href="{{ route('superadmin.employees.index') }}" class="flex items-center px-4 py-3 mb-2 text-gray-300 hover:bg-[#002D80] rounded-lg {{ request()->routeIs('superadmin.employees.*') ? 'bg-[#002D80]' : '' }}">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span class="ml-3 font-medium">Danh sách Nhân viên</span>
                 </a>
                 @endif
 

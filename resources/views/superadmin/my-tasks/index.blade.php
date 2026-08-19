@@ -1587,25 +1587,8 @@ document.addEventListener('alpine:init', () => {
                     return diffA - diffB;
                 });
             } else {
-                // Sắp xếp "Quan trọng" (Mặc định):
-                // Ưu tiên cao nhất:
-                // 1. Việc mới / Vừa được điều phối lại (acceptance_status === 'pending')
-                // 2. Việc bị từ chối cần Quản lý điều phối lại (acceptance_status === 'rejected' || approval_status === 'rejected')
-                // 3. Xếp theo thứ tự kéo thả (position)
+                // Sắp xếp theo thứ tự kéo thả (position)
                 filtered.sort((a, b) => {
-                    const getPriorityScore = (t) => {
-                        if (t.acceptance_status === 'pending') return 3; // Việc mới / Điều phối lại lên đầu tiên
-                        if (t.acceptance_status === 'rejected' || t.approval_status === 'rejected') return 2; // Cần điều phối lại
-                        return 1; // Công việc bình thường
-                    };
-
-                    const scoreA = getPriorityScore(a);
-                    const scoreB = getPriorityScore(b);
-
-                    if (scoreA !== scoreB) {
-                        return scoreB - scoreA;
-                    }
-
                     return (a.position || 0) - (b.position || 0);
                 });
             }

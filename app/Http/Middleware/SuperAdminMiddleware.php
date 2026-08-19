@@ -23,20 +23,9 @@ class SuperAdminMiddleware
 
         $user = Auth::guard('web')->user();
 
-        // Cho phép: level 0-2 (superadmin, account, dev) HOẶC role=superadmin với employee có superadmin_role
-        if ($user->level <= 2) {
-            return $next($request);
-        }
-
-        if (($user->role === 'superadmin' || $user->role === 'super_admin') && $user->employee) {
-            // Cho phép: superadmin_role hoặc quản lý bộ phận
-            if (in_array($user->employee->superadmin_role, ['superadmin', 'director', 'account', 'dev']) || $user->employee->is_department_manager) {
-                return $next($request);
-            }
-        }
-
-        // Cho phép Manager (Quản lý) truy cập các route superadmin (để quản lý users, v.v.)
-        if ($user->isManager()) {
+        // Cho phép Manager (Quản lý) và Employee (Nhân viên) truy cập các route superadmin
+        // Quyền hiển thị menu và chức năng sẽ được phân quyền cụ thể trong giao diện và controller.
+        if ($user->isManager() || $user->isEmployee() || $user->level <= 2) {
             return $next($request);
         }
 

@@ -2,7 +2,7 @@
 
 // [CLEANED] use App\Http\Controllers\SuperAdmin\ContractController;
 use App\Http\Controllers\Admin\PostController;
-// [CLEANED] use App\Http\Controllers\SuperAdmin\EmployeeController;
+use App\Http\Controllers\SuperAdmin\EmployeeController;
 // [CLEANED] use App\Http\Controllers\SuperAdmin\PositionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\SuperAdmin\BriefController;
@@ -72,6 +72,9 @@ Route::middleware([
     Route::resource('departments', DepartmentController::class);
     Route::resource('services', ServiceController::class);
     Route::resource('service-stages', ServiceStageController::class);
+    
+    Route::get('employees', [EmployeeController::class, 'index'])->name('employees.index');
+    Route::get('employees/{employee}', [EmployeeController::class, 'show'])->name('employees.show');
     
     // Performance & Ranking
     Route::get('performance', [App\Http\Controllers\SuperAdmin\PerformanceController::class, 'index'])->name('performance.index');

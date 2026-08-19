@@ -228,7 +228,8 @@ class User extends Authenticatable
             || $this->role === 'superadmin'
             || $this->role === 'super_admin'
             || $this->hasRole('superadmin')
-            || $this->hasRole('super_admin');
+            || $this->hasRole('super_admin')
+            || $this->isManager();
     }
 
     public function isAdministrator(): bool

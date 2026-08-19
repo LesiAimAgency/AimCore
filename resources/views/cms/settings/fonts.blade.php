@@ -59,7 +59,7 @@
             </form>
           </td>
           <td class="px-6 py-4 text-right">
-            <form action="{{ $projectCode ? route('project.admin.fonts.destroy', $projectCode) : route('cms.fonts.destroy') }}" method="POST" style="display:inline" onsubmit="return confirm('Xác nhận xóa?')">
+            <form action="{{ $projectCode ? route('project.admin.fonts.destroy', $projectCode) : route('cms.fonts.destroy') }}" method="POST" style="display:inline" onsubmit="return confirm('Xác nhận ?')">
               @csrf @method('DELETE')
               <input type="hidden" name="id" value="{{ $font['id'] }}">
               <button type="submit" class="text-red-600 hover:text-red-800 text-sm">Xóa</button>

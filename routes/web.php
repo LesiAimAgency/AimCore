@@ -219,11 +219,7 @@ Route::prefix('admin')->name('cms.')->middleware(['auth'])->group(function () {
 // Include SuperAdmin Routes (Project Management)
 require __DIR__.'/superadmin.php';
 
-// Include Employee Routes
-require __DIR__.'/employee.php';
 
-// Include Manager Routes
-require __DIR__.'/manager.php';
 
 // Project routes are loaded separately in bootstrap/app.php with isolated session
 
