@@ -1481,10 +1481,10 @@ document.addEventListener('alpine:init', () => {
             });
 
             setInterval(async () => {
-                // Tự động ngưng poll khi tab bị ẩn, đang kéo thả, hoặc đang mở modal để không lãng phí CPU/băng thông và tránh giật lag UI
-                if (document.hidden || this.isSyncing || this.isSaving || this.isUpdating || this.showModal || this.showEditModal || this.isDragging) return;
+                // Không poll khi đang kéo thả, lưu dữ liệu, hoặc mở modal để tránh gián đoạn UX
+                if (this.isSyncing || this.isSaving || this.isUpdating || this.showModal || this.showEditModal || this.isDragging) return;
                 await this.syncRealtimeData();
-            }, 4000); // 4 giây / lần (chỉ gửi 1 HTTP check nhẹ ~40 bytes từ RAM cache)
+            }, 2000); // 2 giây / lần
         },
 
         async syncRealtimeData(manual = false) {
@@ -1498,7 +1498,7 @@ document.addEventListener('alpine:init', () => {
 
                 const data = await response.json();
                 
-                // Nếu chưa có sự kiện mới: Không làm gì cả (0 DB queries, 0 DOM re-renders)
+                // Nếu chưa có sự kiện mới: Không làm gì cả
                 if (!data.has_changed) {
                     return;
                 }
@@ -1507,8 +1507,8 @@ document.addEventListener('alpine:init', () => {
                 if (data.has_changed && data.pendingTasks) {
                     const lastChange = data.last_change;
                     
-                    // Nếu sự kiện do PM hoặc người khác tạo ra -> cập nhật và hiện popup
-                    if (lastChange && lastChange.user_id !== this.currentUserId) {
+                    // Nếu sự kiện do user khác tạo ra -> cập nhật và hiện popup
+                    if (lastChange && Number(lastChange.user_id) !== Number(this.currentUserId)) {
                         this.pendingTasks = data.pendingTasks;
                         this.completedTasks = data.completedTasks;
 
@@ -1516,7 +1516,7 @@ document.addEventListener('alpine:init', () => {
                             this.updateHeaderGold(data.user_gold);
                         }
 
-                        this.triggerRealtimePopup(lastChange.message || 'Dữ liệu công việc vừa được Quản lý cập nhật!');
+                        this.triggerRealtimePopup(lastChange.message || 'Dữ liệu công việc vừa được cập nhật!');
                     } else if (manual) {
                         this.pendingTasks = data.pendingTasks;
                         this.completedTasks = data.completedTasks;
@@ -2086,19 +2086,33 @@ document.addEventListener('alpine:init', () => {
                 ghostClass: 'task-ghost',
                 fallbackClass: 'task-fallback',
                 forceFallback: true,
+                draggable: '[data-task-id]',
                 onStart: (evt) => {
                     this.isDragging = true;
+                    // Lưu lại node liền kề ban đầu để khôi phục chính xác
+                    evt.item._nextSibling = evt.item.nextSibling;
                 },
                 onEnd: async (evt) => {
                     this.isDragging = false;
                     const items = Array.from(grid.querySelectorAll('[data-task-id]'))
                         .map(el => parseInt(el.getAttribute('data-task-id')));
 
-                    // Cập nhật vị trí trực tiếp trên state Alpine ngay lập tức
+                    // Hoàn tác DOM thay đổi của SortableJS về đúng như cũ
+                    // Để AlpineJS toàn quyền render lại UI dựa trên dữ liệu state
+                    const itemEl = evt.item;
+                    if (itemEl && itemEl.parentNode) {
+                        itemEl.parentNode.insertBefore(itemEl, itemEl._nextSibling);
+                    }
+
+                    // Cập nhật vị trí trực tiếp trên state Alpine
+                    // Khi state thay đổi, Alpine sẽ tự sắp xếp và thay đổi DOM một cách an toàn.
                     items.forEach((id, idx) => {
                         const t = this.pendingTasks.find(item => item.id === id);
                         if (t) t.position = idx + 1;
                     });
+                    
+                    // Force AlpineJS re-evaluation
+                    this.pendingTasks = [...this.pendingTasks];
 
                     this.lastSyncedTime = Date.now();
 
@@ -2117,8 +2131,6 @@ document.addEventListener('alpine:init', () => {
                                 body: JSON.stringify({ items })
                             });
                             const data = await response.json();
-                            // Ẩn thông báo khi kéo thả để tránh rác màn hình khi thao tác nhanh
-                            // if (data.success) { this.showToast('Đã cập nhật thứ tự công việc & đồng bộ Realtime!'); }
                         } catch (e) {
                             console.error(e);
                         }
