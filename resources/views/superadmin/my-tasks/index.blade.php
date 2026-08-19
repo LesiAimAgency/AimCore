@@ -46,8 +46,8 @@
                 </select>
             </template>
 
-            {{-- Sorting Mode (Nằm bên phải cùng) --}}
-            <select x-model="sortMode" class="px-3 py-2 border border-indigo-200 bg-indigo-50/70 text-[#001B4E] font-medium rounded-lg focus:ring-2 focus:ring-[#001B4E] outline-none text-sm cursor-pointer max-w-[170px]">
+            {{-- Sorting Mode (Nằm bên phải cùng, ẩn ở tab Đã hoàn thành) --}}
+            <select x-show="activeTab === 'pending'" x-model="sortMode" class="px-3 py-2 border border-indigo-200 bg-indigo-50/70 text-[#001B4E] font-medium rounded-lg focus:ring-2 focus:ring-[#001B4E] outline-none text-sm cursor-pointer max-w-[170px]">
                 <option value="manual">Quan trọng</option>
                 <option value="deadline">Khẩn cấp</option>
             </select>
@@ -1651,10 +1651,10 @@ document.addEventListener('alpine:init', () => {
                 const matchSearch = t.title.toLowerCase().includes(this.searchQuery.toLowerCase())
                     || (t.assignee_name && t.assignee_name.toLowerCase().includes(this.searchQuery.toLowerCase()));
                 const matchProject = this.filterProject === '' || t.project_id == this.filterProject;
-                const matchDepartment = this.filterDepartment === '' || t.department == this.filterDepartment;
-                const matchAssignee = this.filterAssignee === '' || t.assigned_to == this.filterAssignee;
+                const matchDepartment = this.filterDepartment === '' || t.assignee_department === this.filterDepartment;
+                const matchUser = this.filterUser === '' || t.assigned_to == this.filterUser || t.user_id == this.filterUser;
                 
-                return matchSearch && matchProject && matchDepartment && matchAssignee;
+                return matchSearch && matchProject && matchDepartment && matchUser;
             });
         },
 
