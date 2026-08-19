@@ -1265,6 +1265,7 @@ document.addEventListener('alpine:init', () => {
         isSaving: false,
         isUpdating: false,
         isDragging: false,
+        reorderTimeout: null,
 
         form: {
             title: '',
@@ -1802,6 +1803,13 @@ document.addEventListener('alpine:init', () => {
         },
 
         async approveTask(taskId) {
+            const idx = this.pendingTasks.findIndex(t => t.id === taskId);
+            if (idx === -1) return;
+            const originalTask = JSON.parse(JSON.stringify(this.pendingTasks[idx]));
+            
+            // Optimistic Update
+            this.pendingTasks[idx].approval_status = 'approved';
+
             try {
                 const response = await fetch(`{{ url('superadmin/my-tasks') }}/${taskId}/approve`, {
                     method: 'PATCH',
@@ -1813,13 +1821,14 @@ document.addEventListener('alpine:init', () => {
                 });
                 const data = await response.json();
                 if (data.success && data.task) {
-                    const idx = this.pendingTasks.findIndex(t => t.id === taskId);
-                    if (idx !== -1) this.pendingTasks[idx] = data.task;
+                    this.pendingTasks[idx] = data.task;
                     this.showToast('Đã duyệt công việc!');
                 } else {
+                    this.pendingTasks[idx] = originalTask; // Revert
                     this.showToast(data.message || 'Lỗi khi duyệt task.', 'error');
                 }
             } catch (err) {
+                this.pendingTasks[idx] = originalTask; // Revert
                 console.error(err);
                 this.showToast('Không thể kết nối máy chủ.', 'error');
             }
@@ -1834,6 +1843,13 @@ document.addEventListener('alpine:init', () => {
         },
 
         async acceptTask(taskId) {
+            const idx = this.pendingTasks.findIndex(t => t.id === taskId);
+            if (idx === -1) return;
+            const originalTask = JSON.parse(JSON.stringify(this.pendingTasks[idx]));
+            
+            // Optimistic Update
+            this.pendingTasks[idx].acceptance_status = 'accepted';
+
             try {
                 const response = await fetch(`{{ url('superadmin/my-tasks') }}/${taskId}/accept`, {
                     method: 'PATCH',
@@ -1845,13 +1861,14 @@ document.addEventListener('alpine:init', () => {
                 });
                 const data = await response.json();
                 if (data.success && data.task) {
-                    const idx = this.pendingTasks.findIndex(t => t.id === taskId);
-                    if (idx !== -1) this.pendingTasks[idx] = data.task;
+                    this.pendingTasks[idx] = data.task;
                     this.showToast('Đã nhận việc thành công!');
                 } else {
+                    this.pendingTasks[idx] = originalTask; // Revert
                     this.showToast(data.message || 'Lỗi khi nhận việc.', 'error');
                 }
             } catch (err) {
+                this.pendingTasks[idx] = originalTask; // Revert
                 console.error(err);
                 this.showToast('Không thể kết nối máy chủ.', 'error');
             }
@@ -1947,6 +1964,15 @@ document.addEventListener('alpine:init', () => {
         },
 
         async completeTask(taskId) {
+            const idx = this.pendingTasks.findIndex(t => t.id === taskId);
+            if (idx === -1) return;
+            const task = this.pendingTasks[idx];
+
+            // Optimistic Update
+            this.pendingTasks = this.pendingTasks.filter(t => t.id !== taskId);
+            const optimisticCompleted = { ...task, status: 'completed', completed_at: new Date().toLocaleString('vi-VN'), gold_awarded: false };
+            this.completedTasks.unshift(optimisticCompleted);
+
             try {
                 const response = await fetch(`{{ url('superadmin/my-tasks') }}/${taskId}/complete`, {
                     method: 'PATCH',
@@ -1958,18 +1984,21 @@ document.addEventListener('alpine:init', () => {
                 });
                 const data = await response.json();
                 if (data.success) {
-                    const task = this.pendingTasks.find(t => t.id === taskId);
-                    if (task) {
-                        this.pendingTasks = this.pendingTasks.filter(t => t.id !== taskId);
-                        task.completed_at = new Date().toLocaleString('vi-VN');
-                        task.gold_awarded = false; // Chưa trao gold ngay
-                        this.completedTasks.unshift(data.task || task);
+                    const cIdx = this.completedTasks.findIndex(t => t.id === taskId);
+                    if (cIdx !== -1) {
+                        this.completedTasks[cIdx] = data.task || optimisticCompleted;
                     }
                     this.showToast(data.message || 'Đã báo cáo hoàn thành! Chờ Quản lý duyệt Gold.');
                 } else {
+                    // Revert on error
+                    this.completedTasks = this.completedTasks.filter(t => t.id !== taskId);
+                    this.pendingTasks.unshift(task);
                     this.showToast(data.message || 'Lỗi khi hoàn thành.', 'error');
                 }
             } catch (err) {
+                // Revert on error
+                this.completedTasks = this.completedTasks.filter(t => t.id !== taskId);
+                this.pendingTasks.unshift(task);
                 console.error(err);
                 this.showToast('Không thể kết nối máy chủ.', 'error');
             }
@@ -2005,6 +2034,15 @@ document.addEventListener('alpine:init', () => {
         },
 
         async restoreTask(taskId) {
+            const idx = this.completedTasks.findIndex(t => t.id === taskId);
+            if (idx === -1) return;
+            const task = this.completedTasks[idx];
+
+            // Optimistic update
+            this.completedTasks = this.completedTasks.filter(t => t.id !== taskId);
+            const optimisticPending = { ...task, status: 'todo' };
+            this.pendingTasks.push(optimisticPending);
+
             try {
                 const response = await fetch(`{{ url('superadmin/my-tasks') }}/${taskId}/restore`, {
                     method: 'PATCH',
@@ -2016,16 +2054,24 @@ document.addEventListener('alpine:init', () => {
                 });
                 const data = await response.json();
                 if (data.success && data.task) {
-                    this.completedTasks = this.completedTasks.filter(t => t.id !== taskId);
-                    this.pendingTasks.push(data.task);
+                    const pIdx = this.pendingTasks.findIndex(t => t.id === taskId);
+                    if (pIdx !== -1) {
+                        this.pendingTasks[pIdx] = data.task;
+                    }
                     if (data.user_gold !== undefined) {
                         this.updateHeaderGold(data.user_gold);
                     }
                     this.showToast(data.message || 'Đã khôi phục công việc!');
                 } else {
+                    // Revert on error
+                    this.pendingTasks = this.pendingTasks.filter(t => t.id !== taskId);
+                    this.completedTasks.unshift(task);
                     this.showToast(data.message || 'Lỗi khi khôi phục.', 'error');
                 }
             } catch (err) {
+                // Revert on error
+                this.pendingTasks = this.pendingTasks.filter(t => t.id !== taskId);
+                this.completedTasks.unshift(task);
                 console.error(err);
                 this.showToast('Không thể kết nối máy chủ.', 'error');
             }
@@ -2056,23 +2102,27 @@ document.addEventListener('alpine:init', () => {
 
                     this.lastSyncedTime = Date.now();
 
-                    try {
-                        const response = await fetch('{{ route('superadmin.my-tasks.reorder') }}', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({ items })
-                        });
-                        const data = await response.json();
-                        if (data.success) {
-                            this.showToast('Đã cập nhật thứ tự công việc & đồng bộ Realtime!');
+                    // Debounce API call (chống dội): Đợi 500ms sau khi ngừng kéo mới gọi Server
+                    if (this.reorderTimeout) clearTimeout(this.reorderTimeout);
+                    
+                    this.reorderTimeout = setTimeout(async () => {
+                        try {
+                            const response = await fetch('{{ route('superadmin.my-tasks.reorder') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({ items })
+                            });
+                            const data = await response.json();
+                            // Ẩn thông báo khi kéo thả để tránh rác màn hình khi thao tác nhanh
+                            // if (data.success) { this.showToast('Đã cập nhật thứ tự công việc & đồng bộ Realtime!'); }
+                        } catch (e) {
+                            console.error(e);
                         }
-                    } catch (e) {
-                        console.error(e);
-                    }
+                    }, 500);
                 }
             });
         }
