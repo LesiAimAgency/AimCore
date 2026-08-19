@@ -2121,7 +2121,8 @@ document.addEventListener('alpine:init', () => {
             if (!grid) return;
 
             new Sortable(grid, {
-                animation: 150,
+                animation: 350,
+                easing: "cubic-bezier(0.25, 1, 0.5, 1)",
                 ghostClass: 'task-ghost',
                 dragClass: 'task-drag',
                 fallbackClass: 'task-fallback',
