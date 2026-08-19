@@ -21,6 +21,7 @@ use App\Http\Controllers\SuperAdmin\TenantController;
 use App\Http\Controllers\SuperAdmin\TestExportController;
 use App\Http\Controllers\SuperAdmin\TicketController;
 use App\Http\Controllers\SuperAdmin\WebsiteController;
+use App\Http\Controllers\SuperAdmin\SystemLogController;
 use App\Http\Controllers\SuperAdmin\DepartmentController;
 use App\Http\Controllers\SuperAdmin\ServiceController;
 use App\Http\Controllers\SuperAdmin\ServiceStageController;
@@ -38,6 +39,10 @@ Route::middleware([
 ])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/multi-tenancy', [DashboardController::class, 'multiTenancy'])->name('multi-tenancy');
+    
+    // System Logs
+    Route::get('/logs', [SystemLogController::class, 'index'])->name('logs.index');
+    Route::get('/logs/{filename}/download', [SystemLogController::class, 'download'])->name('logs.download');
 
     // ── Công việc của tôi (Personal Tasks & Team Tasks) ────────────
     Route::get('my-tasks', [MyTaskController::class, 'index'])->name('my-tasks.index');

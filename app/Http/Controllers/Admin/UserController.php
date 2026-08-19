@@ -256,8 +256,6 @@ class UserController extends Controller
                 if ($firstRole) {
                     $user->update(['role' => $firstRole->name]);
                 }
-            } else {
-                $user->update(['role' => 'visitor']);
             }
         }
 
@@ -272,8 +270,7 @@ class UserController extends Controller
             );
         }
 
-        return redirect($this->getIndexRoute())
-            ->with('success', 'User updated successfully.');
+        return back()->with('success', 'Cập nhật tài khoản thành công!');
     }
 
     /**

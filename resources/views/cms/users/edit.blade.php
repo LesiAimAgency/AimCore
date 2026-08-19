@@ -16,6 +16,13 @@
         @csrf
         @method('PUT')
 
+        @if(session('success'))
+            <div class="mb-6 p-4 rounded-lg bg-green-100 text-green-800 border border-green-200">
+                {{ session('success') }}
+            </div>
+        @endif
+
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Cột trái -->
             <div class="space-y-6">

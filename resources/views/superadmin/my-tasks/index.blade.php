@@ -1016,13 +1016,6 @@
 
                     {{-- Navigation & Date controls --}}
                     <div class="flex items-center gap-2">
-                        <button
-                            type="button"
-                            @click="calToday()"
-                            class="px-3.5 py-1.5 rounded-lg border border-gray-300 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors shadow-2xs cursor-pointer"
-                        >
-                            Hôm nay
-                        </button>
                         <div class="flex items-center rounded-lg border border-gray-300 overflow-hidden shadow-2xs">
                             <button
                                 type="button"
@@ -1116,7 +1109,8 @@
 
                                     <template x-if="day.tasks.length > 3">
                                         <div
-                                            class="w-full text-center text-[10px] font-bold text-indigo-700 bg-indigo-50/80 py-0.5 rounded-sm"
+                                            @click.stop="calSelectedDay = day"
+                                            class="w-full text-center text-[10px] font-bold text-indigo-700 bg-indigo-50/80 hover:bg-indigo-100 transition-colors py-0.5 rounded-sm cursor-pointer"
                                             x-text="'+' + (day.tasks.length - 3) + ' việc khác...'"
                                         ></div>
                                     </template>
@@ -1156,6 +1150,40 @@
                         Đóng
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- OVERLAY MODAL FOR ALL TASKS IN A DAY --}}
+    <div x-show="calSelectedDay" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50" style="display: none;" aria-modal="true" role="dialog">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm max-h-[80vh] flex flex-col overflow-hidden" @click.outside="calSelectedDay = null">
+            <div class="px-4 py-3 border-b flex justify-between items-center bg-gray-50">
+                <h3 class="font-bold text-[#001B4E]">Tất cả công việc ngày <span x-text="calSelectedDay?.dayNumber"></span></h3>
+                <button @click="calSelectedDay = null" class="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer p-1 rounded-md hover:bg-gray-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="p-3 overflow-y-auto space-y-2 flex-1">
+                <template x-if="calSelectedDay">
+                    <template x-for="t in calSelectedDay.tasks" :key="'cal-more-'+t.id">
+                        <div
+                            @click="calSelectedDay = null; openDetailModal(t)"
+                            class="p-2 rounded-md text-xs font-medium cursor-pointer transition-all shadow-sm border flex items-center justify-between gap-2 group hover:bg-gray-50"
+                            :class="getCalTaskBadgeClass(t)"
+                            :title="t.title + ' (' + (t.status === 'completed' ? 'Đã hoàn thành' : 'Deadline') + ')'"
+                        >
+                            <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                                <span class="w-2 h-2 rounded-full flex-shrink-0" :class="getCalTaskDotClass(t)"></span>
+                                <span class="truncate font-semibold text-gray-900 group-hover:text-indigo-700" x-text="t.title"></span>
+                            </div>
+                            @if(config('features.gold_enabled'))
+                            <template x-if="t.gold > 0">
+                                <span class="text-[10px] font-bold text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-sm flex-shrink-0" x-text="'+' + t.gold + 'G'"></span>
+                            </template>
+                            @endif
+                        </div>
+                    </template>
+                </template>
             </div>
         </div>
     </div>
@@ -1316,6 +1344,7 @@ document.addEventListener('alpine:init', () => {
         calYear: new Date().getFullYear(),
         calMonth: new Date().getMonth(), // 0 - 11
         calFilterProject: '',
+        calSelectedDay: null,
 
         // Reassign State
         showReassignModal: false,
