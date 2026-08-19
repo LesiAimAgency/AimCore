@@ -59,7 +59,7 @@ class UserController extends Controller
         }
 
         $users = $query->paginate(15);
-        $roles = Role::all();
+        $roles = Role::where('name', '!=', 'visitor')->get();
 
         return view('cms.users.index', compact('users', 'roles'));
     }
@@ -69,7 +69,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
+        $roles = Role::where('name', '!=', 'visitor')->get();
         $managers = User::where('status', true)
             ->where(function($q) {
                 $q->where('role', 'manager')
@@ -177,7 +177,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $roles = Role::all();
+        $roles = Role::where('name', '!=', 'visitor')->get();
         $managers = User::where('status', true)
             ->where('id', '!=', $user->id)
             ->where(function($q) {
