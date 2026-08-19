@@ -42,7 +42,9 @@ Route::middleware([
     
     // System Logs
     Route::get('/logs', [SystemLogController::class, 'index'])->name('logs.index');
+    Route::get('/logs/{filename}/view', [SystemLogController::class, 'show'])->name('logs.show');
     Route::get('/logs/{filename}/download', [SystemLogController::class, 'download'])->name('logs.download');
+    Route::delete('/logs/{filename}', [SystemLogController::class, 'destroy'])->name('logs.destroy');
 
     // ── Công việc của tôi (Personal Tasks & Team Tasks) ────────────
     Route::get('my-tasks', [MyTaskController::class, 'index'])->name('my-tasks.index');
