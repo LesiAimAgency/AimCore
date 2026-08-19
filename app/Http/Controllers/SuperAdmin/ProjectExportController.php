@@ -407,6 +407,7 @@ Contact: support@vnglobaltech.com';
     {
         $sql = "-- Database export for {$project->name}\n";
         $sql .= '-- Generated on: '.now()->format('Y-m-d H:i:s')."\n\n";
+        $sql .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
 
         $dbName = 'project_'.strtolower($project->code);
         $sql .= "CREATE DATABASE IF NOT EXISTS `{$dbName}`;\n";
@@ -418,6 +419,8 @@ Contact: support@vnglobaltech.com';
             $table = array_values((array) $t)[0];
             $sql .= $this->exportTableSQL($table, $project);
         }
+
+        $sql .= "SET FOREIGN_KEY_CHECKS=1;\n";
 
         return $sql;
     }
