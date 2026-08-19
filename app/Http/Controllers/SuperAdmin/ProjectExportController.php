@@ -421,10 +421,12 @@ Contact: support@vnglobaltech.com';
         $sql .= "CREATE DATABASE IF NOT EXISTS `{$dbName}`;\n";
         $sql .= "USE `{$dbName}`;\n\n";
 
-        $sql .= "SET FOREIGN_KEY_CHECKS=0;\n";
-        $sql .= "SET SQL_MODE = \"NO_AUTO_VALUE_ON_ZERO\";\n";
-        $sql .= "SET AUTOCOMMIT = 0;\n";
-        $sql .= "START TRANSACTION;\n\n";
+        $sql .= "/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;\n";
+        $sql .= "/*!40101 SET NAMES utf8mb4 */;\n";
+        $sql .= "/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;\n";
+        $sql .= "/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;\n";
+        $sql .= "/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;\n";
+        $sql .= "/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;\n\n";
 
         $tables = DB::select('SHOW TABLES');
 
@@ -433,8 +435,11 @@ Contact: support@vnglobaltech.com';
             $sql .= $this->exportTableSQL($table, $project);
         }
 
-        $sql .= "COMMIT;\n";
-        $sql .= "SET FOREIGN_KEY_CHECKS=1;\n";
+        $sql .= "/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;\n";
+        $sql .= "/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;\n";
+        $sql .= "/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;\n";
+        $sql .= "/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;\n";
+        $sql .= "/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;\n";
 
         return $sql;
     }

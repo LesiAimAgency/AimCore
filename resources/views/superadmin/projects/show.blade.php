@@ -187,7 +187,7 @@
       @endif
       
       <!-- Hệ thống Task Kanban -->
-      <livewire:superadmin.project-kanban :project="$project" />
+      <livewire:super-admin.project-kanban :project="$project" />
     </div>
 
     <div class="space-y-6">
