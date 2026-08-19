@@ -18,6 +18,15 @@ use Illuminate\Support\Facades\File;
 
 class ProjectController extends Controller implements HasMiddleware
 {
+    public function deleteLogs(Project $project)
+    {
+        $logPath = storage_path("logs/file-changes-{$project->code}.log");
+        if (\Illuminate\Support\Facades\File::exists($logPath)) {
+            \Illuminate\Support\Facades\File::delete($logPath);
+        }
+        return redirect()->back()->with('success', 'Đã xóa toàn bộ log của dự án.');
+    }
+
     public static function middleware(): array
     {
         return [

@@ -13,6 +13,15 @@ use ZipArchive;
 
 class ProjectExportController extends Controller
 {
+    public function exportDatabaseOnly(Project $project)
+    {
+        $sql = $this->generateDatabaseSQL($project);
+        
+        return response($sql)
+            ->header('Content-Type', 'text/sql')
+            ->header('Content-Disposition', 'attachment; filename="database_'.strtolower($project->code).'.sql"');
+    }
+
     public function exportWebsite(Request $request, $projectCode)
     {
         // Tăng thời gian thực thi
@@ -407,11 +416,15 @@ Contact: support@vnglobaltech.com';
     {
         $sql = "-- Database export for {$project->name}\n";
         $sql .= '-- Generated on: '.now()->format('Y-m-d H:i:s')."\n\n";
-        $sql .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
 
         $dbName = 'project_'.strtolower($project->code);
         $sql .= "CREATE DATABASE IF NOT EXISTS `{$dbName}`;\n";
         $sql .= "USE `{$dbName}`;\n\n";
+
+        $sql .= "SET FOREIGN_KEY_CHECKS=0;\n";
+        $sql .= "SET SQL_MODE = \"NO_AUTO_VALUE_ON_ZERO\";\n";
+        $sql .= "SET AUTOCOMMIT = 0;\n";
+        $sql .= "START TRANSACTION;\n\n";
 
         $tables = DB::select('SHOW TABLES');
 
@@ -420,6 +433,7 @@ Contact: support@vnglobaltech.com';
             $sql .= $this->exportTableSQL($table, $project);
         }
 
+        $sql .= "COMMIT;\n";
         $sql .= "SET FOREIGN_KEY_CHECKS=1;\n";
 
         return $sql;

@@ -19,8 +19,14 @@
       <button onclick="copyToClipboard()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
         Copy JSON
       </button>
+      <a href="{{ route('superadmin.projects.export-database', $project) }}" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
+        </svg>
+        Tải Database (.sql)
+      </a>
       <a href="{{ route('superadmin.projects.export-config', $project) }}?format=download" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-        Download
+        Download Code
       </a>
     </div>
   </div>
