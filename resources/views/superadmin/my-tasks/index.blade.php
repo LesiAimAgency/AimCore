@@ -575,8 +575,9 @@
                                 Ngày bắt đầu
                             </label>
                             <input
-                                type="date"
+                                type="text"
                                 x-model="form.start_date"
+                                x-init="flatpickr($el, { dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', locale: 'vn' })"
                                 class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none"
                             >
                         </div>
@@ -585,8 +586,9 @@
                                 Deadline <span class="text-red-500">*</span>
                             </label>
                             <input
-                                type="date"
+                                type="text"
                                 x-model="form.deadline"
+                                x-init="flatpickr($el, { dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', locale: 'vn' })"
                                 class="w-full rounded-lg border px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none"
                                 :class="formErrors.deadline ? 'border-red-400 bg-red-50/20' : 'border-gray-300'"
                             >
@@ -731,8 +733,9 @@
                             Deadline <span class="text-red-500">*</span>
                         </label>
                         <input
-                            type="date"
+                            type="text"
                             x-model="editForm.deadline"
+                            x-init="flatpickr($el, { dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', locale: 'vn' })"
                             required
                             class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none"
                         >
@@ -1267,13 +1270,17 @@
         cursor: grabbing !important;
         z-index: 999999 !important;
         border-radius: 0.75rem !important;
+        pointer-events: none !important;
     }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 @endpush
 
 @push('scripts')
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
 <script>
 document.addEventListener('alpine:init', () => {
     Alpine.data('myTasksApp', () => ({
@@ -1301,7 +1308,10 @@ document.addEventListener('alpine:init', () => {
             project_id: '',
             gold: 100,
             assigned_to: '',
-            start_date: new Date().toISOString().split('T')[0],
+            start_date: (function() {
+                const d = new Date();
+                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            })(),
             deadline: ''
         },
         formErrors: {},
@@ -2113,8 +2123,11 @@ document.addEventListener('alpine:init', () => {
             new Sortable(grid, {
                 animation: 150,
                 ghostClass: 'task-ghost',
+                dragClass: 'task-drag',
                 fallbackClass: 'task-fallback',
                 forceFallback: true,
+                fallbackOnBody: true,
+                fallbackTolerance: 3,
                 draggable: '[data-task-id]',
                 onStart: (evt) => {
                     this.isDragging = true;
