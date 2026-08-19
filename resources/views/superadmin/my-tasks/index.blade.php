@@ -1544,7 +1544,7 @@ document.addEventListener('alpine:init', () => {
                 if (data.has_changed && data.pendingTasks) {
                     const lastChange = data.last_change;
                     
-                    // Nếu sự kiện do user khác tạo ra -> cập nhật và hiện popup
+                    // Nếu sự kiện do user khác tạo ra -> cập nhật bảng dữ liệu
                     if (lastChange && Number(lastChange.user_id) !== Number(this.currentUserId)) {
                         this.pendingTasks = data.pendingTasks;
                         this.completedTasks = data.completedTasks;
@@ -1553,7 +1553,18 @@ document.addEventListener('alpine:init', () => {
                             this.updateHeaderGold(data.user_gold);
                         }
 
-                        this.triggerRealtimePopup(lastChange.message || 'Dữ liệu công việc vừa được cập nhật!');
+                        // Chỉ hiện popup thông báo nếu thao tác này có liên quan tới user hiện tại
+                        // hoặc user hiện tại là PM/Admin (có thể mở rộng sau).
+                        let shouldNotify = false;
+                        if (lastChange.involved_users && Array.isArray(lastChange.involved_users)) {
+                            if (lastChange.involved_users.includes(Number(this.currentUserId))) {
+                                shouldNotify = true;
+                            }
+                        }
+
+                        if (shouldNotify) {
+                            this.triggerRealtimePopup(lastChange.message || 'Dữ liệu công việc vừa được cập nhật!');
+                        }
                     } else if (manual) {
                         this.pendingTasks = data.pendingTasks;
                         this.completedTasks = data.completedTasks;
@@ -1640,7 +1651,10 @@ document.addEventListener('alpine:init', () => {
                 const matchSearch = t.title.toLowerCase().includes(this.searchQuery.toLowerCase())
                     || (t.assignee_name && t.assignee_name.toLowerCase().includes(this.searchQuery.toLowerCase()));
                 const matchProject = this.filterProject === '' || t.project_id == this.filterProject;
-                return matchSearch && matchProject;
+                const matchDepartment = this.filterDepartment === '' || t.department == this.filterDepartment;
+                const matchAssignee = this.filterAssignee === '' || t.assigned_to == this.filterAssignee;
+                
+                return matchSearch && matchProject && matchDepartment && matchAssignee;
             });
         },
 

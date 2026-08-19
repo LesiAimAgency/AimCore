@@ -206,7 +206,7 @@ class MyTaskController extends Controller
 
         $task->load(['project', 'creator', 'assignedUser']);
 
-        $this->recordTaskChange('create', "{$user->name} vừa tạo công việc: {$task->title}");
+        $this->recordTaskChange('create', "{$user->name} vừa tạo công việc: {$task->title}", [$task->assigned_to]);
 
         return response()->json([
             'success' => true,
@@ -279,7 +279,7 @@ class MyTaskController extends Controller
         $taskModel->update($updateData);
         $taskModel->load(['project', 'creator', 'assignedUser']);
 
-        $this->recordTaskChange('update', "{$user->name} vừa cập nhật công việc: {$taskModel->title}");
+        $this->recordTaskChange('update', "{$user->name} vừa cập nhật công việc: {$taskModel->title}", [$taskModel->assigned_to]);
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -309,7 +309,7 @@ class MyTaskController extends Controller
 
         $this->recalculatePositions($taskModel->user_id);
 
-        $this->recordTaskChange('delete', "{$user->name} vừa xóa công việc: {$taskTitle}");
+        $this->recordTaskChange('delete', "{$user->name} vừa xóa công việc: {$taskTitle}", [$taskModel->assigned_to]);
 
         return response()->json([
             'success' => true,
@@ -335,7 +335,7 @@ class MyTaskController extends Controller
         ]);
         $taskModel->load(['project', 'creator', 'assignedUser']);
 
-        $this->recordTaskChange('approve', "Quản lý {$user->name} vừa duyệt công việc: {$taskModel->title}");
+        $this->recordTaskChange('approve', "Quản lý {$user->name} vừa duyệt công việc: {$taskModel->title}", [$taskModel->assigned_to]);
 
         return response()->json([
             'success' => true,
@@ -362,7 +362,7 @@ class MyTaskController extends Controller
         ]);
         $taskModel->load(['project', 'creator', 'assignedUser']);
 
-        $this->recordTaskChange('reject_approval', "Quản lý {$user->name} đã từ chối duyệt: {$taskModel->title}");
+        $this->recordTaskChange('reject_approval', "Quản lý {$user->name} đã từ chối duyệt: {$taskModel->title}", [$taskModel->assigned_to]);
 
         return response()->json([
             'success' => true,
@@ -390,7 +390,7 @@ class MyTaskController extends Controller
         ]);
         $taskModel->load(['project', 'creator', 'assignedUser']);
 
-        $this->recordTaskChange('accept', "Nhân sự {$user->name} đã nhận việc: {$taskModel->title}");
+        $this->recordTaskChange('accept', "Nhân sự {$user->name} đã nhận việc: {$taskModel->title}", [$taskModel->assigned_to]);
 
         return response()->json([
             'success' => true,
@@ -439,7 +439,7 @@ class MyTaskController extends Controller
 
         $taskModel->load(['project', 'creator', 'assignedUser']);
 
-        $this->recordTaskChange('reassign', "Quản lý {$user->name} đã điều phối lại công việc: {$taskModel->title} cho {$newAssignee->name}");
+        $this->recordTaskChange('reassign', "Quản lý {$user->name} đã điều phối lại công việc: {$taskModel->title} cho {$newAssignee->name}", [$taskModel->assigned_to, $newAssignee->id]);
 
         return response()->json([
             'success' => true,
@@ -466,7 +466,7 @@ class MyTaskController extends Controller
         ]);
         $taskModel->load(['project', 'creator', 'assignedUser']);
 
-        $this->recordTaskChange('decline', "Nhân sự {$user->name} đã từ chối việc: {$taskModel->title}");
+        $this->recordTaskChange('decline', "Nhân sự {$user->name} đã từ chối việc: {$taskModel->title}", [$taskModel->assigned_to]);
 
         return response()->json([
             'success' => true,
@@ -510,7 +510,7 @@ class MyTaskController extends Controller
             }
         });
 
-        $this->recordTaskChange('reorder', ($isAdminOrPm ? "Quản lý {$user->name}" : "Nhân sự {$user->name}").' vừa điều chỉnh lại thứ tự ưu tiên của các công việc.');
+        $this->recordTaskChange('reorder', ($isAdminOrPm ? "Quản lý {$user->name}" : "Nhân sự {$user->name}").' vừa điều chỉnh lại thứ tự ưu tiên của các công việc.', []);
 
         return response()->json([
             'success' => true,
@@ -547,7 +547,7 @@ class MyTaskController extends Controller
         $this->recalculatePositions($taskModel->user_id);
         $taskModel->load(['project', 'creator', 'assignedUser']);
 
-        $this->recordTaskChange('complete', "Nhân sự {$user->name} vừa báo cáo hoàn thành: {$taskModel->title}");
+        $this->recordTaskChange('complete', "Nhân sự {$user->name} vừa báo cáo hoàn thành: {$taskModel->title}", [$taskModel->assigned_to]);
 
         $message = $goldAmount > 0
             ? "Đã đánh dấu hoàn thành! Chờ Quản lý duyệt nghiệm thu để nhận +{$goldAmount} Gold."
@@ -611,7 +611,7 @@ class MyTaskController extends Controller
         $freshUser = User::find($user->id);
         $recipient = User::find($recipientId);
 
-        $this->recordTaskChange('approve_gold', "Quản lý {$user->name} đã duyệt trao thưởng +{$goldAmount} Gold cho {$recipient?->name}!");
+        $this->recordTaskChange('approve_gold', "Quản lý {$user->name} đã duyệt trao thưởng +{$goldAmount} Gold cho {$recipient?->name}!", [$recipient?->id ?? 0]);
 
         return response()->json([
             'success' => true,
@@ -669,7 +669,7 @@ class MyTaskController extends Controller
 
         $freshUser = User::find($user->id);
 
-        $this->recordTaskChange('restore', "Quản lý {$user->name} đã khôi phục công việc: {$taskModel->title}");
+        $this->recordTaskChange('restore', "Quản lý {$user->name} đã khôi phục công việc: {$taskModel->title}", [$taskModel->assigned_to]);
 
         return response()->json([
             'success' => true,
@@ -684,7 +684,7 @@ class MyTaskController extends Controller
     /**
      * Ghi nhận sự thay đổi dữ liệu để realtime sync cho các nhân sự khác.
      */
-    protected function recordTaskChange(string $action, string $message): void
+    protected function recordTaskChange(string $action, string $message, array $involvedUsers = []): void
     {
         $user = auth()->user();
         Cache::put('my_tasks_last_change', [
@@ -693,6 +693,7 @@ class MyTaskController extends Controller
             'user_name' => $user?->name ?? 'Hệ thống',
             'action' => $action,
             'message' => $message,
+            'involved_users' => $involvedUsers,
         ], 3600);
 
         // Đẩy thẳng vào System Logs (Log 7 ngày)
