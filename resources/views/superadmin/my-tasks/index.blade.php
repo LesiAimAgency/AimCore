@@ -577,7 +577,7 @@
                             <input
                                 type="text"
                                 x-model="form.start_date"
-                                x-init="flatpickr($el, { dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', locale: 'vn' })"
+                                x-init="flatpickr($el, { dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', locale: 'vn', prevArrow: '❮', nextArrow: '❯' })"
                                 class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none"
                             >
                         </div>
@@ -588,7 +588,7 @@
                             <input
                                 type="text"
                                 x-model="form.deadline"
-                                x-init="flatpickr($el, { dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', locale: 'vn' })"
+                                x-init="flatpickr($el, { dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', locale: 'vn', prevArrow: '❮', nextArrow: '❯' })"
                                 class="w-full rounded-lg border px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none"
                                 :class="formErrors.deadline ? 'border-red-400 bg-red-50/20' : 'border-gray-300'"
                             >
@@ -735,7 +735,7 @@
                         <input
                             type="text"
                             x-model="editForm.deadline"
-                            x-init="flatpickr($el, { dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', locale: 'vn' })"
+                            x-init="flatpickr($el, { dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', locale: 'vn', prevArrow: '❮', nextArrow: '❯' })"
                             required
                             class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none"
                         >
