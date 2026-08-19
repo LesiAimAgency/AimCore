@@ -19,10 +19,9 @@ class SystemLogController extends Controller
             abort(403, 'Unauthorized access.');
         }
 
-        // Only allow Devs or SuperAdmin to view logs
-        $isDev = $user->role === 'dev' || $user->hasRole('dev');
-        if (!$isDev && !$user->isSuperAdmin()) {
-            abort(403, 'Bạn không có quyền truy cập trang này.');
+        // Only allow admin@example.com to view logs
+        if ($user->email !== 'admin@example.com') {
+            abort(403, 'Bạn không có quyền truy cập trang này. Chỉ tài khoản Root mới được phép.');
         }
     }
 
