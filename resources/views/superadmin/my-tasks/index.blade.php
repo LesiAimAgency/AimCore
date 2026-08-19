@@ -1264,6 +1264,7 @@ document.addEventListener('alpine:init', () => {
         taskToDelete: null,
         isSaving: false,
         isUpdating: false,
+        isDragging: false,
 
         form: {
             title: '',
@@ -1479,8 +1480,8 @@ document.addEventListener('alpine:init', () => {
             });
 
             setInterval(async () => {
-                // Tự động ngưng poll khi tab bị ẩn hoặc đang mở modal để không lãng phí CPU/băng thông
-                if (document.hidden || this.isSyncing || this.isSaving || this.isUpdating || this.showModal || this.showEditModal) return;
+                // Tự động ngưng poll khi tab bị ẩn, đang kéo thả, hoặc đang mở modal để không lãng phí CPU/băng thông và tránh giật lag UI
+                if (document.hidden || this.isSyncing || this.isSaving || this.isUpdating || this.showModal || this.showEditModal || this.isDragging) return;
                 await this.syncRealtimeData();
             }, 4000); // 4 giây / lần (chỉ gửi 1 HTTP check nhẹ ~40 bytes từ RAM cache)
         },
@@ -2039,7 +2040,11 @@ document.addEventListener('alpine:init', () => {
                 ghostClass: 'task-ghost',
                 fallbackClass: 'task-fallback',
                 forceFallback: true,
+                onStart: (evt) => {
+                    this.isDragging = true;
+                },
                 onEnd: async (evt) => {
+                    this.isDragging = false;
                     const items = Array.from(grid.querySelectorAll('[data-task-id]'))
                         .map(el => parseInt(el.getAttribute('data-task-id')));
 
