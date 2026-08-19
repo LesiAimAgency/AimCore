@@ -31,16 +31,32 @@
     </div>
 
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
-            <span class="text-sm font-semibold text-gray-700">{{ $filename }}</span>
-            <span class="text-xs font-medium text-gray-500">{{ number_format(strlen($content) / 1024, 2) }} KB</span>
+        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4 w-full md:w-auto">
+                <span class="text-sm font-semibold text-gray-700">{{ $filename }}</span>
+                <span class="text-xs font-medium text-gray-500 bg-gray-200 px-2 py-1 rounded">{{ number_format(strlen($content) / 1024, 2) }} KB</span>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto text-sm">
+                <input type="text" id="filter-user" placeholder="Lọc theo tên người dùng..." class="border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-1.5 w-full sm:w-48 text-sm">
+                
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <input type="time" id="filter-time-start" class="border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 px-2 py-1.5 text-sm" title="Giờ bắt đầu">
+                    <span class="text-gray-500">-</span>
+                    <input type="time" id="filter-time-end" class="border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 px-2 py-1.5 text-sm" title="Giờ kết thúc">
+                </div>
+                
+                <button type="button" id="btn-clear-filters" class="text-gray-500 hover:text-red-600 px-2 py-1.5 text-xs font-medium whitespace-nowrap">
+                    Xóa lọc
+                </button>
+            </div>
         </div>
         
         <div class="overflow-x-auto">
             @if(empty($parsedLogs))
                 <div class="text-gray-500 text-center py-8 italic">File log trống. Chưa có lịch sử hoạt động nào được ghi lại.</div>
             @else
-                <table class="min-w-full divide-y divide-gray-200">
+                <table class="min-w-full divide-y divide-gray-200" id="logs-table">
                     <thead class="bg-gray-50">
                         <tr>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-48">Thời gian</th>
@@ -51,13 +67,13 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($parsedLogs as $log)
-                            <tr class="hover:bg-gray-50 transition-colors">
+                            <tr class="hover:bg-gray-50 transition-colors log-row">
                                 @if(isset($log['time']))
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono log-time" data-time="{{ substr($log['time'], 11, 5) }}">
                                         {{ $log['time'] }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ $log['user'] }}</div>
+                                        <div class="text-sm font-medium text-gray-900 log-user">{{ $log['user'] }}</div>
                                     </td>
                                     <td class="px-6 py-4">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ str_contains(strtolower($log['action']), 'log') ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' }}">
@@ -85,8 +101,88 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div id="no-results" class="hidden text-gray-500 text-center py-8 italic">Không tìm thấy kết quả nào phù hợp với bộ lọc.</div>
             @endif
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterUser = document.getElementById('filter-user');
+    const filterTimeStart = document.getElementById('filter-time-start');
+    const filterTimeEnd = document.getElementById('filter-time-end');
+    const btnClear = document.getElementById('btn-clear-filters');
+    const rows = document.querySelectorAll('.log-row');
+    const noResults = document.getElementById('no-results');
+    
+    function applyFilters() {
+        if (!filterUser) return;
+        
+        const userKeyword = filterUser.value.toLowerCase().trim();
+        const timeStart = filterTimeStart.value; // format: HH:mm
+        const timeEnd = filterTimeEnd.value; // format: HH:mm
+        
+        let visibleCount = 0;
+        
+        rows.forEach(row => {
+            let showRow = true;
+            
+            // Nếu dòng bị lỗi parse (ko có data)
+            const userEl = row.querySelector('.log-user');
+            const timeEl = row.querySelector('.log-time');
+            
+            if (userEl && timeEl) {
+                const userName = userEl.textContent.toLowerCase();
+                const logTime = timeEl.getAttribute('data-time'); // HH:mm
+                
+                // Lọc theo người dùng
+                if (userKeyword && !userName.includes(userKeyword)) {
+                    showRow = false;
+                }
+                
+                // Lọc theo giờ
+                if (timeStart && logTime < timeStart) {
+                    showRow = false;
+                }
+                
+                if (timeEnd && logTime > timeEnd) {
+                    showRow = false;
+                }
+            } else {
+                // Các dòng raw (lỗi) - có thể chọn ẩn luôn hoặc show nếu ko filter
+                if (userKeyword || timeStart || timeEnd) {
+                    showRow = false;
+                }
+            }
+            
+            if (showRow) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        
+        if (noResults) {
+            noResults.classList.toggle('hidden', visibleCount > 0);
+        }
+    }
+    
+    if (filterUser) {
+        filterUser.addEventListener('input', applyFilters);
+        filterTimeStart.addEventListener('input', applyFilters);
+        filterTimeEnd.addEventListener('input', applyFilters);
+        
+        btnClear.addEventListener('click', function() {
+            filterUser.value = '';
+            filterTimeStart.value = '';
+            filterTimeEnd.value = '';
+            applyFilters();
+        });
+    }
+});
+</script>
+@endpush
 @endsection
