@@ -73,7 +73,6 @@
                         <div>
                             <x-form.label value="Hợp đồng liên quan (Đã duyệt)" />
                             <x-form.select name="contract_id">
-                                <option value="">-- Chọn Hợp đồng --</option>
                                 @foreach($contracts as $contract)
                                 <option value="{{ $contract->id }}" {{ old('contract_id') == $contract->id ? 'selected' : '' }}>
                                     {{ $contract->title }} - {{ $contract->client_name }}
