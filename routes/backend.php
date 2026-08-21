@@ -4,6 +4,8 @@
 // All CMS functionality moved to project-specific routes: /{projectCode}/admin/*
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\ShippingEngineController;
 use App\Http\Controllers\SuperAdmin\ProjectController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,9 +18,34 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // Project Management (Super Admin only)
     Route::resource('projects', ProjectController::class);
 
-    // Global System Settings (Super Admin only) - TODO: Create controllers
-    // Route::get('system-settings', [\App\Http\Controllers\SuperAdmin\SystemController::class, 'index'])->name('system.settings');
-    // Route::post('system-settings', [\App\Http\Controllers\SuperAdmin\SystemController::class, 'save'])->name('system.settings.save');
+    // Global System Settings
+    Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::post('settings', [SettingsController::class, 'save'])->name('settings.save');
+
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::post('scan-translations', [SettingsController::class, 'scanTranslations'])->name('scan-translations');
+        Route::get('contact', fn () => view('cms.settings.contact'))->name('contact');
+        Route::get('notifications', fn () => view('cms.settings.notifications'))->name('notifications');
+        Route::get('fonts', fn () => view('cms.settings.fonts'))->name('fonts');
+        Route::get('logs', fn () => view('cms.settings.logs'))->name('logs');
+        Route::get('analytics', fn () => view('cms.settings.analytics'))->name('analytics');
+        Route::get('watermark', fn () => view('cms.settings.watermark'))->name('watermark');
+        Route::get('toc', fn () => view('cms.settings.toc'))->name('toc');
+        Route::get('social', fn () => view('cms.settings.social'))->name('social');
+        Route::get('payment', fn () => view('cms.settings.payment'))->name('payment');
+        Route::get('shipping', [ShippingEngineController::class, 'index'])->name('shipping');
+        Route::post('shipping/calculate', [ShippingEngineController::class, 'calculate'])->name('shipping.calculate');
+        Route::get('ai', fn () => view('cms.settings.ai'))->name('ai');
+        Route::get('reviews', fn () => view('cms.settings.reviews'))->name('reviews');
+        Route::get('languages', fn () => view('cms.settings.languages'))->name('languages');
+        Route::get('forms', fn () => view('cms.settings.forms'))->name('forms');
+        Route::get('contact-buttons', fn () => view('cms.settings.contact-buttons'))->name('contact-buttons');
+        Route::get('redirects', fn () => view('cms.settings.redirects'))->name('redirects');
+        Route::get('seo', fn () => view('cms.settings.seo'))->name('seo');
+        Route::get('popups', fn () => view('cms.settings.popups'))->name('popups');
+        Route::get('permissions', fn () => view('cms.settings.permissions'))->name('permissions');
+        Route::get('fake-notifications', fn () => view('cms.settings.fake-notifications'))->name('fake-notifications');
+    });
 
     // Global Media Management (if needed) - TODO: Check if MediaController exists
     // Route::get('media/list', [\App\Http\Controllers\Admin\MediaController::class, 'list'])->name('media.list');

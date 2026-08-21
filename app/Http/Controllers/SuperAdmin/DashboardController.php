@@ -199,10 +199,13 @@ class DashboardController extends Controller
                 ->take(10)
                 ->get();
 
+            $hostingProfiles = \App\Models\HostingProfile::all();
+
             return view('superadmin.dashboard.multi-tenancy', compact(
                 'projects',
                 'todayActivities',
-                'recentActivities'
+                'recentActivities',
+                'hostingProfiles'
             ));
 
         } catch (\Exception $e) {
@@ -212,11 +215,13 @@ class DashboardController extends Controller
             $projects = collect();
             $todayActivities = 0;
             $recentActivities = collect();
+            $hostingProfiles = collect();
 
             return view('superadmin.dashboard.multi-tenancy', compact(
                 'projects',
                 'todayActivities',
-                'recentActivities'
+                'recentActivities',
+                'hostingProfiles'
             ))->with('alert', [
                 'type' => 'warning',
                 'message' => 'Một số dữ liệu không thể tải được. Vui lòng thử lại sau.',

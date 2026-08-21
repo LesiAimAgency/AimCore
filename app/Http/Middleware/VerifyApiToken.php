@@ -17,8 +17,8 @@ class VerifyApiToken
     {
         $token = $request->bearerToken() ?? $request->header('X-API-TOKEN');
 
-        // Lấy token cấu hình trong .env (site vệ tinh)
-        $expectedToken = config('app.sync_api_token', env('SYNC_API_TOKEN'));
+        // Token được cấu hình trong .env của satellite website (SYNC_API_TOKEN)
+        $expectedToken = config('app.sync_api_token');
 
         if (! $token || ! $expectedToken || $token !== $expectedToken) {
             return response()->json([

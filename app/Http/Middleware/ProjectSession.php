@@ -11,10 +11,19 @@ class ProjectSession
 {
     /**
      * Handle an incoming request.
-     * Set separate session cookie for project routes to isolate from superadmin
+     * Set separate session cookie for project routes to isolate from superadmin.
+     * In standalone mode (exported website), always use a fixed cookie name.
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Standalone mode: exported website with no {projectCode} in URL
+        // Use a fixed, predictable session cookie name for the single project
+        if (config('app.standalone_mode')) {
+            Config::set('session.cookie', 'standalone_session');
+
+            return $next($request);
+        }
+
         // Extract projectCode from URL path (first segment)
         // This runs BEFORE route binding, so we parse the path directly
         $path = trim($request->getPathInfo(), '/');
@@ -36,7 +45,6 @@ class ProjectSession
                 if ($projectCode && ! in_array($projectCode, $reservedPrefixes)) {
                     $cookieName = 'project_'.strtolower($projectCode).'_session';
                     Config::set('session.cookie', $cookieName);
-
                 }
             }
 

@@ -21,14 +21,17 @@ class ProjectSubdomainMiddleware
 
         if ($projectCode) {
             $project = Project::where('code', $projectCode)->first();
-
-            if (! $project) {
-                abort(404, 'Project not found: '.$projectCode);
-            }
-
-            view()->share('currentProject', $project);
-            $request->attributes->set('project', $project);
+        } else {
+            // For exported standalone projects where {projectCode} is removed from routes
+            $project = Project::first();
         }
+
+        if (! $project) {
+            abort(404, 'Project not found'.($projectCode ? ': '.$projectCode : ''));
+        }
+
+        view()->share('currentProject', $project);
+        $request->attributes->set('project', $project);
 
         return $next($request);
     }

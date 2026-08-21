@@ -16,7 +16,7 @@ class ProjectExportController extends Controller
     public function exportDatabaseOnly(Project $project)
     {
         $sql = $this->generateDatabaseSQL($project);
-        
+
         return response($sql)
             ->header('Content-Type', 'text/sql')
             ->header('Content-Disposition', 'attachment; filename="database_'.strtolower($project->code).'.sql"');
@@ -200,12 +200,52 @@ class ProjectExportController extends Controller
             File::delete($superAdminRoute);
         }
 
-        // Sửa web.php để loại bỏ require superadmin.php
+        // Sửa web.php để loại bỏ require superadmin.php (giữ lại backend.php cho admin links)
         $webRoute = $routesDest.'/web.php';
         if (File::exists($webRoute)) {
             $content = File::get($webRoute);
-            $content = str_replace("require __DIR__.'/superadmin.php';", '// SuperAdmin routes removed', $content);
+            $content = str_replace("require __DIR__.'/superadmin.php';", '// SuperAdmin routes removed for standalone', $content);
+            // Keep backend.php so admin settings routes still work in standalone mode
+            // $content = str_replace("require __DIR__.'/backend.php';", '// Backend routes removed', $content);
             File::put($webRoute, $content);
+        }
+
+        // Sửa project.php để loại bỏ {projectCode} cho website độc lập
+        $projectRoute = $routesDest.'/project.php';
+        if (File::exists($projectRoute)) {
+            $content = File::get($projectRoute);
+
+            // Strip {projectCode} from all route prefixes
+            $content = str_replace("Route::prefix('{projectCode}')", "Route::prefix('')", $content);
+            $content = str_replace("Route::prefix('{projectCode}/admin')", "Route::prefix('admin')", $content);
+            $content = str_replace("Route::prefix('{projectCode}/api')", "Route::prefix('api')", $content);
+
+            // Strip {projectCode} from route path patterns
+            $content = str_replace("Route::get('/{projectCode}/{slug}'", "Route::get('/{slug}'", $content);
+            $content = str_replace("Route::get('/{projectCode}/css/custom.css'", "Route::get('/css/custom.css'", $content);
+            $content = str_replace("Route::get('/{projectCode}/js/custom.js'", "Route::get('/js/custom.js'", $content);
+
+            // Remove projectCode where constraint (e.g. ->where('projectCode', '[^/]+'))
+            $content = preg_replace("/->where\s*\(\s*['\"]projectCode['\"]\s*,\s*[^)]+\)/", '', $content);
+
+            // Add standalone login route alias at the end so CheckCmsRole can redirect properly
+            $standaloneRouteAppend = "\n\n// ============================================\n"
+                ."// STANDALONE MODE: Login routes without {projectCode}\n"
+                ."// ============================================\n"
+                ."Route::prefix('')\n"
+                ."    ->middleware([\n"
+                ."        \\App\\Http\\Middleware\\ProjectSubdomainMiddleware::class,\n"
+                ."        \\App\\Http\\Middleware\\SetProjectDatabase::class,\n"
+                ."    ])\n"
+                ."    ->group(function () {\n"
+                ."        Route::get('login', [\\App\\Http\\Controllers\\Auth\\ProjectLoginController::class, 'showLoginForm'])->name('project.login.standalone');\n"
+                ."        Route::post('login', [\\App\\Http\\Controllers\\Auth\\ProjectLoginController::class, 'login'])->name('project.login.standalone.post');\n"
+                ."        Route::post('logout', [\\App\\Http\\Controllers\\Auth\\ProjectLoginController::class, 'logout'])->name('project.logout.standalone');\n"
+                ."    });\n";
+
+            $content .= $standaloneRouteAppend;
+
+            File::put($projectRoute, $content);
         }
     }
 
@@ -251,13 +291,13 @@ class ProjectExportController extends Controller
 
         return 'APP_NAME="'.$project->name.'"
 APP_ENV=production
-APP_KEY='.'base64:'.base64_encode(random_bytes(32)).'
+APP_KEY=base64:'.base64_encode(random_bytes(32)).'
 APP_DEBUG=false
 APP_URL=https://your-domain.com
 
 LOG_CHANNEL=stack
 LOG_DEPRECATIONS_CHANNEL=null
-LOG_LEVEL=debug
+LOG_LEVEL=error
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -266,33 +306,32 @@ DB_DATABASE='.strtolower($project->code).'_db
 DB_USERNAME=your_username
 DB_PASSWORD=your_password
 
-BROADCAST_DRIVER=log
-CACHE_DRIVER=file
+BROADCAST_CONNECTION=log
+CACHE_STORE=file
 FILESYSTEM_DISK=local
 QUEUE_CONNECTION=sync
 SESSION_DRIVER=file
 SESSION_LIFETIME=120
 
-REDIS_HOST=127.0.0.1
-REDIS_PASSWORD=null
-REDIS_PORT=6379
-
 MAIL_MAILER=smtp
-MAIL_HOST=mailpit
-MAIL_PORT=1025
+MAIL_HOST=smtp.your-host.com
+MAIL_PORT=465
 MAIL_USERNAME=null
 MAIL_PASSWORD=null
-MAIL_ENCRYPTION=null
-MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS="hello@your-domain.com"
 MAIL_FROM_NAME="'.$project->name.'"
 
 # Project specific settings
 PROJECT_CODE='.$project->code.'
 PROJECT_NAME="'.$project->name.'"
 
-# Remote Sync API Settings
+# Remote Sync API Settings – token do SuperAdmin cung cấp
 SYNC_API_TOKEN="'.$project->api_token.'"
 SUPERADMIN_URL="'.config('app.url').'"
+
+# Standalone mode – website độc lập (không có {projectCode} trong URL)
+STANDALONE_MODE=true
 ';
     }
 
@@ -417,9 +456,7 @@ Contact: support@vnglobaltech.com';
         $sql = "-- Database export for {$project->name}\n";
         $sql .= '-- Generated on: '.now()->format('Y-m-d H:i:s')."\n\n";
 
-        $dbName = 'project_'.strtolower($project->code);
-        $sql .= "CREATE DATABASE IF NOT EXISTS `{$dbName}`;\n";
-        $sql .= "USE `{$dbName}`;\n\n";
+        // Do not force database name so user can import into their selected database.
 
         $sql .= "/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;\n";
         $sql .= "/*!40101 SET NAMES utf8mb4 */;\n";
@@ -471,13 +508,43 @@ Contact: support@vnglobaltech.com';
             $columns = Schema::getColumnListing($table);
             $query = DB::table($table);
 
-            if (in_array('project_id', $columns)) {
+            if ($table === 'projects') {
+                $query->where('id', $project->id);
+            } elseif (in_array('project_id', $columns)) {
                 $query->where('project_id', $project->id);
+            } elseif (in_array('tenant_id', $columns)) {
+                $query->where('tenant_id', $project->id);
             }
 
-            $skipTables = ['system_logs', 'visitor_logs', 'failed_jobs', 'sessions', 'cache', 'cache_locks', 'activity_logs'];
+            // Explicitly handle pivot tables that don't have project_id or tenant_id
+            if ($table === 'brand_product') {
+                $productIds = DB::table('products_enhanced')->where('project_id', $project->id)->pluck('id');
+                $query->whereIn('product_id', $productIds);
+            } elseif ($table === 'product_attribute_product') {
+                $productIds = DB::table('products_enhanced')->where('project_id', $project->id)->pluck('id');
+                $query->whereIn('product_id', $productIds);
+            } elseif ($table === 'term_relationships') {
+                $postIds = DB::table('posts')->where('project_id', $project->id)->pluck('id');
+                $productIds = DB::table('products_enhanced')->where('project_id', $project->id)->pluck('id');
+                $query->where(function ($q) use ($postIds, $productIds) {
+                    $q->whereIn('object_id', $postIds)
+                        ->orWhereIn('object_id', $productIds);
+                });
+            } elseif ($table === 'user_roles' || $table === 'user_permissions') {
+                $userIds = DB::table('users')->where('tenant_id', $project->id)->pluck('id');
+                $query->whereIn('user_id', $userIds);
+            } elseif ($table === 'role_permissions') {
+                $roleIds = DB::table('roles')->where('tenant_id', $project->id)->pluck('id');
+                $query->whereIn('role_id', $roleIds);
+            }
+
+            $skipTables = [
+                'system_logs', 'visitor_logs', 'failed_jobs', 'sessions', 'cache',
+                'cache_locks', 'activity_logs', 'system_backups', 'jobs', 'job_batches',
+            ];
+
             if (in_array($table, $skipTables)) {
-                return $sql."-- Skipped data for log/cache table\n";
+                return $sql."-- Skipped data for background/cache/log table\n";
             }
 
             $data = $query->get();
@@ -490,7 +557,14 @@ Contact: support@vnglobaltech.com';
 
             foreach ($data as $row) {
                 $rowData = array_map(function ($value) {
-                    return is_null($value) ? 'NULL' : "'".addslashes($value)."'";
+                    if (is_null($value)) {
+                        return 'NULL';
+                    }
+                    if (is_numeric($value) && ! is_string($value)) {
+                        return $value;
+                    }
+
+                    return DB::getPdo()->quote($value);
                 }, (array) $row);
                 $values[] = '('.implode(', ', $rowData).')';
             }
@@ -540,7 +614,8 @@ Contact: support@vnglobaltech.com';
             "DB_PORT=3306\n".
             'DB_DATABASE=project_'.strtolower($project->code)."\n".
             "DB_USERNAME=your_username\n".
-            "DB_PASSWORD=your_password\n";
+            "DB_PASSWORD=your_password\n\n".
+            'SYNC_API_TOKEN='.($project->api_token ?? 'your_api_token')."\n";
     }
 
     private function generateSecurityConfig($project)

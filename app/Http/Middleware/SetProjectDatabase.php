@@ -71,8 +71,9 @@ class SetProjectDatabase
     {
         Log::info("Using shared database for project: {$code}");
 
-        // Use the main database (same as application)
-        Config::set('database.connections.project', config('database.connections.mysql'));
+        // Use the main database connection config (use actual default, not hardcoded 'mysql')
+        $defaultConnection = config('database.default');
+        Config::set('database.connections.project', config("database.connections.{$defaultConnection}"));
 
         try {
             DB::purge('project');
@@ -156,11 +157,19 @@ class SetProjectDatabase
 
     private function resetToMainDatabase()
     {
-        // Reset to mysql (main) connection
-        DB::setDefaultConnection('mysql');
-        Config::set('database.default', 'mysql');
+        // Restore to the original main connection (saved before switching)
+        // Use 'mysql' as safe default fallback, but prefer what was saved in request
+        $mainConnection = request()->attributes->get('main_database', config('database.default', 'mysql'));
+
+        // If we're already on the main connection, nothing to do
+        if (DB::getDefaultConnection() !== 'project') {
+            return;
+        }
+
+        DB::setDefaultConnection($mainConnection);
+        Config::set('database.default', $mainConnection);
         DB::purge('project');
 
-        Log::debug('SetProjectDatabase: Reset to main database');
+        Log::debug("SetProjectDatabase: Reset to main database ({$mainConnection})");
     }
 }

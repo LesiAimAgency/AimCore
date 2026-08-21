@@ -66,6 +66,16 @@ class Project extends Model
         return $this->hasMany(ProjectStage::class)->orderBy('order');
     }
 
+    public function hostingProfiles()
+    {
+        return $this->hasMany(HostingProfile::class);
+    }
+
+    public function latestDeployment()
+    {
+        return $this->hasOne(DeploymentHistory::class)->latestOfMany();
+    }
+
     public function allocatedGold(): int
     {
         return (int) $this->tasks()->sum('gold');

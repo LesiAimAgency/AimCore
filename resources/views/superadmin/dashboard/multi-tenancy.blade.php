@@ -113,6 +113,10 @@
           class="flex-1 px-3 py-2 bg-blue-600 text-white text-center rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
           Vào CMS
         </a>
+        <button onclick="showDeployModal({{ $project->id }}, '{{ $project->code }}', '{{ $project->external_domain ?? '' }}')" 
+          class="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors" title="Deploy Lên Server">
+          🚀
+        </button>
         <button onclick="exportWebsite('{{ $project->code }}')" 
           class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors" title="Xuất Website">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,7 +173,62 @@
 
 
 
+<!-- Deploy Modal -->
+<div id="deployModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+  <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+    <h3 class="text-xl font-bold mb-4">🚀 Deploy Project <span id="deployProjectCode" class="text-blue-600"></span></h3>
+    <form id="deployForm" method="POST" action="">
+      @csrf
+      <input type="hidden" name="project_id" id="deployProjectId">
+      
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Chọn Server (Hosting Profile)</label>
+        <select name="hosting_profile_id" class="w-full border rounded-lg px-3 py-2" required>
+          <option value="">-- Chọn Server --</option>
+          @foreach($hostingProfiles ?? [] as $hp)
+            <option value="{{ $hp->id }}">{{ $hp->name }} ({{ $hp->hostname }})</option>
+          @endforeach
+        </select>
+        @if(($hostingProfiles ?? collect())->isEmpty())
+          <p class="text-xs text-red-500 mt-1">Chưa có Server nào. <a href="{{ route('superadmin.hosting.create') }}" class="underline">Thêm mới</a></p>
+        @endif
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Tên miền (Domain)</label>
+        <input type="text" name="domain" id="deployDomain" placeholder="Ví dụ: client-domain.com" class="w-full border rounded-lg px-3 py-2" required>
+        <p class="text-xs text-gray-500 mt-1">Thư mục code sẽ được tự động tạo dựa trên Project Code nếu chưa có.</p>
+      </div>
+
+      <div class="flex justify-end gap-2 mt-6">
+        <button type="button" onclick="closeDeployModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Hủy</button>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">Bắt đầu Deploy</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
+function showDeployModal(projectId, projectCode, existingDomain) {
+  document.getElementById('deployModal').classList.remove('hidden');
+  document.getElementById('deployProjectCode').textContent = projectCode;
+  document.getElementById('deployProjectId').value = projectId;
+  
+  if (existingDomain && existingDomain !== 'null') {
+    // Remove https:// or http:// if present
+    let cleanDomain = existingDomain.replace(/^https?:\/\//, '');
+    document.getElementById('deployDomain').value = cleanDomain;
+  } else {
+    document.getElementById('deployDomain').value = '';
+  }
+
+  document.getElementById('deployForm').action = `{{ url('/superadmin/multi-tenancy/projects') }}/${projectId}/deploy`;
+}
+
+function closeDeployModal() {
+  document.getElementById('deployModal').classList.add('hidden');
+}
+
 let currentProjectId = null;
 
 document.getElementById('searchProjects').addEventListener('input', function(e) {

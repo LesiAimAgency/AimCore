@@ -2,29 +2,31 @@
 
 // [CLEANED] use App\Http\Controllers\SuperAdmin\ContractController;
 use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\SuperAdmin\EmployeeController;
-// [CLEANED] use App\Http\Controllers\SuperAdmin\PositionController;
 use App\Http\Controllers\Admin\UserController;
+// [CLEANED] use App\Http\Controllers\SuperAdmin\PositionController;
 use App\Http\Controllers\SuperAdmin\BriefController;
 use App\Http\Controllers\SuperAdmin\ContractController;
 use App\Http\Controllers\SuperAdmin\DashboardController;
+use App\Http\Controllers\SuperAdmin\DepartmentController;
+use App\Http\Controllers\SuperAdmin\EmployeeController;
 use App\Http\Controllers\SuperAdmin\FeaturePackController;
 use App\Http\Controllers\SuperAdmin\FileMonitorController;
+use App\Http\Controllers\SuperAdmin\HostingDeployController;
 use App\Http\Controllers\SuperAdmin\MyTaskController;
+use App\Http\Controllers\SuperAdmin\PerformanceController;
 use App\Http\Controllers\SuperAdmin\PermissionController;
 use App\Http\Controllers\SuperAdmin\ProjectController;
 use App\Http\Controllers\SuperAdmin\ProjectExportController;
 use App\Http\Controllers\SuperAdmin\RemoteCmsController;
 use App\Http\Controllers\SuperAdmin\RoleController;
+use App\Http\Controllers\SuperAdmin\ServiceController;
+use App\Http\Controllers\SuperAdmin\ServiceStageController;
+use App\Http\Controllers\SuperAdmin\SystemLogController;
 use App\Http\Controllers\SuperAdmin\TaskController;
 use App\Http\Controllers\SuperAdmin\TenantController;
 use App\Http\Controllers\SuperAdmin\TestExportController;
 use App\Http\Controllers\SuperAdmin\TicketController;
 use App\Http\Controllers\SuperAdmin\WebsiteController;
-use App\Http\Controllers\SuperAdmin\SystemLogController;
-use App\Http\Controllers\SuperAdmin\DepartmentController;
-use App\Http\Controllers\SuperAdmin\ServiceController;
-use App\Http\Controllers\SuperAdmin\ServiceStageController;
 use App\Http\Middleware\SuperAdminBypassProjectScope;
 use App\Http\Middleware\SuperAdminMiddleware;
 use Illuminate\Http\Request;
@@ -39,7 +41,7 @@ Route::middleware([
 ])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/multi-tenancy', [DashboardController::class, 'multiTenancy'])->name('multi-tenancy');
-    
+
     // System Logs
     Route::get('/logs', [SystemLogController::class, 'index'])->name('logs.index');
     Route::get('/logs/{filename}/view', [SystemLogController::class, 'show'])->name('logs.show');
@@ -79,16 +81,15 @@ Route::middleware([
     Route::resource('departments', DepartmentController::class);
     Route::resource('services', ServiceController::class);
     Route::resource('service-stages', ServiceStageController::class);
-    
+
     Route::get('employees', [EmployeeController::class, 'index'])->name('employees.index');
     Route::get('employees/{employee}', [EmployeeController::class, 'show'])->name('employees.show');
-    
-    // Performance & Ranking
-    Route::get('performance', [App\Http\Controllers\SuperAdmin\PerformanceController::class, 'index'])->name('performance.index');
-    Route::get('performance/ranking', [App\Http\Controllers\SuperAdmin\PerformanceController::class, 'ranking'])->name('performance.ranking');
-    Route::get('/performance/gold', [App\Http\Controllers\SuperAdmin\PerformanceController::class, 'gold'])->name('performance.gold');
-    Route::get('performance/report', [App\Http\Controllers\SuperAdmin\PerformanceController::class, 'report'])->name('performance.report');
 
+    // Performance & Ranking
+    Route::get('performance', [PerformanceController::class, 'index'])->name('performance.index');
+    Route::get('performance/ranking', [PerformanceController::class, 'ranking'])->name('performance.ranking');
+    Route::get('/performance/gold', [PerformanceController::class, 'gold'])->name('performance.gold');
+    Route::get('performance/report', [PerformanceController::class, 'report'])->name('performance.report');
 
     Route::post('projects/{project}/create-website', [ProjectController::class, 'createWebsite'])
         ->name('projects.create-website');
@@ -137,9 +138,29 @@ Route::middleware([
 
     // Export project config with debug info
     Route::get('projects/{project}/export-config', [ProjectController::class, 'exportConfig'])->name('projects.export-config');
-    Route::get('projects/{project}/export-database', [\App\Http\Controllers\SuperAdmin\ProjectExportController::class, 'exportDatabaseOnly'])->name('projects.export-database');
+    Route::get('projects/{project}/export-database', [ProjectExportController::class, 'exportDatabaseOnly'])->name('projects.export-database');
     Route::get('projects/{project}/export-viewer', [ProjectController::class, 'exportViewer'])->name('projects.export-viewer');
     Route::delete('projects/{project}/delete-logs', [ProjectController::class, 'deleteLogs'])->name('projects.delete-logs');
+
+    // Hosting Deployment
+    Route::prefix('multi-tenancy')->name('multi-tenancy.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\SuperAdmin\DashboardController::class, 'multiTenancy'])->name('index');
+        Route::post('/projects/{project}/deploy', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'triggerDeployMultiTenancy'])->name('deploy');
+    });
+    Route::prefix('hosting')->name('hosting.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'store'])->name('store');
+        Route::get('/{profile}/edit', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'edit'])->name('edit');
+        Route::put('/{profile}', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'update'])->name('update');
+        Route::delete('/{profile}', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'destroy'])->name('destroy');
+        Route::post('/{profile}/test-connection', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'testConnection'])->name('test-connection');
+
+        // Deployment
+        Route::get('/deployments/{history}', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'deployView'])->name('deploy');
+        Route::get('/deployments/{history}/logs', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'deployLogs'])->name('deploy.logs');
+        Route::post('/deployments/{history}/run', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'runDeploy'])->name('deploy.run');
+    });
 
     // Remote CMS Management - SuperAdmin can manage any project's CMS
     Route::prefix('projects/{projectCode}/cms')->name('projects.cms.')->group(function () {

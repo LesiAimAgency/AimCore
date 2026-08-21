@@ -84,6 +84,12 @@ class ProjectController extends Controller implements HasMiddleware
 
     public function store(Request $request)
     {
+        if ($request->has('project_type') && !$request->has('department_id')) {
+            $request->merge([
+                'department_id' => $request->project_type === 'website' ? 2 : 1
+            ]);
+        }
+
         $validated = $request->validate([
             'contract_id' => 'nullable|exists:contracts,id',
             'name' => 'required|string|max:255',
@@ -103,11 +109,9 @@ class ProjectController extends Controller implements HasMiddleware
 
         $contract = $request->contract_id ? Contract::findOrFail($request->contract_id) : null;
         
-        // Mặc định lấy tài khoản PM Nguyễn Quản Lý
-        $pmEmail = 'pm@example.com';
-        $employee = User::where('email', $pmEmail)->first();
+        $employee = auth()->user();
         if (!$employee) {
-            return back()->withInput()->withErrors(['employee_id' => 'Không tìm thấy tài khoản PM mặc định (pm@example.com)']);
+            return back()->withInput()->withErrors(['employee_id' => 'Không tìm thấy thông tin người dùng hiện tại. Vui lòng đăng nhập lại.']);
         }
 
         $baseUrl = config('app.url');
@@ -188,6 +192,12 @@ class ProjectController extends Controller implements HasMiddleware
 
     public function update(Request $request, Project $project)
     {
+        if (!$request->has('project_type') && $request->has('department_id')) {
+            $request->merge([
+                'project_type' => $request->department_id == 2 ? 'website' : 'design'
+            ]);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'subdomain' => 'required|string|max:255',

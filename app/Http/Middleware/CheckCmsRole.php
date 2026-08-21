@@ -19,7 +19,38 @@ class CheckCmsRole
     {
         $projectCode = $request->route('projectCode');
 
-        // For project routes, check session-based auth
+        // STANDALONE MODE: Exported website – no {projectCode} in URL.
+        // Treat /admin/* as project CMS routes using project_user_id session.
+        if (config('app.standalone_mode') && ! $projectCode) {
+            $userId = session('project_user_id');
+
+            if (! $userId) {
+                return redirect()->route('project.login.standalone');
+            }
+
+            $user = ProjectUser::find($userId);
+
+            if (! $user) {
+                session()->forget(['project_user_id', 'project_user_username', 'current_project']);
+
+                return redirect()->route('project.login.standalone');
+            }
+
+            view()->share('authUser', $user);
+            $request->attributes->set('auth_user', $user);
+
+            if (isset($user->level) && in_array($user->level, [0, 1, 2])) {
+                return $next($request);
+            }
+
+            if (isset($user->role) && in_array($user->role, ['cms', 'admin', 'dev'])) {
+                return $next($request);
+            }
+
+            abort(403, 'Bạn không có quyền truy cập CMS này.');
+        }
+
+        // For project routes with {projectCode}, check session-based auth
         if ($projectCode) {
             $userId = session('project_user_id');
 
@@ -53,7 +84,7 @@ class CheckCmsRole
             abort(403, 'Bạn không có quyền truy cập CMS này.');
         }
 
-        // For non-project routes, use web guard
+        // For non-project routes (SuperAdmin panel), use web guard
         if (! Auth::guard('web')->check()) {
             return redirect()->route('login');
         }

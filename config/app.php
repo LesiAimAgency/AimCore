@@ -123,4 +123,26 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Remote Sync API Token
+    |--------------------------------------------------------------------------
+    |
+    | This token is used by standalone exported websites to authenticate
+    | incoming sync requests from the SuperAdmin. Set SYNC_API_TOKEN in .env.
+    |
+    */
+    'sync_api_token' => env('SYNC_API_TOKEN'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Standalone Mode
+    |--------------------------------------------------------------------------
+    |
+    | When STANDALONE_MODE=true, the app runs as a single-project website
+    | without the {projectCode} URL prefix (exported from SuperAdmin).
+    |
+    */
+    'standalone_mode' => env('STANDALONE_MODE', false),
+
 ];

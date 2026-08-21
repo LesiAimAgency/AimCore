@@ -11,9 +11,22 @@ class ProjectUser extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
-     * Sử dụng connection project (được set bởi SetProjectDatabase middleware)
+     * Sử dụng connection project (được set bởi SetProjectDatabase middleware).
+     * Trong standalone mode (exported website), fallback về connection mặc định
+     * vì SetProjectDatabase không được gọi (không có {projectCode} trong URL).
      */
     protected $connection = 'project';
+
+    public function getConnectionName(): string
+    {
+        // In standalone mode, 'project' connection is never configured.
+        // Fall back to the default mysql connection.
+        if (config('app.standalone_mode')) {
+            return config('database.default', 'mysql');
+        }
+
+        return $this->connection;
+    }
 
     /**
      * Tên bảng trong database
