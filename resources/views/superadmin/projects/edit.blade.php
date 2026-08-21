@@ -58,26 +58,13 @@
                         <!-- Chọn Loại Dự án -->
                         <div class="grid grid-cols-1 gap-6 pt-4 border-t border-gray-100">
                             <div>
-                                <x-form.label value="Loại Dự án (Website/Design)" required="true" />
-                                <x-form.select name="department_id" id="department_select" required="true">
-                                    <option value="">-- Chọn Loại Dự án --</option>
-                                    @foreach($departments as $dept)
-                                        @if($dept->id == 1 || $dept->id == 2)
-                                            <option value="{{ $dept->id }}" {{ old('department_id', $project->department_id) == $dept->id ? 'selected' : '' }}>
-                                                {{ $dept->id == 2 ? 'Dự án Website' : 'Dự án Design' }}
-                                            </option>
-                                        @endif
-                                    @endforeach
+                                <x-form.label value="Phân loại dự án" required="true" />
+                                <x-form.select name="project_type" id="project_type_select" required="true">
+                                    <option value="">-- Chọn loại dự án --</option>
+                                    <option value="design" {{ old('project_type', $project->project_type ?? ($project->department_id == 2 ? 'website' : 'design')) == 'design' ? 'selected' : '' }}>Thiết kế (Design)</option>
+                                    <option value="website" {{ old('project_type', $project->project_type ?? ($project->department_id == 2 ? 'website' : 'design')) == 'website' ? 'selected' : '' }}>Lập trình Website</option>
                                 </x-form.select>
                             </div>
-                            {{--
-                            <div>
-                                <x-form.label value="Dịch vụ (Tùy chọn)" />
-                                <x-form.select name="service_id" id="service_select" disabled>
-                                    <option value="">-- Vui lòng chọn Loại Dự án trước --</option>
-                                </x-form.select>
-                            </div>
-                            --}}
                         </div>
 
                         <!-- Dynamic Form Container -->
