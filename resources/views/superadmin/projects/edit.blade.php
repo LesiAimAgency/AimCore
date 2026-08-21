@@ -167,7 +167,7 @@
                         
                         <div class="pt-2 border-t border-gray-100 mt-4">
                             <x-form.label value="Giá trị Dự án (VNĐ)" />
-                            <input type="text" id="contract_value_display" class="border-gray-300 focus:border-[#001B4E] focus:ring-[#001B4E] rounded-md shadow-sm block w-full sm:text-sm" placeholder="VD: 1.000.000" value="{{ old('contract_value', $project->contract_value) }}">
+                            <input type="text" id="contract_value_display" class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-[#001B4E] focus:ring focus:ring-[#001B4E] focus:ring-opacity-50" placeholder="VD: 1.000.000" value="{{ old('contract_value', $project->contract_value) }}">
                             <input type="hidden" name="contract_value" id="contract_value" value="{{ old('contract_value', $project->contract_value) }}">
                         </div>
 
