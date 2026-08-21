@@ -165,9 +165,10 @@
                             ]" />
                         </div>
                         
-                        <div class="pt-2 border-t border-gray-100">
+                        <div class="pt-2 border-t border-gray-100 mt-4">
                             <x-form.label value="Giá trị Dự án (VNĐ)" />
-                            <x-form.input name="contract_value" :value="old('contract_value', $project->contract_value)" type="number" step="0.01" />
+                            <input type="text" id="contract_value_display" class="border-gray-300 focus:border-[#001B4E] focus:ring-[#001B4E] rounded-md shadow-sm block w-full sm:text-sm" placeholder="VD: 1.000.000" value="{{ old('contract_value', $project->contract_value) }}">
+                            <input type="hidden" name="contract_value" id="contract_value" value="{{ old('contract_value', $project->contract_value) }}">
                         </div>
 
                         {{-- Quỹ Gold Dự Án --}}
@@ -231,6 +232,24 @@
     const oldDynamicData = @json(old('dynamic_form_data', is_array($project->dynamic_form_data) ? $project->dynamic_form_data : json_decode($project->dynamic_form_data, true) ?? []));
 
     document.addEventListener('DOMContentLoaded', function() {
+        const moneyDisplay = document.getElementById('contract_value_display');
+        const moneyReal = document.getElementById('contract_value');
+        if (moneyDisplay && moneyReal) {
+            if (moneyReal.value) {
+                moneyDisplay.value = new Intl.NumberFormat('vi-VN').format(moneyReal.value);
+            }
+            moneyDisplay.addEventListener('input', function(e) {
+                let value = this.value.replace(/\D/g, '');
+                if (value === '') {
+                    this.value = '';
+                    moneyReal.value = '';
+                    return;
+                }
+                this.value = new Intl.NumberFormat('vi-VN').format(value);
+                moneyReal.value = value;
+            });
+        }
+
         const deptSelect = document.getElementById('department_select');
         const serviceSelect = document.getElementById('service_select');
         const dynamicContainer = document.getElementById('dynamic-form-container');
