@@ -1,6 +1,6 @@
 @extends('superadmin.layouts.app')
 
-@section('page-title', 'Hàng chờ công việc1')
+@section('page-title', 'Hàng chờ công việc')
 
 @section('content')
 <div class="px-4 sm:px-6 py-8 w-full max-w-7xl mx-auto" x-data="myTasksApp()">
