@@ -96,6 +96,9 @@ class ProjectController extends Controller implements HasMiddleware
             'code' => 'required|string|unique:projects,code',
             'status' => 'nullable|string',
             'total_gold' => 'nullable|integer|min:0',
+            'contract_value' => 'nullable|numeric',
+            'start_date' => 'nullable|date',
+            'deadline' => 'nullable|date|after_or_equal:start_date',
             'technical_requirements' => 'nullable|string',
             'features' => 'nullable|string',
             'cms_features' => 'nullable|array',
@@ -123,10 +126,10 @@ class ProjectController extends Controller implements HasMiddleware
             'code' => $request->code,
             'subdomain' => $subdomain,
             'client_name' => $contract?->client_name ?? 'TBD',
-            'contract_value' => $contract?->contract_value ?? 0,
+            'contract_value' => $request->filled('contract_value') ? $request->contract_value : ($contract?->contract_value ?? 0),
             'total_gold' => $request->filled('total_gold') ? max(0, (int) $request->total_gold) : 0,
-            'start_date' => $contract?->start_date ?? now(),
-            'deadline' => $contract?->end_date ?? now()->addMonth(),
+            'start_date' => $request->start_date ?? ($contract?->start_date ?? now()),
+            'deadline' => $request->deadline ?? ($contract?->end_date ?? now()->addMonth()),
             'technical_requirements' => $contract?->technical_requirements,
             'features' => $contract?->features,
             'cms_features' => $request->cms_features ?? [],
@@ -192,6 +195,12 @@ class ProjectController extends Controller implements HasMiddleware
 
     public function update(Request $request, Project $project)
     {
+        if ($request->has('project_type') && !$request->has('department_id')) {
+            $request->merge([
+                'department_id' => $request->project_type === 'website' ? 2 : 1
+            ]);
+        }
+
         if (!$request->has('project_type') && $request->has('department_id')) {
             $request->merge([
                 'project_type' => $request->department_id == 2 ? 'website' : 'design'

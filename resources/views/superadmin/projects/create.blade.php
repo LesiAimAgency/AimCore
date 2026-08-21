@@ -171,6 +171,23 @@
                             ]" :value="old('status', 'pending')" />
                         </div>
 
+                        <div class="pt-2 border-t border-gray-100 mt-4">
+                            <x-form.label value="Giá trị Dự án (VNĐ)" />
+                            <input type="text" id="contract_value_display" class="border-gray-300 focus:border-[#001B4E] focus:ring-[#001B4E] rounded-md shadow-sm block w-full sm:text-sm" placeholder="VD: 1.000.000" value="{{ old('contract_value') }}">
+                            <input type="hidden" name="contract_value" id="contract_value" value="{{ old('contract_value') }}">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 pt-2 border-t border-gray-100 mt-4">
+                            <div>
+                                <x-form.label value="Ngày Bắt đầu" />
+                                <x-form.input name="start_date" :value="old('start_date', now()->format('Y-m-d'))" type="date" />
+                            </div>
+                            <div>
+                                <x-form.label value="Deadline" />
+                                <x-form.input name="deadline" :value="old('deadline', now()->addMonth()->format('Y-m-d'))" type="date" />
+                            </div>
+                        </div>
+
                         {{-- Quỹ Gold Dự Án --}}
                         @if(config('features.gold_enabled'))
                         <div class="pt-3 border-t border-gray-100">
@@ -206,6 +223,24 @@
     const oldDynamicData = @json(old('dynamic_form_data', []));
 
     document.addEventListener('DOMContentLoaded', function() {
+        const moneyDisplay = document.getElementById('contract_value_display');
+        const moneyReal = document.getElementById('contract_value');
+        if (moneyDisplay && moneyReal) {
+            if (moneyReal.value) {
+                moneyDisplay.value = new Intl.NumberFormat('vi-VN').format(moneyReal.value);
+            }
+            moneyDisplay.addEventListener('input', function(e) {
+                let value = this.value.replace(/\D/g, '');
+                if (value === '') {
+                    this.value = '';
+                    moneyReal.value = '';
+                    return;
+                }
+                this.value = new Intl.NumberFormat('vi-VN').format(value);
+                moneyReal.value = value;
+            });
+        }
+
         const deptSelect = document.getElementById('department_select');
         const projectTypeSelect = document.getElementById('project_type_select');
         const websiteOptions = document.getElementById('website_options');
