@@ -83,28 +83,7 @@
                         </div>
                         --}}
                         
-                        <!-- Chọn Loại Dự án (Bỏ vì đã có Phân loại dự án ở trên) -->
-                        {{-- <div class="grid grid-cols-1 gap-6 pt-4 border-t border-gray-100">
-                            <div>
-                                <x-form.label value="Loại Dự án (Website/Design)" required="true" />
-                                <x-form.select name="department_id" id="department_select" required="true">
-                                    <option value="">-- Chọn Loại Dự án --</option>
-                                    @foreach($departments as $dept)
-                                        @if($dept->id == 1 || $dept->id == 2)
-                                            <option value="{{ $dept->id }}" {{ old('department_id') == $dept->id ? 'selected' : '' }}>
-                                                {{ $dept->id == 2 ? 'Dự án Website' : 'Dự án Design' }}
-                                            </option>
-                                        @endif
-                                    @endforeach
-                                </x-form.select>
-                            </div>
-                            <div>
-                                <x-form.label value="Dịch vụ (Tùy chọn)" />
-                                <x-form.select name="service_id" id="service_select" disabled>
-                                    <option value="">-- Vui lòng chọn Loại Dự án trước --</option>
-                                </x-form.select>
-                            </div>
-                        </div> --}}
+
 
                         <!-- Dynamic Form Container -->
                         <div id="dynamic-form-container" class="space-y-4 pt-4 mt-4 border-t border-gray-100 hidden">
