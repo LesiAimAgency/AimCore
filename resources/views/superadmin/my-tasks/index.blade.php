@@ -15,7 +15,7 @@
                 <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
-                <input type="text" x-model="searchQuery" placeholder="Tìm kiếm công việc..." class="pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001B4E] focus:border-[#001B4E] outline-none w-full sm:w-48 text-sm transition-shadow">
+                <input type="text" x-model="searchQuery" placeholder="Tìm kiếm công việc..." class="pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001B4E] focus:border-[#001B4E] outline-none w-full sm:w-48 text-sm transition-shadow px-4">
             </div>
 
             {{-- Filter Project --}}
@@ -472,7 +472,7 @@
                             x-model="form.title"
                             placeholder="VD: Thiết kế giao diện trang chủ, Fix lỗi thanh toán..."
                             class="w-full rounded-lg border px-4 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none"
-                            :class="formErrors.title ? 'border-red-400 bg-red-50/20' : 'border-gray-300'"
+                            :class="formErrors.title ? 'border-red-400 bg-red-50/20' : 'border-gray-300' border px-4 py-2"
                         >
                         <template x-if="formErrors.title">
                             <p class="mt-1 text-xs text-red-600" x-text="formErrors.title"></p>
@@ -500,7 +500,7 @@
                         <select
                             x-model="form.project_id"
                             class="w-full rounded-lg border px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none bg-white"
-                            :class="formErrors.project_id ? 'border-red-400' : 'border-gray-300'"
+                            :class="formErrors.project_id ? 'border-red-400' : 'border-gray-300' border px-4 py-2"
                         >
                             <option value="">-- Chọn dự án --</option>
                             <template x-for="project in projects" :key="'modal-proj-'+project.id">
@@ -540,7 +540,7 @@
                                     step="10"
                                     x-model.number="form.gold"
                                     placeholder="Nhập số Gold thưởng (VD: 50, 100, 200...)"
-                                    class="w-full rounded-lg border border-gray-300 pl-4 pr-16 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none"
+                                    class="w-full rounded-lg border border-gray-300 pl-4 pr-16 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none px-4"
                                 >
                                 <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-amber-600">GOLD</span>
                             </div>
@@ -590,7 +590,7 @@
                                 x-model="form.deadline"
                                 x-init="flatpickr($el, { dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', locale: 'vn', prevArrow: '❮', nextArrow: '❯' })"
                                 class="w-full rounded-lg border px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none"
-                                :class="formErrors.deadline ? 'border-red-400 bg-red-50/20' : 'border-gray-300'"
+                                :class="formErrors.deadline ? 'border-red-400 bg-red-50/20' : 'border-gray-300' border px-4 py-2"
                             >
                             <template x-if="formErrors.deadline">
                                 <p class="mt-1 text-xs text-red-600" x-text="formErrors.deadline"></p>
@@ -697,7 +697,7 @@
                                     step="10"
                                     x-model.number="editForm.gold"
                                     placeholder="VD: 50, 100..."
-                                    class="w-full rounded-lg border border-gray-300 pl-4 pr-16 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none"
+                                    class="w-full rounded-lg border border-gray-300 pl-4 pr-16 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none px-4"
                                 >
                                 <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-amber-600">GOLD</span>
                             </div>
@@ -1019,7 +1019,7 @@
 
                     {{-- Navigation & Date controls --}}
                     <div class="flex items-center gap-2">
-                        <div class="flex items-center rounded-lg border border-gray-300 overflow-hidden shadow-2xs">
+                        <div class="flex items-center rounded-lg border border-gray-300 overflow-hidden shadow-2xs px-4 py-2">
                             <button
                                 type="button"
                                 @click="calPrevMonth()"

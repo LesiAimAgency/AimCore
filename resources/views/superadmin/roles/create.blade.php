@@ -77,7 +77,7 @@
                             <div class="space-y-3">
                                 @foreach($perms as $perm)
                                 <label class="flex items-start group cursor-pointer">
-                                    <input type="checkbox" name="permissions[]" value="{{ $perm->id }}" {{ (is_array(old('permissions')) && in_array($perm->id, old('permissions'))) ? 'selected' : '' }} class="mt-1 rounded text-[#001B4E] focus:ring-[#001B4E] border-gray-300">
+                                    <input type="checkbox" name="permissions[]" value="{{ $perm->id }}" {{ (is_array(old('permissions')) && in_array($perm->id, old('permissions'))) ? 'selected' : '' }} class="mt-1 rounded text-[#001B4E] focus:ring-[#001B4E] border-gray-300 border px-4 py-2">
                                     <span class="ml-3 text-sm text-gray-700 group-hover:text-[#001B4E] transition-colors">
                                         <span class="font-medium block">{{ $perm->display_name }}</span>
                                         <span class="text-xs text-gray-500">{{ $perm->description }}</span>

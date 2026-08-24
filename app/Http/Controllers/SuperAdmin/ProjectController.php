@@ -9,6 +9,7 @@ use App\Models\Project;
 use App\Models\ProjectPermission;
 use App\Models\ProjectSetting;
 use App\Models\User;
+use App\Models\Customer;
 use App\Services\RemoteProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -64,7 +65,7 @@ class ProjectController extends Controller implements HasMiddleware
 
     public function create()
     {
-        $contracts = Contract::whereIn('status', ['active', 'completed'])->get();
+        $contracts = Contract::with('customer')->whereIn('status', ['pending', 'active', 'completed'])->get();
         $employees = User::whereIn('role', ['super_admin', 'account'])
             ->orWhereHas('roles', function ($q) {
                 $q->whereIn('name', ['super_admin', 'account']);
@@ -79,7 +80,9 @@ class ProjectController extends Controller implements HasMiddleware
             $q->where('status', 'active');
         }])->where('status', 'active')->get();
 
-        return view('superadmin.projects.create', compact('contracts', 'employees', 'devs', 'featurePacks', 'departments'));
+        $customers = Customer::orderBy('name')->get();
+
+        return view('superadmin.projects.create', compact('contracts', 'employees', 'devs', 'featurePacks', 'departments', 'customers'));
     }
 
     public function store(Request $request)
@@ -92,6 +95,7 @@ class ProjectController extends Controller implements HasMiddleware
 
         $validated = $request->validate([
             'contract_id' => 'nullable|exists:contracts,id',
+            'customer_id' => 'nullable|exists:customers,id',
             'name' => 'required|string|max:255',
             'code' => 'required|string|unique:projects,code',
             'status' => 'nullable|string',
@@ -122,6 +126,7 @@ class ProjectController extends Controller implements HasMiddleware
 
         $project = Project::create([
             'contract_id' => $request->contract_id,
+            'customer_id' => $request->customer_id ?? $contract?->customer_id,
             'name' => $request->name,
             'code' => $request->code,
             'subdomain' => $subdomain,
@@ -175,7 +180,7 @@ class ProjectController extends Controller implements HasMiddleware
 
     public function edit(Project $project)
     {
-        $contracts = collect();
+        $contracts = Contract::with('customer')->whereIn('status', ['pending', 'active', 'completed'])->get();
         $employees = User::whereIn('role', ['super_admin', 'account'])
             ->orWhereHas('roles', function ($q) {
                 $q->whereIn('name', ['super_admin', 'account']);
@@ -190,7 +195,9 @@ class ProjectController extends Controller implements HasMiddleware
             $q->where('status', 'active');
         }])->where('status', 'active')->get();
 
-        return view('superadmin.projects.edit', compact('project', 'contracts', 'employees', 'devs', 'featurePacks', 'departments'));
+        $customers = Customer::orderBy('name')->get();
+
+        return view('superadmin.projects.edit', compact('project', 'contracts', 'employees', 'devs', 'featurePacks', 'departments', 'customers'));
     }
 
     public function update(Request $request, Project $project)
@@ -209,6 +216,7 @@ class ProjectController extends Controller implements HasMiddleware
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'customer_id' => 'nullable|exists:customers,id',
             'subdomain' => 'required|string|max:255',
             'total_gold' => 'nullable|integer|min:0',
             'notes' => 'nullable|string',
@@ -228,6 +236,7 @@ class ProjectController extends Controller implements HasMiddleware
 
         $project->update([
             'name' => $request->name,
+            'customer_id' => $request->customer_id,
             'subdomain' => $request->subdomain,
             'total_gold' => $request->filled('total_gold') ? max(0, (int) $request->total_gold) : (int) ($project->total_gold ?? 0),
             'notes' => $request->notes,

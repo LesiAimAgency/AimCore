@@ -55,10 +55,32 @@
                         <div class="pt-4 border-t border-gray-100 mt-4">
                             <x-form.label value="Phân loại dự án" required="true" />
                             <x-form.select name="project_type" id="project_type_select" required="true">
-                                <option value="">-- Chọn loại dự án --</option>
+                                
                                 <option value="design" {{ old('project_type') == 'design' ? 'selected' : '' }}>Thiết kế (Design)</option>
                                 <option value="website" {{ old('project_type') == 'website' ? 'selected' : '' }}>Lập trình Website</option>
                             </x-form.select>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100 mt-4">
+
+                            
+                            <div>
+                                <x-form.label value="Khách hàng" required="true" />
+                                <select name="customer_id" id="customer_id_select" required class="w-full rounded-lg border-gray-300 focus:border-[#001B4E] focus:ring focus:ring-[#001B4E] focus:ring-opacity-50 border px-4 py-2">
+                                    <option value="">-- Chọn khách hàng --</option>
+                                    @foreach($customers as $customer)
+                                        <option value="{{ $customer->id }}" {{ old('customer_id') == $customer->id ? 'selected' : '' }}>
+                                            {{ $customer->name }} {{ $customer->phone ? ' - ' . $customer->phone : '' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('customer_id')
+                                    <x-form.error :message="$message" />
+                                @enderror
+                                <div class="mt-2 text-xs text-gray-500">
+                                    Nếu chưa có, vui lòng <a href="{{ route('superadmin.customers.create') }}" class="text-blue-600 hover:underline" target="_blank">thêm khách hàng mới</a>
+                                </div>
+                            </div>
                         </div>
                       
                         <div id="website_options" class="hidden mt-4 p-4 bg-blue-50 border border-blue-100 rounded-lg">
@@ -68,19 +90,6 @@
                             </label>
                             <p class="text-xs text-gray-500 mt-1 ml-8">Hệ thống sẽ tự động cấp phát Subdomain, CMS Admin và kết nối vào hệ thống Tenancy.</p>
                         </div>
-                        
-                        {{-- 
-                        <div>
-                            <x-form.label value="Hợp đồng liên quan (Đã duyệt)" />
-                            <x-form.select name="contract_id">
-                                @foreach($contracts as $contract)
-                                <option value="{{ $contract->id }}" {{ old('contract_id') == $contract->id ? 'selected' : '' }}>
-                                    {{ $contract->title }} - {{ $contract->client_name }}
-                                </option>
-                                @endforeach
-                            </x-form.select>
-                        </div>
-                        --}}
                         
 
 
@@ -113,7 +122,7 @@
                         --}}
                         <div>
                             <x-form.label value="Ghi chú thêm" />
-                            <x-form.textarea name="notes" :value="old('notes')" rows="3" placeholder="Các ghi chú hoặc yêu cầu đặc biệt khác..." />
+                            <x-form.rich-editor name="notes" :value="old('notes')" placeholder="Các ghi chú hoặc yêu cầu đặc biệt khác..." />
                         </div>
                     </div>
                 </div>
@@ -147,7 +156,7 @@
                         
                         <div>
                             <x-form.label value="Developer phụ trách" />
-                            <select name="dev_ids[]" multiple class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#001B4E] focus:ring-[#001B4E] sm:text-sm" style="min-height: 100px;">
+                            <select name="dev_ids[]" multiple class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#001B4E] focus:ring-[#001B4E] sm:text-sm border px-4 py-2" style="min-height: 100px;">
                                 @foreach($devs as $dev)
                                 <option value="{{ $dev->id }}" {{ in_array($dev->id, old('dev_ids', [])) ? 'selected' : '' }}>
                                     [{{ $dev->code ?? 'N/A' }}] {{ $dev->name }}
@@ -238,6 +247,18 @@
                 }
                 this.value = new Intl.NumberFormat('vi-VN').format(value);
                 moneyReal.value = value;
+            });
+        }
+        
+        const contractSelect = document.getElementById('contract_id_select');
+        const customerSelect = document.getElementById('customer_id_select');
+        if (contractSelect && customerSelect) {
+            contractSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const customerId = selectedOption.getAttribute('data-customer-id');
+                if (customerId) {
+                    customerSelect.value = customerId;
+                }
             });
         }
 

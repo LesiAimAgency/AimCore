@@ -26,13 +26,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Tên giai đoạn <span class="text-red-500">*</span></label>
-                            <input type="text" name="name" value="{{ old('name') }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" required placeholder="Ví dụ: Lấy yêu cầu khách hàng">
+                            <input type="text" name="name" value="{{ old('name') }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm border px-4 py-2" required placeholder="Ví dụ: Lấy yêu cầu khách hàng">
                             @error('name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Thứ tự (Order) <span class="text-red-500">*</span></label>
-                            <input type="number" name="order" value="{{ old('order', 1) }}" min="1" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" required>
+                            <input type="number" name="order" value="{{ old('order', 1) }}" min="1" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm border px-4 py-2" required>
                             <p class="text-xs text-gray-500 mt-1">Giai đoạn có thứ tự nhỏ sẽ được thực hiện trước.</p>
                             @error('order')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                         </div>
@@ -41,7 +41,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Loại xử lý <span class="text-red-500">*</span></label>
-                            <select name="type" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" required>
+                            <select name="type" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm border px-4 py-2" required>
                                 <option value="client_info" {{ old('type') == 'client_info' ? 'selected' : '' }}>Khách hàng cung cấp thông tin</option>
                                 <option value="system_setup" {{ old('type') == 'system_setup' ? 'selected' : '' }}>Kỹ thuật cấu hình</option>
                                 <option value="implementation" {{ old('type') == 'implementation' ? 'selected' : '' }}>Nhân viên thực hiện</option>
@@ -53,7 +53,7 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Tỷ trọng (% hiệu suất) <span class="text-red-500">*</span></label>
-                            <input type="number" name="weight_percent" value="{{ old('weight_percent', 0) }}" min="0" max="100" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" required>
+                            <input type="number" name="weight_percent" value="{{ old('weight_percent', 0) }}" min="0" max="100" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm border px-4 py-2" required>
                             <p class="text-xs text-gray-500 mt-1">Phần trăm khối lượng công việc cho giai đoạn này (tổng các giai đoạn nên là 100%).</p>
                             @error('weight_percent')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                         </div>
@@ -61,7 +61,7 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Cấu hình Form Kết Quả (JSON)</label>
-                        <textarea name="form_schema" rows="5" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-mono" placeholder='[
+                        <textarea name="form_schema" rows="5" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-mono border px-4 py-2" placeholder='[
   {
     "type": "file",
     "name": "design_file",
@@ -75,13 +75,13 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Mô tả</label>
-                        <textarea name="description" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" placeholder="Hướng dẫn cho nhân viên khi thực hiện giai đoạn này...">{{ old('description') }}</textarea>
+                        <textarea name="description" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm border px-4 py-2" placeholder="Hướng dẫn cho nhân viên khi thực hiện giai đoạn này...">{{ old('description') }}</textarea>
                         @error('description')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
 
                     <div class="flex items-center">
                         <input type="hidden" name="requires_form" value="0">
-                        <input type="checkbox" name="requires_form" value="1" id="requires_form" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" {{ old('requires_form') ? 'checked' : '' }}>
+                        <input type="checkbox" name="requires_form" value="1" id="requires_form" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded border px-4 py-2" {{ old('requires_form') ? 'checked' : '' }}>
                         <label for="requires_form" class="ml-2 block text-sm text-gray-900">
                             Bắt buộc điền form (form_schema của dịch vụ hoặc của giai đoạn) khi hoàn thành
                         </label>

@@ -27,20 +27,20 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Tên dịch vụ <span class="text-red-500">*</span></label>
-                            <input type="text" name="name" value="{{ old('name', $service->name) }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" required>
+                            <input type="text" name="name" value="{{ old('name', $service->name) }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm border px-4 py-2" required>
                             @error('name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Mã (Code) <span class="text-red-500">*</span></label>
-                            <input type="text" name="code" value="{{ old('code', $service->code) }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" required>
+                            <input type="text" name="code" value="{{ old('code', $service->code) }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm border px-4 py-2" required>
                             @error('code')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Bộ phận phụ trách <span class="text-red-500">*</span></label>
-                        <select name="department_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" required>
+                        <select name="department_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm border px-4 py-2" required>
                             <option value="">-- Chọn bộ phận --</option>
                             @foreach($departments as $dept)
                                 <option value="{{ $dept->id }}" {{ old('department_id', $service->department_id) == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
@@ -51,20 +51,20 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Form Schema (JSON)</label>
-                        <textarea name="form_schema" rows="6" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-mono">{{ old('form_schema', is_array($service->form_schema) ? json_encode($service->form_schema, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : $service->form_schema) }}</textarea>
+                        <textarea name="form_schema" rows="6" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-mono border px-4 py-2">{{ old('form_schema', is_array($service->form_schema) ? json_encode($service->form_schema, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : $service->form_schema) }}</textarea>
                         <p class="text-xs text-gray-500 mt-1">Định nghĩa cấu trúc form động để lấy thông tin từ khách hàng (dạng JSON array).</p>
                         @error('form_schema')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Mô tả</label>
-                        <textarea name="description" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">{{ old('description', $service->description) }}</textarea>
+                        <textarea name="description" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm border px-4 py-2">{{ old('description', $service->description) }}</textarea>
                         @error('description')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>
-                        <select name="status" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                        <select name="status" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm border px-4 py-2">
                             <option value="active" {{ old('status', $service->status) == 'active' ? 'selected' : '' }}>Hoạt động</option>
                             <option value="inactive" {{ old('status', $service->status) == 'inactive' ? 'selected' : '' }}>Ngừng hoạt động</option>
                         </select>

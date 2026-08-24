@@ -75,14 +75,14 @@
         <div class="flex flex-col items-center animate-fade-in-up delay-100 w-1/3 max-w-[200px]">
             <div class="relative mb-4 group cursor-pointer transition-transform duration-300 hover:-translate-y-2">
                 <div class="absolute inset-0 bg-gray-400 rounded-full blur-md opacity-50 group-hover:opacity-100 transition-opacity"></div>
-                <img src="{{ $user2->avatar ? asset('storage/'.$user2->avatar) : 'https://ui-avatars.com/api/?name='.urlencode($user2->name) }}" class="relative w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-gray-300 shadow-xl z-10">
+                <img src="{{ $user2->avatar ? asset('storage/'.$user2->avatar) : 'https://ui-avatars.com/api/?name='.urlencode($user2->name) }}" class="relative w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-4 border-gray-300 shadow-xl z-10 border px-4 py-2">
                 <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-gradient-to-br from-gray-300 to-gray-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-black text-sm shadow-lg border-2 border-white z-20">2</div>
             </div>
             <div class="text-center mb-4">
                 <h3 class="font-bold text-gray-800 dark:text-gray-200 truncate w-24 md:w-full">{{ $user2->name }}</h3>
                 <p class="text-xs font-semibold text-gray-500">{{ $user2->approved_tasks_count }} Tasks</p>
             </div>
-            <div class="w-full bg-gradient-to-t from-gray-300 to-gray-100 dark:from-zinc-700 dark:to-zinc-600 rounded-t-lg podium-2 shadow-inner border-t-2 border-gray-300 flex justify-center pt-4">
+            <div class="w-full bg-gradient-to-t from-gray-300 to-gray-100 dark:from-zinc-700 dark:to-zinc-600 rounded-t-lg podium-2 shadow-inner border-t-2 border-gray-300 flex justify-center pt-4 border px-4 py-2">
                 <span class="text-3xl opacity-30 font-black">2</span>
             </div>
         </div>
@@ -187,7 +187,7 @@
     @endif
     
     @if($top3->isEmpty() && $others->isEmpty())
-    <div class="text-center py-20 bg-white dark:bg-zinc-800 rounded-2xl shadow-sm border border-dashed border-gray-300 dark:border-zinc-700">
+    <div class="text-center py-20 bg-white dark:bg-zinc-800 rounded-2xl shadow-sm border border-dashed border-gray-300 dark:border-zinc-700 px-4">
         <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
         <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">Chưa có dữ liệu</h3>
         <p class="text-gray-500 mt-1">Chưa có công việc nào được duyệt trong khoảng thời gian này.</p>

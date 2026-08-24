@@ -77,7 +77,7 @@
                             <div class="flex items-center h-5">
                                 <input type="checkbox" name="create_website" id="create_website" value="1" 
                                        {{ old('create_website') ? 'checked' : '' }}
-                                       class="w-4 h-4 text-[#001B4E] bg-gray-100 border-gray-300 rounded focus:ring-[#001B4E]">
+                                       class="w-4 h-4 text-[#001B4E] bg-gray-100 border-gray-300 rounded focus:ring-[#001B4E] border px-4 py-2">
                             </div>
                             <div class="ml-3 text-sm">
                                 <span class="font-medium text-gray-900">Tự động tạo website với database riêng và export source code</span>

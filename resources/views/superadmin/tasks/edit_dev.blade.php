@@ -19,13 +19,13 @@
                 
                 <div class="mb-6">
                     <label class="block text-sm font-bold text-[#001B4E] mb-2">Báo cáo tiến độ / Link kết quả</label>
-                    <textarea name="result_notes" rows="6" placeholder="Nhập link file, link design hoặc mô tả kết quả công việc đã làm..." required class="w-full rounded-lg border-gray-300 focus:border-[#001B4E] focus:ring focus:ring-[#001B4E] focus:ring-opacity-50">{{ $task->result_notes }}</textarea>
+                    <textarea name="result_notes" rows="6" placeholder="Nhập link file, link design hoặc mô tả kết quả công việc đã làm..." required class="w-full rounded-lg border-gray-300 focus:border-[#001B4E] focus:ring focus:ring-[#001B4E] focus:ring-opacity-50 border px-4 py-2">{{ $task->result_notes }}</textarea>
                 </div>
                 
                 <div class="mb-8 p-4 bg-blue-50 border border-blue-100 rounded-lg">
                     <label class="block text-sm font-bold text-blue-900 mb-2">Trạng thái hiện tại: {{ strtoupper($task->status) }}</label>
                     <div class="flex items-center gap-4">
-                        <select name="status" class="w-full max-w-xs rounded-lg border-gray-300 focus:border-[#001B4E] focus:ring focus:ring-[#001B4E] focus:ring-opacity-50">
+                        <select name="status" class="w-full max-w-xs rounded-lg border-gray-300 focus:border-[#001B4E] focus:ring focus:ring-[#001B4E] focus:ring-opacity-50 border px-4 py-2">
                             <option value="todo" {{ $task->status == 'todo' ? 'selected' : '' }}>Cần làm</option>
                             <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>Đang làm</option>
                             <option value="review" {{ $task->status == 'review' ? 'selected' : '' }}>Nộp kết quả (Chờ duyệt)</option>

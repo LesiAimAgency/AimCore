@@ -57,35 +57,24 @@
                         </div>
 
                         <div>
-                            <x-form.label value="Tên khách hàng" required="true" />
-                            <x-form.input name="client_name" :value="old('client_name', $contract->client_name)" required="true" placeholder="Tên cá nhân/công ty" />
+                            <x-form.label value="Khách hàng" required="true" />
+                            <select name="customer_id" class="w-full rounded-lg border-gray-300 focus:border-[#001B4E] focus:ring focus:ring-[#001B4E] focus:ring-opacity-50 border px-4 py-2" required>
+                                <option value="">-- Chọn khách hàng --</option>
+                                @foreach($customers as $customer)
+                                    <option value="{{ $customer->id }}" {{ old('customer_id', $contract->customer_id) == $customer->id ? 'selected' : '' }}>
+                                        {{ $customer->name }} {{ $customer->phone ? ' - ' . $customer->phone : '' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('customer_id')
+                                <x-form.error :message="$message" />
+                            @enderror
+                            <div class="mt-2 text-xs text-gray-500">
+                                Nếu chưa có, vui lòng <a href="{{ route('superadmin.customers.create') }}" class="text-blue-600 hover:underline" target="_blank">thêm khách hàng mới</a>
+                            </div>
                         </div>
 
-                        <div>
-                            <x-form.label value="Tên người đại diện" />
-                            <x-form.input name="representative_name" :value="old('representative_name', $contract->representative_name)" placeholder="Người đứng tên HĐ..." />
-                        </div>
 
-                        <div>
-                            <x-form.label value="Chức vụ" />
-                            <x-form.input name="representative_title" :value="old('representative_title', $contract->representative_title)" placeholder="Giám đốc..." />
-                        </div>
-
-                        <div>
-                            <x-form.label value="Số điện thoại" />
-                            <x-form.input name="client_phone" :value="old('client_phone', $contract->client_phone)" placeholder="09xxxxxxx" />
-                        </div>
-
-                        <div>
-                            <x-form.label value="Địa chỉ" />
-                            <x-form.input name="client_address" :value="old('client_address', $contract->client_address)" placeholder="Địa chỉ thường trú/trụ sở..." />
-                        </div>
-
-                        <div>
-                            <x-form.label value="Mã số thuế" />
-                            <x-form.input name="tax_code" :value="old('tax_code', $contract->tax_code)" placeholder="MST công ty nếu có..." />
-                        </div>
-                        
                         <div>
                             <x-form.label value="Giá trị hợp đồng (VNĐ)" />
                             <x-form.input name="contract_value" :value="old('contract_value', $contract->contract_value)" type="number" step="1000" min="0" />
@@ -117,43 +106,15 @@
                         Tài nguyên Web (Domain & Hosting)
                     </h3>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <h4 class="font-semibold text-gray-700">Tên miền (Domain)</h4>
-                            <div>
-                                <x-form.label value="Tên miền" />
-                                <x-form.input name="domain_name" :value="old('domain_name', $contract->domain_name)" />
-                            </div>
-                            <div>
-                                <x-form.label value="Ngày mua/Kích hoạt" />
-                                <x-form.input type="date" name="domain_purchase_date" :value="old('domain_purchase_date', $contract->domain_purchase_date?->format('Y-m-d'))" />
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <h4 class="font-semibold text-gray-700">Máy chủ (Hosting/VPS)</h4>
-                            <div>
-                                <x-form.label value="Nhà cung cấp" />
-                                <x-form.input name="hosting_provider" :value="old('hosting_provider', $contract->hosting_provider)" />
-                            </div>
-                            <div>
-                                <x-form.label value="Ngày mua/Kích hoạt" />
-                                <x-form.input type="date" name="hosting_start_date" :value="old('hosting_start_date', $contract->hosting_start_date?->format('Y-m-d'))" />
-                            </div>
-                        </div>
+                    <div class="flex items-center mb-4">
+                        <input type="checkbox" name="has_client_resources" id="has_client_resources_checkbox" value="1" {{ old('client_resource_details', $contract->client_resource_details) ? 'checked' : '' }} class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 border px-4 py-2">
+                        <label for="has_client_resources_checkbox" class="ml-2 font-medium text-gray-900 cursor-pointer">Có đính kèm Tài nguyên Web (Domain, Hosting...)?</label>
                     </div>
 
-                    <div class="mt-6 border-t pt-4">
-                        <div class="flex items-center mb-4">
-                            <input type="checkbox" name="has_client_resources" id="has_client_resources" value="1" {{ old('has_client_resources', $contract->has_client_resources) ? 'checked' : '' }} class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                            <label for="has_client_resources" class="ml-2 text-sm font-medium text-gray-900">Khách hàng cung cấp Tài khoản Domain/Hosting có sẵn</label>
-                        </div>
-                        
-                        <div id="client_resources_wrapper" class="{{ old('has_client_resources', $contract->has_client_resources) ? '' : 'hidden' }}">
-                            <x-form.label value="Chi tiết Tài khoản / Nguồn tài nguyên khách gửi" />
-                            <x-form.rich-editor name="client_resource_details" :value="old('client_resource_details', $contract->client_resource_details)" />
-                            <p class="text-xs text-gray-500 mt-1 italic">Vui lòng cung cấp link đăng nhập, user, pass nếu có...</p>
-                        </div>
+                    <div id="web-resources-fields" class="space-y-4 {{ old('client_resource_details', $contract->client_resource_details) ? '' : 'hidden' }}">
+                        <x-form.label value="Chi tiết Tài khoản / Nguồn tài nguyên" />
+                        <x-form.rich-editor name="client_resource_details" :value="old('client_resource_details', $contract->client_resource_details)" />
+                        <p class="text-xs text-gray-500 mt-1 italic">Vui lòng cung cấp link đăng nhập, user, pass nếu có...</p>
                     </div>
                 </div>
             </div>
@@ -238,13 +199,7 @@
                     
                     <div>
                         <x-form.label value="Thêm hình ảnh mới" />
-                        <input type="file" name="attachment_files[]" multiple accept="image/*" class="w-full text-sm text-gray-500
-                            file:mr-4 file:py-2 file:px-4
-                            file:rounded-lg file:border-0
-                            file:text-sm file:font-semibold
-                            file:bg-[#001B4E] file:text-white
-                            hover:file:bg-[#002D80]
-                            cursor-pointer border rounded-lg border-gray-300 p-2 mt-1">
+                        <input type="file" name="attachment_files[]" multiple accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#001B4E] file:text-white hover:file:bg-[#002D80] cursor-pointer border rounded-lg border-gray-300 p-2 mt-1">
                     </div>
                 </div>
                 
@@ -264,38 +219,18 @@
     </form>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const serviceType = document.getElementById('service_type');
-        const webCard = document.getElementById('web-resources-card');
-        
-        function toggleWebCard() {
-            if(serviceType.value === 'website') {
-                webCard.style.opacity = '1';
-                webCard.style.pointerEvents = 'auto';
-                webCard.style.filter = 'none';
-            } else {
-                webCard.style.opacity = '0.5';
-                webCard.style.filter = 'grayscale(100%)';
-            }
-        }
-        
-        serviceType.addEventListener('change', toggleWebCard);
-        toggleWebCard(); // init
-    });
-</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const checkbox = document.getElementById('has_client_resources');
-        const wrapper = document.getElementById('client_resources_wrapper');
+        const webCheckbox = document.getElementById('has_client_resources_checkbox');
+        const webFields = document.getElementById('web-resources-fields');
         
-        if (checkbox && wrapper) {
-            checkbox.addEventListener('change', function() {
+        if (webCheckbox && webFields) {
+            webCheckbox.addEventListener('change', function() {
                 if (this.checked) {
-                    wrapper.classList.remove('hidden');
+                    webFields.classList.remove('hidden');
                 } else {
-                    wrapper.classList.add('hidden');
+                    webFields.classList.add('hidden');
                 }
             });
         }

@@ -25,7 +25,7 @@
     <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
         <form action="{{ route('superadmin.contracts.index') }}" method="GET" class="flex flex-col sm:flex-row gap-4">
             <div class="flex-1">
-                <select name="service_type" class="w-full rounded-lg border-gray-300 focus:border-[#001B4E] focus:ring focus:ring-[#001B4E] focus:ring-opacity-50">
+                <select name="service_type" class="w-full rounded-lg border-gray-300 focus:border-[#001B4E] focus:ring focus:ring-[#001B4E] focus:ring-opacity-50 border px-4 py-2">
                     <option value="">-- Tất cả Nhóm Dịch vụ --</option>
                     <option value="website" {{ request('service_type') == 'website' ? 'selected' : '' }}>Thiết kế website</option>
                     <option value="publication" {{ request('service_type') == 'publication' ? 'selected' : '' }}>Thiết kế ấn phẩm</option>
@@ -34,7 +34,7 @@
                 </select>
             </div>
             <div class="flex-1">
-                <select name="status" class="w-full rounded-lg border-gray-300 focus:border-[#001B4E] focus:ring focus:ring-[#001B4E] focus:ring-opacity-50">
+                <select name="status" class="w-full rounded-lg border-gray-300 focus:border-[#001B4E] focus:ring focus:ring-[#001B4E] focus:ring-opacity-50 border px-4 py-2">
                     <option value="">-- Tất cả Trạng thái --</option>
                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Đang chờ (Pending)</option>
                     <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Đang hiệu lực (Active)</option>

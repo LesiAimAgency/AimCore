@@ -88,5 +88,15 @@
                 }
             }
         }
+
+        // Global form submit synchronization
+        document.addEventListener('submit', function(e) {
+            const form = e.target;
+            const editors = form.querySelectorAll('[id^="editor-"]');
+            editors.forEach(editor => {
+                const name = editor.id.replace('editor-', '');
+                window.updateTextarea(name);
+            });
+        });
     }
 </script>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\UserController;
 // [CLEANED] use App\Http\Controllers\SuperAdmin\PositionController;
 use App\Http\Controllers\SuperAdmin\BriefController;
 use App\Http\Controllers\SuperAdmin\ContractController;
+use App\Http\Controllers\SuperAdmin\CustomerController;
 use App\Http\Controllers\SuperAdmin\DashboardController;
 use App\Http\Controllers\SuperAdmin\DepartmentController;
 use App\Http\Controllers\SuperAdmin\EmployeeController;
@@ -70,6 +71,7 @@ Route::middleware([
     // Route::resource('tickets', TicketController::class);
     // Route::resource('briefs', BriefController::class);
     Route::get('contracts/{contract}/export/{type}', [ContractController::class, 'exportDocument'])->name('contracts.export');
+    Route::resource('customers', CustomerController::class);
     Route::resource('contracts', ContractController::class);
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);

@@ -10,6 +10,7 @@ class Contract extends Model
     use HasFactory;
 
     protected $fillable = [
+        'customer_id',
         'title',
         'client_name',
         'service_type',
@@ -45,6 +46,11 @@ class Contract extends Model
         'attachments' => 'array',
         'has_client_resources' => 'boolean',
     ];
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 
     public function projects()
     {

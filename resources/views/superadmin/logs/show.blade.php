@@ -38,12 +38,12 @@
             </div>
             
             <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto text-sm">
-                <input type="text" id="filter-user" placeholder="Lọc theo tên người dùng..." class="border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-1.5 w-full sm:w-48 text-sm">
+                <input type="text" id="filter-user" placeholder="Lọc theo tên người dùng..." class="border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-1.5 w-full sm:w-48 text-sm border">
                 
                 <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <input type="time" id="filter-time-start" class="border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 px-2 py-1.5 text-sm" title="Giờ bắt đầu">
+                    <input type="time" id="filter-time-start" class="border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 px-2 py-1.5 text-sm border" title="Giờ bắt đầu">
                     <span class="text-gray-500">-</span>
-                    <input type="time" id="filter-time-end" class="border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 px-2 py-1.5 text-sm" title="Giờ kết thúc">
+                    <input type="time" id="filter-time-end" class="border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 px-2 py-1.5 text-sm border" title="Giờ kết thúc">
                 </div>
                 
                 <button type="button" id="btn-clear-filters" class="text-gray-500 hover:text-red-600 px-2 py-1.5 text-xs font-medium whitespace-nowrap">

@@ -271,10 +271,10 @@ function showProgressModal(projectCode) {
       '</div>' +
     '</div>' +
     '<div id="progressSteps" class="text-xs text-gray-600 space-y-2">' +
-      '<div id="step1" class="flex items-center p-2 rounded"><div class="w-4 h-4 rounded-full border-2 border-gray-300 mr-3 flex-shrink-0"></div><span>25% - Chuẩn bị thư mục export</span></div>' +
-      '<div id="step2" class="flex items-center p-2 rounded"><div class="w-4 h-4 rounded-full border-2 border-gray-300 mr-3 flex-shrink-0"></div><span>50% - Copy source code (app, config, routes...)</span></div>' +
-      '<div id="step3" class="flex items-center p-2 rounded"><div class="w-4 h-4 rounded-full border-2 border-gray-300 mr-3 flex-shrink-0"></div><span>75% - Export database & migrations</span></div>' +
-      '<div id="step4" class="flex items-center p-2 rounded"><div class="w-4 h-4 rounded-full border-2 border-gray-300 mr-3 flex-shrink-0"></div><span>90% - Tạo file cấu hình (.env, deploy.sh)</span></div>' +
+      '<div id="step1" class="flex items-center p-2 rounded"><div class="w-4 h-4 rounded-full border-2 border-gray-300 mr-3 flex-shrink-0 border px-4 py-2"></div><span>25% - Chuẩn bị thư mục export</span></div>' +
+      '<div id="step2" class="flex items-center p-2 rounded"><div class="w-4 h-4 rounded-full border-2 border-gray-300 mr-3 flex-shrink-0 border px-4 py-2"></div><span>50% - Copy source code (app, config, routes...)</span></div>' +
+      '<div id="step3" class="flex items-center p-2 rounded"><div class="w-4 h-4 rounded-full border-2 border-gray-300 mr-3 flex-shrink-0 border px-4 py-2"></div><span>75% - Export database & migrations</span></div>' +
+      '<div id="step4" class="flex items-center p-2 rounded"><div class="w-4 h-4 rounded-full border-2 border-gray-300 mr-3 flex-shrink-0 border px-4 py-2"></div><span>90% - Tạo file cấu hình (.env, deploy.sh)</span></div>' +
     '</div>' +
     '<div class="mt-4 text-xs text-gray-500 bg-gray-50 p-3 rounded">' +
       '<div class="flex justify-between mb-1"><span>File xuất:</span><span class="font-medium text-blue-600">' + projectCode + '_website.zip</span></div>' +

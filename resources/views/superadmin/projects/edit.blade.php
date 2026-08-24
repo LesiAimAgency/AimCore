@@ -60,10 +60,32 @@
                             <div>
                                 <x-form.label value="Phân loại dự án" required="true" />
                                 <x-form.select name="project_type" id="project_type_select" required="true">
-                                    <option value="">-- Chọn loại dự án --</option>
+                                   
                                     <option value="design" {{ old('project_type', $project->project_type ?? ($project->department_id == 2 ? 'website' : 'design')) == 'design' ? 'selected' : '' }}>Thiết kế (Design)</option>
                                     <option value="website" {{ old('project_type', $project->project_type ?? ($project->department_id == 2 ? 'website' : 'design')) == 'website' ? 'selected' : '' }}>Lập trình Website</option>
                                 </x-form.select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100 mt-4">
+
+
+                            <div>
+                                <x-form.label value="Khách hàng" required="true" />
+                                <select name="customer_id" id="customer_id_select" required class="w-full rounded-lg border-gray-300 focus:border-[#001B4E] focus:ring focus:ring-[#001B4E] focus:ring-opacity-50 border px-4 py-2">
+                                    <option value="">-- Chọn khách hàng --</option>
+                                    @foreach($customers as $customer)
+                                        <option value="{{ $customer->id }}" {{ old('customer_id', $project->customer_id) == $customer->id ? 'selected' : '' }}>
+                                            {{ $customer->name }} {{ $customer->phone ? ' - ' . $customer->phone : '' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('customer_id')
+                                    <x-form.error :message="$message" />
+                                @enderror
+                                <div class="mt-2 text-xs text-gray-500">
+                                    Nếu chưa có, vui lòng <a href="{{ route('superadmin.customers.create') }}" class="text-blue-600 hover:underline" target="_blank">thêm khách hàng mới</a>
+                                </div>
                             </div>
                         </div>
 
@@ -97,7 +119,7 @@
                         
                         <div>
                             <x-form.label value="Ghi chú khác" />
-                            <x-form.textarea name="notes" :value="old('notes', $project->notes)" rows="3" placeholder="Các ghi chú bổ sung..." />
+                            <x-form.rich-editor name="notes" :value="old('notes', $project->notes)" placeholder="Các ghi chú bổ sung..." />
                         </div>
                     </div>
                 </div>
@@ -247,6 +269,18 @@
                 }
                 this.value = new Intl.NumberFormat('vi-VN').format(value);
                 moneyReal.value = value;
+            });
+        }
+        
+        const contractSelect = document.getElementById('contract_id_select');
+        const customerSelect = document.getElementById('customer_id_select');
+        if (contractSelect && customerSelect) {
+            contractSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const customerId = selectedOption.getAttribute('data-customer-id');
+                if (customerId) {
+                    customerSelect.value = customerId;
+                }
             });
         }
 

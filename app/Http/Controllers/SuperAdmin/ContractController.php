@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Contract;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -34,7 +35,8 @@ class ContractController extends Controller
      */
     public function create()
     {
-        return view('superadmin.contracts.create');
+        $customers = Customer::orderBy('name')->get();
+        return view('superadmin.contracts.create', compact('customers'));
     }
 
     /**
@@ -45,6 +47,7 @@ class ContractController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'client_name' => 'nullable|string|max:255',
+            'customer_id' => 'nullable|exists:customers,id',
             'service_type' => 'required|in:website,publication,branding,social_media',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
@@ -102,7 +105,8 @@ class ContractController extends Controller
      */
     public function edit(Contract $contract)
     {
-        return view('superadmin.contracts.edit', compact('contract'));
+        $customers = Customer::orderBy('name')->get();
+        return view('superadmin.contracts.edit', compact('contract', 'customers'));
     }
 
     /**
@@ -113,6 +117,7 @@ class ContractController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'client_name' => 'nullable|string|max:255',
+            'customer_id' => 'nullable|exists:customers,id',
             'service_type' => 'required|in:website,publication,branding,social_media',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',

@@ -12,7 +12,7 @@
             @if($isAdminOrPm)
             <div class="flex-1 min-w-[200px]">
                 <label for="user_id" class="block text-sm font-medium text-gray-700 mb-1">Nhân viên</label>
-                <select name="user_id" id="user_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                <select name="user_id" id="user_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm border px-4 py-2">
                     @foreach($users as $u)
                         <option value="{{ $u->id }}" {{ $targetUser->id == $u->id ? 'selected' : '' }}>
                             {{ $u->name }} ({{ $u->department ?? 'N/A' }})
@@ -24,7 +24,7 @@
 
             <div class="flex-1 min-w-[200px]">
                 <label for="period" class="block text-sm font-medium text-gray-700 mb-1">Kỳ báo cáo</label>
-                <select name="period" id="period" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                <select name="period" id="period" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm border px-4 py-2">
                     <option value="month" {{ $period == 'month' ? 'selected' : '' }}>Tháng này</option>
                     <option value="week" {{ $period == 'week' ? 'selected' : '' }}>Tuần này</option>
                     <option value="year" {{ $period == 'year' ? 'selected' : '' }}>Năm nay</option>

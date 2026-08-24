@@ -303,15 +303,12 @@
               <div class="p-3 grid grid-cols-1 gap-2">
                 @foreach($packs as $pack)
                   @php $isChecked = in_array($pack->code, $currentFeatures); @endphp
-                  <label class="feature-card flex items-start gap-3 p-3 rounded-lg cursor-pointer border-2 transition-all duration-200
-                    {{ $isChecked 
-                      ? 'bg-white border-' . $meta['color'] . '-400 shadow-sm' 
-                      : 'bg-white/50 border-transparent hover:border-gray-300 hover:bg-white' }}"
+                  <label class="feature-card flex items-start gap-3 p-3 rounded-lg cursor-pointer border-2 transition-all duration-200 {{ $isChecked ? 'bg-white border-' . $meta['color'] . '-400 shadow-sm' : 'bg-white/50 border-transparent hover:border-gray-300 hover:bg-white' }} border"
                     id="label-{{ $pack->code }}">
                     <input type="checkbox"
                       name="cms_features[]"
                       value="{{ $pack->code }}"
-                      class="feature-checkbox mt-0.5 w-4 h-4 rounded border-gray-300 {{ $colors['check'] }} focus:ring-2"
+                      class="feature-checkbox mt-0.5 w-4 h-4 rounded border-gray-300 {{ $colors['check'] }} focus:ring-2 border px-4 py-2"
                       {{ $isChecked ? 'checked' : '' }}
                       onchange="onFeatureChange(this, '{{ $meta['color'] }}')">
                     <div class="flex-1 min-w-0">
