@@ -45,6 +45,7 @@ class CustomerController extends Controller
             'address' => 'nullable|string|max:255',
             'id_card_details' => 'nullable|string|max:255',
             'representative_name' => 'nullable|string|max:255',
+            'representative_phone' => 'nullable|string|max:50',
             'representative_title' => 'nullable|string|max:255',
             'note' => 'nullable|string',
         ]);
@@ -71,6 +72,7 @@ class CustomerController extends Controller
             'address' => 'nullable|string|max:255',
             'id_card_details' => 'nullable|string|max:255',
             'representative_name' => 'nullable|string|max:255',
+            'representative_phone' => 'nullable|string|max:50',
             'representative_title' => 'nullable|string|max:255',
             'note' => 'nullable|string',
         ]);

@@ -86,6 +86,14 @@
                             <x-form.label>Chức vụ</x-form.label>
                             <x-form.input name="representative_title" :value="old('representative_title')" placeholder="VD: Giám đốc" />
                         </div>
+                        <div>
+                            <x-form.label>SĐT Cá nhân (Đại diện)</x-form.label>
+                            <x-form.input name="representative_phone" :value="old('representative_phone')" placeholder="VD: 0912345678" />
+                        </div>
+                        <div>
+                            <x-form.label>CCCD / Ngày cấp / Nơi cấp</x-form.label>
+                            <x-form.input name="id_card_details" :value="old('id_card_details')" placeholder="VD: 079201012345 - 01/01/2021..." />
+                        </div>
                     </div>
                 </div>
 

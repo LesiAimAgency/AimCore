@@ -18,6 +18,7 @@ class Customer extends Model
         'address',
         'id_card_details',
         'representative_name',
+        'representative_phone',
         'representative_title',
         'note',
     ];
