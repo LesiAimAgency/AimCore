@@ -19,51 +19,72 @@
 
             <div class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <x-form.label>Loại khách hàng</x-form.label>
-                        <x-form.select name="type" :options="['individual' => 'Cá nhân', 'company' => 'Doanh nghiệp']" :value="old('type')" />
-                    </div>
-
-                    <div>
-                        <x-form.label>Tên Khách hàng / Công ty <span class="text-red-500">*</span></x-form.label>
-                        <x-form.input name="name" :value="old('name')" required="true" placeholder="VD: Nguyễn Văn A hoặc Công ty TNHH ABC" />
-                    </div>
-
-                    <div>
-                        <x-form.label>Số điện thoại</x-form.label>
-                        <x-form.input name="phone" :value="old('phone')" placeholder="VD: 0912345678" />
-                    </div>
-
-                    <div>
-                        <x-form.label>Email</x-form.label>
-                        <x-form.input type="email" name="email" :value="old('email')" placeholder="VD: email@example.com" />
-                    </div>
-
                     <div class="md:col-span-2">
-                        <x-form.label>Địa chỉ</x-form.label>
-                        <x-form.input name="address" :value="old('address')" placeholder="Nhập địa chỉ" />
+                        <x-form.label>Loại khách hàng</x-form.label>
+                        <x-form.select name="type" :options="['individual' => 'Cá nhân', 'company' => 'Doanh nghiệp']" :value="old('type', 'individual')" />
                     </div>
 
-                    <div class="md:col-span-2 company-fields bg-blue-50/30 p-5 rounded-xl border border-blue-100">
-                        <h3 class="text-sm font-bold text-[#001B4E] mb-4 flex items-center">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                            Thông tin Pháp lý & Đại diện
+                    <!-- Individual Fields -->
+                    <div class="individual-fields md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 p-5 bg-blue-50/30 rounded-xl border border-blue-100">
+                        <h3 class="text-sm font-bold text-[#001B4E] mb-2 md:col-span-2 flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            Thông Tin Cá Nhân
                         </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <x-form.label>Người đại diện</x-form.label>
-                                <x-form.input name="representative_name" :value="old('representative_name')" placeholder="Người đại diện pháp luật" />
-                            </div>
-                            
-                            <div>
-                                <x-form.label>Chức vụ</x-form.label>
-                                <x-form.input name="representative_title" :value="old('representative_title')" placeholder="VD: Giám đốc" />
-                            </div>
+                        <div>
+                            <x-form.label>Họ và tên <span class="text-red-500">*</span></x-form.label>
+                            <x-form.input name="name" :value="old('name')" placeholder="VD: Nguyễn Văn A" />
+                        </div>
+                        <div>
+                            <x-form.label>Số điện thoại</x-form.label>
+                            <x-form.input name="phone" :value="old('phone')" placeholder="VD: 0912345678" />
+                        </div>
+                        <div class="md:col-span-2">
+                            <x-form.label>CCCD / Ngày cấp / Nơi cấp</x-form.label>
+                            <x-form.input name="id_card_details" :value="old('id_card_details')" placeholder="VD: 079201012345 - 01/01/2021 - Cục CS QLHC..." />
+                        </div>
+                        <div class="md:col-span-2">
+                            <x-form.label>Email</x-form.label>
+                            <x-form.input type="email" name="email" :value="old('email')" placeholder="VD: email@example.com" />
+                        </div>
+                        <div class="md:col-span-2">
+                            <x-form.label>Địa chỉ</x-form.label>
+                            <x-form.input name="address" :value="old('address')" placeholder="Nhập địa chỉ" />
+                        </div>
+                    </div>
 
-                            <div class="md:col-span-2">
-                                <x-form.label>Mã số thuế</x-form.label>
-                                <x-form.input name="tax_code" :value="old('tax_code')" placeholder="VD: 0101234567" />
-                            </div>
+                    <!-- Company Fields -->
+                    <div class="company-fields md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 p-5 bg-blue-50/30 rounded-xl border border-blue-100" style="display: none;">
+                        <h3 class="text-sm font-bold text-[#001B4E] mb-2 md:col-span-2 flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            Thông Tin Công Ty
+                        </h3>
+                        <div>
+                            <x-form.label>Tên Công ty <span class="text-red-500">*</span></x-form.label>
+                            <x-form.input name="name" :value="old('name')" placeholder="VD: Công ty TNHH ABC" />
+                        </div>
+                        <div>
+                            <x-form.label>Mã số thuế</x-form.label>
+                            <x-form.input name="tax_code" :value="old('tax_code')" placeholder="VD: 0101234567" />
+                        </div>
+                        <div class="md:col-span-2">
+                            <x-form.label>Địa chỉ</x-form.label>
+                            <x-form.input name="address" :value="old('address')" placeholder="Nhập địa chỉ công ty" />
+                        </div>
+                        <div>
+                            <x-form.label>Số điện thoại</x-form.label>
+                            <x-form.input name="phone" :value="old('phone')" placeholder="VD: 0912345678" />
+                        </div>
+                        <div>
+                            <x-form.label>Email</x-form.label>
+                            <x-form.input type="email" name="email" :value="old('email')" placeholder="VD: email@example.com" />
+                        </div>
+                        <div>
+                            <x-form.label>Đại diện</x-form.label>
+                            <x-form.input name="representative_name" :value="old('representative_name')" placeholder="Người đại diện pháp luật" />
+                        </div>
+                        <div>
+                            <x-form.label>Chức vụ</x-form.label>
+                            <x-form.input name="representative_title" :value="old('representative_title')" placeholder="VD: Giám đốc" />
                         </div>
                     </div>
                 </div>
@@ -85,13 +106,27 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const typeSelect = document.querySelector('select[name="type"]');
-    const companyFields = document.querySelectorAll('.company-fields');
+    const companyFields = document.querySelector('.company-fields');
+    const individualFields = document.querySelector('.individual-fields');
+    
+    // Inputs
+    const companyInputs = companyFields.querySelectorAll('input, select, textarea');
+    const individualInputs = individualFields.querySelectorAll('input, select, textarea');
     
     function toggleFields() {
         if (typeSelect.value === 'company') {
-            companyFields.forEach(el => el.style.display = 'block');
+            companyFields.style.display = 'grid';
+            individualFields.style.display = 'none';
+            
+            // Toggle required and disabled states
+            companyInputs.forEach(el => el.disabled = false);
+            individualInputs.forEach(el => el.disabled = true);
         } else {
-            companyFields.forEach(el => el.style.display = 'none');
+            companyFields.style.display = 'none';
+            individualFields.style.display = 'grid';
+            
+            companyInputs.forEach(el => el.disabled = true);
+            individualInputs.forEach(el => el.disabled = false);
         }
     }
     

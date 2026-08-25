@@ -16,6 +16,7 @@ class Customer extends Model
         'phone',
         'tax_code',
         'address',
+        'id_card_details',
         'representative_name',
         'representative_title',
         'note',
