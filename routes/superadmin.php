@@ -54,6 +54,7 @@ Route::middleware([
     // ── Công việc của tôi (Personal Tasks & Team Tasks) ────────────
     Route::get('my-tasks', [MyTaskController::class, 'index'])->name('my-tasks.index');
     Route::get('my-tasks/sync', [MyTaskController::class, 'sync'])->name('my-tasks.sync');
+    Route::get('my-tasks/stream', [MyTaskController::class, 'stream'])->name('my-tasks.stream');
     Route::post('my-tasks', [MyTaskController::class, 'store'])->name('my-tasks.store');
     Route::put('my-tasks/{task}', [MyTaskController::class, 'update'])->name('my-tasks.update');
     Route::delete('my-tasks/{task}', [MyTaskController::class, 'destroy'])->name('my-tasks.destroy');

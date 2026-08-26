@@ -1388,8 +1388,59 @@ document.addEventListener('alpine:init', () => {
                 this.initSortable();
             });
 
-            // Kích hoạt đồng bộ Realtime thông minh (Tiết kiệm 99.9% tài nguyên host)
-            this.startRealtimePolling();
+            // Kích hoạt cơ chế Realtime tức thì qua Server-Sent Events (SSE) - 0ms delay, không tốn tài nguyên
+            this.startRealtimeSSE();
+        },
+
+        sseSource: null,
+        reconnectTimeout: null,
+
+        startRealtimeSSE() {
+            if (typeof EventSource === 'undefined') return;
+
+            if (this.sseSource) {
+                this.sseSource.close();
+                this.sseSource = null;
+            }
+
+            const streamUrl = `{{ route('superadmin.my-tasks.stream') }}?last_version=${this.serverVersion}`;
+            this.sseSource = new EventSource(streamUrl);
+
+            this.sseSource.addEventListener('task_updated', async (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.server_version && data.server_version > this.serverVersion) {
+                        this.serverVersion = data.server_version;
+                        // Tự động load và cập nhật dữ liệu + vị trí ngay lập tức khi có phát sinh thay đổi
+                        await this.syncRealtimeData(true);
+                    }
+                } catch (e) {
+                    console.error('SSE Error:', e);
+                }
+            });
+
+            this.sseSource.onerror = () => {
+                if (this.sseSource) {
+                    this.sseSource.close();
+                    this.sseSource = null;
+                }
+                if (this.reconnectTimeout) clearTimeout(this.reconnectTimeout);
+                this.reconnectTimeout = setTimeout(() => {
+                    if (!document.hidden) {
+                        this.startRealtimeSSE();
+                    }
+                }, 3000);
+            };
+
+            // Khi người dùng quay lại tab trình duyệt -> kết nối lại stream và sync ngay
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) {
+                    if (!this.sseSource || this.sseSource.readyState === EventSource.CLOSED) {
+                        this.startRealtimeSSE();
+                    }
+                    this.syncRealtimeData();
+                }
+            });
         },
 
         getTodayDateString() {
@@ -1607,20 +1658,6 @@ document.addEventListener('alpine:init', () => {
             return 'bg-blue-500';
         },
 
-        startRealtimePolling() {
-            // Đồng bộ ngay khi người dùng quay lại tab
-            document.addEventListener('visibilitychange', () => {
-                if (!document.hidden) {
-                    this.syncRealtimeData();
-                }
-            });
-
-            setInterval(async () => {
-                // Không poll khi đang kéo thả, lưu dữ liệu, hoặc mở modal để tránh gián đoạn UX
-                if (this.isSyncing || this.isSaving || this.isUpdating || this.showModal || this.showEditModal || this.isDragging) return;
-                await this.syncRealtimeData();
-            }, 2000); // 2 giây / lần
-        },
 
         async syncRealtimeData(manual = false) {
             try {
@@ -2290,6 +2327,9 @@ document.addEventListener('alpine:init', () => {
                                 body: JSON.stringify({ items })
                             });
                             const data = await response.json();
+                            if (data.success) {
+                                await this.syncRealtimeData(true);
+                            }
                         } catch (e) {
                             console.error(e);
                         }

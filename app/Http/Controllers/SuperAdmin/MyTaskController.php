@@ -170,6 +170,71 @@ class MyTaskController extends Controller
     }
 
     /**
+     * Server-Sent Events (SSE) Stream for Instant Realtime Task Sync.
+     */
+    public function stream(Request $request): \Symfony\Component\HttpFoundation\StreamedResponse
+    {
+        $lastVersion = (int) $request->input('last_version', 0);
+
+        return response()->stream(function () use ($lastVersion) {
+            // Close session lock to prevent blocking parallel user requests
+            if (session_status() === PHP_SESSION_ACTIVE) {
+                session_write_close();
+            }
+
+            if (function_exists('apache_setenv')) {
+                @apache_setenv('no-gzip', '1');
+            }
+            @ini_set('zlib.output_compression', '0');
+            @ini_set('implicit_flush', '1');
+            while (ob_get_level() > 0) {
+                ob_end_flush();
+            }
+            flush();
+
+            $clientVersion = $lastVersion;
+            $maxTime = 25; // 25s per connection, browser will auto-reconnect
+            $startTime = time();
+
+            while (time() - $startTime < $maxTime) {
+                if (connection_aborted()) {
+                    break;
+                }
+
+                $lastChange = Cache::get('my_tasks_last_change', [
+                    'time' => 0,
+                    'user_id' => 0,
+                    'user_name' => '',
+                    'action' => 'init',
+                    'message' => '',
+                ]);
+
+                $serverVersion = (int) ($lastChange['time'] ?? 0);
+
+                if ($serverVersion > $clientVersion) {
+                    echo "event: task_updated\n";
+                    echo 'data: '.json_encode([
+                        'server_version' => $serverVersion,
+                        'last_change' => $lastChange,
+                    ])."\n\n";
+                    flush();
+                    $clientVersion = $serverVersion;
+                } else {
+                    echo ": ping\n\n";
+                    flush();
+                }
+
+                usleep(400000); // 400ms sleep check
+            }
+        }, 200, [
+            'Content-Type' => 'text/event-stream',
+            'Cache-Control' => 'no-cache, no-transform',
+            'Connection' => 'keep-alive',
+            'X-Accel-Buffering' => 'no',
+        ]);
+    }
+
+    /**
      * Store a new personal or assigned task.
      */
     public function store(StoreMyTaskRequest $request): JsonResponse
