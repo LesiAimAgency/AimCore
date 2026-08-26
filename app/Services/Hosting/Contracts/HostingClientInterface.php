@@ -14,9 +14,9 @@ interface HostingClientInterface
     /**
      * Test connection and credentials.
      *
-     * @return bool True if connection is successful.
+     * @return array Array with connection details or result data.
      */
-    public function testConnection(): bool;
+    public function testConnection(): array;
 
     /**
      * Create a MySQL database.

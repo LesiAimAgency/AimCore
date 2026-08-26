@@ -72,7 +72,10 @@
                 <div class="mb-4 col-span-2">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="api_token">API Token <span class="text-red-500">*</span></label>
                     <input type="password" name="api_token" id="api_token" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" {{ isset($profile) ? '' : 'required' }}>
-                    @if(isset($profile))
+                    @if(isset($profile) && !empty($profile->api_token))
+                        <p class="text-xs text-green-600 mt-2 font-semibold">✓ API token is saved and active.</p>
+                        <p class="text-xs text-gray-500 mt-1">Leave this blank if you don't want to change it. Enter a new token to overwrite the existing one.</p>
+                    @elseif(isset($profile))
                         <p class="text-xs text-gray-500 mt-1">Leave blank to keep existing token.</p>
                     @endif
                 </div>

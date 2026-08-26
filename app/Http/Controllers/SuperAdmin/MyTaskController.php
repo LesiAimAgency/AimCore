@@ -536,12 +536,10 @@ class MyTaskController extends Controller
             ], 422);
         }
 
-        $goldAmount = (int) ($taskModel->gold ?? 0);
-
         $taskModel->update([
             'completed_at' => now(),
             'status' => 'completed',
-            'gold_awarded' => false, // Chưa cộng gold, chờ Quản lý duyệt nghiệm thu
+            'gold_awarded' => false,
         ]);
 
         $this->recalculatePositions($taskModel->user_id);
@@ -549,16 +547,10 @@ class MyTaskController extends Controller
 
         $this->recordTaskChange('complete', "Nhân sự {$user->name} vừa báo cáo hoàn thành: {$taskModel->title}", [$taskModel->assigned_to]);
 
-        $message = $goldAmount > 0
-            ? "Đã đánh dấu hoàn thành! Chờ Quản lý duyệt nghiệm thu để nhận +{$goldAmount} Gold."
-            : 'Đã đánh dấu hoàn thành công việc!';
-
         return response()->json([
             'success' => true,
-            'message' => $message,
+            'message' => 'Đã đánh dấu hoàn thành công việc!',
             'task' => $this->transformTask($taskModel, $user, $isAdminOrPm),
-            'gold_amount' => $goldAmount,
-            'gold_awarded' => false,
         ]);
     }
 

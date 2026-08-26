@@ -451,12 +451,69 @@ Contact: support@vnglobaltech.com';
         File::put($exportPath.'/database/config.php', $dbConfig);
     }
 
+    /**
+     * CMS-only table whitelist.
+     * ONLY these tables are exported with schema + project-scoped data.
+     * Central system tables (projects, tasks, users, contracts, etc.) are NEVER exported.
+     */
+    private function getCmsTableWhitelist(): array
+    {
+        return [
+            // Content
+            'posts',
+            'page_sections',
+            'taxonomies',
+            'translations',
+            'archive_templates',
+            'form_submissions',
+            // Widgets
+            'widgets',
+            'widget_templates',
+            // Navigation
+            'menus',
+            'menu_items',
+            // Media / Fonts
+            'fonts',
+            // Settings
+            'settings',
+            'languages',
+            // Users & Roles (project-level only)
+            'users',
+            'roles',
+            'permissions',
+            'user_roles',
+            'user_permissions',
+            'role_permissions',
+            // E-commerce (if enabled)
+            'products_enhanced',
+            'product_categories',
+            'product_attribute_values',
+            'product_attribute_value_mappings',
+            'product_variations',
+            'brands',
+            'brand_product',
+            'product_attribute_product',
+            'product_category_product',
+            'reviews',
+            // Orders
+            'orders',
+            'order_items',
+            'order_status_history',
+            // Shipping
+            'shipping_carriers',
+            'shipping_zones',
+            'shipping_zone_locations',
+            'shipping_rules',
+            'shipping_rule_conditions',
+            'shipping_rate_versions',
+        ];
+    }
+
     private function generateDatabaseSQL($project)
     {
-        $sql = "-- Database export for {$project->name}\n";
-        $sql .= '-- Generated on: '.now()->format('Y-m-d H:i:s')."\n\n";
-
-        // Do not force database name so user can import into their selected database.
+        $sql = "-- CMS Database snapshot for {$project->name} (Project: {$project->code})\n";
+        $sql .= '-- Generated on: '.now()->format('Y-m-d H:i:s')."\n";
+        $sql .= "-- NOTE: Only CMS tables are included. Central system tables are excluded.\n\n";
 
         $sql .= "/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;\n";
         $sql .= "/*!40101 SET NAMES utf8mb4 */;\n";
@@ -465,10 +522,16 @@ Contact: support@vnglobaltech.com';
         $sql .= "/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;\n";
         $sql .= "/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;\n\n";
 
-        $tables = DB::select('SHOW TABLES');
+        // Get the list of tables that actually exist in the DB
+        $existingTables = array_map(
+            fn ($t) => array_values((array) $t)[0],
+            DB::select('SHOW TABLES')
+        );
 
-        foreach ($tables as $t) {
-            $table = array_values((array) $t)[0];
+        // Only export tables that are in the whitelist AND actually exist
+        $tablesToExport = array_intersect($this->getCmsTableWhitelist(), $existingTables);
+
+        foreach ($tablesToExport as $table) {
             $sql .= $this->exportTableSQL($table, $project);
         }
 
@@ -508,43 +571,42 @@ Contact: support@vnglobaltech.com';
             $columns = Schema::getColumnListing($table);
             $query = DB::table($table);
 
-            if ($table === 'projects') {
-                $query->where('id', $project->id);
-            } elseif (in_array('project_id', $columns)) {
+            // Scope data by project. The rules below determine how each table
+            // is filtered to only include data belonging to this project.
+            if (in_array('project_id', $columns)) {
+                // Most CMS tables have a direct project_id foreign key
                 $query->where('project_id', $project->id);
             } elseif (in_array('tenant_id', $columns)) {
+                // Some legacy tables use tenant_id which maps to project.id
                 $query->where('tenant_id', $project->id);
             }
+            // Tables with neither project_id nor tenant_id fall through and
+            // export all rows — these are global config tables like 'languages',
+            // 'fonts', 'widget_templates', 'archive_templates', 'permissions'.
 
-            // Explicitly handle pivot tables that don't have project_id or tenant_id
+            // --- Pivot table special cases ---
             if ($table === 'brand_product') {
                 $productIds = DB::table('products_enhanced')->where('project_id', $project->id)->pluck('id');
-                $query->whereIn('product_id', $productIds);
+                $query = DB::table($table)->whereIn('product_id', $productIds);
             } elseif ($table === 'product_attribute_product') {
                 $productIds = DB::table('products_enhanced')->where('project_id', $project->id)->pluck('id');
-                $query->whereIn('product_id', $productIds);
-            } elseif ($table === 'term_relationships') {
-                $postIds = DB::table('posts')->where('project_id', $project->id)->pluck('id');
+                $query = DB::table($table)->whereIn('product_id', $productIds);
+            } elseif ($table === 'product_category_product') {
                 $productIds = DB::table('products_enhanced')->where('project_id', $project->id)->pluck('id');
-                $query->where(function ($q) use ($postIds, $productIds) {
-                    $q->whereIn('object_id', $postIds)
-                        ->orWhereIn('object_id', $productIds);
-                });
+                $query = DB::table($table)->whereIn('product_id', $productIds);
             } elseif ($table === 'user_roles' || $table === 'user_permissions') {
-                $userIds = DB::table('users')->where('tenant_id', $project->id)->pluck('id');
-                $query->whereIn('user_id', $userIds);
+                $userIds = DB::table('users')->where('project_id', $project->id)->pluck('id');
+                if ($userIds->isEmpty()) {
+                    // Fallback: try tenant_id scope
+                    $userIds = DB::table('users')->where('tenant_id', $project->id)->pluck('id');
+                }
+                $query = DB::table($table)->whereIn('user_id', $userIds);
             } elseif ($table === 'role_permissions') {
-                $roleIds = DB::table('roles')->where('tenant_id', $project->id)->pluck('id');
-                $query->whereIn('role_id', $roleIds);
-            }
-
-            $skipTables = [
-                'system_logs', 'visitor_logs', 'failed_jobs', 'sessions', 'cache',
-                'cache_locks', 'activity_logs', 'system_backups', 'jobs', 'job_batches',
-            ];
-
-            if (in_array($table, $skipTables)) {
-                return $sql."-- Skipped data for background/cache/log table\n";
+                $roleIds = DB::table('roles')->where('project_id', $project->id)->pluck('id');
+                if ($roleIds->isEmpty()) {
+                    $roleIds = DB::table('roles')->where('tenant_id', $project->id)->pluck('id');
+                }
+                $query = DB::table($table)->whereIn('role_id', $roleIds);
             }
 
             $data = $query->get();

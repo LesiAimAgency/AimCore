@@ -37,7 +37,7 @@ class ProjectController extends Controller implements HasMiddleware
 
     public function index()
     {
-        $query = Project::with(['admin', 'createdBy'])->latest();
+        $query = Project::with(['admin', 'createdBy', 'latestDeployment'])->latest();
 
         // If user is dev, only show projects they are assigned to
         if (auth()->check() && (auth()->user()->role === 'dev' || auth()->user()->hasRole('dev'))) {

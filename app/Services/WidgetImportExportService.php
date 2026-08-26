@@ -10,15 +10,22 @@ use Illuminate\Support\Facades\Validator;
 class WidgetImportExportService
 {
     /**
-     * Export widgets configuration
+     * Export widgets configuration.
+     *
+     * @param  array  $options  Accepts 'project_id' to scope export to a specific project.
      */
     public function exportWidgets(array $options = []): array
     {
         $includeAreas = $options['areas'] ?? null;
         $includeTypes = $options['types'] ?? null;
         $includeMetadata = $options['include_metadata'] ?? true;
+        $projectId = $options['project_id'] ?? null;
 
         $query = Widget::query()->orderBy('area')->orderBy('sort_order');
+
+        if ($projectId) {
+            $query->forProject($projectId);
+        }
 
         if ($includeAreas) {
             $query->whereIn('area', $includeAreas);
@@ -34,12 +41,14 @@ class WidgetImportExportService
             'version' => '1.0',
             'exported_at' => now()->toISOString(),
             'exported_by' => auth()->user()->username ?? 'system',
+            'project_id' => $projectId,
             'widget_count' => $widgets->count(),
             'widgets' => [],
         ];
 
         foreach ($widgets as $widget) {
             $widgetData = [
+                'project_id' => $widget->project_id,
                 'name' => $widget->name,
                 'type' => $widget->type,
                 'area' => $widget->area,
@@ -288,8 +297,14 @@ class WidgetImportExportService
             'is_active' => $widgetData['is_active'] ?? true,
         ];
 
-        // Add tenant_id if in project context
-        if (session('current_tenant_id')) {
+        // Prefer explicit project_id from the import data, then fall back to session context.
+        if (! empty($widgetData['project_id'])) {
+            $createData['project_id'] = $widgetData['project_id'];
+            $createData['tenant_id'] = $widgetData['project_id']; // keep legacy field in sync
+        } elseif (session('current_project_id')) {
+            $createData['project_id'] = session('current_project_id');
+            $createData['tenant_id'] = session('current_project_id');
+        } elseif (session('current_tenant_id')) {
             $createData['tenant_id'] = session('current_tenant_id');
         }
 

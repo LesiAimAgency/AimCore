@@ -41,6 +41,8 @@ Route::middleware([
     SuperAdminBypassProjectScope::class,
 ])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/ranking-data', [DashboardController::class, 'rankingData'])->name('dashboard.ranking-data');
+    Route::post('/dashboard/targets', [DashboardController::class, 'updateTargets'])->name('dashboard.targets.update');
     Route::get('/multi-tenancy', [DashboardController::class, 'multiTenancy'])->name('multi-tenancy');
 
     // System Logs
@@ -89,7 +91,6 @@ Route::middleware([
 
     // Performance & Ranking
     Route::get('performance', [PerformanceController::class, 'index'])->name('performance.index');
-    Route::get('performance/ranking', [PerformanceController::class, 'ranking'])->name('performance.ranking');
     Route::get('/performance/gold', [PerformanceController::class, 'gold'])->name('performance.gold');
     Route::get('performance/report', [PerformanceController::class, 'report'])->name('performance.report');
 

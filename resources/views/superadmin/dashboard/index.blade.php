@@ -34,7 +34,21 @@
     <p class="text-blue-100 mt-2">Chào mừng bạn quay trở lại hệ thống quản trị</p>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6">
+    <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-600">Khách hàng</p>
+                <p class="text-3xl font-bold text-indigo-600">{{ $totalCustomers }}</p>
+            </div>
+            <div class="h-12 w-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+
     <div class="bg-white rounded-lg shadow-sm p-6">
         <div class="flex items-center justify-between">
             <div>
@@ -94,14 +108,128 @@
     <div class="bg-white rounded-lg shadow-sm p-6">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm text-gray-600">Doanh thu dự kiến tháng</p>
-                <p class="text-2xl font-bold text-purple-600">{{ number_format($expectedRevenue) }} đ</p>
+                <p class="text-sm text-gray-600">Thực thu tháng này</p>
+                <p class="text-2xl font-bold text-purple-600">{{ number_format($actualRevenueThisMonth) }} đ</p>
             </div>
             <div class="h-12 w-12 bg-purple-100 rounded-lg flex items-center justify-center">
                 <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-600">Dự kiến tháng này</p>
+                <p class="text-2xl font-bold text-pink-600">{{ number_format($expectedRevenue) }} đ</p>
+            </div>
+            <div class="h-12 w-12 bg-pink-100 rounded-lg flex items-center justify-center">
+                <svg class="h-6 w-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mục tiêu chung -->
+<div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold text-gray-900 flex items-center">
+            <svg class="w-5 h-5 text-indigo-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            Mục tiêu chung tháng {{ now()->month }}
+        </h2>
+        @if(auth()->user()->isManager() || auth()->user()->isSuperAdmin())
+        <button type="button" onclick="document.getElementById('targetModal').classList.remove('hidden')" class="text-sm text-indigo-600 hover:underline flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            Thiết lập mục tiêu
+        </button>
+        @endif
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        @php
+            $targetCards = [
+                ['name' => 'Team Account (Khách hàng)', 'actual' => $actualCustomers, 'target' => $targetCustomers, 'color' => 'blue', 'unit' => 'KH'],
+                ['name' => 'Team Dev (Tasks)', 'actual' => $actualDevTasks, 'target' => $targetDevTasks, 'color' => 'indigo', 'unit' => 'task'],
+                ['name' => 'Team Design (Tasks)', 'actual' => $actualDesignTasks, 'target' => $targetDesignTasks, 'color' => 'pink', 'unit' => 'task'],
+                ['name' => 'Doanh thu (VNĐ)', 'actual' => $actualRevenueThisMonth, 'target' => $targetRevenue, 'color' => 'purple', 'unit' => 'đ', 'money' => true],
+            ];
+        @endphp
+
+        @foreach($targetCards as $card)
+            @php
+                $percentage = $card['target'] > 0 ? min(round(($card['actual'] / $card['target']) * 100), 100) : 0;
+                $remaining = max($card['target'] - $card['actual'], 0);
+            @endphp
+            <div class="border rounded-lg p-4 bg-gray-50 relative overflow-hidden">
+                <div class="flex justify-between items-start mb-2">
+                    <p class="text-sm font-medium text-gray-700">{{ $card['name'] }}</p>
+                    <span class="text-xs font-bold text-{{ $card['color'] }}-600 bg-{{ $card['color'] }}-100 px-2 py-1 rounded">
+                        {{ $percentage }}%
+                    </span>
+                </div>
+                <div class="flex justify-between items-end mt-4">
+                    <div>
+                        <p class="text-2xl font-bold text-gray-900">
+                            {{ isset($card['money']) ? number_format($card['actual']) : $card['actual'] }}
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1">Mục tiêu: {{ isset($card['money']) ? number_format($card['target']) : $card['target'] }} {{ $card['unit'] }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs font-medium text-red-500">Còn thiếu: {{ isset($card['money']) ? number_format($remaining) : $remaining }}</p>
+                    </div>
+                </div>
+                <!-- Progress bar -->
+                <div class="w-full bg-gray-200 h-1.5 mt-3 rounded-full overflow-hidden">
+                    <div class="bg-{{ $card['color'] }}-500 h-1.5 rounded-full" style="width: {{ $percentage }}%"></div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
+
+<!-- Modal Thiết lập mục tiêu -->
+<div id="targetModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="relative w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow">
+            <div class="flex items-center justify-between p-4 border-b rounded-t">
+                <h3 class="text-xl font-semibold text-gray-900">
+                    Mục tiêu tháng {{ now()->month }}
+                </h3>
+                <button type="button" onclick="document.getElementById('targetModal').classList.add('hidden')" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Đóng</span>
+                </button>
+            </div>
+            <form action="{{ route('superadmin.dashboard.targets.update') }}" method="POST" class="p-4 md:p-5">
+                @csrf
+                <div class="grid gap-4 mb-4 grid-cols-1">
+                    <div>
+                        <label for="target_customers" class="block mb-2 text-sm font-medium text-gray-900">Khách hàng mới (Account)</label>
+                        <input type="number" name="target_customers" id="target_customers" value="{{ $targetCustomers }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    </div>
+                    <div>
+                        <label for="target_dev_tasks" class="block mb-2 text-sm font-medium text-gray-900">Tasks hoàn thành (Dev)</label>
+                        <input type="number" name="target_dev_tasks" id="target_dev_tasks" value="{{ $targetDevTasks }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    </div>
+                    <div>
+                        <label for="target_design_tasks" class="block mb-2 text-sm font-medium text-gray-900">Tasks hoàn thành (Design)</label>
+                        <input type="number" name="target_design_tasks" id="target_design_tasks" value="{{ $targetDesignTasks }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    </div>
+                    <div>
+                        <label for="target_revenue" class="block mb-2 text-sm font-medium text-gray-900">Doanh thu (VNĐ)</label>
+                        <input type="number" name="target_revenue" id="target_revenue" value="{{ $targetRevenue }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    </div>
+                </div>
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full">
+                    Lưu mục tiêu
+                </button>
+            </form>
         </div>
     </div>
 </div>
@@ -203,7 +331,29 @@
     </div>
 </div>
 
-<div class="grid grid-cols-1 gap-6 mb-6">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <!-- Ranking Bảng vàng -->
+    <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-purple-500">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-bold text-gray-900 flex items-center">
+                <svg class="w-5 h-5 text-purple-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Bảng xếp hạng Nhân viên
+            </h2>
+            <div>
+                <select id="rankingFilterSelect" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block p-2">
+                    <option value="7" {{ $rankingFilter == '7' ? 'selected' : '' }}>7 ngày qua</option>
+                    <option value="14" {{ $rankingFilter == '14' ? 'selected' : '' }}>14 ngày qua</option>
+                    <option value="30" {{ $rankingFilter == '30' ? 'selected' : '' }}>30 ngày qua</option>
+                    <option value="all" {{ $rankingFilter == 'all' ? 'selected' : '' }}>Tất cả</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="rankingListContainer">
+            @include('superadmin.dashboard.partials.ranking_list')
+        </div>
+    </div>
+
     <!-- Tài nguyên Web sắp hết hạn -->
     <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-yellow-500">
         <div class="flex items-center justify-between mb-4">
@@ -264,4 +414,21 @@
     </div>
 </div>
 
+<script>
+    document.getElementById('rankingFilterSelect').addEventListener('change', function() {
+        const filter = this.value;
+        const container = document.getElementById('rankingListContainer');
+        container.innerHTML = '<p class="text-gray-500 text-center py-4">Đang tải dữ liệu...</p>';
+        
+        fetch(`{{ route('superadmin.dashboard.ranking-data') }}?ranking_filter=${filter}`)
+            .then(res => res.json())
+            .then(data => {
+                container.innerHTML = data.html;
+            })
+            .catch(err => {
+                console.error(err);
+                container.innerHTML = '<p class="text-red-500 text-center py-4">Lỗi tải dữ liệu. Hãy thử lại.</p>';
+            });
+    });
+</script>
 @endsection

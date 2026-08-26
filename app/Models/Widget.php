@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Widget extends Model
 {
-    protected $fillable = ['name', 'type', 'area', 'settings', 'sort_order', 'is_active', 'variant', 'metadata', 'tenant_id', 'widget_code', 'rules', 'data', 'is_lazy_loaded'];
+    protected $fillable = ['project_id', 'name', 'type', 'area', 'settings', 'sort_order', 'is_active', 'variant', 'metadata', 'tenant_id', 'widget_code', 'rules', 'data', 'is_lazy_loaded'];
 
     protected $casts = [
         'settings' => 'array',
@@ -91,5 +91,23 @@ class Widget extends Model
     public function getWidgetMetadata(): ?array
     {
         return WidgetRegistry::getConfig($this->type);
+    }
+
+    /**
+     * Scope widgets to a specific project.
+     *
+     * Usage: Widget::forProject($projectId)->get()
+     */
+    public function scopeForProject($query, int $projectId)
+    {
+        return $query->where('project_id', $projectId);
+    }
+
+    /**
+     * Relationship back to the project.
+     */
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
     }
 }

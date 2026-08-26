@@ -92,8 +92,14 @@ class HostingDeployController extends Controller
     {
         try {
             $client = \App\Services\Hosting\HostingClientFactory::make($profile);
-            $client->testConnection();
-            return back()->with('success', 'Connection test passed! API is working correctly.');
+            $result = $client->testConnection();
+            
+            $message = $result['message'] ?? 'Connection test passed! API is working correctly.';
+            if (!empty($result['domains'])) {
+                $message .= ' Domains found: ' . implode(', ', $result['domains']);
+            }
+            
+            return back()->with('success', $message);
         } catch (\Exception $e) {
             return back()->with('error', 'Connection test failed: ' . $e->getMessage());
         }

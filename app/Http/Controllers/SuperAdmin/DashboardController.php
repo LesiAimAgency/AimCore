@@ -9,8 +9,8 @@ use App\Models\Post;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
-
 class DashboardController extends Controller
 {
     public function index()
@@ -28,10 +28,64 @@ class DashboardController extends Controller
         $totalProjects = Project::count();
         $activeProjects = Project::where('status', 'active')->count();
 
-        // Doanh thu dự kiến tháng này (dựa trên hợp đồng được tạo trong tháng)
-        $expectedRevenue = Contract::whereMonth('created_at', now()->month)
+        // Khách hàng đã phục vụ
+        $totalCustomers = \App\Models\Customer::count();
+
+        // Doanh thu dự kiến tháng này
+        $expectedRevenueContracts = Contract::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->sum('contract_value');
+        $expectedRevenueProjects = \App\Models\Project::whereNull('contract_id')
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->sum('contract_value');
+        $expectedRevenue = $expectedRevenueContracts + $expectedRevenueProjects;
+
+        // Doanh thu thực thu trong tháng (tạm tính theo contract_value)
+        $actualRevenueContracts = Contract::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->sum('contract_value');
+        $actualRevenueProjects = \App\Models\Project::whereNull('contract_id')
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->sum('contract_value');
+        $actualRevenueThisMonth = $actualRevenueContracts + $actualRevenueProjects;
+
+        // Mục tiêu chung
+        $monthKey = now()->format('Y_m');
+        $targetCustomers = \App\Models\Setting::where('key', 'target_customers_' . $monthKey)->value('payload') ?? 30;
+        $targetDevTasks = \App\Models\Setting::where('key', 'target_dev_tasks_' . $monthKey)->value('payload') ?? 30;
+        $targetDesignTasks = \App\Models\Setting::where('key', 'target_design_tasks_' . $monthKey)->value('payload') ?? 30;
+        $targetRevenue = \App\Models\Setting::where('key', 'target_revenue_' . $monthKey)->value('payload') ?? 200000000;
+
+        $targetCustomers = is_array($targetCustomers) ? ($targetCustomers['value'] ?? 30) : $targetCustomers;
+        $targetDevTasks = is_array($targetDevTasks) ? ($targetDevTasks['value'] ?? 30) : $targetDevTasks;
+        $targetDesignTasks = is_array($targetDesignTasks) ? ($targetDesignTasks['value'] ?? 30) : $targetDesignTasks;
+        $targetRevenue = is_array($targetRevenue) ? ($targetRevenue['value'] ?? 200000000) : $targetRevenue;
+
+        // Số liệu thực tế cho mục tiêu chung
+        $actualCustomers = \App\Models\Customer::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+
+        $actualDevTasks = \App\Models\Task::where('status', 'completed')
+            ->whereMonth('completed_at', now()->month)
+            ->whereYear('completed_at', now()->year)
+            ->whereHas('dev', function($q) {
+                $q->where('department', 'LIKE', '%Dev%')->orWhere('department', 'LIKE', '%Kỹ thuật%');
+            })->count();
+
+        $actualDesignTasks = \App\Models\Task::where('status', 'completed')
+            ->whereMonth('completed_at', now()->month)
+            ->whereYear('completed_at', now()->year)
+            ->whereHas('dev', function($q) {
+                $q->where('department', 'LIKE', '%Design%');
+            })->count();
+
+        // Lấy Ranking thay cho Gold
+        $rankingFilter = request('ranking_filter', '30'); // 7, 14, 30, all
+        $performanceService = new \App\Services\PerformanceService();
+        $ranking = collect($performanceService->getRanking($rankingFilter))->take(10); // Giới hạn top 10
 
         // Các dự án sắp trễ hạn (deadline trong vòng 2 ngày tới hoặc đã qua) và chưa hoàn thành
         $urgentProjectsRaw = Project::with('tasks')
@@ -101,11 +155,32 @@ class DashboardController extends Controller
             'totalProjects',
             'activeProjects',
             'expectedRevenue',
+            'totalCustomers',
+            'actualRevenueThisMonth',
+            'ranking',
+            'rankingFilter',
             'urgentProjects',
             'projectProgresses',
             'expiringWebResources',
-            'infectedProjects'
+            'infectedProjects',
+            'targetCustomers',
+            'targetDevTasks',
+            'targetDesignTasks',
+            'targetRevenue',
+            'actualCustomers',
+            'actualDevTasks',
+            'actualDesignTasks'
         ));
+    }
+
+    public function rankingData(Request $request)
+    {
+        $rankingFilter = $request->input('ranking_filter', '30');
+        $performanceService = new \App\Services\PerformanceService();
+        $ranking = collect($performanceService->getRanking($rankingFilter))->take(10);
+        
+        $html = view('superadmin.dashboard.partials.ranking_list', compact('ranking'))->render();
+        return response()->json(['html' => $html]);
     }
 
     private function devDashboard($user)
@@ -227,5 +302,24 @@ class DashboardController extends Controller
                 'message' => 'Một số dữ liệu không thể tải được. Vui lòng thử lại sau.',
             ]);
         }
+    }
+
+    public function updateTargets(Request $request)
+    {
+        $request->validate([
+            'target_customers' => 'required|numeric|min:0',
+            'target_dev_tasks' => 'required|numeric|min:0',
+            'target_design_tasks' => 'required|numeric|min:0',
+            'target_revenue' => 'required|numeric|min:0',
+        ]);
+
+        $monthKey = now()->format('Y_m');
+
+        \App\Models\Setting::set('target_customers_' . $monthKey, $request->target_customers, 'dashboard_targets');
+        \App\Models\Setting::set('target_dev_tasks_' . $monthKey, $request->target_dev_tasks, 'dashboard_targets');
+        \App\Models\Setting::set('target_design_tasks_' . $monthKey, $request->target_design_tasks, 'dashboard_targets');
+        \App\Models\Setting::set('target_revenue_' . $monthKey, $request->target_revenue, 'dashboard_targets');
+
+        return back()->with('success', 'Cập nhật mục tiêu chung thành công!');
     }
 }

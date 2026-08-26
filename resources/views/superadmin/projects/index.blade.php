@@ -69,6 +69,7 @@
                         @endif
                         <th class="py-4 px-6 text-sm font-semibold text-gray-600 uppercase tracking-wider">Admin phụ trách</th>
                         <th class="py-4 px-6 text-sm font-semibold text-gray-600 uppercase tracking-wider">Deadline</th>
+                        <th class="py-4 px-6 text-sm font-semibold text-gray-600 uppercase tracking-wider">Deploy</th>
                         <th class="py-4 px-6 text-sm font-semibold text-gray-600 uppercase tracking-wider">Trạng thái</th>
                         <th class="py-4 px-6 text-sm font-semibold text-gray-600 uppercase tracking-wider text-right">Thao tác</th>
                     </tr>
@@ -113,8 +114,20 @@
                         <td class="py-4 px-6 text-gray-600">
                             <span class="inline-flex items-center">
                                 <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                {{ $project->deadline->format('d/m/Y') }}
+                                {{ $project->deadline ? $project->deadline->format('d/m/Y') : 'N/A' }}
                             </span>
+                        </td>
+                        <td class="py-4 px-6">
+                            @if($project->latestDeployment)
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                    {{ $project->latestDeployment->status == 'success' ? 'bg-green-100 text-green-800' : 
+                                       ($project->latestDeployment->status == 'failed' ? 'bg-red-100 text-red-800' : 
+                                       'bg-blue-100 text-blue-800 animate-pulse') }}">
+                                    {{ ucfirst($project->latestDeployment->status) }}
+                                </span>
+                            @else
+                                <span class="text-xs text-gray-400 italic">Chưa deploy</span>
+                            @endif
                         </td>
                         <td class="py-4 px-6">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 

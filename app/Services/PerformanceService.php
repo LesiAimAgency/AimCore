@@ -12,10 +12,10 @@ class PerformanceService
     /**
      * Get the performance ranking for a specific time period.
      *
-     * @param string $period 'month', 'week', 'year', 'all'
+     * @param mixed $period '7', '14', '30', 'all'
      * @return \Illuminate\Support\Collection
      */
-    public function getRanking($period = 'month')
+    public function getRanking($period = '30')
     {
         $query = User::query()
             ->select('users.id', 'users.name', 'users.avatar', 'users.department')
@@ -23,16 +23,8 @@ class PerformanceService
                 $join->on('users.id', '=', 'tasks.assigned_to')
                      ->where('tasks.approval_status', '=', 'approved');
                 
-                if ($period === 'month') {
-                    $join->whereMonth('tasks.completed_at', Carbon::now()->month)
-                         ->whereYear('tasks.completed_at', Carbon::now()->year);
-                } elseif ($period === 'week') {
-                    $join->whereBetween('tasks.completed_at', [
-                        Carbon::now()->startOfWeek(),
-                        Carbon::now()->endOfWeek()
-                    ]);
-                } elseif ($period === 'year') {
-                    $join->whereYear('tasks.completed_at', Carbon::now()->year);
+                if (in_array($period, ['7', '14', '30', 7, 14, 30])) {
+                    $join->where('tasks.completed_at', '>=', Carbon::now()->subDays((int)$period));
                 }
             })
             ->selectRaw('COUNT(tasks.id) as approved_tasks_count')

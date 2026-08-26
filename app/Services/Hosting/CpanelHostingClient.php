@@ -20,43 +20,71 @@ class CpanelHostingClient implements HostingClientInterface
     /**
      * Call cPanel UAPI
      */
-    protected function callUapi(string $module, string $function, array $params = [])
+    protected function callUapi(string $module, string $function, array $params = [], string $method = 'GET')
     {
         $host = preg_replace('/^https?:\/\//', '', $this->profile->hostname);
         $host = rtrim($host, '/');
-        $port = $this->profile->port; // default 2083
+        $port = $this->profile->port ?: 2083;
 
         $url = "https://{$host}:{$port}/execute/{$module}/{$function}";
 
-        $response = Http::withoutVerifying()
+        $request = Http::withoutVerifying()
             ->withHeaders([
-                'Authorization' => "cpanel {$this->profile->cpanel_username}:{$this->profile->api_token}",
+                'Authorization' => "cpanel " . trim($this->profile->cpanel_username) . ":" . trim($this->profile->api_token),
             ])
-            ->timeout(60)
-            ->get($url, $params);
+            ->timeout(60);
+
+        $response = strtoupper($method) === 'POST' 
+            ? $request->asForm()->post($url, $params)
+            : $request->get($url, $params);
 
         if ($response->failed()) {
             throw new \Exception("cPanel UAPI Error ({$module}::{$function}): HTTP {$response->status()} - {$response->body()}");
         }
 
-        $data = $response->json();
+        $rawBody = $response->body();
+        // Remove UTF-8 BOM if present
+        $rawBody = preg_replace('/^' . pack('H*','EFBBBF') . '/', '', $rawBody);
+        
+        $responseData = json_decode($rawBody, true);
 
-        if (isset($data['errors']) && count($data['errors']) > 0) {
-            throw new \Exception("cPanel UAPI Error ({$module}::{$function}): ".implode(', ', $data['errors']));
+        if (!is_array($responseData)) {
+            $rawSample = substr($rawBody, 0, 500);
+            throw new \Exception("cPanel UAPI Error: Invalid JSON response format from server. JSON Error: " . json_last_error_msg() . ". Raw response: " . $rawSample);
         }
 
-        return $data['data'] ?? true;
+        // Some versions/endpoints of UAPI wrap the response in 'result', others return it directly at the root.
+        $result = $responseData['result'] ?? $responseData;
+
+        // Check for API-level errors
+        if (isset($result['status']) && $result['status'] === 0) {
+            $errors = $result['errors'] ?? ['Unknown API error'];
+            $errorMsg = is_array($errors) ? implode(', ', $errors) : $errors;
+            throw new \Exception("cPanel UAPI Error ({$module}::{$function}): " . $errorMsg);
+        }
+
+        return $result['data'] ?? true;
     }
 
-    public function testConnection(): bool
+    public function testConnection(): array
     {
         try {
-            // A simple call to get user info to verify credentials
-            $this->callUapi('Fileman', 'get_file_information', [
-                'path' => $this->profile->public_html_path,
-            ]);
-
-            return true;
+            // Retrieve domain information to verify connection and provide meaningful data
+            $data = $this->callUapi('DomainInfo', 'list_domains');
+            
+            $domains = [];
+            if (isset($data['main_domain'])) {
+                $domains[] = $data['main_domain'];
+            }
+            if (isset($data['addon_domains'])) {
+                $domains = array_merge($domains, $data['addon_domains']);
+            }
+            
+            return [
+                'status' => 'success',
+                'domains' => $domains,
+                'message' => 'Connected successfully to cPanel.'
+            ];
         } catch (\Exception $e) {
             throw new \Exception('Connection test failed: '.$e->getMessage());
         }
@@ -96,12 +124,12 @@ class CpanelHostingClient implements HostingClientInterface
     {
         $host = preg_replace('/^https?:\/\//', '', $this->profile->hostname);
         $host = rtrim($host, '/');
-        $port = $this->profile->port;
+        $port = $this->profile->port ?: 2083;
         $url = "https://{$host}:{$port}/execute/Fileman/upload_files";
 
         $response = Http::withoutVerifying()
             ->withHeaders([
-                'Authorization' => "cpanel {$this->profile->cpanel_username}:{$this->profile->api_token}",
+                'Authorization' => "cpanel " . trim($this->profile->cpanel_username) . ":" . trim($this->profile->api_token),
             ])
             ->timeout(300) // Upload can take time
             ->attach(
@@ -115,10 +143,19 @@ class CpanelHostingClient implements HostingClientInterface
             throw new \Exception("cPanel File Upload Error: HTTP {$response->status()} - {$response->body()}");
         }
 
-        $data = $response->json();
+        $responseData = $response->json();
 
-        if (isset($data['errors']) && count($data['errors']) > 0) {
-            throw new \Exception('cPanel File Upload Error: '.implode(', ', $data['errors']));
+        if (!is_array($responseData)) {
+            $rawBody = substr($response->body(), 0, 500);
+            throw new \Exception("cPanel File Upload Error: Invalid response format from server. Raw response: " . $rawBody);
+        }
+
+        $result = $responseData['result'] ?? $responseData;
+
+        if (isset($result['status']) && $result['status'] === 0) {
+            $errors = $result['errors'] ?? ['Unknown upload error'];
+            $errorMsg = is_array($errors) ? implode(', ', $errors) : $errors;
+            throw new \Exception("cPanel File Upload Error: " . $errorMsg);
         }
 
         return true;
@@ -126,58 +163,14 @@ class CpanelHostingClient implements HostingClientInterface
 
     public function extractZip(string $remoteFilePath, string $remoteExtractDir): bool
     {
-        // For extracting ZIP files, cPanel uses Fileman::extract_files but the parameter is confusing,
-        // it's usually `Fileman::extract_files` but in some versions it's `Fileman::extract` or similar.
-        // Or we can use the `Fileman::upload_files` but that doesn't extract.
-        // Actually, the UAPI for extracting is `Fileman` didn't have an `extract` function, wait, it has:
-        // Module: Fileman, function: extract
-        // params: file (file to extract, relative to home), dir (dir to extract to)
-        // Wait, cPanel documentation says it's `Fileman::extract`? Let me use `Fileman::extract`.
-
-        // Actually, cPanel UAPI extract is usually deprecated in favor of `Fileman`? Wait, UAPI Fileman::extract doesn't exist?
-        // Let's use `Fileman::extract_files`. No, wait.
-        // According to cPanel API 2, it's `Fileman::fileop` with op=extract.
-        // With UAPI, it's `Fileman` doesn't have an extract.
-        // Wait, we can use `Zip::extract` if available. No, UAPI module `Fileman` actually DOES have `extract` or we can use `cPanel API 2`.
-        // I will use UAPI `Fileman` `uncompress`? No.
-        // Let's assume UAPI `Fileman` module has `fileop` or we might have to use API 2.
-        // Let's try UAPI `Fileman` module `fileop` is not UAPI.
-        // Actually, UAPI module `Fileman` has function `upload_files`. To extract, cPanel API 2 `Fileman::fileop` is used.
-        // However, we can just use `Fileman::extract_files` ? No, wait.
-        // Wait, cPanel API 2 is accessible via `/json-api/cpanel`. Let's just use UAPI `Fileman` but wait, what is the extract function?
-        // UAPI module `Fileman`, function `extract` or maybe `Fileman`, `unzip`?
-        // No, let me look it up or I can just upload a PHP script to extract it! That's much safer!
-
-        // Yes, uploading a small extract.php is 100% reliable.
-        $extractScript = "<?php
-            \$zip = new ZipArchive;
-            if (\$zip->open('".basename($remoteFilePath)."') === TRUE) {
-                \$zip->extractTo('./');
-                \$zip->close();
-                echo 'SUCCESS';
-            } else {
-                echo 'FAILED';
-            }
-        ?>";
-
-        $scriptPath = $remoteExtractDir.'/extract_tmp_'.time().'.php';
-        $this->saveFileContent($scriptPath, $extractScript);
-
-        // Then we can execute it by calling the URL if it's in public_html, but wait, the remote directory might NOT be public_html.
-        // If it's not public_html, we can't call it via HTTP.
-        // So we SHOULD use the cPanel API.
-
-        // Let me check cPanel UAPI docs for zip extraction.
-        // UAPI Fileman doesn't seem to have extract. API 2 has `Fileman::fileop` with `op=extract`.
-        // Let's implement API 2 call for this specific function.
         $host = preg_replace('/^https?:\/\//', '', $this->profile->hostname);
         $host = rtrim($host, '/');
-        $port = $this->profile->port;
+        $port = $this->profile->port ?: 2083;
         $url = "https://{$host}:{$port}/json-api/cpanel";
 
         $response = Http::withoutVerifying()
             ->withHeaders([
-                'Authorization' => "cpanel {$this->profile->cpanel_username}:{$this->profile->api_token}",
+                'Authorization' => "cpanel " . trim($this->profile->cpanel_username) . ":" . trim($this->profile->api_token),
             ])
             ->timeout(300)
             ->get($url, [
@@ -195,8 +188,14 @@ class CpanelHostingClient implements HostingClientInterface
 
         $data = $response->json();
 
-        if (isset($data['cpanelresult']['error'])) {
+        if (isset($data['cpanelresult']['error']) && $data['cpanelresult']['error'] !== '') {
             throw new \Exception('cPanel API2 Extract Error: '.$data['cpanelresult']['error']);
+        }
+        
+        // Also check if there's an error message inside the data array
+        if (isset($data['cpanelresult']['data'][0]['status']) && $data['cpanelresult']['data'][0]['status'] === 0) {
+            $errorMsg = $data['cpanelresult']['data'][0]['statusmsg'] ?? 'Unknown extract error';
+            throw new \Exception('cPanel API2 Extract Error: ' . $errorMsg);
         }
 
         return true;
@@ -206,7 +205,7 @@ class CpanelHostingClient implements HostingClientInterface
     {
         $this->callUapi('Fileman', 'mkdir', [
             'dir' => $remoteDir,
-        ]);
+        ], 'POST');
 
         return true;
     }
@@ -220,7 +219,7 @@ class CpanelHostingClient implements HostingClientInterface
             'dir' => $dir,
             'file' => $file,
             'content' => $content,
-        ]);
+        ], 'POST');
 
         return true;
     }

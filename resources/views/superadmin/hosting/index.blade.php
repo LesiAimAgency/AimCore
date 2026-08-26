@@ -10,9 +10,25 @@
     </div>
 
     @if (session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 shadow">
             {{ session('success') }}
         </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                alert("Thành công: " + {!! json_encode(session('success')) !!});
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 shadow">
+            {{ session('error') }}
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                alert("Thất bại: " + {!! json_encode(session('error')) !!});
+            });
+        </script>
     @endif
 
     <div class="bg-white shadow-md rounded my-6 overflow-x-auto">
@@ -47,10 +63,11 @@
                             <div class="flex item-center justify-center space-x-2">
                                 <form action="{{ route('superadmin.hosting.test-connection', $profile) }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" class="transform hover:text-green-500 hover:scale-110" title="Test Connection">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    <button type="submit" class="bg-green-100 text-green-600 hover:bg-green-200 py-1 px-2 rounded text-xs flex items-center shadow-sm" title="Test API Connection">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                                         </svg>
+                                        Test API
                                     </button>
                                 </form>
                                 <a href="{{ route('superadmin.hosting.edit', $profile) }}" class="transform hover:text-blue-500 hover:scale-110" title="Edit">
