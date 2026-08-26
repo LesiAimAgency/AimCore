@@ -3,9 +3,9 @@
 @section('page-title', 'Multi-Tenant Management')
 
 @section('content')
-<div class="px-6 py-8 w-full max-w-7xl mx-auto">
-    <div class="mb-6">
-        <a href="{{ route('superadmin.tenants.index') }}" class="text-gray-500 hover:text-[#001B4E] inline-flex items-center transition-colors">
+<div class="px-1 sm:px-6 py-3 sm:py-8 w-full max-w-7xl mx-auto">
+    <div class="mb-4 sm:mb-6">
+        <a href="{{ route('superadmin.tenants.index') }}" class="text-gray-500 hover:text-[#001B4E] inline-flex items-center transition-colors text-xs sm:text-sm">
             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
@@ -28,12 +28,12 @@
     <form method="POST" action="{{ route('superadmin.tenants.store') }}" id="create-form">
         @csrf
         
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             <!-- Main Content (2 cols) -->
-            <div class="lg:col-span-2 space-y-6">
+            <div class="lg:col-span-2 space-y-4 sm:space-y-6">
                 <!-- Basic Info Card -->
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                    <h3 class="font-bold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                <div class="bg-white rounded-xl shadow-xs p-4 sm:p-6 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-4 border-b pb-2 flex items-center text-sm sm:text-base">
                         <svg class="w-5 h-5 mr-2 text-[#001B4E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
                         </svg>

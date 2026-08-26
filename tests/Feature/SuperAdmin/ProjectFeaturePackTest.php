@@ -22,7 +22,7 @@ class ProjectFeaturePackTest extends TestCase
 
         $this->superAdmin = User::factory()->create([
             'role' => 'superadmin',
-            'level' => 10,
+            'level' => 0,
         ]);
 
         $this->project = Project::factory()->create([

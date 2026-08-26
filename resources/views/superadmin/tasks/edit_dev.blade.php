@@ -1,13 +1,13 @@
 @extends('superadmin.layouts.app')
 @section('content')
-<div class="px-6 py-8">
-    <div class="mb-6">
-        <a href="{{ route('superadmin.tasks.index') }}" class="text-gray-500 hover:text-[#001B4E]">&larr; Quay lại bảng Tasks</a>
-        <h1 class="text-3xl font-bold text-[#001B4E] mt-2">Báo cáo Kết quả: {{ $task->title }}</h1>
+<div class="px-1 sm:px-6 py-3 sm:py-8 max-w-7xl mx-auto">
+    <div class="mb-4 sm:mb-6">
+        <a href="{{ route('superadmin.tasks.index') }}" class="text-gray-500 hover:text-[#001B4E] text-xs sm:text-sm">&larr; Quay lại bảng Tasks</a>
+        <h1 class="text-xl sm:text-3xl font-bold text-[#001B4E] mt-2">Báo cáo Kết quả: {{ $task->title }}</h1>
     </div>
     
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-xs p-4 sm:p-6 border border-gray-100">
             <div class="mb-6">
                 <h3 class="text-sm font-bold text-gray-500 uppercase">Mô tả công việc (Từ Account)</h3>
                 <div class="mt-2 p-4 bg-gray-50 rounded-lg text-gray-800 whitespace-pre-wrap">{{ $task->description }}</div>

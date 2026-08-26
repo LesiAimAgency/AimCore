@@ -3,20 +3,20 @@
 @section('page-title', 'Thêm Gói Tính Năng')
 
 @section('content')
-<div class="px-6 py-8 w-full max-w-4xl mx-auto">
-    <div class="mb-6 flex items-center">
+<div class="px-1 sm:px-6 py-3 sm:py-8 w-full max-w-4xl mx-auto">
+    <div class="mb-4 sm:mb-6 flex items-center">
         <a href="{{ route('superadmin.feature-packs.index') }}" class="text-gray-500 hover:text-[#001B4E] mr-3">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
         </a>
         <div>
-            <h1 class="text-3xl font-bold text-[#001B4E]">Thêm Feature Pack Mới</h1>
-            <p class="text-gray-500 mt-1">Tạo một gói tính năng mới cho hệ thống</p>
+            <h1 class="text-xl sm:text-3xl font-bold text-[#001B4E]">Thêm Feature Pack Mới</h1>
+            <p class="text-gray-500 text-xs sm:text-sm mt-0.5 sm:mt-1">Tạo một gói tính năng mới cho hệ thống</p>
         </div>
     </div>
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <div class="bg-white rounded-xl shadow-xs border border-gray-100 p-4 sm:p-6">
         <form action="{{ route('superadmin.feature-packs.store') }}" method="POST">
             @csrf
             

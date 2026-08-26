@@ -1,10 +1,10 @@
 @extends('superadmin.layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Hosting Deployment Manager</h1>
-        <a href="{{ route('superadmin.hosting.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+<div class="px-1 sm:px-4 py-3 sm:py-8 max-w-7xl mx-auto">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+        <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Hosting Deployment Manager</h1>
+        <a href="{{ route('superadmin.hosting.create') }}" class="w-full sm:w-auto justify-center inline-flex items-center bg-[#001B4E] hover:bg-[#002D80] text-white font-medium py-2 px-4 rounded-lg text-xs sm:text-sm">
             + Add New Hosting Profile
         </a>
     </div>

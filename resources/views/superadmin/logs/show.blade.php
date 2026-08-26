@@ -4,9 +4,9 @@
 @section('page-title', 'Nội dung Log: ' . $filename)
 
 @section('content')
-<div class="max-w-7xl mx-auto">
-    <div class="mb-6 flex justify-between items-center">
-        <a href="{{ route('superadmin.logs.index') }}" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700">
+<div class="px-1 sm:px-6 py-3 sm:py-6 max-w-7xl mx-auto">
+    <div class="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <a href="{{ route('superadmin.logs.index') }}" class="inline-flex items-center text-xs sm:text-sm font-medium text-gray-500 hover:text-gray-700">
             <svg class="mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>

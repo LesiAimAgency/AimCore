@@ -4,12 +4,12 @@
 @section('page-title', 'Chi tiết Dự án')
 
 @section('content')
-<div class="max-w-6xl mx-auto space-y-6">
-  <div class="flex justify-between items-center">
-    <h2 class="text-2xl font-bold text-gray-900">{{ $project->name }}</h2>
-    <div class="flex gap-2">
+<div class="px-1 sm:px-6 py-3 sm:py-8 max-w-7xl mx-auto space-y-4 sm:space-y-6">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-900">{{ $project->name }}</h2>
+    <div class="flex flex-wrap items-center gap-2">
       @if($project->status == 'pending')
-      <span class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg">
+      <span class="px-3 py-1.5 bg-yellow-100 text-yellow-800 rounded-lg text-xs sm:text-sm font-medium">
         Chờ duyệt
       </span>
       @elseif($project->status == 'assigned' || ($project->status == 'active' && empty($project->project_admin_username)))
@@ -17,8 +17,8 @@
       <form method="POST" action="{{ route('superadmin.projects.create-website', $project) }}">
         @csrf
         <button type="submit" onclick="return confirm('Tạo website cho dự án này?')"
-            class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
-          {{ empty($project->project_admin_username) ? 'Tạo Website' : 'Tạo lại Website' }} (Demo Mode)
+            class="px-3 py-1.5 sm:px-4 sm:py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-xs sm:text-sm font-medium">
+          {{ empty($project->project_admin_username) ? 'Tạo Website' : 'Tạo lại Website' }} (Demo)
         </button>
       </form>
       @elseif($project->status == 'active' && !empty($project->project_admin_username))
@@ -26,21 +26,21 @@
       <form method="POST" action="{{ route('superadmin.projects.create-website', $project) }}">
         @csrf
         <button type="submit" onclick="return confirm('Tạo lại website cho dự án này? Username và password cũ sẽ bị thay đổi!')"
-            class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
-          Tạo lại Website (Demo Mode)
+            class="px-3 py-1.5 sm:px-4 sm:py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 text-xs sm:text-sm font-medium">
+          Tạo lại Website (Demo)
         </button>
       </form>
       @endif
       <a href="{{ route('superadmin.projects.edit', $project) }}" 
-        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Sửa</a>
+        class="px-3 py-1.5 sm:px-4 sm:py-2 bg-[#001B4E] text-white rounded-lg hover:bg-[#002D80] text-xs sm:text-sm font-medium">Sửa</a>
     </div>
   </div>
 
-  <div class="grid grid-cols-3 gap-6">
-    <div class="col-span-2 space-y-6">
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2">Thông tin Dự án</h3>
-        <div class="grid grid-cols-2 gap-4">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+    <div class="lg:col-span-2 space-y-4 sm:space-y-6">
+      <div class="bg-white rounded-xl shadow-xs p-4 sm:p-6 border border-gray-100">
+        <h3 class="text-base sm:text-lg font-bold text-gray-900 mb-4 border-b pb-2">Thông tin Dự án</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
           <div><span class="text-gray-600">Mã dự án:</span> <span class="font-mono font-bold text-purple-600">{{ $project->code }}</span></div>
           <div><span class="text-gray-600">Trạng thái:</span> 
             <span class="px-3 py-1 text-sm rounded-full {{ $project->status == 'active' ? 'bg-green-100 text-green-800' : ($project->status == 'assigned' ? 'bg-blue-100 text-blue-800' : ($project->status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800')) }}">

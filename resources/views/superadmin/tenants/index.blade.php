@@ -3,16 +3,16 @@
 @section('page-title', 'Multi-Tenant Management')
 
 @section('content')
-<div class="px-6 py-8 w-full max-w-7xl mx-auto">
+<div class="px-1 sm:px-6 py-3 sm:py-8 w-full max-w-7xl mx-auto">
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-4">
         <div>
-            <h1 class="text-3xl font-bold text-[#001B4E]">Quản lý Tenants</h1>
-            <p class="text-gray-500 mt-1">Quản lý và giám sát các website vệ tinh (Tenants) trong hệ thống</p>
+            <h1 class="text-xl sm:text-3xl font-bold text-[#001B4E]">Quản lý Tenants</h1>
+            <p class="text-gray-500 text-xs sm:text-sm mt-0.5 sm:mt-1">Quản lý và giám sát các website vệ tinh (Tenants) trong hệ thống</p>
         </div>
         <div>
-            <a href="{{ route('superadmin.tenants.create') }}" class="px-6 py-3 bg-[#001B4E] text-white rounded-lg hover:bg-[#002D80] font-medium inline-flex items-center transition-colors shadow-sm">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ route('superadmin.tenants.create') }}" class="w-full sm:w-auto justify-center px-4 sm:px-6 py-2 sm:py-2.5 bg-[#001B4E] text-white rounded-lg hover:bg-[#002D80] font-medium inline-flex items-center transition-colors shadow-xs text-xs sm:text-sm">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
                 Tạo Tenant Mới

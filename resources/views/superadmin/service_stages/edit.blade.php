@@ -3,9 +3,9 @@
 @section('page-title', 'Sửa Giai Đoạn Dịch Vụ')
 
 @section('content')
-<div class="px-6 py-8 w-full max-w-4xl mx-auto">
-    <div class="mb-6">
-        <a href="{{ route('superadmin.service-stages.index', ['service_id' => $service->id]) }}" class="text-[#001B4E] hover:underline flex items-center text-sm font-medium">
+<div class="px-1 sm:px-6 py-3 sm:py-8 w-full max-w-4xl mx-auto">
+    <div class="mb-4 sm:mb-6">
+        <a href="{{ route('superadmin.service-stages.index', ['service_id' => $service->id]) }}" class="text-[#001B4E] hover:underline flex items-center text-xs sm:text-sm font-medium">
             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
@@ -13,13 +13,13 @@
         </a>
     </div>
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-            <h2 class="text-xl font-bold text-gray-800">Chỉnh sửa giai đoạn: {{ $stage->name }}</h2>
-            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">Dịch vụ: {{ $service->name }}</span>
+    <div class="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden">
+        <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100 bg-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <h2 class="text-lg sm:text-xl font-bold text-gray-800">Chỉnh sửa giai đoạn: {{ $stage->name }}</h2>
+            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium w-fit">Dịch vụ: {{ $service->name }}</span>
         </div>
 
-        <div class="p-6">
+        <div class="p-4 sm:p-6">
             <form action="{{ route('superadmin.service-stages.update', ['service_id' => $service->id, 'id' => $stage->id]) }}" method="POST">
                 @csrf
                 @method('PUT')

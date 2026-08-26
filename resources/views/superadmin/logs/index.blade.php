@@ -3,12 +3,12 @@
 @section('title', 'System Logs')
 @section('page-title', 'Quản lý System Logs')
 
-@section('content')
-<div class="bg-white rounded-lg shadow-sm">
-    <div class="p-6 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900">Danh sách File Log (Lưu trữ 7 ngày)</h2>
-        <p class="mt-1 text-sm text-gray-500">Các file log ghi lại mọi thao tác trên hệ thống Super Admin để phục vụ việc truy xuất khi có sự cố. Chỉ những tài khoản Dev hoặc SuperAdmin mới có thể tải về.</p>
-    </div>
+<div class="px-1 sm:px-6 py-3 sm:py-6 max-w-7xl mx-auto">
+    <div class="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden">
+        <div class="p-4 sm:p-6 border-b border-gray-100">
+            <h2 class="text-base sm:text-lg font-semibold text-gray-900">Danh sách File Log (Lưu trữ 7 ngày)</h2>
+            <p class="mt-1 text-xs sm:text-sm text-gray-500">Các file log ghi lại mọi thao tác trên hệ thống Super Admin để phục vụ việc truy xuất khi có sự cố. Chỉ những tài khoản Dev hoặc SuperAdmin mới có thể tải về.</p>
+        </div>
 
     <div class="overflow-x-auto">
         <table class="w-full text-sm text-left text-gray-500">

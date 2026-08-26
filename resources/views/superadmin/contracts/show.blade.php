@@ -3,43 +3,43 @@
 @section('title', 'Chi tiết Hợp đồng')
 
 @section('content')
-<div class="mb-6 flex justify-between items-center">
+<div class="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
     <div>
-        <h1 class="text-2xl font-bold text-gray-800">Chi tiết Hợp đồng</h1>
-        <p class="text-gray-500 text-sm mt-1">Xem thông tin chi tiết và yêu cầu nghiệp vụ của hợp đồng</p>
+        <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Chi tiết Hợp đồng</h1>
+        <p class="text-gray-500 text-xs sm:text-sm mt-0.5 sm:mt-1">Xem thông tin chi tiết và yêu cầu nghiệp vụ của hợp đồng</p>
     </div>
-    <div class="flex space-x-3">
-        <div class="flex rounded-md shadow-sm items-center" role="group">
-            <span class="text-sm font-medium text-gray-500 mr-3">Xuất Word:</span>
-            <a href="{{ route('superadmin.contracts.export', ['contract' => $contract->id, 'type' => 'hdnt']) }}" title="Hợp đồng Nguyên tắc" class="px-3 py-2 text-sm font-medium text-blue-700 bg-blue-100 border border-blue-200 rounded-l-lg hover:bg-blue-200 hover:text-blue-800 focus:z-10 transition-colors">
+    <div class="flex flex-wrap items-center gap-2">
+        <div class="flex rounded-md shadow-xs items-center" role="group">
+            <span class="text-xs font-medium text-gray-500 mr-2">Xuất:</span>
+            <a href="{{ route('superadmin.contracts.export', ['contract' => $contract->id, 'type' => 'hdnt']) }}" title="Hợp đồng Nguyên tắc" class="px-2 sm:px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-100 border border-blue-200 rounded-l-lg hover:bg-blue-200 hover:text-blue-800 transition-colors">
                 HĐNT
             </a>
-            <a href="{{ route('superadmin.contracts.export', ['contract' => $contract->id, 'type' => 'hddvtk']) }}" title="Hợp đồng Dịch vụ Thiết kế" class="px-3 py-2 text-sm font-medium text-blue-700 bg-blue-100 border-t border-b border-r border-blue-200 hover:bg-blue-200 hover:text-blue-800 focus:z-10 transition-colors">
+            <a href="{{ route('superadmin.contracts.export', ['contract' => $contract->id, 'type' => 'hddvtk']) }}" title="Hợp đồng Dịch vụ Thiết kế" class="px-2 sm:px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-100 border-t border-b border-r border-blue-200 hover:bg-blue-200 hover:text-blue-800 transition-colors">
                 HĐDVTK
             </a>
-            <a href="{{ route('superadmin.contracts.export', ['contract' => $contract->id, 'type' => 'bbnt']) }}" title="Biên bản Nghiệm thu" class="px-3 py-2 text-sm font-medium text-blue-700 bg-blue-100 border-t border-b border-r border-blue-200 hover:bg-blue-200 hover:text-blue-800 focus:z-10 transition-colors">
+            <a href="{{ route('superadmin.contracts.export', ['contract' => $contract->id, 'type' => 'bbnt']) }}" title="Biên bản Nghiệm thu" class="px-2 sm:px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-100 border-t border-b border-r border-blue-200 hover:bg-blue-200 hover:text-blue-800 transition-colors">
                 BBNT
             </a>
-            <a href="{{ route('superadmin.contracts.export', ['contract' => $contract->id, 'type' => 'dntt']) }}" title="Đề nghị Thanh toán" class="px-3 py-2 text-sm font-medium text-blue-700 bg-blue-100 border-t border-b border-r border-blue-200 rounded-r-lg hover:bg-blue-200 hover:text-blue-800 focus:z-10 transition-colors">
+            <a href="{{ route('superadmin.contracts.export', ['contract' => $contract->id, 'type' => 'dntt']) }}" title="Đề nghị Thanh toán" class="px-2 sm:px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-100 border-t border-b border-r border-blue-200 rounded-r-lg hover:bg-blue-200 hover:text-blue-800 transition-colors">
                 ĐNTT
             </a>
         </div>
-        <a href="{{ route('superadmin.contracts.index') }}" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+        <a href="{{ route('superadmin.contracts.index') }}" class="px-3 py-1.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-xs sm:text-sm">
             Quay lại
         </a>
-        <a href="{{ route('superadmin.contracts.edit', $contract->id) }}" class="px-4 py-2 bg-[#001B4E] text-white rounded-lg hover:bg-[#002D80] transition-colors">
+        <a href="{{ route('superadmin.contracts.edit', $contract->id) }}" class="px-3 py-1.5 bg-[#001B4E] text-white rounded-lg hover:bg-[#002D80] transition-colors text-xs sm:text-sm">
             Chỉnh sửa
         </a>
     </div>
 </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
     <!-- Main Content -->
-    <div class="lg:col-span-2 space-y-6">
+    <div class="lg:col-span-2 space-y-4 sm:space-y-6">
         <!-- Basic Info -->
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-            <h3 class="font-bold text-gray-800 mb-4 border-b pb-2">Thông tin Hợp đồng</h3>
-            <div class="grid grid-cols-2 gap-4">
+        <div class="bg-white rounded-xl shadow-xs p-4 sm:p-6 border border-gray-100">
+            <h3 class="font-bold text-gray-800 mb-4 border-b pb-2 text-sm sm:text-base">Thông tin Hợp đồng</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
                 <div>
                     <span class="text-gray-500 text-sm block">Mã hợp đồng:</span>
                     <span class="font-semibold">{{ $contract->contract_code ?: 'Chưa cập nhật' }}</span>

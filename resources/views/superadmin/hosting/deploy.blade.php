@@ -1,10 +1,10 @@
 @extends('superadmin.layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Deploy: {{ $project->name }}</h1>
-        <a href="{{ route('superadmin.multi-tenancy.index') }}" class="text-blue-600 hover:underline">
+<div class="px-1 sm:px-4 py-3 sm:py-8 max-w-7xl mx-auto">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+        <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Deploy: {{ $project->name }}</h1>
+        <a href="{{ route('superadmin.multi-tenancy.index') }}" class="text-blue-600 hover:underline text-xs sm:text-sm">
             &larr; Back to Multi-Tenancy
         </a>
     </div>
@@ -21,10 +21,10 @@
         </div>
     @endif
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
         <!-- Target Info -->
-        <div class="bg-white shadow-md rounded p-6">
-            <h2 class="text-lg font-bold mb-4 border-b pb-2">Target Info</h2>
+        <div class="bg-white shadow-xs rounded-xl p-4 sm:p-6 border border-gray-100">
+            <h2 class="text-base sm:text-lg font-bold mb-4 border-b pb-2">Target Info</h2>
             <ul class="text-sm space-y-2">
                 <li><span class="font-semibold text-gray-600">Profile:</span> {{ $profile->name }}</li>
                 <li><span class="font-semibold text-gray-600">Panel:</span> {{ ucfirst($profile->panel_type) }}</li>

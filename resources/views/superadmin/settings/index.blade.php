@@ -4,13 +4,13 @@
 @section('page-title', 'Cài đặt hệ thống')
 
 @section('content')
-<div class="max-w-4xl mx-auto">
-    <div class="bg-white rounded-lg shadow-sm p-6">
+<div class="px-1 sm:px-6 py-3 sm:py-8 max-w-4xl mx-auto">
+    <div class="bg-white rounded-xl shadow-xs p-4 sm:p-6 border border-gray-100">
         <form id="settingsForm" onsubmit="saveSettings(event)">
             <div class="space-y-4" id="settingsContainer"></div>
             
             <div class="flex justify-end gap-3 mt-6 pt-6 border-t">
-                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Lưu cấu hình</button>
+                <button type="submit" class="w-full sm:w-auto px-6 py-2.5 bg-[#001B4E] text-white rounded-lg hover:bg-[#002D80] font-medium text-sm">Lưu cấu hình</button>
             </div>
         </form>
     </div>

@@ -13,13 +13,13 @@
   </a>
 </div>
 
-<div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+<div class="bg-white rounded-xl shadow-xs p-4 sm:p-6 mb-6 border border-gray-100">
   <div class="flex items-center justify-between mb-4">
     <div>
-      <h3 class="text-xl font-bold">{{ $project->name }}</h3>
-      <p class="text-gray-600">{{ $project->code }}</p>
+      <h3 class="text-lg sm:text-xl font-bold">{{ $project->name }}</h3>
+      <p class="text-xs sm:text-sm text-gray-600">{{ $project->code }}</p>
     </div>
-    <span class="px-3 py-1 text-sm font-semibold rounded-full 
+    <span class="px-3 py-1 text-xs sm:text-sm font-semibold rounded-full 
       {{ $project->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
       {{ ucfirst($project->status) }}
     </span>
@@ -27,23 +27,23 @@
   
   @if($remoteStats)
   <div class="border-t pt-4 mt-4">
-    <h4 class="font-semibold text-gray-700 mb-3">Thống kê Remote Server</h4>
-    <div class="grid grid-cols-4 gap-3">
+    <h4 class="font-semibold text-gray-700 mb-3 text-sm sm:text-base">Thống kê Remote Server</h4>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
       <div class="bg-blue-50 p-3 rounded-lg">
-        <p class="text-sm text-gray-600">Users</p>
-        <p class="text-2xl font-bold text-blue-600">{{ $remoteStats['users'] ?? 0 }}</p>
+        <p class="text-xs sm:text-sm text-gray-600">Users</p>
+        <p class="text-xl sm:text-2xl font-bold text-blue-600">{{ $remoteStats['users'] ?? 0 }}</p>
       </div>
       <div class="bg-green-50 p-3 rounded-lg">
-        <p class="text-sm text-gray-600">Products</p>
-        <p class="text-2xl font-bold text-green-600">{{ $remoteStats['products'] ?? 0 }}</p>
+        <p class="text-xs sm:text-sm text-gray-600">Products</p>
+        <p class="text-xl sm:text-2xl font-bold text-green-600">{{ $remoteStats['products'] ?? 0 }}</p>
       </div>
       <div class="bg-blue-50 p-3 rounded-lg">
-        <p class="text-sm text-gray-600">Orders</p>
-        <p class="text-2xl font-bold text-blue-600">{{ $remoteStats['orders'] ?? 0 }}</p>
+        <p class="text-xs sm:text-sm text-gray-600">Orders</p>
+        <p class="text-xl sm:text-2xl font-bold text-blue-600">{{ $remoteStats['orders'] ?? 0 }}</p>
       </div>
       <div class="bg-orange-50 p-3 rounded-lg">
-        <p class="text-sm text-gray-600">Posts</p>
-        <p class="text-2xl font-bold text-orange-600">{{ $remoteStats['posts'] ?? 0 }}</p>
+        <p class="text-xs sm:text-sm text-gray-600">Posts</p>
+        <p class="text-xl sm:text-2xl font-bold text-orange-600">{{ $remoteStats['posts'] ?? 0 }}</p>
       </div>
     </div>
   </div>

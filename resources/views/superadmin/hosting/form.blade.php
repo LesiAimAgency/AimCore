@@ -1,12 +1,12 @@
 @extends('superadmin.layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-8 max-w-4xl">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">
+<div class="px-1 sm:px-4 py-3 sm:py-8 max-w-4xl mx-auto">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+        <h1 class="text-xl sm:text-2xl font-bold text-gray-800">
             {{ isset($profile) ? 'Edit Hosting Profile' : 'Add New Hosting Profile' }}
         </h1>
-        <a href="{{ route('superadmin.hosting.index') }}" class="text-blue-600 hover:underline">
+        <a href="{{ route('superadmin.hosting.index') }}" class="text-blue-600 hover:underline text-xs sm:text-sm">
             &larr; Back to list
         </a>
     </div>
@@ -21,7 +21,7 @@
         </div>
     @endif
 
-    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div class="bg-white shadow-xs rounded-xl px-4 sm:px-8 pt-4 sm:pt-6 pb-6 sm:pb-8 mb-4 border border-gray-100">
         <form action="{{ isset($profile) ? route('superadmin.hosting.update', $profile) : route('superadmin.hosting.store') }}" method="POST">
             @csrf
             @if(isset($profile))

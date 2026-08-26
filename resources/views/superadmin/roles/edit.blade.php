@@ -3,9 +3,9 @@
 @section('page-title', 'Cấu hình Vai trò: ' . $role->display_name)
 
 @section('content')
-<div class="px-6 py-8 w-full max-w-7xl mx-auto">
-    <div class="mb-6">
-        <a href="{{ route('superadmin.roles.index') }}" class="text-gray-500 hover:text-[#001B4E] inline-flex items-center transition-colors">
+<div class="px-1 sm:px-6 py-3 sm:py-8 w-full max-w-7xl mx-auto">
+    <div class="mb-4 sm:mb-6">
+        <a href="{{ route('superadmin.roles.index') }}" class="text-gray-500 hover:text-[#001B4E] inline-flex items-center transition-colors text-xs sm:text-sm">
             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
@@ -29,12 +29,12 @@
         @csrf
         @method('PUT')
         
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             <!-- Sidebar Info (1 col) -->
-            <div class="lg:col-span-1 space-y-6">
-                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="lg:col-span-1 space-y-4 sm:space-y-6">
+                <div class="bg-white rounded-xl shadow-xs p-4 sm:p-6 border border-gray-100">
                     <div class="flex justify-between items-center mb-4 border-b pb-2">
-                        <h3 class="font-bold text-gray-800 flex items-center">
+                        <h3 class="font-bold text-gray-800 flex items-center text-sm sm:text-base">
                             <svg class="w-5 h-5 mr-2 text-[#001B4E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
                             </svg>

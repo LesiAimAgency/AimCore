@@ -3,10 +3,10 @@
 @section('page-title', 'Quản lý Tickets')
 
 @section('content')
-<div class="px-6 py-6 max-w-7xl mx-auto">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="p-6 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-            <h2 class="text-lg font-bold text-gray-800">Tất cả Tickets</h2>
+<div class="px-1 sm:px-6 py-3 sm:py-6 max-w-7xl mx-auto">
+    <div class="bg-white rounded-xl shadow-xs border border-gray-200 overflow-hidden">
+        <div class="p-4 sm:p-6 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+            <h2 class="text-base sm:text-lg font-bold text-gray-800">Tất cả Tickets</h2>
         </div>
 
         <div class="overflow-x-auto">
