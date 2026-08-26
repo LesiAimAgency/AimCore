@@ -85,7 +85,7 @@ class DashboardController extends Controller
         // Lấy Ranking thay cho Gold
         $rankingFilter = request('ranking_filter', '30'); // 7, 14, 30, all
         $performanceService = new \App\Services\PerformanceService();
-        $ranking = collect($performanceService->getRanking($rankingFilter))->take(10); // Giới hạn top 10
+        $ranking = collect($performanceService->getRanking($rankingFilter))->take(3); // Giới hạn top 3
 
         // Các dự án sắp trễ hạn (deadline trong vòng 2 ngày tới hoặc đã qua) và chưa hoàn thành
         $urgentProjectsRaw = Project::with('tasks')
@@ -177,7 +177,7 @@ class DashboardController extends Controller
     {
         $rankingFilter = $request->input('ranking_filter', '30');
         $performanceService = new \App\Services\PerformanceService();
-        $ranking = collect($performanceService->getRanking($rankingFilter))->take(10);
+        $ranking = collect($performanceService->getRanking($rankingFilter))->take(3);
         
         $html = view('superadmin.dashboard.partials.ranking_list', compact('ranking'))->render();
         return response()->json(['html' => $html]);
