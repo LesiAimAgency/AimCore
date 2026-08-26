@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Services\PerformanceService;
 use App\Models\User;
+use App\Services\PerformanceService;
+use Illuminate\Http\Request;
 
 class PerformanceController extends Controller
 {
@@ -26,7 +26,7 @@ class PerformanceController extends Controller
     {
         $period = $request->input('period', 'month');
         $ranking = $this->performanceService->getRanking($period);
-        
+
         $top3 = $ranking->take(3);
         $others = $ranking->slice(3);
 
@@ -35,20 +35,20 @@ class PerformanceController extends Controller
 
     public function gold()
     {
-        if (!config('features.gold_enabled')) {
+        if (! config('features.gold_enabled')) {
             abort(404, 'Tính năng Gold đã bị vô hiệu hóa.');
         }
 
         $ranking = $this->performanceService->getGoldRanking();
-        
+
         return view('superadmin.performance.gold', compact('ranking'));
     }
-    
+
     public function report(Request $request)
     {
         $user = auth()->user();
         $isAdminOrPm = $user->isSuperAdmin() || $user->level <= 1 || $user->role === 'project_manager' || $user->role === 'super_admin' || $user->hasRole(['super_admin', 'project_manager']);
-        
+
         // Mặc định xem báo cáo của chính mình
         $targetUserId = $user->id;
 
@@ -61,7 +61,7 @@ class PerformanceController extends Controller
 
         $targetUser = User::findOrFail($targetUserId);
         $reportData = $this->performanceService->getPersonalReport($targetUserId, $period);
-        
+
         // Lấy danh sách nhân viên để Admin chọn
         $users = [];
         if ($isAdminOrPm) {
@@ -72,7 +72,7 @@ class PerformanceController extends Controller
             'targetUser' => $targetUser,
             'period' => $period,
             'users' => $users,
-            'isAdminOrPm' => $isAdminOrPm
+            'isAdminOrPm' => $isAdminOrPm,
         ]));
     }
 }

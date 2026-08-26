@@ -5,13 +5,15 @@ namespace App\Services\Hosting;
 use App\Models\HostingProfile;
 use App\Services\Hosting\Contracts\HostingClientInterface;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class DirectAdminHostingClient implements HostingClientInterface
 {
     protected $profile;
+
     protected $baseUrl;
+
     protected $username;
+
     protected $apiToken;
 
     public function setProfile(HostingProfile $profile): self
@@ -24,7 +26,7 @@ class DirectAdminHostingClient implements HostingClientInterface
         $this->baseUrl = "https://{$host}:{$port}";
         $this->username = $profile->cpanel_username; // We reuse this field for DA username
         $this->apiToken = $profile->api_token;
-        
+
         return $this;
     }
 
@@ -34,24 +36,24 @@ class DirectAdminHostingClient implements HostingClientInterface
             ->withoutVerifying()
             ->timeout(60);
     }
-    
+
     public function testConnection(): array
     {
         // CMD_API_SHOW_USER_DOMAINS
         $response = $this->client()->get("{$this->baseUrl}/CMD_API_SHOW_USER_DOMAINS");
-        
+
         if (! $response->successful() || strpos($response->body(), 'error=1') !== false) {
             throw new \Exception('Failed to connect to DirectAdmin: '.$response->body());
         }
-        
+
         // Parse the url-encoded body to get domains
         parse_str($response->body(), $data);
         $domains = array_keys($data);
-        
+
         return [
             'status' => 'success',
             'domains' => $domains,
-            'message' => 'Connected successfully to DirectAdmin.'
+            'message' => 'Connected successfully to DirectAdmin.',
         ];
     }
 
@@ -64,7 +66,7 @@ class DirectAdminHostingClient implements HostingClientInterface
     {
         throw new \Exception('DirectAdmin createDatabaseUser not fully implemented yet.');
     }
-    
+
     public function grantPrivileges(string $dbName, string $dbUser): bool
     {
         throw new \Exception('DirectAdmin grantPrivileges not fully implemented yet.');
@@ -84,7 +86,7 @@ class DirectAdminHostingClient implements HostingClientInterface
     {
         throw new \Exception('DirectAdmin Directory Creation via API is not fully supported yet.');
     }
-    
+
     public function saveFileContent(string $remoteFilePath, string $content): bool
     {
         throw new \Exception('DirectAdmin saveFileContent via API is not fully supported yet.');

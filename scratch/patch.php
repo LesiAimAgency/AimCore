@@ -1,4 +1,5 @@
 <?php
+
 $f = 'c:/MAMP/htdocs/yduoc-1/resources/views/widgets/yduoc_doctors.blade.php';
 $c = file_get_contents($f);
 $c = str_replace(

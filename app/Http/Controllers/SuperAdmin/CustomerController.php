@@ -15,9 +15,9 @@ class CustomerController extends Controller
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%")
-                  ->orWhere('tax_code', 'like', "%{$search}%");
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('phone', 'like', "%{$search}%")
+                ->orWhere('tax_code', 'like', "%{$search}%");
         }
 
         if ($request->has('type') && $request->type != '') {
@@ -86,6 +86,7 @@ class CustomerController extends Controller
     public function destroy(Customer $customer)
     {
         $customer->delete();
+
         return redirect()->route('superadmin.customers.index')
             ->with('success', 'Xóa khách hàng thành công');
     }

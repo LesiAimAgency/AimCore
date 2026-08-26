@@ -19,7 +19,7 @@ class VerifyAgencyRequest
         $agencySecret = config('services.agency.secret');
         $providedSecret = $request->header('X-Agency-Secret') ?? $request->bearerToken();
 
-        if (!hash_equals((string)$agencySecret, (string)$providedSecret)) {
+        if (! hash_equals((string) $agencySecret, (string) $providedSecret)) {
             return response()->json(['message' => 'Unauthorized Agency'], Response::HTTP_UNAUTHORIZED);
         }
 
@@ -27,7 +27,7 @@ class VerifyAgencyRequest
         $allowedIps = explode(',', config('services.agency.allowed_ips', ''));
         $clientIp = $request->ip();
 
-        if (!app()->environment('local') && !in_array($clientIp, $allowedIps)) {
+        if (! app()->environment('local') && ! in_array($clientIp, $allowedIps)) {
             return response()->json(['message' => 'IP not allowed'], Response::HTTP_FORBIDDEN);
         }
 

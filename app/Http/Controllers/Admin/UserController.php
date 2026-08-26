@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
+use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -71,13 +72,13 @@ class UserController extends Controller
     {
         $roles = Role::where('name', '!=', 'visitor')->get();
         $managers = User::where('status', true)
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->where('role', 'manager')
-                  ->orWhereHas('roles', function($q2) {
-                      $q2->where('name', 'manager');
-                  });
+                    ->orWhereHas('roles', function ($q2) {
+                        $q2->where('name', 'manager');
+                    });
             })->get();
-        $departments = \App\Models\Department::where('status', 'active')->pluck('name');
+        $departments = Department::where('status', 'active')->pluck('name');
 
         return view('cms.users.create', compact('roles', 'managers', 'departments'));
     }
@@ -180,13 +181,13 @@ class UserController extends Controller
         $roles = Role::where('name', '!=', 'visitor')->get();
         $managers = User::where('status', true)
             ->where('id', '!=', $user->id)
-            ->where(function($q) {
+            ->where(function ($q) {
                 $q->where('role', 'manager')
-                  ->orWhereHas('roles', function($q2) {
-                      $q2->where('name', 'manager');
-                  });
+                    ->orWhereHas('roles', function ($q2) {
+                        $q2->where('name', 'manager');
+                    });
             })->get();
-        $departments = \App\Models\Department::where('status', 'active')->pluck('name');
+        $departments = Department::where('status', 'active')->pluck('name');
         $user->load('roles');
 
         return view('cms.users.edit', compact('user', 'roles', 'managers', 'departments'));

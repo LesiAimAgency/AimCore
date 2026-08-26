@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
-use App\Models\ServiceStage;
 use App\Models\Service;
+use App\Models\ServiceStage;
 use Illuminate\Http\Request;
 
 class ServiceStageController extends Controller
@@ -17,6 +17,7 @@ class ServiceStageController extends Controller
         }
         $stages = $query->paginate(20);
         $services = Service::where('status', 'active')->get();
+
         return view('superadmin.service_stages.index', compact('stages', 'services'));
     }
 
@@ -24,6 +25,7 @@ class ServiceStageController extends Controller
     {
         $services = Service::where('status', 'active')->get();
         $selectedService = $request->service_id ?? null;
+
         return view('superadmin.service_stages.create', compact('services', 'selectedService'));
     }
 
@@ -51,6 +53,7 @@ class ServiceStageController extends Controller
     public function edit(ServiceStage $serviceStage)
     {
         $services = Service::where('status', 'active')->get();
+
         return view('superadmin.service_stages.edit', compact('serviceStage', 'services'));
     }
 
@@ -74,6 +77,7 @@ class ServiceStageController extends Controller
     {
         $serviceId = $serviceStage->service_id;
         $serviceStage->delete();
+
         return redirect()->route('superadmin.service-stages.index', ['service_id' => $serviceId])
             ->with('success', 'Service stage deleted successfully.');
     }

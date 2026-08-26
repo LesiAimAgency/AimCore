@@ -147,22 +147,22 @@ Route::middleware([
 
     // Hosting Deployment
     Route::prefix('multi-tenancy')->name('multi-tenancy.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\SuperAdmin\DashboardController::class, 'multiTenancy'])->name('index');
-        Route::post('/projects/{project}/deploy', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'triggerDeployMultiTenancy'])->name('deploy');
+        Route::get('/', [DashboardController::class, 'multiTenancy'])->name('index');
+        Route::post('/projects/{project}/deploy', [HostingDeployController::class, 'triggerDeployMultiTenancy'])->name('deploy');
     });
     Route::prefix('hosting')->name('hosting.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'index'])->name('index');
-        Route::get('/create', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'create'])->name('create');
-        Route::post('/', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'store'])->name('store');
-        Route::get('/{profile}/edit', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'edit'])->name('edit');
-        Route::put('/{profile}', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'update'])->name('update');
-        Route::delete('/{profile}', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'destroy'])->name('destroy');
-        Route::post('/{profile}/test-connection', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'testConnection'])->name('test-connection');
+        Route::get('/', [HostingDeployController::class, 'index'])->name('index');
+        Route::get('/create', [HostingDeployController::class, 'create'])->name('create');
+        Route::post('/', [HostingDeployController::class, 'store'])->name('store');
+        Route::get('/{profile}/edit', [HostingDeployController::class, 'edit'])->name('edit');
+        Route::put('/{profile}', [HostingDeployController::class, 'update'])->name('update');
+        Route::delete('/{profile}', [HostingDeployController::class, 'destroy'])->name('destroy');
+        Route::post('/{profile}/test-connection', [HostingDeployController::class, 'testConnection'])->name('test-connection');
 
         // Deployment
-        Route::get('/deployments/{history}', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'deployView'])->name('deploy');
-        Route::get('/deployments/{history}/logs', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'deployLogs'])->name('deploy.logs');
-        Route::post('/deployments/{history}/run', [\App\Http\Controllers\SuperAdmin\HostingDeployController::class, 'runDeploy'])->name('deploy.run');
+        Route::get('/deployments/{history}', [HostingDeployController::class, 'deployView'])->name('deploy');
+        Route::get('/deployments/{history}/logs', [HostingDeployController::class, 'deployLogs'])->name('deploy.logs');
+        Route::post('/deployments/{history}/run', [HostingDeployController::class, 'runDeploy'])->name('deploy.run');
     });
 
     // Remote CMS Management - SuperAdmin can manage any project's CMS

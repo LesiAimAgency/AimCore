@@ -1,7 +1,8 @@
 <?php
+
 $files = [
     'c:/MAMP/htdocs/yduoc-1/resources/views/widgets/yduoc_doctors.blade.php',
-    'c:/MAMP/htdocs/yduoc-1/resources/views/widgets/types/yduoc_expert.blade.php'
+    'c:/MAMP/htdocs/yduoc-1/resources/views/widgets/types/yduoc_expert.blade.php',
 ];
 
 foreach ($files as $f) {

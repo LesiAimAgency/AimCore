@@ -575,10 +575,11 @@
                                 Ngày bắt đầu
                             </label>
                             <input
+                                id="create_start_date"
                                 type="text"
                                 x-model="form.start_date"
-                                x-init="flatpickr($el, { dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', locale: 'vn', prevArrow: '❮', nextArrow: '❯' })"
-                                class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none"
+                                placeholder="Chọn ngày bắt đầu..."
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none bg-white cursor-pointer"
                             >
                         </div>
                         <div>
@@ -586,10 +587,11 @@
                                 Deadline <span class="text-red-500">*</span>
                             </label>
                             <input
+                                id="create_deadline"
                                 type="text"
                                 x-model="form.deadline"
-                                x-init="flatpickr($el, { dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', locale: 'vn', prevArrow: '❮', nextArrow: '❯' })"
-                                class="w-full rounded-lg border px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none"
+                                placeholder="Chọn deadline (tương lai)..."
+                                class="w-full rounded-lg border px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none bg-white cursor-pointer"
                                 :class="formErrors.deadline ? 'border-red-400 bg-red-50/20' : 'border-gray-300' border px-4 py-2"
                             >
                             <template x-if="formErrors.deadline">
@@ -733,11 +735,12 @@
                             Deadline <span class="text-red-500">*</span>
                         </label>
                         <input
+                            id="edit_deadline"
                             type="text"
                             x-model="editForm.deadline"
-                            x-init="flatpickr($el, { dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', locale: 'vn', prevArrow: '❮', nextArrow: '❯' })"
+                            placeholder="Chọn deadline mới (tương lai)..."
                             required
-                            class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none"
+                            class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none bg-white cursor-pointer"
                         >
                     </div>
                 </div>
@@ -1270,6 +1273,16 @@
         height: 14px !important;
         display: inline-block !important;
     }
+
+    /* Flatpickr Disabled Days styling */
+    .flatpickr-day.flatpickr-disabled,
+    .flatpickr-day.flatpickr-disabled:hover {
+        color: #cbd5e1 !important;
+        background: transparent !important;
+        cursor: not-allowed !important;
+        opacity: 0.4 !important;
+        text-decoration: line-through;
+    }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 @endpush
@@ -1337,8 +1350,11 @@ document.addEventListener('alpine:init', () => {
         departments: @json($departments ?? []),
         isAdminOrPm: {{ $isAdminOrPm ? 'true' : 'false' }},
         currentUserId: {{ auth()->id() ?? 0 }},
-        serverVersion: {{ (int) (\Illuminate\Support\Facades\Cache::get('my_tasks_last_change')['time'] ?? (int)(microtime(true)*1000)) }},
+        serverVersion: {{ (int) (\Illuminate\Support\Facades\Cache::get('my_tasks_last_change')['time'] ?? 0) }},
         isSyncing: false,
+        createStartPicker: null,
+        createDeadlinePicker: null,
+        editDeadlinePicker: null,
 
         realtimeAlert: {
             show: false,
@@ -1374,6 +1390,88 @@ document.addEventListener('alpine:init', () => {
 
             // Kích hoạt đồng bộ Realtime thông minh (Tiết kiệm 99.9% tài nguyên host)
             this.startRealtimePolling();
+        },
+
+        getTodayDateString() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        },
+
+        initCreatePickers() {
+            const startEl = document.getElementById('create_start_date');
+            const deadlineEl = document.getElementById('create_deadline');
+            if (!startEl || !deadlineEl) return;
+
+            if (this.createStartPicker) {
+                this.createStartPicker.destroy();
+                this.createStartPicker = null;
+            }
+            if (this.createDeadlinePicker) {
+                this.createDeadlinePicker.destroy();
+                this.createDeadlinePicker = null;
+            }
+
+            const todayStr = this.getTodayDateString();
+
+            this.createStartPicker = flatpickr(startEl, {
+                dateFormat: 'Y-m-d',
+                altInput: true,
+                altFormat: 'd/m/Y',
+                locale: 'vn',
+                minDate: 'today',
+                defaultDate: this.form.start_date || todayStr,
+                prevArrow: '❮',
+                nextArrow: '❯',
+                onChange: (selectedDates, dateStr) => {
+                    this.form.start_date = dateStr;
+                    if (this.createDeadlinePicker) {
+                        const minDeadline = dateStr || 'today';
+                        this.createDeadlinePicker.set('minDate', minDeadline);
+                        if (this.form.deadline && this.form.deadline < dateStr) {
+                            this.form.deadline = dateStr;
+                            this.createDeadlinePicker.setDate(dateStr, true);
+                        }
+                    }
+                }
+            });
+
+            this.createDeadlinePicker = flatpickr(deadlineEl, {
+                dateFormat: 'Y-m-d',
+                altInput: true,
+                altFormat: 'd/m/Y',
+                locale: 'vn',
+                minDate: this.form.start_date || 'today',
+                defaultDate: this.form.deadline || null,
+                prevArrow: '❮',
+                nextArrow: '❯',
+                onChange: (selectedDates, dateStr) => {
+                    this.form.deadline = dateStr;
+                }
+            });
+        },
+
+        initEditPicker(currentDeadline) {
+            const editEl = document.getElementById('edit_deadline');
+            if (!editEl) return;
+
+            if (this.editDeadlinePicker) {
+                this.editDeadlinePicker.destroy();
+                this.editDeadlinePicker = null;
+            }
+
+            this.editDeadlinePicker = flatpickr(editEl, {
+                dateFormat: 'Y-m-d',
+                altInput: true,
+                altFormat: 'd/m/Y',
+                locale: 'vn',
+                minDate: 'today',
+                defaultDate: currentDeadline || null,
+                prevArrow: '❮',
+                nextArrow: '❯',
+                onChange: (selectedDates, dateStr) => {
+                    this.editForm.deadline = dateStr;
+                }
+            });
         },
 
         openCalendarModal() {
@@ -1544,20 +1642,19 @@ document.addEventListener('alpine:init', () => {
                 if (data.has_changed && data.pendingTasks) {
                     const lastChange = data.last_change;
                     
-                    // Nếu sự kiện do user khác tạo ra -> cập nhật bảng dữ liệu
+                    // Cập nhật state đầy đủ từ server
+                    this.pendingTasks = data.pendingTasks;
+                    this.completedTasks = data.completedTasks;
+
+                    if (data.user_gold !== undefined) {
+                        this.updateHeaderGold(data.user_gold);
+                    }
+
+                    // Hiện popup thông báo nếu sự kiện từ user khác và có liên quan hoặc user là PM/Admin
                     if (lastChange && Number(lastChange.user_id) !== Number(this.currentUserId)) {
-                        this.pendingTasks = data.pendingTasks;
-                        this.completedTasks = data.completedTasks;
-
-                        if (data.user_gold !== undefined) {
-                            this.updateHeaderGold(data.user_gold);
-                        }
-
-                        // Chỉ hiện popup thông báo nếu thao tác này có liên quan tới user hiện tại
-                        // hoặc user hiện tại là PM/Admin (có thể mở rộng sau).
-                        let shouldNotify = false;
+                        let shouldNotify = this.isAdminOrPm;
                         if (lastChange.involved_users && Array.isArray(lastChange.involved_users)) {
-                            if (lastChange.involved_users.includes(Number(this.currentUserId))) {
+                            if (lastChange.involved_users.map(Number).includes(Number(this.currentUserId))) {
                                 shouldNotify = true;
                             }
                         }
@@ -1565,9 +1662,6 @@ document.addEventListener('alpine:init', () => {
                         if (shouldNotify) {
                             this.triggerRealtimePopup(lastChange.message || 'Dữ liệu công việc vừa được cập nhật!');
                         }
-                    } else if (manual) {
-                        this.pendingTasks = data.pendingTasks;
-                        this.completedTasks = data.completedTasks;
                     }
 
                     if (data.server_version) {
@@ -1693,17 +1787,21 @@ document.addEventListener('alpine:init', () => {
         },
 
         openModal() {
+            const todayStr = this.getTodayDateString();
             this.form = {
                 title: '',
                 description: '',
                 project_id: this.projects.length > 0 ? this.projects[0].id : '',
                 gold: 100,
                 assigned_to: '',
-                start_date: new Date().toISOString().split('T')[0],
+                start_date: todayStr,
                 deadline: ''
             };
             this.formErrors = {};
             this.showModal = true;
+            this.$nextTick(() => {
+                this.initCreatePickers();
+            });
         },
 
         closeModal() {
@@ -1721,6 +1819,9 @@ document.addEventListener('alpine:init', () => {
                 deadline: task.deadline_raw || ''
             };
             this.showEditModal = true;
+            this.$nextTick(() => {
+                this.initEditPicker(task.deadline_raw);
+            });
         },
 
         closeEditModal() {
@@ -1779,6 +1880,7 @@ document.addEventListener('alpine:init', () => {
                     this.pendingTasks.push(data.task);
                     this.closeModal();
                     this.showToast(data.message || 'Đã tạo công việc thành công!');
+                    await this.syncRealtimeData(true);
                 }
             } catch (err) {
                 console.error(err);
@@ -1844,6 +1946,7 @@ document.addEventListener('alpine:init', () => {
                     this.completedTasks = this.completedTasks.filter(t => t.id !== taskId);
                     this.closeDeleteModal();
                     this.showToast('Đã xóa công việc thành công!');
+                    await this.syncRealtimeData(true);
                 } else {
                     this.showToast(data.message || 'Không thể xóa công việc.', 'error');
                 }
@@ -1874,6 +1977,7 @@ document.addEventListener('alpine:init', () => {
                 if (data.success && data.task) {
                     this.pendingTasks[idx] = data.task;
                     this.showToast('Đã duyệt công việc!');
+                    await this.syncRealtimeData(true);
                 } else {
                     this.pendingTasks[idx] = originalTask; // Revert
                     this.showToast(data.message || 'Lỗi khi duyệt task.', 'error');
@@ -1914,6 +2018,7 @@ document.addEventListener('alpine:init', () => {
                 if (data.success && data.task) {
                     this.pendingTasks[idx] = data.task;
                     this.showToast('Đã nhận việc thành công!');
+                    await this.syncRealtimeData(true);
                 } else {
                     this.pendingTasks[idx] = originalTask; // Revert
                     this.showToast(data.message || 'Lỗi khi nhận việc.', 'error');
@@ -1955,6 +2060,7 @@ document.addEventListener('alpine:init', () => {
                     if (idx !== -1) this.pendingTasks[idx] = data.task;
                     this.showReasonModal = false;
                     this.showToast(data.message || 'Đã thực hiện thành công!');
+                    await this.syncRealtimeData(true);
                 } else {
                     this.showToast(data.message || 'Có lỗi xảy ra.', 'error');
                 }
@@ -2040,6 +2146,7 @@ document.addEventListener('alpine:init', () => {
                         this.completedTasks[cIdx] = data.task || optimisticCompleted;
                     }
                     this.showToast(data.message || 'Đã báo cáo hoàn thành! Chờ Quản lý duyệt Gold.');
+                    await this.syncRealtimeData(true);
                 } else {
                     // Revert on error
                     this.completedTasks = this.completedTasks.filter(t => t.id !== taskId);
@@ -2075,6 +2182,7 @@ document.addEventListener('alpine:init', () => {
                         this.updateHeaderGold(data.user_gold);
                     }
                     this.showToast(data.message || 'Đã duyệt nghiệm thu và trao Gold thành công!');
+                    await this.syncRealtimeData(true);
                 } else {
                     this.showToast(data.message || 'Có lỗi xảy ra khi duyệt Gold.', 'error');
                 }
@@ -2113,6 +2221,7 @@ document.addEventListener('alpine:init', () => {
                         this.updateHeaderGold(data.user_gold);
                     }
                     this.showToast(data.message || 'Đã khôi phục công việc!');
+                    await this.syncRealtimeData(true);
                 } else {
                     // Revert on error
                     this.pendingTasks = this.pendingTasks.filter(t => t.id !== taskId);

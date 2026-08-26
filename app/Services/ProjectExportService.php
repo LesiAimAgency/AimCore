@@ -42,8 +42,8 @@ class ProjectExportService
         ini_set('memory_limit', '1G');
 
         $exportBaseDir = storage_path("app/deployments/project_{$project->id}");
-        $exportSourceDir = $exportBaseDir . '/source';
-        $zipPath = $exportBaseDir . '/source.zip';
+        $exportSourceDir = $exportBaseDir.'/source';
+        $zipPath = $exportBaseDir.'/source.zip';
 
         // Clean up any previous attempt
         if (File::exists($exportBaseDir)) {
@@ -55,32 +55,32 @@ class ProjectExportService
 
         // 1. Copy source files (minus SuperAdmin)
         $this->exportEssentialFiles($project, $exportSourceDir);
-        Log::info("[Export] Source files copied.");
+        Log::info('[Export] Source files copied.');
 
         // 2. Generate CMS-only database SQL
         $dbSqlContent = $this->generateDatabaseSQL($project);
-        File::put($exportSourceDir . '/database/database.sql', $dbSqlContent);
-        Log::info("[Export] Database SQL generated (" . strlen($dbSqlContent) . " bytes).");
+        File::put($exportSourceDir.'/database/database.sql', $dbSqlContent);
+        Log::info('[Export] Database SQL generated ('.strlen($dbSqlContent).' bytes).');
 
         // 3. Generate .env template
         $envContent = $this->generateEnvTemplate($project, $profile);
-        File::put($exportSourceDir . '/.env', $envContent);
+        File::put($exportSourceDir.'/.env', $envContent);
 
         // 4. Generate bootstrap installer script
         $bootstrapContent = $this->generateBootstrapInstaller();
-        File::put($exportSourceDir . '/deploy_setup.php', $bootstrapContent);
+        File::put($exportSourceDir.'/deploy_setup.php', $bootstrapContent);
 
         // 5. ZIP everything
         $this->createZipFromDirectory($exportSourceDir, $zipPath, $project);
-        Log::info("[Export] ZIP created at {$zipPath} (" . round(filesize($zipPath) / 1024 / 1024, 2) . " MB).");
+        Log::info("[Export] ZIP created at {$zipPath} (".round(filesize($zipPath) / 1024 / 1024, 2).' MB).');
 
         // Clean up source dir, keep ZIP
         File::deleteDirectory($exportSourceDir);
 
         return [
-            'zip_path'       => $zipPath,
+            'zip_path' => $zipPath,
             'db_sql_content' => $dbSqlContent,
-            'env_content'    => $envContent,
+            'env_content' => $envContent,
         ];
     }
 
@@ -94,24 +94,24 @@ class ProjectExportService
 
         // Directories to copy verbatim
         $directories = [
-            'bootstrap'                     => 'bootstrap',
-            'config'                        => 'config',
-            'database'                      => 'database',
-            'public'                        => 'public',
-            'resources'                     => 'resources',
-            'vendor'                        => 'vendor',
-            'storage/app/public'            => 'storage/app/public',
-            'storage/framework/cache'       => 'storage/framework/cache',
-            'storage/framework/sessions'    => 'storage/framework/sessions',
-            'storage/framework/views'       => 'storage/framework/views',
-            'storage/logs'                  => 'storage/logs',
+            'bootstrap' => 'bootstrap',
+            'config' => 'config',
+            'database' => 'database',
+            'public' => 'public',
+            'resources' => 'resources',
+            'vendor' => 'vendor',
+            'storage/app/public' => 'storage/app/public',
+            'storage/framework/cache' => 'storage/framework/cache',
+            'storage/framework/sessions' => 'storage/framework/sessions',
+            'storage/framework/views' => 'storage/framework/views',
+            'storage/logs' => 'storage/logs',
         ];
 
         foreach ($directories as $source => $dest) {
-            $sourcePath = $basePath . '/' . $source;
+            $sourcePath = $basePath.'/'.$source;
             if (File::exists($sourcePath)) {
-                File::makeDirectory($exportPath . '/' . dirname($dest), 0755, true, true);
-                File::copyDirectory($sourcePath, $exportPath . '/' . $dest);
+                File::makeDirectory($exportPath.'/'.dirname($dest), 0755, true, true);
+                File::copyDirectory($sourcePath, $exportPath.'/'.$dest);
             }
         }
 
@@ -128,23 +128,23 @@ class ProjectExportService
             'storage/app/public',
         ];
         foreach ($storageDirs as $dir) {
-            File::makeDirectory($exportPath . '/' . $dir, 0755, true, true);
-            File::put($exportPath . '/' . $dir . '/.gitkeep', '');
+            File::makeDirectory($exportPath.'/'.$dir, 0755, true, true);
+            File::put($exportPath.'/'.$dir.'/.gitkeep', '');
         }
 
         // Copy root-level files
         $rootFiles = ['artisan', 'composer.json', 'composer.lock', 'package.json', '.env.example', '.gitignore'];
         foreach ($rootFiles as $file) {
-            if (File::exists($basePath . '/' . $file)) {
-                File::copy($basePath . '/' . $file, $exportPath . '/' . $file);
+            if (File::exists($basePath.'/'.$file)) {
+                File::copy($basePath.'/'.$file, $exportPath.'/'.$file);
             }
         }
     }
 
     private function copyAppWithoutSuperAdmin(string $basePath, string $exportPath): void
     {
-        $appSource = $basePath . '/app';
-        $appDest   = $exportPath . '/app';
+        $appSource = $basePath.'/app';
+        $appDest = $exportPath.'/app';
 
         if (! File::exists($appSource)) {
             return;
@@ -154,8 +154,8 @@ class ProjectExportService
 
         // Remove SuperAdmin controllers and middleware
         $superAdminPaths = [
-            $appDest . '/Http/Controllers/SuperAdmin',
-            $appDest . '/Http/Middleware/SuperAdminMiddleware.php',
+            $appDest.'/Http/Controllers/SuperAdmin',
+            $appDest.'/Http/Middleware/SuperAdminMiddleware.php',
         ];
 
         foreach ($superAdminPaths as $path) {
@@ -167,8 +167,8 @@ class ProjectExportService
 
     private function copyRoutesWithoutSuperAdmin(string $basePath, string $exportPath): void
     {
-        $routesSource = $basePath . '/routes';
-        $routesDest   = $exportPath . '/routes';
+        $routesSource = $basePath.'/routes';
+        $routesDest = $exportPath.'/routes';
 
         if (! File::exists($routesSource)) {
             return;
@@ -177,13 +177,13 @@ class ProjectExportService
         File::copyDirectory($routesSource, $routesDest);
 
         // Remove superadmin.php route file
-        $superAdminRoute = $routesDest . '/superadmin.php';
+        $superAdminRoute = $routesDest.'/superadmin.php';
         if (File::exists($superAdminRoute)) {
             File::delete($superAdminRoute);
         }
 
         // Patch web.php: remove superadmin require
-        $webRoute = $routesDest . '/web.php';
+        $webRoute = $routesDest.'/web.php';
         if (File::exists($webRoute)) {
             $content = File::get($webRoute);
             $content = str_replace(
@@ -195,7 +195,7 @@ class ProjectExportService
         }
 
         // Patch project.php: strip {projectCode} prefix so routes work on standalone domain
-        $projectRoute = $routesDest . '/project.php';
+        $projectRoute = $routesDest.'/project.php';
         if (File::exists($projectRoute)) {
             $content = File::get($projectRoute);
             $content = str_replace("Route::prefix('{projectCode}')", "Route::prefix('')", $content);
@@ -245,8 +245,8 @@ class ProjectExportService
 
     public function generateDatabaseSQL(Project $project): string
     {
-        $sql  = "-- CMS Database snapshot for {$project->name} (Project: {$project->code})\n";
-        $sql .= '-- Generated on: ' . now()->format('Y-m-d H:i:s') . "\n";
+        $sql = "-- CMS Database snapshot for {$project->name} (Project: {$project->code})\n";
+        $sql .= '-- Generated on: '.now()->format('Y-m-d H:i:s')."\n";
         $sql .= "-- NOTE: Only CMS tables are included. Central system tables are excluded.\n\n";
         $sql .= "/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;\n";
         $sql .= "/*!40101 SET NAMES utf8mb4 */;\n";
@@ -282,20 +282,20 @@ class ProjectExportService
         try {
             $createTable = DB::select("SHOW CREATE TABLE `{$table}`");
             $sql .= "DROP TABLE IF EXISTS `{$table}`;\n";
-            $sql .= $createTable[0]->{'Create Table'} . ";\n\n";
+            $sql .= $createTable[0]->{'Create Table'}.";\n\n";
             $sql .= $this->getTableData($table, $project);
         } catch (\Exception $e) {
-            $sql .= "-- Error exporting table {$table}: " . $e->getMessage() . "\n\n";
+            $sql .= "-- Error exporting table {$table}: ".$e->getMessage()."\n\n";
         }
 
-        return $sql . "\n";
+        return $sql."\n";
     }
 
     private function getTableData(string $table, Project $project): string
     {
-        $sql     = "-- Data for {$table}\n";
+        $sql = "-- Data for {$table}\n";
         $columns = Schema::getColumnListing($table);
-        $query   = DB::table($table);
+        $query = DB::table($table);
 
         // Scope to project
         if (in_array('project_id', $columns)) {
@@ -341,12 +341,12 @@ class ProjectExportService
 
                     return DB::getPdo()->quote($value);
                 }, (array) $row);
-                $values[] = '(' . implode(', ', $rowData) . ')';
+                $values[] = '('.implode(', ', $rowData).')';
             }
 
-            $sql .= implode(",\n", $values) . ";\n";
+            $sql .= implode(",\n", $values).";\n";
         } catch (\Exception $e) {
-            $sql .= '-- Error exporting data: ' . $e->getMessage() . "\n";
+            $sql .= '-- Error exporting data: '.$e->getMessage()."\n";
         }
 
         return $sql;
@@ -369,11 +369,11 @@ class ProjectExportService
 
         $domain = $project->external_domain ?? ($profile?->domain ?? 'your-domain.com');
 
-        return 'APP_NAME="' . $project->name . '"
+        return 'APP_NAME="'.$project->name.'"
 APP_ENV=production
-APP_KEY=base64:' . base64_encode(random_bytes(32)) . '
+APP_KEY=base64:'.base64_encode(random_bytes(32)).'
 APP_DEBUG=false
-APP_URL=https://' . $domain . '
+APP_URL=https://'.$domain.'
 
 LOG_CHANNEL=stack
 LOG_DEPRECATIONS_CHANNEL=null
@@ -399,16 +399,16 @@ MAIL_PORT=465
 MAIL_USERNAME=null
 MAIL_PASSWORD=null
 MAIL_ENCRYPTION=ssl
-MAIL_FROM_ADDRESS="hello@' . $domain . '"
-MAIL_FROM_NAME="' . $project->name . '"
+MAIL_FROM_ADDRESS="hello@'.$domain.'"
+MAIL_FROM_NAME="'.$project->name.'"
 
 # Project-specific settings
-PROJECT_CODE=' . $project->code . '
-PROJECT_NAME="' . $project->name . '"
+PROJECT_CODE='.$project->code.'
+PROJECT_NAME="'.$project->name.'"
 
 # Remote Sync API – token provided by SuperAdmin
-SYNC_API_TOKEN="' . $project->api_token . '"
-SUPERADMIN_URL="' . config('app.url') . '"
+SYNC_API_TOKEN="'.$project->api_token.'"
+SUPERADMIN_URL="'.config('app.url').'"
 
 # Standalone mode – website runs independently on its own domain
 STANDALONE_MODE=true
@@ -554,7 +554,7 @@ PHP;
 
     private function createZipFromDirectory(string $sourceDir, string $zipPath, Project $project): void
     {
-        $zip = new ZipArchive();
+        $zip = new ZipArchive;
 
         if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
             throw new \Exception("Cannot create ZIP at {$zipPath}");
@@ -569,7 +569,7 @@ PHP;
             if (! $file->isFile()) {
                 continue;
             }
-            $filePath     = $file->getRealPath();
+            $filePath = $file->getRealPath();
             $relativePath = substr($filePath, strlen($sourceDir) + 1);
 
             // Normalise on Windows

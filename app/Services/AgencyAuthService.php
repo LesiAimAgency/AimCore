@@ -10,16 +10,16 @@ class AgencyAuthService
     /**
      * Generate Temporary Signed URL
      */
-    public function generateMagicLink(string $targetEmail = null): string
+    public function generateMagicLink(?string $targetEmail = null): string
     {
         // Get superadmin user or a specific user
-        $admin = $targetEmail 
+        $admin = $targetEmail
             ? User::where('email', $targetEmail)->firstOrFail()
             : User::where('role', 'superadmin')->firstOrFail();
 
         return URL::temporarySignedRoute(
-            'agency.magic_login', 
-            now()->addSeconds(60), 
+            'agency.magic_login',
+            now()->addSeconds(60),
             ['user' => $admin->id]
         );
     }

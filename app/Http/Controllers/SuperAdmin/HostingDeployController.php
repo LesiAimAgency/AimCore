@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\DeployProjectJob;
 use App\Models\DeploymentHistory;
 use App\Models\HostingProfile;
 use App\Models\Project;
+use App\Services\Hosting\DeploymentService;
+use App\Services\Hosting\HostingClientFactory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class HostingDeployController extends Controller
 {
@@ -91,17 +93,17 @@ class HostingDeployController extends Controller
     public function testConnection(HostingProfile $profile)
     {
         try {
-            $client = \App\Services\Hosting\HostingClientFactory::make($profile);
+            $client = HostingClientFactory::make($profile);
             $result = $client->testConnection();
-            
+
             $message = $result['message'] ?? 'Connection test passed! API is working correctly.';
-            if (!empty($result['domains'])) {
-                $message .= ' Domains found: ' . implode(', ', $result['domains']);
+            if (! empty($result['domains'])) {
+                $message .= ' Domains found: '.implode(', ', $result['domains']);
             }
-            
+
             return back()->with('success', $message);
         } catch (\Exception $e) {
-            return back()->with('error', 'Connection test failed: ' . $e->getMessage());
+            return back()->with('error', 'Connection test failed: '.$e->getMessage());
         }
     }
 
@@ -124,13 +126,13 @@ class HostingDeployController extends Controller
         ]);
 
         $profile = HostingProfile::findOrFail($validated['hosting_profile_id']);
-        
+
         // Cập nhật external_domain cho Project
         $project->update([
             'external_domain' => $validated['domain'],
         ]);
 
-        $history = \App\Models\DeploymentHistory::create([
+        $history = DeploymentHistory::create([
             'project_id' => $project->id,
             'hosting_profile_id' => $profile->id,
             'deployed_by' => auth()->id(),
@@ -152,7 +154,7 @@ class HostingDeployController extends Controller
         ]);
     }
 
-    public function runDeploy(DeploymentHistory $history, \App\Services\Hosting\DeploymentService $service)
+    public function runDeploy(DeploymentHistory $history, DeploymentService $service)
     {
         if ($history->status !== 'pending') {
             return response()->json(['status' => 'error', 'message' => 'Deployment already running or finished.']);
@@ -163,9 +165,11 @@ class HostingDeployController extends Controller
 
         try {
             $service->runExistingDeploy($history);
+
             return response()->json(['status' => 'success', 'message' => 'Deployment finished.']);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Deployment error via HTTP: ' . $e->getMessage());
+            Log::error('Deployment error via HTTP: '.$e->getMessage());
+
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }

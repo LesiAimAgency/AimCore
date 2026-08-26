@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\AgencyAuthController;
 use App\Http\Controllers\Api\SyncController;
+use App\Http\Controllers\Api\WidgetController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['api.token'])->group(function () {
@@ -9,8 +11,8 @@ Route::middleware(['api.token'])->group(function () {
 });
 
 Route::middleware('agency.verify')->group(function () {
-    Route::post('/agency/auth', [\App\Http\Controllers\Api\AgencyAuthController::class, 'requestMagicLink']);
+    Route::post('/agency/auth', [AgencyAuthController::class, 'requestMagicLink']);
 });
 
-Route::post('/widgets/sync', [\App\Http\Controllers\Api\WidgetController::class, 'sync']);
-Route::get('/widgets/render/{code}', [\App\Http\Controllers\Api\WidgetController::class, 'renderPartial']);
+Route::post('/widgets/sync', [WidgetController::class, 'sync']);
+Route::get('/widgets/render/{code}', [WidgetController::class, 'renderPartial']);

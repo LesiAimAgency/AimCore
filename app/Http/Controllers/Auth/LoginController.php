@@ -28,6 +28,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($request->only('username', 'password'), $request->boolean('remember'))) {
             $request->session()->regenerate();
+
             return redirect('/superadmin');
         }
 

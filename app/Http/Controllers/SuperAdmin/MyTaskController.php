@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\SuperAdmin;
 
+use App\Helpers\SuperAdminLogHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SuperAdmin\StoreMyTaskRequest;
 use App\Models\Project;
@@ -390,7 +391,7 @@ class MyTaskController extends Controller
         ]);
         $taskModel->load(['project', 'creator', 'assignedUser']);
 
-        $this->recordTaskChange('accept', "Nhân sự {$user->name} đã nhận việc: {$taskModel->title}", [$taskModel->assigned_to]);
+        $this->recordTaskChange('accept', "Nhân sự {$user->name} đã nhận việc: {$taskModel->title}", array_unique(array_filter([$taskModel->user_id, $taskModel->assigned_to])));
 
         return response()->json([
             'success' => true,
@@ -439,7 +440,7 @@ class MyTaskController extends Controller
 
         $taskModel->load(['project', 'creator', 'assignedUser']);
 
-        $this->recordTaskChange('reassign', "Quản lý {$user->name} đã điều phối lại công việc: {$taskModel->title} cho {$newAssignee->name}", [$taskModel->assigned_to, $newAssignee->id]);
+        $this->recordTaskChange('reassign', "Quản lý {$user->name} đã điều phối lại công việc: {$taskModel->title} cho {$newAssignee->name}", array_unique(array_filter([$taskModel->user_id, $taskModel->assigned_to, $newAssignee->id])));
 
         return response()->json([
             'success' => true,
@@ -466,7 +467,7 @@ class MyTaskController extends Controller
         ]);
         $taskModel->load(['project', 'creator', 'assignedUser']);
 
-        $this->recordTaskChange('decline', "Nhân sự {$user->name} đã từ chối việc: {$taskModel->title}", [$taskModel->assigned_to]);
+        $this->recordTaskChange('decline', "Nhân sự {$user->name} đã từ chối việc: {$taskModel->title}", array_unique(array_filter([$taskModel->user_id, $taskModel->assigned_to])));
 
         return response()->json([
             'success' => true,
@@ -545,12 +546,14 @@ class MyTaskController extends Controller
         $this->recalculatePositions($taskModel->user_id);
         $taskModel->load(['project', 'creator', 'assignedUser']);
 
-        $this->recordTaskChange('complete', "Nhân sự {$user->name} vừa báo cáo hoàn thành: {$taskModel->title}", [$taskModel->assigned_to]);
+        $this->recordTaskChange('complete', "Nhân sự {$user->name} vừa báo cáo hoàn thành: {$taskModel->title}", array_unique(array_filter([$taskModel->user_id, $taskModel->assigned_to])));
 
         return response()->json([
             'success' => true,
             'message' => 'Đã đánh dấu hoàn thành công việc!',
             'task' => $this->transformTask($taskModel, $user, $isAdminOrPm),
+            'gold_amount' => (int) ($taskModel->gold ?? 0),
+            'gold_awarded' => false,
         ]);
     }
 
@@ -689,9 +692,9 @@ class MyTaskController extends Controller
         ], 3600);
 
         // Đẩy thẳng vào System Logs (Log 7 ngày)
-        \App\Helpers\SuperAdminLogHelper::logActivity('MyTask: ' . $message, [
+        SuperAdminLogHelper::logActivity('MyTask: '.$message, [
             'action' => $action,
-            'ip' => request()->ip()
+            'ip' => request()->ip(),
         ]);
     }
 

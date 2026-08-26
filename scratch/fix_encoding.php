@@ -1,4 +1,5 @@
 <?php
+
 $f = 'c:/MAMP/htdocs/yduoc-1/resources/views/widgets/yduoc_doctors.blade.php';
 $content = file_get_contents($f);
 $content = str_replace('BA?C S", D_C S"', 'BÁC SĨ, DƯỢC SĨ', $content);

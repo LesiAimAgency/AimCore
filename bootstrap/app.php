@@ -14,6 +14,7 @@ use App\Http\Middleware\ProjectSession;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\SuperAdminMiddleware;
 use App\Http\Middleware\TenantMiddleware;
+use App\Http\Middleware\VerifyAgencyRequest;
 use App\Http\Middleware\VerifyApiToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -80,7 +81,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'project.session' => ProjectSession::class,
             'widget.bypass' => BypassWidgetPermission::class,
             'api.token' => VerifyApiToken::class,
-            'agency.verify' => \App\Http\Middleware\VerifyAgencyRequest::class,
+            'agency.verify' => VerifyAgencyRequest::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

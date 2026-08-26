@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
 use App\Services\AgencyAuthService;
 use Illuminate\Http\JsonResponse;
 
@@ -21,7 +19,7 @@ class AgencyAuthController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'magic_link' => $magicLink
+            'magic_link' => $magicLink,
         ]);
     }
 }

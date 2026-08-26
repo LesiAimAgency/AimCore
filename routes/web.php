@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\RelationshipFieldController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\TaxonomyFieldController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\MagicLoginController;
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\FormSubmissionController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\WatermarkImageController;
@@ -219,8 +221,6 @@ Route::prefix('admin')->name('cms.')->middleware(['auth'])->group(function () {
 // Include SuperAdmin Routes (Project Management)
 require __DIR__.'/superadmin.php';
 
-
-
 // Project routes are loaded separately in bootstrap/app.php with isolated session
 
 // Robots.txt
@@ -255,7 +255,7 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
-    Route::put('/user/password', [\App\Http\Controllers\Auth\PasswordController::class, 'update'])->name('user.password.update');
+    Route::put('/user/password', [PasswordController::class, 'update'])->name('user.password.update');
 });
 
 // Test routes for development
@@ -263,4 +263,4 @@ if (app()->environment(['local', 'testing'])) {
     require __DIR__.'/test.php';
 }
 
-Route::get('/agency/magic-login/{user}', [\App\Http\Controllers\Auth\MagicLoginController::class, 'login'])->name('agency.magic_login')->middleware('signed');
+Route::get('/agency/magic-login/{user}', [MagicLoginController::class, 'login'])->name('agency.magic_login')->middleware('signed');

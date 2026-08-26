@@ -4,12 +4,13 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Contract;
+use App\Models\Customer;
+use App\Models\Department;
 use App\Models\FeaturePack;
 use App\Models\Project;
 use App\Models\ProjectPermission;
 use App\Models\ProjectSetting;
 use App\Models\User;
-use App\Models\Customer;
 use App\Services\RemoteProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -22,9 +23,10 @@ class ProjectController extends Controller implements HasMiddleware
     public function deleteLogs(Project $project)
     {
         $logPath = storage_path("logs/file-changes-{$project->code}.log");
-        if (\Illuminate\Support\Facades\File::exists($logPath)) {
-            \Illuminate\Support\Facades\File::delete($logPath);
+        if (File::exists($logPath)) {
+            File::delete($logPath);
         }
+
         return redirect()->back()->with('success', 'Đã xóa toàn bộ log của dự án.');
     }
 
@@ -75,8 +77,8 @@ class ProjectController extends Controller implements HasMiddleware
                 $q->where('name', 'dev');
             })->get();
         $featurePacks = FeaturePack::where('is_active', true)->orderBy('group_name')->orderBy('name')->get();
-        
-        $departments = \App\Models\Department::with(['services' => function($q) {
+
+        $departments = Department::with(['services' => function ($q) {
             $q->where('status', 'active');
         }])->where('status', 'active')->get();
 
@@ -87,9 +89,9 @@ class ProjectController extends Controller implements HasMiddleware
 
     public function store(Request $request)
     {
-        if ($request->has('project_type') && !$request->has('department_id')) {
+        if ($request->has('project_type') && ! $request->has('department_id')) {
             $request->merge([
-                'department_id' => $request->project_type === 'website' ? 2 : 1
+                'department_id' => $request->project_type === 'website' ? 2 : 1,
             ]);
         }
 
@@ -115,9 +117,9 @@ class ProjectController extends Controller implements HasMiddleware
         ]);
 
         $contract = $request->contract_id ? Contract::findOrFail($request->contract_id) : null;
-        
+
         $employee = auth()->user();
-        if (!$employee) {
+        if (! $employee) {
             return back()->withInput()->withErrors(['employee_id' => 'Không tìm thấy thông tin người dùng hiện tại. Vui lòng đăng nhập lại.']);
         }
 
@@ -153,6 +155,7 @@ class ProjectController extends Controller implements HasMiddleware
         if ($request->project_type === 'website' && $request->has('create_website_now')) {
             $response = $this->createWebsite($request, $project);
             $alert = session()->get('alert') ?? ['type' => 'success', 'message' => 'Tạo dự án và khởi tạo Website Multi-Tenancy thành công!'];
+
             return redirect()->route('superadmin.projects.index')->with('alert', $alert);
         }
 
@@ -191,7 +194,7 @@ class ProjectController extends Controller implements HasMiddleware
             })->get();
         $featurePacks = FeaturePack::where('is_active', true)->orderBy('group_name')->orderBy('name')->get();
 
-        $departments = \App\Models\Department::with(['services' => function($q) {
+        $departments = Department::with(['services' => function ($q) {
             $q->where('status', 'active');
         }])->where('status', 'active')->get();
 
@@ -202,15 +205,15 @@ class ProjectController extends Controller implements HasMiddleware
 
     public function update(Request $request, Project $project)
     {
-        if ($request->has('project_type') && !$request->has('department_id')) {
+        if ($request->has('project_type') && ! $request->has('department_id')) {
             $request->merge([
-                'department_id' => $request->project_type === 'website' ? 2 : 1
+                'department_id' => $request->project_type === 'website' ? 2 : 1,
             ]);
         }
 
-        if (!$request->has('project_type') && $request->has('department_id')) {
+        if (! $request->has('project_type') && $request->has('department_id')) {
             $request->merge([
-                'project_type' => $request->department_id == 2 ? 'website' : 'design'
+                'project_type' => $request->department_id == 2 ? 'website' : 'design',
             ]);
         }
 

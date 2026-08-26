@@ -1,4 +1,5 @@
 <?php
+
 $f = 'c:/MAMP/htdocs/yduoc-1/resources/views/widgets/types/yduoc_expert.blade.php';
 
 $content = <<<HTML

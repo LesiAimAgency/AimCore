@@ -20,7 +20,8 @@ class StoreMyTaskRequest extends FormRequest
             'gold' => ['nullable', 'integer', 'min:0'],
             'priority' => ['nullable', 'string', 'in:low,medium,high,urgent'],
             'description' => ['nullable', 'string'],
-            'deadline' => ['required', 'date', 'after_or_equal:today'],
+            'start_date' => ['nullable', 'date', 'after_or_equal:today'],
+            'deadline' => ['required', 'date', 'after_or_equal:today', 'after_or_equal:start_date'],
         ];
     }
 
@@ -36,7 +37,7 @@ class StoreMyTaskRequest extends FormRequest
             'start_date.after_or_equal' => 'Ngày bắt đầu không được là ngày trong quá khứ.',
             'deadline.required' => 'Vui lòng chọn deadline.',
             'deadline.date' => 'Deadline không hợp lệ.',
-            'deadline.after_or_equal' => 'Deadline phải lớn hơn hoặc bằng ngày bắt đầu.',
+            'deadline.after_or_equal' => 'Deadline không được là ngày trong quá khứ và phải từ ngày bắt đầu trở đi.',
         ];
     }
 }

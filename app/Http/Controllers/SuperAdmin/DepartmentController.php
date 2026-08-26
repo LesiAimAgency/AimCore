@@ -12,12 +12,14 @@ class DepartmentController extends Controller
     public function index()
     {
         $departments = Department::with('manager')->latest()->paginate(10);
+
         return view('superadmin.departments.index', compact('departments'));
     }
 
     public function create()
     {
         $managers = User::where('status', true)->get();
+
         return view('superadmin.departments.create', compact('managers'));
     }
 
@@ -44,6 +46,7 @@ class DepartmentController extends Controller
     public function edit(Department $department)
     {
         $managers = User::where('status', true)->get();
+
         return view('superadmin.departments.edit', compact('department', 'managers'));
     }
 
@@ -51,7 +54,7 @@ class DepartmentController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'code' => 'required|string|max:50|unique:departments,code,' . $department->id,
+            'code' => 'required|string|max:50|unique:departments,code,'.$department->id,
             'description' => 'nullable|string',
             'manager_id' => 'nullable|exists:users,id',
             'status' => 'required|in:active,inactive',
@@ -65,6 +68,7 @@ class DepartmentController extends Controller
     public function destroy(Department $department)
     {
         $department->delete();
+
         return redirect()->route('superadmin.departments.index')->with('success', 'Department deleted successfully.');
     }
 }

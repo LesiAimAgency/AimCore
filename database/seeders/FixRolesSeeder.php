@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class FixRolesSeeder extends Seeder
 {
@@ -60,7 +59,7 @@ class FixRolesSeeder extends Seeder
             // Update pivot table (sync)
             $user->roles()->sync([$newRoleModel->id]);
         }
-        
+
         $this->command->info('Roles structure successfully simplified to manager, employee, and visitor.');
     }
 }

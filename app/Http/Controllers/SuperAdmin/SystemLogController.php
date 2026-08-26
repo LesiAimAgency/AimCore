@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class SystemLogController extends Controller
 {
@@ -15,7 +14,7 @@ class SystemLogController extends Controller
     private function checkPermission()
     {
         $user = Auth::user();
-        if (!$user) {
+        if (! $user) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -30,13 +29,13 @@ class SystemLogController extends Controller
         $this->checkPermission();
 
         $logPath = storage_path('logs');
-        $files = File::glob($logPath . '/checklog-*.log');
-        
+        $files = File::glob($logPath.'/checklog-*.log');
+
         $logs = [];
         foreach ($files as $file) {
             $logs[] = [
                 'name' => basename($file),
-                'size' => round(File::size($file) / 1024, 2) . ' KB',
+                'size' => round(File::size($file) / 1024, 2).' KB',
                 'modified' => date('Y-m-d H:i:s', File::lastModified($file)),
             ];
         }
@@ -54,13 +53,13 @@ class SystemLogController extends Controller
         $this->checkPermission();
 
         // Ensure the filename is valid and safe
-        if (!preg_match('/^checklog-\d{4}-\d{2}-\d{2}\.log$/', $filename)) {
+        if (! preg_match('/^checklog-\d{4}-\d{2}-\d{2}\.log$/', $filename)) {
             abort(404, 'File log không tồn tại hoặc không hợp lệ.');
         }
 
-        $file = storage_path('logs/' . $filename);
+        $file = storage_path('logs/'.$filename);
 
-        if (!File::exists($file)) {
+        if (! File::exists($file)) {
             abort(404, 'File log không tồn tại.');
         }
 
@@ -72,13 +71,13 @@ class SystemLogController extends Controller
         $this->checkPermission();
 
         // Ensure the filename is valid and safe
-        if (!preg_match('/^checklog-\d{4}-\d{2}-\d{2}\.log$/', $filename)) {
+        if (! preg_match('/^checklog-\d{4}-\d{2}-\d{2}\.log$/', $filename)) {
             abort(404, 'File log không tồn tại hoặc không hợp lệ.');
         }
 
-        $file = storage_path('logs/' . $filename);
+        $file = storage_path('logs/'.$filename);
 
-        if (!File::exists($file)) {
+        if (! File::exists($file)) {
             abort(404, 'File log không tồn tại.');
         }
 
@@ -87,7 +86,9 @@ class SystemLogController extends Controller
         $parsedLogs = [];
         $lines = explode(PHP_EOL, $content);
         foreach ($lines as $line) {
-            if (empty(trim($line))) continue;
+            if (empty(trim($line))) {
+                continue;
+            }
 
             // Log format: [2026-08-19 10:20:20] local.INFO: Action: Tên hành động | User: Bui Trung (ID: 1) | Changes: {"key":"value"}
             preg_match('/^\[(.*?)\] (.*?): Action: (.*?) \| User: (.*?) \| Changes: (.*)$/', $line, $matches);
@@ -99,11 +100,11 @@ class SystemLogController extends Controller
                     'action' => trim($matches[3]),
                     'user' => trim($matches[4]),
                     'changes' => json_decode(trim($matches[5]), true) ?: trim($matches[5]),
-                    'raw' => $line
+                    'raw' => $line,
                 ];
             } else {
                 $parsedLogs[] = [
-                    'raw' => $line
+                    'raw' => $line,
                 ];
             }
         }
@@ -117,13 +118,13 @@ class SystemLogController extends Controller
         $this->checkPermission();
 
         // Ensure the filename is valid and safe
-        if (!preg_match('/^checklog-\d{4}-\d{2}-\d{2}\.log$/', $filename)) {
+        if (! preg_match('/^checklog-\d{4}-\d{2}-\d{2}\.log$/', $filename)) {
             abort(404, 'File log không tồn tại hoặc không hợp lệ.');
         }
 
-        $file = storage_path('logs/' . $filename);
+        $file = storage_path('logs/'.$filename);
 
-        if (!File::exists($file)) {
+        if (! File::exists($file)) {
             abort(404, 'File log không tồn tại.');
         }
 
@@ -131,7 +132,7 @@ class SystemLogController extends Controller
 
         return redirect()->route('superadmin.logs.index')->with('alert', [
             'type' => 'success',
-            'message' => 'Đã xóa file log ' . $filename . ' thành công!'
+            'message' => 'Đã xóa file log '.$filename.' thành công!',
         ]);
     }
 }

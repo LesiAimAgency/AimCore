@@ -5,8 +5,8 @@ namespace App\Services\Hosting;
 use App\Models\DeploymentHistory;
 use App\Models\HostingProfile;
 use App\Models\Project;
-use App\Services\ProjectExportService;
 use App\Services\Hosting\Contracts\HostingClientInterface;
+use App\Services\ProjectExportService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -16,11 +16,11 @@ class DeploymentService
     public function deploy(Project $project, HostingProfile $profile, int $userId): DeploymentHistory
     {
         return DeploymentHistory::create([
-            'project_id'         => $project->id,
+            'project_id' => $project->id,
             'hosting_profile_id' => $profile->id,
-            'deployed_by'        => $userId,
-            'status'             => 'pending',
-            'started_at'         => now(),
+            'deployed_by' => $userId,
+            'status' => 'pending',
+            'started_at' => now(),
         ]);
     }
 
@@ -44,13 +44,13 @@ class DeploymentService
             $this->log($history, 'export', 'Exporting project source code...', 'info', 2);
             /** @var ProjectExportService $exportService */
             $exportService = app(ProjectExportService::class);
-            $exportData    = $exportService->buildExportPackage($project, $profile);
+            $exportData = $exportService->buildExportPackage($project, $profile);
 
-            $zipPath      = $exportData['zip_path'];
+            $zipPath = $exportData['zip_path'];
             $dbSqlContent = $exportData['db_sql_content'];
-            $envContent   = $exportData['env_content'];
+            $envContent = $exportData['env_content'];
 
-            $this->log($history, 'export', 'Export completed. ZIP size: ' . round(filesize($zipPath) / 1024 / 1024, 2) . ' MB', 'success', 2);
+            $this->log($history, 'export', 'Export completed. ZIP size: '.round(filesize($zipPath) / 1024 / 1024, 2).' MB', 'success', 2);
             $history->update(['source_hash' => md5_file($zipPath)]);
 
             // Step 3: Create database + user on cPanel
@@ -65,28 +65,28 @@ class DeploymentService
             $this->log($history, 'create_db', "Database {$dbName} and user {$dbUser} created.", 'success', 3);
 
             // Step 4: Substitute real DB credentials + domain into .env
-            $domain     = $project->external_domain ?? ($profile->domain ?? 'unknown');
+            $domain = $project->external_domain ?? ($profile->domain ?? 'unknown');
             $envContent = str_replace('__DB_DATABASE__', $dbName, $envContent);
             $envContent = str_replace('__DB_USERNAME__', $dbUser, $envContent);
             $envContent = str_replace('__DB_PASSWORD__', $dbPass, $envContent);
-            $envContent = preg_replace('/APP_URL=.*/', 'APP_URL=https://' . $domain, $envContent);
+            $envContent = preg_replace('/APP_URL=.*/', 'APP_URL=https://'.$domain, $envContent);
 
             // Step 5: Upload ZIP to cPanel
             $this->log($history, 'upload', 'Uploading source code ZIP...', 'info', 4);
-            $remoteZipName = "deploy_{$history->id}_" . time() . '.zip';
-            $remoteDir     = $profile->public_html_path;
+            $remoteZipName = "deploy_{$history->id}_".time().'.zip';
+            $remoteDir = $profile->public_html_path;
 
             $client->uploadFile($zipPath, $remoteDir, $remoteZipName);
             $this->log($history, 'upload', 'Upload completed. Extracting...', 'info', 4);
 
             // Step 6: Extract ZIP on server
-            $client->extractZip($remoteDir . '/' . $remoteZipName, $remoteDir);
+            $client->extractZip($remoteDir.'/'.$remoteZipName, $remoteDir);
             $this->log($history, 'upload', 'Extraction completed.', 'success', 4);
 
             // Step 7: Save configured .env and database SQL to remote
             $this->log($history, 'configure', 'Saving .env and database.sql to server...', 'info', 5);
-            $client->saveFileContent($remoteDir . '/.env', $envContent);
-            $client->saveFileContent($remoteDir . '/database/database.sql', $dbSqlContent);
+            $client->saveFileContent($remoteDir.'/.env', $envContent);
+            $client->saveFileContent($remoteDir.'/database/database.sql', $dbSqlContent);
             $this->log($history, 'configure', 'Configuration files saved.', 'success', 5);
 
             // Step 8: Upload and run bootstrap installer script
@@ -97,9 +97,9 @@ class DeploymentService
             // Step 9: Mark success
             $this->log($history, 'verify', 'Deployment fully completed.', 'success', 7);
             $history->update([
-                'status'       => 'success',
+                'status' => 'success',
                 'completed_at' => now(),
-                'deployed_url' => 'https://' . $domain,
+                'deployed_url' => 'https://'.$domain,
             ]);
             $project->update(['status' => 'deployed']);
 
@@ -111,8 +111,8 @@ class DeploymentService
         } catch (\Exception $e) {
             $this->log($history, 'error', $e->getMessage(), 'error', 99);
             $history->update([
-                'status'        => 'failed',
-                'completed_at'  => now(),
+                'status' => 'failed',
+                'completed_at' => now(),
                 'error_message' => $e->getMessage(),
             ]);
             throw $e;
@@ -128,26 +128,28 @@ class DeploymentService
     protected function log(DeploymentHistory $history, string $step, string $message, string $level = 'info', int $stepNum = 0): void
     {
         $history->logs()->create([
-            'step'        => $step,
-            'message'     => $message,
-            'level'       => $level,
+            'step' => $step,
+            'message' => $message,
+            'level' => $level,
             'step_number' => $stepNum,
-            'logged_at'   => now(),
+            'logged_at' => now(),
         ]);
         Log::channel('single')->info("Deploy [{$history->id}] {$step}: {$message}");
     }
 
     protected function getDbName(HostingProfile $profile, Project $project): string
     {
-        $prefix = $profile->db_prefix ? $profile->db_prefix . '_' : $profile->cpanel_username . '_';
-        return substr($prefix . strtolower($project->code), 0, 64);
+        $prefix = $profile->db_prefix ? $profile->db_prefix.'_' : $profile->cpanel_username.'_';
+
+        return substr($prefix.strtolower($project->code), 0, 64);
     }
 
     protected function getDbUser(HostingProfile $profile, Project $project): string
     {
         // cPanel MySQL username max length is 16 characters
-        $prefix = $profile->db_prefix ? $profile->db_prefix . '_' : $profile->cpanel_username . '_';
-        return substr($prefix . substr(strtolower($project->code), 0, 6), 0, 16);
+        $prefix = $profile->db_prefix ? $profile->db_prefix.'_' : $profile->cpanel_username.'_';
+
+        return substr($prefix.substr(strtolower($project->code), 0, 6), 0, 16);
     }
 
     /**
@@ -167,8 +169,8 @@ class DeploymentService
         ?ProjectExportService $exportService = null
     ): void {
         $exportService = $exportService ?? app(ProjectExportService::class);
-        $remoteDir     = $profile->public_html_path;
-        $secretToken   = Str::random(32);
+        $remoteDir = $profile->public_html_path;
+        $secretToken = Str::random(32);
 
         // Inject one-time token into the installer script
         $scriptContent = str_replace(
@@ -177,8 +179,8 @@ class DeploymentService
             $exportService->generateBootstrapInstaller()
         );
 
-        $scriptName = 'deploy_bootstrap_' . time() . '.php';
-        $client->saveFileContent($remoteDir . '/' . $scriptName, $scriptContent);
+        $scriptName = 'deploy_bootstrap_'.time().'.php';
+        $client->saveFileContent($remoteDir.'/'.$scriptName, $scriptContent);
 
         // Invoke the script via HTTP
         $url = "https://{$domain}/{$scriptName}?token={$secretToken}";
@@ -189,7 +191,7 @@ class DeploymentService
                 ->get($url);
 
             if ($response->successful()) {
-                Log::info("Bootstrap output: " . substr($response->body(), 0, 1000));
+                Log::info('Bootstrap output: '.substr($response->body(), 0, 1000));
             } else {
                 // The script may have self-destructed before the response was sent;
                 // this is expected on some hosts. Log as warning rather than error.
@@ -197,7 +199,7 @@ class DeploymentService
             }
         } catch (\Exception $e) {
             // Connection reset / timeout is expected if the script self-destructed.
-            Log::warning('Bootstrap script HTTP call issue (may be normal): ' . $e->getMessage());
+            Log::warning('Bootstrap script HTTP call issue (may be normal): '.$e->getMessage());
         }
     }
 }

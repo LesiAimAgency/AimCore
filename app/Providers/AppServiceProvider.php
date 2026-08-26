@@ -2,16 +2,16 @@
 
 namespace App\Providers;
 
+use App\Helpers\SuperAdminLogHelper;
 use App\Services\DynamicWidgetRenderer;
 use App\Services\ProjectPasswordService;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Auth\Events\Login;
-use Illuminate\Auth\Events\Logout;
-use App\Helpers\SuperAdminLogHelper;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -57,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
                 'user_id' => $user->id ?? null,
                 'email' => $user->email ?? null,
                 'ip_address' => $ip,
-                'user_agent' => $userAgent
+                'user_agent' => $userAgent,
             ]);
         });
 
@@ -68,14 +68,14 @@ class AppServiceProvider extends ServiceProvider
             SuperAdminLogHelper::logActivity('User Logged Out', [
                 'user_id' => $user->id ?? null,
                 'email' => $user->email ?? null,
-                'ip_address' => $ip
+                'ip_address' => $ip,
             ]);
         });
 
         // Log all model changes
         Event::listen('eloquent.*', function ($eventName, array $data) {
             // Only log saved/created/updated/deleted events
-            if (!preg_match('/^eloquent\.(created|updated|deleted): (.*)$/', $eventName, $matches)) {
+            if (! preg_match('/^eloquent\.(created|updated|deleted): (.*)$/', $eventName, $matches)) {
                 return;
             }
 
@@ -89,13 +89,13 @@ class AppServiceProvider extends ServiceProvider
             ];
 
             // Only log if we have a valid model, not ignored, and user is logged in
-            if (!$model || in_array($modelClass, $ignoredModels) || !auth()->check()) {
+            if (! $model || in_array($modelClass, $ignoredModels) || ! auth()->check()) {
                 return;
             }
 
             // Only log if the user has access to superadmin (SuperAdmin, Manager, Dev, etc)
             $user = auth()->user();
-            if (!$user->isSuperAdmin() && !$user->isManager() && $user->role !== 'dev' && !$user->hasRole('dev')) {
+            if (! $user->isSuperAdmin() && ! $user->isManager() && $user->role !== 'dev' && ! $user->hasRole('dev')) {
                 return;
             }
 
@@ -117,11 +117,11 @@ class AppServiceProvider extends ServiceProvider
 
             $modelName = class_basename($modelClass);
             $recordId = $model->id ?? 'unknown';
-            
+
             $actionVi = [
                 'created' => 'Tạo mới',
                 'updated' => 'Cập nhật',
-                'deleted' => 'Xóa'
+                'deleted' => 'Xóa',
             ][$action];
 
             SuperAdminLogHelper::logActivity("{$actionVi} {$modelName} (ID: {$recordId})", $changes);

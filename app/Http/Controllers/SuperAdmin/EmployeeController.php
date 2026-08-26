@@ -4,7 +4,6 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
@@ -19,10 +18,10 @@ class EmployeeController extends Controller
         // For broader access, we could just show all users with the 'employee' role.
         // Let's show all employees for now to ensure data visibility.
         $employees = User::where('role', 'employee')
-            ->orWhereHas('roles', function($q) {
+            ->orWhereHas('roles', function ($q) {
                 $q->where('name', 'employee');
             })
-            ->with(['tasks' => function($q) {
+            ->with(['tasks' => function ($q) {
                 // Eager load recent tasks for a quick summary
                 $q->latest()->limit(5);
             }])
@@ -36,7 +35,7 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-        $employee = User::with(['tasks' => function($q) {
+        $employee = User::with(['tasks' => function ($q) {
             $q->latest();
         }])->findOrFail($id);
 

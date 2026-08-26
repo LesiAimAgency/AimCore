@@ -33,7 +33,7 @@ return new class extends Migration
                 'representative_title',
                 'client_address',
                 'tax_code',
-                'client_phone'
+                'client_phone',
             ]);
         });
     }

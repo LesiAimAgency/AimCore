@@ -25,7 +25,7 @@ class PasswordController extends Controller
 
         return back()->with('alert', [
             'type' => 'success',
-            'message' => 'Mật khẩu đã được cập nhật thành công.'
+            'message' => 'Mật khẩu đã được cập nhật thành công.',
         ]);
     }
 }

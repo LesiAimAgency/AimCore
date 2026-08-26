@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Department;
 use Illuminate\Database\Seeder;
 
 class DepartmentSeeder extends Seeder
@@ -21,7 +21,7 @@ class DepartmentSeeder extends Seeder
         ];
 
         foreach ($departments as $dept) {
-            \App\Models\Department::updateOrCreate(
+            Department::updateOrCreate(
                 ['code' => $dept['code']],
                 $dept
             );

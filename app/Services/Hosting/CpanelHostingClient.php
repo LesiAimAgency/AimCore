@@ -30,11 +30,11 @@ class CpanelHostingClient implements HostingClientInterface
 
         $request = Http::withoutVerifying()
             ->withHeaders([
-                'Authorization' => "cpanel " . trim($this->profile->cpanel_username) . ":" . trim($this->profile->api_token),
+                'Authorization' => 'cpanel '.trim($this->profile->cpanel_username).':'.trim($this->profile->api_token),
             ])
             ->timeout(60);
 
-        $response = strtoupper($method) === 'POST' 
+        $response = strtoupper($method) === 'POST'
             ? $request->asForm()->post($url, $params)
             : $request->get($url, $params);
 
@@ -44,13 +44,13 @@ class CpanelHostingClient implements HostingClientInterface
 
         $rawBody = $response->body();
         // Remove UTF-8 BOM if present
-        $rawBody = preg_replace('/^' . pack('H*','EFBBBF') . '/', '', $rawBody);
-        
+        $rawBody = preg_replace('/^'.pack('H*', 'EFBBBF').'/', '', $rawBody);
+
         $responseData = json_decode($rawBody, true);
 
-        if (!is_array($responseData)) {
+        if (! is_array($responseData)) {
             $rawSample = substr($rawBody, 0, 500);
-            throw new \Exception("cPanel UAPI Error: Invalid JSON response format from server. JSON Error: " . json_last_error_msg() . ". Raw response: " . $rawSample);
+            throw new \Exception('cPanel UAPI Error: Invalid JSON response format from server. JSON Error: '.json_last_error_msg().'. Raw response: '.$rawSample);
         }
 
         // Some versions/endpoints of UAPI wrap the response in 'result', others return it directly at the root.
@@ -60,7 +60,7 @@ class CpanelHostingClient implements HostingClientInterface
         if (isset($result['status']) && $result['status'] === 0) {
             $errors = $result['errors'] ?? ['Unknown API error'];
             $errorMsg = is_array($errors) ? implode(', ', $errors) : $errors;
-            throw new \Exception("cPanel UAPI Error ({$module}::{$function}): " . $errorMsg);
+            throw new \Exception("cPanel UAPI Error ({$module}::{$function}): ".$errorMsg);
         }
 
         return $result['data'] ?? true;
@@ -71,7 +71,7 @@ class CpanelHostingClient implements HostingClientInterface
         try {
             // Retrieve domain information to verify connection and provide meaningful data
             $data = $this->callUapi('DomainInfo', 'list_domains');
-            
+
             $domains = [];
             if (isset($data['main_domain'])) {
                 $domains[] = $data['main_domain'];
@@ -79,11 +79,11 @@ class CpanelHostingClient implements HostingClientInterface
             if (isset($data['addon_domains'])) {
                 $domains = array_merge($domains, $data['addon_domains']);
             }
-            
+
             return [
                 'status' => 'success',
                 'domains' => $domains,
-                'message' => 'Connected successfully to cPanel.'
+                'message' => 'Connected successfully to cPanel.',
             ];
         } catch (\Exception $e) {
             throw new \Exception('Connection test failed: '.$e->getMessage());
@@ -129,7 +129,7 @@ class CpanelHostingClient implements HostingClientInterface
 
         $response = Http::withoutVerifying()
             ->withHeaders([
-                'Authorization' => "cpanel " . trim($this->profile->cpanel_username) . ":" . trim($this->profile->api_token),
+                'Authorization' => 'cpanel '.trim($this->profile->cpanel_username).':'.trim($this->profile->api_token),
             ])
             ->timeout(300) // Upload can take time
             ->attach(
@@ -145,9 +145,9 @@ class CpanelHostingClient implements HostingClientInterface
 
         $responseData = $response->json();
 
-        if (!is_array($responseData)) {
+        if (! is_array($responseData)) {
             $rawBody = substr($response->body(), 0, 500);
-            throw new \Exception("cPanel File Upload Error: Invalid response format from server. Raw response: " . $rawBody);
+            throw new \Exception('cPanel File Upload Error: Invalid response format from server. Raw response: '.$rawBody);
         }
 
         $result = $responseData['result'] ?? $responseData;
@@ -155,7 +155,7 @@ class CpanelHostingClient implements HostingClientInterface
         if (isset($result['status']) && $result['status'] === 0) {
             $errors = $result['errors'] ?? ['Unknown upload error'];
             $errorMsg = is_array($errors) ? implode(', ', $errors) : $errors;
-            throw new \Exception("cPanel File Upload Error: " . $errorMsg);
+            throw new \Exception('cPanel File Upload Error: '.$errorMsg);
         }
 
         return true;
@@ -170,7 +170,7 @@ class CpanelHostingClient implements HostingClientInterface
 
         $response = Http::withoutVerifying()
             ->withHeaders([
-                'Authorization' => "cpanel " . trim($this->profile->cpanel_username) . ":" . trim($this->profile->api_token),
+                'Authorization' => 'cpanel '.trim($this->profile->cpanel_username).':'.trim($this->profile->api_token),
             ])
             ->timeout(300)
             ->get($url, [
@@ -191,11 +191,11 @@ class CpanelHostingClient implements HostingClientInterface
         if (isset($data['cpanelresult']['error']) && $data['cpanelresult']['error'] !== '') {
             throw new \Exception('cPanel API2 Extract Error: '.$data['cpanelresult']['error']);
         }
-        
+
         // Also check if there's an error message inside the data array
         if (isset($data['cpanelresult']['data'][0]['status']) && $data['cpanelresult']['data'][0]['status'] === 0) {
             $errorMsg = $data['cpanelresult']['data'][0]['statusmsg'] ?? 'Unknown extract error';
-            throw new \Exception('cPanel API2 Extract Error: ' . $errorMsg);
+            throw new \Exception('cPanel API2 Extract Error: '.$errorMsg);
         }
 
         return true;

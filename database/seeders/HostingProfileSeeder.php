@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\HostingProfile;
 use Illuminate\Database\Seeder;
 
 class HostingProfileSeeder extends Seeder
@@ -12,7 +12,7 @@ class HostingProfileSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\HostingProfile::updateOrCreate(
+        HostingProfile::updateOrCreate(
             ['name' => 'Demo cPanel Server'],
             [
                 'panel_type' => 'cpanel',
@@ -26,7 +26,7 @@ class HostingProfileSeeder extends Seeder
             ]
         );
 
-        \App\Models\HostingProfile::updateOrCreate(
+        HostingProfile::updateOrCreate(
             ['name' => 'Demo DirectAdmin Server'],
             [
                 'panel_type' => 'directadmin',

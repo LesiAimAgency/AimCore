@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Service;
 use App\Models\Department;
+use App\Models\Service;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -12,12 +12,14 @@ class ServiceController extends Controller
     public function index()
     {
         $services = Service::with('department')->latest()->paginate(10);
+
         return view('superadmin.services.index', compact('services'));
     }
 
     public function create()
     {
         $departments = Department::where('status', 'active')->get();
+
         return view('superadmin.services.create', compact('departments'));
     }
 
@@ -49,6 +51,7 @@ class ServiceController extends Controller
     public function edit(Service $service)
     {
         $departments = Department::where('status', 'active')->get();
+
         return view('superadmin.services.edit', compact('service', 'departments'));
     }
 
@@ -57,7 +60,7 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'department_id' => 'required|exists:departments,id',
             'name' => 'required|string|max:255',
-            'code' => 'required|string|max:50|unique:services,code,' . $service->id,
+            'code' => 'required|string|max:50|unique:services,code,'.$service->id,
             'description' => 'nullable|string',
             'form_schema' => 'nullable|json',
             'status' => 'required|in:active,inactive',
@@ -75,6 +78,7 @@ class ServiceController extends Controller
     public function destroy(Service $service)
     {
         $service->delete();
+
         return redirect()->route('superadmin.services.index')->with('success', 'Service deleted successfully.');
     }
 }
