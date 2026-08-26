@@ -38,16 +38,30 @@
         :root {
             --sidebar-width: 18rem; /* 72 * 0.25rem = 18rem */
         }
-        .sidebar-resizable {
-            width: var(--sidebar-width);
-            min-width: 15rem;
-            max-width: 30rem;
-            resize: horizontal;
-            overflow-y: auto;
-            overflow-x: hidden;
+        @media (min-width: 1024px) {
+            .sidebar-resizable {
+                width: var(--sidebar-width);
+                min-width: 15rem;
+                max-width: 30rem;
+                resize: horizontal;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+            .content-resizable {
+                margin-left: var(--sidebar-width);
+            }
         }
-        .content-resizable {
-            margin-left: var(--sidebar-width);
+        @media (max-width: 1023.98px) {
+            .sidebar-resizable {
+                width: 18rem;
+                max-width: 85vw;
+                overflow-y: auto;
+            }
+            .content-resizable {
+                margin-left: 0;
+                width: 100%;
+                min-width: 0;
+            }
         }
         /* Style cho thanh kéo resize */
         .sidebar-resizable::-webkit-resizer {
@@ -69,18 +83,57 @@
             background: #0040A0; 
         }
     </style>
+    <script>
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('superadmin-sidebar');
+            const overlay = document.getElementById('sidebar-backdrop');
+            if (!sidebar) return;
+            const isHidden = sidebar.classList.contains('-translate-x-full');
+            if (isHidden) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                if (overlay) overlay.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden', 'lg:overflow-auto');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                if (overlay) overlay.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden', 'lg:overflow-auto');
+            }
+        }
+        function closeMobileSidebar() {
+            const sidebar = document.getElementById('superadmin-sidebar');
+            const overlay = document.getElementById('sidebar-backdrop');
+            if (sidebar) {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+            }
+            if (overlay) overlay.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden', 'lg:overflow-auto');
+        }
+    </script>
     @stack('styles')
 </head>
-<body class="bg-slate-50 font-sans text-gray-800">
+<body class="bg-slate-50 font-sans text-gray-800 antialiased">
+    <!-- Backdrop Overlay on Mobile -->
+    <div id="sidebar-backdrop" onclick="closeMobileSidebar()" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 hidden lg:hidden transition-opacity"></div>
+
     <div class="min-h-screen flex w-full">
-        <div class="sidebar-resizable bg-[#001B4E] shadow-2xl fixed h-screen flex flex-col">
-            <div class="flex-shrink-0 p-6 border-b border-[#002D80]">
-                <div class="flex items-center justify-center py-6 px-4">
-                    <img src="{{ asset('Logo.png') }}" alt="AIM AGENCY" class="h-20 w-full object-contain">
+        <!-- Sidebar Navigation (Drawer on Mobile, Resizable on Desktop) -->
+        <div id="superadmin-sidebar" class="sidebar-resizable bg-[#001B4E] shadow-2xl fixed h-screen flex flex-col top-0 left-0 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50">
+            <div class="flex-shrink-0 p-4 sm:p-6 border-b border-[#002D80] flex items-center justify-between">
+                <div class="flex items-center justify-center py-2 sm:py-4 px-2 w-full">
+                    <img src="{{ asset('Logo.png') }}" alt="AIM AGENCY" class="h-12 sm:h-16 w-full object-contain">
                 </div>
+                <!-- Close Button on Mobile -->
+                <button type="button" onclick="closeMobileSidebar()" class="lg:hidden p-2 text-slate-300 hover:text-white rounded-lg hover:bg-[#002D80] transition-colors" title="Đóng menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </div>
 
-            <nav class="flex-1 py-6 px-3">
+            <nav class="flex-1 py-4 sm:py-6 px-3 overflow-y-auto">
                 <div class="px-4 py-2 mt-2 text-[11px] font-bold text-[#8FA3C9] uppercase tracking-wider">Cá nhân & Công việc</div>
                 <a href="{{ route('superadmin.dashboard') }}" class="flex items-center px-4 py-3 mb-2 text-gray-300 hover:bg-[#002D80] rounded-lg {{ request()->routeIs('superadmin.dashboard') ? 'bg-[#002D80]' : '' }}">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -162,8 +215,6 @@
                 </a>
                 @endif
 
-              
-
                 @if(auth()->user()->isSuperAdmin() || auth()->user()->role === 'dev' || auth()->user()->hasRole('dev') || auth()->user()->department === 'Thiết kế website')
                 <div class="px-4 py-2 mt-4 text-[11px] font-bold text-[#8FA3C9] uppercase tracking-wider">Hệ thống</div>
                 <a href="{{ route('superadmin.multi-tenancy.index') }}" class="flex items-center px-4 py-3 mb-2 text-gray-300 hover:bg-[#002D80] rounded-lg {{ request()->routeIs('superadmin.multi-tenancy.*') || request()->routeIs('superadmin.multi-tenancy') ? 'bg-[#002D80]' : '' }}">
@@ -224,20 +275,6 @@
                 </a>
                 @endif
 
-                {{--
-                @if(auth()->user()->isSuperAdmin() || auth()->user()->hasPermission('manage-tasks') || auth()->user()->hasPermission('update-tasks-progress') || auth()->user()->hasPermission('review-tasks') || auth()->user()->role === 'dev' || auth()->user()->hasRole('dev'))
-                <a href="{{ route('superadmin.tickets.index') }}" class="flex items-center px-4 py-3 mb-2 text-gray-300 hover:bg-[#002D80] rounded-lg {{ request()->routeIs('superadmin.tickets.*') ? 'bg-[#002D80]' : '' }}">
-                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                    </svg>
-                    <span class="ml-3 font-medium">Hỗ trợ / Tickets</span>
-                </a>
-                @endif
-                --}}
-
-               
-
-
             </nav>
 
             <div class="mt-auto flex-shrink-0 p-4 border-t border-[#002D80]">
@@ -248,32 +285,41 @@
             </div>
         </div>
 
-        <div class="flex-1 flex flex-col content-resizable">
-            <header class="bg-white shadow-sm border-b border-gray-200">
-                <div class="flex justify-between items-center px-6 py-4">
-                    <h1 class="text-2xl font-bold text-gray-900">@yield('page-title', 'Super Admin')</h1>
-                    <div class="flex items-center space-x-3">
+        <!-- Main Content Area -->
+        <div class="flex-1 min-w-0 flex flex-col content-resizable">
+            <header class="bg-white shadow-xs border-b border-gray-200 sticky top-0 z-30">
+                <div class="flex justify-between items-center px-3 sm:px-6 py-3 sm:py-4 gap-2">
+                    <div class="flex items-center min-w-0">
+                        <!-- Hamburger button on mobile -->
+                        <button type="button" onclick="toggleMobileSidebar()" class="lg:hidden mr-2.5 p-2 rounded-lg text-gray-600 hover:text-[#001B4E] hover:bg-gray-100 transition-colors focus:outline-hidden" title="Mở danh mục menu">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        <h1 class="text-base sm:text-2xl font-bold text-gray-900 truncate">@yield('page-title', 'Super Admin')</h1>
+                    </div>
+
+                    <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
                         {{-- Gold Reward Points Badge --}}
                         @if(config('features.gold_enabled'))
-                        <div class="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-full shadow-xs" id="user-header-gold" title="Điểm thưởng Gold tích lũy">
-                            <svg class="w-4 h-4 text-amber-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-full shadow-2xs" id="user-header-gold" title="Điểm thưởng Gold tích lũy">
+                            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                 <circle cx="10" cy="10" r="8" fill="#FBBF24" stroke="#D97706" stroke-width="1.5"/>
                                 <circle cx="10" cy="10" r="5.5" fill="#F59E0B" stroke="#B45309" stroke-width="0.75"/>
                                 <text x="10" y="13" font-size="8" font-weight="bold" fill="#78350F" text-anchor="middle">G</text>
                             </svg>
-                            <span class="text-xs font-bold text-amber-900 tracking-tight" id="user-header-gold-val">{{ number_format(auth()->user()->gold ?? 0) }}</span>
-                            <span class="text-[10px] font-semibold text-amber-600 uppercase">Gold</span>
+                            <span class="text-[11px] sm:text-xs font-bold text-amber-900 tracking-tight" id="user-header-gold-val">{{ number_format(auth()->user()->gold ?? 0) }}</span>
+                            <span class="hidden sm:inline text-[10px] font-semibold text-amber-600 uppercase">Gold</span>
                         </div>
                         @endif
 
-
-                        <a href="{{ route('superadmin.users.edit', auth()->user()->id) }}" class="text-right cursor-pointer group" title="Sửa tài khoản">
-                            <p class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">{{ auth()->user()->name }}</p>
-                            <p class="text-xs text-indigo-600 font-medium group-hover:text-indigo-800 transition-colors">{{ auth()->user()->roles->first()?->display_name ?? (auth()->user()->department ?? 'Thành viên') }} (Sửa)</p>
+                        <a href="{{ route('superadmin.users.edit', auth()->user()->id) }}" class="text-right cursor-pointer group max-w-[120px] sm:max-w-[200px]" title="Sửa tài khoản">
+                            <p class="text-xs sm:text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors truncate">{{ auth()->user()->name }}</p>
+                            <p class="hidden sm:block text-[11px] text-indigo-600 font-medium group-hover:text-indigo-800 transition-colors truncate">{{ auth()->user()->roles->first()?->display_name ?? (auth()->user()->department ?? 'Thành viên') }} (Sửa)</p>
                         </a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="text-sm text-gray-500 hover:text-red-600">
+                            <button type="submit" class="p-1.5 sm:p-2 text-gray-500 hover:text-red-600 rounded-lg hover:bg-gray-100 transition-colors" title="Đăng xuất">
                                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                 </svg>
@@ -283,7 +329,7 @@
                 </div>
             </header>
 
-            <main class="flex-1 p-6 bg-gray-50">
+            <main class="flex-1 p-3.5 sm:p-6 bg-gray-50 max-w-full overflow-x-hidden">
                 @if(session('alert'))
                 <div class="mb-6 p-4 rounded-lg {{ session('alert.type') === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                     {!! nl2br(e(session('alert.message'))) !!}

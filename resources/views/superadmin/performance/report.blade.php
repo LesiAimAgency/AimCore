@@ -41,23 +41,23 @@
     </div>
 
     <!-- User Profile Summary -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex items-center justify-between">
-        <div class="flex items-center gap-4">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3 sm:gap-4">
             @if($targetUser->avatar)
-                <img src="{{ asset('storage/' . $targetUser->avatar) }}" alt="{{ $targetUser->name }}" class="w-16 h-16 rounded-full object-cover border-2 border-gray-200">
+                <img src="{{ asset('storage/' . $targetUser->avatar) }}" alt="{{ $targetUser->name }}" class="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-gray-200">
             @else
-                <div class="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center border-2 border-indigo-200">
-                    <span class="text-indigo-600 font-bold text-2xl">{{ substr($targetUser->name, 0, 1) }}</span>
+                <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-indigo-100 flex items-center justify-center border-2 border-indigo-200 shrink-0">
+                    <span class="text-indigo-600 font-bold text-lg sm:text-2xl">{{ substr($targetUser->name, 0, 1) }}</span>
                 </div>
             @endif
             <div>
-                <h2 class="text-2xl font-bold text-gray-900">{{ $targetUser->name }}</h2>
-                <p class="text-sm text-gray-500 font-medium">{{ $targetUser->department ?? 'Chưa cập nhật phòng ban' }} - {{ $targetUser->employee_code ?? 'N/A' }}</p>
+                <h2 class="text-lg sm:text-2xl font-bold text-gray-900">{{ $targetUser->name }}</h2>
+                <p class="text-xs sm:text-sm text-gray-500 font-medium">{{ $targetUser->department ?? 'Chưa cập nhật phòng ban' }} - {{ $targetUser->employee_code ?? 'N/A' }}</p>
             </div>
         </div>
         
         @if(config('features.gold_enabled'))
-        <div class="text-right">
+        <div class="text-left sm:text-right w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-gray-100 flex sm:block items-center justify-between">
             <p class="text-sm text-gray-500 font-medium mb-1">Tổng Gold kiếm được (Kỳ này)</p>
             <div class="flex items-center gap-2 justify-end">
                 <svg class="w-6 h-6 text-amber-500" fill="currentColor" viewBox="0 0 20 20">

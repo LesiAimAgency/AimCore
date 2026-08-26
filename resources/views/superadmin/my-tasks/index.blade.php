@@ -3,23 +3,21 @@
 @section('page-title', 'Hàng chờ công việc')
 
 @section('content')
-<div class="px-4 sm:px-6 py-8 w-full max-w-7xl mx-auto" x-data="myTasksApp()">
+<div class="px-1 sm:px-6 py-3 sm:py-8 w-full max-w-7xl mx-auto" x-data="myTasksApp()">
     {{-- Header --}}
-    <div class="flex flex-col lg:flex-row lg:items-center justify-between mb-6 gap-4">
-       
-        
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-4">
         {{-- Controls bar --}}
-        <div class="flex flex-wrap items-center gap-2.5">
+        <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-2.5 w-full">
             {{-- Search --}}
-            <div class="relative flex-1 sm:flex-initial">
+            <div class="relative col-span-2 sm:col-span-1 sm:flex-initial w-full sm:w-56">
                 <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
-                <input type="text" x-model="searchQuery" placeholder="Tìm kiếm công việc..." class="pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001B4E] focus:border-[#001B4E] outline-none w-full sm:w-48 text-sm transition-shadow px-4">
+                <input type="text" x-model="searchQuery" placeholder="Tìm kiếm công việc..." class="pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001B4E] focus:border-[#001B4E] outline-none w-full text-xs sm:text-sm transition-shadow">
             </div>
 
             {{-- Filter Project --}}
-            <select x-model="filterProject" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001B4E] outline-none text-sm bg-white cursor-pointer max-w-[140px]">
+            <select x-model="filterProject" class="w-full sm:w-auto px-2.5 sm:px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001B4E] outline-none text-xs sm:text-sm bg-white cursor-pointer truncate">
                 <option value="">Tất cả dự án</option>
                 <template x-for="project in projects" :key="project.id">
                     <option :value="project.id" x-text="project.name"></option>
@@ -28,7 +26,7 @@
 
             {{-- Filter Department (Chỉ Quản lý / Root mới thấy) --}}
             <template x-if="isAdminOrPm">
-                <select x-model="filterDepartment" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001B4E] outline-none text-sm bg-white cursor-pointer max-w-[150px]">
+                <select x-model="filterDepartment" class="w-full sm:w-auto px-2.5 sm:px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001B4E] outline-none text-xs sm:text-sm bg-white cursor-pointer truncate">
                     <option value="">Tất cả phòng ban</option>
                     <template x-for="dept in departments" :key="dept">
                         <option :value="dept" x-text="dept"></option>
@@ -38,7 +36,7 @@
 
             {{-- Filter Assignee (dành cho Admin / PM) --}}
             <template x-if="isAdminOrPm">
-                <select x-model="filterUser" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001B4E] outline-none text-sm bg-white cursor-pointer max-w-[150px]">
+                <select x-model="filterUser" class="w-full sm:w-auto px-2.5 sm:px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001B4E] outline-none text-xs sm:text-sm bg-white cursor-pointer truncate">
                     <option value="">Tất cả nhân sự</option>
                     <template x-for="u in users" :key="'user-filter-'+u.id">
                         <option :value="u.id" x-text="u.name"></option>
@@ -47,9 +45,9 @@
             </template>
 
             {{-- Sorting Mode (Nằm bên phải cùng, ẩn ở tab Đã hoàn thành) --}}
-            <select x-show="activeTab === 'pending'" x-model="sortMode" class="px-3 py-2 border border-indigo-200 bg-indigo-50/70 text-[#001B4E] font-medium rounded-lg focus:ring-2 focus:ring-[#001B4E] outline-none text-sm cursor-pointer max-w-[170px]">
-                <option value="manual">Quan trọng</option>
-                <option value="deadline">Khẩn cấp</option>
+            <select x-show="activeTab === 'pending'" x-model="sortMode" class="w-full sm:w-auto col-span-2 sm:col-span-1 px-2.5 sm:px-3 py-2 border border-indigo-200 bg-indigo-50/70 text-[#001B4E] font-medium rounded-lg focus:ring-2 focus:ring-[#001B4E] outline-none text-xs sm:text-sm cursor-pointer">
+                <option value="manual">Sắp xếp: Quan trọng</option>
+                <option value="deadline">Sắp xếp: Khẩn cấp</option>
             </select>
         </div>
     </div>
@@ -78,55 +76,55 @@
     </div>
 
     {{-- Tabs + Add Button --}}
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
-        <div class="flex rounded-lg overflow-hidden border border-gray-200 w-fit bg-white shadow-xs">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 mb-4 sm:mb-6">
+        <div class="flex rounded-lg overflow-hidden border border-gray-200 w-full sm:w-fit bg-white shadow-2xs">
             <button
                 @click="activeTab = 'pending'"
-                class="px-5 py-2 text-sm font-medium transition-colors flex items-center gap-2"
+                class="flex-1 sm:flex-initial px-3.5 sm:px-5 py-2 text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-1.5 sm:gap-2"
                 :class="activeTab === 'pending' ? 'bg-[#001B4E] text-white' : 'bg-white text-gray-600 hover:bg-gray-50'"
             >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                 </svg>
                 <span>Cần làm</span>
-                <span x-show="pendingTasks.length > 0" x-text="pendingTasks.length" class="ml-1 px-1.5 py-0.5 rounded-full text-xs" :class="activeTab === 'pending' ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-700'"></span>
+                <span x-show="pendingTasks.length > 0" x-text="pendingTasks.length" class="ml-1 px-1.5 py-0.5 rounded-full text-[10px] sm:text-xs" :class="activeTab === 'pending' ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-700'"></span>
             </button>
             <button
                 @click="activeTab = 'completed'"
-                class="px-5 py-2 text-sm font-medium transition-colors border-l border-gray-200 flex items-center gap-2"
+                class="flex-1 sm:flex-initial px-3.5 sm:px-5 py-2 text-xs sm:text-sm font-medium transition-colors border-l border-gray-200 flex items-center justify-center gap-1.5 sm:gap-2"
                 :class="activeTab === 'completed' ? 'bg-[#001B4E] text-white' : 'bg-white text-gray-600 hover:bg-gray-50'"
             >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
-                <span>Đã hoàn thành</span>
-                <span x-show="completedTasks.length > 0" x-text="completedTasks.length" class="ml-1 px-1.5 py-0.5 rounded-full text-xs" :class="activeTab === 'completed' ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-700'"></span>
+                <span>Đã xong</span>
+                <span x-show="completedTasks.length > 0" x-text="completedTasks.length" class="ml-1 px-1.5 py-0.5 rounded-full text-[10px] sm:text-xs" :class="activeTab === 'completed' ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-700'"></span>
             </button>
         </div>
 
-        <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-2 w-full sm:w-auto">
             {{-- Nút Xem Lịch Calendar (Google Calendar Style) --}}
             <button
                 type="button"
                 @click="openCalendarModal()"
-                class="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-indigo-200 text-[#001B4E] hover:bg-indigo-50/80 rounded-lg font-semibold transition-all shadow-xs text-sm cursor-pointer"
+                class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-indigo-200 text-[#001B4E] hover:bg-indigo-50/80 rounded-lg font-semibold transition-all shadow-2xs text-xs sm:text-sm cursor-pointer"
                 title="Xem Lịch công việc Google Calendar"
             >
-                <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
-                <span>Lịch</span>
+                <span>Xem Lịch</span>
             </button>
 
             <button
                 x-show="activeTab === 'pending'"
                 @click="openModal()"
-                class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#001B4E] text-white rounded-lg hover:bg-[#002D80] font-medium transition-colors shadow-xs text-sm"
+                class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-[#001B4E] text-white rounded-lg hover:bg-[#002D80] font-medium transition-colors shadow-2xs text-xs sm:text-sm"
             >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
-                <span x-text="isAdminOrPm ? 'Tạo việc mới' : 'Thêm  việc mới'"></span>
+                <span x-text="isAdminOrPm ? 'Tạo việc mới' : 'Thêm việc mới'"></span>
             </button>
         </div>
     </div>
