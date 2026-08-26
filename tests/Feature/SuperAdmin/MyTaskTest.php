@@ -542,4 +542,15 @@ class MyTaskTest extends TestCase
             ->assertStatus(422)
             ->assertJsonValidationErrors(['deadline']);
     }
+
+    public function test_stream_returns_event_stream_response(): void
+    {
+        $pm = $this->pmUser();
+
+        $response = $this->actingAs($pm)
+            ->get(route('superadmin.my-tasks.stream', ['last_version' => 0]));
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertStringContainsString('text/event-stream', $response->headers->get('Content-Type'));
+    }
 }
