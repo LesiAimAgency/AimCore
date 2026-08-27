@@ -3,6 +3,7 @@
 @section('title', 'System Logs')
 @section('page-title', 'Quản lý System Logs')
 
+@section('content')
 <div class="px-1 sm:px-6 py-3 sm:py-6 max-w-7xl mx-auto">
     <div class="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden">
         <div class="p-4 sm:p-6 border-b border-gray-100">
