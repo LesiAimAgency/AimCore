@@ -14,5 +14,7 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '*/admin/media/upload',
         'admin/media/upload',
+        'api/form-submit',
+        '*/api/form-submit',
     ];
 }
