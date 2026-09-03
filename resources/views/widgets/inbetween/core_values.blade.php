@@ -109,33 +109,40 @@
       <h3 class="text-sm font-bold uppercase tracking-widest text-black">{{ $settings['partners_title'] }}</h3>
     </div>
 
-    <div class="overflow-hidden relative py-4">
-      <div class="marquee-track flex items-center gap-12 sm:gap-16 w-max">
-        @if(!empty($settings['partners']) && is_array($settings['partners']))
-          @foreach($settings['partners'] as $partner)
-            @if(!empty($partner['image']))
-              <img src="{{ asset($partner['image']) }}" alt="Partner" class="h-8 lg:h-10 w-auto object-contain">
-            @endif
-          @endforeach
-          <!-- Duplicate for loop -->
-          @foreach($settings['partners'] as $partner)
-            @if(!empty($partner['image']))
-              <img src="{{ asset($partner['image']) }}" alt="Partner" class="h-8 lg:h-10 w-auto object-contain">
-            @endif
-          @endforeach
-        @else
-          @for($i = 0; $i <= 11; $i++)
-            @if(file_exists(public_path("themes/inbetween/assets/image{$i}_200_302.png")))
-            <img src="{{ asset("themes/inbetween/assets/image{$i}_200_302.png") }}" alt="Partner {{ $i + 1 }}" class="h-8 lg:h-10 w-auto object-contain">
-            @endif
-          @endfor
-          <!-- Duplicate for loop -->
-          @for($i = 0; $i <= 5; $i++)
-            @if(file_exists(public_path("themes/inbetween/assets/image{$i}_200_302.png")))
-            <img src="{{ asset("themes/inbetween/assets/image{$i}_200_302.png") }}" alt="Partner {{ $i + 1 }}" class="h-8 lg:h-10 w-auto object-contain">
-            @endif
-          @endfor
-        @endif
+    <div class="overflow-hidden relative py-4 flex">
+      <div class="marquee-track flex w-max">
+        <!-- Track 1 -->
+        <div class="flex items-center gap-12 sm:gap-16 pr-12 sm:pr-16 shrink-0">
+          @if(!empty($settings['partners']) && is_array($settings['partners']))
+            @foreach($settings['partners'] as $partner)
+              @if(!empty($partner['image']))
+                <img src="{{ asset($partner['image']) }}" alt="Partner" class="h-8 lg:h-10 w-auto object-contain">
+              @endif
+            @endforeach
+          @else
+            @for($i = 1; $i <= 17; $i++)
+              @if(file_exists(public_path("themes/inbetween/assets/partner-{$i}.png")))
+                <img src="{{ asset("themes/inbetween/assets/partner-{$i}.png") }}" alt="Partner {{ $i }}" class="h-8 lg:h-10 w-auto object-contain max-w-[120px]">
+              @endif
+            @endfor
+          @endif
+        </div>
+        <!-- Track 2 (Duplicate for seamless scroll) -->
+        <div class="flex items-center gap-12 sm:gap-16 pr-12 sm:pr-16 shrink-0" aria-hidden="true">
+          @if(!empty($settings['partners']) && is_array($settings['partners']))
+            @foreach($settings['partners'] as $partner)
+              @if(!empty($partner['image']))
+                <img src="{{ asset($partner['image']) }}" alt="Partner" class="h-8 lg:h-10 w-auto object-contain">
+              @endif
+            @endforeach
+          @else
+            @for($i = 1; $i <= 17; $i++)
+              @if(file_exists(public_path("themes/inbetween/assets/partner-{$i}.png")))
+                <img src="{{ asset("themes/inbetween/assets/partner-{$i}.png") }}" alt="Partner {{ $i }}" class="h-8 lg:h-10 w-auto object-contain max-w-[120px]">
+              @endif
+            @endfor
+          @endif
+        </div>
       </div>
     </div>
   </div>
