@@ -33,7 +33,7 @@ BLADE,
             'inbetween-community-wall' => <<<BLADE
 <div class="wall-stage">
     <div class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-        <div id="wall-center-logo" class="wall-center-logo w-[42vw] max-w-[548px] text-center select-none will-change-transform">
+        <div id="wall-center-logo" class="wall-center-logo w-[70vw] md:w-[42vw] max-w-[548px] text-center select-none will-change-transform">
         <img src="{{ asset('themes/inbetween/assets/logo-white.svg') }}" alt="{{ setting('site_name', 'INBETWEEN') }}" class="w-full h-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
         </div>
     </div>
