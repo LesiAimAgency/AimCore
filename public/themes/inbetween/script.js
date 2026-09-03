@@ -251,7 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
         gsap.set(centerLogo, { xPercent: -50, yPercent: -50 });
         // Shrink the original logo to fit the next section without fading it out
         // Also add a slight y offset to position it perfectly in the gap between the two text titles
-        commTL.to(centerLogo, { y: 30, scale: 340 / 548, duration: 0.4, ease: "power2.inOut" }, 0.7);
+        commTL.to(centerLogo, { y: -45, scale: 340 / 548, duration: 0.4, ease: "power2.inOut" }, 0.7);
       }
 
       // Do not fade out #community-wall so centerLogo remains visible
@@ -329,7 +329,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (centerLogo) {
         gsap.set(centerLogo, { xPercent: -50, yPercent: -50 });
-        wallTLMobile.to(centerLogo, { y: 30, scale: 340 / 548, duration: 0.6 }, 0.2);
+        wallTLMobile.to(centerLogo, { y: -45, scale: 340 / 548, duration: 0.6 }, 0.2);
       }
       // Do not fade out #community-wall so logo remains visible
 
