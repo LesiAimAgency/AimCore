@@ -46,7 +46,6 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Form</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Thông tin</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">IP</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Trạng thái</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ngày gửi</th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Thao tác</th>
@@ -71,7 +70,6 @@
                                 <div class="mt-1 text-xs text-purple-600 italic">Ghi chú: {{ $submission->admin_note }}</div>
                             @endif
                         </td>
-                        <td class="px-6 py-4 text-sm text-gray-500">{{ $submission->ip_address }}</td>
                         <td class="px-6 py-4">
                             @php
                                 $sc = ['pending' => 'bg-yellow-100 text-yellow-800', 'approved' => 'bg-green-100 text-green-800', 'rejected' => 'bg-red-100 text-red-800'];
@@ -109,7 +107,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                        <td colspan="5" class="px-6 py-12 text-center text-gray-500">
                             <p>Chưa có submission nào.</p>
                         </td>
                     </tr>
