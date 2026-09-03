@@ -6,52 +6,52 @@
       justify-content: flex-end;
     }
 
-    /* Full SVN-Gilroy Typography System */
+    /* Full SVN-GilroyTypography System */
     @font-face {
       font-family: "SVN-Gilroy";
-      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Light.otf") format("opentype");
+      src: url("./assets/font/SVN-Gilroy/SVN-GilroyLight.otf") format("opentype");
       font-weight: 300;
       font-style: normal;
     }
 
     @font-face {
       font-family: "SVN-Gilroy";
-      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Regular.otf") format("opentype");
+      src: url("./assets/font/SVN-Gilroy/SVN-GilroyRegular.otf") format("opentype");
       font-weight: 400;
       font-style: normal;
     }
 
     @font-face {
       font-family: "SVN-Gilroy";
-      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Medium.otf") format("opentype");
+      src: url("./assets/font/SVN-Gilroy/SVN-GilroyMedium.otf") format("opentype");
       font-weight: 500;
       font-style: normal;
     }
 
     @font-face {
       font-family: "SVN-Gilroy";
-      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy SemiBold.otf") format("opentype");
+      src: url("./assets/font/SVN-Gilroy/SVN-GilroySemiBold.otf") format("opentype");
       font-weight: 600;
       font-style: normal;
     }
 
     @font-face {
       font-family: "SVN-Gilroy";
-      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Bold.otf") format("opentype");
+      src: url("./assets/font/SVN-Gilroy/SVN-GilroyBold.otf") format("opentype");
       font-weight: 700;
       font-style: normal;
     }
 
     @font-face {
       font-family: "SVN-Gilroy";
-      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy XBold.otf") format("opentype");
+      src: url("./assets/font/SVN-Gilroy/SVN-GilroyXBold.otf") format("opentype");
       font-weight: 800;
       font-style: normal;
     }
 
     @font-face {
       font-family: "SVN-Gilroy";
-      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Heavy.otf") format("opentype");
+      src: url("./assets/font/SVN-Gilroy/SVN-GilroyHeavy.otf") format("opentype");
       font-weight: 900;
       font-style: normal;
     }

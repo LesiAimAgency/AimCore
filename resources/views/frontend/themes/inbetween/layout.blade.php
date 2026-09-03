@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="{{ asset('themes/inbetween/style.css') }}">
   @stack('styles')
 </head>
-<body class="bg-black text-white">
+<body class="bg-black text-white antialiased font-sans">
   @include('frontend.themes.inbetween.partials.header')
   <main>@yield('content')</main>
   @include('frontend.themes.inbetween.partials.footer')
