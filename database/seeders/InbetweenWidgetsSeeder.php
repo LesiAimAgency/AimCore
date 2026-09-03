@@ -63,14 +63,14 @@ BLADE,
         </div>
     </div>
     </div>
-    <div class="lg:col-span-4 flex flex-col items-center text-center my-6 lg:mt-32 z-20">
+    <div class="lg:col-span-4 flex flex-col items-center text-center my-6 lg:my-0 z-20">
     <h2 id="sec2-title-top" class="text-2xl sm:text-3xl lg:text-[40px] font-bold uppercase tracking-tight text-white m-0 leading-tight">
         THE <span style="color: {{ setting('theme_primary_color', '#EC460B') }};">COMMUNITY</span>
     </h2>
-    <div id="sec2-logo" class="mt-12 mb-0 lg:mt-20 lg:-mb-4 w-full max-w-[340px] flex items-center justify-center">
-        <img src="{{ asset('themes/inbetween/assets/logo-white.svg') }}" alt="{{ setting('site_name', 'INBETWEEN') }}" class="w-full h-auto object-contain drop-shadow-xl">
+    <div id="sec2-logo" class="my-6 lg:my-8 w-full max-w-[340px] flex items-center justify-center">
+        <img src="{{ asset('themes/inbetween/assets/logo-white.svg') }}" alt="{{ setting('site_name', 'INBETWEEN') }}" class="w-full h-auto object-contain drop-shadow-xl opacity-0">
     </div>
-    <h2 id="sec2-title-bot" class="text-2xl sm:text-3xl lg:text-[40px] font-bold uppercase tracking-tight text-white m-0 leading-tight relative z-10">CREATING</h2>
+    <h2 id="sec2-title-bot" class="text-2xl sm:text-3xl lg:text-[40px] font-bold uppercase tracking-tight text-white m-0 leading-tight">CREATING</h2>
     <p id="sec2-subtitle" class="text-xs sm:text-sm font-light leading-relaxed my-4 max-w-[320px] text-[#A9A9A9]">{{ setting('community_description', 'A cross-border network where Professionals, Founders and Creatives collaborate and connect.') }}</p>
     <div id="sec2-ctas" class="flex flex-col sm:flex-row gap-3.5 items-center justify-center w-full mt-3">
         <a href="#packages" class="pill-btn-outline w-full sm:w-auto text-center">JOIN COMMUNITY</a>
