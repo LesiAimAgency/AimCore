@@ -61,7 +61,7 @@
         </div>
 
         <!-- Action Links in 1 Row -->
-        <div class="flex flex-col gap-5 pt-1">
+        <div class="flex flex-row gap-5 pt-1">
           <a href="#contact" class="min-w-[150px] sm:min-w-[170px] border-b border-white pb-1.5 flex items-center justify-between text-xs sm:text-sm font-bold tracking-widest uppercase hover:text-[#EC460B] hover:border-[#EC460B] transition-colors">
             <span>LET'S CONNECT</span>
             <span class="text-sm font-normal">→</span>
