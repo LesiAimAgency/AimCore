@@ -1,4 +1,4 @@
-﻿@php
+@php
   $phone = setting('site_phone', '0909 999 999');
   $email = setting('site_email', 'inbetween.asia@gmail.com');
   $logo  = setting('site_logo', asset('themes/inbetween/assets/logo.svg'));
@@ -68,13 +68,6 @@
         <a href="{{ $link['url'] }}" class="nav-link">{{ $link['label'] }}</a>
       @endforeach
     </nav>
-
-    {{-- Center Logo (absolute on desktop) --}}
-    <div class="hidden md:block absolute left-1/2 -translate-x-1/2">
-      <a href="{{ url(request()->route('projectCode') ?? '/') }}" aria-label="{{ setting('site_name', 'INBETWEEN') }}">
-        <img src="{{ $logo }}" alt="{{ setting('site_name', 'INBETWEEN') }}" class="h-8 lg:h-9 w-auto object-contain select-none">
-      </a>
-    </div>
 
     {{-- Mobile Logo --}}
     <a href="{{ url(request()->route('projectCode') ?? '/') }}" class="md:hidden" aria-label="{{ setting('site_name', 'INBETWEEN') }}">
