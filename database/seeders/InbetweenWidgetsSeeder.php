@@ -67,7 +67,7 @@ BLADE,
     <h2 id="sec2-title-top" class="text-2xl sm:text-3xl lg:text-[40px] font-bold uppercase tracking-tight text-white m-0 leading-tight">
         THE <span style="color: {{ setting('theme_primary_color', '#EC460B') }};">COMMUNITY</span>
     </h2>
-    <div id="sec2-logo" class="my-4 w-full max-w-[340px] flex items-center justify-center">
+    <div id="sec2-logo" class="my-6 lg:my-8 w-full max-w-[340px] flex items-center justify-center">
         <img src="{{ asset('themes/inbetween/assets/logo-white.svg') }}" alt="{{ setting('site_name', 'INBETWEEN') }}" class="w-full h-auto object-contain drop-shadow-xl">
     </div>
     <h2 id="sec2-title-bot" class="text-2xl sm:text-3xl lg:text-[40px] font-bold uppercase tracking-tight text-white m-0 leading-tight">CREATING</h2>
