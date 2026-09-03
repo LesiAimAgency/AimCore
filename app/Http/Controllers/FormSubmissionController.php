@@ -16,10 +16,9 @@ class FormSubmissionController extends Controller
 
         $data = [];
         if (! $form) {
-            // Fallback: If form not defined in CMS, just capture all inputs except internals
             $inputs = $request->except(['_token', 'form_name', 'project_id']);
             foreach ($inputs as $key => $value) {
-                $data[$key] = strip_tags($value);
+                $data[$key] = is_string($value) ? strip_tags($value) : $value;
             }
         } else {
             // Build validation rules
@@ -47,7 +46,7 @@ class FormSubmissionController extends Controller
             // Sanitize data
             foreach ($form['fields'] as $field) {
                 $value = $request->input($field['label']);
-                $data[$field['label']] = strip_tags($value);
+                $data[$field['label']] = is_string($value) ? strip_tags($value) : $value;
             }
         }
 
