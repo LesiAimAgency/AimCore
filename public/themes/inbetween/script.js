@@ -248,6 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .to(layer3, { y: -40, scale: 1, opacity: 0, duration: 0.4, ease: "power2.inOut" }, 0.4);
 
       if (centerLogo) {
+        gsap.set(centerLogo, { xPercent: -50, yPercent: -50 });
         // Shrink the original logo to fit the next section without fading it out
         commTL.to(centerLogo, { scale: 340 / 548, duration: 0.4, ease: "power2.inOut" }, 0.7);
       }
@@ -326,6 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (centerLogo) {
+        gsap.set(centerLogo, { xPercent: -50, yPercent: -50 });
         wallTLMobile.to(centerLogo, { scale: 340 / 548, duration: 0.6 }, 0.2);
       }
       // Do not fade out #community-wall so logo remains visible

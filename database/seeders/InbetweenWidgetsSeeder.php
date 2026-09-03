@@ -32,10 +32,9 @@ BLADE,
 
             'inbetween-community-wall' => <<<BLADE
 <div class="wall-stage">
-    <div class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-        <div id="wall-center-logo" class="wall-center-logo w-[70vw] md:w-[42vw] max-w-[548px] text-center select-none will-change-transform">
-        <img src="{{ asset('themes/inbetween/assets/logo-white.svg') }}" alt="{{ setting('site_name', 'INBETWEEN') }}" class="w-full h-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
-        </div>
+    <!-- Central Inbetween Logo (GSAP xPercent/yPercent replaces tailwind translate) -->
+    <div id="wall-center-logo" class="wall-center-logo absolute left-1/2 top-1/2 z-30 w-[38%] pointer-events-none text-center select-none will-change-transform">
+        <img src="https://aimagency.vn/themes/inbetween/assets/logo-white.svg" alt="INBETWEEN" class="w-full h-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
     </div>
     <div class="floating-card" style="left:8.61%;top:11.22%;width:15.35%;height:31.0%;z-index:12;"><img src="{{ asset('themes/inbetween/assets/image0_252_132.png') }}" alt="Community"></div>
     <div class="floating-card" style="left:28.19%;top:-4.67%;width:12.85%;height:25.89%;z-index:10;"><img src="{{ asset('themes/inbetween/assets/image1_252_132.png') }}" alt="Founder"></div>
