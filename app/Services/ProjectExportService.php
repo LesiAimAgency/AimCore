@@ -38,7 +38,7 @@ class ProjectExportService
      */
     public function buildExportPackage(Project $project, ?HostingProfile $profile = null): array
     {
-        set_time_limit(300);
+        set_time_limit(0);
         ini_set('memory_limit', '1G');
 
         $exportBaseDir = storage_path("app/deployments/project_{$project->id}");
@@ -49,7 +49,9 @@ class ProjectExportService
         if (File::exists($exportBaseDir)) {
             File::deleteDirectory($exportBaseDir);
         }
-        File::makeDirectory($exportSourceDir, 0755, true);
+        if (! File::exists($exportSourceDir)) {
+            File::makeDirectory($exportSourceDir, 0755, true, true);
+        }
 
         Log::info("[Export] Starting export for project {$project->code}");
 
@@ -59,6 +61,7 @@ class ProjectExportService
 
         // 2. Generate CMS-only database SQL
         $dbSqlContent = $this->generateDatabaseSQL($project);
+        File::ensureDirectoryExists($exportSourceDir.'/database');
         File::put($exportSourceDir.'/database/database.sql', $dbSqlContent);
         Log::info('[Export] Database SQL generated ('.strlen($dbSqlContent).' bytes).');
 
@@ -110,8 +113,7 @@ class ProjectExportService
         foreach ($directories as $source => $dest) {
             $sourcePath = $basePath.'/'.$source;
             if (File::exists($sourcePath)) {
-                File::makeDirectory($exportPath.'/'.dirname($dest), 0755, true, true);
-                File::copyDirectory($sourcePath, $exportPath.'/'.$dest);
+                $this->robustCopyDirectory($sourcePath, $exportPath.'/'.$dest);
             }
         }
 
@@ -128,7 +130,9 @@ class ProjectExportService
             'storage/app/public',
         ];
         foreach ($storageDirs as $dir) {
-            File::makeDirectory($exportPath.'/'.$dir, 0755, true, true);
+            if (! File::exists($exportPath.'/'.$dir)) {
+                File::makeDirectory($exportPath.'/'.$dir, 0755, true, true);
+            }
             File::put($exportPath.'/'.$dir.'/.gitkeep', '');
         }
 
@@ -137,6 +141,33 @@ class ProjectExportService
         foreach ($rootFiles as $file) {
             if (File::exists($basePath.'/'.$file)) {
                 File::copy($basePath.'/'.$file, $exportPath.'/'.$file);
+            }
+        }
+    }
+
+    private function robustCopyDirectory(string $source, string $dest): void
+    {
+        if (! is_dir($dest)) {
+            @mkdir($dest, 0755, true);
+        }
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::SELF_FIRST,
+            \RecursiveIteratorIterator::CATCH_GET_CHILD
+        );
+
+        foreach ($iterator as $item) {
+            if ($item->isLink()) {
+                continue; // Skip symlinks to avoid recursion or broken links
+            }
+            $target = $dest.DIRECTORY_SEPARATOR.$iterator->getSubPathname();
+            if ($item->isDir()) {
+                if (! is_dir($target)) {
+                    @mkdir($target, 0755, true);
+                }
+            } else {
+                @copy($item->getPathname(), $target);
             }
         }
     }

@@ -44,11 +44,11 @@
                     
                     <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-50">
                         <div class="flex items-center gap-2">
-                            @if($task->assignee)
-                            <div class="w-6 h-6 rounded-full bg-[#001B4E] text-white flex items-center justify-center text-xs font-bold" title="{{ $task->assignee->name }}">
-                                {{ substr($task->assignee->name, 0, 1) }}
+                            @if($task->assignedUser)
+                            <div class="w-6 h-6 rounded-full bg-[#001B4E] text-white flex items-center justify-center text-xs font-bold" title="{{ $task->assignedUser->name }}">
+                                {{ substr($task->assignedUser->name, 0, 1) }}
                             </div>
-                            <span class="text-xs text-gray-500">{{ explode(' ', $task->assignee->name)[0] }}</span>
+                            <span class="text-xs text-gray-500">{{ explode(' ', $task->assignedUser->name)[0] }}</span>
                             @else
                             <span class="text-xs text-gray-400 italic">Chưa phân</span>
                             @endif

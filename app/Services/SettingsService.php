@@ -120,14 +120,15 @@ class SettingsService
 
         // Nếu là array và có key 'value', trả về giá trị đó
         if (\is_array($value)) {
-            if (isset($value['value'])) {
-                return $value['value'];
+            if (array_key_exists('value', $value)) {
+                $val = $value['value'];
+                return $val !== null ? $val : $default;
             }
 
             return $value;
         }
 
-        return $value;
+        return $value !== null ? $value : $default;
     }
 
     public function set($key, $value, $group = null, $locked = false)

@@ -33,7 +33,7 @@ class ProjectKanban extends Component
     public function render()
     {
         // Get tasks for this project grouped by status
-        $tasks = $this->project->tasks()->with('assignee')->get();
+        $tasks = $this->project->tasks()->with('assignedUser')->get();
 
         $columns = [
             'pending' => [

@@ -9,18 +9,15 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // Get current project from session
-        $currentProject = session('current_project');
+        // Get current project from request attributes (set by ProjectSubdomainMiddleware)
+        $currentProject = request()->attributes->get('project');
         $theme = null;
 
         if ($currentProject) {
-            // Check if project has a theme setting
-            $projectId = is_array($currentProject) ? ($currentProject['id'] ?? null) : ($currentProject->id ?? null);
-            if ($projectId) {
-                $theme = Setting::where('tenant_id', $projectId)
-                    ->where('key', 'theme')
-                    ->value('value');
-            }
+            $projectId = $currentProject->id;
+            $theme = Setting::where('tenant_id', $projectId)
+                ->where('key', 'theme')
+                ->value('value');
         }
 
         // Use theme-specific view if available

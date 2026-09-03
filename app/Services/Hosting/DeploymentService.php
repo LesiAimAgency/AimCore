@@ -59,10 +59,46 @@ class DeploymentService
             $dbUser = $this->getDbUser($profile, $project);
             $dbPass = Str::random(16);
 
-            $client->createDatabase($dbName);
-            $client->createDatabaseUser($dbUser, $dbPass);
-            $client->grantPrivileges($dbName, $dbUser);
+            try {
+                $client->createDatabase($dbName);
+            } catch (\Exception $e) {
+                if (! str_contains($e->getMessage(), 'already exists')) {
+                    throw $e;
+                }
+            }
+            try {
+                $client->createDatabaseUser($dbUser, $dbPass);
+            } catch (\Exception $e) {
+                if (! str_contains($e->getMessage(), 'already exists')) {
+                    throw $e;
+                }
+            }
+            try {
+                $client->grantPrivileges($dbName, $dbUser);
+            } catch (\Exception $e) {
+                // Ignore grant errors if already granted
+            }
             $this->log($history, 'create_db', "Database {$dbName} and user {$dbUser} created.", 'success', 3);
+
+            // Step 3.5: Create Addon/Sub Domain & Get Server IP
+            $domain = $project->external_domain ?? ($profile->domain ?? 'unknown');
+            $this->log($history, 'create_domain', "Creating domain {$domain} on hosting...", 'info', 3);
+
+            try {
+                $client->createDomain($domain, ltrim($profile->public_html_path, '/'));
+                $this->log($history, 'create_domain', "Domain {$domain} created successfully.", 'success', 3);
+            } catch (\Exception $e) {
+                $this->log($history, 'create_domain', 'Warning: Could not create domain automatically: '.$e->getMessage(), 'warning', 3);
+            }
+
+            try {
+                $serverIp = $client->getServerIp();
+                $history->update(['server_ip' => $serverIp]);
+                $this->log($history, 'create_domain', "Retrieved Server IP: {$serverIp}", 'success', 3);
+            } catch (\Exception $e) {
+                $this->log($history, 'create_domain', 'Warning: Could not retrieve server IP: '.$e->getMessage(), 'warning', 3);
+                $serverIp = 'Unknown';
+            }
 
             // Step 4: Substitute real DB credentials + domain into .env
             $domain = $project->external_domain ?? ($profile->domain ?? 'unknown');
@@ -83,10 +119,9 @@ class DeploymentService
             $client->extractZip($remoteDir.'/'.$remoteZipName, $remoteDir);
             $this->log($history, 'upload', 'Extraction completed.', 'success', 4);
 
-            // Step 7: Save configured .env and database SQL to remote
-            $this->log($history, 'configure', 'Saving .env and database.sql to server...', 'info', 5);
+            // Step 7: Save configured .env to remote
+            $this->log($history, 'configure', 'Saving .env to server...', 'info', 5);
             $client->saveFileContent($remoteDir.'/.env', $envContent);
-            $client->saveFileContent($remoteDir.'/database/database.sql', $dbSqlContent);
             $this->log($history, 'configure', 'Configuration files saved.', 'success', 5);
 
             // Step 8: Upload and run bootstrap installer script
@@ -101,7 +136,7 @@ class DeploymentService
                 'completed_at' => now(),
                 'deployed_url' => 'https://'.$domain,
             ]);
-            $project->update(['status' => 'deployed']);
+            $project->update(['status' => 'active']);
 
             // Cleanup local ZIP
             if (file_exists($zipPath)) {

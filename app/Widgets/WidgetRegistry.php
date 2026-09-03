@@ -18,8 +18,20 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
+use App\Widgets\Inbetween\HeroSectionWidget;
+use App\Widgets\Inbetween\CommunityCollageWidget;
+use App\Widgets\Inbetween\CommunityStatementWidget;
+use App\Widgets\Inbetween\CoreValuesWidget;
+use App\Widgets\Inbetween\FounderSectionWidget;
+use App\Widgets\Inbetween\UpcomingEventsWidget;
+use App\Widgets\Inbetween\MediaStoriesWidget;
+use App\Widgets\Inbetween\PackagesWidget;
+
 class WidgetRegistry implements WidgetRegistryInterface
 {
+    /**
+     * @var array<string, class-string<BaseWidget>>
+     */
     protected static array $widgets = [
         'HeaderWidget' => HeaderWidget::class,
         'FooterWidget' => FooterWidget::class,
@@ -30,6 +42,16 @@ class WidgetRegistry implements WidgetRegistryInterface
         'BlogWidget' => BlogWidget::class,
         'InstagramWidget' => InstagramWidget::class,
         'FeatureWidget' => FeatureWidget::class,
+        
+        // Inbetween Widgets
+        'inbetween_hero_section' => HeroSectionWidget::class,
+        'inbetween_community_collage' => CommunityCollageWidget::class,
+        'inbetween_community_statement' => CommunityStatementWidget::class,
+        'inbetween_core_values' => CoreValuesWidget::class,
+        'inbetween_founder_section' => FounderSectionWidget::class,
+        'inbetween_upcoming_events' => UpcomingEventsWidget::class,
+        'inbetween_media_stories' => MediaStoriesWidget::class,
+        'inbetween_packages' => PackagesWidget::class,
     ];
 
     protected static array $discoveredWidgets = [];

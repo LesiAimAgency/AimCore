@@ -72,4 +72,17 @@ interface HostingClientInterface
      * @param  string  $content  Content to write
      */
     public function saveFileContent(string $remoteFilePath, string $content): bool;
+
+    /**
+     * Create an addon domain or subdomain.
+     *
+     * @param  string  $domain  The domain name to create
+     * @param  string  $documentRoot  The document root for the domain
+     */
+    public function createDomain(string $domain, string $documentRoot): bool;
+
+    /**
+     * Get the server's shared IP address.
+     */
+    public function getServerIp(): string;
 }

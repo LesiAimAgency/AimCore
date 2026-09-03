@@ -1,0 +1,1830 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="INBETWEEN - Cross-border community, media & connection platform for Professionals, Founders, Creatives & Organizations">
+  <title>INBETWEEN | Cross-border Community & Platform</title>
+
+  <!-- Google Fonts: Be Vietnam Pro & Pinyon Script & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400;1,700&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- GSAP & ScrollTrigger CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandOrange: '#EC460B',
+            paper: '#F9F9F9',
+            darkBg: '#050505',
+            darkCard: '#111113',
+            silver: '#A9A9A9',
+            grayBorder: '#E5E5E5',
+          },
+          fontFamily: {
+            sans: ['"SVN-Gilroy"', '"Be Vietnam Pro"', 'sans-serif'],
+            gilroy: ['"SVN-Gilroy"', 'sans-serif'],
+            vietnam: ['"Be Vietnam Pro"', 'sans-serif'],
+            brovile: ['"Oai Brovile"', '"Playfair Display"', 'serif'],
+            serif: ['"Oai Brovile"', '"Playfair Display"', 'Georgia', 'serif'],
+            script: ['"Pinyon Script"', 'cursive'],
+          },
+          maxWidth: {
+            'container': '1440px',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    #sec2-card-1,
+    #sec2-card-2,
+    #sec2-card-3,
+    #sec2-card-4 {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Full SVN-Gilroy Typography System */
+    @font-face {
+      font-family: "SVN-Gilroy";
+      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Light.otf") format("opentype");
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "SVN-Gilroy";
+      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Regular.otf") format("opentype");
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "SVN-Gilroy";
+      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Medium.otf") format("opentype");
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "SVN-Gilroy";
+      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy SemiBold.otf") format("opentype");
+      font-weight: 600;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "SVN-Gilroy";
+      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Bold.otf") format("opentype");
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "SVN-Gilroy";
+      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy XBold.otf") format("opentype");
+      font-weight: 800;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "SVN-Gilroy";
+      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Heavy.otf") format("opentype");
+      font-weight: 900;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "Oai Brovile";
+      src: url("./assets/font/Brovile/OAI-BROVILE.TTF") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      font-family: 'SVN-Gilroy', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Container Custom */
+    .container-custom {
+      width: 100%;
+      max-width: 1440px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    @media (min-width: 1024px) {
+      .container-custom {
+        padding-left: 72px;
+        padding-right: 72px;
+      }
+    }
+
+    /* =========================================================================
+       HERO SECTION (herosection.svg)
+       ========================================================================= */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url("assets/hero-bg.png");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center top;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-orbits-container {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      mix-blend-mode: soft-light;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .orbit-ring {
+      position: absolute;
+      top: 50%;
+      border-radius: 50%;
+      mix-blend-mode: soft-light;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .orbit-outer {
+      width: 649px;
+      height: 649px;
+      margin-top: -324.5px;
+    }
+
+    .orbit-mid {
+      width: 504px;
+      height: 504px;
+      margin-top: -252px;
+    }
+
+    .orbit-inner {
+      width: 360px;
+      height: 360px;
+      margin-top: -180px;
+    }
+
+    .orbit-left {
+      right: 50%;
+      background-image: url("assets/orbit-left.svg");
+      transform-origin: center center;
+    }
+
+    .orbit-right {
+      left: 50%;
+      background-image: url("assets/orbit-right.svg");
+      transform-origin: center center;
+    }
+
+    @keyframes rippleLeft {
+      0% {
+        transform: rotate(180deg) scale(0.85);
+        opacity: 0;
+      }
+
+      25% {
+        opacity: 0.95;
+      }
+
+      100% {
+        transform: rotate(180deg) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    @keyframes rippleRight {
+      0% {
+        transform: rotate(0deg) scale(0.85);
+        opacity: 0;
+      }
+
+      25% {
+        opacity: 0.95;
+      }
+
+      100% {
+        transform: rotate(0deg) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    .orbit-outer.orbit-left {
+      animation: rippleLeft 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite 0s;
+    }
+
+    .orbit-mid.orbit-left {
+      animation: rippleLeft 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite 2s;
+    }
+
+    .orbit-inner.orbit-left {
+      animation: rippleLeft 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite 4s;
+    }
+
+    .orbit-outer.orbit-right {
+      animation: rippleRight 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite 0s;
+    }
+
+    .orbit-mid.orbit-right {
+      animation: rippleRight 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite 2s;
+    }
+
+    .orbit-inner.orbit-right {
+      animation: rippleRight 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite 4s;
+    }
+
+    @media (max-width: 1024px) {
+      .orbit-outer {
+        width: 440px;
+        height: 440px;
+        margin-top: -220px;
+      }
+
+      .orbit-mid {
+        width: 340px;
+        height: 340px;
+        margin-top: -170px;
+      }
+
+      .orbit-inner {
+        width: 240px;
+        height: 240px;
+        margin-top: -120px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .orbit-outer {
+        width: 300px;
+        height: 300px;
+        margin-top: -150px;
+      }
+
+      .orbit-mid {
+        width: 230px;
+        height: 230px;
+        margin-top: -115px;
+      }
+
+      .orbit-inner {
+        width: 160px;
+        height: 160px;
+        margin-top: -80px;
+      }
+    }
+
+    /* Navigation & Links */
+    .nav-link {
+      position: relative;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      transition: color 0.3s ease;
+      text-decoration: none;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0%;
+      height: 1.5px;
+      background-color: #EC460B;
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: #ffffff;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .pill-btn-white {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 24px;
+      border-radius: 9999px;
+      background-color: #ffffff !important;
+      color: #000000 !important;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid #ffffff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      text-decoration: none;
+    }
+
+    .pill-btn-white:hover {
+      background-color: #EC460B !important;
+      border-color: #EC460B;
+      color: #ffffff !important;
+      box-shadow: 0 4px 18px rgba(236, 70, 11, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .pill-btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 24px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      background: transparent;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .pill-btn-outline:hover {
+      background-color: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+      box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2);
+    }
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #ffffff;
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 2px;
+      border-bottom: 1.5px solid #ffffff;
+      transition: all 0.3s ease;
+    }
+
+    .cta-link span.arrow {
+      margin-left: 6px;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .cta-link:hover {
+      color: #EC460B;
+      border-bottom-color: #EC460B;
+    }
+
+    .cta-link:hover span.arrow {
+      transform: translate(3px, -3px);
+    }
+
+    .cta-link-dark {
+      display: inline-flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #111111;
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 2px;
+      border-bottom: 1.5px solid #111111;
+      transition: all 0.3s ease;
+    }
+
+    .cta-link-dark span.arrow {
+      margin-left: 6px;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .cta-link-dark:hover {
+      color: #EC460B;
+      border-bottom-color: #EC460B;
+    }
+
+    .cta-link-dark:hover span.arrow {
+      transform: translate(3px, -3px);
+    }
+
+    /* =========================================================================
+       SECTION 1: 1.svg EXACT 3D FLOATING MEDIA COLLAGE
+       ========================================================================= */
+    .wall-stage {
+      position: relative;
+      width: 100%;
+      max-width: 1440px;
+      height: 900px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    @media (max-width: 1024px) {
+      .wall-stage {
+        height: 680px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .wall-stage {
+        height: 540px;
+      }
+    }
+
+    .floating-card {
+      position: absolute;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.8);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+      will-change: transform;
+    }
+
+    .floating-card img {
+      width: 100%;
+      height: 100%;
+      object-cover: cover;
+      display: block;
+    }
+
+    .floating-card:hover {
+      transform: scale(1.06) translateY(-4px);
+      box-shadow: 0 24px 50px rgba(236, 70, 11, 0.35);
+      z-index: 30;
+    }
+
+    /* =========================================================================
+       SECTION 3: 1:1 Overlapping Venn Circles from 3.svg
+       ========================================================================= */
+    .venn-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 1234px;
+      height: 478px;
+      margin: 0 auto;
+    }
+
+    .venn-item {
+      position: absolute;
+      top: 0;
+      width: 478px;
+      height: 478px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .venn-bg {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: linear-gradient(180deg, rgba(255, 231, 218, 0) 0%, #F5AD93 100%);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    .venn-item-1 {
+      left: 0;
+    }
+
+    .venn-item-2 {
+      left: 378px;
+    }
+
+    .venn-item-3 {
+      left: 756px;
+    }
+
+    .venn-plus-sign {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 30;
+      color: #ffffff;
+      font-size: 38px;
+      font-weight: 300;
+      line-height: 1;
+      user-select: none;
+      pointer-events: none;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    }
+
+    .venn-plus-1 {
+      left: 428px;
+    }
+
+    .venn-plus-2 {
+      left: 806px;
+    }
+
+    /* Infinite Marquee */
+    @keyframes marqueeScroll {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* .transition-transform {
+      width: 300px;
+    } */
+
+    /* =========================================================================
+       SECTION 6: STORY CARDS ACCORDION DRAWER
+       ========================================================================= */
+    .story-card {
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .story-drawer {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      overflow: hidden;
+      transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin-top 0.3s ease;
+      margin-top: 0;
+    }
+
+    .story-drawer-inner {
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .story-card.is-open .story-drawer {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      margin-top: 0.75rem;
+    }
+
+    .story-chevron {
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: center center;
+    }
+
+    .story-card.is-open .story-chevron {
+      transform: rotate(180deg);
+    }
+
+    @media (min-width: 1024px) {
+      .story-stagger-down {
+        margin-top: 5.5rem !important;
+      }
+    }
+
+    /* =========================================================================
+       DYNAMIC ADAPTIVE HEADER (Light / Dark Section Detection)
+       ========================================================================= */
+    #site-header {
+      transition: background-color 0.3s ease, border-color 0.3s ease, padding 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #site-header.header-scrolled {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      background-color: rgba(5, 5, 5, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #site-header.header-scrolled.header-light {
+      background-color: rgba(249, 249, 249, 0.92);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    #site-header.header-light .nav-link {
+      color: #111111 !important;
+    }
+
+    #site-header.header-light .nav-link:hover {
+      color: #EC460B !important;
+    }
+
+    #site-header.header-light .pill-btn-white {
+      background-color: #111111 !important;
+      color: #ffffff !important;
+      border-color: #111111 !important;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    #site-header.header-light .pill-btn-white:hover {
+      background-color: #EC460B !important;
+      border-color: #EC460B !important;
+      color: #ffffff !important;
+    }
+
+    #site-header.header-light .cta-link {
+      color: #111111 !important;
+      border-bottom-color: #111111 !important;
+    }
+
+    #site-header.header-light .cta-link:hover {
+      color: #EC460B !important;
+      border-bottom-color: #EC460B !important;
+    }
+
+    #site-header.header-light #mobile-menu-btn {
+      color: #111111 !important;
+    }
+
+    #site-header.header-light #mobile-menu-btn:hover {
+      color: #EC460B !important;
+    }
+  </style>
+
+  <!-- Project External Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-black text-white selection:bg-brandOrange selection:text-white">
+
+  <!-- =========================================================================
+       HEADER NAVIGATION
+       ========================================================================= -->
+  <header id="site-header" class="fixed top-0 inset-x-0 z-50 text-white py-6 transition-all duration-300">
+    <div class="container-custom flex items-center justify-between">
+
+      <!-- Left: Navigation Links -->
+      <nav class="hidden md:flex items-center gap-9" aria-label="Main Navigation">
+        <a href="#about" class="nav-link">About us</a>
+        <a href="#media" class="nav-link">Media</a>
+        <a href="#community" class="nav-link">Community</a>
+      </nav>
+
+      <!-- Right: Action CTA & Events Pill -->
+      <div class="flex items-center justify-end gap-6 sm:gap-8 w-full md:w-auto">
+        <a href="#events" class="pill-btn-white" aria-label="Explore Events">EVENTS</a>
+        <a href="#contact" class="cta-link hidden sm:inline-flex" aria-label="Connect With Us">
+          LET'S CONNECT <span class="arrow font-normal">↗</span>
+        </a>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 text-white hover:text-brandOrange transition-colors"
+          aria-label="Toggle menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Dropdown Navigation -->
+    <div id="mobile-menu" class="hidden md:hidden bg-black/95 border-b border-white/10 px-6 py-6 transition-all">
+      <nav class="flex flex-col gap-4 text-base">
+        <a href="#about" class="text-white hover:text-brandOrange transition-colors">About us</a>
+        <a href="#media" class="text-white hover:text-brandOrange transition-colors">Media</a>
+        <a href="#community" class="text-white hover:text-brandOrange transition-colors">Community</a>
+        <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+          <a href="#contact" class="cta-link">LET'S CONNECT <span class="arrow font-normal">↗</span></a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- =======================================================================
+         SECTION 0: HERO SECTION (herosection.svg - 100vh Fullscreen)
+         ======================================================================= -->
+    <section id="top"
+      class="relative h-screen min-h-[640px] h-[100dvh] w-full bg-black text-white overflow-hidden flex items-center justify-center pt-16 pb-8 md:py-0">
+
+      <!-- Fullscreen Background Image (1/2 Black Top, 1/2 Warm Orange Glow Bottom) -->
+      <div class="hero-bg" aria-hidden="true"></div>
+
+      <!-- Concentric Orbits (Water Ripple Wave Effect) -->
+      <div class="hero-orbits-container pointer-events-none" aria-hidden="true">
+        <div class="orbit-ring orbit-outer orbit-left"></div>
+
+
+
+
+
+        <div class="orbit-ring orbit-inner orbit-right"></div>
+      </div>
+
+      <!-- Cinematic Vignette Overlay -->
+      <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/40 pointer-events-none z-[1]"
+        aria-hidden="true"></div>
+
+      <!-- Hero Central Main Branding & Typography -->
+      <div class="container-custom relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6">
+        <div class="hero-content flex flex-col items-center max-w-[708px] w-full">
+
+          <!-- Logo -->
+          <div class="hero-logo-wrapper w-full max-w-[280px] sm:max-w-[420px] md:max-w-[580px] lg:max-w-[708px]">
+            <img src="assets/logo.svg" alt="INBETWEEN" class="w-full h-auto object-contain drop-shadow-2xl select-none"
+              width="708" height="109">
+          </div>
+
+          <!-- Subtitle Description -->
+          <div
+            class="hero-subtitle mt-4 sm:mt-8 lg:mt-11 text-[25px] font-medium leading-snug sm:leading-[1.18] space-y-0.5 sm:space-y-1 text-white select-none">
+            <p class="m-0 tracking-[-0.01em] drop-shadow-md">
+              Cross-border community, media &amp; connection platform
+            </p>
+            <p class="m-0 tracking-[-0.01em] drop-shadow-md">
+              for
+            </p>
+            <p class="m-0 tracking-[-0.01em] drop-shadow-md">
+              Professionals, Founders, Creatives &amp; Organizations
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 1 & 2: COMMUNITY PINNED WRAPPER (Onepage Transition)
+         ======================================================================= -->
+    <section id="community-pinned-wrapper" class="relative w-full h-screen bg-black overflow-hidden">
+
+      <!-- Central Inbetween Logo (Moved outside wall to sit above text with z-30) -->
+      <div id="wall-center-logo"
+        class="wall-center-logo absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-[42vw] max-w-[548px] pointer-events-none text-center select-none will-change-transform">
+        <img src="assets/logo-white.svg" alt="INBETWEEN"
+          class="w-full h-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
+      </div>
+
+      <!-- COMMUNITY WALL (Stage 1) -->
+      <div id="community-wall" class="absolute inset-0 flex items-center justify-center z-10"
+        aria-label="INBETWEEN Community Collage">
+
+        <div class="wall-stage">
+
+          <!-- 10 Exact Floating Cards from 1.svg positioned by exact design percentages -->
+          <!-- Card 1: Two Women Podcasting (x=124, y=101, w=221, h=279) -->
+          <div class="floating-card"
+            style="left: 8.61%; top: 11.22%; width: 15.35%; height: 31.0%; z-index: 12; opacity: 0.4;">
+            <img src="assets/image0_252_132.png" alt="Community Voices">
+          </div>
+
+          <!-- Card 2: Man Sitting in White Shirt (x=406, y=-42, w=185, h=233) -->
+          <div class="floating-card"
+            style="left: 28.19%; top: -4.67%; width: 12.85%; height: 25.89%; z-index: 10; opacity: 0.4;">
+            <img src="assets/image1_252_132.png" alt="Founder Story">
+          </div>
+
+          <!-- Card 3: Woman in Blue Shirt (x=498, y=590, w=111, h=141) -->
+          <div class="floating-card"
+            style="left: 34.58%; top: 65.56%; width: 7.71%; height: 15.67%; z-index: 11; opacity: 1;">
+            <img src="assets/image2_252_132.png" alt="Creative Member">
+          </div>
+
+          <!-- Card 4: Woman Speaking in Red (x=781, y=100, w=111, h=141) -->
+          <div class="floating-card"
+            style="left: 54.24%; top: 11.11%; width: 7.71%; height: 15.67%; z-index: 11; opacity: 0.6;">
+            <img src="assets/image3_252_132.png" alt="Keynote Speaker">
+          </div>
+
+          <!-- Card 5: Woman with Mic in Crowd (x=739, y=623, w=153, h=195) -->
+          <div class="floating-card"
+            style="left: 51.32%; top: 69.22%; width: 10.62%; height: 21.67%; z-index: 12; opacity: 1;">
+            <img src="assets/image4_252_132.png" alt="Event Moment">
+          </div>
+
+          <!-- Card 6: Woman on Sofa with Mic (x=985, y=472, w=203, h=259) -->
+          <div class="floating-card"
+            style="left: 68.40%; top: 52.44%; width: 14.10%; height: 28.78%; z-index: 12; opacity: 1;">
+            <img src="assets/image5_252_132.png" alt="Interview Spotlight">
+          </div>
+
+          <!-- Card 7: Woman in White Gown Stage (x=1056, y=-18, w=265, h=339) -->
+          <div class="floating-card"
+            style="left: 73.33%; top: -2.00%; width: 18.40%; height: 37.67%; z-index: 10; opacity: 0.4;">
+            <img src="assets/image6_252_132.png" alt="Summit Gala Host">
+          </div>
+
+          <!-- Card 8: Smiling Woman Podcaster (x=1256, y=400, w=209, h=267) -->
+          <div class="floating-card"
+            style="left: 87.22%; top: 44.44%; width: 14.51%; height: 29.67%; z-index: 11; opacity: 0.6;">
+            <img src="assets/image7_252_132.png" alt="Media Spotlight">
+          </div>
+
+          <!-- Card 9: Man in Studio (x=237, y=476, w=157, h=199) -->
+          <div class="floating-card"
+            style="left: 16.46%; top: 52.89%; width: 10.90%; height: 22.11%; z-index: 12; opacity: 0.7;">
+            <img src="assets/image8_252_132.png" alt="Podcast Guest">
+          </div>
+
+          <!-- Card 10: Man in Green Jacket Studio (x=-98, y=460, w=283, h=358) -->
+          <div class="floating-card"
+            style="left: -6.81%; top: 51.11%; width: 19.65%; height: 39.78%; z-index: 10; opacity: 0.4;">
+            <img src="assets/image9_252_132.png" alt="Innovator Profile">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- COMMUNITY STATEMENT & 4 PILLARS (Stage 2) -->
+      <div id="community" class="absolute inset-0 flex items-center justify-center z-20">
+
+        <div class="relative w-full max-w-[1440px] mx-auto flex flex-col justify-center px-6 lg:px-16 z-10">
+
+          <!-- Grid layout matching 2.svg -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+
+            <!-- Left Column (2 Cards: Influencers & Businesses) -->
+            <div class="lg:col-span-4 flex flex-col gap-8 items-start">
+
+              <!-- Top Left: WHERE INFLUENCERS Sharing THEIR THOUGHTS -->
+              <div id="sec2-card-1" class="group cursor-pointer max-w-[340px] w-full will-change-transform">
+                <div
+                  class="aspect-[300/288]  overflow-hidden bg-neutral-900 shadow-2xl transition-transform duration-500 group-hover:scale-105">
+                  <img src="assets/image1_250_148.png" alt="Where Influencers Sharing Their Thoughts"
+                    class="w-full h-full object-cover">
+                </div>
+              </div>
+
+              <!-- Bottom Left: WHERE BUSINESSES Find NEW OPPORTUNITIES -->
+              <div id="sec2-card-2" class="group cursor-pointer max-w-[380px] w-full will-change-transform">
+                <div
+                  class="aspect-[401/346]  overflow-hidden bg-neutral-900 shadow-2xl transition-transform duration-500 group-hover:scale-105">
+                  <img src="assets/image2_250_148.png" alt="Where Businesses Find New Opportunities"
+                    class="w-full h-full object-cover">
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Center Column (Main Statement & CTAs) -->
+            <div class="lg:col-span-4 flex flex-col items-center text-center my-6 z-20" style="margin-top: 19vh;">
+              <div class="flex flex-col" style="gap: 80px;">
+                <h2 id="sec2-title-top"
+                  class="text-2xl sm:text-3xl lg:text-[40px] font-bold uppercase tracking-tight text-white m-0 leading-tight">
+                  THE <span class="text-brandOrange">COMMUNITY</span>
+                </h2>
+                <h2 id="sec2-title-bot"
+                  class="text-2xl sm:text-3xl lg:text-[40px] font-bold uppercase tracking-tight text-white m-0 leading-tight">
+                  CREATING
+                </h2>
+              </div>
+              <!-- <div class="my-6 w-full h-[60px] lg:h-[80px]"></div> -->
+
+
+
+              <p id="sec2-subtitle"
+                class="text-xs sm:text-sm text-silver font-light leading-relaxed my-6 max-w-[320px]">
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+              </p>
+
+              <div id="sec2-ctas" class="flex flex-col sm:flex-row gap-3.5 items-center justify-center w-full mt-3">
+                <a href="#packages" class="pill-btn-outline w-full sm:w-auto text-center">JOIN COMMUNITY</a>
+                <a href="#events" class="pill-btn-white w-full sm:w-auto text-center">UPCOMING EVENTS</a>
+              </div>
+            </div>
+
+            <!-- Right Column (2 Cards: People & Creatives) -->
+            <div class="lg:col-span-4 flex flex-col gap-8 items-end">
+
+              <!-- Top Right: WHERE PEOPLE Connect WITH OTHERS -->
+              <div id="sec2-card-3" class="group cursor-pointer max-w-[380px] w-full will-change-transform">
+                <div
+                  class="aspect-[402/346]  overflow-hidden bg-neutral-900 shadow-2xl transition-transform duration-500 group-hover:scale-105">
+                  <img src="assets/image3_250_148.png" alt="Where People Connect With Others"
+                    class="w-full h-full object-cover">
+                </div>
+              </div>
+
+              <!-- Bottom Right: WHERE CREATIVES Collaborated AND IDEAS Spreaded -->
+              <div id="sec2-card-4" class="group cursor-pointer max-w-[380px] w-full will-change-transform">
+                <div
+                  class="aspect-[402/346]  overflow-hidden bg-neutral-900 shadow-2xl transition-transform duration-500 group-hover:scale-105">
+                  <img src="assets/image4_250_148.png" alt="Where Creatives Collaborated And Ideas Spreaded"
+                    class="w-full h-full object-cover">
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 3: CORE VALUES & PARTNERS (Exact 1:1 from 3.svg)
+         ======================================================================= -->
+    <section id="about"
+      class="relative w-full  min-h-screen lg:min-h-0 bg-[#F9F9F9] text-black py-12 flex flex-col justify-center overflow-hidden">
+      <div class="container-custom">
+
+        <!-- Header: Exact Typography & Spacing from 3.svg -->
+        <div id="core-values-header" class="text-center max-w-2xl mx-auto mb-14 lg:mb-20">
+          <div class="w-48 sm:w-56 lg:w-64 mx-auto mb-4">
+            <img src="assets/core-values-header.svg" alt="in • between" class="w-full h-auto object-contain">
+          </div>
+          <h2
+            class="text-3xl sm:text-4xl lg:text-[52px] font-bold tracking-tight text-brandOrange m-0 uppercase leading-none">
+            CORE VALUES
+          </h2>
+          <p class="text-sm sm:text-base lg:text-lg text-black font-semibold mt-3 tracking-wide">
+            Who we are inspire what we do
+          </p>
+        </div>
+
+        <!-- Desktop 1:1 Overlapping Venn Diagram from 3.svg -->
+        <div class="hidden lg:block venn-wrapper my-8">
+
+          <!-- Circle 1 (Left) -->
+          <div class="venn-item venn-item-1">
+            <div class="venn-bg"></div>
+            <div class="relative z-10 max-w-[220px]">
+              <h3 class="text-lg lg:text-xl font-bold uppercase tracking-wider text-brandOrange mb-2.5">
+                AUTHENTICITY
+              </h3>
+              <p class="text-xs sm:text-sm text-black leading-relaxed m-0 font-semibold">
+                Building genuine bonds across diverse cultures and creative industries
+              </p>
+            </div>
+          </div>
+
+          <!-- White Plus Sign 1 (Intersection 1 & 2) -->
+          <span class="venn-plus-sign venn-plus-1">+</span>
+
+          <!-- Circle 2 (Middle) -->
+          <div class="venn-item venn-item-2">
+            <div class="venn-bg"></div>
+            <div class="relative z-10 max-w-[220px]">
+              <h3 class="text-lg lg:text-xl font-bold uppercase tracking-wider text-brandOrange mb-2.5">
+                INNOVATION
+              </h3>
+              <p class="text-xs sm:text-sm text-black leading-relaxed m-0 font-semibold">
+                Empowering bold ideas and fostering cross-border breakthroughs
+              </p>
+            </div>
+          </div>
+
+          <!-- White Plus Sign 2 (Intersection 2 & 3) -->
+          <span class="venn-plus-sign venn-plus-2">+</span>
+
+          <!-- Circle 3 (Right) -->
+          <div class="venn-item venn-item-3">
+            <div class="venn-bg"></div>
+            <div class="relative z-10 max-w-[220px]">
+              <h3 class="text-lg lg:text-xl font-bold uppercase tracking-wider text-brandOrange mb-2.5">
+                IMPACT
+              </h3>
+              <p class="text-xs sm:text-sm text-black leading-relaxed m-0 font-semibold">
+                Creating lasting value and sustainable growth for our global community
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Mobile / Tablet Responsive Fallback (< 1024px) -->
+        <div class="lg:hidden flex flex-col items-center gap-6 my-10">
+
+          <div
+            class="w-full max-w-[340px] aspect-square rounded-full flex flex-col items-center justify-center p-8 text-center bg-gradient-to-b from-[#FFE7DA]/0 to-[#F5AD93] shadow-sm">
+            <h3 class="text-lg font-bold uppercase tracking-wider text-brandOrange mb-2">AUTHENTICITY</h3>
+            <p class="text-xs sm:text-sm text-black leading-relaxed m-0 font-semibold max-w-[220px]">
+              Building genuine bonds across diverse cultures and creative industries
+            </p>
+          </div>
+
+          <div
+            class="w-8 h-8 rounded-full bg-brandOrange/20 text-brandOrange font-bold flex items-center justify-center text-xl">
+            +</div>
+
+          <div
+            class="w-full max-w-[340px] aspect-square rounded-full flex flex-col items-center justify-center p-8 text-center bg-gradient-to-b from-[#FFE7DA]/0 to-[#F5AD93] shadow-sm">
+            <h3 class="text-lg font-bold uppercase tracking-wider text-brandOrange mb-2">INNOVATION</h3>
+            <p class="text-xs sm:text-sm text-black leading-relaxed m-0 font-semibold max-w-[220px]">
+              Empowering bold ideas and fostering cross-border breakthroughs
+            </p>
+          </div>
+
+          <div
+            class="w-8 h-8 rounded-full bg-brandOrange/20 text-brandOrange font-bold flex items-center justify-center text-xl">
+            +</div>
+
+          <div
+            class="w-full max-w-[340px] aspect-square rounded-full flex flex-col items-center justify-center p-8 text-center bg-gradient-to-b from-[#FFE7DA]/0 to-[#F5AD93] shadow-sm">
+            <h3 class="text-lg font-bold uppercase tracking-wider text-brandOrange mb-2">IMPACT</h3>
+            <p class="text-xs sm:text-sm text-black leading-relaxed m-0 font-semibold max-w-[220px]">
+              Creating lasting value and sustainable growth for our global community
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Partner Logos Section (from 3.svg) -->
+      <div class="pt-20 border-t border-neutral-200 mt-16">
+        <div class="text-center mb-10">
+          <h3 class="text-sm font-bold uppercase tracking-widest text-black">OUR BUSINESS PARTNERS</h3>
+        </div>
+
+        <div class="overflow-hidden relative py-4">
+          <div class="marquee-track flex items-center gap-12 sm:gap-16 w-max">
+            <img src="assets/image0_200_302.png" alt="Intek" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image1_200_302.png" alt="Partner" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image2_200_302.png" alt="Partner" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image3_200_302.png" alt="Air Liquide" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image4_200_302.png" alt="Good Food" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image5_200_302.png" alt="Partner" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image6_200_302.png" alt="Sen Vang" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image7_200_302.png" alt="Thang Long" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image8_200_302.png" alt="Sport Aster" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image9_200_302.png" alt="Ceva Logistics" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image10_200_302.png" alt="Behn Meyer" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image11_200_302.png" alt="Filmor" class="h-8 lg:h-10 w-auto object-contain">
+
+            <!-- Duplicate for loop -->
+            <img src="assets/image0_200_302.png" alt="Intek" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image1_200_302.png" alt="Partner" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image2_200_302.png" alt="Partner" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image3_200_302.png" alt="Air Liquide" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image4_200_302.png" alt="Good Food" class="h-8 lg:h-10 w-auto object-contain">
+            <img src="assets/image5_200_302.png" alt="Partner" class="h-8 lg:h-10 w-auto object-contain">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 4: FOUNDER & MISSION (Exact 1:1 from 4.svg)
+         ======================================================================= -->
+    <section id="founder"
+      class="relative w-full h-screen bg-black text-white overflow-hidden pt-24 lg:pt-32 pb-16 lg:pb-24 flex flex-col justify-between">
+
+      <!-- Fullscreen Founder Background Photo from 4.svg -->
+      <div
+        class="founder-bg absolute inset-0 bg-[url('assets/founder-bg.png')] bg-center bg-cover bg-no-repeat pointer-events-none">
+      </div>
+
+
+      <div class="container-custom relative z-10 w-full h-full flex flex-col justify-between items-start my-auto">
+
+        <!-- Top Left: Founder Name & Title -->
+        <div id="founder-title-block" class="max-w-xl pt-4">
+          <h2
+            class="text-3xl sm:text-4xl lg:text-[54px] font-bold uppercase tracking-tight text-white leading-none m-0">
+            HUYNH THI AI NHU
+          </h2>
+          <p class="text-base sm:text-xl lg:text-[22px] font-normal text-white/90 mt-3 m-0">
+            Founder of INBETWEEN
+          </p>
+        </div>
+
+        <!-- Floating Social Badges from 4.svg (Desktop Absolute Positioning 1:1 with Figma) -->
+        <!-- YouTube Badge (Left) at x: ~14%, y: ~40% -->
+        <div id="founder-badge-yt"
+          class="hidden lg:flex flex-col items-start gap-2.5 absolute z-20 left-[6%] xl:left-[12%] top-[46%] max-w-[200px] text-left group">
+          <div class="w-6 h-6 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+            <img src="assets/social1.svg" alt="YouTube" class="w-6 h-6 object-contain drop-shadow-lg">
+          </div>
+          <p class="text-[12px] text-white/90 leading-snug m-0 font-normal drop-shadow-md">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+          </p>
+        </div>
+
+        <!-- Facebook Badge (Top Right) at x: ~69%, y: ~27% -->
+        <div id="founder-badge-fb"
+          class="hidden lg:flex flex-col items-start gap-2.5 absolute z-20 right-[18%] xl:right-[20%] top-[34%] max-w-[200px] text-left group">
+          <div class="w-6 h-6 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+            <img src="assets/social2.svg" alt="Facebook" class="w-6 h-6 object-contain drop-shadow-lg">
+          </div>
+          <p class="text-[12px] text-white/90 leading-snug m-0 font-normal drop-shadow-md">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+          </p>
+        </div>
+
+        <!-- Instagram Badge (Bottom Right) at x: ~76%, y: ~50% -->
+        <div id="founder-badge-ig"
+          class="hidden lg:flex flex-col items-start gap-2.5 absolute z-20 right-[8%] xl:right-[10%] top-[57%] max-w-[200px] text-left group">
+          <div class="w-6 h-6 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+            <img src="assets/social3.svg" alt="Instagram" class="w-6 h-6 object-contain drop-shadow-lg">
+          </div>
+          <p class="text-[12px] text-white/90 leading-snug m-0 font-normal drop-shadow-md">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+          </p>
+        </div>
+
+        <!-- Mobile / Tablet Responsive Social Badges Grid (< lg) -->
+        <div class="flex lg:hidden flex-col sm:flex-row gap-4 my-8 w-full z-20">
+          <div
+            class="flex items-center gap-3 bg-black/50 backdrop-blur-md p-3.5 rounded-xl border border-white/10 flex-1">
+            <img src="assets/social1.svg" alt="YouTube" class="w-10 h-10 object-contain shrink-0">
+            <p class="text-xs text-white/90 leading-snug m-0">Lorem Ipsum is simply dummy text of the printing and
+              typesetting industry.</p>
+          </div>
+          <div
+            class="flex items-center gap-3 bg-black/50 backdrop-blur-md p-3.5 rounded-xl border border-white/10 flex-1">
+            <img src="assets/social2.svg" alt="Facebook" class="w-10 h-10 object-contain shrink-0">
+            <p class="text-xs text-white/90 leading-snug m-0">Lorem Ipsum is simply dummy text of the printing and
+              typesetting industry.</p>
+          </div>
+          <div
+            class="flex items-center gap-3 bg-black/50 backdrop-blur-md p-3.5 rounded-xl border border-white/10 flex-1">
+            <img src="assets/social3.svg" alt="Instagram" class="w-10 h-10 object-contain shrink-0">
+            <p class="text-xs text-white/90 leading-snug m-0">Lorem Ipsum is simply dummy text of the printing and
+              typesetting industry.</p>
+          </div>
+        </div>
+
+        <!-- Bottom Left: Big Mission Headline -->
+        <div id="founder-mission-slogan" class="max-w-xl pb-4 overflow-hidden">
+          <h2
+            class="text-3xl sm:text-4xl lg:text-[50px] font-bold uppercase tracking-tight text-white leading-tight m-0 flex flex-col gap-2">
+            <div class="flex flex-wrap gap-[10px]">
+              <span class="mission-word inline-block">CONNECTING</span>
+              <span class="mission-word inline-block">PEOPLE</span>
+            </div>
+            <div class="flex flex-wrap gap-[10px]">
+              <span class="mission-word inline-block">IS</span>
+              <span class="mission-word inline-block">OUR</span>
+              <span class="mission-word inline-block">VERY</span>
+              <span class="mission-word inline-block">MISSION</span>
+            </div>
+          </h2>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 5: UPCOMING EVENTS & VIP PREVIEW (Exact 1:1 from 5.svg)
+         ======================================================================= -->
+    <section id="events"
+      class="relative w-full min-h-screen bg-black text-white overflow-hidden py-16 lg:py-12 flex flex-col justify-center">
+
+      <!-- Fullscreen Spotlight Background Photo (image0_200_411) -->
+      <div
+        class="events-bg absolute inset-0 bg-[url('assets/events-bg.png')] bg-center bg-cover bg-no-repeat pointer-events-none">
+      </div>
+
+      <!-- Linear Gradient Overlay for High Legibility on Left Column -->
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-black via-black/85 lg:via-black/75 to-transparent pointer-events-none">
+      </div>
+      <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/60 pointer-events-none">
+      </div>
+
+      <div class="container-custom relative z-10 w-full h-full flex flex-col justify-between my-auto">
+
+        <!-- Header (Center Top) -->
+        <div id="events-header" class="text-center pt-2 mb-12 lg:mb-16">
+          <h2 class="text-3xl sm:text-4xl lg:text-[44px] font-bold tracking-[0.15em] uppercase text-white m-0">
+            UPCOMING EVENTS
+          </h2>
+        </div>
+
+        <!-- VIP Event Information Column (Left Side from 5.svg / Wireframe-4) -->
+        <div id="vip-invitation-box"
+          class="flex flex-col items-center text-center max-w-xl lg:max-w-2xl lg:ml-12 xl:ml-20">
+
+          <span
+            class="text-xs sm:text-sm lg:text-base font-bold uppercase tracking-[0.2em] text-neutral-300 mb-2">PREMIUM
+            EVENT</span>
+
+          <h1
+            class="font-serif text-8xl sm:text-9xl lg:text-[140px] font-normal text-white leading-none tracking-normal m-0 uppercase drop-shadow-lg">
+            VIP
+          </h1>
+
+          <div class="py-2 border-t border-b border-white/60 mb-10 inline-block mt-3 px-2">
+            <p class="font-serif italic font-bold text-3xl sm:text-4xl lg:text-[42px] text-white tracking-wide m-0">
+              Private Preview
+            </p>
+          </div>
+
+          <!-- Date & Time Details (Be Vietnam Pro) -->
+          <div class="space-y-2 mb-10 text-white font-vietnam">
+            <p class="text-xl sm:text-2xl lg:text-[28px] font-semibold tracking-wide text-neutral-200 m-0">Tuesday</p>
+            <p class="text-5xl sm:text-6xl lg:text-[68px] font-bold tracking-tight text-white leading-[1.05] m-0">
+              18.08
+            </p>
+            <p class="text-5xl sm:text-6xl lg:text-[68px] font-bold tracking-tight text-white leading-[1.05] m-0">
+              2026
+            </p>
+            <p class="text-base sm:text-lg lg:text-[20px] text-neutral-300 font-normal tracking-widest m-0 pt-3">
+              9:00AM - 11:30 AM
+            </p>
+          </div>
+
+          <!-- Location (Venue & Address - Be Vietnam Pro) -->
+          <div class="space-y-2 mb-10 text-neutral-200 font-vietnam">
+            <p class="text-2xl sm:text-3xl lg:text-[32px] font-bold text-white m-0 tracking-wide leading-snug">
+              Grand Ballroom - Park Hyatt Saigon
+            </p>
+            <p
+              class="text-base sm:text-lg lg:text-[22px] text-neutral-300 m-0 font-normal tracking-wide leading-relaxed">
+              No.02 Cong Truong Lam Son St, Sai Gon Ward, HCMC
+            </p>
+          </div>
+
+          <!-- Agenda (Be Vietnam Pro) -->
+          <div class="space-y-3 mb-10 text-neutral-200 font-vietnam">
+            <h4 class="text-3xl sm:text-4xl lg:text-[42px] font-bold text-white m-0 mb-4 tracking-wide">
+              Agenda
+            </h4>
+            <p class="text-lg sm:text-xl lg:text-[24px] text-neutral-100 m-0 font-medium tracking-wide">
+              Meeting with special guest
+            </p>
+            <p class="text-lg sm:text-xl lg:text-[24px] text-neutral-100 m-0 font-medium tracking-wide">
+              Having brunch
+            </p>
+            <p class="text-lg sm:text-xl lg:text-[24px] text-neutral-100 m-0 font-medium tracking-wide">
+              Luck Gifts
+            </p>
+          </div>
+
+          <!-- Join Us Button -->
+          <a href="#contact"
+            class="inline-flex items-center justify-center px-12 py-3.5 rounded-full border-2 border-white text-white font-vietnam text-sm sm:text-base font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-all">
+            JOIN US
+          </a>
+
+        </div>
+
+        <div class="hidden lg:block pt-8"></div>
+
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 6: STORIES (Exact 1:1 from 6.svg / Frame 107)
+         ======================================================================= -->
+    <section id="media"
+      class="relative w-full bg-[#F9F9F9] text-black min-h-screen overflow-hidden py-12 flex flex-col justify-center">
+      <div class="container-custom">
+
+        <!-- Header: 3-column flex from Frame 107 -->
+        <div id="stories-header"
+          class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start mb-16 lg:mb-20 pb-8 border-b border-neutral-200">
+
+          <!-- Left: Hear the STORIES -->
+          <div class="md:col-span-5 lg:col-span-4">
+            <h2 class="text-3xl sm:text-4xl lg:text-[38px] font-bold text-black leading-none m-0">
+              Hear the
+            </h2>
+            <div
+              class="text-4xl sm:text-5xl lg:text-[62px] font-serif font-bold text-[#EC460B] uppercase leading-none tracking-tight mt-1.5">
+              STORIES
+            </div>
+          </div>
+
+          <!-- Middle: Description & Be our guest -->
+          <div class="md:col-span-4 lg:col-span-5 flex flex-col items-start pt-2">
+            <p class="text-xs sm:text-sm text-neutral-600 leading-relaxed max-w-sm m-0">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+              industry's standard dummy text ever since 1966.
+            </p>
+            <a href="#contact"
+              class="inline-flex items-center gap-2 border-b border-black pb-1 text-xs font-bold uppercase tracking-widest hover:text-[#EC460B] hover:border-[#EC460B] transition-colors mt-4">
+              BE OUR GUEST <span>→</span>
+            </a>
+          </div>
+
+          <!-- Right: Explore more on Socials -->
+          <div class="md:col-span-3 flex flex-col items-start md:items-end pt-2">
+            <span class="text-xs font-medium text-neutral-600 mb-3 block">Explore more content on</span>
+            <div class="flex items-center gap-3">
+              <a href="#"
+                class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center">
+                <img src="assets/social4.svg" alt="Facebook" class="w-6 h-6">
+              </a>
+              <a href="#"
+                class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center">
+                <img src="assets/social5.svg" alt="Instagram" class="w-6 h-6">
+              </a>
+              <a href="#"
+                class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center">
+                <img src="assets/social6.svg" alt="LinkedIn" class="w-6 h-6">
+              </a>
+              <a href="#"
+                class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center">
+                <img src="assets/social7.svg" alt="TikTok" class="w-6 h-6">
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 4 Story Cards (Staggered: Số lẻ 1 & 3 ở trên, Số chẵn 2 & 4 ở dưới) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 items-start">
+
+          <!-- Story 1 (Ken - Số 1 LẺ - Ở TRÊN) -->
+          <article class="story-card group flex flex-col">
+            <div class="aspect-[297/450] rounded-[22px] overflow-hidden bg-neutral-200 shadow-sm mb-4">
+              <img src="assets/story-1.png" alt="Ken"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            </div>
+            <h3
+              class="text-sm sm:text-base font-bold text-black group-hover:text-[#EC460B] transition-colors leading-snug m-0 uppercase mb-3 min-h-[44px]">
+              HÃY ĐỂ VIỆT NAM ĐƯỢC LÀ VIỆT NAM
+            </h3>
+            <div class="story-toggle-bar flex items-center justify-between pt-1 cursor-pointer select-none"
+              onclick="toggleStoryCard(this)">
+              <div class="flex items-center gap-2 pointer-events-none">
+                <span class="border border-black rounded-full px-3 py-0.5 text-xs font-semibold text-black">Guest</span>
+                <span class="text-sm font-bold text-black">Ken</span>
+              </div>
+              <button type="button"
+                class="story-toggle-btn p-1.5 rounded-full hover:bg-neutral-200 transition-colors focus:outline-none flex items-center justify-center pointer-events-none"
+                aria-label="Toggle Story Info">
+                <svg class="w-4 h-4 text-black story-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+            <!-- Collapsible Drawer (Grid Accordion) -->
+            <div class="story-drawer text-xs text-neutral-600 leading-relaxed font-normal">
+              <div class="story-drawer-inner">
+                <p class="pt-2.5 border-t border-neutral-200 m-0">
+                  Lắng nghe những góc nhìn sâu sắc của Ken về bản sắc văn hóa Việt Nam, tiềm năng phát triển và cơ hội
+                  kết nối cộng đồng sáng tạo quốc tế.
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Story 2 (Hayo Jongejans - Số 2 CHẴN - Ở DƯỚI lg:mt-24) -->
+          <article class="story-card story-stagger-down group flex flex-col lg:mt-24">
+            <div class="aspect-[297/450] rounded-[22px] overflow-hidden bg-neutral-200 shadow-sm mb-4">
+              <img src="assets/story-2.png" alt="Hayo Jongejans"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            </div>
+            <h3
+              class="text-sm sm:text-base font-bold text-black group-hover:text-[#EC460B] transition-colors leading-snug m-0 uppercase mb-3 min-h-[44px]">
+              VIỆT NAM KHIẾN TÔI TRÂN TRỌNG HƠN NHỮNG MỐI QUAN HỆ LÂU DÀI
+            </h3>
+            <div class="story-toggle-bar flex items-center justify-between pt-1 cursor-pointer select-none"
+              onclick="toggleStoryCard(this)">
+              <div class="flex items-center gap-2 pointer-events-none">
+                <span class="border border-black rounded-full px-3 py-0.5 text-xs font-semibold text-black">Guest</span>
+                <span class="text-sm font-bold text-black">Hayo Jongejans</span>
+              </div>
+              <button type="button"
+                class="story-toggle-btn p-1.5 rounded-full hover:bg-neutral-200 transition-colors focus:outline-none flex items-center justify-center pointer-events-none"
+                aria-label="Toggle Story Info">
+                <svg class="w-4 h-4 text-black story-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+            <!-- Collapsible Drawer (Grid Accordion) -->
+            <div class="story-drawer text-xs text-neutral-600 leading-relaxed font-normal">
+              <div class="story-drawer-inner">
+                <p class="pt-2.5 border-t border-neutral-200 m-0">
+                  Hayo Jongejans chia sẻ về hành trình xây dựng các mối quan hệ bền vững và giá trị của sự tin cậy trong
+                  môi trường kinh doanh tại Việt Nam.
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Story 3 (Thuc Doan - Số 3 LẺ - Ở TRÊN) -->
+          <article class="story-card group flex flex-col">
+            <div class="aspect-[297/450] rounded-[22px] overflow-hidden bg-neutral-200 shadow-sm mb-4">
+              <img src="assets/story-3.png" alt="Thuc Doan"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            </div>
+            <h3
+              class="text-sm sm:text-base font-bold text-black group-hover:text-[#EC460B] transition-colors leading-snug m-0 uppercase mb-3 min-h-[44px]">
+              PHÁ SẢN VÌ KHỞI NGHIỆP CO-WORKING SPACE
+            </h3>
+            <div class="story-toggle-bar flex items-center justify-between pt-1 cursor-pointer select-none"
+              onclick="toggleStoryCard(this)">
+              <div class="flex items-center gap-2 pointer-events-none">
+                <span class="border border-black rounded-full px-3 py-0.5 text-xs font-semibold text-black">Guest</span>
+                <span class="text-sm font-bold text-black">Thuc Doan</span>
+              </div>
+              <button type="button"
+                class="story-toggle-btn p-1.5 rounded-full hover:bg-neutral-200 transition-colors focus:outline-none flex items-center justify-center pointer-events-none"
+                aria-label="Toggle Story Info">
+                <svg class="w-4 h-4 text-black story-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+            <!-- Collapsible Drawer (Grid Accordion) -->
+            <div class="story-drawer text-xs text-neutral-600 leading-relaxed font-normal">
+              <div class="story-drawer-inner">
+                <p class="pt-2.5 border-t border-neutral-200 m-0">
+                  Câu chuyện thực chiến, những vấp ngã đắt giá và bài học xương máu khi khởi nghiệp mô hình không gian
+                  làm việc chung (Co-working space).
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Story 4 (Mr. A - Số 4 CHẴN - Ở DƯỚI lg:mt-24) -->
+          <article class="story-card story-stagger-down group flex flex-col lg:mt-24">
+            <div class="aspect-[297/450] rounded-[22px] overflow-hidden bg-neutral-200 shadow-sm mb-4">
+              <img src="assets/story-4.png" alt="Mr. A"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            </div>
+            <h3
+              class="text-sm sm:text-base font-bold text-black group-hover:text-[#EC460B] transition-colors leading-snug m-0 uppercase mb-3 min-h-[44px]">
+              MEDIA TITLE GOES HERE
+            </h3>
+            <div class="story-toggle-bar flex items-center justify-between pt-1 cursor-pointer select-none"
+              onclick="toggleStoryCard(this)">
+              <div class="flex items-center gap-2 pointer-events-none">
+                <span class="border border-black rounded-full px-3 py-0.5 text-xs font-semibold text-black">Guest</span>
+                <span class="text-sm font-bold text-black">Mr. A</span>
+              </div>
+              <button type="button"
+                class="story-toggle-btn p-1.5 rounded-full hover:bg-neutral-200 transition-colors focus:outline-none flex items-center justify-center pointer-events-none"
+                aria-label="Toggle Story Info">
+                <svg class="w-4 h-4 text-black story-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
+            <!-- Collapsible Drawer (Grid Accordion) -->
+            <div class="story-drawer text-xs text-neutral-600 leading-relaxed font-normal">
+              <div class="story-drawer-inner">
+                <p class="pt-2.5 border-t border-neutral-200 m-0">
+                  Khám phá những câu chuyện truyền cảm hứng, góc nhìn đa chiều từ các chuyên gia hàng đầu trong hệ sinh
+                  thái đổi mới sáng tạo INBETWEEN.
+                </p>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 7: MEMBERSHIP / COMMUNITY PACKAGES (Exact 1:1 from 7.svg)
+         ======================================================================= -->
+    <section id="packages"
+      class="relative w-full min-h-screen bg-[#F9F9F9] text-black py-12 flex flex-col justify-center border-t border-neutral-200">
+      <div class="container-custom">
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+
+          <!-- Left Column: Big Title (Fixed / Sticky when scrolling) -->
+          <div id="packages-sticky-header" class="lg:col-span-5 flex flex-col items-start lg:sticky lg:top-32">
+            <h2 class="text-4xl sm:text-5xl lg:text-[56px] font-bold text-black tracking-tight leading-tight m-0">
+              Be a member of<br>
+              <span class="text-[#EC460B]">Our Community</span>
+            </h2>
+          </div>
+
+          <!-- Right Column: Description at Top + 3 Stacked Package Cards (from 7.svg) -->
+          <div class="lg:col-span-7 flex flex-col gap-6 w-full">
+
+            <!-- Description at top of right column (Width 30%) -->
+            <p
+              class="text-xs sm:text-sm text-neutral-600 font-normal leading-relaxed mb-4 max-w-[260px] lg:max-w-[30%] m-0">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+              industry's standard dummy text ever since 1966.
+            </p>
+
+            <!-- Package 1 -->
+            <div
+              class="package-card border border-black rounded-[22px] p-6 sm:p-7 bg-transparent hover:bg-white hover:shadow-xl transition-all flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between pb-2">
+                  <h3 class="text-2xl sm:text-3xl font-bold text-black m-0 tracking-tight">PACKAGE 1</h3>
+                  <span class="text-2xl sm:text-3xl font-bold text-black">$29<span
+                      class="text-base font-normal text-neutral-600">/ Month</span></span>
+                </div>
+                <h4 class="text-base font-bold text-black mt-2 mb-2 m-0">Privilege</h4>
+                <ul class="text-xs sm:text-sm text-neutral-700 space-y-1 pl-4 list-disc m-0">
+                  <li>Lorem Ipsum is simply dummy text of the printing</li>
+                  <li>Lorem Ipsum is simply dummy text of the printing</li>
+                  <li>Lorem Ipsum is simply dummy text of the printing</li>
+                </ul>
+              </div>
+              <div class="flex justify-end mt-4 pt-2">
+                <a href="#contact"
+                  class="inline-flex items-center gap-2 border-b border-black pb-0.5 text-xs font-bold uppercase tracking-wider hover:text-[#EC460B] hover:border-[#EC460B] transition-colors">
+                  BECOME A MEMBER <span>→</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Package 2 -->
+            <div
+              class="package-card border border-black rounded-[22px] p-6 sm:p-7 bg-transparent hover:bg-white hover:shadow-xl transition-all flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between pb-2">
+                  <h3 class="text-2xl sm:text-3xl font-bold text-black m-0 tracking-tight">PACKAGE 2</h3>
+                  <span class="text-2xl sm:text-3xl font-bold text-black">$49<span
+                      class="text-base font-normal text-neutral-600">/ Month</span></span>
+                </div>
+                <h4 class="text-base font-bold text-black mt-2 mb-2 m-0">Privilege</h4>
+                <ul class="text-xs sm:text-sm text-neutral-700 space-y-1 pl-4 list-disc m-0">
+                  <li>Lorem Ipsum is simply dummy text of the printing</li>
+                  <li>Lorem Ipsum is simply dummy text of the printing</li>
+                  <li>Lorem Ipsum is simply dummy text of the printing</li>
+                </ul>
+              </div>
+              <div class="flex justify-end mt-4 pt-2">
+                <a href="#contact"
+                  class="inline-flex items-center gap-2 border-b border-black pb-0.5 text-xs font-bold uppercase tracking-wider hover:text-[#EC460B] hover:border-[#EC460B] transition-colors">
+                  BECOME A MEMBER <span>→</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Package 3 -->
+            <div
+              class="package-card border border-black rounded-[22px] p-6 sm:p-7 bg-transparent hover:bg-white hover:shadow-xl transition-all flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between pb-2">
+                  <h3 class="text-2xl sm:text-3xl font-bold text-black m-0 tracking-tight">PACKAGE 3</h3>
+                  <span class="text-2xl sm:text-3xl font-bold text-black">$69<span
+                      class="text-base font-normal text-neutral-600">/ Month</span></span>
+                </div>
+                <h4 class="text-base font-bold text-black mt-2 mb-2 m-0">Privilege</h4>
+                <ul class="text-xs sm:text-sm text-neutral-700 space-y-1 pl-4 list-disc m-0">
+                  <li>Lorem Ipsum is simply dummy text of the printing</li>
+                  <li>Lorem Ipsum is simply dummy text of the printing</li>
+                  <li>Lorem Ipsum is simply dummy text of the printing</li>
+                </ul>
+              </div>
+              <div class="flex justify-end mt-4 pt-2">
+                <a href="#contact"
+                  class="inline-flex items-center gap-2 border-b border-black pb-0.5 text-xs font-bold uppercase tracking-wider hover:text-[#EC460B] hover:border-[#EC460B] transition-colors">
+                  BECOME A MEMBER <span>→</span>
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         SECTION 8: ONE NETWORK. ENDLESS POSSIBILITIES & FOOTER (Exact 1:1 from 8.svg)
+         ======================================================================= -->
+    <footer id="contact"
+      class="relative w-full min-h-screen bg-black text-white overflow-hidden flex flex-col justify-between">
+
+      <!-- Top Giant Statement Banner from 8.svg -->
+      <div id="brand-statement-banner"
+        class="border-b border-white/15 py-16 lg:py-24 px-6 sm:px-12 flex justify-center items-center">
+        <div
+          class="w-fit mx-auto font-black uppercase tracking-tight text-white leading-[0.95] text-5xl sm:text-7xl lg:text-[96px]">
+
+          <!-- Line 1: ONE -->
+          <div>ONE</div>
+
+          <!-- 2-Column Grid to lock ENDLESS and POSSIBILITIES into the exact same column -->
+          <div class="grid grid-cols-1 sm:grid-cols-[auto_auto] items-baseline gap-x-6 sm:gap-x-12">
+
+            <!-- Row 2 Left: NETWORK + Orange Dot -->
+            <div class="flex items-center justify-between sm:justify-start gap-4 sm:gap-6 my-1 sm:my-2">
+              <span>NETWORK</span>
+              <span class="w-3.5 h-3.5 sm:w-5 sm:h-5 rounded-full bg-[#EC460B] shrink-0"></span>
+            </div>
+
+            <!-- Row 2 Right: ENDLESS -->
+            <div class="my-1 sm:my-2">
+              <span>ENDLESS</span>
+            </div>
+
+            <!-- Row 3 Left: Small Description Paragraph -->
+            <div class="self-end pb-2 sm:pb-3">
+              <p
+                class="text-[10px] sm:text-[12px] font-light uppercase tracking-widest text-neutral-400 leading-[1.8] m-0 max-w-[320px]">
+                WE CONNECT PEOPLE, TALENT, AND<br class="hidden sm:inline">
+                BUSINESSES ACROSS BORDERS TO CREATE<br class="hidden sm:inline">
+                LASTING OPPORTUNITIES.
+              </p>
+            </div>
+
+            <!-- Row 3 Right: POSSIBILITIES (100% aligned under ENDLESS) -->
+            <div>
+              <span>POSSIBILITIES</span>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Footer Navigation & Brand from 8.svg -->
+      <div class="py-16 lg:py-20">
+        <div class="container-custom">
+
+          <!-- Footer Row 1: Logo (Left) & Action Links LET'S CONNECT / JOIN COMMUNITY (Right) -->
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-10 lg:pb-12">
+            <!-- Logo Brand -->
+            <div>
+              <img src="assets/logo-footer.svg" alt="in • between" class="h-10 lg:h-12 w-auto object-contain">
+            </div>
+
+            <!-- Action Links in 1 Row -->
+            <div class="flex flex-wrap items-center gap-8 sm:gap-12">
+              <a href="#contact"
+                class="min-w-[150px] sm:min-w-[170px] border-b border-white pb-1.5 flex items-center justify-between text-xs sm:text-sm font-bold tracking-widest uppercase hover:text-[#EC460B] hover:border-[#EC460B] transition-colors">
+                <span>LET'S CONNECT</span>
+                <span class="text-sm font-normal">→</span>
+              </a>
+              <a href="#packages"
+                class="min-w-[150px] sm:min-w-[170px] border-b border-white pb-1.5 flex items-center justify-between text-xs sm:text-sm font-bold tracking-widest uppercase hover:text-[#EC460B] hover:border-[#EC460B] transition-colors">
+                <span>JOIN COMMUNITY</span>
+                <span class="text-sm font-normal">→</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Footer Row 2: 3 Columns (Contact for work, Quick links, Explore more on / Copyright) -->
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start pt-10 lg:pt-12">
+
+            <!-- Col 1: Contact for work -->
+            <div class="md:col-span-4 lg:col-span-4">
+              <p class="text-xs text-neutral-400 mb-2.5 m-0 font-normal">Contact for work</p>
+              <p class="text-sm font-bold text-white mb-1 m-0">P: 0909 999 999</p>
+              <p class="text-sm font-bold text-white m-0">E: inbetween.asia@gmail.com</p>
+            </div>
+
+            <!-- Col 2: Quick links -->
+            <div class="md:col-span-4 lg:col-span-4">
+              <p class="text-xs text-neutral-400 mb-2.5 m-0 font-normal">Quick links</p>
+              <div class="grid grid-cols-2 gap-x-8 gap-y-2.5 text-sm font-semibold text-white">
+                <a href="#about" class="hover:text-[#EC460B] transition-colors">About Us</a>
+                <a href="#media" class="hover:text-[#EC460B] transition-colors">Media</a>
+                <a href="#events" class="hover:text-[#EC460B] transition-colors">Events</a>
+                <a href="#packages" class="hover:text-[#EC460B] transition-colors">Community</a>
+              </div>
+            </div>
+
+            <!-- Col 3: Explore more on & Copyright -->
+            <div class="md:col-span-4 lg:col-span-4 flex flex-col items-start md:items-end">
+              <p class="text-xs text-neutral-400 mb-3 m-0 font-normal">Explore more on</p>
+              <div class="flex items-center gap-3 mb-4">
+                <a href="#"
+                  class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center">
+                  <img src="assets/social8.svg" alt="Facebook" class="w-6 h-6">
+                </a>
+                <a href="#"
+                  class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center">
+                  <img src="assets/social9.svg" alt="Instagram" class="w-6 h-6">
+                </a>
+                <a href="#"
+                  class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center">
+                  <img src="assets/social10.svg" alt="LinkedIn" class="w-6 h-6">
+                </a>
+                <a href="#"
+                  class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center">
+                  <img src="assets/social11.svg" alt="TikTok" class="w-6 h-6">
+                </a>
+              </div>
+              <p class="text-[11px] text-neutral-400 m-0">Copyright belong to INBETWEEN</p>
+              <p class="text-[11px] text-neutral-500 m-0">Powered by AIM AGENCY</p>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- =========================================================================
+       SUBMIT FORM DRAWER MODAL (Exact 1:1 from SUBMIT FORM.svg)
+       ========================================================================= -->
+  <div id="contact-drawer-overlay"
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300"></div>
+
+  <aside id="contact-drawer"
+    class="fixed top-0 right-0 bottom-0 w-full max-w-[420px] bg-white text-black z-50 shadow-2xl border-l border-[#B9B9B9] p-8 overflow-y-auto transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between">
+    <div>
+      <!-- Header with Close Button -->
+      <div class="flex items-start justify-between mb-6 pb-2">
+        <div>
+          <h3 class="text-lg sm:text-xl font-bold text-black m-0 tracking-tight">Let's build a community together</h3>
+          <p class="text-xs text-neutral-500 mt-1 m-0 font-normal">Leave us your information, we will reply immediately.
+          </p>
+        </div>
+        <button id="close-drawer-btn"
+          class="w-8 h-8 rounded border border-neutral-300 flex items-center justify-center text-neutral-500 hover:text-black hover:border-black transition-colors shrink-0 ml-3">
+          ✕
+        </button>
+      </div>
+
+      <!-- Form Inputs matching SUBMIT FORM.svg -->
+      <form id="drawer-form" class="space-y-4"
+        onsubmit="event.preventDefault(); alert('Cảm ơn bạn đã gửi thông tin! Chúng tôi sẽ liên hệ sớm nhất.'); closeDrawer();">
+        <div>
+          <input type="text" placeholder="Full Name" required
+            class="w-full border border-[#393939] rounded-[6px] px-3.5 py-2.5 text-xs text-black placeholder:text-[#8B8B8B] focus:outline-none focus:border-[#EC460B]">
+        </div>
+        <div>
+          <input type="tel" placeholder="Phone number" required
+            class="w-full border border-[#393939] rounded-[6px] px-3.5 py-2.5 text-xs text-black placeholder:text-[#8B8B8B] focus:outline-none focus:border-[#EC460B]">
+        </div>
+        <div>
+          <input type="text" placeholder="Company"
+            class="w-full border border-[#393939] rounded-[6px] px-3.5 py-2.5 text-xs text-black placeholder:text-[#8B8B8B] focus:outline-none focus:border-[#EC460B]">
+        </div>
+        <div>
+          <input type="text" placeholder="Website | Social link"
+            class="w-full border border-[#393939] rounded-[6px] px-3.5 py-2.5 text-xs text-black placeholder:text-[#8B8B8B] focus:outline-none focus:border-[#EC460B]">
+        </div>
+        <div>
+          <textarea rows="5" placeholder="Tell us more about yourself"
+            class="w-full border border-[#393939] rounded-[6px] px-3.5 py-2.5 text-xs text-black placeholder:text-[#8B8B8B] focus:outline-none focus:border-[#EC460B] resize-none"></textarea>
+        </div>
+
+        <button type="submit"
+          class="w-full flex items-center justify-between border-b border-black pb-2 text-xs font-bold uppercase tracking-wider text-black hover:text-[#EC460B] hover:border-[#EC460B] transition-colors pt-2">
+          <span>SUBMIT</span>
+          <span>→</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Bottom Contact Info from SUBMIT FORM.svg -->
+    <div class="pt-8 mt-6 border-t border-neutral-100">
+      <p class="text-[11px] uppercase tracking-wider text-neutral-400 font-semibold m-0">Contact for work</p>
+      <p class="text-sm font-bold text-black mt-1 mb-0.5 m-0">P: 0909 999 999</p>
+      <p class="text-sm font-bold text-black underline m-0">E: inbetween.asia@gmail.com</p>
+
+      <p class="text-[11px] uppercase tracking-wider text-neutral-400 font-semibold mt-4 mb-2 m-0">Explore more content
+      </p>
+      <div class="flex items-center gap-3">
+        <a href="#" class="w-7 h-7 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center">
+          <img src="assets/social4.svg" alt="Facebook" class="w-5 h-5">
+        </a>
+        <a href="#" class="w-7 h-7 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center">
+          <img src="assets/social5.svg" alt="Instagram" class="w-5 h-5">
+        </a>
+        <a href="#" class="w-7 h-7 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center">
+          <img src="assets/social6.svg" alt="LinkedIn" class="w-5 h-5">
+        </a>
+        <a href="#" class="w-7 h-7 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center">
+          <img src="assets/social7.svg" alt="TikTok" class="w-5 h-5">
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       SCRIPTS: GSAP + ScrollTrigger + Master Animations
+       ========================================================================= -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+
+</body>
+
+</html>

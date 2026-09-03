@@ -1,0 +1,514 @@
+/* ==========================================================================
+   Custom Fonts (@font-face)
+   ========================================================================== */
+@font-face {
+  font-family: "SVN-Gilroy";
+  src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SVN-Gilroy";
+  src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SVN-Gilroy";
+  src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SVN-Gilroy";
+  src: url("./assets/font/SVN-Gilroy/SVN-Gilroy SemiBold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SVN-Gilroy";
+  src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SVN-Gilroy";
+  src: url("./assets/font/SVN-Gilroy/SVN-Gilroy XBold.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SVN-Gilroy";
+  src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Heavy.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Beautique Display";
+  src: local("Beautique Display");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Oai Brovile";
+  src: url("./assets/font/Brovile/OAI-BROVILE.TTF") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* ==========================================================================
+   Header Dynamic Theme & Glassmorphism
+   ========================================================================== */
+#site-header {
+  transition: background-color 0.3s ease, border-color 0.3s ease, padding 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease;
+}
+
+#site-header.header-scrolled {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  background-color: rgba(5, 5, 5, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#site-header.header-scrolled.header-light {
+  background-color: rgba(249, 249, 249, 0.92);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Header Light Mode Elements (When over light sections: #about, #media, #packages, #contact) */
+#site-header.header-light .nav-link {
+  color: #111111;
+}
+#site-header.header-light .nav-link:hover {
+  color: #EC460B;
+}
+
+#site-header.header-light .pill-btn-white {
+  background-color: #111111;
+  color: #ffffff;
+  border-color: #111111;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+#site-header.header-light .pill-btn-white:hover {
+  background-color: #EC460B;
+  border-color: #EC460B;
+  color: #ffffff;
+}
+
+#site-header.header-light .cta-link {
+  color: #111111;
+  border-bottom-color: #111111;
+}
+#site-header.header-light .cta-link:hover {
+  color: #EC460B;
+  border-bottom-color: #EC460B;
+}
+
+#site-header.header-light #mobile-menu-btn {
+  color: #111111;
+}
+#site-header.header-light #mobile-menu-btn:hover {
+  color: #EC460B;
+}
+
+/* ==========================================================================
+   Hero Section & Background (100vh, 1/2 Black Top, 1/2 Orange Bottom)
+   ========================================================================== */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url("assets/hero-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center top;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ==========================================================================
+   Hero Concentric Orbits (Figma: Soft Light + Water Ripple Effect)
+   ========================================================================== */
+.hero-orbits-wrapper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: soft-light;
+}
+
+.orbits-left,
+.orbits-right {
+  mix-blend-mode: soft-light;
+}
+
+.hero-orbit {
+  position: absolute;
+  width: 649px;
+  height: 649px;
+  top: 50%;
+  margin-top: -324.5px;
+  border-radius: 50%;
+  mix-blend-mode: soft-light !important;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.orbit-left {
+  left: calc(50% - 649px);
+  background-image: url("assets/orbit-left.svg");
+  transform-origin: center center;
+}
+
+.orbit-right {
+  left: 50%;
+  background-image: url("assets/orbit-right.svg");
+  transform-origin: center center;
+}
+
+/* ==========================================================================
+   Water Ripple: Lan tỏa sóng nước từ tâm ra ngoài (Staggered Wave)
+   ========================================================================== */
+
+/* Left Orbits Wave (Base: 180deg) */
+@keyframes waterRippleLeft {
+  0% {
+    transform: rotate(180deg) scale(0.8);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: rotate(180deg) scale(1.25);
+    opacity: 0;
+  }
+}
+
+/* Right Orbits Wave (Base: 0deg) */
+@keyframes waterRippleRight {
+  0% {
+    transform: rotate(0deg) scale(0.8);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: rotate(0deg) scale(1.25);
+    opacity: 0;
+  }
+}
+
+/* Lan tỏa sóng nước đa tầng (Chu kỳ 6s, mỗi vòng trễ đều 2s bung nở liên tục) */
+.orbit-left.orbit-1 {
+  animation: waterRippleLeft 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+  animation-delay: 0s;
+}
+
+.orbit-left.orbit-2 {
+  animation: waterRippleLeft 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+  animation-delay: 2s;
+}
+
+.orbit-left.orbit-3 {
+  animation: waterRippleLeft 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+  animation-delay: 4s;
+}
+
+.orbit-right.orbit-1 {
+  animation: waterRippleRight 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+  animation-delay: 0s;
+}
+
+.orbit-right.orbit-2 {
+  animation: waterRippleRight 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+  animation-delay: 2s;
+}
+
+.orbit-right.orbit-3 {
+  animation: waterRippleRight 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+  animation-delay: 4s;
+}
+
+@media (max-width: 1024px) {
+  .hero-orbit {
+    width: 440px;
+    height: 440px;
+    top: 50%;
+    margin-top: -220px;
+  }
+
+  .orbit-left {
+    left: calc(50% - 440px);
+  }
+  .orbit-right {
+    left: 50%;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-orbit {
+    width: 280px;
+    height: 280px;
+    top: 50%;
+    margin-top: -140px;
+  }
+
+  .orbit-left {
+    left: calc(50% - 280px);
+  }
+  .orbit-right {
+    left: 50%;
+  }
+}
+
+/* ==========================================================================
+   Header Glassmorphism on Scroll
+   ========================================================================== */
+#site-header.header-scrolled {
+  background-color: rgba(8, 8, 10, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================================================
+   Global Animations & Reveal Effects (GSAP Managed)
+   ========================================================================== */
+.reveal {
+  will-change: transform, opacity;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 32s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ==========================================================================
+   Shutter Box Wooden Slat Reveal Effect
+   ========================================================================== */
+.shutter-box {
+  position: relative;
+  overflow: hidden;
+  will-change: transform, clip-path, opacity;
+  padding: 4px 0;
+}
+
+/* ==========================================================================
+   Decorative Community Wall Images (TYPE C: Art Collage)
+   ========================================================================== */
+.wall-image {
+  position: absolute;
+  border-radius: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  will-change: transform, opacity;
+}
+
+.wall-1 {
+  left: 8%;
+  top: 11%;
+  width: 221px;
+  height: 279px;
+  background-image: url("assets/wall-1.png");
+}
+
+.wall-2 {
+  left: 28%;
+  top: 0;
+  width: 185px;
+  height: 233px;
+  opacity: 0.5;
+  background-image: url("assets/wall-2.png");
+}
+
+.wall-3 {
+  left: 34%;
+  top: 65%;
+  width: 111px;
+  height: 141px;
+  opacity: 0.3;
+  background-image: url("assets/wall-3.png");
+}
+
+.wall-4 {
+  left: 54%;
+  top: 11%;
+  width: 111px;
+  height: 141px;
+  opacity: 0.3;
+  background-image: url("assets/wall-4.png");
+}
+
+.wall-5 {
+  left: 51%;
+  top: 69%;
+  width: 153px;
+  height: 195px;
+  opacity: 0.5;
+  background-image: url("assets/wall-5.png");
+}
+
+.wall-6 {
+  left: 68%;
+  top: 52%;
+  width: 203px;
+  height: 259px;
+  opacity: 0.7;
+  background-image: url("assets/wall-6.png");
+}
+
+.wall-7 {
+  left: 73%;
+  top: -2%;
+  width: 265px;
+  height: 339px;
+  background-image: url("assets/wall-7.png");
+}
+
+.wall-8 {
+  left: 87%;
+  top: 44%;
+  width: 209px;
+  height: 267px;
+  background-image: url("assets/wall-8.png");
+}
+
+.wall-9 {
+  left: 16%;
+  top: 52%;
+  width: 157px;
+  height: 199px;
+  opacity: 0.5;
+  background-image: url("assets/wall-9.png");
+}
+
+.wall-10 {
+  left: -4%;
+  top: 51%;
+  width: 283px;
+  height: 358px;
+  background-image: url("assets/wall-10.png");
+}
+
+@media (max-width: 768px) {
+  .wall-image {
+    transform: scale(0.65);
+    transform-origin: center;
+  }
+}
+
+.perspective-stage {
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+.card-video {
+  pointer-events: none;
+  object-fit: cover;
+  transform: translateZ(0);
+}
+
+.statement-card {
+  will-change: transform, opacity;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+}
+
+.statement-card:hover {
+  transform: translateY(-6px) scale(1.03) translateZ(20px);
+}
+
+/* ==========================================================================
+   Section 6: Story Cards & Interactive Drawer Toggle
+   ========================================================================== */
+.story-card {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.story-drawer {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  overflow: hidden;
+  transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin-top 0.3s ease;
+  margin-top: 0;
+}
+
+.story-drawer-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.story-card.is-open .story-drawer {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-top: 0.75rem;
+}
+
+.story-chevron {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center center;
+}
+
+.story-card.is-open .story-chevron {
+  transform: rotate(180deg);
+}
+
+@media (min-width: 1024px) {
+  .story-stagger-down {
+    margin-top: 5.5rem !important;
+  }
+}
+
+
+
+/* ==========================================================================
+   Accessibility: Reduced Motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}

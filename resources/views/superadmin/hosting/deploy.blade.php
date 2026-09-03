@@ -29,6 +29,9 @@
                 <li><span class="font-semibold text-gray-600">Profile:</span> {{ $profile->name }}</li>
                 <li><span class="font-semibold text-gray-600">Panel:</span> {{ ucfirst($profile->panel_type) }}</li>
                 <li><span class="font-semibold text-gray-600">Domain:</span> <a href="https://{{ $project->external_domain ?? $profile->domain }}" target="_blank" class="text-blue-500">{{ $project->external_domain ?? $profile->domain }}</a></li>
+                @if($latestHistory && $latestHistory->server_ip)
+                    <li><span class="font-semibold text-gray-600">Server IP:</span> <span class="bg-gray-100 text-gray-800 px-2 py-0.5 rounded text-xs select-all">{{ $latestHistory->server_ip }}</span></li>
+                @endif
                 <li><span class="font-semibold text-gray-600">Path:</span> {{ $profile->public_html_path }}</li>
                 <li><span class="font-semibold text-gray-600">Last Deploy:</span> 
                     @if($latestHistory)

@@ -8,7 +8,7 @@
     $baseUrl     = $projectCode ? "/{$projectCode}/admin" : '/admin';
 
     $widgetAreas = [
-        'homepage-main' => ['label' => 'Trang chủ', 'icon' => 'home'],
+        'homepage-main'  => ['label' => 'Trang chủ', 'icon' => 'home'],
         'sidebar'        => ['label' => 'Sidebar', 'icon' => 'view-list'],
         'footer'         => ['label' => 'Footer', 'icon' => 'template'],
         'blog-sidebar'   => ['label' => 'Blog Sidebar', 'icon' => 'document-text'],
@@ -936,13 +936,15 @@
                     '<link rel="stylesheet" href="/theme/libs/flickity/flickity.min.css">' +
                     '<link rel="stylesheet" href="/theme/libs/jarallax/jarallax.min.css">' +
                     '<link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:300,300i,400,400i,500,500i&display=swap" rel="stylesheet">' +
-                    '<link href="/theme/css/app.min.css" rel="stylesheet" type="text/css" />';
+                    '<link href="/theme/css/app.min.css" rel="stylesheet" type="text/css" />' + 
+                    '<link href="/themes/inbetween/style.css" rel="stylesheet" type="text/css" />';
 
                 var themeScripts = '<script src="/theme/libs/jquery/jquery.min.js"><\/script>' +
                     '<script src="/theme/libs/jarallax/jarallax.min.js"><\/script>' +
                     '<script src="/theme/libs/swiper/swiper-bundle.min.js"><\/script>' +
                     '<script src="/theme/libs/flickity/flickity.pkgd.min.js"><\/script>' +
                     '<script src="/theme/libs/bootstrap/js/bootstrap.bundle.min.js"><\/script>' +
+                    '<script src="/themes/inbetween/script.js"><\/script>' +
                     '<script>' +
                     '  setTimeout(function() {' +
                     '    try {' +

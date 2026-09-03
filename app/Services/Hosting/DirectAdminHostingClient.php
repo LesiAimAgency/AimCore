@@ -91,4 +91,14 @@ class DirectAdminHostingClient implements HostingClientInterface
     {
         throw new \Exception('DirectAdmin saveFileContent via API is not fully supported yet.');
     }
+
+    public function createDomain(string $domain, string $documentRoot): bool
+    {
+        throw new \Exception('DirectAdmin createDomain via API is not fully supported yet.');
+    }
+
+    public function getServerIp(): string
+    {
+        throw new \Exception('DirectAdmin getServerIp via API is not fully supported yet.');
+    }
 }

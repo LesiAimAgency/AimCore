@@ -43,9 +43,33 @@ class WidgetController extends Controller
             }
         }
 
-        $existingWidgets = Widget::orderBy('area')
-            ->orderBy('sort_order')
-            ->get()
+        // Check if we're in project context
+        $projectCode = request()->route('projectCode');
+        $currentProject = null;
+        $tenantId = null;
+
+        if ($projectCode) {
+            $currentProject = Project::where('code', $projectCode)->first();
+            if ($currentProject) {
+                $tenantId = $currentProject->id;
+            }
+        } else {
+            $sessionProject = session('current_project');
+            if (\is_array($sessionProject)) {
+                $tenantId = $sessionProject['id'] ?? null;
+            } elseif (\is_object($sessionProject)) {
+                $tenantId = $sessionProject->id ?? null;
+            }
+        }
+
+        $query = Widget::orderBy('area')->orderBy('sort_order');
+        if ($tenantId) {
+            $query->where(function ($q) use ($tenantId) {
+                $q->where('tenant_id', $tenantId)->orWhereNull('tenant_id');
+            });
+        }
+
+        $existingWidgets = $query->get()
             ->groupBy('area')
             ->map(fn ($widgets) => $widgets->map(fn ($w) => [
                 'id' => $w->id,
@@ -61,21 +85,6 @@ class WidgetController extends Controller
         // Get only accessible widgets for current user
         $permissionService = new WidgetPermissionService;
         $availableWidgets = $permissionService->getAccessibleWidgetsByCategory($user);
-
-        // Debug: dd available widgets
-        // dd([
-        //     'availableWidgets' => $availableWidgets,
-        //     'count' => count($availableWidgets),
-        //     'user' => $user ? ['id' => $user->id, 'role' => $user->role] : null,
-        // ]);
-
-        // Check if we're in project context
-        $projectCode = request()->route('projectCode');
-        $currentProject = null;
-
-        if ($projectCode) {
-            $currentProject = Project::where('code', $projectCode)->first();
-        }
 
         $permissionSummary = config('app.env') === 'local' ?
             ['can_manage_widgets' => true, 'can_toggle_widgets' => true, 'accessible_widget_count' => 999, 'total_widget_count' => 999, 'is_super_admin' => true] :

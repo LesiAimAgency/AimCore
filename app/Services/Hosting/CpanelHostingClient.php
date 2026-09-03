@@ -223,4 +223,50 @@ class CpanelHostingClient implements HostingClientInterface
 
         return true;
     }
+
+    public function createDomain(string $domain, string $documentRoot): bool
+    {
+        // Simple heuristic: if domain has more than 1 dot and is not something like .com.vn, it might be a subdomain.
+        // For precision, we can just fetch the main domain or try Addon first.
+        // But since the user specifically requested subdomain support, let's parse it:
+        $parts = explode('.', $domain);
+
+        // If it's something like demo1.aimagency.vn
+        if (count($parts) >= 3 && strlen($parts[count($parts) - 2]) > 3) {
+            $sub = array_shift($parts);
+            $rootdomain = implode('.', $parts);
+
+            try {
+                $this->callUapi('SubDomain', 'addsubdomain', [
+                    'domain' => $sub,
+                    'rootdomain' => $rootdomain,
+                    'dir' => $documentRoot,
+                ], 'POST');
+
+                return true;
+            } catch (\Exception $e) {
+                // If subdomain fails, we can fallback to addon domain below
+            }
+        }
+
+        $subdomain = str_replace('.', '_', $domain);
+        $this->callUapi('AddonDomain', 'addaddon', [
+            'dir' => $documentRoot,
+            'newdomain' => $domain,
+            'subdomain' => $subdomain,
+        ], 'POST');
+
+        return true;
+    }
+
+    public function getServerIp(): string
+    {
+        $data = $this->callUapi('Variables', 'get_user_information');
+
+        if (isset($data['sharedip'])) {
+            return $data['sharedip'];
+        }
+
+        throw new \Exception('Could not retrieve Server IP from cPanel.');
+    }
 }
