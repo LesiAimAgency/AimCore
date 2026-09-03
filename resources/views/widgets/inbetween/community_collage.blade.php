@@ -8,7 +8,7 @@
   <div id="about" class="absolute -top-20"></div>
 
   <!-- Central Inbetween Logo (Moved outside wall to sit above text with z-30) -->
-  <div id="wall-center-logo" class="wall-center-logo absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-[42vw] max-w-[548px] pointer-events-none text-center select-none will-change-transform">
+  <div id="wall-center-logo" class="wall-center-logo absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-[70vw] md:w-[42vw] max-w-[548px] pointer-events-none text-center select-none will-change-transform">
     <img src="{{ $settings['center_logo'] }}" alt="{{ $siteName }}" class="w-full h-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
   </div>
 

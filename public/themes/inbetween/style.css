@@ -402,22 +402,11 @@
     .wall-stage {
       position: relative;
       width: 100%;
+      min-width: 800px;
       max-width: 1440px;
-      height: 900px;
+      aspect-ratio: 1440 / 900;
       margin: 0 auto;
-      overflow: hidden;
-    }
-
-    @media (max-width: 1024px) {
-      .wall-stage {
-        height: 680px;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .wall-stage {
-        height: 540px;
-      }
+      /* Remove overflow hidden so if scaled down it doesn't clip internally */
     }
 
     .floating-card {
