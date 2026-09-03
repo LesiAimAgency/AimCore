@@ -17,7 +17,8 @@ class DatabaseSeeder extends Seeder
             EcommerceSeeder::class,
             ProjectSeeder::class,
             WebsiteConfigSeeder::class,
-            HomepageWidgetsSeeder::class,
+            InbetweenThemeSeeder::class,
+            InbetweenHomepageMainSeeder::class,
         ]);
 
         Schema::enableForeignKeyConstraints();

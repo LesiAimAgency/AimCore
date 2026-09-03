@@ -195,7 +195,7 @@ class InbetweenHomepageMainSeeder extends Seeder
         ];
 
         // Delete old widgets in homepage-main to avoid duplicates
-        Widget::where('tenant_id', $tenantId)->where('area', 'homepage-main')->delete();
+        Widget::where('area', 'homepage-main')->delete();
 
         foreach ($widgets as $order => $widget) {
             Widget::create([
