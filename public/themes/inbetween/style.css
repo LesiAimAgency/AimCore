@@ -401,11 +401,9 @@
        ========================================================================= */
     .wall-stage {
       position: relative;
-      /* Maximize at 85vw/85vh to leave padding for cards overflowing the stage */
-      width: 85vw;
-      height: calc(85vw * 900 / 1440);
-      max-height: 85vh;
-      max-width: calc(85vh * 1440 / 900);
+      /* Container-fluid behavior: scale with screen width without getting constrained by height */
+      width: 90vw;
+      height: calc(90vw * 900 / 1440);
       margin: 0 auto;
     }
 
