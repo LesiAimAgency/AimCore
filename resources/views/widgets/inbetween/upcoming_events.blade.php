@@ -24,7 +24,7 @@
       $dayOfWeek = $date->format('l');
       $title = is_array($event) ? $event['title'] : $event->title;
       $location = is_array($event) ? $event['location'] : $event->location;
-      $img = is_array($event) ? $event['image'] : (isset($event->image_id) ? get_image_url($event->image_id) : asset('themes/inbetween/assets/events-bg.png'));
+      $img = is_array($event) ? $event['image'] : (isset($event->image_id) ? asset($event->image_id) : asset('themes/inbetween/assets/events-bg.png'));
   }
 @endphp
 

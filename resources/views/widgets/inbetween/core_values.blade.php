@@ -114,13 +114,13 @@
         @if(!empty($settings['partners']) && is_array($settings['partners']))
           @foreach($settings['partners'] as $partner)
             @if(!empty($partner['image']))
-              <img src="{{ RvMedia::getImageUrl($partner['image']) }}" alt="Partner" class="h-8 lg:h-10 w-auto object-contain">
+              <img src="{{ asset($partner['image']) }}" alt="Partner" class="h-8 lg:h-10 w-auto object-contain">
             @endif
           @endforeach
           <!-- Duplicate for loop -->
           @foreach($settings['partners'] as $partner)
             @if(!empty($partner['image']))
-              <img src="{{ RvMedia::getImageUrl($partner['image']) }}" alt="Partner" class="h-8 lg:h-10 w-auto object-contain">
+              <img src="{{ asset($partner['image']) }}" alt="Partner" class="h-8 lg:h-10 w-auto object-contain">
             @endif
           @endforeach
         @else

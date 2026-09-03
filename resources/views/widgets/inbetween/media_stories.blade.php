@@ -93,8 +93,8 @@
       
       @foreach($displayPosts as $index => $post)
       @php
-        $img = is_array($post) ? (isset($post['image']) && strpos($post['image'], 'http') !== false ? $post['image'] : \RvMedia::getImageUrl($post['image'] ?? '')) : (isset($post->image) ? get_image_url($post->image) : asset('themes/inbetween/assets/story-'.(($index%4)+1).'.png'));
-        if (empty($img)) $img = asset('themes/inbetween/assets/story-'.(($index%4)+1).'.png');
+        $img = is_array($post) ? (isset($post['image']) && strpos($post['image'], 'http') !== false ? $post['image'] : asset($post['image'] ?? '')) : (isset($post->image) ? asset($post->image) : asset('themes/inbetween/assets/story-'.(($index%4)+1).'.png'));
+        if (empty($img) || str_ends_with($img, '/')) $img = asset('themes/inbetween/assets/story-'.(($index%4)+1).'.png');
         
         $title = is_array($post) ? ($post['title'] ?? '') : ($post->name ?? '');
         $authorName = is_array($post) ? ($post['author_name'] ?? 'Guest') : ($post->author->name ?? 'Guest');
