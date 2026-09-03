@@ -23,7 +23,14 @@ class InbetweenThemeSeeder extends Seeder
             'site_phone' => '0909 999 999',
             'site_email' => 'inbetween.asia@gmail.com',
             
-            'hero_logo' => asset('themes/inbetween/assets/logo.svg'),
+            'site_logo_footer' => 'themes/inbetween/assets/logo-footer.svg',
+            'site_copyright' => 'Copyright belong to INBETWEEN',
+            'site_powered_by' => 'Powered by AIM AGENCY',
+            
+            'footer_brand_statement' => 'ONE NETWORK. ENDLESS POSSIBILITIES.',
+            'footer_brand_subtitle' => 'WE CONNECT PEOPLE, TALENT, AND<br class="hidden sm:inline"> BUSINESSES ACROSS BORDERS TO CREATE<br class="hidden sm:inline"> LASTING OPPORTUNITIES.',
+            
+            'hero_logo' => 'themes/inbetween/assets/logo.svg',
             'hero_subtitle' => 'Cross-border community, media & connection platform|for|Professionals, Founders, Creatives & Organizations',
             
             'community_description' => 'A cross-border network where Professionals, Founders and Creatives collaborate and connect.',
