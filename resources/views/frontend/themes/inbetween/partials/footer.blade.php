@@ -99,10 +99,10 @@
           <div class="flex flex-col items-start">
             <p class="text-xs text-neutral-400 mb-3 m-0 font-normal">Explore more on</p>
             <div class="flex items-center gap-3 mb-4">
-              @if($fb = setting('social_facebook'))<a href="{{ $fb }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social8.svg') }}" alt="Facebook" class="w-6 h-6"></a>@endif
-              @if($ig = setting('social_instagram'))<a href="{{ $ig }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social9.svg') }}" alt="Instagram" class="w-6 h-6"></a>@endif
-              @if($li = setting('social_linkedin'))<a href="{{ $li }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social10.svg') }}" alt="LinkedIn" class="w-6 h-6"></a>@endif
-              @if($tt = setting('social_tiktok'))<a href="{{ $tt }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social11.svg') }}" alt="TikTok" class="w-6 h-6"></a>@endif
+            @if($fb = setting('social_facebook', 'https://facebook.com'))<a href="{{ $fb }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social8.svg') }}" alt="Facebook" class="w-6 h-6"></a>@endif
+            @if($ig = setting('social_instagram', 'https://instagram.com'))<a href="{{ $ig }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social9.svg') }}" alt="Instagram" class="w-6 h-6"></a>@endif
+            @if($li = setting('social_linkedin', 'https://linkedin.com'))<a href="{{ $li }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social10.svg') }}" alt="LinkedIn" class="w-6 h-6"></a>@endif
+            @if($tt = setting('social_tiktok', 'https://tiktok.com'))<a href="{{ $tt }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social11.svg') }}" alt="TikTok" class="w-6 h-6"></a>@endif
             </div>
             <p class="text-[11px] text-neutral-400 m-0">{{ $copyright }}</p>
             <p class="text-[11px] text-neutral-500 m-0">{{ $poweredBy }}</p>
