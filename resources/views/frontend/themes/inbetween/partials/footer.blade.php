@@ -67,7 +67,7 @@
             <span class="text-sm font-normal">→</span>
           </a>
           <a href="#packages" class="min-w-[150px] sm:min-w-[170px] border-b border-white pb-1.5 flex items-center justify-between text-xs sm:text-sm font-bold tracking-widest uppercase hover:text-[#EC460B] hover:border-[#EC460B] transition-colors">
-            <span>JOIN OUR CREW</span>
+            <span>JOIN COMMUNITY</span>
             <span class="text-sm font-normal">→</span>
           </a>
         </div>
@@ -86,7 +86,7 @@
         <!-- Col 2: Quick links -->
         <div class="md:col-span-4 lg:col-span-4">
           <p class="text-xs text-neutral-400 mb-2.5 m-0 font-normal">Quick links</p>
-          <nav class="flex flex-col gap-3 text-sm font-semibold tracking-wide" aria-label="Footer Navigation">
+          <nav class="grid grid-cols-2 gap-y-3 gap-x-8 text-sm font-semibold tracking-wide" aria-label="Footer Navigation">
             <a href="#about" class="hover:text-[#EC460B] transition-colors">About Us</a>
             <a href="#media" class="hover:text-[#EC460B] transition-colors">Media</a>
             <a href="#events" class="hover:text-[#EC460B] transition-colors">Events</a>
@@ -96,15 +96,17 @@
 
         <!-- Col 3: Explore more on & Copyright -->
         <div class="md:col-span-4 lg:col-span-4 flex flex-col items-start md:items-end">
-          <p class="text-xs text-neutral-400 mb-3 m-0 font-normal">Explore more on</p>
-          <div class="flex items-center gap-3 mb-4">
-            @if($fb = setting('social_facebook'))<a href="{{ $fb }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social8.svg') }}" alt="Facebook" class="w-6 h-6"></a>@endif
-            @if($ig = setting('social_instagram'))<a href="{{ $ig }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social9.svg') }}" alt="Instagram" class="w-6 h-6"></a>@endif
-            @if($li = setting('social_linkedin'))<a href="{{ $li }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social10.svg') }}" alt="LinkedIn" class="w-6 h-6"></a>@endif
-            @if($tt = setting('social_tiktok'))<a href="{{ $tt }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social11.svg') }}" alt="TikTok" class="w-6 h-6"></a>@endif
+          <div class="flex flex-col items-start">
+            <p class="text-xs text-neutral-400 mb-3 m-0 font-normal">Explore more on</p>
+            <div class="flex items-center gap-3 mb-4">
+              @if($fb = setting('social_facebook'))<a href="{{ $fb }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social8.svg') }}" alt="Facebook" class="w-6 h-6"></a>@endif
+              @if($ig = setting('social_instagram'))<a href="{{ $ig }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social9.svg') }}" alt="Instagram" class="w-6 h-6"></a>@endif
+              @if($li = setting('social_linkedin'))<a href="{{ $li }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social10.svg') }}" alt="LinkedIn" class="w-6 h-6"></a>@endif
+              @if($tt = setting('social_tiktok'))<a href="{{ $tt }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social11.svg') }}" alt="TikTok" class="w-6 h-6"></a>@endif
+            </div>
+            <p class="text-[11px] text-neutral-400 m-0">{{ $copyright }}</p>
+            <p class="text-[11px] text-neutral-500 m-0">{{ $poweredBy }}</p>
           </div>
-          <p class="text-[11px] text-neutral-400 m-0">{{ $copyright }}</p>
-          <p class="text-[11px] text-neutral-500 m-0">{{ $poweredBy }}</p>
         </div>
 
       </div>
