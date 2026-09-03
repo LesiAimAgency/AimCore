@@ -61,13 +61,13 @@
         </div>
 
         <!-- Action Links in 1 Row -->
-        <div class="flex flex-wrap items-center gap-8 sm:gap-12">
-          <a href="#contact" class="min-w-[150px] sm:min-w-[170px] border-b border-white pb-1.5 flex items-center justify-between text-xs sm:text-sm font-bold tracking-widest uppercase hover:text-[{{ $primaryColor }}] hover:border-[{{ $primaryColor }}] transition-colors">
+        <div class="flex flex-col gap-5 pt-1">
+          <a href="#contact" class="min-w-[150px] sm:min-w-[170px] border-b border-white pb-1.5 flex items-center justify-between text-xs sm:text-sm font-bold tracking-widest uppercase hover:text-[#EC460B] hover:border-[#EC460B] transition-colors">
             <span>LET'S CONNECT</span>
             <span class="text-sm font-normal">→</span>
           </a>
-          <a href="#packages" class="min-w-[150px] sm:min-w-[170px] border-b border-white pb-1.5 flex items-center justify-between text-xs sm:text-sm font-bold tracking-widest uppercase hover:text-[{{ $primaryColor }}] hover:border-[{{ $primaryColor }}] transition-colors">
-            <span>JOIN COMMUNITY</span>
+          <a href="#packages" class="min-w-[150px] sm:min-w-[170px] border-b border-white pb-1.5 flex items-center justify-between text-xs sm:text-sm font-bold tracking-widest uppercase hover:text-[#EC460B] hover:border-[#EC460B] transition-colors">
+            <span>JOIN OUR CREW</span>
             <span class="text-sm font-normal">→</span>
           </a>
         </div>
@@ -86,12 +86,12 @@
         <!-- Col 2: Quick links -->
         <div class="md:col-span-4 lg:col-span-4">
           <p class="text-xs text-neutral-400 mb-2.5 m-0 font-normal">Quick links</p>
-          <div class="grid grid-cols-2 gap-x-8 gap-y-2.5 text-sm font-semibold text-white">
-            <a href="#about" class="hover:text-[{{ $primaryColor }}] transition-colors">About Us</a>
-            <a href="#media" class="hover:text-[{{ $primaryColor }}] transition-colors">Media</a>
-            <a href="#events" class="hover:text-[{{ $primaryColor }}] transition-colors">Events</a>
-            <a href="#packages" class="hover:text-[{{ $primaryColor }}] transition-colors">Community</a>
-          </div>
+          <nav class="flex flex-col gap-3 text-sm font-semibold tracking-wide" aria-label="Footer Navigation">
+            <a href="#about" class="hover:text-[#EC460B] transition-colors">About Us</a>
+            <a href="#media" class="hover:text-[#EC460B] transition-colors">Media</a>
+            <a href="#events" class="hover:text-[#EC460B] transition-colors">Events</a>
+            <a href="#packages" class="hover:text-[#EC460B] transition-colors">Community</a>
+          </nav>
         </div>
 
         <!-- Col 3: Explore more on & Copyright -->
@@ -158,7 +158,7 @@
         <textarea rows="5" placeholder="Tell us more about yourself"
           class="w-full border border-[#393939] rounded-[6px] px-3.5 py-2.5 text-xs text-black placeholder:text-[#8B8B8B] focus:outline-none focus:border-[#EC460B] resize-none"></textarea>
       </div>
-
+      
       <button type="submit"
         class="w-full flex items-center justify-between border-b border-black pb-2 text-xs font-bold uppercase tracking-wider text-black hover:text-[#EC460B] hover:border-[#EC460B] transition-colors pt-2">
         <span>SUBMIT</span>

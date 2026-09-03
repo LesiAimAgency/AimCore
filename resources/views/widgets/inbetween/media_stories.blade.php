@@ -52,7 +52,7 @@
         <h2 class="text-3xl sm:text-4xl lg:text-[38px] font-bold text-black leading-none m-0">
           {!! str_replace('STORIES', '', $settings['title']) !!}
         </h2>
-        <div class="text-4xl sm:text-5xl lg:text-[62px] font-serif font-bold text-[{{ $primaryColor }}] uppercase leading-none tracking-tight mt-1.5">
+        <div class="text-4xl sm:text-5xl lg:text-[62px] font-serif font-bold text-[#EC460B] uppercase leading-none tracking-tight mt-1.5">
           STORIES
         </div>
       </div>
@@ -62,7 +62,7 @@
         <p class="text-xs sm:text-sm text-neutral-600 leading-relaxed max-w-sm m-0">
           {{ $settings['subtitle'] }}
         </p>
-        <a href="{{ $settings['btn_link'] }}" class="inline-flex items-center gap-2 border-b border-black pb-1 text-xs font-bold uppercase tracking-widest hover:text-[{{ $primaryColor }}] hover:border-[{{ $primaryColor }}] transition-colors mt-4">
+        <a href="{{ $settings['btn_link'] }}" class="inline-flex items-center gap-2 border-b border-black pb-1 text-xs font-bold uppercase tracking-widest hover:text-[#EC460B] hover:border-[#EC460B] transition-colors mt-4">
           {{ $settings['btn_text'] }} <span>→</span>
         </a>
       </div>
@@ -108,7 +108,7 @@
         <a href="{{ $url }}" class="aspect-[297/450] rounded-[22px] overflow-hidden bg-neutral-200 shadow-sm mb-4 block">
           <img src="{{ $img }}" alt="{{ $title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
         </a>
-        <h3 class="text-sm sm:text-base font-bold text-black group-hover:text-[{{ $primaryColor }}] transition-colors leading-snug m-0 uppercase mb-3 min-h-[44px]">
+        <h3 class="text-sm sm:text-base font-bold text-black group-hover:text-[#EC460B] transition-colors leading-snug m-0 uppercase mb-3 min-h-[44px]">
           <a href="{{ $url }}">{{ $title }}</a>
         </h3>
         <div class="story-toggle-bar flex items-center justify-between pt-1 cursor-pointer select-none" onclick="toggleStoryCard(this)">

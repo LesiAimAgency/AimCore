@@ -88,11 +88,13 @@ class InbetweenHomepageMainSeeder extends Seeder
                 'name' => '5. Founder Section',
                 'type' => 'inbetween_founder_section',
                 'settings' => [
-                    'title' => 'CONNECTING PEOPLE<br>IS OUR VERY MISSION',
-                    'quote' => '',
-                    'author_name' => 'HUYNH THI AI NHU',
-                    'author_role' => 'Founder of INBETWEEN',
-                    'founder_image' => asset('themes/inbetween/assets/founder-bg.png')
+                    'founder_name' => 'HUYNH THI AI NHU',
+                    'founder_role' => 'Founder of INBETWEEN',
+                    'mission_statement' => 'CONNECTING PEOPLE IS OUR VERY MISSION',
+                    'social_1_text' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+                    'social_2_text' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+                    'social_3_text' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+                    'background_image' => 'themes/inbetween/assets/founder-bg.png'
                 ]
             ],
             6 => [
@@ -119,31 +121,35 @@ class InbetweenHomepageMainSeeder extends Seeder
                 'type' => 'inbetween_media_stories',
                 'settings' => [
                     'title' => 'Hear the STORIES',
+                    'subtitle' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since 1966.',
                     'btn_text' => 'BE OUR GUEST',
                     'btn_link' => '#contact',
-                    'limit' => '4',
                     'manual_stories' => [
                         [
                             'title' => 'HÃY ĐỂ VIỆT NAM ĐƯỢC LÀ VIỆT NAM',
-                            'created_at' => '2024-05-12 10:00:00',
+                            'author_name' => 'Ken',
+                            'description' => 'Lắng nghe những góc nhìn sâu sắc của Ken về bản sắc văn hóa Việt Nam, tiềm năng phát triển và cơ hội kết nối cộng đồng sáng tạo quốc tế.',
                             'image' => 'themes/inbetween/assets/story-1.png',
                             'url' => '#'
                         ],
                         [
                             'title' => 'VIỆT NAM KHIẾN TÔI TRÂN TRỌNG HƠN NHỮNG MỐI QUAN HỆ LÂU DÀI',
-                            'created_at' => '2024-06-20 14:30:00',
+                            'author_name' => 'Hayo Jongejans',
+                            'description' => 'Hayo Jongejans chia sẻ về hành trình xây dựng các mối quan hệ bền vững và giá trị của sự tin cậy trong môi trường kinh doanh tại Việt Nam.',
                             'image' => 'themes/inbetween/assets/story-2.png',
                             'url' => '#'
                         ],
                         [
-                            'title' => 'PHÁ SẢN VÌ KHỞI NGHIỆP CO-WORKING SPACE',
-                            'created_at' => '2024-07-05 09:15:00',
+                            'title' => 'CƠ HỘI NÀO CHO NHỮNG NHÀ SÁNG TẠO TRẺ TẠI VIỆT NAM?',
+                            'author_name' => 'Thảo Nguyễn',
+                            'description' => 'Khám phá những cơ hội và thách thức mà thế hệ trẻ đang đối mặt trên con đường xây dựng sự nghiệp sáng tạo tại Việt Nam.',
                             'image' => 'themes/inbetween/assets/story-3.png',
                             'url' => '#'
                         ],
                         [
-                            'title' => 'MEDIA TITLE GOES HERE',
-                            'created_at' => '2024-08-18 16:45:00',
+                            'title' => 'GIAO THOA VĂN HÓA TRONG KỶ NGUYÊN SỐ',
+                            'author_name' => 'David Trần',
+                            'description' => 'Góc nhìn về sự kết hợp giữa truyền thống và công nghệ hiện đại trong các dự án văn hóa tại Việt Nam và khu vực.',
                             'image' => 'themes/inbetween/assets/story-4.png',
                             'url' => '#'
                         ]
@@ -155,6 +161,7 @@ class InbetweenHomepageMainSeeder extends Seeder
                 'type' => 'inbetween_packages',
                 'settings' => [
                     'title' => 'Be a member of<br><span class="text-[#EC460B]">Our Community</span>',
+                    'subtitle' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since 1966.',
                     'btn_text' => 'BECOME A MEMBER',
                     'btn_link' => '#contact',
                     'packages_list' => [
@@ -162,7 +169,7 @@ class InbetweenHomepageMainSeeder extends Seeder
                             'name' => 'PACKAGE 1',
                             'price' => '$29',
                             'period' => '/ Month',
-                            'description' => '',
+                            'description' => 'Privilege',
                             'features' => "Lorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing",
                             'highlight' => '0'
                         ],
@@ -170,7 +177,7 @@ class InbetweenHomepageMainSeeder extends Seeder
                             'name' => 'PACKAGE 2',
                             'price' => '$49',
                             'period' => '/ Month',
-                            'description' => '',
+                            'description' => 'Privilege',
                             'features' => "Lorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing",
                             'highlight' => '0'
                         ],
@@ -178,7 +185,7 @@ class InbetweenHomepageMainSeeder extends Seeder
                             'name' => 'PACKAGE 3',
                             'price' => '$69',
                             'period' => '/ Month',
-                            'description' => '',
+                            'description' => 'Privilege',
                             'features' => "Lorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing",
                             'highlight' => '0'
                         ]
