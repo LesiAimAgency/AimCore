@@ -51,13 +51,14 @@ class FormSubmissionController extends Controller
         }
 
         // Save to database
-        FormSubmission::create([
+        $submission = FormSubmission::create([
             'form_name' => $formName,
             'data' => $data,
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
             'status' => 'pending',
             'project_id' => $request->input('project_id'),
+            'tenant_id' => $request->input('project_id'),
         ]);
 
         return response()->json(['success' => true, 'message' => 'Đã gửi thành công']);
