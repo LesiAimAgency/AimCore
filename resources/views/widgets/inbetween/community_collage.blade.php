@@ -11,8 +11,10 @@
   <div id="community-wall" class="absolute inset-0 flex items-center justify-center z-10" aria-label="INBETWEEN Community Collage">
     <div class="wall-stage">
       <!-- Central Inbetween Logo (Moved inside wall-stage to scale proportionally with cards) -->
-      <div id="wall-center-logo" class="wall-center-logo absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-[38%] pointer-events-none text-center select-none will-change-transform">
-        <img src="{{ $settings['center_logo'] }}" alt="{{ $siteName }}" class="w-full h-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
+      <div class="absolute inset-0 flex items-center justify-center z-30 pointer-events-none">
+        <div id="wall-center-logo" class="wall-center-logo w-[38%] text-center select-none will-change-transform">
+          <img src="{{ $settings['center_logo'] }}" alt="{{ $siteName }}" class="w-full h-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
+        </div>
       </div>
 
       <div class="floating-card" style="left: 8.61%; top: 11.22%; width: 15.35%; height: 31.0%; z-index: 12; opacity: 0.4;">
