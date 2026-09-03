@@ -136,36 +136,81 @@
     </div>
 
     <!-- Form Inputs matching SUBMIT FORM.svg -->
-    <form id="drawer-form" class="space-y-4"
-      onsubmit="event.preventDefault(); alert('Cảm ơn bạn đã gửi thông tin! Chúng tôi sẽ liên hệ sớm nhất.'); closeDrawer();">
+    <form id="drawer-form" class="space-y-4" onsubmit="submitDrawerForm(event)">
+      <input type="hidden" name="form_name" value="Contact">
       <div>
-        <input type="text" placeholder="Full Name" required
+        <input type="text" name="Full Name" placeholder="Full Name" required
           class="w-full border border-[#393939] rounded-[6px] px-3.5 py-2.5 text-xs text-black placeholder:text-[#8B8B8B] focus:outline-none focus:border-[#EC460B]">
       </div>
       <div>
-        <input type="tel" placeholder="Phone number" required
+        <input type="tel" name="Phone number" placeholder="Phone number" required
           class="w-full border border-[#393939] rounded-[6px] px-3.5 py-2.5 text-xs text-black placeholder:text-[#8B8B8B] focus:outline-none focus:border-[#EC460B]">
       </div>
       <div>
-        <input type="text" placeholder="Company"
+        <input type="text" name="Company" placeholder="Company"
           class="w-full border border-[#393939] rounded-[6px] px-3.5 py-2.5 text-xs text-black placeholder:text-[#8B8B8B] focus:outline-none focus:border-[#EC460B]">
       </div>
       <div>
-        <input type="text" placeholder="Website | Social link"
+        <input type="text" name="Website" placeholder="Website | Social link"
           class="w-full border border-[#393939] rounded-[6px] px-3.5 py-2.5 text-xs text-black placeholder:text-[#8B8B8B] focus:outline-none focus:border-[#EC460B]">
       </div>
       <div>
-        <textarea rows="5" placeholder="Tell us more about yourself"
+        <textarea rows="5" name="Message" placeholder="Tell us more about yourself"
           class="w-full border border-[#393939] rounded-[6px] px-3.5 py-2.5 text-xs text-black placeholder:text-[#8B8B8B] focus:outline-none focus:border-[#EC460B] resize-none"></textarea>
       </div>
       
-      <button type="submit"
-        class="w-full flex items-center justify-between border-b border-black pb-2 text-xs font-bold uppercase tracking-wider text-black hover:text-[#EC460B] hover:border-[#EC460B] transition-colors pt-2">
+      <div id="drawer-form-message" class="hidden text-xs"></div>
+
+      <button type="submit" id="drawer-submit-btn"
+        class="w-full flex items-center justify-between border-b border-black pb-2 text-xs font-bold uppercase tracking-wider text-black hover:text-[#EC460B] hover:border-[#EC460B] transition-colors pt-2 disabled:opacity-50">
         <span>SUBMIT</span>
         <span>→</span>
       </button>
     </form>
   </div>
+
+  <script>
+    async function submitDrawerForm(event) {
+      event.preventDefault();
+      const form = event.target;
+      const submitBtn = document.getElementById('drawer-submit-btn');
+      const msgBox = document.getElementById('drawer-form-message');
+      
+      submitBtn.disabled = true;
+      msgBox.classList.add('hidden');
+      
+      try {
+        const formData = new FormData(form);
+        const response = await fetch('/api/form-submit', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+          }
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          msgBox.textContent = 'Cảm ơn bạn! Thông tin đã được gửi thành công.';
+          msgBox.className = 'text-xs text-green-600 block mb-3';
+          form.reset();
+          setTimeout(() => closeDrawer(), 3000);
+        } else {
+          let errorText = 'Có lỗi xảy ra. ';
+          if (result.error) errorText += result.error;
+          msgBox.textContent = errorText;
+          msgBox.className = 'text-xs text-red-600 block mb-3';
+        }
+      } catch (error) {
+        msgBox.textContent = 'Lỗi kết nối, vui lòng thử lại sau.';
+        msgBox.className = 'text-xs text-red-600 block mb-3';
+      } finally {
+        submitBtn.disabled = false;
+      }
+    }
+  </script>
 
   <!-- Bottom Contact Info from SUBMIT FORM.svg -->
   <div class="pt-8 mt-6 border-t border-neutral-100">

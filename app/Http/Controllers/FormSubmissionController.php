@@ -10,41 +10,45 @@ class FormSubmissionController extends Controller
 {
     public function submit(Request $request)
     {
-        $formName = $request->input('form_name');
+        $formName = $request->input('form_name', 'Contact');
         $forms = json_decode(setting('forms', '[]'), true);
         $form = collect($forms)->firstWhere('name', $formName);
 
-        if (! $form) {
-            return response()->json(['error' => 'Form không tồn tại'], 404);
-        }
-
-        // Build validation rules
-        $rules = [];
-        foreach ($form['fields'] as $field) {
-            $fieldRules = [];
-            if ($field['required']) {
-                $fieldRules[] = 'required';
-            }
-            if ($field['type'] === 'email') {
-                $fieldRules[] = 'email';
-            }
-            if ($field['type'] === 'phone') {
-                $fieldRules[] = 'regex:/^[0-9]{10,11}$/';
-            }
-            $rules[$field['label']] = $fieldRules;
-        }
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        // Sanitize data
         $data = [];
-        foreach ($form['fields'] as $field) {
-            $value = $request->input($field['label']);
-            $data[$field['label']] = strip_tags($value);
+        if (! $form) {
+            // Fallback: If form not defined in CMS, just capture all inputs except internals
+            $inputs = $request->except(['_token', 'form_name']);
+            foreach ($inputs as $key => $value) {
+                $data[$key] = strip_tags($value);
+            }
+        } else {
+            // Build validation rules
+            $rules = [];
+            foreach ($form['fields'] as $field) {
+                $fieldRules = [];
+                if ($field['required']) {
+                    $fieldRules[] = 'required';
+                }
+                if ($field['type'] === 'email') {
+                    $fieldRules[] = 'email';
+                }
+                if ($field['type'] === 'phone') {
+                    $fieldRules[] = 'regex:/^[0-9]{10,11}$/';
+                }
+                $rules[$field['label']] = $fieldRules;
+            }
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+
+            // Sanitize data
+            foreach ($form['fields'] as $field) {
+                $value = $request->input($field['label']);
+                $data[$field['label']] = strip_tags($value);
+            }
         }
 
         // Save to database
