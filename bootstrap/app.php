@@ -53,6 +53,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'admin/media/upload',
             '*/admin/media/upload',
+            'api/form-submit',
+            '*/api/form-submit',
         ]);
 
         // Chỉ áp dụng TenantMiddleware cho các route không phải admin
