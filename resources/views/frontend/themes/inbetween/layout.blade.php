@@ -105,7 +105,7 @@
         });
       });
     })();
-  </script>
+  <script src="{{ asset('themes/inbetween/script.js') }}"></script>
   @stack('scripts')
 </body>
 </html>

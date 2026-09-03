@@ -1,514 +1,628 @@
-/* ==========================================================================
-   Custom Fonts (@font-face)
-   ========================================================================== */
-@font-face {
-  font-family: "SVN-Gilroy";
-  src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Light.otf") format("opentype");
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "SVN-Gilroy";
-  src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Regular.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "SVN-Gilroy";
-  src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Medium.otf") format("opentype");
-  font-weight: 500;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "SVN-Gilroy";
-  src: url("./assets/font/SVN-Gilroy/SVN-Gilroy SemiBold.otf") format("opentype");
-  font-weight: 600;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "SVN-Gilroy";
-  src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Bold.otf") format("opentype");
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "SVN-Gilroy";
-  src: url("./assets/font/SVN-Gilroy/SVN-Gilroy XBold.otf") format("opentype");
-  font-weight: 800;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "SVN-Gilroy";
-  src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Heavy.otf") format("opentype");
-  font-weight: 900;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Beautique Display";
-  src: local("Beautique Display");
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Oai Brovile";
-  src: url("./assets/font/Brovile/OAI-BROVILE.TTF") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-}
-
-/* ==========================================================================
-   Header Dynamic Theme & Glassmorphism
-   ========================================================================== */
-#site-header {
-  transition: background-color 0.3s ease, border-color 0.3s ease, padding 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease;
-}
-
-#site-header.header-scrolled {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  background-color: rgba(5, 5, 5, 0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-#site-header.header-scrolled.header-light {
-  background-color: rgba(249, 249, 249, 0.92);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-}
-
-/* Header Light Mode Elements (When over light sections: #about, #media, #packages, #contact) */
-#site-header.header-light .nav-link {
-  color: #111111;
-}
-#site-header.header-light .nav-link:hover {
-  color: #EC460B;
-}
-
-#site-header.header-light .pill-btn-white {
-  background-color: #111111;
-  color: #ffffff;
-  border-color: #111111;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-}
-#site-header.header-light .pill-btn-white:hover {
-  background-color: #EC460B;
-  border-color: #EC460B;
-  color: #ffffff;
-}
-
-#site-header.header-light .cta-link {
-  color: #111111;
-  border-bottom-color: #111111;
-}
-#site-header.header-light .cta-link:hover {
-  color: #EC460B;
-  border-bottom-color: #EC460B;
-}
-
-#site-header.header-light #mobile-menu-btn {
-  color: #111111;
-}
-#site-header.header-light #mobile-menu-btn:hover {
-  color: #EC460B;
-}
-
-/* ==========================================================================
-   Hero Section & Background (100vh, 1/2 Black Top, 1/2 Orange Bottom)
-   ========================================================================== */
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background-image: url("assets/hero-bg.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center top;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ==========================================================================
-   Hero Concentric Orbits (Figma: Soft Light + Water Ripple Effect)
-   ========================================================================== */
-.hero-orbits-wrapper {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  mix-blend-mode: soft-light;
-}
-
-.orbits-left,
-.orbits-right {
-  mix-blend-mode: soft-light;
-}
-
-.hero-orbit {
-  position: absolute;
-  width: 649px;
-  height: 649px;
-  top: 50%;
-  margin-top: -324.5px;
-  border-radius: 50%;
-  mix-blend-mode: soft-light !important;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  pointer-events: none;
-  will-change: transform, opacity;
-}
-
-.orbit-left {
-  left: calc(50% - 649px);
-  background-image: url("assets/orbit-left.svg");
-  transform-origin: center center;
-}
-
-.orbit-right {
-  left: 50%;
-  background-image: url("assets/orbit-right.svg");
-  transform-origin: center center;
-}
-
-/* ==========================================================================
-   Water Ripple: Lan tỏa sóng nước từ tâm ra ngoài (Staggered Wave)
-   ========================================================================== */
-
-/* Left Orbits Wave (Base: 180deg) */
-@keyframes waterRippleLeft {
-  0% {
-    transform: rotate(180deg) scale(0.8);
-    opacity: 0;
-  }
-
-  20% {
-    opacity: 0.9;
-  }
-
-  100% {
-    transform: rotate(180deg) scale(1.25);
-    opacity: 0;
-  }
-}
-
-/* Right Orbits Wave (Base: 0deg) */
-@keyframes waterRippleRight {
-  0% {
-    transform: rotate(0deg) scale(0.8);
-    opacity: 0;
-  }
-
-  20% {
-    opacity: 0.9;
-  }
-
-  100% {
-    transform: rotate(0deg) scale(1.25);
-    opacity: 0;
-  }
-}
-
-/* Lan tỏa sóng nước đa tầng (Chu kỳ 6s, mỗi vòng trễ đều 2s bung nở liên tục) */
-.orbit-left.orbit-1 {
-  animation: waterRippleLeft 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
-  animation-delay: 0s;
-}
-
-.orbit-left.orbit-2 {
-  animation: waterRippleLeft 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
-  animation-delay: 2s;
-}
-
-.orbit-left.orbit-3 {
-  animation: waterRippleLeft 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
-  animation-delay: 4s;
-}
-
-.orbit-right.orbit-1 {
-  animation: waterRippleRight 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
-  animation-delay: 0s;
-}
-
-.orbit-right.orbit-2 {
-  animation: waterRippleRight 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
-  animation-delay: 2s;
-}
-
-.orbit-right.orbit-3 {
-  animation: waterRippleRight 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
-  animation-delay: 4s;
-}
-
-@media (max-width: 1024px) {
-  .hero-orbit {
-    width: 440px;
-    height: 440px;
-    top: 50%;
-    margin-top: -220px;
-  }
-
-  .orbit-left {
-    left: calc(50% - 440px);
-  }
-  .orbit-right {
-    left: 50%;
-  }
-}
-
-@media (max-width: 640px) {
-  .hero-orbit {
-    width: 280px;
-    height: 280px;
-    top: 50%;
-    margin-top: -140px;
-  }
-
-  .orbit-left {
-    left: calc(50% - 280px);
-  }
-  .orbit-right {
-    left: 50%;
-  }
-}
-
-/* ==========================================================================
-   Header Glassmorphism on Scroll
-   ========================================================================== */
-#site-header.header-scrolled {
-  background-color: rgba(8, 8, 10, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-/* ==========================================================================
-   Global Animations & Reveal Effects (GSAP Managed)
-   ========================================================================== */
-.reveal {
-  will-change: transform, opacity;
-}
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.marquee-track {
-  animation: marquee 32s linear infinite;
-}
-
-.marquee-track:hover {
-  animation-play-state: paused;
-}
-
-/* ==========================================================================
-   Shutter Box Wooden Slat Reveal Effect
-   ========================================================================== */
-.shutter-box {
-  position: relative;
-  overflow: hidden;
-  will-change: transform, clip-path, opacity;
-  padding: 4px 0;
-}
-
-/* ==========================================================================
-   Decorative Community Wall Images (TYPE C: Art Collage)
-   ========================================================================== */
-.wall-image {
-  position: absolute;
-  border-radius: 20px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  will-change: transform, opacity;
-}
-
-.wall-1 {
-  left: 8%;
-  top: 11%;
-  width: 221px;
-  height: 279px;
-  background-image: url("assets/wall-1.png");
-}
-
-.wall-2 {
-  left: 28%;
-  top: 0;
-  width: 185px;
-  height: 233px;
-  opacity: 0.5;
-  background-image: url("assets/wall-2.png");
-}
-
-.wall-3 {
-  left: 34%;
-  top: 65%;
-  width: 111px;
-  height: 141px;
-  opacity: 0.3;
-  background-image: url("assets/wall-3.png");
-}
-
-.wall-4 {
-  left: 54%;
-  top: 11%;
-  width: 111px;
-  height: 141px;
-  opacity: 0.3;
-  background-image: url("assets/wall-4.png");
-}
-
-.wall-5 {
-  left: 51%;
-  top: 69%;
-  width: 153px;
-  height: 195px;
-  opacity: 0.5;
-  background-image: url("assets/wall-5.png");
-}
-
-.wall-6 {
-  left: 68%;
-  top: 52%;
-  width: 203px;
-  height: 259px;
-  opacity: 0.7;
-  background-image: url("assets/wall-6.png");
-}
-
-.wall-7 {
-  left: 73%;
-  top: -2%;
-  width: 265px;
-  height: 339px;
-  background-image: url("assets/wall-7.png");
-}
-
-.wall-8 {
-  left: 87%;
-  top: 44%;
-  width: 209px;
-  height: 267px;
-  background-image: url("assets/wall-8.png");
-}
-
-.wall-9 {
-  left: 16%;
-  top: 52%;
-  width: 157px;
-  height: 199px;
-  opacity: 0.5;
-  background-image: url("assets/wall-9.png");
-}
-
-.wall-10 {
-  left: -4%;
-  top: 51%;
-  width: 283px;
-  height: 358px;
-  background-image: url("assets/wall-10.png");
-}
-
-@media (max-width: 768px) {
-  .wall-image {
-    transform: scale(0.65);
-    transform-origin: center;
-  }
-}
-
-.perspective-stage {
-  perspective: 1200px;
-  perspective-origin: 50% 50%;
-  transform-style: preserve-3d;
-}
-
-.card-video {
-  pointer-events: none;
-  object-fit: cover;
-  transform: translateZ(0);
-}
-
-.statement-card {
-  will-change: transform, opacity;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  transform-style: preserve-3d;
-}
-
-.statement-card:hover {
-  transform: translateY(-6px) scale(1.03) translateZ(20px);
-}
-
-/* ==========================================================================
-   Section 6: Story Cards & Interactive Drawer Toggle
-   ========================================================================== */
-.story-card {
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.story-drawer {
-  display: grid;
-  grid-template-rows: 0fr;
-  opacity: 0;
-  overflow: hidden;
-  transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin-top 0.3s ease;
-  margin-top: 0;
-}
-
-.story-drawer-inner {
-  overflow: hidden;
-  min-height: 0;
-}
-
-.story-card.is-open .story-drawer {
-  grid-template-rows: 1fr;
-  opacity: 1;
-  margin-top: 0.75rem;
-}
-
-.story-chevron {
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  transform-origin: center center;
-}
-
-.story-card.is-open .story-chevron {
-  transform: rotate(180deg);
-}
-
-@media (min-width: 1024px) {
-  .story-stagger-down {
-    margin-top: 5.5rem !important;
-  }
-}
-
-
-
-/* ==========================================================================
-   Accessibility: Reduced Motion
-   ========================================================================== */
-@media (prefers-reduced-motion: reduce) {
-
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation: none !important;
-    transition: none !important;
-  }
-}
+    #sec2-card-1,
+    #sec2-card-2,
+    #sec2-card-3,
+    #sec2-card-4 {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Full SVN-Gilroy Typography System */
+    @font-face {
+      font-family: "SVN-Gilroy";
+      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Light.otf") format("opentype");
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "SVN-Gilroy";
+      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Regular.otf") format("opentype");
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "SVN-Gilroy";
+      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Medium.otf") format("opentype");
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "SVN-Gilroy";
+      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy SemiBold.otf") format("opentype");
+      font-weight: 600;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "SVN-Gilroy";
+      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Bold.otf") format("opentype");
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "SVN-Gilroy";
+      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy XBold.otf") format("opentype");
+      font-weight: 800;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "SVN-Gilroy";
+      src: url("./assets/font/SVN-Gilroy/SVN-Gilroy Heavy.otf") format("opentype");
+      font-weight: 900;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "Oai Brovile";
+      src: url("./assets/font/Brovile/OAI-BROVILE.TTF") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      font-family: 'SVN-Gilroy', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Container Custom */
+    .container-custom {
+      width: 100%;
+      max-width: 1440px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    @media (min-width: 1024px) {
+      .container-custom {
+        padding-left: 72px;
+        padding-right: 72px;
+      }
+    }
+
+    /* =========================================================================
+       HERO SECTION (herosection.svg)
+       ========================================================================= */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url("assets/hero-bg.png");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center top;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-orbits-container {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      mix-blend-mode: soft-light;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .orbit-ring {
+      position: absolute;
+      top: 50%;
+      border-radius: 50%;
+      mix-blend-mode: soft-light;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .orbit-outer {
+      width: 649px;
+      height: 649px;
+      margin-top: -324.5px;
+    }
+
+    .orbit-mid {
+      width: 504px;
+      height: 504px;
+      margin-top: -252px;
+    }
+
+    .orbit-inner {
+      width: 360px;
+      height: 360px;
+      margin-top: -180px;
+    }
+
+    .orbit-left {
+      right: 50%;
+      background-image: url("assets/orbit-left.svg");
+      transform-origin: center center;
+    }
+
+    .orbit-right {
+      left: 50%;
+      background-image: url("assets/orbit-right.svg");
+      transform-origin: center center;
+    }
+
+    @keyframes rippleLeft {
+      0% {
+        transform: rotate(180deg) scale(0.85);
+        opacity: 0;
+      }
+
+      25% {
+        opacity: 0.95;
+      }
+
+      100% {
+        transform: rotate(180deg) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    @keyframes rippleRight {
+      0% {
+        transform: rotate(0deg) scale(0.85);
+        opacity: 0;
+      }
+
+      25% {
+        opacity: 0.95;
+      }
+
+      100% {
+        transform: rotate(0deg) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    .orbit-outer.orbit-left {
+      animation: rippleLeft 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite 0s;
+    }
+
+    .orbit-mid.orbit-left {
+      animation: rippleLeft 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite 2s;
+    }
+
+    .orbit-inner.orbit-left {
+      animation: rippleLeft 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite 4s;
+    }
+
+    .orbit-outer.orbit-right {
+      animation: rippleRight 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite 0s;
+    }
+
+    .orbit-mid.orbit-right {
+      animation: rippleRight 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite 2s;
+    }
+
+    .orbit-inner.orbit-right {
+      animation: rippleRight 6s cubic-bezier(0.2, 0.6, 0.35, 1) infinite 4s;
+    }
+
+    @media (max-width: 1024px) {
+      .orbit-outer {
+        width: 440px;
+        height: 440px;
+        margin-top: -220px;
+      }
+
+      .orbit-mid {
+        width: 340px;
+        height: 340px;
+        margin-top: -170px;
+      }
+
+      .orbit-inner {
+        width: 240px;
+        height: 240px;
+        margin-top: -120px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .orbit-outer {
+        width: 300px;
+        height: 300px;
+        margin-top: -150px;
+      }
+
+      .orbit-mid {
+        width: 230px;
+        height: 230px;
+        margin-top: -115px;
+      }
+
+      .orbit-inner {
+        width: 160px;
+        height: 160px;
+        margin-top: -80px;
+      }
+    }
+
+    /* Navigation & Links */
+    .nav-link {
+      position: relative;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      transition: color 0.3s ease;
+      text-decoration: none;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0%;
+      height: 1.5px;
+      background-color: #EC460B;
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: #ffffff;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .pill-btn-white {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 24px;
+      border-radius: 9999px;
+      background-color: #ffffff !important;
+      color: #000000 !important;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid #ffffff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      text-decoration: none;
+    }
+
+    .pill-btn-white:hover {
+      background-color: #EC460B !important;
+      border-color: #EC460B;
+      color: #ffffff !important;
+      box-shadow: 0 4px 18px rgba(236, 70, 11, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .pill-btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 24px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      background: transparent;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .pill-btn-outline:hover {
+      background-color: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+      box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2);
+    }
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #ffffff;
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 2px;
+      border-bottom: 1.5px solid #ffffff;
+      transition: all 0.3s ease;
+    }
+
+    .cta-link span.arrow {
+      margin-left: 6px;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .cta-link:hover {
+      color: #EC460B;
+      border-bottom-color: #EC460B;
+    }
+
+    .cta-link:hover span.arrow {
+      transform: translate(3px, -3px);
+    }
+
+    .cta-link-dark {
+      display: inline-flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #111111;
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 2px;
+      border-bottom: 1.5px solid #111111;
+      transition: all 0.3s ease;
+    }
+
+    .cta-link-dark span.arrow {
+      margin-left: 6px;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .cta-link-dark:hover {
+      color: #EC460B;
+      border-bottom-color: #EC460B;
+    }
+
+    .cta-link-dark:hover span.arrow {
+      transform: translate(3px, -3px);
+    }
+
+    /* =========================================================================
+       SECTION 1: 1.svg EXACT 3D FLOATING MEDIA COLLAGE
+       ========================================================================= */
+    .wall-stage {
+      position: relative;
+      width: 100%;
+      max-width: 1440px;
+      height: 900px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    @media (max-width: 1024px) {
+      .wall-stage {
+        height: 680px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .wall-stage {
+        height: 540px;
+      }
+    }
+
+    .floating-card {
+      position: absolute;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.8);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+      will-change: transform;
+    }
+
+    .floating-card img {
+      width: 100%;
+      height: 100%;
+      object-cover: cover;
+      display: block;
+    }
+
+    .floating-card:hover {
+      transform: scale(1.06) translateY(-4px);
+      box-shadow: 0 24px 50px rgba(236, 70, 11, 0.35);
+      z-index: 30;
+    }
+
+    /* =========================================================================
+       SECTION 3: 1:1 Overlapping Venn Circles from 3.svg
+       ========================================================================= */
+    .venn-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 1234px;
+      height: 478px;
+      margin: 0 auto;
+    }
+
+    .venn-item {
+      position: absolute;
+      top: 0;
+      width: 478px;
+      height: 478px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .venn-bg {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: linear-gradient(180deg, rgba(255, 231, 218, 0) 0%, #F5AD93 100%);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    .venn-item-1 {
+      left: 0;
+    }
+
+    .venn-item-2 {
+      left: 378px;
+    }
+
+    .venn-item-3 {
+      left: 756px;
+    }
+
+    .venn-plus-sign {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 30;
+      color: #ffffff;
+      font-size: 38px;
+      font-weight: 300;
+      line-height: 1;
+      user-select: none;
+      pointer-events: none;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    }
+
+    .venn-plus-1 {
+      left: 428px;
+    }
+
+    .venn-plus-2 {
+      left: 806px;
+    }
+
+    /* Infinite Marquee */
+    @keyframes marqueeScroll {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* .transition-transform {
+      width: 300px;
+    } */
+
+    /* =========================================================================
+       SECTION 6: STORY CARDS ACCORDION DRAWER
+       ========================================================================= */
+    .story-card {
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .story-drawer {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      overflow: hidden;
+      transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin-top 0.3s ease;
+      margin-top: 0;
+    }
+
+    .story-drawer-inner {
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .story-card.is-open .story-drawer {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      margin-top: 0.75rem;
+    }
+
+    .story-chevron {
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: center center;
+    }
+
+    .story-card.is-open .story-chevron {
+      transform: rotate(180deg);
+    }
+
+    @media (min-width: 1024px) {
+      .story-stagger-down {
+        margin-top: 5.5rem !important;
+      }
+    }
+
+    /* =========================================================================
+       DYNAMIC ADAPTIVE HEADER (Light / Dark Section Detection)
+       ========================================================================= */
+    #site-header {
+      transition: background-color 0.3s ease, border-color 0.3s ease, padding 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    #site-header.header-scrolled {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      background-color: rgba(5, 5, 5, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #site-header.header-scrolled.header-light {
+      background-color: rgba(249, 249, 249, 0.92);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    #site-header.header-light .nav-link {
+      color: #111111 !important;
+    }
+
+    #site-header.header-light .nav-link:hover {
+      color: #EC460B !important;
+    }
+
+    #site-header.header-light .pill-btn-white {
+      background-color: #111111 !important;
+      color: #ffffff !important;
+      border-color: #111111 !important;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    #site-header.header-light .pill-btn-white:hover {
+      background-color: #EC460B !important;
+      border-color: #EC460B !important;
+      color: #ffffff !important;
+    }
+
+    #site-header.header-light .cta-link {
+      color: #111111 !important;
+      border-bottom-color: #111111 !important;
+    }
+
+    #site-header.header-light .cta-link:hover {
+      color: #EC460B !important;
+      border-bottom-color: #EC460B !important;
+    }
+
+    #site-header.header-light #mobile-menu-btn {
+      color: #111111 !important;
+    }
+
+    #site-header.header-light #mobile-menu-btn:hover {
+      color: #EC460B !important;
+    }
