@@ -13,7 +13,7 @@
 
   <!-- Top Giant Statement Banner from 8.svg -->
   <div id="brand-statement-banner" class="border-b border-white/15 py-16 lg:py-24 px-6 sm:px-12 flex justify-center items-center">
-    <div class="w-fit mx-auto font-black uppercase tracking-tight text-white leading-[0.95] text-5xl sm:text-7xl lg:text-[96px]">
+    <div class="w-fit mx-auto font-black uppercase tracking-tight text-white leading-[0.95] text-5xl sm:text-7xl lg:text-[72px] xl:text-[96px]">
 
       <!-- Line 1: ONE -->
       <div>ONE</div>

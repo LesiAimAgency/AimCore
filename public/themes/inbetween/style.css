@@ -401,12 +401,11 @@
        ========================================================================= */
     .wall-stage {
       position: relative;
-      width: 100%;
-      min-width: 800px;
-      max-width: 1440px;
-      aspect-ratio: 1440 / 900;
+      width: 100vw;
+      height: calc(100vw * 900 / 1440);
+      max-height: 100vh;
+      max-width: calc(100vh * 1440 / 900);
       margin: 0 auto;
-      /* Remove overflow hidden so if scaled down it doesn't clip internally */
     }
 
     .floating-card {
