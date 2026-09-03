@@ -109,8 +109,20 @@
       <h3 class="text-sm font-bold uppercase tracking-widest text-black">{{ $settings['partners_title'] }}</h3>
     </div>
 
+    <style>
+      @keyframes marqueeScrollValues {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+      .animate-marquee-values {
+        animation: marqueeScrollValues 20s linear infinite;
+      }
+      .animate-marquee-values:hover {
+        animation-play-state: paused;
+      }
+    </style>
     <div class="overflow-hidden relative py-4">
-      <div class="marquee-track flex w-max shrink-0" style="animation: marqueeScroll 20s linear infinite;">
+      <div class="flex w-max shrink-0 animate-marquee-values">
         <!-- Track 1 -->
         <div class="flex items-center gap-12 sm:gap-16 pr-12 sm:pr-16 shrink-0">
           @if(!empty($settings['partners']) && is_array($settings['partners']))
