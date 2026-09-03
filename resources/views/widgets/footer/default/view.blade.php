@@ -187,7 +187,7 @@
     </div>
 </div>
 
-@include('partials/responsive-footer')
+{{-- @include('partials/responsive-footer') --}}
 
 <a href="#" x-on:click.prevent="
       window.scrollTo({
