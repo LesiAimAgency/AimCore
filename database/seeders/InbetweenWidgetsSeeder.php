@@ -63,7 +63,7 @@ BLADE,
         </div>
     </div>
     </div>
-    <div class="lg:col-span-4 flex flex-col items-center text-center my-6 lg:my-0 z-20">
+    <div class="lg:col-span-4 flex flex-col items-center text-center my-6 lg:mt-16 z-20">
     <h2 id="sec2-title-top" class="text-2xl sm:text-3xl lg:text-[40px] font-bold uppercase tracking-tight text-white m-0 leading-tight">
         THE <span style="color: {{ setting('theme_primary_color', '#EC460B') }};">COMMUNITY</span>
     </h2>
