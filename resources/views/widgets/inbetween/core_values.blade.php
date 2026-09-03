@@ -5,7 +5,7 @@
 <!-- =======================================================================
      SECTION 3: CORE VALUES & PARTNERS (Exact 1:1 from 3.svg)
      ======================================================================= -->
-<section id="about" class="relative w-full min-h-screen lg:min-h-0 bg-[#F9F9F9] text-black py-12 flex flex-col justify-center overflow-hidden">
+<section id="core-values" class="relative w-full min-h-screen lg:min-h-0 bg-[#F9F9F9] text-black py-12 flex flex-col justify-center overflow-hidden">
   <div class="container-custom">
 
     <!-- Header: Exact Typography & Spacing from 3.svg -->

@@ -5,6 +5,7 @@
      SECTION 1 & 2: COMMUNITY PINNED WRAPPER (Onepage Transition)
      ======================================================================= -->
 <section id="community-pinned-wrapper" class="relative w-full h-screen bg-black overflow-hidden">
+  <div id="about" class="absolute -top-20"></div>
 
   <!-- Central Inbetween Logo (Moved outside wall to sit above text with z-30) -->
   <div id="wall-center-logo" class="wall-center-logo absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-[42vw] max-w-[548px] pointer-events-none text-center select-none will-change-transform">
