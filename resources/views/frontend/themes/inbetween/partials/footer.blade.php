@@ -74,7 +74,7 @@
       </div>
 
       <!-- Footer Row 2: 3 Columns (Contact for work, Quick links, Explore more on / Copyright) -->
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start pt-10 lg:pt-12">
+      <div id="footer-grid" class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start pt-10 lg:pt-12">
 
         <!-- Col 1: Contact for work -->
         <div class="md:col-span-4 lg:col-span-4">
