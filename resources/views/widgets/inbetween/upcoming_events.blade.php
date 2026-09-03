@@ -69,7 +69,7 @@
       </div>
 
       <!-- Date & Time Details (Be Vietnam Pro) -->
-      <div class="space-y-2 mb-10 text-white font-vietnam">
+      <div class="space-y-2 mb-10 text-white font-sans">
         <p class="text-xl sm:text-2xl lg:text-[28px] font-semibold tracking-wide text-neutral-200 m-0">{{ $dayOfWeek }}</p>
         <p class="text-5xl sm:text-6xl lg:text-[68px] font-bold tracking-tight text-white leading-[1.05] m-0">
           {{ $day }}
@@ -83,7 +83,7 @@
       </div>
 
       <!-- Location (Venue & Address - Be Vietnam Pro) -->
-      <div class="space-y-2 mb-10 text-neutral-200 font-vietnam">
+      <div class="space-y-2 mb-10 text-neutral-200 font-sans">
         <p class="text-2xl sm:text-3xl lg:text-[32px] font-bold text-white m-0 tracking-wide leading-snug">
           {{ $location }}
         </p>
@@ -93,7 +93,7 @@
       </div>
 
       <!-- Agenda (Be Vietnam Pro) -->
-      <div class="space-y-3 mb-10 text-neutral-200 font-vietnam">
+      <div class="space-y-3 mb-10 text-neutral-200 font-sans">
         <h4 class="text-3xl sm:text-4xl lg:text-[42px] font-bold text-white m-0 mb-4 tracking-wide">
           Agenda
         </h4>
@@ -109,7 +109,7 @@
       </div>
 
       <!-- Join Us Button -->
-      <a href="{{ $settings['btn_link'] }}" class="inline-flex items-center justify-center px-12 py-3.5 rounded-full border-2 border-white text-white font-vietnam text-sm sm:text-base font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-all">
+      <a href="{{ $settings['btn_link'] }}" class="inline-flex items-center justify-center px-12 py-3.5 rounded-full border-2 border-white text-white font-sans text-sm sm:text-base font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-all">
         {{ $settings['btn_text'] }}
       </a>
 

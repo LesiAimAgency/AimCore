@@ -70,7 +70,7 @@
     body {
       background-color: #000000;
       color: #ffffff;
-      font-family: 'SVN-Gilroy', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'SVN-Gilroy', -apple-system, BlinkMacSystemFont, sans-serif;
       margin: 0;
       padding: 0;
       overflow-x: hidden;

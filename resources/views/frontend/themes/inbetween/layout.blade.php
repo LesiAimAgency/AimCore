@@ -8,7 +8,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -21,9 +21,8 @@
             paper: '#F9F9F9', darkBg: '#050505', darkCard: '#111113', silver: '#A9A9A9', grayBorder: '#E5E5E5',
           },
           fontFamily: {
-            sans: ['"SVN-Gilroy"', '"Be Vietnam Pro"', 'sans-serif'],
+            sans: ['"SVN-Gilroy"', 'sans-serif'],
             gilroy: ['"SVN-Gilroy"', 'sans-serif'],
-            vietnam: ['"Be Vietnam Pro"', 'sans-serif'],
             brovile: ['"Oai Brovile"', '"Playfair Display"', 'serif'],
             serif: ['"Oai Brovile"', '"Playfair Display"', 'Georgia', 'serif'],
             script: ['"Pinyon Script"', 'cursive'],
