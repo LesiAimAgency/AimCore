@@ -626,3 +626,11 @@
     #site-header.header-light #mobile-menu-btn:hover {
       color: #EC460B !important;
     }
+
+    .marquee-track {
+      animation: marqueeScroll 20s linear infinite;
+    }
+    
+    .marquee-track:hover {
+      animation-play-state: paused;
+    }

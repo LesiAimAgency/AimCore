@@ -21,6 +21,7 @@ if (! function_exists('clear_widget_cache')) {
 
         if ($areaKey) {
             Cache::forget("widget_area_{$areaKey}");
+            $renderingService->clearCache();
         } else {
             // Clear all widget area caches
             $areas = ['homepage-main', 'sidebar', 'footer', 'header'];
