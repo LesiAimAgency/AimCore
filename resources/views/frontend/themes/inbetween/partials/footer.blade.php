@@ -224,10 +224,10 @@
     <p class="text-[11px] uppercase tracking-wider text-neutral-400 font-semibold mt-4 mb-2 m-0">Explore more content
     </p>
     <div class="flex items-center gap-3">
-      @if($fb = setting('social_facebook'))<a href="{{ $fb }}" class="w-7 h-7 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social4.svg') }}" alt="Facebook" class="w-5 h-5"></a>@endif
-      @if($ig = setting('social_instagram'))<a href="{{ $ig }}" class="w-7 h-7 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social5.svg') }}" alt="Instagram" class="w-5 h-5"></a>@endif
-      @if($li = setting('social_linkedin'))<a href="{{ $li }}" class="w-7 h-7 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social6.svg') }}" alt="LinkedIn" class="w-5 h-5"></a>@endif
-      @if($tt = setting('social_tiktok'))<a href="{{ $tt }}" class="w-7 h-7 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social7.svg') }}" alt="TikTok" class="w-5 h-5"></a>@endif
+      @if($fb = setting('social_facebook', 'https://facebook.com'))<a href="{{ $fb }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social4.svg') }}" alt="Facebook" class="w-5 h-5"></a>@endif
+      @if($ig = setting('social_instagram', 'https://instagram.com'))<a href="{{ $ig }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social5.svg') }}" alt="Instagram" class="w-5 h-5"></a>@endif
+      @if($li = setting('social_linkedin', 'https://linkedin.com'))<a href="{{ $li }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social6.svg') }}" alt="LinkedIn" class="w-5 h-5"></a>@endif
+      @if($tt = setting('social_tiktok', 'https://tiktok.com'))<a href="{{ $tt }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-full hover:opacity-75 transition-opacity flex items-center justify-center"><img src="{{ asset('themes/inbetween/assets/social7.svg') }}" alt="TikTok" class="w-5 h-5"></a>@endif
     </div>
   </div>
 </aside>
