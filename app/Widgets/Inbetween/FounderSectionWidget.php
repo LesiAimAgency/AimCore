@@ -78,7 +78,7 @@ class FounderSectionWidget extends BaseWidget
         if (empty($settings['background_image'])) {
             $settings['background_image'] = asset('themes/inbetween/assets/founder-bg.png');
         } else {
-            $settings['background_image'] = \RvMedia::getImageUrl($settings['background_image']);
+            $settings['background_image'] = asset($settings['background_image']);
         }
 
         return view('widgets.inbetween.founder_section', ['widget' => $this, 'settings' => $settings])->render();
