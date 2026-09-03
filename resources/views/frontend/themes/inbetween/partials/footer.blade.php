@@ -138,6 +138,7 @@
     <!-- Form Inputs matching SUBMIT FORM.svg -->
     <form id="drawer-form" class="space-y-4" onsubmit="submitDrawerForm(event)">
       <input type="hidden" name="form_name" value="Contact">
+      <input type="hidden" name="project_id" value="{{ current_project()?->id }}">
       <div>
         <input type="text" name="Full Name" placeholder="Full Name" required
           class="w-full border border-[#393939] rounded-[6px] px-3.5 py-2.5 text-xs text-black placeholder:text-[#8B8B8B] focus:outline-none focus:border-[#EC460B]">

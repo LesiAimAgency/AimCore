@@ -17,7 +17,7 @@ class FormSubmissionController extends Controller
         $data = [];
         if (! $form) {
             // Fallback: If form not defined in CMS, just capture all inputs except internals
-            $inputs = $request->except(['_token', 'form_name']);
+            $inputs = $request->except(['_token', 'form_name', 'project_id']);
             foreach ($inputs as $key => $value) {
                 $data[$key] = strip_tags($value);
             }
@@ -58,6 +58,7 @@ class FormSubmissionController extends Controller
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
             'status' => 'pending',
+            'project_id' => $request->input('project_id'),
         ]);
 
         return response()->json(['success' => true, 'message' => 'Đã gửi thành công']);

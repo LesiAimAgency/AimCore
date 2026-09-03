@@ -122,6 +122,7 @@
                         @csrf
                         <input type="hidden" name="form_id" value="{{ $formId }}">
                         <input type="hidden" name="form_name" value="{{ $form['name'] ?? 'Popup Form' }}">
+                        <input type="hidden" name="project_id" value="{{ current_project()?->id }}">
                         
                         @foreach($form['fields'] ?? [] as $index => $field)
                             @php
