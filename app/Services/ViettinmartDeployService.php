@@ -41,11 +41,6 @@ class ViettinmartDeployService
         if (! $tenantId) {
             $tenant = Tenant::where('code', $project->code)
                 ->orWhere('domain', $project->code)
-                ->orWhere(function ($q) use ($project) {
-                    if (str_contains($project->code, 'viettinmart')) {
-                        $q->where('id', 3)->orWhere('code', 'viettinmart');
-                    }
-                })
                 ->first();
 
             if (! $tenant) {
@@ -303,17 +298,22 @@ class ViettinmartDeployService
         ];
 
         foreach ($defaultSettings as $key => $val) {
-            DB::table('settings')->updateOrInsert(
-                [
-                    'key' => $key,
-                    'project_id' => $projectId,
-                ],
-                [
-                    'value' => $val,
-                    'tenant_id' => $tenantId,
-                    'updated_at' => now(),
-                ]
-            );
+            DB::table('settings')
+                ->where('key', $key)
+                ->where(function ($q) use ($tenantId, $projectId) {
+                    $q->where('tenant_id', $tenantId)
+                        ->orWhere('project_id', $projectId);
+                })
+                ->delete();
+
+            DB::table('settings')->insert([
+                'key' => $key,
+                'value' => $val,
+                'project_id' => $projectId,
+                'tenant_id' => $tenantId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
     }
 
@@ -374,17 +374,22 @@ class ViettinmartDeployService
         }
 
         if (! empty($translations)) {
-            DB::table('settings')->updateOrInsert(
-                [
-                    'key' => 'translations',
-                    'project_id' => $projectId,
-                ],
-                [
-                    'value' => json_encode($translations),
-                    'tenant_id' => $tenantId,
-                    'updated_at' => now(),
-                ]
-            );
+            DB::table('settings')
+                ->where('key', 'translations')
+                ->where(function ($q) use ($tenantId, $projectId) {
+                    $q->where('tenant_id', $tenantId)
+                        ->orWhere('project_id', $projectId);
+                })
+                ->delete();
+
+            DB::table('settings')->insert([
+                'key' => 'translations',
+                'value' => json_encode($translations),
+                'project_id' => $projectId,
+                'tenant_id' => $tenantId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
     }
 }
