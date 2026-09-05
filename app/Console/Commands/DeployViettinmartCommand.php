@@ -3,13 +3,16 @@
 namespace App\Console\Commands;
 
 use App\Models\Project;
+use App\Models\User;
 use App\Services\ViettinmartDeployService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Str;
 
 class DeployViettinmartCommand extends Command
 {
     protected $signature = 'project:deploy-vtm 
-                            {project_id? : ID of the project to deploy Viettinmart template to} 
+                            {project_id? : ID or Code of the project to deploy Viettinmart template to (e.g. viettinmart-eco)} 
                             {--tenant_id= : Optional tenant ID}';
 
     protected $description = 'Deploy and configure a complete Viettinmart E-commerce solution (1-Click VTM) to a project';
@@ -22,20 +25,78 @@ class DeployViettinmartCommand extends Command
         if (! $projectId) {
             $project = Project::where('code', 'viettinmart-eco')
                 ->orWhere('code', 'viettinmart')
-                ->orWhere('name', 'like', '%Viettinmart%')
-                ->orWhere('id', 10)
                 ->first();
+
+            if (! $project) {
+                $candidate = Project::find(10);
+                if ($candidate && (str_contains(strtolower($candidate->code), 'viettinmart') || str_contains(strtolower($candidate->name), 'viettinmart') || str_contains(strtolower($candidate->code), 'vtm'))) {
+                    $project = $candidate;
+                }
+            }
+
+            if (! $project) {
+                $project = Project::where('name', 'like', '%Viettinmart%')->first();
+            }
+
+            if (! $project) {
+                $this->info('Chưa có dự án Viettinmart trong hệ thống. Đang tự động tạo dự án mới: Viettinmart (code: viettinmart-eco)...');
+                $baseUrl = config('app.url', 'http://127.0.0.1:8000');
+                $adminId = User::where('role', 'superadmin')->value('id') ?? User::first()?->id ?? 1;
+
+                $project = Project::create([
+                    'name' => 'Viettinmart E-commerce',
+                    'code' => 'viettinmart-eco',
+                    'subdomain' => rtrim($baseUrl, '/').'/viettinmart-eco',
+                    'client_name' => 'VietTin Mart',
+                    'department_id' => 2,
+                    'status' => 'active',
+                    'project_type' => 'website',
+                    'admin_id' => $adminId,
+                    'created_by' => $adminId,
+                    'cms_features' => ['commerce', 'product_listing', 'blog', 'contact', 'gallery', 'agent'],
+                ]);
+                $this->info("✓ Đã tạo thành công dự án mới với ID: {$project->id}");
+            }
         } else {
-            $project = Project::find($projectId);
+            $project = is_numeric($projectId) ? Project::find($projectId) : Project::where('code', $projectId)->first();
+
+            if (! $project && ! is_numeric($projectId)) {
+                $code = Str::slug($projectId);
+                $this->info("Đang tạo dự án mới với mã: {$code}...");
+                $baseUrl = config('app.url', 'http://127.0.0.1:8000');
+                $adminId = User::where('role', 'superadmin')->value('id') ?? User::first()?->id ?? 1;
+
+                $project = Project::create([
+                    'name' => 'Viettinmart - '.ucfirst($code),
+                    'code' => $code,
+                    'subdomain' => rtrim($baseUrl, '/').'/'.$code,
+                    'client_name' => 'VietTin Mart',
+                    'department_id' => 2,
+                    'status' => 'active',
+                    'project_type' => 'website',
+                    'admin_id' => $adminId,
+                    'created_by' => $adminId,
+                    'cms_features' => ['commerce', 'product_listing', 'blog', 'contact', 'gallery', 'agent'],
+                ]);
+                $this->info("✓ Đã tạo thành công dự án mới với ID: {$project->id}");
+            }
         }
 
         if (! $project) {
-            $this->error('Không tìm thấy dự án với ID hoặc Code đã chỉ định!');
+            $this->error('Không tìm thấy hoặc không thể tạo dự án với ID hoặc Code đã chỉ định!');
 
             return self::FAILURE;
         }
 
         $this->info("🚀 Bắt đầu triển khai mẫu Viettinmart cho dự án: {$project->name} ({$project->code}, ID: {$project->id})...");
+
+        // Auto-migrate to guarantee all tables exist (non-destructive)
+        try {
+            $this->line('• Kiểm tra cấu trúc database (migrating)...');
+            Artisan::call('migrate', ['--force' => true]);
+        } catch (\Throwable $e) {
+            $this->warn('Migration warning: '.$e->getMessage());
+        }
 
         try {
             $result = $deployService->deploy($project, $tenantId);
