@@ -4,11 +4,16 @@ namespace Database\Seeders;
 
 use App\Models\FormTemplate;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class ViettinmartFormTemplateSeeder extends Seeder
 {
     public function run(int $projectId = 10, int $tenantId = 3): void
     {
+        if (! Schema::hasTable('form_templates')) {
+            return;
+        }
+
         $templates = [
             // 1. Contact Form Template
             [
