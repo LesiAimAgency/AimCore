@@ -97,6 +97,8 @@ Route::middleware([
 
     Route::post('projects/{project}/create-website', [ProjectController::class, 'createWebsite'])
         ->name('projects.create-website');
+    Route::post('projects/{project}/deploy-vtm', [ProjectController::class, 'deployVtm'])
+        ->name('projects.deploy-vtm');
     Route::post('projects/{project}/update-progress', [ProjectController::class, 'updateProgress'])->name('projects.update-progress');
     Route::get('projects/{project}/config', [ProjectController::class, 'config'])->name('projects.config');
     Route::post('projects/{project}/config', [ProjectController::class, 'updateConfig']);

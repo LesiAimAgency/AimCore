@@ -19,28 +19,28 @@ class HeroSectionWidget extends BaseWidget
                     'name' => 'primary_color',
                     'label' => 'Màu chủ đạo (Primary Color)',
                     'type' => 'color',
-                    'default' => '#EC460B'
+                    'default' => '#EC460B',
                 ],
                 [
                     'name' => 'hero_logo',
                     'label' => 'Hero Logo',
                     'type' => 'image',
-                    'default' => ''
+                    'default' => '',
                 ],
                 [
                     'name' => 'hero_subtitle',
                     'label' => 'Hero Subtitle (Dùng | để ngắt dòng)',
                     'type' => 'textarea',
-                    'default' => "Cross-border community, media & connection platform|for|Professionals, Founders, Creatives & Organizations"
-                ]
-            ]
+                    'default' => 'Cross-border community, media & connection platform|for|Professionals, Founders, Creatives & Organizations',
+                ],
+            ],
         ];
     }
 
     public function render(): string
     {
         $settings = $this->settings;
-        
+
         // Cung cấp các giá trị mặc định nếu rỗng
         if (empty($settings['hero_logo'])) {
             $settings['hero_logo'] = asset('themes/inbetween/assets/logo.svg');
@@ -49,7 +49,7 @@ class HeroSectionWidget extends BaseWidget
             $settings['primary_color'] = '#EC460B';
         }
         if (empty($settings['hero_subtitle'])) {
-            $settings['hero_subtitle'] = "Cross-border community, media & connection platform|for|Professionals, Founders, Creatives & Organizations";
+            $settings['hero_subtitle'] = 'Cross-border community, media & connection platform|for|Professionals, Founders, Creatives & Organizations';
         }
 
         return view('widgets.inbetween.hero_section', ['widget' => $this, 'settings' => $settings])->render();

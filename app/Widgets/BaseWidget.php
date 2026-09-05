@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 
 abstract class BaseWidget
 {
+    public $id = null;
+
     protected array $settings;
 
     protected array $metadata;
@@ -20,6 +22,7 @@ abstract class BaseWidget
     public function __construct(array $settings = [], string $variant = 'default')
     {
         $this->settings = $settings;
+        $this->id = $settings['id'] ?? spl_object_id($this);
         $this->metadata = $this->loadMetadata();
         $this->setVariant($variant);
         $this->validateSettings();
@@ -476,6 +479,24 @@ abstract class BaseWidget
     public function js(): string
     {
         return '';
+    }
+
+    public function __get(string $name): mixed
+    {
+        if ($name === 'id') {
+            return $this->id ?? $this->settings['id'] ?? spl_object_id($this);
+        }
+
+        return $this->get($name);
+    }
+
+    public function __isset(string $name): bool
+    {
+        if ($name === 'id') {
+            return true;
+        }
+
+        return isset($this->settings[$name]);
     }
 
     /**

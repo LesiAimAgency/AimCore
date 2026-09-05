@@ -12,6 +12,7 @@ use App\Models\ProjectPermission;
 use App\Models\ProjectSetting;
 use App\Models\User;
 use App\Services\RemoteProjectService;
+use App\Services\ViettinmartDeployService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -402,6 +403,31 @@ class ProjectController extends Controller implements HasMiddleware
         }
     }
 
+    /**
+     * 1-Click Deploy complete Viettinmart E-commerce template for a project.
+     */
+    public function deployVtm(Request $request, Project $project, ViettinmartDeployService $deployService)
+    {
+        try {
+            $result = $deployService->deploy($project);
+
+            return back()->with('alert', [
+                'type' => 'success',
+                'message' => "🎉 Triển khai mẫu Viettinmart cho '{$project->name}' thành công!\n\n"
+                    ."• CMS Username: {$result['admin_username']}\n"
+                    ."• CMS Password: {$result['admin_password']}\n"
+                    ."• Frontend: {$result['frontend_url']}\n"
+                    ."• CMS Admin: {$result['admin_url']}\n"
+                    ."• Cài đặt ngôn ngữ: {$result['languages_url']}",
+            ]);
+        } catch (\Throwable $e) {
+            return back()->with('alert', [
+                'type' => 'error',
+                'message' => 'Lỗi triển khai mẫu Viettinmart: '.$e->getMessage(),
+            ]);
+        }
+    }
+
     // DISABLED FOR DEMO: Database setup methods
     /*
     private function setupSharedProject(Project $project)
@@ -768,7 +794,26 @@ class ProjectController extends Controller implements HasMiddleware
 
         $featurePacks = FeaturePack::where('is_active', true)->orderBy('group_name')->orderBy('name')->get();
 
-        return view('superadmin.projects.config', compact('project', 'systemModules', 'settings', 'users', 'remoteStats', 'featurePacks'));
+        // Multi-language settings for this project
+        $rawLanguages = ProjectSetting::get($project->id, 'languages');
+        $projectLanguages = null;
+        if ($rawLanguages) {
+            $projectLanguages = is_string($rawLanguages) ? json_decode($rawLanguages, true) : $rawLanguages;
+        }
+        if (! is_array($projectLanguages) || empty($projectLanguages)) {
+            $projectLanguages = [
+                ['code' => 'vi', 'name' => 'Tiếng Việt', 'is_default' => true, 'is_active' => true],
+                ['code' => 'en', 'name' => 'English', 'is_default' => false, 'is_active' => true],
+            ];
+        }
+        $multilingualEnabled = (bool) ProjectSetting::get($project->id, 'multilingual_enabled', true);
+        $defaultLanguage = ProjectSetting::get($project->id, 'default_language', 'vi');
+        $autoDetectLanguage = (bool) ProjectSetting::get($project->id, 'auto_detect_language', true);
+
+        return view('superadmin.projects.config', compact(
+            'project', 'systemModules', 'settings', 'users', 'remoteStats', 'featurePacks',
+            'projectLanguages', 'multilingualEnabled', 'defaultLanguage', 'autoDetectLanguage'
+        ));
     }
 
     public function resetAdminAccount(Request $request, Project $project)
@@ -842,6 +887,54 @@ class ProjectController extends Controller implements HasMiddleware
                 foreach ($request->settings as $key => $value) {
                     ProjectSetting::set($project->id, $key, '1');
                 }
+            }
+
+            // Xử lý lưu cấu hình đa ngôn ngữ trực tiếp
+            if ($request->has('settings') && isset($request->settings['settings.languages'])) {
+                $mlEnabled = $request->boolean('multilingual_enabled', true) ? '1' : '0';
+                $defaultLang = $request->input('default_language', 'vi');
+                $inputLangs = $request->input('languages', []);
+
+                $formattedLangs = [];
+                if (is_array($inputLangs)) {
+                    foreach ($inputLangs as $l) {
+                        if (! empty($l['code']) && ! empty($l['name'])) {
+                            $code = strtolower(trim($l['code']));
+                            $formattedLangs[] = [
+                                'code' => $code,
+                                'name' => trim($l['name']),
+                                'is_default' => ($code === $defaultLang),
+                                'is_active' => ! empty($l['is_active']),
+                            ];
+                        }
+                    }
+                }
+
+                if (empty($formattedLangs)) {
+                    $formattedLangs = [
+                        ['code' => 'vi', 'name' => 'Tiếng Việt', 'is_default' => true, 'is_active' => true],
+                        ['code' => 'en', 'name' => 'English', 'is_default' => false, 'is_active' => true],
+                    ];
+                }
+
+                ProjectSetting::set($project->id, 'multilingual_enabled', $mlEnabled);
+                ProjectSetting::set($project->id, 'default_language', $defaultLang);
+                ProjectSetting::set($project->id, 'languages', json_encode($formattedLangs));
+                ProjectSetting::set($project->id, 'auto_detect_language', $request->boolean('auto_detect_language', true) ? '1' : '0');
+
+                // Đồng bộ vào bảng settings cho giao diện website
+                \DB::table('settings')->where('project_id', $project->id)->whereIn('key', ['multilingual_enabled', 'default_language', 'languages'])->delete();
+                \DB::table('settings')->insert([
+                    ['project_id' => $project->id, 'key' => 'multilingual_enabled', 'payload' => json_encode($mlEnabled === '1')],
+                    ['project_id' => $project->id, 'key' => 'default_language', 'payload' => json_encode($defaultLang)],
+                    ['project_id' => $project->id, 'key' => 'languages', 'payload' => json_encode($formattedLangs)],
+                ]);
+            } else {
+                ProjectSetting::set($project->id, 'multilingual_enabled', '0');
+                \DB::table('settings')->where('project_id', $project->id)->where('key', 'multilingual_enabled')->delete();
+                \DB::table('settings')->insert([
+                    ['project_id' => $project->id, 'key' => 'multilingual_enabled', 'payload' => json_encode(false)],
+                ]);
             }
 
             if ($request->has('cms_features')) {

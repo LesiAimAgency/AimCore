@@ -250,35 +250,38 @@ class DashboardController extends Controller
 
             $query = Project::with(['admin'])->latest();
 
-            // Lọc dự án theo user (ai được đưa vào dự án nào thì thấy dự án đó)
-            $query->where(function ($q) use ($user) {
-                $q->where('admin_id', $user->id)
-                    ->orWhere('created_by', $user->id)
-                    ->orWhereJsonContains('employee_ids', $user->id);
+            // Lọc dự án theo user (Super Admin hoặc admin@example.com sẽ thấy toàn bộ dự án)
+            if ($user && ! $user->isSuperAdmin() && $user->email !== 'admin@example.com') {
+                $query->where(function ($q) use ($user) {
+                    $q->where('admin_id', $user->id)
+                        ->orWhere('created_by', $user->id)
+                        ->orWhereJsonContains('employee_ids', $user->id);
 
-                if (! empty($user->project_ids)) {
-                    $q->orWhereIn('id', $user->project_ids);
-                }
+                    if (! empty($user->project_ids)) {
+                        $q->orWhereIn('id', $user->project_ids);
+                    }
 
-                $taskProjectIds = Task::where('dev_id', $user->id)->distinct()->pluck('project_id')->toArray();
-                if (! empty($taskProjectIds)) {
-                    $q->orWhereIn('id', $taskProjectIds);
-                }
-            });
+                    $taskProjectIds = Task::where('dev_id', $user->id)->distinct()->pluck('project_id')->toArray();
+                    if (! empty($taskProjectIds)) {
+                        $q->orWhereIn('id', $taskProjectIds);
+                    }
+                });
+            }
 
             $projects = $query->get();
             $projectIds = $projects->pluck('id')->toArray();
 
-            // Lọc activities theo danh sách projects của user
-            $todayActivities = ActivityLog::whereDate('created_at', today())
-                ->whereIn('project_id', $projectIds)
-                ->count();
+            // Lọc activities theo danh sách projects của user (Super Admin thấy toàn bộ)
+            $todayActivitiesQuery = ActivityLog::whereDate('created_at', today());
+            $recentActivitiesQuery = ActivityLog::with(['user', 'project'])->latest()->take(10);
 
-            $recentActivities = ActivityLog::with(['user', 'project'])
-                ->whereIn('project_id', $projectIds)
-                ->latest()
-                ->take(10)
-                ->get();
+            if ($user && ! $user->isSuperAdmin() && $user->email !== 'admin@example.com') {
+                $todayActivitiesQuery->whereIn('project_id', $projectIds);
+                $recentActivitiesQuery->whereIn('project_id', $projectIds);
+            }
+
+            $todayActivities = $todayActivitiesQuery->count();
+            $recentActivities = $recentActivitiesQuery->get();
 
             $hostingProfiles = HostingProfile::all();
 

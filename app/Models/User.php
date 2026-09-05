@@ -13,6 +13,14 @@ class User extends Authenticatable
 {
     use BelongsToTenant, HasFactory, Notifiable;
 
+    const ROLE_ADMIN = 'admin';
+
+    const ROLE_MANAGER = 'manager';
+
+    const ROLE_STORE_MANAGER = 'store_manager';
+
+    const ROLE_WEB_ADMIN = 'web_admin';
+
     /**
      * Get the database connection for the model.
      */
@@ -122,10 +130,10 @@ class User extends Authenticatable
         return $this->hasMany(Task::class, 'dev_id');
     }
 
-    // public function orders()
-    // {
-    //     return $this->hasMany(Order::class);
-    // }
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'customer_email', 'email');
+    }
 
     public function manager()
     {

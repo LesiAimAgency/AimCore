@@ -62,14 +62,16 @@
                 @if($product->short_description)
                     <div>
                         <p class="text-xs font-medium text-gray-500 uppercase mb-1">Mô tả ngắn</p>
-                        <p class="text-gray-700 text-sm">{{ $product->short_description }}</p>
+                        <div class="prose prose-sm max-w-none text-gray-700">
+                            {!! $product->short_description !!}
+                        </div>
                     </div>
                 @endif
 
                 <div>
                     <p class="text-xs font-medium text-gray-500 uppercase mb-2">Mô tả đầy đủ</p>
                     <div class="prose prose-sm max-w-none text-gray-700">
-                        {!! nl2br(e($product->description)) !!}
+                        {!! $product->description !!}
                     </div>
                 </div>
             </div>

@@ -5,22 +5,69 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\FormSubmission;
 use App\Models\Post;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
     public function show($locale = null, $slug = null)
     {
-        // Handle both localized and non-localized routes
+        // Handle both localized and non-localized routes, or {projectCode}/{slug}
         if ($slug === null) {
             $slug = $locale;
             $locale = null;
         }
 
-        $page = Post::pages()
-            ->where('slug', $slug)
-            ->where('status', 'published')
-            ->firstOrFail();
+        $project = function_exists('current_project') ? current_project() : null;
+        if (! $project && app()->bound('current_project_id')) {
+            $project = Project::find(app('current_project_id'));
+        }
+        if (! $project && request()->route('projectCode')) {
+            $project = Project::where('code', request()->route('projectCode'))->first();
+        }
+
+        $query = Post::pages()->where('status', 'published');
+        if ($project) {
+            $query->where('project_id', $project->id);
+        }
+
+        // Try exact slug
+        $page = (clone $query)->where('slug', $slug)->first();
+
+        // Try slug with project id suffix (e.g. gioi-thieu-10)
+        if (! $page && $project) {
+            $page = (clone $query)->where('slug', $slug.'-'.$project->id)->first();
+        }
+
+        // Known aliases
+        if (! $page && $project) {
+            $aliases = [
+                'gioi-thieu' => ['gioi-thieu-10', 'about-us', 'introduce'],
+                'chinh-sach-giao-hang' => ['shipping-policy', 'chinh-sach-van-chuyen', 'chinh-sach-giao-hang-10'],
+                'chinh-sach-van-chuyen' => ['shipping-policy', 'chinh-sach-giao-hang'],
+            ];
+            if (isset($aliases[$slug])) {
+                $page = (clone $query)->whereIn('slug', $aliases[$slug])->first();
+            }
+        }
+
+        // Fallback without project filter
+        if (! $page) {
+            $page = Post::pages()->where('slug', $slug)->where('status', 'published')->first();
+        }
+
+        if (! $page) {
+            abort(404);
+        }
+
+        if (view()->exists('pages.show')) {
+            return view('pages.show', compact('page'));
+        }
+
+        if (view()->exists('frontend.themes.viettinmartdemo.pages.show')) {
+            return view('frontend.themes.viettinmartdemo.pages.show', compact('page'));
+        }
+
         if ($page->template && view()->exists("frontend.templates.{$page->template}")) {
             return view("frontend.templates.{$page->template}", compact('page'));
         }

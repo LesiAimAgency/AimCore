@@ -211,7 +211,6 @@
                             </div>
                             <div class="ml-4">
                                 <div class="text-sm font-semibold text-gray-900">{{ $product->name }}</div>
-                                <div class="text-sm text-gray-500 truncate max-w-xs">{{ Str::limit($product->short_description, 50) }}</div>
                                 <div class="flex items-center gap-2 mt-1">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
                                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

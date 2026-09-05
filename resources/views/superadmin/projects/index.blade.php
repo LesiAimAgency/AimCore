@@ -147,6 +147,12 @@
                                     </svg>
                                 </a>
                                 @if(auth()->user()->isSuperAdmin() || auth()->user()->hasPermission('manage-projects'))
+                                <form method="POST" action="{{ route('superadmin.projects.deploy-vtm', $project) }}" class="inline-block" onsubmit="return confirm('Triển khai Mẫu Viettinmart (1-Click VTM) cho dự án {{ $project->name }}?');">
+                                    @csrf
+                                    <button type="submit" class="p-2 text-emerald-600 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors" title="Deploy 1-Click VTM">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                    </button>
+                                </form>
                                 <a href="{{ route('superadmin.projects.edit', $project) }}" class="p-2 text-[#001B4E] bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors" title="Chỉnh sửa">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>

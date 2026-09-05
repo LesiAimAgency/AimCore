@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
+        <h1 class="text-xl font-bold mb-4">JavaScript Test</h1>
+        
+        <!-- Test translation function -->
+        <div class="mb-4">
+            <button onclick="testTranslation()" class="bg-blue-500 text-white px-4 py-2 rounded">
+                Test Translation Function
+            </button>
+            <div id="translation-result" class="mt-2 text-sm text-gray-600"></div>
+        </div>
+
+        <!-- Test Alpine.js -->
+        <div x-data="{ open: false }" class="mb-4">
+            <button @click="open = !open" class="bg-green-500 text-white px-4 py-2 rounded">
+                Test Alpine.js
+            </button>
+            <div x-show="open" x-collapse class="mt-2 p-2 bg-gray-100 rounded">
+                Alpine.js is working!
+            </div>
+        </div>
+
+        <!-- Test SEO Checklist -->
+        <div class="mb-4">
+            <button onclick="testSEOCheck()" class="bg-purple-500 text-white px-4 py-2 rounded">
+                Test SEO Checklist
+            </button>
+            <div id="seo-result" class="mt-2 text-sm text-gray-600"></div>
+        </div>
+    </div>
+
+    <script>
+        // Translation helper
+        window.__ = function(key, replace = {}) {
+            const translations = {
+                'common.success': 'Thành công',
+                'common.error': 'Lỗi',
+                'common.delete': 'Xóa',
+                'common.edit': 'Sửa',
+                'common.view': 'Xem',
+                'common.save': 'Lưu',
+                'common.cancel': 'Hủy',
+                'common.back': 'Quay lại',
+                'common.search': 'Tìm kiếm',
+                'common.loading': 'Đang tải'
+            };
+            
+            let translation = translations[key] || key;
+            
+            Object.keys(replace).forEach(placeholder => {
+                translation = translation.replace(':' + placeholder, replace[placeholder]);
+            });
+            
+            return translation;
+        };
+
+        function testTranslation() {
+            const result = document.getElementById('translation-result');
+            try {
+                const success = __('common.success');
+                const error = __('common.error');
+                result.innerHTML = `Success: ${success}, Error: ${error}`;
+                result.className = 'mt-2 text-sm text-green-600';
+            } catch (e) {
+                result.innerHTML = `Translation Error: ${e.message}`;
+                result.className = 'mt-2 text-sm text-red-600';
+            }
+        }
+
+        function testSEOCheck() {
+            const result = document.getElementById('seo-result');
+            try {
+                if (typeof window.SEOCheck !== 'undefined') {
+                    result.innerHTML = 'SEO Checklist loaded successfully';
+                    result.className = 'mt-2 text-sm text-green-600';
+                } else {
+                    result.innerHTML = 'SEO Checklist not loaded (this is expected on test page)';
+                    result.className = 'mt-2 text-sm text-yellow-600';
+                }
+            } catch (e) {
+                result.innerHTML = `SEO Error: ${e.message}`;
+                result.className = 'mt-2 text-sm text-red-600';
+            }
+        }
+
+        // Test console for errors
+        window.addEventListener('load', function() {
+            console.log('Page loaded successfully');
+            console.log('Alpine.js available:', typeof Alpine !== 'undefined');
+            console.log('Translation function available:', typeof __ === 'function');
+        });
+    </script>
+
+    <script src="/js/admin/seo-checklist.js"></script>
+</body>
+</html>

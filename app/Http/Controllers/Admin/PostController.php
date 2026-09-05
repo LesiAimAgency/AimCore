@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Models\Taxonomy;
 use App\Traits\HasAlerts;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -76,7 +79,10 @@ class PostController extends Controller
         $currentLang = $request->get('lang', $defaultLang);
         session(['admin_language' => $currentLang]);
 
-        return view('cms.posts.create', compact('postType', 'config', 'currentLang'));
+        $categories = Taxonomy::where('taxonomy', 'category')->orderBy('order')->get();
+        $availableTags = Taxonomy::whereIn('taxonomy', ['post_tag', 'tag'])->orderBy('name')->get();
+
+        return view('cms.posts.create', compact('postType', 'config', 'currentLang', 'categories', 'availableTags'));
     }
 
     public function store(Request $request, $projectCode = null)
@@ -137,14 +143,72 @@ class PostController extends Controller
 
         $post = Post::create($validated);
 
+        // Process categories
+        if ($request->has('categories')) {
+            $categoryIds = array_filter((array) $request->input('categories', []));
+            $allCategoryTaxIds = Taxonomy::where('taxonomy', 'category')->pluck('id')->toArray();
+            DB::table('term_relationships')
+                ->where('object_id', $post->id)
+                ->whereIn('term_taxonomy_id', $allCategoryTaxIds)
+                ->delete();
+
+            foreach ($categoryIds as $catId) {
+                DB::table('term_relationships')->insert([
+                    'object_id' => $post->id,
+                    'term_taxonomy_id' => $catId,
+                    'order' => 0,
+                ]);
+            }
+        }
+
+        // Process tags
+        if ($request->has('tags')) {
+            $rawTags = $request->input('tags');
+            $tagNames = is_array($rawTags) ? $rawTags : explode(',', (string) $rawTags);
+            $tagNames = array_unique(array_filter(array_map('trim', $tagNames)));
+
+            $tagIds = [];
+            foreach ($tagNames as $tagName) {
+                if (! empty($tagName)) {
+                    $tagTax = Taxonomy::firstOrCreate(
+                        [
+                            'project_id' => $post->project_id ?? (function_exists('project_id') ? project_id() : null),
+                            'taxonomy' => 'post_tag',
+                            'slug' => Str::slug($tagName),
+                        ],
+                        [
+                            'tenant_id' => $post->tenant_id ?? 3,
+                            'name' => $tagName,
+                            'status' => 'published',
+                        ]
+                    );
+                    $tagIds[] = $tagTax->id;
+                }
+            }
+
+            $allTagTaxIds = Taxonomy::whereIn('taxonomy', ['post_tag', 'tag'])->pluck('id')->toArray();
+            DB::table('term_relationships')
+                ->where('object_id', $post->id)
+                ->whereIn('term_taxonomy_id', $allTagTaxIds)
+                ->delete();
+
+            foreach ($tagIds as $tagId) {
+                DB::table('term_relationships')->insert([
+                    'object_id' => $post->id,
+                    'term_taxonomy_id' => $tagId,
+                    'order' => 0,
+                ]);
+            }
+        }
+
         if ($request->has('translations')) {
             $post->saveTranslations($request->input('translations'));
         }
 
-        $projectCode = request()->route('projectCode');
+        $projectCode = request()->route('projectCode') ?? (function_exists('project_code') ? project_code() : null);
         $route = $projectCode
             ? route('project.admin.posts.index', ['projectCode' => $projectCode, 'type' => $postType])
-            : route('cms.posts.index', ['type' => $postType]);
+            : (Route::has('superadmin.posts.index') ? route('superadmin.posts.index', ['type' => $postType]) : route('cms.posts.index', ['type' => $postType]));
 
         return redirect($route)->with('alert', [
             'type' => 'success',
@@ -162,6 +226,7 @@ class PostController extends Controller
     public function edit(Request $request, $projectCodeOrPost = null, $postId = null)
     {
         $post = $this->resolvePost($projectCodeOrPost, $postId);
+        $post->load('taxonomies');
         $postType = $post->post_type;
         $config = config("post_types.{$postType}");
 
@@ -177,7 +242,21 @@ class PostController extends Controller
         $currentLang = $request->get('lang', $defaultLang);
         session(['admin_language' => $currentLang]);
 
-        return view('cms.posts.edit', compact('post', 'postType', 'config', 'currentLang'));
+        $categories = Taxonomy::where('taxonomy', 'category')->orderBy('order')->get();
+        $availableTags = Taxonomy::whereIn('taxonomy', ['post_tag', 'tag'])->orderBy('name')->get();
+        $selectedCategories = $post->taxonomies->where('taxonomy', 'category')->pluck('id')->toArray();
+        $selectedTags = $post->taxonomies->whereIn('taxonomy', ['post_tag', 'tag'])->pluck('name')->implode(', ');
+
+        return view('cms.posts.edit', compact(
+            'post',
+            'postType',
+            'config',
+            'currentLang',
+            'categories',
+            'availableTags',
+            'selectedCategories',
+            'selectedTags'
+        ));
     }
 
     public function update(Request $request, $projectCodeOrPost = null, $postId = null)
@@ -225,14 +304,72 @@ class PostController extends Controller
 
         $post->update($validated);
 
+        // Process categories
+        if ($request->has('categories')) {
+            $categoryIds = array_filter((array) $request->input('categories', []));
+            $allCategoryTaxIds = Taxonomy::where('taxonomy', 'category')->pluck('id')->toArray();
+            DB::table('term_relationships')
+                ->where('object_id', $post->id)
+                ->whereIn('term_taxonomy_id', $allCategoryTaxIds)
+                ->delete();
+
+            foreach ($categoryIds as $catId) {
+                DB::table('term_relationships')->insert([
+                    'object_id' => $post->id,
+                    'term_taxonomy_id' => $catId,
+                    'order' => 0,
+                ]);
+            }
+        }
+
+        // Process tags
+        if ($request->has('tags')) {
+            $rawTags = $request->input('tags');
+            $tagNames = is_array($rawTags) ? $rawTags : explode(',', (string) $rawTags);
+            $tagNames = array_unique(array_filter(array_map('trim', $tagNames)));
+
+            $tagIds = [];
+            foreach ($tagNames as $tagName) {
+                if (! empty($tagName)) {
+                    $tagTax = Taxonomy::firstOrCreate(
+                        [
+                            'project_id' => $post->project_id ?? (function_exists('project_id') ? project_id() : null),
+                            'taxonomy' => 'post_tag',
+                            'slug' => Str::slug($tagName),
+                        ],
+                        [
+                            'tenant_id' => $post->tenant_id ?? 3,
+                            'name' => $tagName,
+                            'status' => 'published',
+                        ]
+                    );
+                    $tagIds[] = $tagTax->id;
+                }
+            }
+
+            $allTagTaxIds = Taxonomy::whereIn('taxonomy', ['post_tag', 'tag'])->pluck('id')->toArray();
+            DB::table('term_relationships')
+                ->where('object_id', $post->id)
+                ->whereIn('term_taxonomy_id', $allTagTaxIds)
+                ->delete();
+
+            foreach ($tagIds as $tagId) {
+                DB::table('term_relationships')->insert([
+                    'object_id' => $post->id,
+                    'term_taxonomy_id' => $tagId,
+                    'order' => 0,
+                ]);
+            }
+        }
+
         if ($request->has('translations')) {
             $post->saveTranslations($request->input('translations'));
         }
 
-        $projectCode = request()->route('projectCode');
+        $projectCode = request()->route('projectCode') ?? (function_exists('project_code') ? project_code() : null);
         $route = $projectCode
             ? route('project.admin.posts.edit', ['projectCode' => $projectCode, 'post' => $post->slug ?: $post->id])
-            : route('cms.posts.edit', $post->slug ?: $post->id);
+            : (Route::has('superadmin.posts.edit') ? route('superadmin.posts.edit', $post->slug ?: $post->id) : route('cms.posts.edit', $post->slug ?: $post->id));
 
         return redirect($route)->with('alert', [
             'type' => 'success',

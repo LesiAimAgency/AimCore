@@ -19,69 +19,69 @@ class CommunityStatementWidget extends BaseWidget
                     'name' => 'title_top',
                     'label' => 'Tiêu đề trên (The Community)',
                     'type' => 'text',
-                    'default' => 'THE COMMUNITY'
+                    'default' => 'THE COMMUNITY',
                 ],
                 [
                     'name' => 'title_bot',
                     'label' => 'Tiêu đề dưới (Creating)',
                     'type' => 'text',
-                    'default' => 'CREATING'
+                    'default' => 'CREATING',
                 ],
                 [
                     'name' => 'description',
                     'label' => 'Mô tả',
                     'type' => 'textarea',
-                    'default' => 'A cross-border network where Professionals, Founders and Creatives collaborate and connect.'
+                    'default' => 'A cross-border network where Professionals, Founders and Creatives collaborate and connect.',
                 ],
                 [
                     'name' => 'image_1',
                     'label' => 'Hình 1 (Top Left)',
                     'type' => 'image',
-                    'default' => ''
+                    'default' => '',
                 ],
                 [
                     'name' => 'image_2',
                     'label' => 'Hình 2 (Bottom Left)',
                     'type' => 'image',
-                    'default' => ''
+                    'default' => '',
                 ],
                 [
                     'name' => 'image_3',
                     'label' => 'Hình 3 (Top Right)',
                     'type' => 'image',
-                    'default' => ''
+                    'default' => '',
                 ],
                 [
                     'name' => 'image_4',
                     'label' => 'Hình 4 (Bottom Right)',
                     'type' => 'image',
-                    'default' => ''
+                    'default' => '',
                 ],
                 [
                     'name' => 'btn_1_text',
                     'label' => 'Chữ nút 1',
                     'type' => 'text',
-                    'default' => 'JOIN COMMUNITY'
+                    'default' => 'JOIN COMMUNITY',
                 ],
                 [
                     'name' => 'btn_1_link',
                     'label' => 'Link nút 1',
                     'type' => 'text',
-                    'default' => '#packages'
+                    'default' => '#packages',
                 ],
                 [
                     'name' => 'btn_2_text',
                     'label' => 'Chữ nút 2',
                     'type' => 'text',
-                    'default' => 'UPCOMING EVENTS'
+                    'default' => 'UPCOMING EVENTS',
                 ],
                 [
                     'name' => 'btn_2_link',
                     'label' => 'Link nút 2',
                     'type' => 'text',
-                    'default' => '#events'
-                ]
-            ]
+                    'default' => '#events',
+                ],
+            ],
         ];
     }
 
@@ -89,17 +89,31 @@ class CommunityStatementWidget extends BaseWidget
     {
         $settings = $this->settings;
 
-        if (empty($settings['title_top'])) $settings['title_top'] = 'THE COMMUNITY';
-        if (empty($settings['title_bot'])) $settings['title_bot'] = 'CREATING';
-        if (empty($settings['description'])) $settings['description'] = 'A cross-border network where Professionals, Founders and Creatives collaborate and connect.';
-        if (empty($settings['btn_1_text'])) $settings['btn_1_text'] = 'JOIN COMMUNITY';
-        if (empty($settings['btn_1_link'])) $settings['btn_1_link'] = '#packages';
-        if (empty($settings['btn_2_text'])) $settings['btn_2_text'] = 'UPCOMING EVENTS';
-        if (empty($settings['btn_2_link'])) $settings['btn_2_link'] = '#events';
+        if (empty($settings['title_top'])) {
+            $settings['title_top'] = 'THE COMMUNITY';
+        }
+        if (empty($settings['title_bot'])) {
+            $settings['title_bot'] = 'CREATING';
+        }
+        if (empty($settings['description'])) {
+            $settings['description'] = 'A cross-border network where Professionals, Founders and Creatives collaborate and connect.';
+        }
+        if (empty($settings['btn_1_text'])) {
+            $settings['btn_1_text'] = 'JOIN COMMUNITY';
+        }
+        if (empty($settings['btn_1_link'])) {
+            $settings['btn_1_link'] = '#packages';
+        }
+        if (empty($settings['btn_2_text'])) {
+            $settings['btn_2_text'] = 'UPCOMING EVENTS';
+        }
+        if (empty($settings['btn_2_link'])) {
+            $settings['btn_2_link'] = '#events';
+        }
 
         for ($i = 1; $i <= 4; $i++) {
-            if (empty($settings['image_' . $i])) {
-                $settings['image_' . $i] = asset("themes/inbetween/assets/image{$i}_250_148.png");
+            if (empty($settings['image_'.$i])) {
+                $settings['image_'.$i] = asset("themes/inbetween/assets/image{$i}_250_148.png");
             }
         }
 

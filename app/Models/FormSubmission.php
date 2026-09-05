@@ -2,28 +2,46 @@
 
 namespace App\Models;
 
-use App\Traits\BelongsToTenant;
-use App\Traits\ProjectScoped;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class FormSubmission extends Model
 {
-    use BelongsToTenant, ProjectScoped;
+    use HasFactory;
 
-    protected $fillable = ['form_name', 'data', 'ip_address', 'user_agent', 'status', 'admin_note', 'tenant_id', 'project_id'];
+    protected $fillable = [
+        'project_id',
+        'tenant_id',
+        'form_template_id',
+        'modal_form_id',
+        'data',
+        'ip_address',
+        'user_agent',
+        'source', // 'modal', 'widget', 'page'
+        'submitted_at',
+    ];
 
     protected $casts = [
         'data' => 'array',
-        'created_at' => 'datetime',
+        'submitted_at' => 'datetime',
     ];
 
-    public function scopePending($query)
+    public function getDataAttribute($value)
     {
-        return $query->where('status', 'pending');
+        if (is_array($value)) {
+            return $value;
+        }
+
+        return json_decode($value ?? '[]', true) ?: [];
     }
 
-    public function scopeApproved($query)
+    public function formTemplate()
     {
-        return $query->where('status', 'approved');
+        return $this->belongsTo(FormTemplate::class);
+    }
+
+    public function modalForm()
+    {
+        return $this->belongsTo(ModalForm::class);
     }
 }

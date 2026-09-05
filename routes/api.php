@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AgencyAuthController;
+use App\Http\Controllers\Api\ShopApiController;
 use App\Http\Controllers\Api\SyncController;
 use App\Http\Controllers\Api\WidgetController;
 use Illuminate\Support\Facades\Route;
@@ -16,3 +17,15 @@ Route::middleware('agency.verify')->group(function () {
 
 Route::post('/widgets/sync', [WidgetController::class, 'sync']);
 Route::get('/widgets/render/{code}', [WidgetController::class, 'renderPartial']);
+
+// Viettinmart Headless Shop API
+Route::prefix('v1/shop')->group(function () {
+    Route::get('/products', [ShopApiController::class, 'products']);
+    Route::get('/products/{slug}', [ShopApiController::class, 'product']);
+    Route::get('/categories', [ShopApiController::class, 'categories']);
+    Route::get('/cart', [ShopApiController::class, 'cart']);
+    Route::post('/cart/add', [ShopApiController::class, 'addToCart']);
+    Route::post('/cart/update', [ShopApiController::class, 'updateCart']);
+    Route::post('/cart/remove', [ShopApiController::class, 'removeFromCart']);
+    Route::post('/checkout', [ShopApiController::class, 'checkout']);
+});

@@ -93,10 +93,96 @@ class Widget extends Model
     }
 
     /**
-     * Scope widgets to a specific project.
-     *
-     * Usage: Widget::forProject($projectId)->get()
+     * Get menu items for a specific area/slug.
      */
+    public static function getMenu(string $area): array
+    {
+        $currentLocale = strtolower(app()->getLocale() ?: 'vi');
+
+        $project = function_exists('current_project') ? current_project() : null;
+        if (! $project && app()->bound('current_project_id')) {
+            $project = Project::find(app('current_project_id'));
+        }
+        if (! $project && session('current_project_id')) {
+            $project = Project::find(session('current_project_id'));
+        }
+        if (! $project && request()->route('projectCode')) {
+            $project = Project::where('code', request()->route('projectCode'))->first();
+        }
+
+        $projectId = $project?->id;
+        $projectCode = $project?->code ?? request()->route('projectCode');
+
+        // 1. Try finding widget with area and matching locale
+        $query = static::where('area', $area)->where('is_active', true);
+        if ($projectId) {
+            $query->where('project_id', $projectId);
+        }
+
+        $widget = (clone $query)->where('settings->locale', $currentLocale)->first();
+
+        // 2. Fallback: Any active widget for this area
+        if (! $widget) {
+            $widget = $query->first();
+        }
+
+        // 3. Fallback without project_id if not found
+        if (! $widget && $projectId) {
+            $widget = static::where('area', $area)
+                ->where('is_active', true)
+                ->where('settings->locale', $currentLocale)
+                ->first()
+                ?? static::where('area', $area)->where('is_active', true)->first();
+        }
+
+        if (! $widget) {
+            return [];
+        }
+
+        $settings = $widget->settings ?? [];
+        $items = $settings['items'] ?? $widget->config['items'] ?? [];
+
+        if (! is_array($items)) {
+            return [];
+        }
+
+        // Format relative URLs with project code if present
+        if ($projectCode) {
+            $items = static::prefixMenuItemsUrl($items, $projectCode);
+        }
+
+        return $items;
+    }
+
+    protected static function prefixMenuItemsUrl(array $items, string $projectCode): array
+    {
+        foreach ($items as &$item) {
+            if (isset($item['url']) && is_string($item['url'])) {
+                $url = $item['url'];
+                if (! str_starts_with($url, 'http://') &&
+                    ! str_starts_with($url, 'https://') &&
+                    ! str_starts_with($url, '//') &&
+                    ! str_starts_with($url, '#') &&
+                    ! str_starts_with($url, 'tel:') &&
+                    ! str_starts_with($url, 'mailto:') &&
+                    ! str_starts_with($url, 'javascript:')
+                ) {
+                    $trimmed = ltrim($url, '/');
+                    if (! str_starts_with($trimmed, $projectCode)) {
+                        $item['url'] = '/'.$projectCode.($trimmed !== '' ? '/'.$trimmed : '');
+                    }
+                }
+            }
+
+            if (! empty($item['children']) && is_array($item['children'])) {
+                $item['children'] = static::prefixMenuItemsUrl($item['children'], $projectCode);
+            }
+        }
+        unset($item);
+
+        return $items;
+    }
+
     public function scopeForProject($query, int $projectId)
     {
         return $query->where('project_id', $projectId);

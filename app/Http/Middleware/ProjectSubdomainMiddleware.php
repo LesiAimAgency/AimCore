@@ -32,6 +32,11 @@ class ProjectSubdomainMiddleware
 
         view()->share('currentProject', $project);
         $request->attributes->set('project', $project);
+        app()->instance('current_project_id', $project->id);
+        if (session()) {
+            session(['current_project_id' => $project->id]);
+            session(['current_project' => $project]);
+        }
 
         return $next($request);
     }

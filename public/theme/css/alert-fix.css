@@ -1,0 +1,135 @@
+/* ===== FIX Z-INDEX CHO ALERTS VÀ NOTIFICATIONS ===== */
+
+/* SweetAlert2 - Phải cao nhất */
+.swal2-container {
+    z-index: 9999999 !important;
+}
+
+.swal2-popup {
+    z-index: 9999999 !important;
+}
+
+/* Bootstrap Alerts - Cao hơn popups */
+.alert {
+    position: relative !important;
+    z-index: 999999 !important;
+}
+
+/* Toast notifications (SweetAlert2 toast mode) */
+.swal2-toast-shown .swal2-container {
+    z-index: 9999999 !important;
+}
+
+/* Backdrop của SweetAlert */
+.swal2-backdrop-show {
+    z-index: 9999998 !important;
+}
+
+/* Ghost notification (fake order popup) */
+.ghost-notification,
+.notification-popup {
+    z-index: 999998 !important;
+}
+
+/* ===== THỨ TỰ Z-INDEX TRONG PROJECT ===== */
+/*
+ * 9999999 - SweetAlert2 (alerts, confirmations) - CAO NHẤT
+ * 999999  - Bootstrap alerts, flash messages
+ * 999998  - Ghost notifications, fake order popups
+ * 99999   - Mobile dropdowns, mobile backdrop
+ * 9999    - Cart dropdown, category menu, modals
+ * 999     - Regular popups, tooltips
+ * 1       - Normal elements
+ */
+
+/* Đảm bảo modal backdrop không che alert */
+.modal-backdrop {
+    z-index: 9998 !important;
+}
+
+/* Product quick view modal */
+.product-details-popup-wrapper {
+    z-index: 9999 !important;
+}
+
+.product-details-popup-wrapper.popup {
+    z-index: 9999 !important;
+}
+
+/* Mobile sidebar */
+#side-bar {
+    z-index: 99999 !important;
+}
+
+/* Đảm bảo alert luôn visible và không bị che */
+.alert,
+.swal2-container,
+.swal2-popup {
+    pointer-events: auto !important;
+}
+
+/* Fix cho alert trong modal */
+.modal .alert {
+    z-index: 999999 !important;
+}
+
+/* Fix cho toast position */
+.swal2-top-end {
+    top: 20px !important;
+    right: 20px !important;
+}
+
+.swal2-top {
+    top: 20px !important;
+}
+
+.swal2-top-start {
+    top: 20px !important;
+    left: 20px !important;
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+    .swal2-popup {
+        width: calc(100% - 40px) !important;
+        max-width: 400px !important;
+    }
+    
+    .swal2-top-end,
+    .swal2-top-start {
+        top: 10px !important;
+        right: 10px !important;
+        left: 10px !important;
+    }
+}
+
+/* Animation cho alert */
+@keyframes alertSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert {
+    animation: alertSlideIn 0.3s ease !important;
+}
+
+/* Đảm bảo alert không bị overflow hidden */
+body:has(.swal2-shown) {
+    overflow: auto !important;
+}
+
+/* Fix cho alert trong fixed header */
+.rts-header-one-area-one .alert {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    left: auto !important;
+    max-width: 400px !important;
+    z-index: 9999999 !important;
+}

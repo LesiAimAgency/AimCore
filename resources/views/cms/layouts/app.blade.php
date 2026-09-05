@@ -398,7 +398,7 @@
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col ml-72">
+        <div class="flex-1 flex flex-col ml-72 min-w-0">
             <!-- Header -->
             <header class="bg-white shadow-sm border-b border-gray-200">
                 <div class="flex justify-between items-center px-6 py-4">
@@ -445,7 +445,7 @@
             </header>
 
             <!-- Content -->
-            <main class="flex-1 p-6 bg-gray-50">
+            <main class="flex-1 p-6 bg-gray-50 min-w-0">
                 @if(session('alert'))
                     <div class="mb-4 p-4 rounded-lg {{ session('alert')['type'] === 'error' ? 'bg-red-100 border border-red-400 text-red-700' : (session('alert')['type'] === 'warning' ? 'bg-yellow-100 border border-yellow-400 text-yellow-700' : 'bg-green-100 border border-green-400 text-green-700') }}" 
                          x-data="{ show: true }" 
@@ -667,31 +667,32 @@ function reindexRepeatableItems(container, fieldName) {
 <script>
 window.initTinyMCE = function() {
     if (typeof tinymce !== 'undefined') {
-        // Find all uninitialized editors
         const uninitialized = document.querySelectorAll('.tinymce-editor:not([data-tinymce-initialized])');
         if (uninitialized.length === 0) return;
         
-        // Mark them as initialized to prevent double init
-        uninitialized.forEach(el => el.setAttribute('data-tinymce-initialized', 'true'));
-
-        tinymce.init({
-            selector: '.tinymce-editor:not(.tox-target)',
-            height: 380,
-            menubar: 'file edit view insert format tools table',
-            plugins: [
-                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                'insertdatetime', 'media', 'table', 'wordcount'
-            ],
-            toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | link image media code | fullscreen',
-            content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; padding: 10px; }',
-            branding: false,
-            promotion: false,
-            setup: function (editor) {
-                editor.on('change keyup blur', function () {
-                    editor.save();
-                });
-            }
+        uninitialized.forEach(el => {
+            el.setAttribute('data-tinymce-initialized', 'true');
+            const editorHeight = parseInt(el.getAttribute('data-height')) || 380;
+            
+            tinymce.init({
+                target: el,
+                height: editorHeight,
+                menubar: 'file edit view insert format tools table',
+                plugins: [
+                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                    'insertdatetime', 'media', 'table', 'wordcount'
+                ],
+                toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | link image media code | fullscreen',
+                content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6; padding: 10px; }',
+                branding: false,
+                promotion: false,
+                setup: function (editor) {
+                    editor.on('change keyup blur', function () {
+                        editor.save();
+                    });
+                }
+            });
         });
     }
 };

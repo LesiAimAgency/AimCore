@@ -1,0 +1,196 @@
+/* ===== ALL SUBMENU STYLES - COMPREHENSIVE FIX ===== */
+
+/* IMPORTANT: Cart dropdown được xử lý riêng bởi JavaScript và cart-dropdown.css */
+/* CSS này chỉ áp dụng cho: Category menu, Language switcher, Navigation submenus */
+
+/* 1. CATEGORY MENU DROPDOWN (Danh mục button) - CHỈ cho category-btn, KHÔNG phải cart */
+.category-btn.category-hover-header:not(.cart) {
+    position: relative !important;
+}
+
+.category-btn.category-hover-header:not(.cart) .category-sub-menu {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    background: #ffffff !important;
+    border-radius: 0 0 10px 10px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    z-index: 9999 !important;
+    min-width: 260px !important;
+    max-width: 300px !important;
+    padding: 8px 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+    border: 1px solid #e5e7eb !important;
+    transition: opacity 0.3s ease, visibility 0.3s ease !important;
+}
+
+.category-btn.category-hover-header:not(.cart) .category-sub-menu li {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.category-btn.category-hover-header:not(.cart) .category-sub-menu .menu-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 10px 16px !important;
+    color: #1f2937 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    border-bottom: 1px solid #f3f4f6 !important;
+}
+
+.category-btn.category-hover-header:not(.cart) .category-sub-menu .menu-item:hover {
+    background: var(--color-primary) !important;
+    color: #ffffff !important;
+}
+
+.category-btn.category-hover-header:not(.cart) .category-sub-menu .menu-item img,
+.category-btn.category-hover-header:not(.cart) .category-sub-menu .menu-item svg {
+    width: 20px !important;
+    height: 20px !important;
+    flex-shrink: 0 !important;
+}
+
+/* 2. LANGUAGE SWITCHER DROPDOWN - CHỈ cho language-hover, KHÔNG phải cart */
+.language-hover.category-hover-header:not(.cart) {
+    position: relative !important;
+}
+
+.language-hover.category-hover-header:not(.cart) .category-sub-menu {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    background: #ffffff !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    z-index: 9999 !important;
+    min-width: 180px !important;
+    padding: 8px 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+    border: 1px solid #e5e7eb !important;
+    transition: opacity 0.3s ease, visibility 0.3s ease !important;
+}
+
+.language-hover.category-hover-header:not(.cart):hover .category-sub-menu {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.language-hover.category-hover-header:not(.cart) .category-sub-menu li {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.language-hover.category-hover-header:not(.cart) .category-sub-menu .menu-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 10px 16px !important;
+    color: #1f2937 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.language-hover.category-hover-header:not(.cart) .category-sub-menu .menu-item:hover {
+    background: #f8fafc !important;
+    color: #2563eb !important;
+}
+
+
+
+/* 3. NAVIGATION SUBMENUS (has-dropdown) */
+.has-dropdown {
+    position: relative !important;
+}
+
+.has-dropdown .submenu {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    background: #ffffff !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    z-index: 9999 !important;
+    min-width: 220px !important;
+    padding: 8px 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+    border: 1px solid #e5e7eb !important;
+    transition: opacity 0.3s ease, visibility 0.3s ease !important;
+}
+
+.has-dropdown:hover .submenu {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.has-dropdown .submenu li {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.has-dropdown .submenu a {
+    display: block !important;
+    padding: 10px 16px !important;
+    color: #1f2937 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.has-dropdown .submenu a:hover {
+    background: #f8fafc !important;
+    color: #2563eb !important;
+}
+
+/* 4. SCROLLBAR FOR ALL SUBMENUS */
+.category-sub-menu::-webkit-scrollbar,
+.submenu::-webkit-scrollbar {
+    width: 4px !important;
+}
+
+.category-sub-menu::-webkit-scrollbar-track,
+.submenu::-webkit-scrollbar-track {
+    background: #f1f5f9 !important;
+}
+
+.category-sub-menu::-webkit-scrollbar-thumb,
+.submenu::-webkit-scrollbar-thumb {
+    background: #cbd5e1 !important;
+    border-radius: 2px !important;
+}
+
+.category-sub-menu::-webkit-scrollbar-thumb:hover,
+.submenu::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8 !important;
+}
+
+/* 5. MOBILE RESPONSIVE - KHÔNG áp dụng cho cart */
+@media (max-width: 768px) {
+
+    .category-btn.category-hover-header:not(.cart) .category-sub-menu,
+    .language-hover.category-hover-header:not(.cart) .category-sub-menu,
+    .has-dropdown .submenu {
+        position: fixed !important;
+        top: 60px !important;
+        left: 10px !important;
+        right: 10px !important;
+        max-width: calc(100vw - 20px) !important;
+    }
+}

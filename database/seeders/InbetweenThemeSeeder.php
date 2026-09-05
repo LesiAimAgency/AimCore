@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Project;
 use App\Models\Setting;
 use App\Models\Widget;
 use Illuminate\Database\Seeder;
@@ -10,31 +11,31 @@ class InbetweenThemeSeeder extends Seeder
 {
     public function run(): void
     {
-        $tenantId = session('current_project')['id'] ?? \App\Models\Project::first()->id ?? 1;
+        $tenantId = session('current_project')['id'] ?? Project::first()->id ?? 1;
 
         // 1. SEED SETTINGS
         $settings = [
             'theme' => 'inbetween',
             'theme_primary_color' => '#EC460B',
-            
+
             'site_name' => 'INBETWEEN',
             'site_tagline' => 'Cross-border Community & Platform',
             'site_description' => 'A cross-border network where Professionals, Founders and Creatives collaborate and connect.',
             'site_phone' => '0909 999 999',
             'site_email' => 'inbetween.asia@gmail.com',
-            
+
             'site_logo_footer' => 'themes/inbetween/assets/logo-footer.svg',
             'site_copyright' => 'Copyright belong to INBETWEEN',
             'site_powered_by' => 'Powered by AIM AGENCY',
-            
+
             'footer_brand_statement' => 'ONE NETWORK. ENDLESS POSSIBILITIES.',
             'footer_brand_subtitle' => 'WE CONNECT PEOPLE, TALENT, AND<br class="hidden sm:inline"> BUSINESSES ACROSS BORDERS TO CREATE<br class="hidden sm:inline"> LASTING OPPORTUNITIES.',
-            
+
             'hero_logo' => 'themes/inbetween/assets/logo.svg',
             'hero_subtitle' => 'Cross-border community, media & connection platform|for|Professionals, Founders, Creatives & Organizations',
-            
+
             'community_description' => 'A cross-border network where Professionals, Founders and Creatives collaborate and connect.',
-            
+
             'core_values_title' => 'CORE VALUES',
             'core_values_subtitle' => 'Who we are inspire what we do',
             'core_value_1_title' => 'AUTHENTICITY',
@@ -43,16 +44,16 @@ class InbetweenThemeSeeder extends Seeder
             'core_value_2_desc' => 'Empowering bold ideas and fostering cross-border breakthroughs',
             'core_value_3_title' => 'IMPACT',
             'core_value_3_desc' => 'Creating lasting value and sustainable growth for our global community',
-            
+
             'partners_section_title' => 'OUR BUSINESS PARTNERS',
-            
+
             'founder_name' => 'HUYNH THI AI NHU',
             'founder_title' => 'Founder of INBETWEEN',
             'founder_mission' => "CONNECTING PEOPLE\nIS OUR VERY MISSION",
             'founder_social_yt_text' => 'Follow our journey on YouTube',
             'founder_social_fb_text' => 'Join our community on Facebook',
             'founder_social_ig_text' => 'See our highlights on Instagram',
-            
+
             'event_day' => 'Tuesday',
             'event_date' => '18.08',
             'event_year' => '2026',
@@ -60,17 +61,17 @@ class InbetweenThemeSeeder extends Seeder
             'event_location' => 'Grand Ballroom - Park Hyatt Saigon',
             'event_address' => 'No.02 Cong Truong Lam Son St, Sai Gon Ward, HCMC',
             'event_agenda' => "Meeting with special guest\nHaving brunch\nLuck Gifts",
-            
+
             'stories_description' => 'Inspiring stories from leaders shaping the future.',
             'story_1_title' => 'HAY DE VIET NAM DUOC LA VIET NAM',
             'story_1_guest' => 'Ken',
             'story_1_desc' => 'A deep dive into the local culture.',
-            
+
             'packages_description' => 'Choose the membership package that best fits your journey.',
             'package_1_name' => 'STANDARD',
             'package_1_price' => '$29',
             'package_1_privileges' => "Access to community events\nMonthly newsletter",
-            
+
             'social_facebook' => 'https://facebook.com/inbetween',
             'social_instagram' => 'https://instagram.com/inbetween',
             'social_linkedin' => 'https://linkedin.com/company/inbetween',

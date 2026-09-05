@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Project;
 use App\Models\Widget;
 use Illuminate\Database\Seeder;
 
@@ -9,7 +10,7 @@ class InbetweenWidgetsSeeder extends Seeder
 {
     public function run(): void
     {
-        $tenantId = session('current_project')['id'] ?? \App\Models\Project::first()->id ?? 1;
+        $tenantId = session('current_project')['id'] ?? Project::first()->id ?? 1;
 
         // Clear existing INBETWEEN widgets to prevent duplicates
         Widget::where('tenant_id', $tenantId)
@@ -17,20 +18,20 @@ class InbetweenWidgetsSeeder extends Seeder
             ->delete();
 
         $widgets = [
-            'inbetween-hero' => <<<BLADE
+            'inbetween-hero' => <<<'BLADE'
 <div class="hero-content flex flex-col items-center max-w-[708px] w-full">
     <div class="hero-logo-wrapper w-full max-w-[280px] sm:max-w-[420px] md:max-w-[580px] lg:max-w-[708px]">
     <img src="{{ setting('hero_logo', asset('themes/inbetween/assets/logo.svg')) }}" alt="{{ setting('site_name', 'INBETWEEN') }}" class="w-full h-auto object-contain drop-shadow-2xl select-none" width="708" height="109">
     </div>
     <div class="hero-subtitle mt-4 sm:mt-8 lg:mt-11 text-[25px] font-medium leading-snug sm:leading-[1.18] space-y-0.5 sm:space-y-1 text-white select-none">
-    @foreach(explode('|', setting('hero_subtitle', 'Cross-border community, media & connection platform|for|Professionals, Founders, Creatives & Organizations')) as \$line)
-    <p class="m-0 tracking-[-0.01em] drop-shadow-md">{{ trim(\$line) }}</p>
+    @foreach(explode('|', setting('hero_subtitle', 'Cross-border community, media & connection platform|for|Professionals, Founders, Creatives & Organizations')) as $line)
+    <p class="m-0 tracking-[-0.01em] drop-shadow-md">{{ trim($line) }}</p>
     @endforeach
     </div>
 </div>
 BLADE,
 
-            'inbetween-community-wall' => <<<BLADE
+            'inbetween-community-wall' => <<<'BLADE'
 <div class="wall-stage">
     <!-- Central Inbetween Logo (GSAP xPercent/yPercent replaces tailwind translate) -->
     <div id="wall-center-logo" class="wall-center-logo absolute left-1/2 top-1/2 z-30 w-[38%] pointer-events-none text-center select-none will-change-transform">
@@ -49,7 +50,7 @@ BLADE,
 </div>
 BLADE,
 
-            'inbetween-community' => <<<BLADE
+            'inbetween-community' => <<<'BLADE'
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
     <div class="lg:col-span-4 flex flex-col gap-8 items-start">
     <div id="sec2-card-1" class="group cursor-pointer max-w-[340px] w-full will-change-transform">
@@ -92,7 +93,7 @@ BLADE,
 </div>
 BLADE,
 
-            'inbetween-about' => <<<BLADE
+            'inbetween-about' => <<<'BLADE'
 <div id="core-values-header" class="text-center max-w-2xl mx-auto mb-14 lg:mb-20">
     <div class="w-48 sm:w-56 lg:w-64 mx-auto mb-4">
     <img src="{{ asset('themes/inbetween/assets/core-values-header.svg') }}" alt="{{ setting('site_name', 'INBETWEEN') }}" class="w-full h-auto object-contain">

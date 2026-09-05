@@ -1,0 +1,104 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Project;
+use App\Models\ProjectSetting;
+use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
+
+class ViettinmartMasterSeeder extends Seeder
+{
+    /**
+     * Seed all Viettinmart data from legacy public_html into VGTDemo core.
+     * Run: php artisan db:seed --class=ViettinmartMasterSeeder
+     */
+    public function run(?int $projectId = null, ?int $tenantId = null): void
+    {
+        $projectId = $projectId ?? 10;
+        $tenantId = $tenantId ?? 3;
+
+        $this->command->info('=== BẮT ĐẦU SEED DỮ LIỆU VIETTINMART VÀO VGT CORE ===');
+
+        // 1. Users
+        $this->command->info('1. Seeding Users...');
+        $this->call(ViettinmartUserSeeder::class, false, ['projectId' => $projectId, 'tenantId' => $tenantId]);
+
+        // 2. Agents
+        $this->command->info('2. Seeding Agents...');
+        $this->call(ViettinmartAgentSeeder::class, false, ['projectId' => $projectId, 'tenantId' => $tenantId]);
+
+        // 3. Form Templates
+        $this->command->info('3. Seeding Form Templates...');
+        $this->call(ViettinmartFormTemplateSeeder::class, false, ['projectId' => $projectId, 'tenantId' => $tenantId]);
+
+        // 4. Homepage Widgets
+        $this->command->info('4. Seeding Homepage Widgets...');
+        $this->call(ViettinmartWidgetsSeeder::class, false, ['projectId' => $projectId, 'tenantId' => $tenantId]);
+
+        // 5. Footer Widgets
+        $this->command->info('5. Seeding Footer Widgets...');
+        $this->call(ViettinmartFooterWidgetSeeder::class, false, ['projectId' => $projectId, 'tenantId' => $tenantId]);
+
+        // 6. Navigation Menus
+        $this->command->info('6. Seeding Navigation Menus...');
+        $this->call(ViettinmartMenuSeeder::class, false, ['projectId' => $projectId, 'tenantId' => $tenantId]);
+
+        // 7. Database Migration & Full Sync from Legacy VTM (Products, Categories, Orders, Coupons, Reviews, Pages, Relationships, etc.)
+        $this->command->info('7. Đồng bộ toàn bộ danh mục sản phẩm, đơn hàng, bài viết, trang, flash sale từ legacy DB...');
+        Artisan::call('migrate:legacy-vtm', [
+            'project_id' => $projectId,
+            'tenant_id' => $tenantId,
+        ]);
+        $this->command->line(Artisan::output());
+
+        // 7b. Seed Products to Posts & ProductsEnhanced with proper taxonomies and image paths
+        $this->call(ViettinmartProductsSeeder::class, false, ['projectId' => $projectId, 'tenantId' => $tenantId]);
+
+        // 8. English Translations for Products
+        $this->command->info('8. Seeding English Translations...');
+        $this->call(ViettinmartProductEnTranslationSeeder::class, false, ['projectId' => $projectId]);
+
+        // 9. Synchronize Project Config, Feature Packs & CMS Credentials
+        $this->command->info('9. Cấu hình tính năng thương mại điện tử & CMS Admin cho Project...');
+        $project = Project::find($projectId);
+        if ($project) {
+            $project->cms_features = ['commerce', 'product_listing', 'blog', 'contact', 'gallery', 'agent'];
+            $project->project_admin_username = 'admin_vtm';
+            $project->project_admin_password = bcrypt('admin123');
+            $project->project_admin_password_plain = encrypt('admin123');
+            $project->password_updated_at = now();
+            $project->save();
+
+            // Set CMS user
+            $cmsUser = User::where('email', 'admin@viettinmart.com')->first();
+            if ($cmsUser) {
+                $cmsUser->username = 'admin_vtm';
+                $cmsUser->role = 'cms';
+                $cmsUser->project_ids = [$projectId];
+                $cmsUser->save();
+            }
+
+            // Set all 21 Core Modules in Project Settings
+            $systemModules = collect(config('system_menu'))->pluck('permission')->toArray();
+            foreach ($systemModules as $permKey) {
+                ProjectSetting::set($projectId, $permKey, '1');
+            }
+        }
+
+        // 10. Settings & Theme Options
+        $this->command->info('10. Seeding Settings & Theme Options...');
+        $this->call(ViettinmartSettingsSeeder::class);
+
+        // 11. Blog Categories, Tags, and Rich Articles
+        $this->command->info('11. Seeding Blog Categories, Tags & Posts...');
+        $this->call(ViettinmartBlogSeeder::class, false, ['projectId' => $projectId]);
+
+        // 12. Ecommerce Enhancements (Coupons, Flash Sale, Brands, Shipping Carriers, Modal Forms)
+        $this->command->info('12. Seeding Ecommerce Enhancements...');
+        $this->call(ViettinmartEcommerceEnhanceSeeder::class, false, ['projectId' => $projectId]);
+
+        $this->command->info('=== HOÀN TẤT SEED TOÀN BỘ DỮ LIỆU VIETTINMART VÀO VGT CORE! ===');
+    }
+}

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\ProjectScoped;
+use App\Traits\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Taxonomy extends Model
 {
-    use HasFactory, ProjectScoped, SoftDeletes;
+    use HasFactory, ProjectScoped, SoftDeletes, Translatable;
+
+    protected $translatable = [
+        'name',
+        'description',
+    ];
 
     protected $fillable = [
         'project_id',
@@ -61,7 +67,7 @@ class Taxonomy extends Model
 
     public function scopeTags($query)
     {
-        return $query->where('taxonomy', 'tag');
+        return $query->whereIn('taxonomy', ['post_tag', 'tag']);
     }
 
     // Helper methods

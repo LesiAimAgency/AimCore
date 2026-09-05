@@ -1,12 +1,38 @@
 @extends('cms.layouts.app')
 
+@section('title', 'Quản lý Ngôn ngữ')
+@section('page-title', 'Quản lý Ngôn ngữ')
+
 @section('content')
+@php
+    $project = request()->attributes->get('project');
+    $projectCode = request()->route('projectCode') ?? ($project?->code ?? (request()->segment(1) !== 'admin' && request()->segment(1) !== 'cms' ? request()->segment(1) : null));
+    $isProject = !empty($projectCode);
+    $saveUrl = $isProject 
+        ? route('project.admin.settings.save', ['projectCode' => $projectCode]) 
+        : (Route::has('admin.settings.save') ? route('admin.settings.save') : url('/admin/settings'));
+    $backUrl = $isProject 
+        ? route('project.admin.settings.index', ['projectCode' => $projectCode]) 
+        : (Route::has('admin.settings.index') ? route('admin.settings.index') : url('/admin/settings'));
+    $scanUrl = $isProject 
+        ? route('project.admin.settings.scan-translations', ['projectCode' => $projectCode]) 
+        : (Route::has('admin.settings.scan-translations') ? route('admin.settings.scan-translations') : url('/admin/settings/scan-translations'));
+@endphp
 <div class="container mx-auto px-4 py-6" x-data="languageManager()">
+    <div class="mb-6">
+        <a href="{{ $backUrl }}" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 font-medium">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Quay lại cài đặt
+        </a>
+    </div>
+
     <div class="bg-white rounded-lg shadow p-6">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold">Quản lý Ngôn ngữ</h2>
             <div class="flex items-center gap-4">
-                <label class="flex items-center gap-2 cursor-pointer"></label>
+                <label class="flex items-center gap-2 cursor-pointer">
                     <input type="checkbox" 
                            x-model="multilingualEnabled"
                            @change="toggleMultilingual"
@@ -139,8 +165,7 @@
         </div>
 
         <!-- Save Form -->
-        @php $projectCode = request()->segment(1); $isProject = $projectCode && $projectCode !== 'cms'; @endphp
-        <form action="{{ $isProject ? route('project.admin.settings.save', $projectCode) : route('cms.settings.save') }}" method="POST" x-ref="saveForm">
+        <form action="{{ $saveUrl }}" method="POST" x-ref="saveForm">
             @csrf
             <input type="hidden" name="page" value="languages">
             <input type="hidden" name="languages" :value="JSON.stringify(languages)">
@@ -239,7 +264,7 @@
         </div>
 
         <!-- Save Form -->
-        <form action="{{ $isProject ? route('project.admin.settings.save', $projectCode) : route('cms.settings.save') }}" method="POST" x-ref="transForm">
+        <form action="{{ $saveUrl }}" method="POST" x-ref="transForm">
             @csrf
             <input type="hidden" name="page" value="translations">
             <input type="hidden" name="translations" :value="JSON.stringify(translations)">
@@ -294,11 +319,17 @@ function showAlert(message, type = 'info') {
 }
 
 function languageManager() {
-    let savedLanguages = {!! json_encode(setting('languages', [])) !!};
+    let rawLangs = {!! json_encode(setting('languages', [])) !!};
+    let savedLanguages = [];
+    if (typeof rawLangs === 'string') {
+        try { savedLanguages = JSON.parse(rawLangs); } catch(e) { savedLanguages = []; }
+    } else if (Array.isArray(rawLangs)) {
+        savedLanguages = rawLangs;
+    }
     if (!Array.isArray(savedLanguages) || savedLanguages.length === 0) {
         savedLanguages = [
-            {name: 'Tiếng Việt', code: 'vi', is_default: true},
-            {name: 'English', code: 'en', is_default: false}
+            {name: 'Tiếng Việt', code: 'vi', is_default: true, is_active: true},
+            {name: 'English', code: 'en', is_default: false, is_active: true}
         ];
     }
 
@@ -392,7 +423,7 @@ function languageManager() {
         async toggleMultilingual() {
             console.log('toggleMultilingual called!');
             console.log('Multilingual toggled to:', this.multilingualEnabled);
-            console.log('Saving to URL:', '{{ $isProject ? route('project.admin.settings.save', $projectCode) : route('cms.settings.save') }}');
+            console.log('Saving to URL:', '{{ $saveUrl }}');
             
             // Show immediate feedback
             showAlert('Đang lưu cài đặt...', 'info');
@@ -405,7 +436,7 @@ function languageManager() {
                 formData.append('multilingual_enabled', this.multilingualEnabled ? '1' : '0');
                 formData.append('languages', JSON.stringify(this.languages));
                 
-                const response = await fetch('{{ $isProject ? route('project.admin.settings.save', $projectCode) : route('cms.settings.save') }}', {
+                const response = await fetch('{{ $saveUrl }}', {
                     method: 'POST',
                     body: formData
                 });
@@ -435,11 +466,29 @@ function languageManager() {
 
 function translationManager() {
     let rawData = {!! json_encode(setting('translations', '[]')) !!};
-    let savedTranslations = typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
-    if (!Array.isArray(savedTranslations)) savedTranslations = [];
+    let savedTranslations = [];
+    if (typeof rawData === 'string') {
+        try { savedTranslations = JSON.parse(rawData); } catch(e) { savedTranslations = []; }
+    } else if (Array.isArray(rawData)) {
+        savedTranslations = rawData;
+    }
+
+    let rawLangs = {!! json_encode(setting('languages', [])) !!};
+    let savedLanguages = [];
+    if (typeof rawLangs === 'string') {
+        try { savedLanguages = JSON.parse(rawLangs); } catch(e) { savedLanguages = []; }
+    } else if (Array.isArray(rawLangs)) {
+        savedLanguages = rawLangs;
+    }
+    if (!Array.isArray(savedLanguages) || savedLanguages.length === 0) {
+        savedLanguages = [
+            {name: 'Tiếng Việt', code: 'vi', is_default: true, is_active: true},
+            {name: 'English', code: 'en', is_default: false, is_active: true}
+        ];
+    }
 
     return {
-        languages: @json(setting('languages', [])),
+        languages: savedLanguages,
         translations: savedTranslations,
         showAddTranslation: false,
         editTransIndex: null,
@@ -518,7 +567,7 @@ function translationManager() {
 
         async scanTranslations() {
             try {
-                const response = await fetch('{{ route('project.admin.settings.scan-translations', $currentProject->code) }}', {
+                const response = await fetch('{{ $scanUrl }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

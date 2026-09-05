@@ -19,51 +19,53 @@ class CommunityCollageWidget extends BaseWidget
                     'name' => 'center_logo',
                     'label' => 'Center Logo Image',
                     'type' => 'image',
-                    'default' => ''
+                    'default' => '',
                 ],
                 [
-                    'name' => 'image_1', 'label' => 'Image 1 (Community)', 'type' => 'image', 'default' => ''
+                    'name' => 'image_1', 'label' => 'Image 1 (Community)', 'type' => 'image', 'default' => '',
                 ],
                 [
-                    'name' => 'image_2', 'label' => 'Image 2 (Founder)', 'type' => 'image', 'default' => ''
+                    'name' => 'image_2', 'label' => 'Image 2 (Founder)', 'type' => 'image', 'default' => '',
                 ],
                 [
-                    'name' => 'image_3', 'label' => 'Image 3 (Member)', 'type' => 'image', 'default' => ''
+                    'name' => 'image_3', 'label' => 'Image 3 (Member)', 'type' => 'image', 'default' => '',
                 ],
                 [
-                    'name' => 'image_4', 'label' => 'Image 4 (Speaker)', 'type' => 'image', 'default' => ''
+                    'name' => 'image_4', 'label' => 'Image 4 (Speaker)', 'type' => 'image', 'default' => '',
                 ],
                 [
-                    'name' => 'image_5', 'label' => 'Image 5 (Event)', 'type' => 'image', 'default' => ''
+                    'name' => 'image_5', 'label' => 'Image 5 (Event)', 'type' => 'image', 'default' => '',
                 ],
                 [
-                    'name' => 'image_6', 'label' => 'Image 6 (Interview)', 'type' => 'image', 'default' => ''
+                    'name' => 'image_6', 'label' => 'Image 6 (Interview)', 'type' => 'image', 'default' => '',
                 ],
                 [
-                    'name' => 'image_7', 'label' => 'Image 7 (Summit)', 'type' => 'image', 'default' => ''
+                    'name' => 'image_7', 'label' => 'Image 7 (Summit)', 'type' => 'image', 'default' => '',
                 ],
                 [
-                    'name' => 'image_8', 'label' => 'Image 8 (Media)', 'type' => 'image', 'default' => ''
+                    'name' => 'image_8', 'label' => 'Image 8 (Media)', 'type' => 'image', 'default' => '',
                 ],
                 [
-                    'name' => 'image_9', 'label' => 'Image 9 (Podcast)', 'type' => 'image', 'default' => ''
+                    'name' => 'image_9', 'label' => 'Image 9 (Podcast)', 'type' => 'image', 'default' => '',
                 ],
                 [
-                    'name' => 'image_10', 'label' => 'Image 10 (Innovator)', 'type' => 'image', 'default' => ''
-                ]
-            ]
+                    'name' => 'image_10', 'label' => 'Image 10 (Innovator)', 'type' => 'image', 'default' => '',
+                ],
+            ],
         ];
     }
 
     public function render(): string
     {
         $settings = $this->settings;
-        
-        if (empty($settings['center_logo'])) $settings['center_logo'] = asset('themes/inbetween/assets/logo-white.svg');
+
+        if (empty($settings['center_logo'])) {
+            $settings['center_logo'] = asset('themes/inbetween/assets/logo-white.svg');
+        }
         for ($i = 1; $i <= 10; $i++) {
-            if (empty($settings['image_' . $i])) {
+            if (empty($settings['image_'.$i])) {
                 $idx = $i - 1;
-                $settings['image_' . $i] = asset("themes/inbetween/assets/image{$idx}_252_132.png");
+                $settings['image_'.$i] = asset("themes/inbetween/assets/image{$idx}_252_132.png");
             }
         }
 

@@ -2,8 +2,8 @@
 
 namespace App\Widgets\Inbetween;
 
-use App\Widgets\BaseWidget;
-use App\Models\Event; // Assuming Event model exists
+use App\Models\Event;
+use App\Widgets\BaseWidget; // Assuming Event model exists
 
 class UpcomingEventsWidget extends BaseWidget
 {
@@ -20,31 +20,31 @@ class UpcomingEventsWidget extends BaseWidget
                     'name' => 'title',
                     'label' => 'Tiêu đề (UPCOMING EVENTS)',
                     'type' => 'text',
-                    'default' => 'UPCOMING EVENTS'
+                    'default' => 'UPCOMING EVENTS',
                 ],
                 [
                     'name' => 'subtitle',
                     'label' => 'Tiêu đề phụ',
                     'type' => 'text',
-                    'default' => 'What to expect next'
+                    'default' => 'What to expect next',
                 ],
                 [
                     'name' => 'btn_text',
                     'label' => 'Chữ nút (DISCOVER MORE)',
                     'type' => 'text',
-                    'default' => 'DISCOVER MORE'
+                    'default' => 'DISCOVER MORE',
                 ],
                 [
                     'name' => 'btn_link',
                     'label' => 'Link nút',
                     'type' => 'text',
-                    'default' => '/events'
+                    'default' => '/events',
                 ],
                 [
                     'name' => 'limit',
                     'label' => 'Số lượng sự kiện',
                     'type' => 'number',
-                    'default' => 3
+                    'default' => 3,
                 ],
                 [
                     'name' => 'manual_events',
@@ -54,26 +54,26 @@ class UpcomingEventsWidget extends BaseWidget
                         [
                             'name' => 'title',
                             'label' => 'Tên sự kiện',
-                            'type' => 'text'
+                            'type' => 'text',
                         ],
                         [
                             'name' => 'start_date',
                             'label' => 'Ngày bắt đầu (VD: 2025-01-15 08:00:00)',
-                            'type' => 'text'
+                            'type' => 'text',
                         ],
                         [
                             'name' => 'location',
                             'label' => 'Địa điểm',
-                            'type' => 'text'
+                            'type' => 'text',
                         ],
                         [
                             'name' => 'image',
                             'label' => 'Hình ảnh',
-                            'type' => 'image'
-                        ]
-                    ]
-                ]
-            ]
+                            'type' => 'image',
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -81,20 +81,30 @@ class UpcomingEventsWidget extends BaseWidget
     {
         $settings = $this->settings;
 
-        if (empty($settings['title'])) $settings['title'] = 'UPCOMING EVENTS';
-        if (empty($settings['subtitle'])) $settings['subtitle'] = 'What to expect next';
-        if (empty($settings['btn_text'])) $settings['btn_text'] = 'DISCOVER MORE';
-        if (empty($settings['btn_link'])) $settings['btn_link'] = '/events';
-        if (empty($settings['limit'])) $settings['limit'] = 3;
+        if (empty($settings['title'])) {
+            $settings['title'] = 'UPCOMING EVENTS';
+        }
+        if (empty($settings['subtitle'])) {
+            $settings['subtitle'] = 'What to expect next';
+        }
+        if (empty($settings['btn_text'])) {
+            $settings['btn_text'] = 'DISCOVER MORE';
+        }
+        if (empty($settings['btn_link'])) {
+            $settings['btn_link'] = '/events';
+        }
+        if (empty($settings['limit'])) {
+            $settings['limit'] = 3;
+        }
 
-        // Fetch events if model exists, for now we will pass empty array and handle in blade 
+        // Fetch events if model exists, for now we will pass empty array and handle in blade
         // to show placeholders if no events exist
         $events = [];
         if (class_exists(Event::class)) {
             $events = Event::where('status', 1)
-                           ->orderBy('start_date', 'asc')
-                           ->limit($settings['limit'])
-                           ->get();
+                ->orderBy('start_date', 'asc')
+                ->limit($settings['limit'])
+                ->get();
         }
 
         return view('widgets.inbetween.upcoming_events', ['widget' => $this, 'settings' => $settings, 'events' => $events])->render();

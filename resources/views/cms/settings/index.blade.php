@@ -62,7 +62,7 @@
         Bán hàng & Thanh toán
     </h2>
     <div class="grid grid-cols-6 gap-4">
-        @foreach($modules->whereIn('permission', ['settings.payment', 'settings.shipping', 'settings.reviews']) as $module)
+        @foreach($modules->whereIn('permission', ['settings.payment', 'settings.shipping', 'settings.reviews', 'settings.orders']) as $module)
         <a href="{{ route($module['route'], $module['route_params'] ?? []) }}" class="group bg-white rounded-lg shadow-sm hover:shadow-md hover:border-red-300 border-2 border-transparent transition-all p-4 h-24 flex items-center">
             <div class="flex items-center space-x-3 w-full">
                 <div class="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center group-hover:bg-red-100 flex-shrink-0">

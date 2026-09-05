@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Traits\BelongsToTenant;
 use App\Traits\ProjectScoped;
+use App\Traits\Translatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductCategory extends Model
 {
-    use BelongsToTenant, HasFactory, ProjectScoped, SoftDeletes;
+    use BelongsToTenant, HasFactory, ProjectScoped, SoftDeletes, Translatable;
+
+    protected $table = 'product_categories';
+
+    protected $translatable = [
+        'name',
+        'description',
+        'meta_title',
+        'meta_description',
+    ];
 
     /**
      * Maximum allowed category depth (0-based, so 3 means 4 levels: 0,1,2,3)
@@ -54,6 +64,11 @@ class ProductCategory extends Model
     public function scopeRoots(Builder $query)
     {
         return $query->whereNull('parent_id');
+    }
+
+    public function scopeWithStandardRelations(Builder $query)
+    {
+        return $query->with(['translations', 'children.translations']);
     }
 
     public function scopeSearch(Builder $query, $search)

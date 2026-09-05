@@ -72,8 +72,9 @@ class SettingsService
                 // DEMO MODE: Đọc từ main database với project scoping
                 $project = request()->attributes->get('project');
                 if ($project) {
+                    $mainConn = config('database.default');
                     // Load global settings (project_id IS NULL) làm fallback
-                    $globalSettings = DB::connection('mysql')
+                    $globalSettings = DB::connection($mainConn)
                         ->table('settings')
                         ->whereNull('project_id')
                         ->pluck('payload', 'key')
@@ -81,7 +82,7 @@ class SettingsService
                         ->toArray();
 
                     // Load project-specific settings (override global)
-                    $projectSettings = DB::connection('mysql')
+                    $projectSettings = DB::connection($mainConn)
                         ->table('settings')
                         ->where('project_id', $project->id)
                         ->pluck('payload', 'key')
@@ -122,6 +123,7 @@ class SettingsService
         if (\is_array($value)) {
             if (array_key_exists('value', $value)) {
                 $val = $value['value'];
+
                 return $val !== null ? $val : $default;
             }
 
@@ -134,7 +136,20 @@ class SettingsService
     public function set($key, $value, $group = null, $locked = false)
     {
         if ($this->isProjectContext()) {
-            ProjectSettingModel::set($key, $value, $group);
+            $project = request()->attributes->get('project');
+            if ($project) {
+                $mainConn = config('database.default');
+                DB::connection($mainConn)->table('settings')->updateOrInsert(
+                    ['key' => $key, 'project_id' => $project->id],
+                    [
+                        'payload' => json_encode(is_array($value) ? $value : ['value' => $value]),
+                        'group' => $group ?? 'general',
+                        'updated_at' => now(),
+                    ]
+                );
+            } else {
+                ProjectSettingModel::set($key, $value, $group);
+            }
         } else {
             Setting::updateOrCreate(
                 ['key' => $key, 'project_id' => null],

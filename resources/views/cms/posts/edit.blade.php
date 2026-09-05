@@ -171,6 +171,53 @@
                 </div>
             </div>
 
+            @if($postType === 'post')
+            <!-- Chuyên mục bài viết -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="font-semibold text-gray-900 mb-4">Chuyên mục</h2>
+                @if(isset($categories) && $categories->isNotEmpty())
+                <div class="space-y-2 max-h-52 overflow-y-auto pr-1">
+                    @foreach($categories as $cat)
+                    <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1.5 rounded text-sm text-gray-700">
+                        <input type="checkbox" name="categories[]" value="{{ $cat->id }}" 
+                               {{ in_array($cat->id, old('categories', $selectedCategories ?? [])) ? 'checked' : '' }}
+                               class="rounded text-blue-600 focus:ring-blue-500">
+                        <span>{{ $cat->name }}</span>
+                    </label>
+                    @endforeach
+                </div>
+                @else
+                <p class="text-sm text-gray-500">Chưa có chuyên mục nào.</p>
+                @endif
+            </div>
+
+            <!-- Thẻ bài viết -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="font-semibold text-gray-900 mb-4">Thẻ bài viết (Tags)</h2>
+                <div class="space-y-3">
+                    <input type="text" name="tags" value="{{ old('tags', $selectedTags ?? '') }}"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+                           placeholder="Ví dụ: Hải sản tươi, Mẹo vặt, Bò Úc">
+                    <p class="text-xs text-gray-500">Nhập các thẻ cách nhau bằng dấu phẩy (,)</p>
+                    
+                    @if(isset($availableTags) && $availableTags->isNotEmpty())
+                    <div class="pt-2 border-t">
+                        <span class="text-xs font-medium text-gray-500 block mb-1.5">Gợi ý thẻ phổ biến:</span>
+                        <div class="flex flex-wrap gap-1.5">
+                            @foreach($availableTags->take(8) as $tag)
+                            <button type="button" 
+                                    onclick="addTag('{{ $tag->name }}')" 
+                                    class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded transition">
+                                + {{ $tag->name }}
+                            </button>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            @endif
+
             @if(in_array('featured_image', $config['supports'] ?? []))
             <!-- Ảnh đại diện -->
             <div class="bg-white rounded-lg shadow-sm p-6">
@@ -202,6 +249,15 @@
 function postForm() {
     return {
         slug: ''
+    }
+}
+function addTag(tagName) {
+    const input = document.querySelector('input[name="tags"]');
+    if (!input) return;
+    const current = input.value.split(',').map(s => s.trim()).filter(Boolean);
+    if (!current.includes(tagName)) {
+        current.push(tagName);
+        input.value = current.join(', ');
     }
 }
 </script>

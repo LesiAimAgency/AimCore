@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Project;
 use App\Models\Widget;
 use Illuminate\Database\Seeder;
 
@@ -9,23 +10,23 @@ class InbetweenWidgetsSeeder2 extends Seeder
 {
     public function run(): void
     {
-        $tenantId = session('current_project')['id'] ?? \App\Models\Project::first()->id ?? 1;
+        $tenantId = session('current_project')['id'] ?? Project::first()->id ?? 1;
 
         $widgets = [
-            'inbetween-partners' => <<<BLADE
+            'inbetween-partners' => <<<'BLADE'
 <div class="text-center mb-10">
     <h3 class="text-sm font-bold uppercase tracking-widest text-black">{{ setting('partners_section_title', 'OUR BUSINESS PARTNERS') }}</h3>
 </div>
 <div class="overflow-hidden relative py-4">
     <div class="marquee-track flex items-center gap-12 sm:gap-16">
-    @for(\$i = 0; \$i <= 11; \$i++)
-        @if(file_exists(public_path("themes/inbetween/assets/image{\$i}_200_302.png")))
-        <img src="{{ asset("themes/inbetween/assets/image{\$i}_200_302.png") }}" alt="Partner {{ \$i + 1 }}" class="h-8 lg:h-10 w-auto object-contain">
+    @for($i = 0; $i <= 11; $i++)
+        @if(file_exists(public_path("themes/inbetween/assets/image{$i}_200_302.png")))
+        <img src="{{ asset("themes/inbetween/assets/image{$i}_200_302.png") }}" alt="Partner {{ $i + 1 }}" class="h-8 lg:h-10 w-auto object-contain">
         @endif
     @endfor
-    @for(\$i = 0; \$i <= 11; \$i++)
-        @if(file_exists(public_path("themes/inbetween/assets/image{\$i}_200_302.png")))
-        <img src="{{ asset("themes/inbetween/assets/image{\$i}_200_302.png") }}" alt="" class="h-8 lg:h-10 w-auto object-contain" aria-hidden="true">
+    @for($i = 0; $i <= 11; $i++)
+        @if(file_exists(public_path("themes/inbetween/assets/image{$i}_200_302.png")))
+        <img src="{{ asset("themes/inbetween/assets/image{$i}_200_302.png") }}" alt="" class="h-8 lg:h-10 w-auto object-contain" aria-hidden="true">
         @endif
     @endfor
     </div>

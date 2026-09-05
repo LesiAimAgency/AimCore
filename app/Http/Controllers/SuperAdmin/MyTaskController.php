@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MyTaskController extends Controller
 {
@@ -172,7 +173,7 @@ class MyTaskController extends Controller
     /**
      * Server-Sent Events (SSE) Stream for Instant Realtime Task Sync.
      */
-    public function stream(Request $request): \Symfony\Component\HttpFoundation\StreamedResponse
+    public function stream(Request $request): StreamedResponse
     {
         $lastVersion = (int) $request->input('last_version', 0);
 

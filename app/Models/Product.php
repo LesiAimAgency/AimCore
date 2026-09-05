@@ -45,12 +45,12 @@ class Product extends Model implements HasMedia
     ];
 
     protected $fillable = [
-        'name', 'slug', 'short_description', 'description', 'sku', 'price', 'sale_price',
+        'project_id', 'tenant_id', 'name', 'slug', 'short_description', 'description', 'sku', 'price', 'sale_price',
         'has_price', 'stock_quantity', 'manage_stock', 'stock_status', 'featured_image',
         'gallery', 'weight', 'dimensions', 'product_category_id', 'brand_id', 'status',
         'is_featured', 'badges', 'meta_title', 'meta_description',
         'schema_type', 'canonical_url', 'noindex', 'settings', 'views',
-        'rating_average', 'rating_count', 'product_type', 'tenant_id', 'language',
+        'rating_average', 'rating_count', 'product_type', 'language',
     ];
 
     protected $casts = [
@@ -163,15 +163,40 @@ class Product extends Model implements HasMedia
         return $this->hasMany(ProductReview::class);
     }
 
+    public function approvedReviews()
+    {
+        return $this->reviews()->where('status', 'approved');
+    }
+
+    public function getAverageRatingAttribute(): float
+    {
+        return (float) (round($this->approvedReviews()->avg('rating'), 1) ?: 5.0);
+    }
+
     public function variations()
     {
         return $this->hasMany(ProductVariation::class);
     }
 
     // Scopes
+    public function scopeActive(Builder $query)
+    {
+        return $query->whereIn('status', ['active', 'published']);
+    }
+
     public function scopePublished(Builder $query)
     {
         return $query->where('status', 'published');
+    }
+
+    public function scopeWithStandardRelations(Builder $query)
+    {
+        return $query->with([
+            'translations',
+            'categories' => function ($q) {
+                $q->with('translations');
+            },
+        ]);
     }
 
     public function scopeSearch(Builder $query, $search)
@@ -206,6 +231,87 @@ class Product extends Model implements HasMedia
     }
 
     // Accessors
+    public function getFeaturedImageAttribute($value): ?string
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://') || str_starts_with($value, '/storage/')) {
+            return $value;
+        }
+
+        if (str_starts_with($value, 'storage/')) {
+            return '/'.$value;
+        }
+
+        return '/storage/'.ltrim($value, '/');
+    }
+
+    public function getThumbnailUrlAttribute(): ?string
+    {
+        if (! empty($this->featured_image)) {
+            return $this->featured_image;
+        }
+
+        return asset('theme/images/grocery/01.jpg');
+    }
+
+    public function getEffectivePriceAttribute(): float
+    {
+        $price = (float) ($this->price ?? 0);
+        $salePrice = (float) ($this->sale_price ?? 0);
+        if ($salePrice > 0 && $salePrice < $price) {
+            return $salePrice;
+        }
+
+        return $price;
+    }
+
+    public function getOldPriceAttribute(): ?float
+    {
+        $price = (float) ($this->price ?? 0);
+        $salePrice = (float) ($this->sale_price ?? 0);
+        if ($salePrice > 0 && $salePrice < $price) {
+            return $price;
+        }
+
+        return null;
+    }
+
+    public function getFormattedPriceAttribute(): string
+    {
+        $price = $this->effective_price;
+        if ($price <= 0) {
+            return __('common.contact_price') ?: 'Liên hệ';
+        }
+
+        return number_format($price, 0, ',', '.').' ₫';
+    }
+
+    public function getFormattedOldPriceAttribute(): ?string
+    {
+        $oldPrice = $this->old_price;
+
+        return $oldPrice ? number_format($oldPrice, 0, ',', '.').' ₫' : null;
+    }
+
+    public function getDiscountPercentAttribute(): ?int
+    {
+        $effective = $this->effective_price;
+        $old = $this->old_price;
+        if ($effective <= 0 || ! $old || $old <= $effective) {
+            return null;
+        }
+
+        return (int) round((1 - ($effective / $old)) * 100);
+    }
+
+    public function getUnitAttribute(): ?string
+    {
+        return $this->settings['unit'] ?? 'Hộp / Kg';
+    }
+
     public function getDisplayPriceAttribute()
     {
         if (! $this->has_price) {

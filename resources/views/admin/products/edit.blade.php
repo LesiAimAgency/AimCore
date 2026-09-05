@@ -73,8 +73,9 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Mô tả ngắn</label>
-                        <textarea name="short_description" rows="3" 
-                                  class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#98191F] focus:border-[#98191F] transition-all">{{ old('short_description', $product->short_description) }}</textarea>
+                        <div class="ckeditor-container">
+                            <textarea name="short_description" id="short_description" class="ckeditor">{{ old('short_description', $product->short_description) }}</textarea>
+                        </div>
                     </div>
 
                     <div>

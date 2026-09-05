@@ -19,10 +19,19 @@
       <h3 class="text-lg sm:text-xl font-bold">{{ $project->name }}</h3>
       <p class="text-xs sm:text-sm text-gray-600">{{ $project->code }}</p>
     </div>
-    <span class="px-3 py-1 text-xs sm:text-sm font-semibold rounded-full 
-      {{ $project->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-      {{ ucfirst($project->status) }}
-    </span>
+    <div class="flex items-center gap-3">
+      <form method="POST" action="{{ route('superadmin.projects.deploy-vtm', $project) }}" class="inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn Triển khai Mẫu Viettinmart (1-Click VTM)? Toàn bộ Theme, 21 Module, Menu, Widgets và Dữ liệu mẫu eCommerce sẽ được tự động cài đặt.')">
+        @csrf
+        <button type="submit" class="px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 shadow-xs transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          Deploy 1-Click VTM
+        </button>
+      </form>
+      <span class="px-3 py-1 text-xs sm:text-sm font-semibold rounded-full 
+        {{ $project->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+        {{ ucfirst($project->status) }}
+      </span>
+    </div>
   </div>
   
   @if($remoteStats)
@@ -197,21 +206,136 @@
             </h4>
             <div class="space-y-3">
           @foreach($systemModules as $module)
-          <div class="border rounded-lg p-4 hover:border-blue-300 transition-colors">
+          @php $isLanguagesModule = ($module['key'] === 'settings.languages'); @endphp
+          <div class="border rounded-lg p-4 hover:border-blue-300 transition-colors {{ $isLanguagesModule ? 'bg-gradient-to-r from-red-50/40 to-white border-red-200' : '' }}">
             <div class="flex items-center justify-between">
               <div class="flex-1">
-                <h5 class="font-semibold text-gray-800 mb-1">{{ $module['title'] }}</h5>
+                <div class="flex items-center gap-2">
+                  <h5 class="font-semibold text-gray-800 mb-1">{{ $module['title'] }}</h5>
+                  @if($isLanguagesModule)
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-red-100 text-red-800 border border-red-200">
+                      Cấu hình trực tiếp
+                    </span>
+                  @endif
+                </div>
                 <p class="text-sm text-gray-500">{{ $module['description'] }}</p>
               </div>
               <label class="toggle-switch ml-4">
                 <input type="checkbox" name="settings[{{ $module['key'] }}]" value="1" 
-                  {{ isset($settings[$module['key']]) && $settings[$module['key']] == '1' ? 'checked' : '' }}>
+                  id="{{ $isLanguagesModule ? 'toggle-settings-languages' : '' }}"
+                  {{ isset($settings[$module['key']]) && $settings[$module['key']] == '1' ? 'checked' : '' }}
+                  {{ $isLanguagesModule ? 'onchange="toggleLanguageConfigPanel(this.checked)"' : '' }}>
                 <span class="toggle-slider"></span>
               </label>
             </div>
+
+            @if($isLanguagesModule)
+            {{-- Panel cấu hình trực tiếp đa ngôn ngữ --}}
+            <div id="language-config-panel" class="{{ isset($settings[$module['key']]) && $settings[$module['key']] == '1' ? '' : 'hidden' }} mt-4 pt-4 border-t border-red-200 space-y-4">
+              <div class="bg-white rounded-lg p-4 border border-red-200 shadow-xs space-y-4">
+                <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                  <div>
+                    <h6 class="text-sm font-bold text-gray-900 flex items-center gap-2">
+                      <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+                      </svg>
+                      Cài đặt Ngôn ngữ & Dịch thuật của Website
+                    </h6>
+                    <p class="text-xs text-gray-500 mt-0.5">Chọn ngôn ngữ hỗ trợ, ngôn ngữ mặc định và tự động đồng bộ sang giao diện trang web.</p>
+                  </div>
+                  <label class="inline-flex items-center gap-2 cursor-pointer bg-red-50 px-3 py-1.5 rounded-lg border border-red-200 hover:bg-red-100 transition">
+                    <input type="checkbox" name="multilingual_enabled" value="1" {{ ($multilingualEnabled ?? true) ? 'checked' : '' }} class="w-4 h-4 rounded border-gray-300 text-red-600 focus:ring-red-500">
+                    <span class="text-xs font-bold text-red-900">Bật đa ngôn ngữ</span>
+                  </label>
+                </div>
+
+                {{-- Ngôn ngữ mặc định & nhận diện --}}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Ngôn ngữ chính (Mặc định khi vào web):</label>
+                    <select name="default_language" id="select-default-lang" class="w-full text-sm border-gray-300 rounded-lg shadow-xs focus:border-red-500 focus:ring-red-500 py-1.5" onchange="syncDefaultLanguage(this.value)">
+                      @foreach(($projectLanguages ?? []) as $lang)
+                        <option value="{{ $lang['code'] }}" {{ ($lang['code'] === ($defaultLanguage ?? 'vi')) ? 'selected' : '' }}>
+                          {{ $lang['name'] }} ({{ strtoupper($lang['code']) }})
+                        </option>
+                      @endforeach
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Tùy chọn tự động:</label>
+                    <label class="flex items-center gap-2 mt-2 cursor-pointer">
+                      <input type="checkbox" name="auto_detect_language" value="1" {{ ($autoDetectLanguage ?? true) ? 'checked' : '' }} class="w-4 h-4 rounded border-gray-300 text-red-600 focus:ring-red-500">
+                      <span class="text-xs text-gray-700">Tự động nhận diện ngôn ngữ theo trình duyệt khách</span>
+                    </label>
+                  </div>
+                </div>
+
+                {{-- Bảng danh sách ngôn ngữ --}}
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-semibold text-gray-700">Danh sách ngôn ngữ hỗ trợ:</span>
+                    <button type="button" onclick="addCustomLanguageRow()" class="text-xs text-red-600 hover:text-red-700 font-semibold flex items-center gap-1 bg-red-50 px-2 py-1 rounded border border-red-200">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                      Thêm ngôn ngữ khác
+                    </button>
+                  </div>
+
+                  <div id="language-rows-container" class="space-y-2">
+                    @php
+                      $flags = [
+                        'vi' => '🇻🇳',
+                        'en' => '🇬🇧',
+                        'zh' => '🇨🇳',
+                        'ja' => '🇯🇵',
+                        'ko' => '🇰🇷',
+                        'fr' => '🇫🇷',
+                        'de' => '🇩🇪',
+                      ];
+                    @endphp
+                    @foreach(($projectLanguages ?? []) as $idx => $lang)
+                    <div class="flex items-center gap-3 p-2 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100/80 transition" id="lang-row-{{ $idx }}">
+                      <span class="text-base">{{ $flags[$lang['code']] ?? '🌐' }}</span>
+                      
+                      <div class="w-20">
+                        <input type="text" name="languages[{{ $idx }}][code]" value="{{ $lang['code'] }}" class="w-full text-xs font-mono border-gray-300 rounded px-2 py-1 uppercase text-center font-bold bg-white" placeholder="CODE" readonly>
+                      </div>
+
+                      <div class="flex-1">
+                        <input type="text" name="languages[{{ $idx }}][name]" value="{{ $lang['name'] }}" class="w-full text-xs border-gray-300 rounded px-2 py-1 bg-white font-medium" placeholder="Tên ngôn ngữ">
+                      </div>
+
+                      <div class="flex items-center gap-3 pr-2">
+                        <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-gray-700">
+                          <input type="checkbox" name="languages[{{ $idx }}][is_active]" value="1" {{ !empty($lang['is_active']) ? 'checked' : '' }} class="rounded border-gray-300 text-red-600 focus:ring-red-500">
+                          <span>Bật</span>
+                        </label>
+
+                        <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-gray-700">
+                          <input type="radio" name="default_lang_radio" value="{{ $lang['code'] }}" {{ $lang['code'] === ($defaultLanguage ?? 'vi') ? 'checked' : '' }} onchange="setDefaultLangFromRadio('{{ $lang['code'] }}')" class="border-gray-300 text-red-600 focus:ring-red-500">
+                          <span>Mặc định</span>
+                        </label>
+                      </div>
+                    </div>
+                    @endforeach
+                  </div>
+                </div>
+
+                {{-- Nút link tới trang CMS Strings & Translations --}}
+                <div class="pt-2 flex items-center justify-between border-t border-gray-100 text-xs">
+                  <span class="text-gray-500">Quản lý từ vựng và chuỗi giao diện chi tiết:</span>
+                  <a href="{{ route('project.admin.settings.languages', $project->code) }}" target="_blank" class="inline-flex items-center gap-1 text-red-600 hover:text-red-700 font-bold bg-red-50 px-2.5 py-1 rounded border border-red-200 hover:bg-red-100 transition">
+                    <span>Mở Quản lý Chuỗi dịch CMS</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+            @endif
           </div>
           @endforeach
             </div>
+
           </div>
         </div>
         
@@ -861,17 +985,93 @@ function refreshHistory() {
 // Export menu management
 function toggleExportMenu() {
   const menu = document.getElementById('export-menu');
-  menu.classList.toggle('hidden');
+  if (menu) menu.classList.toggle('hidden');
 }
 
 // Close export menu when clicking outside
 document.addEventListener('click', function(event) {
   const menu = document.getElementById('export-menu');
   const button = event.target.closest('button');
-  
-  if (!button || !button.onclick || button.onclick.toString().indexOf('toggleExportMenu') === -1) {
+  if (menu && (!button || !button.onclick || button.onclick.toString().indexOf('toggleExportMenu') === -1)) {
     menu.classList.add('hidden');
   }
 });
+
+// Direct Multi-Language Configuration Helpers
+function toggleLanguageConfigPanel(isChecked) {
+
+  const panel = document.getElementById('language-config-panel');
+  if (panel) {
+    if (isChecked) {
+      panel.classList.remove('hidden');
+    } else {
+      panel.classList.add('hidden');
+    }
+  }
+}
+
+function syncDefaultLanguage(val) {
+  const radios = document.querySelectorAll('input[name="default_lang_radio"]');
+  radios.forEach(r => {
+    r.checked = (r.value === val);
+  });
+}
+
+function setDefaultLangFromRadio(val) {
+  const select = document.getElementById('select-default-lang');
+  if (select) {
+    select.value = val;
+  }
+}
+
+let customLangIdx = {{ count($projectLanguages ?? []) }};
+function addCustomLanguageRow() {
+  const container = document.getElementById('language-rows-container');
+  if (!container) return;
+
+  const row = document.createElement('div');
+  row.className = 'flex items-center gap-3 p-2 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100/80 transition animate-fadeIn';
+  row.id = `lang-row-${customLangIdx}`;
+  row.innerHTML = `
+    <span class="text-base">🌐</span>
+    <div class="w-20">
+      <input type="text" name="languages[${customLangIdx}][code]" class="w-full text-xs font-mono border-gray-300 rounded px-2 py-1 uppercase text-center font-bold bg-white" placeholder="CODE" required onchange="this.value = this.value.toLowerCase().trim(); updateDefaultSelectOption(this.value);">
+    </div>
+    <div class="flex-1">
+      <input type="text" name="languages[${customLangIdx}][name]" class="w-full text-xs border-gray-300 rounded px-2 py-1 bg-white font-medium" placeholder="Tên ngôn ngữ" required>
+    </div>
+    <div class="flex items-center gap-3 pr-2">
+      <label class="inline-flex items-center gap-1.5 cursor-pointer text-xs text-gray-700">
+        <input type="checkbox" name="languages[${customLangIdx}][is_active]" value="1" checked class="rounded border-gray-300 text-red-600 focus:ring-red-500">
+        <span>Bật</span>
+      </label>
+      <button type="button" onclick="document.getElementById('lang-row-${customLangIdx}').remove()" class="text-gray-400 hover:text-red-500 p-1" title="Xóa">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+  `;
+  container.appendChild(row);
+  customLangIdx++;
+}
+
+function updateDefaultSelectOption(code) {
+  if (!code) return;
+  const select = document.getElementById('select-default-lang');
+  if (!select) return;
+  let exists = false;
+  for (let i = 0; i < select.options.length; i++) {
+    if (select.options[i].value === code) {
+      exists = true;
+      break;
+    }
+  }
+  if (!exists) {
+    const opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = code.toUpperCase();
+    select.appendChild(opt);
+  }
+}
 </script>
+
 @endsection

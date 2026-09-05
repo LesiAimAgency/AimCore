@@ -43,25 +43,25 @@
           <td class="px-6 py-4">
             <form action="{{ $projectCode ? route('project.admin.fonts.toggle', $projectCode) : route('cms.fonts.toggle') }}" method="POST" style="display:inline">
               @csrf
-              <input type="hidden" name="id" value="{{ $font['id'] }}">
-              <button type="submit" class="px-3 py-1 text-xs rounded {{ $font['is_active'] ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                {{ $font['is_active'] ? 'Bật' : 'Tắt' }}
+              <input type="hidden" name="id" value="{{ $font['id'] ?? '' }}">
+              <button type="submit" class="px-3 py-1 text-xs rounded {{ !empty($font['is_active']) ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                {{ !empty($font['is_active']) ? 'Bật' : 'Tắt' }}
               </button>
             </form>
           </td>
           <td class="px-6 py-4">
             <form action="{{ $projectCode ? route('project.admin.fonts.default', $projectCode) : route('cms.fonts.default') }}" method="POST" style="display:inline">
               @csrf
-              <input type="hidden" name="id" value="{{ $font['id'] }}">
-              <button type="submit" class="px-3 py-1 text-xs rounded {{ $font['is_default'] ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
-                {{ $font['is_default'] ? '' : '-' }}
+              <input type="hidden" name="id" value="{{ $font['id'] ?? '' }}">
+              <button type="submit" class="px-3 py-1 text-xs rounded {{ !empty($font['is_default']) ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
+                {{ !empty($font['is_default']) ? '✓' : '-' }}
               </button>
             </form>
           </td>
           <td class="px-6 py-4 text-right">
             <form action="{{ $projectCode ? route('project.admin.fonts.destroy', $projectCode) : route('cms.fonts.destroy') }}" method="POST" style="display:inline" onsubmit="return confirm('Xác nhận ?')">
               @csrf @method('DELETE')
-              <input type="hidden" name="id" value="{{ $font['id'] }}">
+              <input type="hidden" name="id" value="{{ $font['id'] ?? '' }}">
               <button type="submit" class="text-red-600 hover:text-red-800 text-sm">Xóa</button>
             </form>
           </td>

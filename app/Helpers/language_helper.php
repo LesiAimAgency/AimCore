@@ -50,6 +50,53 @@ if (! function_exists('switchLanguageUrl')) {
     }
 }
 
+if (! function_exists('change_locale_url')) {
+    /**
+     * Chuyển đổi ngôn ngữ trên URL hiện tại (hỗ trợ cả projectCode và standalone)
+     */
+    function change_locale_url(string $locale): string
+    {
+        $locale = strtolower($locale);
+        $project = request()->attributes->get('project');
+        $projectCode = $project ? $project->code : request()->route('projectCode');
+
+        $defaultLocale = strtolower(setting('default_language', 'vi'));
+        $rawLangs = setting('languages', []);
+        if (is_string($rawLangs)) {
+            $rawLangs = json_decode($rawLangs, true) ?: [];
+        }
+        $activeCodes = array_map('strtolower', array_column($rawLangs, 'code')) ?: ['vi', 'en', 'zh'];
+
+        $segments = request()->segments();
+
+        // If in project context, segment 0 is projectCode
+        $prefix = '';
+        if ($projectCode && ! empty($segments) && $segments[0] === $projectCode) {
+            $prefix = array_shift($segments);
+        }
+
+        // Remove existing locale from segments if present
+        if (! empty($segments) && in_array(strtolower($segments[0]), $activeCodes)) {
+            array_shift($segments);
+        }
+
+        // Add new locale if not default
+        if ($locale !== $defaultLocale) {
+            array_unshift($segments, $locale);
+        }
+
+        // Put back projectCode
+        if ($prefix) {
+            array_unshift($segments, $prefix);
+        }
+
+        $path = '/'.implode('/', $segments);
+        $queryString = request()->getQueryString();
+
+        return url($path).($queryString ? '?'.$queryString : '');
+    }
+}
+
 if (! function_exists('localizedRoute')) {
     /**
      * Tạo route có locale

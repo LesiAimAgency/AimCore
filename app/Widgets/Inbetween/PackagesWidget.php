@@ -19,25 +19,25 @@ class PackagesWidget extends BaseWidget
                     'name' => 'title',
                     'label' => 'Tiêu đề',
                     'type' => 'textarea',
-                    'default' => 'Be a member of<br><span class="text-[#EC460B]">Our Community</span>'
+                    'default' => 'Be a member of<br><span class="text-[#EC460B]">Our Community</span>',
                 ],
                 [
                     'name' => 'subtitle',
                     'label' => 'Đoạn mô tả ngắn (Description)',
                     'type' => 'textarea',
-                    'default' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since 1966.'
+                    'default' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since 1966.',
                 ],
                 [
                     'name' => 'btn_text',
                     'label' => 'Chữ nút (Mặc định cho các gói)',
                     'type' => 'text',
-                    'default' => 'BECOME A MEMBER'
+                    'default' => 'BECOME A MEMBER',
                 ],
                 [
                     'name' => 'btn_link',
                     'label' => 'Link nút',
                     'type' => 'text',
-                    'default' => '#contact'
+                    'default' => '#contact',
                 ],
                 [
                     'name' => 'packages_list',
@@ -48,31 +48,31 @@ class PackagesWidget extends BaseWidget
                             'name' => 'name',
                             'label' => 'Tên gói',
                             'type' => 'text',
-                            'default' => 'PACKAGE 1'
+                            'default' => 'PACKAGE 1',
                         ],
                         [
                             'name' => 'price',
                             'label' => 'Giá',
                             'type' => 'text',
-                            'default' => '$29'
+                            'default' => '$29',
                         ],
                         [
                             'name' => 'period',
                             'label' => 'Đơn vị tính (VD: / Month)',
                             'type' => 'text',
-                            'default' => '/ Month'
+                            'default' => '/ Month',
                         ],
                         [
                             'name' => 'description',
                             'label' => 'Mô tả ngắn (Privilege)',
                             'type' => 'textarea',
-                            'default' => 'Privilege'
+                            'default' => 'Privilege',
                         ],
                         [
                             'name' => 'features',
                             'label' => 'Tính năng (Mỗi dòng 1 tính năng)',
                             'type' => 'textarea',
-                            'default' => "Lorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing"
+                            'default' => "Lorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing",
                         ],
                         [
                             'name' => 'highlight',
@@ -80,10 +80,10 @@ class PackagesWidget extends BaseWidget
                             'type' => 'select',
                             'options' => [
                                 '0' => 'Không',
-                                '1' => 'Có'
+                                '1' => 'Có',
                             ],
-                            'default' => '0'
-                        ]
+                            'default' => '0',
+                        ],
                     ],
                     'default' => [
                         [
@@ -92,7 +92,7 @@ class PackagesWidget extends BaseWidget
                             'period' => '/ Month',
                             'description' => 'Privilege',
                             'features' => "Lorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing",
-                            'highlight' => '0'
+                            'highlight' => '0',
                         ],
                         [
                             'name' => 'PACKAGE 2',
@@ -100,7 +100,7 @@ class PackagesWidget extends BaseWidget
                             'period' => '/ Month',
                             'description' => 'Privilege',
                             'features' => "Lorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing",
-                            'highlight' => '0'
+                            'highlight' => '0',
                         ],
                         [
                             'name' => 'PACKAGE 3',
@@ -108,11 +108,11 @@ class PackagesWidget extends BaseWidget
                             'period' => '/ Month',
                             'description' => 'Privilege',
                             'features' => "Lorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing",
-                            'highlight' => '0'
-                        ]
-                    ]
-                ]
-            ]
+                            'highlight' => '0',
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -120,10 +120,18 @@ class PackagesWidget extends BaseWidget
     {
         $settings = $this->settings;
 
-        if (empty($settings['title'])) $settings['title'] = 'Be a member of<br><span class="text-[#EC460B]">Our Community</span>';
-        if (empty($settings['subtitle'])) $settings['subtitle'] = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since 1966.';
-        if (empty($settings['btn_text'])) $settings['btn_text'] = 'BECOME A MEMBER';
-        if (empty($settings['btn_link'])) $settings['btn_link'] = '#contact';
+        if (empty($settings['title'])) {
+            $settings['title'] = 'Be a member of<br><span class="text-[#EC460B]">Our Community</span>';
+        }
+        if (empty($settings['subtitle'])) {
+            $settings['subtitle'] = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since 1966.';
+        }
+        if (empty($settings['btn_text'])) {
+            $settings['btn_text'] = 'BECOME A MEMBER';
+        }
+        if (empty($settings['btn_link'])) {
+            $settings['btn_link'] = '#contact';
+        }
 
         return view('widgets.inbetween.packages', ['widget' => $this, 'settings' => $settings])->render();
     }

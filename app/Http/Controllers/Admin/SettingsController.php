@@ -25,19 +25,50 @@ class SettingsController extends Controller
 
             \DB::setDefaultConnection('project');
 
+            // Luôn đảm bảo settings.languages hiển thị nếu dự án có đa ngôn ngữ hoặc được cấu hình
+            if (! in_array('settings.languages', $enabledSettings)) {
+                $enabledSettings[] = 'settings.languages';
+            }
+
             // Chỉ hiển thị các module đã được bật
-            $modules = collect(config('system_menu'))->filter(function ($module) use ($enabledSettings) {
+            $rawModules = collect(config('system_menu'))->filter(function ($module) use ($enabledSettings) {
                 return in_array($module['permission'], $enabledSettings);
             });
         } else {
-            // SuperAdmin (level 0 hoặc 1) có quyền truy cập tất cả
-            if ($user && ($user->level === 0 || $user->level === 1)) {
-                $modules = collect(config('system_menu'));
-            } else {
-                // User thường chỉ thấy các module được phép
-                $modules = collect(config('system_menu'));
-            }
+            $rawModules = collect(config('system_menu'));
         }
+
+        // Map routes to appropriate project or admin routes
+        $modules = $rawModules->map(function ($module) use ($project) {
+            $perm = $module['permission'] ?? '';
+            $routeKey = str_replace('_', '-', str_replace('settings.', '', $perm));
+
+            if ($project) {
+                $projectRoute = "project.admin.settings.{$routeKey}";
+                if (\Illuminate\Support\Facades\Route::has($projectRoute)) {
+                    $module['route'] = $projectRoute;
+                    $module['route_params'] = ['projectCode' => $project->code];
+                } elseif (\Illuminate\Support\Facades\Route::has("project.admin.{$routeKey}.index")) {
+                    $module['route'] = "project.admin.{$routeKey}.index";
+                    $module['route_params'] = ['projectCode' => $project->code];
+                } else {
+                    $module['route_url'] = url("/{$project->code}/admin/settings/{$routeKey}");
+                }
+            } else {
+                $adminRoute = "admin.settings.{$routeKey}";
+                if (\Illuminate\Support\Facades\Route::has($adminRoute)) {
+                    $module['route'] = $adminRoute;
+                    $module['route_params'] = [];
+                } elseif (\Illuminate\Support\Facades\Route::has("admin.{$routeKey}.index")) {
+                    $module['route'] = "admin.{$routeKey}.index";
+                    $module['route_params'] = [];
+                } else {
+                    $module['route_url'] = url("/admin/settings/{$routeKey}");
+                }
+            }
+
+            return $module;
+        });
 
         return view('cms.settings.index', compact('modules'));
     }
@@ -61,11 +92,18 @@ class SettingsController extends Controller
                     preg_match_all("/__\('([^']+)'\)/", $content, $matches1);
                     preg_match_all('/__\("([^"]+)"\)/', $content, $matches2);
 
-                    if (! empty($matches1[1])) {
-                        $keys = array_merge($keys, $matches1[1]);
-                    }
-                    if (! empty($matches2[1])) {
-                        $keys = array_merge($keys, $matches2[1]);
+                    // Match Lang('key') and Lang("key") patterns
+                    preg_match_all("/Lang\('([^']+)'\)/", $content, $matches3);
+                    preg_match_all('/Lang\("([^"]+)"\)/', $content, $matches4);
+
+                    // Match trans_db('key') and trans_db("key") patterns
+                    preg_match_all("/trans_db\('([^']+)'\)/", $content, $matches5);
+                    preg_match_all('/trans_db\("([^"]+)"\)/', $content, $matches6);
+
+                    foreach ([$matches1, $matches2, $matches3, $matches4, $matches5, $matches6] as $m) {
+                        if (! empty($m[1])) {
+                            $keys = array_merge($keys, $m[1]);
+                        }
                     }
                 }
             }
@@ -156,6 +194,13 @@ class SettingsController extends Controller
 
             SettingsService::getInstance()->clearCache();
 
+            if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+                return response()->json([
+                    'success' => true,
+                    'message' => "Lưu cấu hình thành công! Đã lưu {$savedCount} cài đặt.",
+                ]);
+            }
+
             return back()->with('alert', [
                 'type' => 'success',
                 'message' => "Lưu cấu hình thành công! Đã lưu {$savedCount} cài đặt.",
@@ -165,6 +210,13 @@ class SettingsController extends Controller
                 'trace' => $e->getTraceAsString(),
                 'request_data' => $request->all(),
             ]);
+
+            if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Lỗi: '.$e->getMessage(),
+                ], 500);
+            }
 
             return back()->with('alert', [
                 'type' => 'error',

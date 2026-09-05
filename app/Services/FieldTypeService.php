@@ -11,6 +11,7 @@ use App\Services\FieldTypes\GalleryField;
 use App\Services\FieldTypes\ImageField;
 use App\Services\FieldTypes\NumberField;
 use App\Services\FieldTypes\PostObjectField;
+use App\Services\FieldTypes\RadioField;
 use App\Services\FieldTypes\RangeField;
 use App\Services\FieldTypes\RelationshipField;
 use App\Services\FieldTypes\RepeatableField;
@@ -48,6 +49,7 @@ class FieldTypeService
         // Choice fields
         $this->register(new SelectField);
         $this->register(new CheckboxField);
+        $this->register(new RadioField);
 
         // Media fields
         $this->register(new ImageField);

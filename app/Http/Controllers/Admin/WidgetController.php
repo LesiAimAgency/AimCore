@@ -63,13 +63,25 @@ class WidgetController extends Controller
         }
 
         $query = Widget::orderBy('area')->orderBy('sort_order');
-        if ($tenantId) {
-            $query->where(function ($q) use ($tenantId) {
-                $q->where('tenant_id', $tenantId)->orWhereNull('tenant_id');
+        if ($currentProject || $tenantId) {
+            $projId = $currentProject?->id ?? $tenantId;
+            $query->where(function ($q) use ($projId, $tenantId) {
+                $q->where('project_id', $projId)
+                    ->orWhere('tenant_id', $tenantId);
+                if ($projId == 10 || $tenantId == 10) {
+                    $q->orWhere('tenant_id', 3);
+                }
             });
         }
 
         $existingWidgets = $query->get()
+            ->map(function ($w) {
+                if ($w->area === 'homepage') {
+                    $w->area = 'homepage-main';
+                }
+
+                return $w;
+            })
             ->groupBy('area')
             ->map(fn ($widgets) => $widgets->map(fn ($w) => [
                 'id' => $w->id,
@@ -266,7 +278,8 @@ class WidgetController extends Controller
             $errorCount = 0;
             $errors = [];
 
-            // Get tenant_id from session
+            // Get tenant_id from session or route
+            $projectCode = request()->route('projectCode');
             $currentProject = session('current_project');
             $tenantId = null;
             if (\is_array($currentProject)) {
@@ -274,13 +287,28 @@ class WidgetController extends Controller
             } elseif (\is_object($currentProject)) {
                 $tenantId = $currentProject->id ?? null;
             }
+            if (! $tenantId && $projectCode) {
+                $p = Project::where('code', $projectCode)->first();
+                $tenantId = $p?->id;
+            }
 
             // Clear existing widgets for the areas being updated (only for this tenant)
             $areas = collect($widgets)->pluck('area')->unique();
             foreach ($areas as $area) {
-                $query = Widget::where('area', $area);
+                $query = Widget::where(function ($q) use ($area) {
+                    $q->where('area', $area);
+                    if ($area === 'homepage-main') {
+                        $q->orWhere('area', 'homepage');
+                    }
+                });
                 if ($tenantId) {
-                    $query->where('tenant_id', $tenantId);
+                    $query->where(function ($q) use ($tenantId) {
+                        $q->where('tenant_id', $tenantId)
+                            ->orWhere('project_id', $tenantId);
+                        if ($tenantId == 10) {
+                            $q->orWhere('tenant_id', 3);
+                        }
+                    });
                 }
                 $query->delete();
             }
@@ -289,9 +317,10 @@ class WidgetController extends Controller
             foreach ($widgets as $widgetData) {
                 try {
                     $validated = $this->validateWidgetData($widgetData);
-                    // Add tenant_id
+                    // Add tenant_id and project_id
                     if ($tenantId) {
                         $validated['tenant_id'] = $tenantId;
+                        $validated['project_id'] = $tenantId;
                     }
                     Widget::create($validated);
                     $successCount++;
@@ -326,6 +355,42 @@ class WidgetController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error saving widgets: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Reorder widgets within an area
+     */
+    public function reorder(Request $request)
+    {
+        try {
+            $widgetIds = $request->input('widget_ids', []);
+            $area = $request->input('area');
+
+            foreach ($widgetIds as $index => $id) {
+                if ($id) {
+                    Widget::where('id', $id)->update(['sort_order' => $index]);
+                }
+            }
+
+            if ($area) {
+                clear_widget_cache($area);
+                if ($area === 'homepage-main') {
+                    clear_widget_cache('homepage');
+                }
+            } else {
+                clear_widget_cache();
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã cập nhật vị trí widget thành công',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi cập nhật vị trí: '.$e->getMessage(),
             ], 500);
         }
     }

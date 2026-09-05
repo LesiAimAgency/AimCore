@@ -25,7 +25,6 @@ use App\Http\Controllers\Admin\WidgetTemplateController;
 use App\Http\Controllers\Api\RelationshipFieldController;
 use App\Http\Controllers\Api\TaxonomyFieldController;
 use App\Http\Controllers\Auth\ProjectLoginController;
-use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\PostController;
@@ -57,31 +56,8 @@ Route::prefix('{projectCode}')
             return view("frontend.demo.{$type}");
         })->name('project.demo-layout');
 
-        // Default routes (no locale prefix - uses default language)
-        Route::get('/', [HomeController::class, 'index'])->name('project.home');
-        Route::get('/san-pham', [App\Http\Controllers\Frontend\ProductController::class, 'index'])->name('project.products.index');
-        Route::get('/san-pham/{slug}', [App\Http\Controllers\Frontend\ProductController::class, 'show'])->name('project.products.show');
-        Route::get('/danh-muc/{slug}', [App\Http\Controllers\Frontend\ProductController::class, 'category'])->name('project.products.category');
-        Route::get('/products', [App\Http\Controllers\Frontend\ProductController::class, 'index'])->name('project.products.index.en');
-        Route::get('/product/{slug}', [App\Http\Controllers\Frontend\ProductController::class, 'show'])->name('project.products.show.en');
-        Route::get('/category/{slug}', [App\Http\Controllers\Frontend\ProductController::class, 'category'])->name('project.products.category.en');
-        Route::get('/blog', [PostController::class, 'index'])->name('project.posts.index');
-        Route::get('/blog/{slug}', [PostController::class, 'show'])->name('project.posts.show');
-        Route::get('/contact', [PageController::class, 'contact'])->name('project.contact');
-        Route::post('/contact', [PageController::class, 'contactSubmit'])->name('project.contact.submit');
-
-        // Dynamic page route - exclude admin, login, etc.
-        Route::get('/{slug}', [PageController::class, 'show'])
-            ->where('slug', '^(?!admin|login|logout|cart|checkout|api).*$')
-            ->name('project.pages.show');
-
-        Route::get('/cart', [CartController::class, 'index'])->name('project.cart');
-        Route::post('/cart/add', [CartController::class, 'add'])->name('project.cart.add');
-        Route::post('/cart/update/{slug}', [CartController::class, 'update'])->name('project.cart.update');
-        Route::delete('/cart/remove/{slug}', [CartController::class, 'remove'])->name('project.cart.remove');
-        Route::get('/checkout', [CartController::class, 'checkout'])->name('project.checkout');
-        Route::post('/checkout/process', [CartController::class, 'processCheckout'])->name('project.checkout.process');
-        Route::get('/order/success', fn () => view('frontend.cart.success'))->name('project.order.success');
+        // Viettinmart Frontend Routes
+        require __DIR__.'/viettinmart.php';
 
         // Localized routes with language prefix
         Route::prefix('{locale}')
@@ -141,6 +117,7 @@ Route::prefix('{projectCode}/admin')
         Route::get('/', [DashboardController::class, 'projectDashboard'])->name('dashboard');
 
         // Products Management
+        Route::post('products/sync-widgets', [ProductController::class, 'syncWidgets'])->name('products.sync-widgets');
         Route::post('products/bulk-edit', [ProductController::class, 'bulkEdit'])->name('products.bulk-edit');
         Route::post('products/bulk-update', [ProductController::class, 'bulkUpdate'])->name('products.bulk-update');
         Route::post('products/toggle-badge', [ProductController::class, 'toggleBadge'])->name('products.toggle-badge');
@@ -316,6 +293,7 @@ Route::prefix('{projectCode}/admin')
         Route::put('widgets/{widget}', [WidgetController::class, 'update'])->name('widgets.update');
         Route::delete('widgets/{widget}', [WidgetController::class, 'destroy'])->name('widgets.destroy');
         Route::post('widgets/save-all', [WidgetController::class, 'saveWidgets'])->name('widgets.save-all');
+        Route::post('widgets/reorder', [WidgetController::class, 'reorder'])->name('widgets.reorder');
         Route::post('widgets/preview', [WidgetController::class, 'preview'])->name('widgets.preview');
         Route::post('widgets/toggle', [WidgetController::class, 'toggleWidget'])->name('widgets.toggle');
         Route::post('widgets/clear-cache', [WidgetController::class, 'clearCache'])->name('widgets.clear-cache');
@@ -345,7 +323,7 @@ Route::prefix('{projectCode}/admin')
             Route::post('scan-translations', [SettingsController::class, 'scanTranslations'])->name('scan-translations');
             Route::get('contact', fn () => view('cms.settings.contact'))->name('contact');
             Route::get('notifications', fn () => view('cms.settings.notifications'))->name('notifications');
-            Route::get('fonts', fn () => view('cms.settings.fonts'))->name('fonts');
+            Route::get('fonts', [FontController::class, 'index'])->name('fonts');
             Route::get('logs', fn () => view('cms.settings.logs'))->name('logs');
             Route::get('analytics', fn () => view('cms.settings.analytics'))->name('analytics');
             Route::get('watermark', fn () => view('cms.settings.watermark'))->name('watermark');

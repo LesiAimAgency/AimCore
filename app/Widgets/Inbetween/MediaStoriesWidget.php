@@ -20,31 +20,31 @@ class MediaStoriesWidget extends BaseWidget
                     'name' => 'title',
                     'label' => 'Tiêu đề',
                     'type' => 'text',
-                    'default' => 'Hear the STORIES'
+                    'default' => 'Hear the STORIES',
                 ],
                 [
                     'name' => 'subtitle',
                     'label' => 'Đoạn mô tả ngắn (Description)',
                     'type' => 'textarea',
-                    'default' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since 1966.'
+                    'default' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since 1966.',
                 ],
                 [
                     'name' => 'btn_text',
                     'label' => 'Chữ nút (BE OUR GUEST)',
                     'type' => 'text',
-                    'default' => 'BE OUR GUEST'
+                    'default' => 'BE OUR GUEST',
                 ],
                 [
                     'name' => 'btn_link',
                     'label' => 'Link nút',
                     'type' => 'text',
-                    'default' => '#contact'
+                    'default' => '#contact',
                 ],
                 [
                     'name' => 'limit',
                     'label' => 'Số lượng bài viết',
                     'type' => 'number',
-                    'default' => 4
+                    'default' => 4,
                 ],
                 [
                     'name' => 'manual_stories',
@@ -54,31 +54,31 @@ class MediaStoriesWidget extends BaseWidget
                         [
                             'name' => 'title',
                             'label' => 'Tiêu đề',
-                            'type' => 'text'
+                            'type' => 'text',
                         ],
                         [
                             'name' => 'author_name',
                             'label' => 'Tên Tác giả / Khách mời',
-                            'type' => 'text'
+                            'type' => 'text',
                         ],
                         [
                             'name' => 'description',
                             'label' => 'Mô tả ngắn (Accordion drawer)',
-                            'type' => 'textarea'
+                            'type' => 'textarea',
                         ],
                         [
                             'name' => 'image',
                             'label' => 'Hình ảnh',
-                            'type' => 'image'
+                            'type' => 'image',
                         ],
                         [
                             'name' => 'url',
                             'label' => 'Link bài viết',
-                            'type' => 'text'
-                        ]
-                    ]
-                ]
-            ]
+                            'type' => 'text',
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -86,18 +86,28 @@ class MediaStoriesWidget extends BaseWidget
     {
         $settings = $this->settings;
 
-        if (empty($settings['title'])) $settings['title'] = 'Hear the STORIES';
-        if (empty($settings['subtitle'])) $settings['subtitle'] = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since 1966.';
-        if (empty($settings['btn_text'])) $settings['btn_text'] = 'BE OUR GUEST';
-        if (empty($settings['btn_link'])) $settings['btn_link'] = '#contact';
-        if (empty($settings['limit'])) $settings['limit'] = 4;
+        if (empty($settings['title'])) {
+            $settings['title'] = 'Hear the STORIES';
+        }
+        if (empty($settings['subtitle'])) {
+            $settings['subtitle'] = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since 1966.';
+        }
+        if (empty($settings['btn_text'])) {
+            $settings['btn_text'] = 'BE OUR GUEST';
+        }
+        if (empty($settings['btn_link'])) {
+            $settings['btn_link'] = '#contact';
+        }
+        if (empty($settings['limit'])) {
+            $settings['limit'] = 4;
+        }
 
         $posts = [];
         if (class_exists(Post::class)) {
             $posts = Post::where('status', 'published')
-                         ->orderBy('created_at', 'desc')
-                         ->limit($settings['limit'])
-                         ->get();
+                ->orderBy('created_at', 'desc')
+                ->limit($settings['limit'])
+                ->get();
         }
 
         return view('widgets.inbetween.media_stories', ['widget' => $this, 'settings' => $settings, 'posts' => $posts])->render();

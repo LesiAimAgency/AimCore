@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Project;
 use App\Models\Widget;
 use Illuminate\Database\Seeder;
 
@@ -9,7 +10,7 @@ class InbetweenHomepageMainSeeder extends Seeder
 {
     public function run(): void
     {
-        $tenantId = session('current_project')['id'] ?? \App\Models\Project::first()->id ?? 1;
+        $tenantId = session('current_project')['id'] ?? Project::first()->id ?? 1;
 
         $widgets = [
             1 => [
@@ -18,8 +19,8 @@ class InbetweenHomepageMainSeeder extends Seeder
                 'settings' => [
                     'primary_color' => '#EC460B',
                     'hero_logo' => asset('themes/inbetween/assets/logo.svg'),
-                    'hero_subtitle' => 'Cross-border community, media & connection platform|for|Professionals, Founders, Creatives & Organizations'
-                ]
+                    'hero_subtitle' => 'Cross-border community, media & connection platform|for|Professionals, Founders, Creatives & Organizations',
+                ],
             ],
             2 => [
                 'name' => '2. Community 3D Collage',
@@ -35,8 +36,8 @@ class InbetweenHomepageMainSeeder extends Seeder
                     'image_7' => asset('themes/inbetween/assets/image6_252_132.png'),
                     'image_8' => asset('themes/inbetween/assets/image7_252_132.png'),
                     'image_9' => asset('themes/inbetween/assets/image8_252_132.png'),
-                    'image_10' => asset('themes/inbetween/assets/image9_252_132.png')
-                ]
+                    'image_10' => asset('themes/inbetween/assets/image9_252_132.png'),
+                ],
             ],
             3 => [
                 'name' => '3. Community Statement',
@@ -52,8 +53,8 @@ class InbetweenHomepageMainSeeder extends Seeder
                     'image_1' => asset('themes/inbetween/assets/image1_250_148.png'),
                     'image_2' => asset('themes/inbetween/assets/image2_250_148.png'),
                     'image_3' => asset('themes/inbetween/assets/image3_250_148.png'),
-                    'image_4' => asset('themes/inbetween/assets/image4_250_148.png')
-                ]
+                    'image_4' => asset('themes/inbetween/assets/image4_250_148.png'),
+                ],
             ],
             4 => [
                 'name' => '4. Core Values & Partners',
@@ -80,9 +81,9 @@ class InbetweenHomepageMainSeeder extends Seeder
                         ['image' => 'themes/inbetween/assets/image8_200_302.png'],
                         ['image' => 'themes/inbetween/assets/image9_200_302.png'],
                         ['image' => 'themes/inbetween/assets/image10_200_302.png'],
-                        ['image' => 'themes/inbetween/assets/image11_200_302.png']
-                    ]
-                ]
+                        ['image' => 'themes/inbetween/assets/image11_200_302.png'],
+                    ],
+                ],
             ],
             5 => [
                 'name' => '5. Founder Section',
@@ -94,8 +95,8 @@ class InbetweenHomepageMainSeeder extends Seeder
                     'social_1_text' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
                     'social_2_text' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
                     'social_3_text' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-                    'background_image' => 'themes/inbetween/assets/founder-bg.png'
-                ]
+                    'background_image' => 'themes/inbetween/assets/founder-bg.png',
+                ],
             ],
             6 => [
                 'name' => '6. Upcoming Events',
@@ -112,9 +113,9 @@ class InbetweenHomepageMainSeeder extends Seeder
                             'start_date' => '2026-08-18 09:00:00',
                             'location' => 'Grand Ballroom - Park Hyatt Saigon',
                             'image' => 'themes/inbetween/assets/events-bg.png',
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
             7 => [
                 'name' => '7. Media / Stories',
@@ -130,31 +131,31 @@ class InbetweenHomepageMainSeeder extends Seeder
                             'author_name' => 'Ken',
                             'description' => 'Lắng nghe những góc nhìn sâu sắc của Ken về bản sắc văn hóa Việt Nam, tiềm năng phát triển và cơ hội kết nối cộng đồng sáng tạo quốc tế.',
                             'image' => 'themes/inbetween/assets/story-1.png',
-                            'url' => '#'
+                            'url' => '#',
                         ],
                         [
                             'title' => 'VIỆT NAM KHIẾN TÔI TRÂN TRỌNG HƠN NHỮNG MỐI QUAN HỆ LÂU DÀI',
                             'author_name' => 'Hayo Jongejans',
                             'description' => 'Hayo Jongejans chia sẻ về hành trình xây dựng các mối quan hệ bền vững và giá trị của sự tin cậy trong môi trường kinh doanh tại Việt Nam.',
                             'image' => 'themes/inbetween/assets/story-2.png',
-                            'url' => '#'
+                            'url' => '#',
                         ],
                         [
                             'title' => 'CƠ HỘI NÀO CHO NHỮNG NHÀ SÁNG TẠO TRẺ TẠI VIỆT NAM?',
                             'author_name' => 'Thảo Nguyễn',
                             'description' => 'Khám phá những cơ hội và thách thức mà thế hệ trẻ đang đối mặt trên con đường xây dựng sự nghiệp sáng tạo tại Việt Nam.',
                             'image' => 'themes/inbetween/assets/story-3.png',
-                            'url' => '#'
+                            'url' => '#',
                         ],
                         [
                             'title' => 'GIAO THOA VĂN HÓA TRONG KỶ NGUYÊN SỐ',
                             'author_name' => 'David Trần',
                             'description' => 'Góc nhìn về sự kết hợp giữa truyền thống và công nghệ hiện đại trong các dự án văn hóa tại Việt Nam và khu vực.',
                             'image' => 'themes/inbetween/assets/story-4.png',
-                            'url' => '#'
-                        ]
-                    ]
-                ]
+                            'url' => '#',
+                        ],
+                    ],
+                ],
             ],
             8 => [
                 'name' => '8. Packages',
@@ -171,7 +172,7 @@ class InbetweenHomepageMainSeeder extends Seeder
                             'period' => '/ Month',
                             'description' => 'Privilege',
                             'features' => "Lorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing",
-                            'highlight' => '0'
+                            'highlight' => '0',
                         ],
                         [
                             'name' => 'PACKAGE 2',
@@ -179,7 +180,7 @@ class InbetweenHomepageMainSeeder extends Seeder
                             'period' => '/ Month',
                             'description' => 'Privilege',
                             'features' => "Lorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing",
-                            'highlight' => '0'
+                            'highlight' => '0',
                         ],
                         [
                             'name' => 'PACKAGE 3',
@@ -187,11 +188,11 @@ class InbetweenHomepageMainSeeder extends Seeder
                             'period' => '/ Month',
                             'description' => 'Privilege',
                             'features' => "Lorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing",
-                            'highlight' => '0'
-                        ]
-                    ]
-                ]
-            ]
+                            'highlight' => '0',
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         // Delete old widgets in homepage-main to avoid duplicates

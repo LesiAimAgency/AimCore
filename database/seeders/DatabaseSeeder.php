@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             WebsiteConfigSeeder::class,
             InbetweenThemeSeeder::class,
             InbetweenHomepageMainSeeder::class,
+            ViettinmartMasterSeeder::class,
         ]);
 
         Schema::enableForeignKeyConstraints();

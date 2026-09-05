@@ -406,7 +406,7 @@
         </div>
     </div>
     
-    @if($errors->has('current_password') || $errors->has('password'))
+    @if(isset($errors) && ($errors->has('current_password') || $errors->has('password')))
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('change-password-modal').classList.remove('hidden');

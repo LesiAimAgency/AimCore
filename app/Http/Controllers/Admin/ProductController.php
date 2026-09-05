@@ -4,12 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Models\Product;
 use App\Models\ProductAttribute;
+use App\Models\ProductCategory;
 use App\Models\Project;
 use App\Models\ProjectBrand;
 use App\Models\Taxonomy;
 use App\Traits\HasCrudAlerts;
+use App\Widgets\WidgetRegistry;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
@@ -25,6 +30,12 @@ class ProductController extends Controller
             $query->onlyTrashed();
         } else {
             $query->when($request->status, fn ($q) => $q->where('status', $request->status));
+        }
+
+        if ($request->filled('category')) {
+            $query->whereHas('taxonomies', function ($q) use ($request) {
+                $q->where('term_taxonomy_id', $request->category);
+            });
         }
 
         $products = $query->when($request->search, fn ($q) => $q->where('title', 'like', "%{$request->search}%"))
@@ -116,6 +127,8 @@ class ProductController extends Controller
         if ($request->has('categories')) {
             $post->taxonomies()->sync($request->categories);
         }
+
+        $this->syncToProductEnhanced($post, $metaData, $request->input('categories', []));
 
         $this->alertCreated('sản phẩm', "Sản phẩm '{$post->title}' đã được thêm.");
 
@@ -239,6 +252,8 @@ class ProductController extends Controller
             $post->taxonomies()->sync([]);
         }
 
+        $this->syncToProductEnhanced($post, $metaData, $request->input('categories', []));
+
         $this->alertUpdated('sản phẩm', "Sản phẩm '{$post->title}' đã được cập nhật.");
 
         $route = request()->route('projectCode')
@@ -256,6 +271,11 @@ class ProductController extends Controller
             })->firstOrFail();
         $title = $post->title;
         $post->delete();
+
+        try {
+            Product::where('slug', $post->slug)->delete();
+        } catch (\Throwable $e) {
+        }
 
         $this->alertDeleted('sản phẩm', "Sản phẩm '{$title}' đã được xóa.");
 
@@ -347,13 +367,14 @@ class ProductController extends Controller
                     if (! empty($data['status'])) {
                         $post->status = $data['status'];
                     }
+                    if (isset($data['categories']) && is_array($data['categories'])) {
+                        $post->taxonomies()->sync($data['categories']);
+                    }
 
                     $post->meta_data = $metaData;
                     $post->save();
 
-                    if (isset($data['categories']) && is_array($data['categories'])) {
-                        $post->taxonomies()->sync($data['categories']);
-                    }
+                    $this->syncToProductEnhanced($post, $metaData, $data['categories'] ?? []);
                 }
             }
 
@@ -393,14 +414,14 @@ class ProductController extends Controller
 
             if ($salePriceMode === 'fixed') {
                 $metaData['sale_price'] = max(0, $salePriceValue);
-            } elseif ($salePriceMode === 'percent_decrease_regular') {
-                $metaData['sale_price'] = max(0, round($newPrice * (1 - $salePriceValue / 100)));
             } elseif ($salePriceMode === 'percent_increase') {
                 $base = $currentSalePrice !== null ? $currentSalePrice : $currentPrice;
                 $metaData['sale_price'] = max(0, round($base * (1 + $salePriceValue / 100)));
             } elseif ($salePriceMode === 'percent_decrease') {
                 $base = $currentSalePrice !== null ? $currentSalePrice : $currentPrice;
                 $metaData['sale_price'] = max(0, round($base * (1 - $salePriceValue / 100)));
+            } elseif ($salePriceMode === 'percent_decrease_regular') {
+                $metaData['sale_price'] = max(0, round($newPrice * (1 - $salePriceValue / 100)));
             } elseif ($salePriceMode === 'amount_increase') {
                 $base = $currentSalePrice !== null ? $currentSalePrice : $currentPrice;
                 $metaData['sale_price'] = max(0, round($base + $salePriceValue));
@@ -421,6 +442,8 @@ class ProductController extends Controller
             if (! empty($categories) && is_array($categories)) {
                 $post->taxonomies()->sync($categories);
             }
+
+            $this->syncToProductEnhanced($post, $metaData, $categories);
         }
 
         return response()->json(['success' => true, 'message' => 'Cập nhật sản phẩm thành công']);
@@ -446,6 +469,7 @@ class ProductController extends Controller
         if ($badgeType === 'featured') {
             $newState = ! ($metaData['is_featured'] ?? false);
             $metaData['is_featured'] = $newState;
+            Product::withoutGlobalScopes()->where('slug', $post->slug)->update(['is_featured' => $newState]);
         } elseif ($badgeType === 'favorite') {
             $newState = ! ($metaData['is_favorite'] ?? false);
             $metaData['is_favorite'] = $newState;
@@ -465,6 +489,7 @@ class ProductController extends Controller
             })->firstOrFail();
 
         $product->restore();
+        Product::withoutGlobalScopes()->withTrashed()->where('slug', $product->slug)->restore();
         $this->alertSuccess('Đã khôi phục sản phẩm thành công.');
 
         return redirect()->back();
@@ -478,8 +503,114 @@ class ProductController extends Controller
             })->firstOrFail();
 
         $product->forceDelete();
+        Product::withoutGlobalScopes()->withTrashed()->where('slug', $product->slug)->forceDelete();
         $this->alertSuccess('Đã xóa vĩnh viễn sản phẩm thành công.');
 
         return redirect()->back();
+    }
+
+    public function syncWidgets(Request $request, $projectCode = null)
+    {
+        $project = Project::where('code', $projectCode ?: request()->route('projectCode'))->first();
+        $projectId = $project?->id ?? 10;
+        $tenantId = $project?->tenant_id ?? 3;
+
+        $posts = Post::where('post_type', 'product')
+            ->where(function ($q) use ($projectId, $tenantId) {
+                $q->where('project_id', $projectId)
+                    ->orWhere('tenant_id', $tenantId);
+            })
+            ->with('taxonomies')
+            ->get();
+
+        $syncedCount = 0;
+        foreach ($posts as $post) {
+            $metaData = is_string($post->meta_data) ? json_decode($post->meta_data, true) : ($post->meta_data ?? []);
+
+            $tax = $post->taxonomies->first();
+            $prodCatId = null;
+            if ($tax) {
+                $prodCat = ProductCategory::withoutGlobalScopes()->where('slug', $tax->slug)->first();
+                $prodCatId = $prodCat?->id;
+            }
+
+            Product::withoutGlobalScopes()->updateOrCreate(
+                ['slug' => $post->slug],
+                [
+                    'project_id' => $post->project_id ?: $projectId,
+                    'tenant_id' => $post->tenant_id ?: $tenantId,
+                    'name' => $post->title,
+                    'short_description' => $post->excerpt,
+                    'description' => $post->content,
+                    'featured_image' => $post->featured_image,
+                    'sku' => $metaData['sku'] ?? null,
+                    'price' => $metaData['price'] ?? 0,
+                    'sale_price' => ! empty($metaData['sale_price']) ? (float) $metaData['sale_price'] : null,
+                    'has_price' => 1,
+                    'stock_quantity' => $metaData['stock_quantity'] ?? 999,
+                    'manage_stock' => $metaData['manage_stock'] ?? true,
+                    'stock_status' => ($metaData['stock_quantity'] ?? 999) > 0 ? 'in_stock' : 'out_of_stock',
+                    'product_category_id' => $prodCatId,
+                    'status' => $post->status ?: 'published',
+                    'is_featured' => $metaData['is_featured'] ?? false,
+                ]
+            );
+            $syncedCount++;
+        }
+
+        if (class_exists(WidgetRegistry::class)) {
+            WidgetRegistry::clearCache();
+        }
+        Cache::flush();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => "Đã đồng bộ thành công {$syncedCount} sản phẩm với các widget trang chủ!",
+            ]);
+        }
+
+        $this->alertSuccess("Đã đồng bộ thành công {$syncedCount} sản phẩm với các widget trang chủ!");
+
+        return redirect()->back();
+    }
+
+    private function syncToProductEnhanced(Post $post, array $metaData, ?array $categoryIds): void
+    {
+        try {
+            $firstTaxonomyId = $categoryIds[0] ?? null;
+            $prodCatId = null;
+            if ($firstTaxonomyId) {
+                $tax = Taxonomy::find($firstTaxonomyId);
+                if ($tax) {
+                    $prodCat = ProductCategory::where('slug', $tax->slug)->first();
+                    $prodCatId = $prodCat?->id;
+                }
+            }
+
+            Product::updateOrCreate(
+                ['slug' => $post->slug],
+                [
+                    'project_id' => $post->project_id,
+                    'tenant_id' => $post->tenant_id,
+                    'name' => $post->title,
+                    'short_description' => $post->excerpt,
+                    'description' => $post->content,
+                    'featured_image' => $post->featured_image,
+                    'sku' => $metaData['sku'] ?? null,
+                    'price' => $metaData['price'] ?? 0,
+                    'sale_price' => ! empty($metaData['sale_price']) ? (float) $metaData['sale_price'] : null,
+                    'has_price' => 1,
+                    'stock_quantity' => $metaData['stock_quantity'] ?? 0,
+                    'manage_stock' => $metaData['manage_stock'] ?? true,
+                    'stock_status' => ($metaData['stock_quantity'] ?? 0) > 0 ? 'in_stock' : 'out_of_stock',
+                    'product_category_id' => $prodCatId,
+                    'status' => $post->status,
+                    'is_featured' => $metaData['is_featured'] ?? false,
+                ]
+            );
+        } catch (\Throwable $e) {
+            Log::warning('syncToProductEnhanced failed: '.$e->getMessage());
+        }
     }
 }

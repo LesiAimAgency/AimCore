@@ -19,45 +19,45 @@ class FounderSectionWidget extends BaseWidget
                     'name' => 'founder_name',
                     'label' => 'Tên Founder',
                     'type' => 'text',
-                    'default' => 'HUYNH THI AI NHU'
+                    'default' => 'HUYNH THI AI NHU',
                 ],
                 [
                     'name' => 'founder_role',
                     'label' => 'Vai trò',
                     'type' => 'text',
-                    'default' => 'Founder of INBETWEEN'
+                    'default' => 'Founder of INBETWEEN',
                 ],
                 [
                     'name' => 'background_image',
                     'label' => 'Hình Nền Founder',
                     'type' => 'image',
-                    'default' => ''
+                    'default' => '',
                 ],
                 [
                     'name' => 'social_1_text',
                     'label' => 'Mô tả Social 1 (YouTube)',
                     'type' => 'textarea',
-                    'default' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+                    'default' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
                 ],
                 [
                     'name' => 'social_2_text',
                     'label' => 'Mô tả Social 2 (Facebook)',
                     'type' => 'textarea',
-                    'default' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+                    'default' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
                 ],
                 [
                     'name' => 'social_3_text',
                     'label' => 'Mô tả Social 3 (Instagram)',
                     'type' => 'textarea',
-                    'default' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+                    'default' => 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
                 ],
                 [
                     'name' => 'mission_statement',
                     'label' => 'Tuyên ngôn Sứ mệnh (Mission)',
                     'type' => 'textarea',
-                    'default' => 'CONNECTING PEOPLE IS OUR VERY MISSION'
-                ]
-            ]
+                    'default' => 'CONNECTING PEOPLE IS OUR VERY MISSION',
+                ],
+            ],
         ];
     }
 
@@ -65,16 +65,22 @@ class FounderSectionWidget extends BaseWidget
     {
         $settings = $this->settings;
 
-        if (empty($settings['founder_name'])) $settings['founder_name'] = 'HUYNH THI AI NHU';
-        if (empty($settings['founder_role'])) $settings['founder_role'] = 'Founder of INBETWEEN';
-        if (empty($settings['mission_statement'])) $settings['mission_statement'] = 'CONNECTING PEOPLE IS OUR VERY MISSION';
-        
+        if (empty($settings['founder_name'])) {
+            $settings['founder_name'] = 'HUYNH THI AI NHU';
+        }
+        if (empty($settings['founder_role'])) {
+            $settings['founder_role'] = 'Founder of INBETWEEN';
+        }
+        if (empty($settings['mission_statement'])) {
+            $settings['mission_statement'] = 'CONNECTING PEOPLE IS OUR VERY MISSION';
+        }
+
         for ($i = 1; $i <= 3; $i++) {
             if (empty($settings['social_'.$i.'_text'])) {
                 $settings['social_'.$i.'_text'] = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.';
             }
         }
-        
+
         if (empty($settings['background_image'])) {
             $settings['background_image'] = asset('themes/inbetween/assets/founder-bg.png');
         } else {

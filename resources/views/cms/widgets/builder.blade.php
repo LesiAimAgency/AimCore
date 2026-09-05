@@ -57,11 +57,17 @@
                     </svg>
                     Tablet
                 </button>
-                <button data-vp-width="1280" class="modal-vp-btn text-white bg-blue-600 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition" title="Desktop (1280px)">
+                <button data-vp-width="1280" class="modal-vp-btn text-white bg-blue-600 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition" title="Desktop (Chuẩn 1320px)">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                     </svg>
                     Desktop
+                </button>
+                <button data-vp-width="100%" class="modal-vp-btn text-gray-400 hover:text-white flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition" title="Toàn màn hình (100%)">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                    </svg>
+                    100%
                 </button>
             </div>
             <button id="btn-close-drawer" class="ml-1 p-2 hover:bg-gray-700 rounded-lg transition flex-shrink-0" title="Đóng (ESC)">
@@ -119,7 +125,7 @@
                 <div class="flex-1 overflow-auto p-6 pt-16 flex items-start justify-center">
                     
                     {{-- Device Wrapper --}}
-                    <div id="modal-preview-wrapper" class="relative transition-all duration-300" style="width: 1280px; min-height: 400px;">
+                    <div id="modal-preview-wrapper" class="relative transition-all duration-300 w-full" style="width: 100%; max-width: 1320px; min-height: 400px;">
                         
                         {{-- Loading Overlay --}}
                         <div id="modal-preview-loading" class="absolute inset-0 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center z-20 rounded-xl shadow-xl hidden">
@@ -264,11 +270,16 @@
                 {{-- Widget List --}}
                 <div class="widget-area-list divide-y divide-gray-50" id="area-list-{{ $areaKey }}" data-area="{{ $areaKey }}">
                     @forelse($areaWidgets as $w)
-                        <div class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50/80 transition group widget-row"
+                        <div class="flex items-center gap-2.5 px-4 py-3 hover:bg-gray-50/80 transition group widget-row select-none"
                              data-id="{{ $w['id'] ?? '' }}"
                              data-type="{{ $w['type'] }}"
                              data-area="{{ $areaKey }}"
                              data-name="{{ $w['name'] }}">
+                            <div class="drag-handle cursor-grab active:cursor-grabbing text-gray-300 hover:text-blue-600 transition-colors p-1 -ml-1 flex-shrink-0" title="Kéo thả lên/xuống để đổi vị trí">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+                                </svg>
+                            </div>
                             <div class="w-1 h-8 bg-blue-400 rounded-full flex-shrink-0"></div>
                             <div class="flex-1 min-w-0">
                                 <p class="text-sm font-medium text-gray-800 truncate">{{ $w['name'] }}</p>
@@ -483,6 +494,7 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <script>
 (function () {
     'use strict';
@@ -575,12 +587,17 @@
 
     function buildWidgetRow(area, widget) {
         var row = document.createElement('div');
-        row.className = 'flex items-center gap-3 px-4 py-3 hover:bg-gray-50/80 transition group widget-row';
+        row.className = 'flex items-center gap-2.5 px-4 py-3 hover:bg-gray-50/80 transition group widget-row select-none';
         row.dataset.id   = widget.id || '';
         row.dataset.type = widget.type;
         row.dataset.area = area;
         row.dataset.name = widget.name;
         row.innerHTML =
+            '<div class="drag-handle cursor-grab active:cursor-grabbing text-gray-300 hover:text-blue-600 transition-colors p-1 -ml-1 flex-shrink-0" title="Kéo thả lên/xuống để đổi vị trí">' +
+                '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>' +
+                '</svg>' +
+            '</div>' +
             '<div class="w-1 h-8 bg-blue-400 rounded-full flex-shrink-0"></div>' +
             '<div class="flex-1 min-w-0">' +
                 '<p class="text-sm font-medium text-gray-800 truncate">' + escAttr(widget.name) + '</p>' +
@@ -629,6 +646,7 @@
                 if (empty) { empty.remove(); }
                 list.appendChild(buildWidgetRow(area, { id: id, type: type, name: name, settings: {}, variant: 'default' }));
                 updateBadge(area);
+                initSortable();
             }
         })
         .catch(function () { showToast('Lỗi kết nối server', 'error'); });
@@ -655,6 +673,58 @@
             showToast('Đã xoá widget', 'success');
         })
         .catch(function () { showToast('Lỗi kết nối', 'error'); });
+    }
+
+    // ── SORTABLE DRAG & DROP (UP / DOWN ONLY) ──────────────────────
+    function initSortable() {
+        if (typeof Sortable === 'undefined') return;
+
+        document.querySelectorAll('.widget-area-list').forEach(function (listEl) {
+            if (listEl._sortable) {
+                listEl._sortable.destroy();
+            }
+            var areaKey = listEl.dataset.area;
+            listEl._sortable = new Sortable(listEl, {
+                handle: '.drag-handle',
+                animation: 180,
+                ghostClass: 'bg-blue-50/80',
+                chosenClass: 'bg-blue-100/70',
+                dragClass: 'shadow-lg',
+                direction: 'vertical',
+                onEnd: function (evt) {
+                    if (evt.oldIndex === evt.newIndex) return;
+
+                    var rows = listEl.querySelectorAll('.widget-row');
+                    var widgetIds = Array.from(rows).map(function (row) {
+                        return row.dataset.id;
+                    }).filter(Boolean);
+
+                    fetch(BASE_URL + '/widgets/reorder', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': CSRF,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            area: areaKey,
+                            widget_ids: widgetIds
+                        })
+                    })
+                    .then(safeJson)
+                    .then(function (data) {
+                        if (data && data.success) {
+                            showToast(data.message || 'Đã cập nhật vị trí widget', 'success');
+                        } else {
+                            showToast((data && data.message) || 'Lỗi cập nhật vị trí', 'error');
+                        }
+                    })
+                    .catch(function () {
+                        showToast('Lỗi kết nối khi cập nhật vị trí', 'error');
+                    });
+                }
+            });
+        });
     }
 
     // ── CONDITIONAL FIELDS ─────────────────────────────────────────
@@ -686,11 +756,19 @@
     }
     
     function checkConditional(targetWrapper, controlField, showIf) {
-        var controlFieldName = controlField.getAttribute('name');
-        var expectedValue = showIf[controlFieldName];
+        var rawName = controlField.getAttribute('name') || '';
+        var controlFieldName = rawName.replace(/\[\]$/, '');
+        var expectedValue = showIf[controlFieldName] !== undefined ? showIf[controlFieldName] : showIf[rawName];
         var currentValue = controlField.value;
-        
-        if (currentValue === expectedValue) {
+
+        var isMatch = false;
+        if (Array.isArray(expectedValue)) {
+            isMatch = expectedValue.map(String).indexOf(String(currentValue)) !== -1;
+        } else {
+            isMatch = (currentValue === expectedValue || String(currentValue) === String(expectedValue));
+        }
+
+        if (isMatch) {
             targetWrapper.style.display = '';
         } else {
             targetWrapper.style.display = 'none';
@@ -861,6 +939,12 @@
                 return;
             }
 
+            if (input.tagName === 'SELECT' && input.multiple) {
+                var selectedVals = Array.from(input.selectedOptions).map(function(opt) { return opt.value; });
+                setNestedValue(settings, input.name.replace(/\[\]$/, ''), selectedVals);
+                return;
+            }
+
             var val = input.value;
 
             // Check Alpine.js imageUrl property if non-empty
@@ -930,47 +1014,123 @@
                 iframeInitialized = false;
             } else {
                 // Always re-write the iframe with full HTML so all scripts/styles load correctly
-                var themeStyles = '<link href="/theme/css/bootstrap.min.css" rel="stylesheet" type="text/css" />' +
-                    '<link href="/theme/icons/font-icon.css" rel="stylesheet" type="text/css" />' +
-                    '<link href="/theme/libs/swiper/swiper-bundle.min.css" rel="stylesheet">' +
-                    '<link rel="stylesheet" href="/theme/libs/flickity/flickity.min.css">' +
-                    '<link rel="stylesheet" href="/theme/libs/jarallax/jarallax.min.css">' +
-                    '<link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:300,300i,400,400i,500,500i&display=swap" rel="stylesheet">' +
-                    '<link href="/theme/css/app.min.css" rel="stylesheet" type="text/css" />' + 
-                    '<link href="/themes/inbetween/style.css" rel="stylesheet" type="text/css" />';
+                var isVtm = (drawerWidgetType && drawerWidgetType.startsWith('vtm_')) || 
+                            ('{{ $projectCode }}'.indexOf('viettinmart') !== -1 || '{{ $projectCode }}'.indexOf('vtm') !== -1);
 
-                var themeScripts = '<script src="/theme/libs/jquery/jquery.min.js"><\/script>' +
-                    '<script src="/theme/libs/jarallax/jarallax.min.js"><\/script>' +
-                    '<script src="/theme/libs/swiper/swiper-bundle.min.js"><\/script>' +
-                    '<script src="/theme/libs/flickity/flickity.pkgd.min.js"><\/script>' +
-                    '<script src="/theme/libs/bootstrap/js/bootstrap.bundle.min.js"><\/script>' +
-                    '<script src="/themes/inbetween/script.js"><\/script>' +
-                    '<script>' +
-                    '  setTimeout(function() {' +
-                    '    try {' +
-                    '      if (window.jQuery && window.jQuery.fn.flickity) {' +
-                    '        window.jQuery("[data-flickity]").each(function() {' +
-                    '          try { window.jQuery(this).flickity("destroy"); } catch(err){}' +
-                    '          window.jQuery(this).flickity();' +
-                    '        });' +
-                    '      }' +
-                    '      if (window.Swiper) {' +
-                    '        document.querySelectorAll(".swiper, .swiper-container").forEach(function(el) {' +
-                    '          new Swiper(el, { loop: true, autoplay: { delay: 4000 } });' +
-                    '        });' +
-                    '      }' +
-                    '    } catch(e) {}' +
-                    '  }, 300);' +
-                    '<\/script>';
+                var themeStyles = '';
+                var themeScripts = '';
+                var tailwindScript = '';
 
-                var tailwindScript = '<script src="https://cdn.tailwindcss.com"><\/script>';
+                if (isVtm) {
+                    themeStyles = 
+                        '<link rel="preconnect" href="https://fonts.googleapis.com">' +
+                        '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
+                        '<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">' +
+                        '<link rel="stylesheet" href="/theme/css/plugins.css">' +
+                        '<link rel="stylesheet" href="/theme/css/style.css">' +
+                        '<link rel="stylesheet" href="/theme/css/update.css">' +
+                        '<link rel="stylesheet" href="/theme/css/category-menu.css">' +
+                        '<link rel="stylesheet" href="/theme/css/cart-dropdown.css">' +
+                        '<link rel="stylesheet" href="/theme/css/alert-fix.css">' +
+                        '<style>' +
+                        ':root {' +
+                        '    --color-primary: #629D23;' +
+                        '    --color-secondary: #1F1F25;' +
+                        '    --color-body: #6E777D;' +
+                        '    --color-heading-1: #2C3C28;' +
+                        '    --site-bg: #ffffff;' +
+                        '    --color-white: #fff;' +
+                        '    --color-primary-hover: color-mix(in srgb, var(--color-primary), black 10%);' +
+                        '    --color-primary-light: color-mix(in srgb, var(--color-primary), white 85%);' +
+                        '    --color-primary-alpha-10: color-mix(in srgb, var(--color-primary), transparent 90%);' +
+                        '    --color-primary-alpha-20: color-mix(in srgb, var(--color-primary), transparent 80%);' +
+                        '    --color-secondary-hover: color-mix(in srgb, var(--color-secondary), black 10%);' +
+                        '    --font-primary: "Barlow", sans-serif;' +
+                        '    --font-secondary: "Quicksand", sans-serif;' +
+                        '}' +
+                        'html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; font-family: var(--font-primary) !important; overflow-x: hidden !important; }' +
+                        'h1, h2, h3, h4, h5, h6, .font-heading { font-family: var(--font-primary) !important; }' +
+                        '[x-cloak] { display: none !important; }' +
+                        '.swiper { width: 100% !important; height: auto !important; }' +
+                        '.swiper-slide { height: auto !important; }' +
+                        '.single-shopping-card-one {' +
+                        '    display: flex !important; flex-direction: column !important; height: 100% !important; min-height: 420px !important;' +
+                        '    background: #fff; border: 1px solid #f1f5f9; border-radius: 12px; overflow: hidden;' +
+                        '    transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative;' +
+                        '}' +
+                        '.single-shopping-card-one:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }' +
+                        '.single-shopping-card-one .image-and-action-area-wrapper {' +
+                        '    position: relative; width: 100% !important; height: 220px !important; background-color: #f8fafc; overflow: hidden; display: block !important;' +
+                        '}' +
+                        '.single-shopping-card-one .image-and-action-area-wrapper .thumbnail-preview { display: block !important; width: 100% !important; height: 100% !important; position: relative; }' +
+                        '.single-shopping-card-one .image-and-action-area-wrapper .thumbnail-preview img { width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important; }' +
+                        '.single-shopping-card-one .image-and-action-area-wrapper .badge { position: absolute !important; top: 10px !important; left: 10px !important; z-index: 5 !important; margin: 0 !important; pointer-events: none; }' +
+                        '.single-shopping-card-one .body-content { padding: 16px !important; flex-grow: 1 !important; display: flex !important; flex-direction: column !important; }' +
+                        '.single-shopping-card-one .body-content .title { font-size: 15px !important; font-weight: 600 !important; line-height: 1.4 !important; height: 42px !important; margin-bottom: 8px !important; overflow: hidden; display: -webkit-box !important; -webkit-line-clamp: 2; -webkit-box-orient: vertical; color: #1e293b !important; }' +
+                        '.single-shopping-card-one .body-content .availability { font-size: 12px !important; color: #94a3b8 !important; margin-bottom: 10px !important; display: block !important; }' +
+                        '.single-shopping-card-one .price-area { margin-top: auto !important; display: flex !important; align-items: baseline !important; gap: 8px !important; margin-bottom: 15px !important; }' +
+                        '.single-shopping-card-one .price-area .current { font-size: 18px !important; font-weight: 800 !important; color: var(--color-primary) !important; }' +
+                        '.single-shopping-card-one .price-area .previous { font-size: 13px !important; text-decoration: line-through !important; color: #cbd5e1 !important; }' +
+                        '.single-shopping-card-one .cart-counter-action { margin-top: auto !important; width: 100% !important; }' +
+                        '.single-shopping-card-one .cart-counter-action .rts-btn { width: 100% !important; justify-content: center !important; }' +
+                        '</style>';
+
+                    themeScripts = 
+                        '<script src="/theme/js/plugins.js"><\/script>' +
+                        '<script src="/theme/js/main.js"><\/script>' +
+                        '<script src="/theme/js/update.js"><\/script>' +
+                        '<script>' +
+                        '  setTimeout(function() {' +
+                        '    try {' +
+                        '      if (window.Swiper) {' +
+                        '        document.querySelectorAll(".swiper, .swiper-container, .swiper-data").forEach(function(swiperEl) {' +
+                        '          if (!swiperEl.swiper) {' +
+                        '            var optionsData = swiperEl.dataset.swiper ? JSON.parse(swiperEl.dataset.swiper) : {};' +
+                        '            new Swiper(swiperEl, Object.assign({ observer: true, observeParents: true }, optionsData));' +
+                        '          } else {' +
+                        '            swiperEl.swiper.update();' +
+                        '          }' +
+                        '        });' +
+                        '      }' +
+                        '    } catch(err) { console.error(err); }' +
+                        '  }, 200);' +
+                        '<\/script>';
+                } else {
+                    themeStyles = '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />' +
+                        '<link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet">' +
+                        '<link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">' +
+                        '<link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:300,300i,400,400i,500,500i&display=swap" rel="stylesheet">' +
+                        '<link href="/themes/inbetween/style.css" rel="stylesheet" type="text/css" onerror="this.remove()" />';
+
+                    themeScripts = '<script src="https://code.jquery.com/jquery-3.7.1.min.js"><\/script>' +
+                        '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"><\/script>' +
+                        '<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"><\/script>' +
+                        '<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"><\/script>' +
+                        '<script src="/themes/inbetween/script.js" onerror="this.remove()"><\/script>' +
+                        '<script>' +
+                        '  setTimeout(function() {' +
+                        '    try {' +
+                        '      if (window.jQuery && window.jQuery.fn.flickity) {' +
+                        '        window.jQuery("[data-flickity]").each(function() {' +
+                        '          try { window.jQuery(this).flickity("destroy"); } catch(err){}' +
+                        '          window.jQuery(this).flickity();' +
+                        '        });' +
+                        '      }' +
+                        '      if (window.Swiper) {' +
+                        '        document.querySelectorAll(".swiper, .swiper-container").forEach(function(el) {' +
+                        '          new Swiper(el, { loop: true, autoplay: { delay: 4000 } });' +
+                        '        });' +
+                        '      }' +
+                        '    } catch(e) {}' +
+                        '  }, 300);' +
+                        '<\/script>';
+
+                    tailwindScript = '<script src="https://cdn.tailwindcss.com"><\/script>';
+                }
                 
-                var fullHtml = '<html><head>'
+                var fullHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">'
                     + themeStyles
                     + tailwindScript
-                    + '<style>body{margin:0;padding:20px;background:#fff;} [x-cloak]{display:none!important;}'
-                    + '.swiper{width:100%;height:100%;}'
-                    + '</style>'
                     + '</head><body>'
                     + data.preview
                     + themeScripts
@@ -1260,11 +1420,27 @@
             var w = this.dataset.vpWidth;
             var wrapper = document.getElementById('modal-preview-wrapper');
             var label = document.getElementById('modal-vp-size-label');
-            if (wrapper) wrapper.style.width = w + 'px';
+            if (wrapper) {
+                if (w === '100%') {
+                    wrapper.style.width = '100%';
+                    wrapper.style.maxWidth = '100%';
+                } else if (w === '1280') {
+                    wrapper.style.width = '100%';
+                    wrapper.style.maxWidth = '1320px';
+                } else {
+                    wrapper.style.width = w + 'px';
+                    wrapper.style.maxWidth = '100%';
+                }
+            }
             if (label) {
                 if (w === '375') label.textContent = 'Mobile (375px)';
                 else if (w === '768') label.textContent = 'Tablet (768px)';
-                else label.textContent = 'Desktop (1280px)';
+                else if (w === '100%') label.textContent = 'Toàn màn hình (100%)';
+                else label.textContent = 'Desktop (Chuẩn 1320px)';
+            }
+            var iframe = document.getElementById('modal-preview-content');
+            if (iframe) {
+                setTimeout(function() { adjustIframeHeight(iframe); }, 100);
             }
         });
     });
@@ -1273,6 +1449,9 @@
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') { closeDrawer(); }
     });
+
+    // Initialize drag-and-drop vertical sorting
+    initSortable();
 }());
 </script>
 @endpush

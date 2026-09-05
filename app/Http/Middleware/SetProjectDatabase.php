@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Tenant;
 use App\Services\SettingsService;
 use Closure;
 use Illuminate\Http\Request;
@@ -48,12 +49,22 @@ class SetProjectDatabase
         $request->attributes->set('main_database', config('database.default'));
 
         // Set tenant ID và project ID cho session TRƯỚC KHI query
-        // Trong shared database mode, sử dụng project_id làm tenant_id
-        // để đảm bảo BelongsToTenant trait filter đúng dữ liệu
-        session(['current_tenant_id' => $project->id]);
+        $tenantId = $project->tenant_id ?? null;
+        if (! $tenantId) {
+            $matchedTenant = Tenant::where('code', $project->code)
+                ->orWhere('code', str_replace(['-eco', '-ecommerce', '-demo'], '', $project->code))
+                ->first();
+            $tenantId = $matchedTenant?->id
+                ?? \DB::table('widgets')->where('project_id', $project->id)->whereNotNull('tenant_id')->value('tenant_id')
+                ?? \DB::table('products_enhanced')->where('project_id', $project->id)->whereNotNull('tenant_id')->value('tenant_id')
+                ?? \DB::table('posts')->where('project_id', $project->id)->whereNotNull('tenant_id')->value('tenant_id')
+                ?? $project->id;
+        }
+
+        session(['current_tenant_id' => $tenantId]);
         session(['current_project_id' => $project->id]);
         app()->instance('current_project_id', $project->id);
-        app()->instance('current_tenant_id', $project->id);
+        app()->instance('current_tenant_id', $tenantId);
 
         // Clear settings cache để load lại từ project database
         if (class_exists('\App\Services\SettingsService')) {

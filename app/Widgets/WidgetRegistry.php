@@ -14,18 +14,28 @@ use App\Widgets\Groups\HeaderWidget;
 use App\Widgets\Groups\InstagramWidget;
 use App\Widgets\Groups\ProductWidget;
 use App\Widgets\Groups\SliderWidget;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
-
-use App\Widgets\Inbetween\HeroSectionWidget;
 use App\Widgets\Inbetween\CommunityCollageWidget;
 use App\Widgets\Inbetween\CommunityStatementWidget;
 use App\Widgets\Inbetween\CoreValuesWidget;
 use App\Widgets\Inbetween\FounderSectionWidget;
-use App\Widgets\Inbetween\UpcomingEventsWidget;
+use App\Widgets\Inbetween\HeroSectionWidget;
 use App\Widgets\Inbetween\MediaStoriesWidget;
 use App\Widgets\Inbetween\PackagesWidget;
+use App\Widgets\Inbetween\UpcomingEventsWidget;
+use App\Widgets\Viettinmart\ViettinmartDealFlashWidget;
+use App\Widgets\Viettinmart\ViettinmartFeatureIconsWidget;
+use App\Widgets\Viettinmart\ViettinmartFooterColumnWidget;
+use App\Widgets\Viettinmart\ViettinmartFormWidget;
+// Viettinmart Widgets
+use App\Widgets\Viettinmart\ViettinmartHeroSliderWidget;
+use App\Widgets\Viettinmart\ViettinmartPostsLatestWidget;
+use App\Widgets\Viettinmart\ViettinmartProductFeaturedWidget;
+use App\Widgets\Viettinmart\ViettinmartProductTabsWidget;
+use App\Widgets\Viettinmart\ViettinmartPromoBannersWidget;
+use App\Widgets\Viettinmart\ViettinmartTopTrendingWidget;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class WidgetRegistry implements WidgetRegistryInterface
 {
@@ -42,7 +52,7 @@ class WidgetRegistry implements WidgetRegistryInterface
         'BlogWidget' => BlogWidget::class,
         'InstagramWidget' => InstagramWidget::class,
         'FeatureWidget' => FeatureWidget::class,
-        
+
         // Inbetween Widgets
         'inbetween_hero_section' => HeroSectionWidget::class,
         'inbetween_community_collage' => CommunityCollageWidget::class,
@@ -52,6 +62,21 @@ class WidgetRegistry implements WidgetRegistryInterface
         'inbetween_upcoming_events' => UpcomingEventsWidget::class,
         'inbetween_media_stories' => MediaStoriesWidget::class,
         'inbetween_packages' => PackagesWidget::class,
+
+        // Viettinmart Widgets
+        'vtm_hero_slider' => ViettinmartHeroSliderWidget::class,
+        'vtm_feature_icons' => ViettinmartFeatureIconsWidget::class,
+        'vtm_product_featured' => ViettinmartProductFeaturedWidget::class,
+        'vtm_prod_featured' => ViettinmartProductFeaturedWidget::class,
+        'vtm_deal_flash' => ViettinmartDealFlashWidget::class,
+        'vtm_product_tabs' => ViettinmartProductTabsWidget::class,
+        'vtm_prod_tabs' => ViettinmartProductTabsWidget::class,
+        'vtm_promo_banners' => ViettinmartPromoBannersWidget::class,
+        'vtm_top_trending' => ViettinmartTopTrendingWidget::class,
+        'vtm_posts_latest' => ViettinmartPostsLatestWidget::class,
+        'vtm_form_widget' => ViettinmartFormWidget::class,
+        'vtm_footer_column' => ViettinmartFooterColumnWidget::class,
+        'footer_column' => ViettinmartFooterColumnWidget::class,
     ];
 
     protected static array $discoveredWidgets = [];

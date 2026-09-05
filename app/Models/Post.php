@@ -26,6 +26,7 @@ class Post extends Model
     ];
 
     protected $fillable = [
+        'project_id',
         'title',
         'slug',
         'excerpt',
@@ -67,6 +68,17 @@ class Post extends Model
         return $query->where('status', 'published');
     }
 
+    public function scopeWithStandardRelations($query)
+    {
+        return $query->with(['translations', 'taxonomies.translations']);
+    }
+
+    public function category()
+    {
+        return $this->belongsToMany(Taxonomy::class, 'term_relationships', 'object_id', 'term_taxonomy_id')
+            ->where('taxonomy', 'category');
+    }
+
     // Relationships
     public function author(): BelongsTo
     {
@@ -92,6 +104,12 @@ class Post extends Model
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Taxonomy::class, 'term_relationships', 'object_id', 'term_taxonomy_id')
+            ->whereIn('taxonomy', ['post_tag', 'tag']);
     }
 
     // Helper methods
@@ -161,7 +179,7 @@ class Post extends Model
 
     public function getCategoryAttribute()
     {
-        return $this->taxonomies->where('taxonomy', 'product_cat')->first();
+        return $this->taxonomies->whereIn('taxonomy', ['category', 'product_cat'])->first();
     }
 
     public function getRenderedContent(): string
@@ -172,5 +190,27 @@ class Post extends Model
         }
 
         return $content;
+    }
+
+    public function getFeaturedImageAttribute($value): ?string
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://') || str_starts_with($value, '/storage/')) {
+            return $value;
+        }
+
+        if (str_starts_with($value, 'storage/')) {
+            return '/'.$value;
+        }
+
+        return '/storage/'.ltrim($value, '/');
+    }
+
+    public function getThumbnailAttribute(): ?string
+    {
+        return $this->featured_image ?? null;
     }
 }

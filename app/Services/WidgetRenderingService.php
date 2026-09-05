@@ -2,12 +2,14 @@
 
 namespace App\Services;
 
+use App\Models\Project;
 use App\Models\Widget;
 use App\Widgets\BaseWidget;
 use App\Widgets\WidgetRegistry;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
+use Illuminate\View\Factory;
 
 class WidgetRenderingService
 {
@@ -22,7 +24,27 @@ class WidgetRenderingService
      */
     public function render(string $type, array $settings = [], string $variant = 'default', array $context = []): string
     {
+        $viewFactory = app('view');
+        $savedStack = null;
+        $savedSections = null;
+        $stackProp = null;
+        $sectionsProp = null;
+
         try {
+            if ($viewFactory instanceof Factory) {
+                $ref = new \ReflectionClass($viewFactory);
+                if ($ref->hasProperty('sectionStack')) {
+                    $stackProp = $ref->getProperty('sectionStack');
+                    $stackProp->setAccessible(true);
+                    $savedStack = $stackProp->getValue($viewFactory);
+                }
+                if ($ref->hasProperty('sections')) {
+                    $sectionsProp = $ref->getProperty('sections');
+                    $sectionsProp->setAccessible(true);
+                    $savedSections = $sectionsProp->getValue($viewFactory);
+                }
+            }
+
             $this->renderingContext = $context;
 
             // Get widget class
@@ -33,6 +55,9 @@ class WidgetRenderingService
 
             // Create widget instance
             $widget = new $widgetClass($settings, $variant);
+            if (isset($settings['id'])) {
+                $widget->id = $settings['id'];
+            }
 
             // Check if widget should be cached
             if ($this->shouldCache($widget)) {
@@ -43,6 +68,15 @@ class WidgetRenderingService
 
         } catch (\Exception $e) {
             Log::error('Widget rendering failed: '.$e->getMessage().' in '.$e->getFile().':'.$e->getLine());
+
+            // If an inner view exception caused Laravel to flush the outer section stack, restore it
+            if ($stackProp && ! empty($savedStack) && empty($stackProp->getValue($viewFactory))) {
+                $stackProp->setValue($viewFactory, $savedStack);
+                if ($sectionsProp && ! empty($savedSections)) {
+                    $sectionsProp->setValue($viewFactory, $savedSections);
+                }
+            }
+
             // Use error handling service for graceful degradation
             $errorHandler = new WidgetErrorHandlingService;
 
@@ -137,24 +171,50 @@ class WidgetRenderingService
         $html = '';
 
         try {
-            $projectId = is_array(session('current_project')) ? (session('current_project')['id'] ?? null) : (session('current_project')->id ?? null);
+            $project = function_exists('current_project') ? current_project() : null;
+            if (! $project && app()->bound('current_project_id')) {
+                $project = Project::find(app('current_project_id'));
+            }
+            if (! $project && session('current_project_id')) {
+                $project = Project::find(session('current_project_id'));
+            }
+            if (! $project) {
+                $sessionProj = session('current_project');
+                if ($sessionProj instanceof Project) {
+                    $project = $sessionProj;
+                } elseif (is_array($sessionProj) && ! empty($sessionProj['id'])) {
+                    $project = Project::find($sessionProj['id']);
+                } elseif (is_string($sessionProj)) {
+                    $project = Project::where('code', $sessionProj)->first();
+                }
+            }
+            if (! $project && request()->route('projectCode')) {
+                $project = Project::where('code', request()->route('projectCode'))->first();
+            }
+
+            $projectId = $project?->id;
 
             $query = Widget::where('area', $area)
                 ->where('is_active', true)
                 ->orderBy('sort_order');
 
             if ($projectId) {
-                $query->where(function ($q) use ($projectId) {
-                    $q->where('tenant_id', $projectId)->orWhereNull('tenant_id');
-                });
+                $query->where('project_id', $projectId);
+            } else {
+                $query->whereNull('project_id');
             }
 
             $widgets = $query->get();
 
             foreach ($widgets as $widget) {
+                $settings = $widget->settings ?? [];
+                if (! isset($settings['id'])) {
+                    $settings['id'] = $widget->id;
+                }
+
                 $html .= $this->render(
                     $widget->type,
-                    $widget->settings ?? [],
+                    $settings,
                     $widget->variant ?? 'default',
                     $context
                 );

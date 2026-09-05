@@ -231,7 +231,13 @@ class DynamicWidgetRenderer
      */
     public function renderArea(string $area): string
     {
-        return '';
+        if (function_exists('render_widgets')) {
+            return render_widgets($area);
+        }
+
+        $renderingService = new WidgetRenderingService;
+
+        return $renderingService->renderArea($area);
     }
 
     /**

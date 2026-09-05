@@ -45,7 +45,8 @@
             "app/Helpers/widget_helper.php",
             "app/Helpers/LayoutHelper.php",
             "app/Helpers/language_helper.php",
-            "app/Helpers/shortcode_helper.php"
+            "app/Helpers/shortcode_helper.php",
+            "app/Helpers/ViettinmartHelper.php"
         ]
     },
     "autoload-dev": {

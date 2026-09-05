@@ -59,9 +59,8 @@
 
                 <!-- Mô tả ngắn -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Mô tả ngắn</label>
-                    <textarea name="short_description" rows="3" 
-                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#98191F]">{{ old('short_description') }}</textarea>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Mô tả ngắn</label>
+                    <textarea id="product-short-description" name="short_description" class="tinymce-editor" data-height="250">{{ old('short_description') }}</textarea>
                 </div>
 
                 <!-- Mô tả đầy đủ -->
@@ -69,7 +68,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Mô tả đầy đủ
                     </label>
-                    <textarea name="description" class="tinymce-editor">{{ old('description') }}</textarea>
+                    <textarea id="product-description" name="description" class="tinymce-editor" data-height="400">{{ old('description') }}</textarea>
                 </div>
 
 
