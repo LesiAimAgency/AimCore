@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class ViettinmartDeployService
 {
@@ -28,6 +29,13 @@ class ViettinmartDeployService
     public function deploy(Project $project, ?int $tenantId = null): array
     {
         Log::info("Starting 1-Click VTM Deployment for Project: {$project->code} (ID: {$project->id})");
+
+        // 0. Ensure schema migrations are up-to-date (non-destructive)
+        try {
+            Artisan::call('migrate', ['--force' => true]);
+        } catch (\Throwable $e) {
+            Log::warning('Auto-migration during VTM deploy warning: '.$e->getMessage());
+        }
 
         // 1. Ensure Tenant
         if (! $tenantId) {
@@ -71,21 +79,62 @@ class ViettinmartDeployService
         $adminInfo = $this->setupAdminUser($project, $tenantId);
 
         // 6. Run Seeders for Widgets, Menus, Forms
-        Widget::where('project_id', $project->id)->where('area', 'homepage')->delete();
-        (new ViettinmartFormTemplateSeeder)->run($project->id, $tenantId);
-        (new ViettinmartWidgetsSeeder)->run($project->id, $tenantId);
-        (new ViettinmartFooterWidgetSeeder)->run($project->id, $tenantId);
-        (new ViettinmartMenuSeeder)->run($project->id, $tenantId);
+        if (Schema::hasTable('widgets')) {
+            try {
+                Widget::where('project_id', $project->id)->where('area', 'homepage')->delete();
+            } catch (\Throwable $e) {
+                Log::warning('Could not clean existing widgets: '.$e->getMessage());
+            }
+        }
+
+        if (Schema::hasTable('form_templates')) {
+            try {
+                (new ViettinmartFormTemplateSeeder)->run($project->id, $tenantId);
+            } catch (\Throwable $e) {
+                Log::warning('ViettinmartFormTemplateSeeder warning: '.$e->getMessage());
+            }
+        }
+
+        try {
+            (new ViettinmartWidgetsSeeder)->run($project->id, $tenantId);
+        } catch (\Throwable $e) {
+            Log::warning('ViettinmartWidgetsSeeder warning: '.$e->getMessage());
+        }
+
+        try {
+            (new ViettinmartFooterWidgetSeeder)->run($project->id, $tenantId);
+        } catch (\Throwable $e) {
+            Log::warning('ViettinmartFooterWidgetSeeder warning: '.$e->getMessage());
+        }
+
+        try {
+            (new ViettinmartMenuSeeder)->run($project->id, $tenantId);
+        } catch (\Throwable $e) {
+            Log::warning('ViettinmartMenuSeeder warning: '.$e->getMessage());
+        }
 
         // 7. Migrate Legacy VTM Data (Products, Categories, Orders, Posts, etc.)
-        Artisan::call('migrate:legacy-vtm', [
-            'project_id' => $project->id,
-            'tenant_id' => $tenantId,
-        ]);
+        try {
+            Artisan::call('migrate:legacy-vtm', [
+                'project_id' => $project->id,
+                'tenant_id' => $tenantId,
+            ]);
+        } catch (\Throwable $e) {
+            Log::warning('migrate:legacy-vtm warning: '.$e->getMessage());
+        }
 
         // 8. Seed English Product Translations & UI Translations
-        (new ViettinmartProductEnTranslationSeeder)->run($project->id);
-        $this->seedUiTranslations($project->id, $tenantId);
+        try {
+            (new ViettinmartProductEnTranslationSeeder)->run($project->id);
+        } catch (\Throwable $e) {
+            Log::warning('ViettinmartProductEnTranslationSeeder warning: '.$e->getMessage());
+        }
+
+        try {
+            $this->seedUiTranslations($project->id, $tenantId);
+        } catch (\Throwable $e) {
+            Log::warning('seedUiTranslations warning: '.$e->getMessage());
+        }
 
         // 9. Clear cache
         try {
