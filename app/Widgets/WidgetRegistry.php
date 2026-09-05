@@ -63,19 +63,40 @@ class WidgetRegistry implements WidgetRegistryInterface
         'inbetween_media_stories' => MediaStoriesWidget::class,
         'inbetween_packages' => PackagesWidget::class,
 
-        // Viettinmart Widgets
+        // Viettinmart Widgets (Both vtm_* and inbetween_* aliases)
         'vtm_hero_slider' => ViettinmartHeroSliderWidget::class,
+        'inbetween_hero_slider' => ViettinmartHeroSliderWidget::class,
+
         'vtm_feature_icons' => ViettinmartFeatureIconsWidget::class,
+        'inbetween_feature_icons' => ViettinmartFeatureIconsWidget::class,
+
         'vtm_product_featured' => ViettinmartProductFeaturedWidget::class,
+        'inbetween_product_featured' => ViettinmartProductFeaturedWidget::class,
         'vtm_prod_featured' => ViettinmartProductFeaturedWidget::class,
+        'inbetween_prod_featured' => ViettinmartProductFeaturedWidget::class,
+
         'vtm_deal_flash' => ViettinmartDealFlashWidget::class,
+        'inbetween_deal_flash' => ViettinmartDealFlashWidget::class,
+
         'vtm_product_tabs' => ViettinmartProductTabsWidget::class,
+        'inbetween_product_tabs' => ViettinmartProductTabsWidget::class,
         'vtm_prod_tabs' => ViettinmartProductTabsWidget::class,
+        'inbetween_prod_tabs' => ViettinmartProductTabsWidget::class,
+
         'vtm_promo_banners' => ViettinmartPromoBannersWidget::class,
+        'inbetween_promo_banners' => ViettinmartPromoBannersWidget::class,
+
         'vtm_top_trending' => ViettinmartTopTrendingWidget::class,
+        'inbetween_top_trending' => ViettinmartTopTrendingWidget::class,
+
         'vtm_posts_latest' => ViettinmartPostsLatestWidget::class,
+        'inbetween_posts_latest' => ViettinmartPostsLatestWidget::class,
+
         'vtm_form_widget' => ViettinmartFormWidget::class,
+        'inbetween_form_widget' => ViettinmartFormWidget::class,
+
         'vtm_footer_column' => ViettinmartFooterColumnWidget::class,
+        'inbetween_footer_column' => ViettinmartFooterColumnWidget::class,
         'footer_column' => ViettinmartFooterColumnWidget::class,
     ];
 
@@ -308,18 +329,7 @@ class WidgetRegistry implements WidgetRegistryInterface
      */
     public static function exists(string $type): bool
     {
-        // Check code-based widgets
-        if (isset(self::$widgets[$type])) {
-            return true;
-        }
-
-        // Check discovered widgets
-        $discovered = self::discover();
-        if (isset($discovered[$type])) {
-            return true;
-        }
-
-        return false;
+        return self::get($type) !== null;
     }
 
     /**
@@ -354,6 +364,19 @@ class WidgetRegistry implements WidgetRegistryInterface
         // Check manually registered first
         if (isset(self::$widgets[$type])) {
             return self::$widgets[$type];
+        }
+
+        // Support dynamic prefix aliasing between inbetween_ and vtm_
+        if (str_starts_with($type, 'inbetween_')) {
+            $vtm = 'vtm_'.substr($type, 10);
+            if (isset(self::$widgets[$vtm])) {
+                return self::$widgets[$vtm];
+            }
+        } elseif (str_starts_with($type, 'vtm_')) {
+            $inbetween = 'inbetween_'.substr($type, 4);
+            if (isset(self::$widgets[$inbetween])) {
+                return self::$widgets[$inbetween];
+            }
         }
 
         // Check discovered widgets
