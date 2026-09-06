@@ -52,6 +52,12 @@ try {
 }
 
 $queries = \Illuminate\Support\Facades\DB::getQueryLog();
+$filteredQueries = [];
+foreach ($queries as $q) {
+    if (str_contains($q['query'], 'products_enhanced') || str_contains($q['query'], 'product_categories') || str_contains($q['query'], 'category')) {
+        $filteredQueries[] = $q;
+    }
+}
 
 echo json_encode([
     'products_count' => $productsCount ?? null,
@@ -59,16 +65,15 @@ echo json_encode([
     'products_items' => array_map(fn($p) => ['id' => $p->id, 'name' => $p->name, 'slug' => $p->slug], $productsItems ?? []),
     'active_filters' => $activeFilters ?? null,
     'error' => $error ?? null,
-    'queries' => $queries,
+    'queries' => $filteredQueries,
 ], JSON_PRETTY_PRINT);
-
 @unlink(__FILE__);
 PHP;
 
 $method->invoke($c, 'Fileman', 'save_file_content', [
     'dir' => 'aimagency.vn/public',
-    'file' => 'debug_shop_index.php',
+    'file' => 'debug_shop_index2.php',
     'content' => $serverScript,
 ]);
 
-echo file_get_contents('https://aimagency.vn/debug_shop_index.php');
+echo file_get_contents('https://aimagency.vn/debug_shop_index2.php');
