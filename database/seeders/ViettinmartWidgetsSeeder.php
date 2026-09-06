@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ProductCategory;
 use App\Models\Project;
 use App\Models\Widget;
 use Illuminate\Database\Seeder;
@@ -38,7 +39,7 @@ class ViettinmartWidgetsSeeder extends Seeder
         $p10CatFile = database_path('seeders/data/viettinmart/p10_product_categories.json');
         if (File::exists($p10CatFile) && Schema::hasTable('product_categories')) {
             $p10Cats = json_decode(File::get($p10CatFile), true) ?? [];
-            $currentCats = \App\Models\ProductCategory::withoutGlobalScopes()
+            $currentCats = ProductCategory::withoutGlobalScopes()
                 ->where('project_id', $projectId)
                 ->pluck('id', 'slug')
                 ->toArray();
@@ -84,7 +85,7 @@ class ViettinmartWidgetsSeeder extends Seeder
             if (! empty($categoryMap)) {
                 if (isset($settings['category_id']) && ! empty($settings['category_id'])) {
                     if (is_array($settings['category_id'])) {
-                        $settings['category_id'] = array_map(fn($id) => $categoryMap[$id] ?? $id, $settings['category_id']);
+                        $settings['category_id'] = array_map(fn ($id) => $categoryMap[$id] ?? $id, $settings['category_id']);
                     } elseif (isset($categoryMap[$settings['category_id']])) {
                         $settings['category_id'] = (string) $categoryMap[$settings['category_id']];
                     }
@@ -94,7 +95,7 @@ class ViettinmartWidgetsSeeder extends Seeder
                     foreach ($settings['tabs'] as $tIdx => $tab) {
                         if (isset($tab['category_id']) && ! empty($tab['category_id'])) {
                             $settings['tabs'][$tIdx]['category_id'] = array_map(
-                                fn($id) => $categoryMap[$id] ?? $id,
+                                fn ($id) => $categoryMap[$id] ?? $id,
                                 (array) $tab['category_id']
                             );
                         }

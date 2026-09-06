@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Widgets\BaseWidget;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class ViettinmartProductTabsWidget extends BaseWidget
 {
@@ -111,10 +112,10 @@ class ViettinmartProductTabsWidget extends BaseWidget
                 });
             } elseif (! empty($tab['label']) && $tab['label'] !== 'Tất cả') {
                 $matchedCat = ProductCategory::withoutGlobalScopes()
-                    ->when($projectId, fn($q) => $q->where('project_id', $projectId))
+                    ->when($projectId, fn ($q) => $q->where('project_id', $projectId))
                     ->where(function ($q) use ($tab) {
                         $q->where('name', 'like', '%'.trim($tab['label']).'%')
-                          ->orWhere('slug', 'like', '%'.\Illuminate\Support\Str::slug($tab['label']).'%');
+                            ->orWhere('slug', 'like', '%'.Str::slug($tab['label']).'%');
                     })
                     ->first();
                 if ($matchedCat) {

@@ -366,34 +366,34 @@ if (! function_exists('media_url')) {
         if (str_starts_with($cleanPath, 'storage/')) {
             $relativeMedia = preg_replace('#^storage/#', '', $cleanPath);
             // Check in public/media-files/...
-            if (file_exists(public_path('media-files/' . $relativeMedia))) {
-                return asset('media-files/' . $relativeMedia);
+            if (file_exists(public_path('media-files/'.$relativeMedia))) {
+                return asset('media-files/'.$relativeMedia);
             }
             // Check in storage/app/public/...
-            if (file_exists(storage_path('app/public/' . $relativeMedia))) {
+            if (file_exists(storage_path('app/public/'.$relativeMedia))) {
                 return asset($cleanPath);
             }
         } elseif (str_starts_with($cleanPath, 'media-files/')) {
             $relativeStorage = preg_replace('#^media-files/#', '', $cleanPath);
             // Check in public/storage/...
-            if (file_exists(public_path('storage/' . $relativeStorage))) {
-                return asset('storage/' . $relativeStorage);
+            if (file_exists(public_path('storage/'.$relativeStorage))) {
+                return asset('storage/'.$relativeStorage);
             }
             // Check in storage/app/public/...
-            if (file_exists(storage_path('app/public/' . $relativeStorage))) {
-                return asset('storage/' . $relativeStorage);
+            if (file_exists(storage_path('app/public/'.$relativeStorage))) {
+                return asset('storage/'.$relativeStorage);
             }
         } elseif (str_starts_with($cleanPath, 'media/')) {
             // Check in public/media-files/media/...
-            if (file_exists(public_path('media-files/' . $cleanPath))) {
-                return asset('media-files/' . $cleanPath);
+            if (file_exists(public_path('media-files/'.$cleanPath))) {
+                return asset('media-files/'.$cleanPath);
             }
             // Check in public/storage/media/...
-            if (file_exists(public_path('storage/' . $cleanPath))) {
-                return asset('storage/' . $cleanPath);
+            if (file_exists(public_path('storage/'.$cleanPath))) {
+                return asset('storage/'.$cleanPath);
             }
             // Check in storage/app/public/media/...
-            if (file_exists(storage_path('app/public/' . $cleanPath))) {
+            if (file_exists(storage_path('app/public/'.$cleanPath))) {
                 return Storage::disk('public')->url($cleanPath);
             }
         }

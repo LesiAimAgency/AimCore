@@ -1,12 +1,16 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
-$app = require_once __DIR__ . '/../bootstrap/app.php';
-$kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
+use App\Models\HostingProfile;
+use App\Services\Hosting\HostingClientFactory;
+use Illuminate\Contracts\Console\Kernel;
+
+require __DIR__.'/../vendor/autoload.php';
+$app = require_once __DIR__.'/../bootstrap/app.php';
+$kernel = $app->make(Kernel::class);
 $kernel->bootstrap();
 
-$p = \App\Models\HostingProfile::find(2);
-$c = \App\Services\Hosting\HostingClientFactory::make($p);
+$p = HostingProfile::find(2);
+$c = HostingClientFactory::make($p);
 
 $ref = new ReflectionClass($c);
 $method = $ref->getMethod('callUapi');
@@ -20,7 +24,7 @@ $method->invoke($c, 'Fileman', 'save_file_content', [
 @unlink(__DIR__ . "/test_symlink.php");
 @unlink(__DIR__ . "/cleanup.php");
 echo "CLEANUP_DONE";
-'
+',
 ]);
 
 echo "cleanup.php created.\n";

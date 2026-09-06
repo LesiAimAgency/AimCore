@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Widgets\BaseWidget;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class ViettinmartProductFeaturedWidget extends BaseWidget
 {
@@ -248,10 +249,10 @@ class ViettinmartProductFeaturedWidget extends BaseWidget
                 $widgetTitle = $config['title'] ?? '';
                 if (! empty($widgetTitle)) {
                     $matchedCategory = ProductCategory::withoutGlobalScopes()
-                        ->when($projectId, fn($q) => $q->where('project_id', $projectId))
+                        ->when($projectId, fn ($q) => $q->where('project_id', $projectId))
                         ->where(function ($q) use ($widgetTitle) {
                             $q->where('name', 'like', '%'.trim($widgetTitle).'%')
-                              ->orWhere('slug', 'like', '%'.\Illuminate\Support\Str::slug($widgetTitle).'%');
+                                ->orWhere('slug', 'like', '%'.Str::slug($widgetTitle).'%');
                         })
                         ->first();
                     if ($matchedCategory) {
