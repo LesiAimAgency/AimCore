@@ -15,22 +15,22 @@ return new class extends Migration
             Schema::table('products_enhanced', function (Blueprint $table) {
                 try {
                     $table->dropUnique('products_enhanced_slug_unique');
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                 }
 
                 try {
                     $table->dropUnique('products_enhanced_sku_unique');
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                 }
 
                 try {
                     $table->unique(['project_id', 'slug'], 'products_enhanced_project_slug_unique');
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                 }
 
                 try {
                     $table->unique(['project_id', 'sku'], 'products_enhanced_project_sku_unique');
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                 }
             });
         }
@@ -46,13 +46,13 @@ return new class extends Migration
                 try {
                     $table->dropUnique('products_enhanced_project_sku_unique');
                     $table->unique('sku', 'products_enhanced_sku_unique');
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                 }
 
                 try {
                     $table->dropUnique('products_enhanced_project_slug_unique');
                     $table->unique('slug', 'products_enhanced_slug_unique');
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                 }
             });
         }
