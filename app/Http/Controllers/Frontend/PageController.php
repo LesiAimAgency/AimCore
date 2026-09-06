@@ -91,13 +91,32 @@ class PageController extends Controller
             }
 
             // Check if slug belongs to a product
-            $product = Product::where('slug', $slug)->active()->first();
+            $currentLocale = app()->getLocale();
+            $prodQuery = Product::withoutGlobalScopes()->where(function ($q) use ($slug, $currentLocale) {
+                $q->where('slug', $slug)
+                    ->orWhereHas('translations', function ($tq) use ($slug, $currentLocale) {
+                        $tq->where('field', 'slug')
+                            ->where('locale', $currentLocale)
+                            ->where('value', $slug);
+                    });
+            });
+
+            if ($project) {
+                $product = (clone $prodQuery)->where('project_id', $project->id)->first();
+            } else {
+                $product = null;
+            }
+
+            if (! $product) {
+                $product = $prodQuery->first();
+            }
+
             if ($product) {
                 if (class_exists(ShopController::class)) {
-                    return app(ShopController::class)->show($project?->code, $slug);
+                    return app(ShopController::class)->show($project?->code, $product->slug);
                 }
 
-                return redirect(locale_route('shop.show', ['slug' => $slug]));
+                return redirect(locale_route('shop.show', ['slug' => $product->slug]));
             }
 
             abort(404);

@@ -228,4 +228,20 @@ class Post extends Model
     {
         return $this->featured_image ?? null;
     }
+
+    /**
+     * Clean SEO URL for post/page/product
+     */
+    public function getUrlAttribute(): string
+    {
+        if ($this->post_type === 'product') {
+            return locale_route('shop.show', $this->slug);
+        }
+
+        if ($this->post_type === 'page') {
+            return locale_route('pages.show', $this->slug);
+        }
+
+        return locale_route('blog.show', $this->slug);
+    }
 }

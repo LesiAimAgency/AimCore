@@ -60,7 +60,7 @@
         <div class="products-grid">
             @foreach($relatedProducts as $related)
             <article class="product-card">
-                <a href="{{ route('products.show', $related->slug) }}">
+                <a href="{{ locale_route('shop.show', $related->slug) }}">
                     <img src="{{ $related->featured_image }}" alt="{{ $related->name }}">
                     <h3>{{ $related->name }}</h3>
                     <p>{{ number_format($related->price) }}đ</p>

@@ -182,7 +182,7 @@
                                 @foreach($cart as $item)
                                     <div class="single-shop-list">
                                         <div class="left-area">
-                                            <a href="{{ locale_route('product.show', $item['slug']) }}" class="thumbnail">
+                                            <a href="{{ locale_route('shop.show', $item['slug']) }}" class="thumbnail">
                                                 @php
                                                     $imgSrc = media_url($item['image'] ?? '', 'theme/images/shop/default.png');
                                                 @endphp

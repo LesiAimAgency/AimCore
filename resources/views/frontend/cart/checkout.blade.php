@@ -24,7 +24,7 @@
   @if(empty($cart))
   <div class="bg-white rounded-lg shadow-sm p-12 text-center">
     <p class="text-gray-500 mb-4">Giỏ hàng trống, vui lòng thêm sản phẩm trước khi thanh toán</p>
-    <a href="/{{ $projectCode }}/san-pham" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700">
+    <a href="{{ locale_route('shop.index') }}" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700">
       Mua sắm ngay
     </a>
   </div>

@@ -125,7 +125,7 @@ html { scroll-behavior: smooth; }
 <div class="mt-10 pt-8 border-t border-gray-200">
     <div class="flex items-center justify-between mb-6">
         <h3 class="text-2xl font-bold text-gray-900">Sản phẩm nổi bật</h3>
-        <a href="/{{ request()->route('projectCode') }}/san-pham" class="text-blue-600 hover:text-blue-700 text-sm font-medium">Xem tất cả &rarr;</a>
+        <a href="{{ locale_route('shop.index') }}" class="text-blue-600 hover:text-blue-700 text-sm font-medium">Xem tất cả &rarr;</a>
     </div>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         @foreach($products as $product)

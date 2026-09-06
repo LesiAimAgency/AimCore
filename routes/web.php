@@ -221,7 +221,33 @@ Route::prefix('admin')->name('cms.')->middleware(['auth'])->group(function () {
 // Include SuperAdmin Routes (Project Management)
 require __DIR__.'/superadmin.php';
 
-// Project routes are loaded separately in bootstrap/app.php with isolated session
+// Redirect /public/... to /... (strip /public prefix and collapse legacy /san-pham in 1 hop)
+Route::get('/public/{any}', function (\Illuminate\Http\Request $request, $any) {
+    $cleaned = preg_replace('#(^|/)san-pham/#', '$1', ltrim($any, '/'));
+    if ($cleaned === 'san-pham') {
+        $cleaned = 'cua-hang';
+    }
+    $target = $request->getSchemeAndHttpHost().'/'.$cleaned;
+
+    return redirect()->away($target, 301);
+})->where('any', '.*');
+
+// 301 Redirect legacy /san-pham to clean 1-level SEO URL
+Route::get('/san-pham/{slug}', function (\Illuminate\Http\Request $request, $slug) {
+    $project = function_exists('current_project') ? current_project() : null;
+    $prefix = $project?->code ? '/'.$project->code : '';
+    $target = $request->getSchemeAndHttpHost()."{$prefix}/{$slug}";
+
+    return redirect()->away($target, 301);
+});
+
+Route::get('/san-pham', function (\Illuminate\Http\Request $request) {
+    $project = function_exists('current_project') ? current_project() : null;
+    $prefix = $project?->code ? '/'.$project->code : '';
+    $target = $request->getSchemeAndHttpHost()."{$prefix}/cua-hang";
+
+    return redirect()->away($target, 301);
+});
 
 // Robots.txt
 Route::get('/robots.txt', function () {

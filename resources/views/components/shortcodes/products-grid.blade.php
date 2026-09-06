@@ -41,7 +41,7 @@
             {{-- Content --}}
             <div class="p-4">
                 <h3 class="font-semibold text-gray-800 mb-2 line-clamp-2 group-hover:text-blue-600 transition">
-                    <a href="{{ route('frontend.product', $product->slug) }}">{{ $product->name }}</a>
+                    <a href="{{ locale_route('shop.show', $product->slug) }}">{{ $product->name }}</a>
                 </h3>
                 
                 @if($showPrice)
@@ -56,7 +56,7 @@
                 @endif
                 
                 @if($showButton)
-                    <a href="{{ route('frontend.product', $product->slug) }}" 
+                    <a href="{{ locale_route('shop.show', $product->slug) }}" 
                        class="block w-full text-center py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
                         Xem chi tiết
                     </a>

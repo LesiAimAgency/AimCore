@@ -19,7 +19,7 @@
             {{-- Content --}}
             <div class="flex-1">
                 <h3 class="font-semibold text-gray-800 mb-1 hover:text-blue-600">
-                    <a href="{{ route('frontend.product', $product->slug) }}">{{ $product->name }}</a>
+                    <a href="{{ locale_route('shop.show', $product->slug) }}">{{ $product->name }}</a>
                 </h3>
                 
                 @if($product->short_description)
@@ -36,7 +36,7 @@
                         @endif
                     </div>
                     
-                    <a href="{{ route('frontend.product', $product->slug) }}" 
+                    <a href="{{ locale_route('shop.show', $product->slug) }}" 
                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition">
                         Xem chi tiết
                     </a>

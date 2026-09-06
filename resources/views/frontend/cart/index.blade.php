@@ -30,7 +30,7 @@
     </svg>
     <h2 class="text-2xl font-bold text-gray-700 mb-2">Giỏ hàng trống</h2>
     <p class="text-gray-500 mb-6">Bạn chưa có sản phẩm nào trong giỏ hàng</p>
-    <a href="/{{ $projectCode }}/san-pham" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 font-medium transition">
+    <a href="{{ locale_route('shop.index') }}" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 font-medium transition">
       ️ Tiếp tục mua sắm
     </a>
   </div>
@@ -85,7 +85,7 @@
       </div>
       
       <div class="mt-4">
-        <a href="/{{ $projectCode }}/san-pham" class="text-blue-600 hover:text-blue-800 flex items-center gap-2">
+        <a href="{{ locale_route('shop.index') }}" class="text-blue-600 hover:text-blue-800 flex items-center gap-2">
           ← Tiếp tục mua sắm
         </a>
       </div>

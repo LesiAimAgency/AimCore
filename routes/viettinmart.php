@@ -17,7 +17,16 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.i
 Route::get('/cua-hang', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/danh-muc/{slug}', [ShopController::class, 'index'])->name('shop.category.danh-muc');
 Route::get('/cua-hang/{slug}', [ShopController::class, 'index'])->name('shop.category.cua-hang');
-Route::get('/{slug}', [ShopController::class, 'index'])->name('shop.category');
+Route::get('/san-pham/{slug}', function (\Illuminate\Http\Request $request, $projectCode, $slug) {
+    $target = $request->getSchemeAndHttpHost()."/{$projectCode}/{$slug}";
+
+    return redirect()->away($target, 301);
+})->name('shop.san-pham.redirect');
+Route::get('/san-pham', function (\Illuminate\Http\Request $request, $projectCode) {
+    $target = $request->getSchemeAndHttpHost()."/{$projectCode}/cua-hang";
+
+    return redirect()->away($target, 301);
+})->name('shop.san-pham-index.redirect');
 Route::get('/search-suggest', [ShopController::class, 'searchSuggest'])->name('shop.suggest');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
@@ -47,7 +56,6 @@ Route::post('/wishlist/remove', [CustomerActionController::class, 'removeFromWis
 Route::post('/compare/add', [CustomerActionController::class, 'addToCompare'])->name('compare.add');
 Route::post('/compare/remove', [CustomerActionController::class, 'removeFromCompare'])->name('compare.remove');
 
-Route::get('/{slug}', [ShopController::class, 'show'])->name('shop.show');
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -58,3 +66,4 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/password/reset', function () {
     return 'Reset Password Page';
 })->name('password.request');
+

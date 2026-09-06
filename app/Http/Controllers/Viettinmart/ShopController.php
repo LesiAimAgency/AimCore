@@ -87,9 +87,15 @@ class ShopController extends Controller
             $maxPrice = $maxPrice ?? ($presetMax !== '' ? $presetMax : null);
         }
 
-        // === 2. Sidebar: tất cả danh mục root ===
+        // === 2. Sidebar: tất cả danh mục root thuộc project hiện tại ===
+        $projectId = function_exists('current_project') ? current_project()?->id : null;
+        if (! $projectId && request()->attributes->get('project')) {
+            $projectId = request()->attributes->get('project')->id;
+        }
+
         $categories = Category::whereNull('parent_id')
             ->where('is_active', true)
+            ->when($projectId, fn ($q) => $q->where('project_id', $projectId))
             ->with('translations')
             ->orderBy('sort_order')
             ->get();
@@ -101,20 +107,50 @@ class ShopController extends Controller
                 'categories' => fn ($q) => $q->where('is_active', true)->with('translations'),
             ]);
 
-        // Lọc theo danh mục (OR – sản phẩm thuộc bất kỳ danh mục nào được chọn)
+        // Lọc theo danh mục (OR – sản phẩm thuộc bất kỳ danh mục nào được chọn, bao gồm danh mục con & direct FK)
         if (! empty($selectedSlugs)) {
             $currentLocale = App::getLocale();
-            $query->whereHas('categories', function ($q) use ($selectedSlugs, $currentLocale) {
-                $q->where(function ($subQuery) use ($selectedSlugs, $currentLocale) {
-                    // Tìm trong slug gốc
-                    $subQuery->whereIn('slug', $selectedSlugs)
-                             // Hoặc tìm trong bản dịch slug
-                        ->orWhereHas('translations', function ($transQuery) use ($selectedSlugs, $currentLocale) {
-                            $transQuery->where('field', 'slug')
+
+            $matchedCategories = Category::withoutGlobalScopes()
+                ->where(function ($q) use ($selectedSlugs, $currentLocale) {
+                    $q->whereIn('slug', $selectedSlugs)
+                        ->orWhereHas('translations', function ($tq) use ($selectedSlugs, $currentLocale) {
+                            $tq->where('field', 'slug')
                                 ->where('locale', $currentLocale)
                                 ->whereIn('value', $selectedSlugs);
                         });
-                });
+                })
+                ->when($projectId, fn ($q) => $q->where('project_id', $projectId))
+                ->with('children')
+                ->get();
+
+            $categoryIds = [];
+            foreach ($matchedCategories as $cat) {
+                $categoryIds[] = $cat->id;
+                foreach ($cat->children as $child) {
+                    $categoryIds[] = $child->id;
+                }
+            }
+            $categoryIds = array_values(array_unique(array_filter($categoryIds)));
+
+            $query->where(function ($subQuery) use ($categoryIds, $selectedSlugs, $currentLocale) {
+                if (! empty($categoryIds)) {
+                    $subQuery->whereIn('product_category_id', $categoryIds)
+                        ->orWhereHas('categories', function ($q) use ($categoryIds) {
+                            $q->whereIn('product_categories.id', $categoryIds);
+                        });
+                } else {
+                    $subQuery->whereHas('categories', function ($q) use ($selectedSlugs, $currentLocale) {
+                        $q->where(function ($inner) use ($selectedSlugs, $currentLocale) {
+                            $inner->whereIn('slug', $selectedSlugs)
+                                ->orWhereHas('translations', function ($transQuery) use ($selectedSlugs, $currentLocale) {
+                                    $transQuery->where('field', 'slug')
+                                        ->where('locale', $currentLocale)
+                                        ->whereIn('value', $selectedSlugs);
+                                });
+                        });
+                    });
+                }
             });
         }
 
@@ -341,9 +377,32 @@ class ShopController extends Controller
             ])->first();
 
         if (! $product) {
-            $category = Category::where('slug', $slug)->where('is_active', true)->first();
+            $catAliases = [
+                'dong-lanh' => ['dong-lanh', 'san-pham-tuoi-cap-dong-chua-so-che', 'thuc-pham-dong-lanh'],
+                'thuc-pham-dong-lanh' => ['thuc-pham-dong-lanh', 'dong-lanh', 'san-pham-tuoi-cap-dong-chua-so-che'],
+                'thit-hai-san' => ['thit-hai-san', 'cac-san-pham-tu-thit'],
+                'rau-cu-qua' => ['rau-cu-qua', 'san-pham-da-lam-sach'],
+                'do-uong' => ['do-uong', 'cac-san-pham-khac'],
+                'banh-keo' => ['banh-keo', 'cac-san-pham-khac'],
+            ];
+            $lookupSlugs = $catAliases[$slug] ?? [$slug];
+
+            $category = Category::where(function ($q) use ($lookupSlugs, $currentLocale) {
+                $q->whereIn('slug', $lookupSlugs)
+                    ->orWhereHas('translations', function ($tq) use ($lookupSlugs, $currentLocale) {
+                        $tq->where('field', 'slug')
+                            ->where('locale', $currentLocale)
+                            ->whereIn('value', $lookupSlugs);
+                    });
+            })->where('is_active', true)->first();
+
             if ($category) {
-                return redirect(locale_route('shop.category', ['slug' => $slug]));
+                return $this->index(request(), $projectCode, $category->slug);
+            }
+
+            // Check if it's a CMS page
+            if (class_exists(\App\Http\Controllers\Frontend\PageController::class)) {
+                return app(\App\Http\Controllers\Frontend\PageController::class)->show($projectCode, $slug);
             }
 
             abort(404);

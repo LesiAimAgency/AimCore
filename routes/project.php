@@ -75,11 +75,26 @@ Route::prefix('{projectCode}')
             });
     });
 
+// Legacy /san-pham 301 Redirects to clean 1-level SEO URLs
+Route::get('/{projectCode}/san-pham/{slug}', function (\Illuminate\Http\Request $request, $projectCode, $slug) {
+    $target = $request->getSchemeAndHttpHost()."/{$projectCode}/{$slug}";
+
+    return redirect()->away($target, 301);
+});
+Route::get('/{projectCode}/san-pham', function (\Illuminate\Http\Request $request, $projectCode) {
+    $target = $request->getSchemeAndHttpHost()."/{$projectCode}/cua-hang";
+
+    return redirect()->away($target, 301);
+});
+
 // Dynamic Pages (must be last to avoid conflicts)
 Route::get('/{projectCode}/{slug}', [PageController::class, 'show'])
-    ->where('slug', '^(?!admin|login|logout|cart|checkout|products|product|blog|contact|api).*$')
-    ->middleware([ProjectSubdomainMiddleware::class])
-    ->name('project.pages.show');
+    ->where('slug', '^(?!admin|login|logout|cart|checkout|products|product|blog|contact|api|san-pham).*$')
+    ->middleware([
+        ProjectSubdomainMiddleware::class,
+        SetProjectDatabase::class,
+    ])
+    ->name('project.shop.show');
 
 // ============================================
 // AUTH ROUTES (Đăng nhập CMS)

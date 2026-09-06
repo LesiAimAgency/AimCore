@@ -142,7 +142,7 @@
   <!-- Search Widget -->
   <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
     <h3 class="font-bold mb-4 text-lg text-gray-900">Tìm kiếm</h3>
-    <form action="/{{ $projectCode }}/san-pham" method="GET">
+    <form action="{{ locale_route('shop.index') }}" method="GET">
       <div class="flex rounded-lg overflow-hidden">
         <input type="text" name="q" value="{{ request('q') }}" 
             placeholder="Tìm sản phẩm..." 
@@ -161,7 +161,7 @@
     <h3 class="font-bold mb-4 text-lg text-gray-900">Danh mục</h3>
     <ul class="space-y-2">
       <li>
-        <a href="/{{ $projectCode }}/san-pham" 
+        <a href="{{ locale_route('shop.index') }}" 
           class="flex items-center justify-between p-3 rounded-lg {{ !isset($category) ? 'bg-blue-50 text-blue-600 font-medium' : 'hover:bg-gray-50 text-gray-700' }} transition-colors">
           <span> tất cả sản phẩm</span>
           <span class="bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-full">{{ $products->total() ?? 0 }}</span>
@@ -169,7 +169,7 @@
       </li>
       @foreach($categories ?? [] as $cat)
       <li>
-        <a href="/{{ $projectCode }}/danh-muc/{{ $cat->slug }}" 
+        <a href="{{ locale_route('shop.category', $cat->slug) }}" 
           class="flex items-center justify-between p-3 rounded-lg {{ isset($category) && $category->id == $cat->id ? 'bg-blue-50 text-blue-600 font-medium' : 'hover:bg-gray-50 text-gray-700' }} transition-colors">
           <span>{{ $cat->name }}</span>
           @if(isset($cat->products_count))
@@ -184,7 +184,7 @@
   <!-- Price Filter Widget -->
   <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
     <h3 class="font-bold mb-4 text-lg text-gray-900">Lọc theo giá</h3>
-    <form action="/{{ $projectCode }}/san-pham" method="GET">
+    <form action="{{ locale_route('shop.index') }}" method="GET">
       <div class="space-y-3">
         <div>
           <label class="block text-sm font-medium text-gray-600 mb-1">Từ (₫)</label>

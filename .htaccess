@@ -1,6 +1,10 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    
+
+    # 301 Redirect nếu truy cập trực tiếp có tiền tố /public/
+    RewriteCond %{THE_REQUEST} \s/+public/([^\s?]*) [NC]
+    RewriteRule ^ %1 [L,NE,R=301]
+
     # Bỏ qua nếu đường dẫn đã có sẵn chữ /public/ để tránh bị loop lặp vô hạn
     RewriteCond %{REQUEST_URI} !^/public/
     

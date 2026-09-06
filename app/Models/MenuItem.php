@@ -53,6 +53,10 @@ class MenuItem extends Model
     public function getUrlAttribute($value): ?string
     {
         if ($value) {
+            if (str_contains($value, '/san-pham/')) {
+                $value = str_replace('/san-pham/', '/', $value);
+            }
+
             return $value;
         }
 

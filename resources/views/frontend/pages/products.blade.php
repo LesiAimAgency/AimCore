@@ -16,7 +16,7 @@
             <h3>Danh Mục</h3>
             <ul class="category-list">
                 @foreach($categories as $category)
-                <li><a href="{{ route('products.category', $category->slug) }}">{{ $category->name }}</a></li>
+                <li><a href="{{ locale_route('shop.category', $category->slug) }}">{{ $category->name }}</a></li>
                 @endforeach
             </ul>
         </div>
@@ -25,7 +25,7 @@
             <div class="products-grid">
                 @foreach($products as $product)
                 <article class="product-card">
-                    <a href="{{ route('products.show', $product->slug) }}">
+                    <a href="{{ locale_route('shop.show', $product->slug) }}">
                         <div class="product-card__image">
                             <img src="{{ $product->featured_image }}" alt="{{ $product->name }}">
                         </div>

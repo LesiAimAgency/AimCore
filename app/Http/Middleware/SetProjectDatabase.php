@@ -89,6 +89,11 @@ class SetProjectDatabase
         try {
             DB::purge('project');
 
+            // If sqlite in-memory database, share PDO instance so tables exist across connections
+            if (config("database.connections.{$defaultConnection}.driver") === 'sqlite' && config("database.connections.{$defaultConnection}.database") === ':memory:') {
+                DB::connection('project')->setPdo(DB::connection($defaultConnection)->getPdo());
+            }
+
             // Test connection before switching
             DB::connection('project')->getPdo();
 

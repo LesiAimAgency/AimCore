@@ -174,7 +174,42 @@ return new class extends Migration
             });
         }
 
-        // 9. Products Enhanced fallback (for clean test database environments)
+        // 9. Product Categories fallback
+        if (! Schema::hasTable('product_categories')) {
+            Schema::create('product_categories', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('project_id')->nullable()->index();
+                $table->unsignedBigInteger('tenant_id')->nullable()->index();
+                $table->string('name')->nullable();
+                $table->string('slug')->nullable()->index();
+                $table->text('description')->nullable();
+                $table->unsignedBigInteger('parent_id')->nullable()->index();
+                $table->integer('level')->default(0);
+                $table->string('path')->nullable();
+                $table->integer('sort_order')->default(0);
+                $table->boolean('is_active')->default(true);
+                $table->softDeletes();
+                $table->timestamps();
+            });
+        }
+
+        // 10. Posts fallback
+        if (! Schema::hasTable('posts')) {
+            Schema::create('posts', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('project_id')->nullable()->index();
+                $table->unsignedBigInteger('tenant_id')->nullable()->index();
+                $table->string('title')->nullable();
+                $table->string('slug')->nullable()->index();
+                $table->string('post_type')->default('post');
+                $table->longText('content')->nullable();
+                $table->string('status')->default('published');
+                $table->softDeletes();
+                $table->timestamps();
+            });
+        }
+
+        // 11. Products Enhanced fallback (for clean test database environments)
         if (! Schema::hasTable('products_enhanced')) {
             Schema::create('products_enhanced', function (Blueprint $table) {
                 $table->id();
@@ -183,6 +218,7 @@ return new class extends Migration
                 $table->string('name')->nullable();
                 $table->string('slug')->nullable()->index();
                 $table->string('sku')->nullable();
+                $table->decimal('price', 15, 2)->nullable();
                 $table->decimal('regular_price', 15, 2)->default(0);
                 $table->decimal('sale_price', 15, 2)->nullable();
                 $table->string('status')->default('publish');

@@ -389,4 +389,12 @@ class Product extends Model implements HasMedia
     {
         return $this->getMedia('images');
     }
+
+    /**
+     * Clean 1-level SEO URL for product (e.g. /{projectCode}/{product-slug})
+     */
+    public function getUrlAttribute(): string
+    {
+        return locale_route('shop.show', $this->slug);
+    }
 }

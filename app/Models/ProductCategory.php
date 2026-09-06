@@ -228,4 +228,12 @@ class ProductCategory extends Model
 
         return $query->orderBy('path')->get();
     }
+
+    /**
+     * Clean 1-level SEO URL for category (e.g. /{projectCode}/{category-slug})
+     */
+    public function getUrlAttribute(): string
+    {
+        return locale_route('shop.category', $this->slug);
+    }
 }

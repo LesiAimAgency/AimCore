@@ -233,14 +233,48 @@ if (! function_exists('locale_route')) {
             $name = 'project.'.$name;
         }
 
-        // Clean SEO Category URL: /{projectCode}/{slug} or /{slug}
-        if ($name === 'project.shop.category' || $name === 'shop.category') {
-            $slug = is_array($params) ? ($params['slug'] ?? ($params[0] ?? '')) : (string) $params;
-            $projectCode = is_array($params) && isset($params['projectCode'])
-                ? $params['projectCode']
-                : (request()->route('projectCode') ?? (session('current_project')['code'] ?? (session('current_project')->code ?? (function_exists('current_project') ? current_project()?->code : null))));
+        // Clean 1-level SEO URL for Categories and Products: /{projectCode}/{slug} or /{slug}
+        $oneLevelRoutes = [
+            'project.shop.category', 'shop.category',
+            'project.shop.show', 'shop.show',
+            'project.products.show', 'products.show',
+            'project.product.show', 'product.show',
+            'project.frontend.product', 'frontend.product',
+        ];
+
+        if (in_array($name, $oneLevelRoutes, true)) {
+            if (is_object($params)) {
+                $slug = $params->slug ?? ($params->id ?? '');
+                $projectCode = $params->project?->code ?? null;
+            } elseif (is_array($params)) {
+                $slug = $params['slug'] ?? ($params[0] ?? '');
+                $projectCode = $params['projectCode'] ?? null;
+            } else {
+                $slug = (string) $params;
+                $projectCode = null;
+            }
+
+            $projectCode = $projectCode
+                ?? (request()->route('projectCode')
+                ?? (session('current_project')['code']
+                ?? (session('current_project')->code
+                ?? (function_exists('current_project') ? current_project()?->code : null))));
+
+            $slug = ltrim((string) $slug, '/');
 
             return $projectCode ? "/{$projectCode}/{$slug}" : "/{$slug}";
+        }
+
+        // Shop index URL: /{projectCode}/cua-hang
+        if (in_array($name, ['project.shop.index', 'shop.index'], true)) {
+            $projectCode = (is_array($params) && isset($params['projectCode']))
+                ? $params['projectCode']
+                : (request()->route('projectCode')
+                ?? (session('current_project')['code']
+                ?? (session('current_project')->code
+                ?? (function_exists('current_project') ? current_project()?->code : null))));
+
+            return $projectCode ? "/{$projectCode}/cua-hang" : "/cua-hang";
         }
 
         if (! Route::has($name)) {
