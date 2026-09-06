@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Project;
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class ViettinmartUserSeeder extends Seeder
@@ -12,8 +15,30 @@ class ViettinmartUserSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(int $projectId = 10, int $tenantId = 3): void
+    public function run(?int $projectId = null, ?int $tenantId = null): void
     {
+        if (! $projectId) {
+            $project = Project::where('code', 'viettinmart-eco')->orWhere('code', 'viettinmart')->first();
+            $projectId = $project ? $project->id : 10;
+        }
+
+        if (! $tenantId || ! Tenant::where('id', $tenantId)->exists()) {
+            $tenant = Tenant::where('code', 'viettinmart')
+                ->orWhere('code', 'viettinmart-eco')
+                ->orWhere('name', 'like', '%Viettinmart%')
+                ->first();
+            if (! $tenant) {
+                $tenant = Tenant::find(3) ?? Tenant::first();
+            }
+            if (! $tenant && Schema::hasTable('tenants')) {
+                $tenant = Tenant::create([
+                    'code' => 'viettinmart',
+                    'name' => 'Viettinmart Demo',
+                    'status' => 'active',
+                ]);
+            }
+            $tenantId = $tenant ? $tenant->id : null;
+        }
         $users = [
             // 1. Admin (Toàn quyền)
             [

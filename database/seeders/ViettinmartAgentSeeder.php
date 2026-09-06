@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Agent;
+use App\Models\Project;
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -11,8 +13,23 @@ class ViettinmartAgentSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(int $projectId = 10, int $tenantId = 3): void
+    public function run(?int $projectId = null, ?int $tenantId = null): void
     {
+        if (! $projectId) {
+            $project = Project::where('code', 'viettinmart-eco')->orWhere('code', 'viettinmart')->first();
+            $projectId = $project ? $project->id : 10;
+        }
+
+        if (! $tenantId || ! Tenant::where('id', $tenantId)->exists()) {
+            $tenant = Tenant::where('code', 'viettinmart')
+                ->orWhere('code', 'viettinmart-eco')
+                ->orWhere('name', 'like', '%Viettinmart%')
+                ->first();
+            if (! $tenant) {
+                $tenant = Tenant::find(3) ?? Tenant::first();
+            }
+            $tenantId = $tenant ? $tenant->id : null;
+        }
         $webAdmin = User::where('role', User::ROLE_WEB_ADMIN)->first();
         $manager = User::where('role', User::ROLE_MANAGER)->first();
         $customer = User::where('email', 'customer@viettinmart.com')->first();

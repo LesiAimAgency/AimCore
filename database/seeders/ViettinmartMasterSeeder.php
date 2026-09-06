@@ -4,9 +4,11 @@ namespace Database\Seeders;
 
 use App\Models\Project;
 use App\Models\ProjectSetting;
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schema;
 
 class ViettinmartMasterSeeder extends Seeder
 {
@@ -23,9 +25,26 @@ class ViettinmartMasterSeeder extends Seeder
                 ->first();
             $projectId = $project ? $project->id : 10;
         }
-        $tenantId = $tenantId ?? $projectId;
 
-        $this->command->info("=== BẮT ĐẦU SEED DỮ LIỆU VIETTINMART VÀO VGT CORE (Project ID: {$projectId}) ===");
+        if (! $tenantId || ! Tenant::where('id', $tenantId)->exists()) {
+            $tenant = Tenant::where('code', 'viettinmart')
+                ->orWhere('code', 'viettinmart-eco')
+                ->orWhere('name', 'like', '%Viettinmart%')
+                ->first();
+            if (! $tenant) {
+                $tenant = Tenant::find(3) ?? Tenant::first();
+            }
+            if (! $tenant && Schema::hasTable('tenants')) {
+                $tenant = Tenant::create([
+                    'code' => 'viettinmart',
+                    'name' => 'Viettinmart Demo',
+                    'status' => 'active',
+                ]);
+            }
+            $tenantId = $tenant ? $tenant->id : null;
+        }
+
+        $this->command->info("=== BẮT ĐẦU SEED DỮ LIỆU VIETTINMART VÀO VGT CORE (Project ID: {$projectId}, Tenant ID: {$tenantId}) ===");
 
         // 1. Users
         $this->command->info('1. Seeding Users...');
