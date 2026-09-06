@@ -5,15 +5,28 @@ $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 
 $project = App\Models\Project::where('code', 'viettinmart-eco')->orWhere('code', 'viettinmart')->first();
-app()->instance('current_project', $project);
+$products = App\Models\Product::withoutGlobalScopes()->where('project_id', $project->id)->get();
 
-$categories = App\Models\Category::whereNull('parent_id')
-    ->where('is_active', true)
-    ->with('translations')
-    ->orderBy('sort_order')
-    ->get();
+echo "Total products for project: " . $products->count() . "\n";
 
-echo "Total categories queried for sidebar: " . $categories->count() . "\n";
-foreach ($categories as $c) {
-    echo " - [#" . $c->id . "] " . $c->name . " (slug: " . $c->slug . ") | project_id: " . ($c->project_id ?? 'NULL') . "\n";
+$withDirectCat = $products->whereNotNull('product_category_id')->count();
+echo "Products with direct product_category_id: {$withDirectCat}\n";
+
+$withPivotCat = 0;
+foreach ($products as $p) {
+    if ($p->categories()->count() > 0) {
+        $withPivotCat++;
+    }
+}
+echo "Products with categories() pivot: {$withPivotCat}\n";
+
+$sample = $products->first();
+if ($sample) {
+    echo "Sample product: " . $sample->name . "\n";
+    echo " - product_category_id: " . ($sample->product_category_id ?? 'NULL') . "\n";
+    echo " - category relation: " . ($sample->category ? $sample->category->name : 'NULL') . "\n";
+    echo " - categories count: " . $sample->categories->count() . "\n";
+    foreach ($sample->categories as $c) {
+        echo "   * Pivot cat: " . $c->id . " - " . $c->name . " (slug: " . $c->slug . ")\n";
+    }
 }
