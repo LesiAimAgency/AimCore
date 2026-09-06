@@ -1,2 +1,3 @@
-*
-!.gitignore
+# Ignore temporary files, keep demo assets
+test.txt
+*.tmp
