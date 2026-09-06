@@ -32,6 +32,16 @@ class ProductVariation extends Model
     }
 
     // Accessors
+    public function getStockAttribute(): int
+    {
+        return (int) ($this->stock_quantity ?? 0);
+    }
+
+    public function getLabelAttribute(): string
+    {
+        return $this->attribute_names;
+    }
+
     public function getDisplayPriceAttribute()
     {
         return $this->sale_price ?: $this->price;
