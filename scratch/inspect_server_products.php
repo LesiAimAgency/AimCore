@@ -28,15 +28,19 @@ $kernel->bootstrap();
 
 header('Content-Type: application/json');
 
-$cats = DB::table('product_categories')->get();
-echo json_encode($cats, JSON_PRETTY_PRINT);
+$indexes = DB::select("SHOW INDEXES FROM posts");
+$uniqueIndexes = array_filter($indexes, fn($idx) => $idx->Non_unique == 0);
+
+echo json_encode([
+    'unique_indexes_posts' => $uniqueIndexes
+], JSON_PRETTY_PRINT);
 @unlink(__FILE__);
 PHP;
 
 $method->invoke($c, 'Fileman', 'save_file_content', [
     'dir' => 'aimagency.vn/public',
-    'file' => 'check_cats_server.php',
+    'file' => 'check_posts_indexes.php',
     'content' => $serverScript,
 ]);
 
-echo "check_cats_server.php uploaded.\n";
+echo "check_posts_indexes.php uploaded.\n";
