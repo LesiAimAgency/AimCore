@@ -11,7 +11,7 @@ class Menu extends Model
 {
     use BelongsToTenant, ProjectScoped;
 
-    protected $fillable = ['name', 'slug', 'location', 'is_active', 'tenant_id'];
+    protected $fillable = ['project_id', 'tenant_id', 'name', 'slug', 'location', 'is_active'];
 
     public function getRouteKeyName()
     {

@@ -132,6 +132,34 @@ class PackagesWidget extends BaseWidget
         if (empty($settings['btn_link'])) {
             $settings['btn_link'] = '#contact';
         }
+        if (empty($settings['packages_list'])) {
+            $settings['packages_list'] = [
+                [
+                    'name' => 'PACKAGE 1',
+                    'price' => '$29',
+                    'period' => '/ Month',
+                    'description' => 'Privilege',
+                    'features' => "Lorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing",
+                    'highlight' => '0',
+                ],
+                [
+                    'name' => 'PACKAGE 2',
+                    'price' => '$49',
+                    'period' => '/ Month',
+                    'description' => 'Privilege',
+                    'features' => "Lorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing",
+                    'highlight' => '0',
+                ],
+                [
+                    'name' => 'PACKAGE 3',
+                    'price' => '$69',
+                    'period' => '/ Month',
+                    'description' => 'Privilege',
+                    'features' => "Lorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing\nLorem Ipsum is simply dummy text of the printing",
+                    'highlight' => '0',
+                ],
+            ];
+        }
 
         return view('widgets.inbetween.packages', ['widget' => $this, 'settings' => $settings])->render();
     }

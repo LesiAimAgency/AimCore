@@ -14,7 +14,7 @@
   <div class="container-custom relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6">
     <div class="hero-content flex flex-col items-center max-w-[708px] w-full">
       <div class="hero-logo-wrapper w-full max-w-[280px] sm:max-w-[420px] md:max-w-[580px] lg:max-w-[708px]">
-        <img src="{{ $heroLogo }}" alt="{{ $siteName }}" class="w-full h-auto object-contain drop-shadow-2xl select-none" width="708" height="109">
+        <img src="{{ str_starts_with($heroLogo, 'http') || str_starts_with($heroLogo, '/') ? $heroLogo : asset($heroLogo) }}" alt="{{ $siteName }}" class="w-full h-auto object-contain drop-shadow-2xl select-none" width="708" height="109">
       </div>
       <div class="hero-subtitle mt-4 sm:mt-8 lg:mt-11 text-[25px] font-medium leading-snug sm:leading-[1.18] space-y-0.5 sm:space-y-1 text-white select-none">
         @foreach(explode('|', $heroSubtitle) as $line)

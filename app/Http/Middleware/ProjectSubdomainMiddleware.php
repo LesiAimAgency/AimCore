@@ -38,6 +38,15 @@ class ProjectSubdomainMiddleware
             session(['current_project' => $project]);
         }
 
+        // Prepend active project's theme view path so project theme templates/layouts take precedence
+        $theme = setting('theme');
+        if ($theme) {
+            $themeViewPath = resource_path("views/frontend/themes/{$theme}");
+            if (is_dir($themeViewPath)) {
+                view()->getFinder()->prependLocation($themeViewPath);
+            }
+        }
+
         // Ensure active locale is set for the project
         $sessionLocale = session('locale');
         if ($sessionLocale) {

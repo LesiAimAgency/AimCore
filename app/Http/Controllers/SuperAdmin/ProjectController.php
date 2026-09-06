@@ -10,9 +10,17 @@ use App\Models\FeaturePack;
 use App\Models\Project;
 use App\Models\ProjectPermission;
 use App\Models\ProjectSetting;
+use App\Models\Setting;
 use App\Models\User;
 use App\Services\RemoteProjectService;
+use App\Services\SettingsService;
 use App\Services\ViettinmartDeployService;
+use Database\Seeders\InbetweenHomepageMainSeeder;
+use Database\Seeders\InbetweenThemeSeeder;
+use Database\Seeders\ViettinmartMenuSeeder;
+use Database\Seeders\ViettinmartProductsSeeder;
+use Database\Seeders\ViettinmartSettingsSeeder;
+use Database\Seeders\ViettinmartWidgetsSeeder;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -686,47 +694,58 @@ class ProjectController extends Controller implements HasMiddleware
 
     private function seedProjectTheme(Project $project)
     {
-        \Log::info("Seeding project theme and basic settings for project {$project->id}");
-        // Chỉ copy bảng settings (chứa các cấu hình cơ bản, theme, font, colors...)
-        // KHÔNG copy widgets, widget_templates vì chúng là dữ liệu dùng chung (Synchronized)
-        $tablesToCopy = ['settings'];
+        \Log::info("Seeding project theme, settings and widgets for project {$project->id}");
 
-        foreach ($tablesToCopy as $table) {
+        $tenantId = $project->tenant_id ?? $project->id;
+        $theme = Setting::where(function ($q) use ($project, $tenantId) {
+            $q->where('project_id', $project->id)->orWhere('tenant_id', $tenantId);
+        })->where('key', 'theme')->value('value');
+
+        if ($theme === 'inbetween') {
             try {
-                $data = \DB::table($table)
-                    ->where(function ($q) {
-                        $q->whereNull('tenant_id')
-                            ->orWhere('tenant_id', 0);
-                    })
-                    ->where(function ($q) {
-                        $q->whereNull('project_id')
-                            ->orWhere('project_id', 0);
-                    })
-                    ->get();
-
-                if ($data->count() > 0) {
-                    foreach ($data as $row) {
-                        $rowArray = (array) $row;
-                        unset($rowArray['id']);
-                        $rowArray['project_id'] = $project->id;
-                        $rowArray['tenant_id'] = null;
-
-                        $exists = \DB::table($table)->where('project_id', $project->id);
-
-                        if (isset($rowArray['key'])) {
-                            $exists->where('key', $rowArray['key']);
-                        } elseif (isset($rowArray['name'])) {
-                            $exists->where('name', $rowArray['name']);
-                        }
-
-                        if (! $exists->exists()) {
-                            \DB::table($table)->insert($rowArray);
-                        }
-                    }
+                if (class_exists('\Database\Seeders\InbetweenThemeSeeder')) {
+                    (new InbetweenThemeSeeder)->run($project->id, $tenantId);
                 }
-            } catch (\Exception $e) {
-                \Log::warning("Skip seeding data for {$table}: ".$e->getMessage());
+            } catch (\Throwable $e) {
+                \Log::warning("InbetweenThemeSeeder warning for project {$project->id}: ".$e->getMessage());
             }
+
+            try {
+                if (class_exists('\Database\Seeders\InbetweenHomepageMainSeeder')) {
+                    (new InbetweenHomepageMainSeeder)->run($project->id, $tenantId);
+                }
+            } catch (\Throwable $e) {
+                \Log::warning("InbetweenHomepageMainSeeder warning for project {$project->id}: ".$e->getMessage());
+            }
+
+            return;
+        }
+
+        // 1. Seed Settings (Full configuration for Header, Footer, Colors, Fonts, Contact)
+        try {
+            if (class_exists('\Database\Seeders\ViettinmartSettingsSeeder')) {
+                (new ViettinmartSettingsSeeder)->run($project->id, $tenantId);
+            }
+        } catch (\Throwable $e) {
+            \Log::warning("ViettinmartSettingsSeeder warning for project {$project->id}: ".$e->getMessage());
+        }
+
+        // 2. Seed Widgets (30 independent widgets for Header Menu, Footer 5 columns, Homepage, About)
+        try {
+            if (class_exists('\Database\Seeders\ViettinmartWidgetsSeeder')) {
+                (new ViettinmartWidgetsSeeder)->run($project->id, $tenantId);
+            }
+        } catch (\Throwable $e) {
+            \Log::warning("ViettinmartWidgetsSeeder warning for project {$project->id}: ".$e->getMessage());
+        }
+
+        // 3. Seed Menus
+        try {
+            if (class_exists('\Database\Seeders\ViettinmartMenuSeeder')) {
+                (new ViettinmartMenuSeeder)->run($project->id, $tenantId);
+            }
+        } catch (\Throwable $e) {
+            \Log::warning("ViettinmartMenuSeeder warning for project {$project->id}: ".$e->getMessage());
         }
     }
 
@@ -965,43 +984,83 @@ class ProjectController extends Controller implements HasMiddleware
 
     private function syncDataToProject(Project $project)
     {
-        $dbName = $this->getProjectDatabaseName($project);
+        \Log::info("Synchronizing template data to project {$project->code} (ID: {$project->id}) in shared database mode");
 
-        $mainDb = config('database.connections.mysql.database');
+        $tenantId = $project->tenant_id ?? $project->id;
 
-        $tablesToSync = ['settings', 'menus', 'menu_items', 'widgets', 'widget_templates', 'posts', 'product_categories', 'brands'];
+        $theme = Setting::where(function ($q) use ($project, $tenantId) {
+            $q->where('project_id', $project->id)->orWhere('tenant_id', $tenantId);
+        })->where('key', 'theme')->value('value');
 
-        foreach ($tablesToSync as $table) {
+        if ($theme === 'inbetween') {
             try {
-                $data = \DB::table($table)
-                    ->where(function ($q) {
-                        $q->whereNull('tenant_id')->orWhere('tenant_id', 0);
-                    })
-                    ->where(function ($q) {
-                        $q->whereNull('project_id')->orWhere('project_id', 0);
-                    })
-                    ->get();
-
-                if ($data->count() > 0) {
-                    \DB::statement("USE `{$dbName}`");
-                    \DB::table($table)->truncate();
-
-                    foreach ($data as $row) {
-                        $rowArray = (array) $row;
-                        $originalId = $rowArray['id'];
-                        unset($rowArray['id']);
-                        $rowArray['project_id'] = $project->id;
-                        $rowArray['tenant_id'] = null;
-
-                        \DB::table($table)->insert($rowArray);
-                    }
-
-                    \DB::statement("USE `{$mainDb}`");
+                if (class_exists('\Database\Seeders\InbetweenThemeSeeder')) {
+                    (new InbetweenThemeSeeder)->run($project->id, $tenantId);
                 }
-            } catch (\Exception $e) {
-                \Log::warning("Skip syncing {$table}: ".$e->getMessage());
+            } catch (\Throwable $e) {
+                \Log::warning("Sync InbetweenThemeSeeder warning for project {$project->id}: ".$e->getMessage());
             }
+
+            try {
+                if (class_exists('\Database\Seeders\InbetweenHomepageMainSeeder')) {
+                    (new InbetweenHomepageMainSeeder)->run($project->id, $tenantId);
+                }
+            } catch (\Throwable $e) {
+                \Log::warning("Sync InbetweenHomepageMainSeeder warning for project {$project->id}: ".$e->getMessage());
+            }
+
+            if (class_exists('\App\Services\SettingsService')) {
+                SettingsService::getInstance()->clearCache();
+            }
+            clear_widget_cache();
+
+            return;
         }
+
+        // 1. Sync / Seed Settings
+        try {
+            if (class_exists('\Database\Seeders\ViettinmartSettingsSeeder')) {
+                (new ViettinmartSettingsSeeder)->run($project->id, $tenantId);
+            }
+        } catch (\Throwable $e) {
+            \Log::warning("Sync settings warning for project {$project->id}: ".$e->getMessage());
+        }
+
+        // 2. Sync / Seed Widgets (Header Menu, Footer 5 columns, Homepage, About)
+        try {
+            if (class_exists('\Database\Seeders\ViettinmartWidgetsSeeder')) {
+                (new ViettinmartWidgetsSeeder)->run($project->id, $tenantId);
+            }
+        } catch (\Throwable $e) {
+            \Log::warning("Sync widgets warning for project {$project->id}: ".$e->getMessage());
+        }
+
+        // 3. Sync / Seed Menus & Menu Items
+        try {
+            if (class_exists('\Database\Seeders\ViettinmartMenuSeeder')) {
+                (new ViettinmartMenuSeeder)->run($project->id, $tenantId);
+            }
+        } catch (\Throwable $e) {
+            \Log::warning("Sync menus warning for project {$project->id}: ".$e->getMessage());
+        }
+
+        // 4. Sync / Seed Categories & Taxonomies if empty
+        try {
+            if (class_exists('\Database\Seeders\ViettinmartProductsSeeder')) {
+                $hasCats = \DB::table('product_categories')->where('project_id', $project->id)->exists();
+                if (! $hasCats) {
+                    (new ViettinmartProductsSeeder)->run($project->id, $tenantId);
+                }
+            }
+        } catch (\Throwable $e) {
+            \Log::warning("Sync catalog warning for project {$project->id}: ".$e->getMessage());
+        }
+
+        // 5. Clear cache
+        if (class_exists('\App\Services\SettingsService')) {
+            SettingsService::getInstance()->clearCache();
+        }
+        clear_widget_cache();
     }
 
     private function syncDataToRemote(Project $project)

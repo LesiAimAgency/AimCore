@@ -86,7 +86,7 @@
     @stack('styles')
 </head>
 <body>
-    @include('frontend.partials.header')
+    @include('frontend.themes.victorious.partials.header')
     
     <main class="p-top">
         @yield('content')

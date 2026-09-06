@@ -9,6 +9,8 @@ use App\Services\FieldTypeService;
 use App\Services\WidgetImportExportService;
 use App\Services\WidgetPermissionService;
 use App\Widgets\WidgetRegistry;
+use Database\Seeders\InbetweenHomepageMainSeeder;
+use Database\Seeders\ViettinmartWidgetsSeeder;
 use Illuminate\Http\Request;
 
 class WidgetController extends Controller
@@ -45,33 +47,50 @@ class WidgetController extends Controller
 
         // Check if we're in project context
         $projectCode = request()->route('projectCode');
-        $currentProject = null;
-        $tenantId = null;
+        $currentProject = request()->attributes->get('project');
 
-        if ($projectCode) {
+        if (! $currentProject && $projectCode) {
             $currentProject = Project::where('code', $projectCode)->first();
-            if ($currentProject) {
-                $tenantId = $currentProject->id;
-            }
-        } else {
+        }
+        if (! $currentProject) {
             $sessionProject = session('current_project');
-            if (\is_array($sessionProject)) {
-                $tenantId = $sessionProject['id'] ?? null;
-            } elseif (\is_object($sessionProject)) {
-                $tenantId = $sessionProject->id ?? null;
+            if ($sessionProject instanceof Project) {
+                $currentProject = $sessionProject;
+            } elseif (\is_array($sessionProject) && ! empty($sessionProject['id'])) {
+                $currentProject = Project::find($sessionProject['id']);
+            } elseif (\is_object($sessionProject) && ! empty($sessionProject->id)) {
+                $currentProject = Project::find($sessionProject->id);
+            } elseif (session('current_project_id')) {
+                $currentProject = Project::find(session('current_project_id'));
+            }
+        }
+
+        $projId = $currentProject?->id;
+        $tenantId = $currentProject?->tenant_id ?? $projId;
+
+        // Auto-seed widgets if project currently has 0 widgets
+        if ($projId) {
+            $widgetCount = Widget::where('project_id', $projId)->count();
+            if ($widgetCount === 0) {
+                try {
+                    $theme = Setting::where(function ($q) use ($projId, $tenantId) {
+                        $q->where('project_id', $projId)->orWhere('tenant_id', $tenantId);
+                    })->where('key', 'theme')->value('value');
+
+                    if ($theme === 'inbetween' && class_exists('\Database\Seeders\InbetweenHomepageMainSeeder')) {
+                        (new InbetweenHomepageMainSeeder)->run($projId, $tenantId);
+                    } elseif (class_exists('\Database\Seeders\ViettinmartWidgetsSeeder')) {
+                        (new ViettinmartWidgetsSeeder)->run($projId, $tenantId);
+                    }
+                } catch (\Throwable $e) {
+                    \Log::warning("Auto-seeding widgets failed for project {$projId}: ".$e->getMessage());
+                }
             }
         }
 
         $query = Widget::orderBy('area')->orderBy('sort_order');
-        if ($currentProject || $tenantId) {
-            $projId = $currentProject?->id ?? $tenantId;
-            $query->where(function ($q) use ($projId, $tenantId) {
-                $q->where('project_id', $projId)
-                    ->orWhere('tenant_id', $tenantId);
-                if ($projId == 10 || $tenantId == 10) {
-                    $q->orWhere('tenant_id', 3);
-                }
-            });
+        if ($projId) {
+            $query->where('project_id', $projId);
         }
 
         $existingWidgets = $query->get()
@@ -176,6 +195,33 @@ class WidgetController extends Controller
         }
         unset($validated['config']);
 
+        // Check project context
+        $projectCode = request()->route('projectCode');
+        $currentProject = request()->attributes->get('project');
+        if (! $currentProject && $projectCode) {
+            $currentProject = Project::where('code', $projectCode)->first();
+        }
+        if (! $currentProject) {
+            $sessionProject = session('current_project');
+            if ($sessionProject instanceof Project) {
+                $currentProject = $sessionProject;
+            } elseif (\is_array($sessionProject) && ! empty($sessionProject['id'])) {
+                $currentProject = Project::find($sessionProject['id']);
+            } elseif (\is_object($sessionProject) && ! empty($sessionProject->id)) {
+                $currentProject = Project::find($sessionProject->id);
+            } elseif (session('current_project_id')) {
+                $currentProject = Project::find(session('current_project_id'));
+            }
+        }
+
+        $projId = $currentProject?->id;
+        $tenantId = $currentProject?->tenant_id ?? $projId;
+
+        if ($projId) {
+            $validated['project_id'] = $projId;
+            $validated['tenant_id'] = $tenantId;
+        }
+
         $newWidget = Widget::create($validated);
         clear_widget_cache($validated['area']);
 
@@ -278,38 +324,45 @@ class WidgetController extends Controller
             $errorCount = 0;
             $errors = [];
 
-            // Get tenant_id from session or route
-            $projectCode = request()->route('projectCode');
-            $currentProject = session('current_project');
-            $tenantId = null;
-            if (\is_array($currentProject)) {
-                $tenantId = $currentProject['id'] ?? null;
-            } elseif (\is_object($currentProject)) {
-                $tenantId = $currentProject->id ?? null;
+            // Get current project context
+            $projectCode = $request->route('projectCode') ?? request()->route('projectCode');
+            $currentProject = $request->attributes->get('project') ?? request()->attributes->get('project');
+            if (! $currentProject && $projectCode) {
+                $currentProject = Project::where('code', $projectCode)->first();
             }
-            if (! $tenantId && $projectCode) {
-                $p = Project::where('code', $projectCode)->first();
-                $tenantId = $p?->id;
+            if (! $currentProject) {
+                $sessionProject = session('current_project');
+                if ($sessionProject instanceof Project) {
+                    $currentProject = $sessionProject;
+                } elseif (\is_array($sessionProject) && ! empty($sessionProject['id'])) {
+                    $currentProject = Project::find($sessionProject['id']);
+                } elseif (\is_object($sessionProject) && ! empty($sessionProject->id)) {
+                    $currentProject = Project::find($sessionProject->id);
+                } elseif (session('current_project_id')) {
+                    $currentProject = Project::find(session('current_project_id'));
+                }
             }
 
-            // Clear existing widgets for the areas being updated (only for this tenant)
-            $areas = collect($widgets)->pluck('area')->unique();
+            $projId = $currentProject?->id;
+            $tenantId = $currentProject?->tenant_id ?? $projId;
+
+            if (! $projId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không tìm thấy thông tin dự án để lưu widget.',
+                ], 400);
+            }
+
+            // Clear existing widgets for the areas being updated (strictly for this project)
+            $areas = collect($widgets)->pluck('area')->unique()->values()->all();
             foreach ($areas as $area) {
-                $query = Widget::where(function ($q) use ($area) {
-                    $q->where('area', $area);
-                    if ($area === 'homepage-main') {
-                        $q->orWhere('area', 'homepage');
-                    }
-                });
-                if ($tenantId) {
-                    $query->where(function ($q) use ($tenantId) {
-                        $q->where('tenant_id', $tenantId)
-                            ->orWhere('project_id', $tenantId);
-                        if ($tenantId == 10) {
-                            $q->orWhere('tenant_id', 3);
+                $query = Widget::where('project_id', $projId)
+                    ->where(function ($q) use ($area) {
+                        $q->where('area', $area);
+                        if ($area === 'homepage-main') {
+                            $q->orWhere('area', 'homepage');
                         }
                     });
-                }
                 $query->delete();
             }
 
@@ -317,11 +370,9 @@ class WidgetController extends Controller
             foreach ($widgets as $widgetData) {
                 try {
                     $validated = $this->validateWidgetData($widgetData);
-                    // Add tenant_id and project_id
-                    if ($tenantId) {
-                        $validated['tenant_id'] = $tenantId;
-                        $validated['project_id'] = $tenantId;
-                    }
+                    $validated['tenant_id'] = $tenantId;
+                    $validated['project_id'] = $projId;
+
                     Widget::create($validated);
                     $successCount++;
                 } catch (\Exception $e) {
@@ -402,20 +453,34 @@ class WidgetController extends Controller
     {
         $area = $request->input('area', 'homepage-main');
 
-        // Get tenant_id from session
-        $currentProject = session('current_project');
-        $tenantId = null;
-        if (\is_array($currentProject)) {
-            $tenantId = $currentProject['id'] ?? null;
-        } elseif (\is_object($currentProject)) {
-            $tenantId = $currentProject->id ?? null;
+        // Resolve current project
+        $projectCode = $request->route('projectCode') ?? request()->route('projectCode');
+        $currentProject = $request->attributes->get('project') ?? request()->attributes->get('project');
+        if (! $currentProject && $projectCode) {
+            $currentProject = Project::where('code', $projectCode)->first();
+        }
+        if (! $currentProject) {
+            $sessionProject = session('current_project');
+            if ($sessionProject instanceof Project) {
+                $currentProject = $sessionProject;
+            } elseif (\is_array($sessionProject) && ! empty($sessionProject['id'])) {
+                $currentProject = Project::find($sessionProject['id']);
+            } elseif (\is_object($sessionProject) && ! empty($sessionProject->id)) {
+                $currentProject = Project::find($sessionProject->id);
+            } elseif (session('current_project_id')) {
+                $currentProject = Project::find(session('current_project_id'));
+            }
         }
 
-        $query = Widget::where('area', $area);
-        if ($tenantId) {
-            $query->where('tenant_id', $tenantId);
+        $projId = $currentProject?->id;
+        if (! $projId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tìm thấy thông tin dự án để xóa widget.',
+            ], 400);
         }
 
+        $query = Widget::where('project_id', $projId)->where('area', $area);
         $count = $query->count();
         $query->delete();
         clear_widget_cache($area);

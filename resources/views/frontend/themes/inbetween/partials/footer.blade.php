@@ -86,11 +86,34 @@
         <!-- Col 2: Quick links -->
         <div class="md:col-span-4 lg:col-span-4">
           <p class="text-xs text-neutral-400 mb-2.5 m-0 font-normal">Quick links</p>
+          @php
+            $currentProj = function_exists('current_project') ? current_project() : null;
+            $currentProjId = $currentProj?->id ?? session('current_project_id');
+            $footerMenu = null;
+            if ($currentProjId) {
+                $footerMenu = \App\Models\Menu::where('project_id', $currentProjId)
+                    ->where(function($q) { $q->where('location', 'footer')->orWhere('slug', 'footer-menu'); })
+                    ->where('is_active', true)
+                    ->with(['items' => fn($q) => $q->whereNull('parent_id')->orderBy('order')])
+                    ->first();
+            }
+            if ($footerMenu && $footerMenu->items->isNotEmpty()) {
+                $footerNav = $footerMenu->items->map(fn($item) => ['label' => $item->title, 'url' => $item->url ?: '#'])->toArray();
+            } else {
+                $cmsFooter = \App\Models\Widget::getMenu('footer-links');
+                if (empty($cmsFooter)) { $cmsFooter = \App\Models\Widget::getMenu('footer'); }
+                $footerNav = !empty($cmsFooter) ? $cmsFooter : [
+                    ['label' => 'About Us', 'url' => '#about'],
+                    ['label' => 'Media', 'url' => '#media'],
+                    ['label' => 'Events', 'url' => '#events'],
+                    ['label' => 'Community', 'url' => '#packages'],
+                ];
+            }
+          @endphp
           <nav class="grid grid-cols-2 gap-y-3 gap-x-8 text-sm font-semibold tracking-wide" aria-label="Footer Navigation">
-            <a href="#about" class="hover:text-[#EC460B] transition-colors">About Us</a>
-            <a href="#media" class="hover:text-[#EC460B] transition-colors">Media</a>
-            <a href="#events" class="hover:text-[#EC460B] transition-colors">Events</a>
-            <a href="#packages" class="hover:text-[#EC460B] transition-colors">Community</a>
+            @foreach($footerNav as $navItem)
+              <a href="{{ $navItem['url'] ?? '#' }}" class="hover:text-[#EC460B] transition-colors">{{ $navItem['label'] }}</a>
+            @endforeach
           </nav>
         </div>
 

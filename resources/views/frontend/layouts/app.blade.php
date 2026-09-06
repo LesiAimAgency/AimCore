@@ -116,7 +116,16 @@
     @endif
     
     <!-- Header -->
-    @include('frontend.partials.header')
+    @php
+        $activeTheme = setting('theme');
+    @endphp
+    @if($activeTheme && view()->exists("frontend.themes.{$activeTheme}.partials.header"))
+        @include("frontend.themes.{$activeTheme}.partials.header")
+    @elseif($activeTheme && view()->exists("frontend.themes.{$activeTheme}.layouts.partials.header"))
+        @include("frontend.themes.{$activeTheme}.layouts.partials.header")
+    @else
+        @include('frontend.partials.header')
+    @endif
     
     <!-- Main Content -->
     <main role="main" id="main-content">
@@ -124,7 +133,13 @@
     </main>
     
     <!-- Footer -->
-    @include('frontend.partials.footer')
+    @if($activeTheme && view()->exists("frontend.themes.{$activeTheme}.partials.footer"))
+        @include("frontend.themes.{$activeTheme}.partials.footer")
+    @elseif($activeTheme && view()->exists("frontend.themes.{$activeTheme}.layouts.partials.footer"))
+        @include("frontend.themes.{$activeTheme}.layouts.partials.footer")
+    @else
+        @include('frontend.partials.footer')
+    @endif
     
     <!-- Image Protection (Watermark) -->
     @include('frontend.partials.image-protection')

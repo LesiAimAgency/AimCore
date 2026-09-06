@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Menu;
+use App\Models\MenuItem;
 use App\Models\Project;
 use App\Models\Setting;
 use App\Models\Widget;
@@ -9,9 +11,13 @@ use Illuminate\Database\Seeder;
 
 class InbetweenThemeSeeder extends Seeder
 {
-    public function run(): void
+    public function run(?int $projectId = null, ?int $tenantId = null): void
     {
-        $tenantId = session('current_project')['id'] ?? Project::first()->id ?? 1;
+        if (! $projectId) {
+            $project = Project::where('code', 'HD001')->orWhere('name', 'Aim Agency')->first() ?? Project::find(5);
+            $projectId = $project ? $project->id : 5;
+        }
+        $tenantId = $tenantId ?? $projectId;
 
         // 1. SEED SETTINGS
         $settings = [
@@ -79,56 +85,90 @@ class InbetweenThemeSeeder extends Seeder
             'social_youtube' => 'https://youtube.com/@inbetween',
         ];
 
-        foreach ($settings as $key => $value) {
-            Setting::updateOrCreate(
-                ['tenant_id' => $tenantId, 'key' => $key],
-                ['value' => $value]
-            );
+        // Delete any duplicate rows for this project where tenant_id is null if tenant_id = $tenantId already exists
+        $tenantKeys = Setting::where('tenant_id', $tenantId)->pluck('key')->toArray();
+        if (! empty($tenantKeys)) {
+            Setting::where('project_id', $projectId)
+                ->whereNull('tenant_id')
+                ->whereIn('key', $tenantKeys)
+                ->delete();
         }
 
-        // 2. SEED WIDGET AREAS (Placeholders for CMS Admin)
-        $widgetAreas = [
-            'inbetween-before-hero' => 'Top Bar (Before Hero)',
-            'inbetween-hero' => 'Hero Override (Replaces Default Hero)',
-            'inbetween-after-hero' => 'After Hero (Between Hero and Collage)',
-            'inbetween-community-wall' => 'Community Collage Wall',
-            'inbetween-after-collage' => 'After Collage Wall',
-            'inbetween-community' => 'Community Section Content',
-            'inbetween-after-community' => 'After Community Section',
-            'inbetween-about' => 'About / Core Values Content',
-            'inbetween-partners' => 'Partners Marquee',
-            'inbetween-after-about' => 'After About Section',
-            'inbetween-founder' => 'Founder Section Content',
-            'inbetween-after-founder' => 'After Founder Section',
-            'inbetween-events' => 'Events Section Content',
-            'inbetween-after-events' => 'After Events Section',
-            'inbetween-media' => 'Media / Stories Section',
-            'inbetween-after-media' => 'After Media Section',
-            'inbetween-packages-sidebar' => 'Packages Left Sidebar',
-            'inbetween-packages' => 'Packages List Override',
-            'inbetween-after-packages' => 'After Packages Section',
+        // Now safe to assign project_id to all tenant_id rows
+        Setting::where('tenant_id', $tenantId)->whereNull('project_id')->update(['project_id' => $projectId]);
+
+        foreach ($settings as $key => $value) {
+            $existing = Setting::where(function ($q) use ($projectId, $tenantId) {
+                $q->where('project_id', $projectId)->orWhere('tenant_id', $tenantId);
+            })->where('key', $key)->first();
+
+            if ($existing) {
+                $existing->update([
+                    'project_id' => $projectId,
+                    'tenant_id' => $tenantId,
+                    'value' => $value,
+                ]);
+            } else {
+                Setting::create([
+                    'project_id' => $projectId,
+                    'tenant_id' => $tenantId,
+                    'key' => $key,
+                    'value' => $value,
+                    'type' => 'string',
+                    'group' => 'general',
+                ]);
+            }
+        }
+
+        // 2. SEED PROJECT-SPECIFIC MENUS (Header & Footer)
+        // Clean up any old menu widgets for this project
+        Widget::where('project_id', $projectId)->where('type', 'menu')->delete();
+
+        // Main Menu
+        $mainMenu = Menu::updateOrCreate(
+            ['project_id' => $projectId, 'slug' => 'main-menu'],
+            ['tenant_id' => $tenantId, 'name' => 'Main Menu', 'location' => 'header', 'is_active' => true]
+        );
+        $mainMenu->allItems()->delete();
+        $mainMenuItems = [
+            ['title' => 'About us', 'url' => '#about', 'order' => 1],
+            ['title' => 'Media', 'url' => '#media', 'order' => 2],
+            ['title' => 'Community', 'url' => '#community', 'order' => 3],
         ];
-
-        // Clear existing INBETWEEN widgets to prevent duplicates if re-seeded
-        Widget::where('tenant_id', $tenantId)
-            ->where('area', 'like', 'inbetween-%')
-            ->delete();
-
-        $sort = 1;
-        foreach ($widgetAreas as $area => $name) {
-            Widget::create([
+        foreach ($mainMenuItems as $item) {
+            MenuItem::create([
+                'menu_id' => $mainMenu->id,
+                'project_id' => $projectId,
                 'tenant_id' => $tenantId,
-                'name' => "Placeholder: $name",
-                'type' => 'html', // Assuming basic HTML widget exists
-                'area' => $area,
-                'sort_order' => $sort++,
-                'is_active' => false, // Set to false by default so it doesn't break the frontend fallback layout
-                'settings' => [
-                    'content' => "<!-- Widget Area: $area -->",
-                ],
+                'title' => $item['title'],
+                'url' => $item['url'],
+                'order' => $item['order'],
             ]);
         }
 
-        $this->command->info('INBETWEEN Theme Settings & Widget Areas seeded successfully!');
+        // Footer Menu
+        $footerMenu = Menu::updateOrCreate(
+            ['project_id' => $projectId, 'slug' => 'footer-menu'],
+            ['tenant_id' => $tenantId, 'name' => 'Footer Menu', 'location' => 'footer', 'is_active' => true]
+        );
+        $footerMenu->allItems()->delete();
+        $footerMenuItems = [
+            ['title' => 'About Us', 'url' => '#about', 'order' => 1],
+            ['title' => 'Media', 'url' => '#media', 'order' => 2],
+            ['title' => 'Events', 'url' => '#events', 'order' => 3],
+            ['title' => 'Community', 'url' => '#packages', 'order' => 4],
+        ];
+        foreach ($footerMenuItems as $item) {
+            MenuItem::create([
+                'menu_id' => $footerMenu->id,
+                'project_id' => $projectId,
+                'tenant_id' => $tenantId,
+                'title' => $item['title'],
+                'url' => $item['url'],
+                'order' => $item['order'],
+            ]);
+        }
+
+        $this->command?->info("INBETWEEN Theme Settings and Menus seeded successfully for Project ID: {$projectId}!");
     }
 }

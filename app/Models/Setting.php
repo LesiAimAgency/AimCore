@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
-    protected $fillable = ['key', 'payload', 'group', 'locked', 'project_id'];
+    protected $fillable = ['key', 'payload', 'value', 'type', 'group', 'locked', 'project_id', 'tenant_id', 'description'];
 
     protected $casts = [
         'payload' => 'array',

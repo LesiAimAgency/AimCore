@@ -11,11 +11,11 @@ class HomeController extends Controller
     {
         // Get current project from request attributes (set by ProjectSubdomainMiddleware)
         $currentProject = request()->attributes->get('project');
-        $theme = null;
-
-        if ($currentProject) {
+        $theme = setting('theme');
+        if (! $theme && $currentProject) {
             $projectId = $currentProject->id;
-            $theme = Setting::where('tenant_id', $projectId)
+            $theme = Setting::where('project_id', $projectId)
+                ->orWhere('tenant_id', $projectId)
                 ->where('key', 'theme')
                 ->value('value');
         }
@@ -23,6 +23,10 @@ class HomeController extends Controller
         // Use theme-specific view if available
         if ($theme && view()->exists("frontend.themes.{$theme}.home")) {
             return view("frontend.themes.{$theme}.home");
+        }
+
+        if ($theme && view()->exists("frontend.themes.{$theme}.index")) {
+            return view("frontend.themes.{$theme}.index");
         }
 
         // Check for storefront theme as default

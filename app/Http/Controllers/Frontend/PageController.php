@@ -83,16 +83,22 @@ class PageController extends Controller
             abort(404);
         }
 
-        if (view()->exists('pages.show')) {
-            return view('pages.show', compact('page'));
-        }
-
-        if (view()->exists('frontend.themes.viettinmartdemo.pages.show')) {
-            return view('frontend.themes.viettinmartdemo.pages.show', compact('page'));
+        $theme = setting('theme');
+        if ($theme) {
+            if (view()->exists("frontend.themes.{$theme}.pages.show")) {
+                return view("frontend.themes.{$theme}.pages.show", compact('page'));
+            }
+            if (view()->exists("frontend.themes.{$theme}.page")) {
+                return view("frontend.themes.{$theme}.page", compact('page'));
+            }
         }
 
         if ($page->template && view()->exists("frontend.templates.{$page->template}")) {
             return view("frontend.templates.{$page->template}", compact('page'));
+        }
+
+        if (view()->exists('pages.show')) {
+            return view('pages.show', compact('page'));
         }
 
         return view('frontend.page', compact('page'));
@@ -100,7 +106,16 @@ class PageController extends Controller
 
     public function contact($locale = null)
     {
-        return view('frontend.contact');
+        $theme = setting('theme');
+        if ($theme && view()->exists("frontend.themes.{$theme}.contact")) {
+            return view("frontend.themes.{$theme}.contact");
+        }
+
+        if (view()->exists('frontend.contact')) {
+            return view('frontend.contact');
+        }
+
+        return view('frontend.pages.contact');
     }
 
     public function contactSubmit(Request $request, $projectCode = null, $locale = null)

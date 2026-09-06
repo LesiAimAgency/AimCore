@@ -1,5 +1,6 @@
 @php
   $primaryColor   = setting('theme_primary_color', '#EC460B');
+  $founderBg = !empty($settings['background_image']) ? (str_starts_with($settings['background_image'], 'http') || str_starts_with($settings['background_image'], '/') ? $settings['background_image'] : asset($settings['background_image'])) : asset('themes/inbetween/assets/founder-bg.png');
 @endphp
 <!-- =======================================================================
      SECTION 4: FOUNDER & MISSION (Exact 1:1 from 4.svg)
@@ -7,7 +8,7 @@
 <section id="founder" class="relative w-full h-screen bg-black text-white overflow-hidden pt-24 lg:pt-32 pb-16 lg:pb-24 flex flex-col justify-between">
 
   <!-- Fullscreen Founder Background Photo from 4.svg -->
-  <div class="founder-bg absolute inset-0 bg-center bg-cover bg-no-repeat pointer-events-none" style="background-image: url('{{ $settings['background_image'] }}');">
+  <div class="founder-bg absolute inset-0 bg-center bg-cover bg-no-repeat pointer-events-none" style="background-image: url('{{ $founderBg }}');">
   </div>
 
   <div class="container-custom relative z-10 w-full h-full flex flex-col justify-between items-start my-auto">

@@ -49,10 +49,62 @@ class SettingsService
     private function getCurrentProjectKey(): string
     {
         if ($this->isProjectContext()) {
-            return session('current_project') ?? config('database.connections.project.database') ?? 'project';
+            $project = request()->attributes->get('project');
+            if ($project) {
+                return 'project_'.($project->id ?? $project->code ?? 'unknown');
+            }
+
+            $projId = session('current_project_id');
+            if ($projId) {
+                return 'project_'.$projId;
+            }
+
+            $sess = session('current_project');
+            if (is_string($sess)) {
+                return 'project_'.$sess;
+            }
+
+            return config('database.connections.project.database') ?? 'project';
         }
 
         return 'main';
+    }
+
+    private function parseSettingsRows($rows): array
+    {
+        $result = [];
+        foreach ($rows as $row) {
+            $val = null;
+            if (! empty($row->payload)) {
+                if (is_array($row->payload)) {
+                    $val = $row->payload;
+                } elseif (is_string($row->payload)) {
+                    $decoded = json_decode($row->payload, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $val = $decoded;
+                    } else {
+                        $val = $row->payload;
+                    }
+                }
+            }
+            if ($val === null && isset($row->value) && $row->value !== null) {
+                if (is_array($row->value)) {
+                    $val = $row->value;
+                } elseif (is_string($row->value)) {
+                    $decoded = json_decode($row->value, true);
+                    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                        $val = $decoded;
+                    } else {
+                        $val = $row->value;
+                    }
+                } else {
+                    $val = $row->value;
+                }
+            }
+            $result[$row->key] = $val;
+        }
+
+        return $result;
     }
 
     private function loadSettings()
@@ -74,30 +126,30 @@ class SettingsService
                 if ($project) {
                     $mainConn = config('database.default');
                     // Load global settings (project_id IS NULL) làm fallback
-                    $globalSettings = DB::connection($mainConn)
+                    $globalRows = DB::connection($mainConn)
                         ->table('settings')
                         ->whereNull('project_id')
-                        ->pluck('payload', 'key')
-                        ->map(fn ($payload) => json_decode($payload, true))
-                        ->toArray();
+                        ->select(['key', 'payload', 'value'])
+                        ->get();
+                    $globalSettings = $this->parseSettingsRows($globalRows);
 
                     // Load project-specific settings (override global)
-                    $projectSettings = DB::connection($mainConn)
+                    $projectRows = DB::connection($mainConn)
                         ->table('settings')
                         ->where('project_id', $project->id)
-                        ->pluck('payload', 'key')
-                        ->map(fn ($payload) => json_decode($payload, true))
-                        ->toArray();
+                        ->select(['key', 'payload', 'value'])
+                        ->get();
+                    $projectSettings = $this->parseSettingsRows($projectRows);
 
                     // Merge: project settings override global
                     $this->settings = array_merge($globalSettings, $projectSettings);
                 } else {
                     // Fallback: thử đọc từ project database
-                    $this->settings = DB::connection('project')
+                    $projectRows = DB::connection('project')
                         ->table('settings')
-                        ->pluck('payload', 'key')
-                        ->map(fn ($payload) => json_decode($payload, true))
-                        ->toArray();
+                        ->select(['key', 'payload', 'value'])
+                        ->get();
+                    $this->settings = $this->parseSettingsRows($projectRows);
                 }
             } catch (\Exception $e) {
                 \Log::warning("Failed to load project settings for {$currentProject}: ".$e->getMessage());
@@ -105,7 +157,11 @@ class SettingsService
             }
         } else {
             $cacheKey = 'all_settings_main';
-            $this->settings = Cache::rememberForever($cacheKey, fn () => Setting::pluck('payload', 'key')->toArray());
+            $this->settings = Cache::rememberForever($cacheKey, function () {
+                $rows = Setting::select(['key', 'payload', 'value'])->get();
+
+                return $this->parseSettingsRows($rows);
+            });
         }
     }
 
@@ -113,7 +169,7 @@ class SettingsService
     {
         $this->loadSettings();
 
-        if (! isset($this->settings[$key])) {
+        if (! array_key_exists($key, $this->settings)) {
             return $default;
         }
 
@@ -135,6 +191,9 @@ class SettingsService
 
     public function set($key, $value, $group = null, $locked = false)
     {
+        $payloadVal = is_array($value) ? $value : ['value' => $value];
+        $scalarVal = is_scalar($value) ? (string) $value : (is_null($value) ? null : json_encode($value));
+
         if ($this->isProjectContext()) {
             $project = request()->attributes->get('project');
             if ($project) {
@@ -142,7 +201,9 @@ class SettingsService
                 DB::connection($mainConn)->table('settings')->updateOrInsert(
                     ['key' => $key, 'project_id' => $project->id],
                     [
-                        'payload' => json_encode(is_array($value) ? $value : ['value' => $value]),
+                        'payload' => json_encode($payloadVal),
+                        'value' => $scalarVal,
+                        'tenant_id' => $project->tenant_id ?? $project->id,
                         'group' => $group ?? 'general',
                         'updated_at' => now(),
                     ]
@@ -154,8 +215,9 @@ class SettingsService
             Setting::updateOrCreate(
                 ['key' => $key, 'project_id' => null],
                 [
-                    'payload' => $value,
-                    'group' => $group,
+                    'payload' => $payloadVal,
+                    'value' => $scalarVal,
+                    'group' => $group ?? 'general',
                     'locked' => $locked,
                 ]
             );

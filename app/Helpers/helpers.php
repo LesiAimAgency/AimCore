@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Menu;
+use App\Models\Project;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -83,7 +84,30 @@ if (! function_exists('trans_db')) {
 if (! function_exists('current_project')) {
     function current_project()
     {
-        return request()->attributes->get('project');
+        $project = request()->attributes->get('project');
+        if (! $project) {
+            $code = request()->route('projectCode');
+            if ($code) {
+                $project = Project::where('code', $code)->first();
+                if ($project) {
+                    request()->attributes->set('project', $project);
+                }
+            }
+        }
+        if (! $project && app()->bound('current_project_id')) {
+            $project = Project::find(app('current_project_id'));
+            if ($project) {
+                request()->attributes->set('project', $project);
+            }
+        }
+        if (! $project && session('current_project_id')) {
+            $project = Project::find(session('current_project_id'));
+            if ($project) {
+                request()->attributes->set('project', $project);
+            }
+        }
+
+        return $project;
     }
 }
 
@@ -104,12 +128,42 @@ if (! function_exists('render_menu')) {
     {
         $menu = null;
         try {
-            $menu = Menu::where('location', $location)
-                ->where('is_active', true)
+            $project = function_exists('current_project') ? current_project() : null;
+            $projectId = $project?->id ?? session('current_project_id');
+
+            $query = Menu::where('is_active', true);
+            if ($projectId) {
+                $query->where('project_id', $projectId);
+            }
+
+            // 1. Try finding by location
+            $menu = (clone $query)->where('location', $location)
                 ->with(['items' => function ($query) {
                     $query->whereNull('parent_id')->with('children')->orderBy('order');
                 }])
                 ->first();
+
+            // 2. Try finding by slug
+            if (! $menu) {
+                $menu = (clone $query)->where('slug', $location)
+                    ->with(['items' => function ($query) {
+                        $query->whereNull('parent_id')->with('children')->orderBy('order');
+                    }])
+                    ->first();
+            }
+
+            // 3. Fallback to global menu if project menu is not configured
+            if (! $menu && $projectId) {
+                $menu = Menu::whereNull('project_id')
+                    ->where('is_active', true)
+                    ->where(function ($q) use ($location) {
+                        $q->where('location', $location)->orWhere('slug', $location);
+                    })
+                    ->with(['items' => function ($query) {
+                        $query->whereNull('parent_id')->with('children')->orderBy('order');
+                    }])
+                    ->first();
+            }
         } catch (Exception $e) {
             // Bỏ qua lỗi nếu bảng menus không tồn tại
         }

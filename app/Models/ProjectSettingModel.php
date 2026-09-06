@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\SettingsService;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,7 +11,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ProjectSettingModel extends Model
 {
-    protected $connection = 'project';
+    public function getConnectionName()
+    {
+        return (app()->environment('testing') || ! config('database.connections.project'))
+            ? config('database.default')
+            : 'project';
+    }
 
     protected $table = 'settings';
 
@@ -40,68 +46,42 @@ class ProjectSettingModel extends Model
     public static function set($key, $value, $group = 'general')
     {
         $project = request()->attributes->get('project');
-        $tenantId = session('current_tenant_id');
-        $projectId = $project ? $project->id : null;
-
-        // Chuẩn hóa giá trị để so sánh
-        $normalizedValue = \is_array($value) ? $value : ['value' => $value];
-
-        // Kiểm tra xem key đã tồn tại cho project này chưa
-        $query = static::where('key', $key);
-        if ($projectId !== null) {
-            $query->where('project_id', $projectId);
-        } else {
-            $query->whereNull('project_id');
+        if (! $project && session('current_project_id')) {
+            $project = Project::find(session('current_project_id'));
         }
-        $existingSetting = $query->first();
+        if (! $project && request()->route('projectCode')) {
+            $project = Project::where('code', request()->route('projectCode'))->first();
+        }
 
-        if ($existingSetting) {
-            // Kiểm tra xem giá trị có thay đổi không
-            $existingValue = $existingSetting->payload;
+        $projectId = $project ? $project->id : null;
+        $tenantId = $project?->tenant_id ?? session('current_tenant_id') ?? $projectId;
 
-            // Nếu giá trị giống nhau thì không cần update
-            if ($existingValue === $normalizedValue && $existingSetting->group === $group) {
-                return $existingSetting;
-            }
+        // Chuẩn hóa giá trị
+        $normalizedValue = \is_array($value) ? $value : ['value' => $value];
+        $scalarValue = is_scalar($value) ? (string) $value : (is_null($value) ? null : json_encode($value));
 
-            // Nếu có thay đổi thì update
-            $existingSetting->update([
-                'payload' => $normalizedValue,
+        $matchConditions = ['key' => $key];
+        if ($projectId !== null) {
+            $matchConditions['project_id'] = $projectId;
+        } else {
+            $matchConditions['project_id'] = null;
+        }
+
+        \DB::table('settings')->updateOrInsert(
+            $matchConditions,
+            [
+                'payload' => json_encode($normalizedValue),
+                'value' => $scalarValue,
+                'tenant_id' => $tenantId,
                 'group' => $group,
                 'updated_at' => now(),
-            ]);
-
-            return $existingSetting;
-        }
-
-        // Nếu chưa có thì dùng INSERT IGNORE để tránh duplicate key error
-        $data = [
-            'key' => $key,
-            'payload' => json_encode($normalizedValue),
-            'group' => $group,
-            'created_at' => now()->format('Y-m-d H:i:s'),
-            'updated_at' => now()->format('Y-m-d H:i:s'),
-        ];
-
-        // Thêm tenant_id và project_id nếu có
-        if ($tenantId) {
-            $data['tenant_id'] = $tenantId;
-        }
-
-        if ($projectId) {
-            $data['project_id'] = $projectId;
-        }
-
-        // Sử dụng INSERT IGNORE để bỏ qua lỗi duplicate key
-        $columns = implode(', ', array_map(fn ($col) => "`{$col}`", array_keys($data)));
-        $placeholders = implode(', ', array_fill(0, \count($data), '?'));
-
-        \DB::connection('project')->statement(
-            "INSERT IGNORE INTO settings ({$columns}) VALUES ({$placeholders})",
-            array_values($data)
+            ]
         );
 
-        // Trả về record
+        if (class_exists('\App\Services\SettingsService')) {
+            SettingsService::getInstance()->clearCache();
+        }
+
         $query = static::where('key', $key);
         if ($projectId !== null) {
             $query->where('project_id', $projectId);
@@ -114,13 +94,17 @@ class ProjectSettingModel extends Model
 
     public static function getValue($key, $default = null)
     {
+        if (class_exists('\App\Services\SettingsService')) {
+            return SettingsService::getInstance()->get($key, $default);
+        }
+
         $setting = static::where('key', $key)->first();
 
         if (! $setting) {
             return $default;
         }
 
-        $value = $setting->payload;
+        $value = $setting->payload ?? $setting->value;
 
         if (\is_array($value) && isset($value['value'])) {
             return $value['value'];

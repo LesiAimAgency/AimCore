@@ -27,13 +27,22 @@
     $navTextColor = $getSettingValue('nav_text_color', '#ffffff');
     $navHoverColor = $getSettingValue('nav_hover_color', '#c0392b');
     
+    // Get project context
+    $currentProj = function_exists('current_project') ? current_project() : null;
+    $currentProjId = $currentProj?->id ?? session('current_project_id');
+
     // Get menus - load tất cả items với children (submenu)
     $topbarMenuId = $getSettingValue('topbar_menu_id', null);
     $navMenuId = $getSettingValue('navigation_menu_id', null);
-    
+
     // Load topbar menu với tất cả items
     $topbarMenu = null;
     try {
+        if (!$topbarMenuId && $currentProjId) {
+            $topbarMenuId = \App\Models\Menu::where('project_id', $currentProjId)
+                ->where(function($q) { $q->where('location', 'topbar')->orWhere('slug', 'topbar-menu'); })
+                ->value('id');
+        }
         $topbarMenu = $topbarMenuId ? \App\Models\Menu::with(['items' => function($query) {
             $query->whereNull('parent_id')
                   ->orderBy('order')
@@ -44,12 +53,17 @@
     } catch (\Exception $e) {
         // Bỏ qua lỗi nếu bảng menus không tồn tại
     }
-    
+
     // Load navigation menu với tất cả items và children (submenu đa cấp)
     $navMenu = null;
     try {
+        if (!$navMenuId && $currentProjId) {
+            $navMenuId = \App\Models\Menu::where('project_id', $currentProjId)
+                ->where(function($q) { $q->where('location', 'header')->orWhere('slug', 'main-menu'); })
+                ->value('id') ?? \App\Models\Menu::where('project_id', $currentProjId)->value('id');
+        }
         if (!$navMenuId) {
-            $navMenuId = \App\Models\Menu::first()?->id;
+            $navMenuId = \App\Models\Menu::whereNull('project_id')->first()?->id;
         }
         $navMenu = $navMenuId ? \App\Models\Menu::with(['items' => function($query) {
             $query->whereNull('parent_id')

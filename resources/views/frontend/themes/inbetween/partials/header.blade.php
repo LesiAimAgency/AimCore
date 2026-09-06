@@ -5,13 +5,38 @@
   $primaryColor = setting('theme_primary_color', '#EC460B');
 
   // Navigation links - CMS-driven or fallback to defaults
-  $navLinks = json_decode(setting('nav_links', '[]'), true);
-  if (empty($navLinks)) {
-      $navLinks = [
-          ['label' => 'About us',   'url' => '#about'],
-          ['label' => 'Media',      'url' => '#media'],
-          ['label' => 'Community',  'url' => '#community'],
-      ];
+  $currentProj = function_exists('current_project') ? current_project() : null;
+  $currentProjId = $currentProj?->id ?? session('current_project_id');
+  $headerMenu = null;
+  if ($currentProjId) {
+      $headerMenu = \App\Models\Menu::where('project_id', $currentProjId)
+          ->where(function($q) { $q->where('location', 'header')->orWhere('slug', 'main-menu'); })
+          ->where('is_active', true)
+          ->with(['items' => fn($q) => $q->whereNull('parent_id')->orderBy('order')])
+          ->first();
+  }
+  if ($headerMenu && $headerMenu->items->isNotEmpty()) {
+      $navLinks = $headerMenu->items->map(fn($item) => [
+          'label' => $item->title,
+          'url' => $item->url ?: '#'
+      ])->toArray();
+  } else {
+      $cmsMenu = \App\Models\Widget::getMenu('header-menu');
+      if (empty($cmsMenu)) {
+          $cmsMenu = \App\Models\Widget::getMenu('header');
+      }
+      if (!empty($cmsMenu)) {
+          $navLinks = $cmsMenu;
+      } else {
+          $navLinks = json_decode(setting('nav_links', '[]'), true);
+          if (empty($navLinks)) {
+              $navLinks = [
+                  ['label' => 'About us',   'url' => '#about'],
+                  ['label' => 'Media',      'url' => '#media'],
+                  ['label' => 'Community',  'url' => '#community'],
+              ];
+          }
+      }
   }
   $eventsLabel  = setting('nav_events_label',  'EVENTS');
   $connectLabel = setting('nav_connect_label', "LET'S CONNECT");

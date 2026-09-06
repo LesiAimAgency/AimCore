@@ -11,19 +11,25 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Taxonomy;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class MenuController extends Controller
 {
     public function index()
     {
-        $project = request()->attributes->get('project');
+        $project = current_project();
 
         $query = Menu::query();
         if ($project) {
-            $query->withoutGlobalScopes()->where(function ($q) use ($project) {
-                $q->where('project_id', $project->id)
-                    ->orWhereNull('project_id');
-            });
+            $hasProjectMenus = Menu::withoutGlobalScopes()->where('project_id', $project->id)->exists();
+            if ($hasProjectMenus) {
+                $query->withoutGlobalScopes()->where('project_id', $project->id);
+            } else {
+                $query->withoutGlobalScopes()->where(function ($q) use ($project) {
+                    $q->where('project_id', $project->id)
+                        ->orWhereNull('project_id');
+                });
+            }
         }
 
         $menus = $query->with(['items' => function ($q) {
@@ -32,14 +38,18 @@ class MenuController extends Controller
             }])->orderBy('order');
         }])->get();
 
-        $selectedMenu = $menus->firstWhere('project_id', $project->id ?? null) ?? $menus->first();
+        $selectedMenu = $menus->firstWhere('project_id', $project?->id) ?? $menus->first();
 
         $pages = Post::where('post_type', 'page')->select('id', 'title', 'slug')->get();
         $posts = Post::where('post_type', 'post')->select('id', 'title', 'slug')->latest()->limit(50)->get();
         $postCategories = Taxonomy::where('taxonomy', 'category')->select('id', 'name', 'slug')->get();
-        $productCategories = ProductCategory::select('id', 'name', 'parent_id', 'slug')->whereNull('parent_id')->with('children')->get();
+        $productCategories = Schema::hasTable('product_categories')
+            ? ProductCategory::select('id', 'name', 'parent_id', 'slug')->whereNull('parent_id')->with('children')->get()
+            : collect();
         $products = Product::select('id', 'name', 'slug')->latest()->limit(50)->get();
-        $brands = Brand::select('id', 'name', 'slug')->get();
+        $brands = Schema::hasTable('brands')
+            ? Brand::select('id', 'name', 'slug')->get()
+            : collect();
 
         return view('cms.menus.index', compact(
             'menus', 'selectedMenu', 'pages', 'posts', 'postCategories', 'productCategories', 'products', 'brands'
@@ -52,14 +62,19 @@ class MenuController extends Controller
             $id = $projectCode;
         }
 
-        $project = request()->attributes->get('project');
+        $project = current_project();
 
         $query = Menu::query();
         if ($project) {
-            $query->withoutGlobalScopes()->where(function ($q) use ($project) {
-                $q->where('project_id', $project->id)
-                    ->orWhereNull('project_id');
-            });
+            $hasProjectMenus = Menu::withoutGlobalScopes()->where('project_id', $project->id)->exists();
+            if ($hasProjectMenus) {
+                $query->withoutGlobalScopes()->where('project_id', $project->id);
+            } else {
+                $query->withoutGlobalScopes()->where(function ($q) use ($project) {
+                    $q->where('project_id', $project->id)
+                        ->orWhereNull('project_id');
+                });
+            }
         }
 
         $menus = $query->with(['items' => function ($q) {
@@ -72,14 +87,27 @@ class MenuController extends Controller
             $q->withoutGlobalScopes()->whereNull('parent_id')->with(['children' => function ($cq) {
                 $cq->withoutGlobalScopes();
             }])->orderBy('order');
-        }])->findOrFail($id);
+        }]);
+
+        if ($project) {
+            $menu = $menu->where(function ($q) use ($project) {
+                $q->where('project_id', $project->id)
+                    ->orWhereNull('project_id');
+            });
+        }
+
+        $menu = $menu->findOrFail($id);
 
         $pages = Post::where('post_type', 'page')->select('id', 'title', 'slug')->get();
         $posts = Post::where('post_type', 'post')->select('id', 'title', 'slug')->latest()->limit(50)->get();
         $postCategories = Taxonomy::where('taxonomy', 'category')->select('id', 'name', 'slug')->get();
-        $productCategories = ProductCategory::select('id', 'name', 'parent_id', 'slug')->whereNull('parent_id')->with('children')->get();
+        $productCategories = Schema::hasTable('product_categories')
+            ? ProductCategory::select('id', 'name', 'parent_id', 'slug')->whereNull('parent_id')->with('children')->get()
+            : collect();
         $products = Product::select('id', 'name', 'slug')->latest()->limit(50)->get();
-        $brands = Brand::select('id', 'name', 'slug')->get();
+        $brands = Schema::hasTable('brands')
+            ? Brand::select('id', 'name', 'slug')->get()
+            : collect();
 
         return view('cms.menus.index', [
             'menus' => $menus,
@@ -96,19 +124,27 @@ class MenuController extends Controller
     public function store(Request $request)
     {
         try {
-            $tenantId = 1;
+            $project = current_project();
+
+            $projectId = $project?->id;
+            $tenantId = $project?->tenant_id ?? $projectId;
 
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'slug' => 'required|string|max:255',
             ]);
 
-            $exists = Menu::where('slug', $validated['slug'])->exists();
+            $existsQuery = Menu::withoutGlobalScopes()->where('slug', $validated['slug']);
+            if ($projectId) {
+                $existsQuery->where('project_id', $projectId);
+            } else {
+                $existsQuery->whereNull('project_id');
+            }
 
-            if ($exists) {
+            if ($existsQuery->exists()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Slug đã tồn tại. Vui lòng chọn tên khác.',
+                    'message' => 'Slug đã tồn tại cho dự án này. Vui lòng chọn tên khác.',
                 ], 422);
             }
 
@@ -117,6 +153,7 @@ class MenuController extends Controller
                 'slug' => $validated['slug'],
                 'location' => 'header',
                 'is_active' => true,
+                'project_id' => $projectId,
                 'tenant_id' => $tenantId,
             ]);
 
@@ -286,6 +323,12 @@ class MenuController extends Controller
                 'success' => true,
                 'message' => "Đã xóa menu '{$menuName}' và tất cả mục con!",
             ]);
+        }
+
+        $project = current_project();
+        $code = $projectCode ?: $project?->code;
+        if ($code) {
+            return redirect()->route('project.admin.menus.index', ['projectCode' => $code])->with('success', "Đã xóa menu '{$menuName}' và tất cả mục con!");
         }
 
         return redirect()->route('cms.menus.index')->with('success', "Đã xóa menu '{$menuName}' và tất cả mục con!");

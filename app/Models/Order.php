@@ -9,6 +9,8 @@ use App\Traits\ProjectScoped;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class Order extends Model
 {
@@ -74,7 +76,7 @@ class Order extends Model
     {
         $prefix = 'ORD-'.date('Ymd').'-';
         do {
-            $number = $prefix.strtoupper(\Illuminate\Support\Str::random(5));
+            $number = $prefix.strtoupper(Str::random(5));
         } while (static::withoutGlobalScopes()->where('order_number', $number)->exists());
 
         return $number;
@@ -142,9 +144,9 @@ class Order extends Model
     public function sendOrderPlacedNotifications(): void
     {
         try {
-            \Illuminate\Support\Facades\Log::info("Order placed notification triggered for #{$this->order_number} to {$this->customer_email}");
+            Log::info("Order placed notification triggered for #{$this->order_number} to {$this->customer_email}");
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::warning("Order placed notification warning: ".$e->getMessage());
+            Log::warning('Order placed notification warning: '.$e->getMessage());
         }
     }
 

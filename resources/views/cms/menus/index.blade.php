@@ -4,6 +4,11 @@
 @section('page-title', 'Quản lý Menu')
 
 @section('content')
+@php
+    $currentProj = function_exists('current_project') ? current_project() : null;
+    $projCode = $currentProj?->code ?? request()->route('projectCode') ?? request()->segment(1);
+    $urlPrefix = $projCode ? '/' . $projCode : '';
+@endphp
 <!-- Alert Container -->
 <div id="alert-container" class="fixed top-4 right-4 z-50 space-y-2 max-w-md"></div>
 
@@ -54,7 +59,7 @@
                 <div id="pages-section" class="p-3 border-t max-h-56 overflow-y-auto space-y-1">
                     @forelse($pages ?? [] as $page)
                     <label class="flex items-center p-2 hover:bg-blue-50/50 rounded cursor-pointer transition">
-                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-blue-600" data-type="page" data-id="{{ $page->id }}" data-title="{{ $page->title }}" data-url="/HD001/page/{{ $page->slug ?? $page->id }}">
+                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-blue-600" data-type="page" data-id="{{ $page->id }}" data-title="{{ $page->title }}" data-url="{{ $urlPrefix }}/page/{{ $page->slug ?? $page->id }}">
                         <span class="text-sm text-gray-700">{{ $page->title }}</span>
                     </label>
                     @empty
@@ -78,7 +83,7 @@
                 <div id="posts-section" class="hidden p-3 border-t max-h-56 overflow-y-auto space-y-1">
                     @forelse($posts ?? [] as $postItem)
                     <label class="flex items-center p-2 hover:bg-emerald-50/50 rounded cursor-pointer transition">
-                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-emerald-600" data-type="post" data-id="{{ $postItem->id }}" data-title="{{ $postItem->title }}" data-url="/HD001/post/{{ $postItem->slug ?? $postItem->id }}">
+                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-emerald-600" data-type="post" data-id="{{ $postItem->id }}" data-title="{{ $postItem->title }}" data-url="{{ $urlPrefix }}/post/{{ $postItem->slug ?? $postItem->id }}">
                         <span class="text-sm text-gray-700 truncate">{{ $postItem->title }}</span>
                     </label>
                     @empty
@@ -102,7 +107,7 @@
                 <div id="post-categories-section" class="hidden p-3 border-t max-h-56 overflow-y-auto space-y-1">
                     @forelse($postCategories ?? [] as $cat)
                     <label class="flex items-center p-2 hover:bg-purple-50/50 rounded cursor-pointer transition">
-                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-purple-600" data-type="postcategory" data-id="{{ $cat->id }}" data-title="{{ $cat->name }}" data-url="/HD001/blog/category/{{ $cat->slug ?? $cat->id }}">
+                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-purple-600" data-type="postcategory" data-id="{{ $cat->id }}" data-title="{{ $cat->name }}" data-url="{{ $urlPrefix }}/blog/category/{{ $cat->slug ?? $cat->id }}">
                         <span class="text-sm text-gray-700">{{ $cat->name }}</span>
                     </label>
                     @empty
@@ -128,14 +133,14 @@
                     @foreach($productCategories as $category)
                     <div class="mb-1">
                         <label class="flex items-center p-1.5 hover:bg-amber-50/50 rounded cursor-pointer font-medium text-gray-800">
-                            <input type="checkbox" class="mr-2 rounded border-gray-300 text-amber-600" data-type="productcategory" data-id="{{ $category->id }}" data-title="{{ $category->name }}" data-url="/HD001/category/{{ $category->slug ?? $category->id }}">
+                            <input type="checkbox" class="mr-2 rounded border-gray-300 text-amber-600" data-type="productcategory" data-id="{{ $category->id }}" data-title="{{ $category->name }}" data-url="{{ $urlPrefix }}/category/{{ $category->slug ?? $category->id }}">
                             <span class="text-sm">{{ $category->name }}</span>
                         </label>
                         @if($category->children && $category->children->count() > 0)
                         <div class="ml-6 space-y-0.5 border-l-2 border-amber-100 pl-2">
                             @foreach($category->children as $child)
                             <label class="flex items-center p-1 hover:bg-amber-50/50 rounded cursor-pointer">
-                                <input type="checkbox" class="mr-2 rounded border-gray-300 text-amber-600" data-type="productcategory" data-id="{{ $child->id }}" data-title="{{ $child->name }}" data-url="/HD001/category/{{ $child->slug ?? $child->id }}">
+                                <input type="checkbox" class="mr-2 rounded border-gray-300 text-amber-600" data-type="productcategory" data-id="{{ $child->id }}" data-title="{{ $child->name }}" data-url="{{ $urlPrefix }}/category/{{ $child->slug ?? $child->id }}">
                                 <span class="text-xs text-gray-600">↳ {{ $child->name }}</span>
                             </label>
                             @endforeach
@@ -162,7 +167,7 @@
                 <div id="products-section" class="hidden p-3 border-t max-h-56 overflow-y-auto space-y-1">
                     @forelse($products ?? [] as $prod)
                     <label class="flex items-center p-2 hover:bg-rose-50/50 rounded cursor-pointer transition">
-                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-rose-600" data-type="product" data-id="{{ $prod->id }}" data-title="{{ $prod->name }}" data-url="/HD001/product/{{ $prod->slug ?? $prod->id }}">
+                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-rose-600" data-type="product" data-id="{{ $prod->id }}" data-title="{{ $prod->name }}" data-url="{{ $urlPrefix }}/product/{{ $prod->slug ?? $prod->id }}">
                         <span class="text-sm text-gray-700 truncate">{{ $prod->name }}</span>
                     </label>
                     @empty
@@ -186,7 +191,7 @@
                 <div id="brands-section" class="hidden p-3 border-t max-h-56 overflow-y-auto space-y-1">
                     @forelse($brands ?? [] as $brand)
                     <label class="flex items-center p-2 hover:bg-cyan-50/50 rounded cursor-pointer transition">
-                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-cyan-600" data-type="brand" data-id="{{ $brand->id }}" data-title="{{ $brand->name }}" data-url="/HD001/brand/{{ $brand->slug ?? $brand->id }}">
+                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-cyan-600" data-type="brand" data-id="{{ $brand->id }}" data-title="{{ $brand->name }}" data-url="{{ $urlPrefix }}/brand/{{ $brand->slug ?? $brand->id }}">
                         <span class="text-sm text-gray-700">{{ $brand->name }}</span>
                     </label>
                     @empty
@@ -354,7 +359,7 @@ function closeAlert(alertId) {
     }
 }
 
-const isProjectRoute = window.location.pathname.match(/^\/[A-Z0-9]+\/admin/);
+const isProjectRoute = window.location.pathname.match(/^\/[a-zA-Z0-9_-]+\/admin/);
 const routePrefix = isProjectRoute ? 'project.admin' : 'cms';
 
 function toggleSection(section) {

@@ -23,8 +23,9 @@
       $year = $date->format('Y');
       $dayOfWeek = $date->format('l');
       $title = is_array($event) ? $event['title'] : $event->title;
-      $location = is_array($event) ? $event['location'] : $event->location;
-      $img = is_array($event) ? $event['image'] : (isset($event->image_id) ? asset($event->image_id) : asset('themes/inbetween/assets/events-bg.png'));
+      $location = is_array($event) ? ($event['location'] ?? 'Grand Ballroom - Park Hyatt Saigon') : ($event->location ?? 'Grand Ballroom - Park Hyatt Saigon');
+      $rawImg = is_array($event) ? ($event['image'] ?? '') : (isset($event->image_id) ? $event->image_id : '');
+      $img = !empty($rawImg) ? (str_starts_with($rawImg, 'http') || str_starts_with($rawImg, '/') ? $rawImg : asset($rawImg)) : asset('themes/inbetween/assets/events-bg.png');
   }
 @endphp
 

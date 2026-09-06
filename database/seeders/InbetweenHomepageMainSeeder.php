@@ -8,9 +8,13 @@ use Illuminate\Database\Seeder;
 
 class InbetweenHomepageMainSeeder extends Seeder
 {
-    public function run(): void
+    public function run(?int $projectId = null, ?int $tenantId = null): void
     {
-        $tenantId = session('current_project')['id'] ?? Project::first()->id ?? 1;
+        if (! $projectId) {
+            $project = Project::where('code', 'HD001')->orWhere('name', 'Aim Agency')->first() ?? Project::find(5);
+            $projectId = $project ? $project->id : 5;
+        }
+        $tenantId = $tenantId ?? $projectId;
 
         $widgets = [
             1 => [
@@ -18,7 +22,7 @@ class InbetweenHomepageMainSeeder extends Seeder
                 'type' => 'inbetween_hero_section',
                 'settings' => [
                     'primary_color' => '#EC460B',
-                    'hero_logo' => asset('themes/inbetween/assets/logo.svg'),
+                    'hero_logo' => 'themes/inbetween/assets/logo.svg',
                     'hero_subtitle' => 'Cross-border community, media & connection platform|for|Professionals, Founders, Creatives & Organizations',
                 ],
             ],
@@ -26,17 +30,17 @@ class InbetweenHomepageMainSeeder extends Seeder
                 'name' => '2. Community 3D Collage',
                 'type' => 'inbetween_community_collage',
                 'settings' => [
-                    'center_logo' => asset('themes/inbetween/assets/logo-white.svg'),
-                    'image_1' => asset('themes/inbetween/assets/image0_252_132.png'),
-                    'image_2' => asset('themes/inbetween/assets/image1_252_132.png'),
-                    'image_3' => asset('themes/inbetween/assets/image2_252_132.png'),
-                    'image_4' => asset('themes/inbetween/assets/image3_252_132.png'),
-                    'image_5' => asset('themes/inbetween/assets/image4_252_132.png'),
-                    'image_6' => asset('themes/inbetween/assets/image5_252_132.png'),
-                    'image_7' => asset('themes/inbetween/assets/image6_252_132.png'),
-                    'image_8' => asset('themes/inbetween/assets/image7_252_132.png'),
-                    'image_9' => asset('themes/inbetween/assets/image8_252_132.png'),
-                    'image_10' => asset('themes/inbetween/assets/image9_252_132.png'),
+                    'center_logo' => 'themes/inbetween/assets/logo-white.svg',
+                    'image_1' => 'themes/inbetween/assets/image0_252_132.png',
+                    'image_2' => 'themes/inbetween/assets/image1_252_132.png',
+                    'image_3' => 'themes/inbetween/assets/image2_252_132.png',
+                    'image_4' => 'themes/inbetween/assets/image3_252_132.png',
+                    'image_5' => 'themes/inbetween/assets/image4_252_132.png',
+                    'image_6' => 'themes/inbetween/assets/image5_252_132.png',
+                    'image_7' => 'themes/inbetween/assets/image6_252_132.png',
+                    'image_8' => 'themes/inbetween/assets/image7_252_132.png',
+                    'image_9' => 'themes/inbetween/assets/image8_252_132.png',
+                    'image_10' => 'themes/inbetween/assets/image9_252_132.png',
                 ],
             ],
             3 => [
@@ -50,10 +54,10 @@ class InbetweenHomepageMainSeeder extends Seeder
                     'btn_1_link' => '#packages',
                     'btn_2_text' => 'UPCOMING EVENTS',
                     'btn_2_link' => '#events',
-                    'image_1' => asset('themes/inbetween/assets/image1_250_148.png'),
-                    'image_2' => asset('themes/inbetween/assets/image2_250_148.png'),
-                    'image_3' => asset('themes/inbetween/assets/image3_250_148.png'),
-                    'image_4' => asset('themes/inbetween/assets/image4_250_148.png'),
+                    'image_1' => 'themes/inbetween/assets/image1_250_148.png',
+                    'image_2' => 'themes/inbetween/assets/image2_250_148.png',
+                    'image_3' => 'themes/inbetween/assets/image3_250_148.png',
+                    'image_4' => 'themes/inbetween/assets/image4_250_148.png',
                 ],
             ],
             4 => [
@@ -195,11 +199,17 @@ class InbetweenHomepageMainSeeder extends Seeder
             ],
         ];
 
-        // Delete old widgets in homepage-main to avoid duplicates
-        Widget::where('area', 'homepage-main')->delete();
+        // Delete old widgets in homepage-main and any misplaced vtm_* widgets for this project only
+        Widget::where(function ($q) use ($projectId, $tenantId) {
+            $q->where('project_id', $projectId)->orWhere('tenant_id', $tenantId);
+        })->where(function ($q) {
+            $q->where('area', 'homepage-main')
+                ->orWhere('type', 'like', 'vtm_%');
+        })->delete();
 
         foreach ($widgets as $order => $widget) {
             Widget::create([
+                'project_id' => $projectId,
                 'tenant_id' => $tenantId,
                 'area' => 'homepage-main',
                 'name' => $widget['name'],
@@ -210,6 +220,6 @@ class InbetweenHomepageMainSeeder extends Seeder
             ]);
         }
 
-        $this->command->info('Homepage Main widgets seeded successfully for INBETWEEN theme.');
+        $this->command?->info("Homepage Main widgets seeded successfully for INBETWEEN theme (Project ID: {$projectId}).");
     }
 }

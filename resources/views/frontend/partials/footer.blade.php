@@ -16,7 +16,18 @@
     $email        = $getSettingValue('email', 'info@example.com');
     $projectCode  = request()->route('projectCode') ?? request()->segment(1);
     $isProject    = $projectCode && $projectCode !== 'cms';
-    $homeUrl      = $isProject ? "/{$projectCode}" : "/";
+    $currentProj = function_exists('current_project') ? current_project() : null;
+    $currentProjId = $currentProj?->id ?? session('current_project_id');
+    $footerMenuId = $getSettingValue('footer_menu_id', null);
+    $footerMenu = null;
+    try {
+        if (!$footerMenuId && $currentProjId) {
+            $footerMenuId = \App\Models\Menu::where('project_id', $currentProjId)
+                ->where(function($q) { $q->where('location', 'footer')->orWhere('slug', 'footer-menu'); })
+                ->value('id');
+        }
+        $footerMenu = $footerMenuId ? \App\Models\Menu::with(['items' => fn($q) => $q->whereNull('parent_id')->orderBy('order')])->find($footerMenuId) : null;
+    } catch (\Exception $e) {}
 @endphp
 
 <footer style="background-color: {{ $footerBg }}; color: {{ $footerText }};" class="pt-16 pb-12 border-t border-slate-800">
@@ -45,12 +56,18 @@
 
             <!-- Col 2: Quick Links -->
             <div>
-                <h3 class="font-bold text-white text-base mb-4 tracking-wide uppercase text-xs">Về Chúng Tôi</h3>
+                <h3 class="font-bold text-white text-base mb-4 tracking-wide uppercase text-xs">{{ $footerMenu?->name ?? 'Về Chúng Tôi' }}</h3>
                 <ul class="space-y-2.5 text-sm">
-                    <li><a href="{{ $homeUrl }}" class="hover:text-white transition">Trang chủ</a></li>
-                    <li><a href="{{ $homeUrl }}/page/gioi-thieu" class="hover:text-white transition">Giới thiệu công ty</a></li>
-                    <li><a href="{{ $homeUrl }}/blog" class="hover:text-white transition">Tin tức & Sự kiện</a></li>
-                    <li><a href="{{ $homeUrl }}/contact" class="hover:text-white transition">Liên hệ & Báo giá</a></li>
+                    @if($footerMenu && $footerMenu->items->isNotEmpty())
+                        @foreach($footerMenu->items as $item)
+                            <li><a href="{{ $item->url }}" class="hover:text-white transition">{{ $item->title }}</a></li>
+                        @endforeach
+                    @else
+                        <li><a href="{{ $homeUrl }}" class="hover:text-white transition">Trang chủ</a></li>
+                        <li><a href="{{ $homeUrl }}/page/gioi-thieu" class="hover:text-white transition">Giới thiệu công ty</a></li>
+                        <li><a href="{{ $homeUrl }}/blog" class="hover:text-white transition">Tin tức & Sự kiện</a></li>
+                        <li><a href="{{ $homeUrl }}/contact" class="hover:text-white transition">Liên hệ & Báo giá</a></li>
+                    @endif
                 </ul>
             </div>
 

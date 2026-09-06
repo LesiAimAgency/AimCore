@@ -121,18 +121,56 @@ class Widget extends Model
 
         $widget = (clone $query)->where('settings->locale', $currentLocale)->first();
 
-        // 2. Fallback: Any active widget for this area
+        // 2. Fallback: Any active widget for this area in this project
         if (! $widget) {
             $widget = $query->first();
         }
 
-        // 3. Fallback without project_id if not found
+        // 3. Fallback: Check Menu model for this project
+        if (! $widget && $projectId && class_exists('\App\Models\Menu')) {
+            $dbMenu = Menu::withoutGlobalScopes()
+                ->where('project_id', $projectId)
+                ->where(function ($q) use ($area) {
+                    $q->where('slug', $area)
+                        ->orWhere('location', str_contains($area, 'header') ? 'header' : (str_contains($area, 'footer') ? 'footer' : $area));
+                })
+                ->with(['items' => function ($q) {
+                    $q->withoutGlobalScopes()->whereNull('parent_id')->with(['children' => function ($cq) {
+                        $cq->withoutGlobalScopes()->orderBy('order');
+                    }])->orderBy('order');
+                }])
+                ->first();
+
+            if ($dbMenu && $dbMenu->items && $dbMenu->items->isNotEmpty()) {
+                $formatItem = function ($item) use (&$formatItem) {
+                    return [
+                        'label' => $item->title,
+                        'url' => $item->url,
+                        'target' => $item->target ?? '_self',
+                        'icon' => $item->icon ?? null,
+                        'image' => $item->image ?? null,
+                        'children' => $item->children && $item->children->isNotEmpty() ? $item->children->map($formatItem)->toArray() : [],
+                    ];
+                };
+
+                $items = $dbMenu->items->map($formatItem)->toArray();
+
+                if ($projectCode) {
+                    $items = static::prefixMenuItemsUrl($items, $projectCode);
+                }
+
+                return $items;
+            }
+        }
+
+        // 4. Fallback: Only global widgets (project_id IS NULL), NEVER leak other projects' widgets
         if (! $widget && $projectId) {
             $widget = static::where('area', $area)
+                ->whereNull('project_id')
                 ->where('is_active', true)
                 ->where('settings->locale', $currentLocale)
                 ->first()
-                ?? static::where('area', $area)->where('is_active', true)->first();
+                ?? static::where('area', $area)->whereNull('project_id')->where('is_active', true)->first();
         }
 
         if (! $widget) {
