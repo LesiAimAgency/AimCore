@@ -204,39 +204,67 @@ class CheckoutController extends Controller
                 }
             }
 
+            $project = request()->attributes->get('project')
+                ?? (function_exists('current_project') ? current_project() : null)
+                ?? (session('current_project_id') ? \App\Models\Project::find(session('current_project_id')) : null);
+            $projectId = $project ? $project->id : (session('current_project_id') ?: 10);
+            $tenantId = $project ? ($project->tenant_id ?? 1) : (session('current_tenant_id') ?: 1);
+
             $order = Order::create([
+                'project_id' => $projectId,
+                'tenant_id' => $tenantId,
                 'order_number' => $orderNumber,
                 'user_id' => $user?->id,
                 'customer_name' => $fullName,
                 'customer_email' => $validated['email'],
                 'customer_phone' => $validated['phone'],
-                'shipping_address' => $fullAddress,
-                'shipping_province' => $validated['province_name'],
-                'shipping_district' => $validated['district_name'],
-                'shipping_ward' => $validated['ward_name'],
+                'billing_address' => [
+                    'full_address' => $fullAddress,
+                    'street' => $validated['street_address'],
+                    'ward' => $validated['ward_name'],
+                    'district' => $validated['district_name'],
+                    'province' => $validated['province_name'],
+                ],
+                'shipping_address' => [
+                    'full_address' => $fullAddress,
+                    'street' => $validated['street_address'],
+                    'ward' => $validated['ward_name'],
+                    'district' => $validated['district_name'],
+                    'province' => $validated['province_name'],
+                ],
                 'subtotal' => $total,
+                'discount_amount' => $totalDiscount,
+                'shipping_amount' => $shippingFee,
+                'total_amount' => max(0, $total - $totalDiscount + $shippingFee),
                 'discount' => $totalDiscount,
                 'shipping_fee' => $shippingFee,
                 'total' => max(0, $total - $totalDiscount + $shippingFee),
                 'status' => 'pending',
-                'payment_status' => 'unpaid',
+                'payment_status' => 'pending',
                 'payment_method' => $validated['payment_method'],
+                'customer_notes' => $validated['notes'],
                 'customer_note' => $validated['notes'],
+                'internal_notes' => ! empty($appliedCouponCodes) ? 'Voucher: '.implode(', ', $appliedCouponCodes) : null,
                 'coupon_code' => implode(', ', $appliedCouponCodes),
             ]);
 
             foreach ($cart as $item) {
                 OrderItem::create([
+                    'project_id' => $projectId,
+                    'tenant_id' => $tenantId,
                     'order_id' => $order->id,
                     'product_id' => $item['id'],
-                    'variant_id' => $item['variant_id'] ?? null,
+                    'product_variation_id' => $item['variant_id'] ?? null,
                     'product_name' => $item['name'],
-                    'variant_label' => $item['variant_label'] ?? null,
-                    'price' => $item['price'],
+                    'product_sku' => $item['sku'] ?? ('SKU-'.$item['id']),
+                    'product_attributes' => ! empty($item['variant_label']) ? ['variant' => $item['variant_label']] : null,
+                    'unit_price' => $item['price'],
                     'quantity' => $item['qty'],
+                    'total_price' => $item['price'] * $item['qty'],
+                    'price' => $item['price'],
                     'total' => $item['price'] * $item['qty'],
-                    'image' => $item['image'] ?? null,
-                    'sku' => $item['sku'] ?? null,
+                    'sku' => $item['sku'] ?? ('SKU-'.$item['id']),
+                    'variant_id' => $item['variant_id'] ?? null,
                 ]);
             }
 

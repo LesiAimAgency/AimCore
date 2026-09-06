@@ -28,6 +28,9 @@ class OrderItem extends Model
     protected $fillable = [
         'order_id', 'product_id', 'product_variation_id', 'product_name',
         'product_sku', 'product_attributes', 'unit_price', 'quantity', 'total_price',
+        'tenant_id', 'project_id',
+        // Virtual alias fillables
+        'price', 'total', 'sku', 'variant_id', 'variant_label', 'image',
     ];
 
     protected $casts = [
@@ -35,6 +38,72 @@ class OrderItem extends Model
         'unit_price' => 'decimal:2',
         'total_price' => 'decimal:2',
     ];
+
+    public function setPriceAttribute($value): void
+    {
+        $this->attributes['unit_price'] = $value;
+    }
+
+    public function getPriceAttribute()
+    {
+        return $this->attributes['unit_price'] ?? 0;
+    }
+
+    public function setTotalAttribute($value): void
+    {
+        $this->attributes['total_price'] = $value;
+    }
+
+    public function getTotalAttribute()
+    {
+        return $this->attributes['total_price'] ?? 0;
+    }
+
+    public function setSkuAttribute($value): void
+    {
+        $this->attributes['product_sku'] = $value;
+    }
+
+    public function getSkuAttribute()
+    {
+        return $this->attributes['product_sku'] ?? '';
+    }
+
+    public function setVariantIdAttribute($value): void
+    {
+        $this->attributes['product_variation_id'] = $value;
+    }
+
+    public function getVariantIdAttribute()
+    {
+        return $this->attributes['product_variation_id'] ?? null;
+    }
+
+    public function setVariantLabelAttribute($value): void
+    {
+        if (! empty($value)) {
+            $attrs = json_decode($this->attributes['product_attributes'] ?? '[]', true) ?: [];
+            $attrs['variant'] = $value;
+            $this->attributes['product_attributes'] = json_encode($attrs);
+        }
+    }
+
+    public function getVariantLabelAttribute(): ?string
+    {
+        $attrs = json_decode($this->attributes['product_attributes'] ?? '[]', true) ?: [];
+
+        return $attrs['variant'] ?? null;
+    }
+
+    public function setImageAttribute($value): void
+    {
+        // virtual alias
+    }
+
+    public function getImageAttribute(): ?string
+    {
+        return $this->product?->thumbnail_url;
+    }
 
     // Relationships
     public function order()

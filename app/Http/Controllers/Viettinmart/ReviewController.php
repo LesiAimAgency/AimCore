@@ -80,7 +80,10 @@ class ReviewController extends Controller
                         'message' => 'Bạn cần đăng nhập để đánh giá sản phẩm.',
                     ], 401);
                 }
-                $hasOrdered = Order::where('user_id', auth()->id())
+                $user = auth()->user();
+                $hasOrdered = Order::where(function ($q) use ($user) {
+                    $q->where('user_id', $user->id)->orWhere('customer_email', $user->email);
+                })
                     ->where('status', 'completed')
                     ->whereHas('items', function ($q) use ($request) {
                         $q->where('product_id', $request->product_id);
@@ -96,7 +99,10 @@ class ReviewController extends Controller
             // Check verified purchase
             $isVerifiedPurchase = false;
             if (auth()->check()) {
-                $hasOrdered = Order::where('user_id', auth()->id())
+                $user = auth()->user();
+                $hasOrdered = Order::where(function ($q) use ($user) {
+                    $q->where('user_id', $user->id)->orWhere('customer_email', $user->email);
+                })
                     ->where('status', 'completed')
                     ->whereHas('items', function ($q) use ($request) {
                         $q->where('product_id', $request->product_id);

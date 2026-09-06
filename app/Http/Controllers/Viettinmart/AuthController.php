@@ -167,14 +167,20 @@ class AuthController extends Controller
 
     public function orders()
     {
-        $orders = Order::where('user_id', Auth::id())->latest()->paginate(10);
+        $user = Auth::user();
+        $orders = Order::where(function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+                ->orWhere('customer_email', $user->email);
+        })->latest()->paginate(10);
 
         return view('account.orders', compact('orders'));
     }
 
     public function orderDetail(Order $order)
     {
-        abort_if($order->user_id !== Auth::id(), 403);
+        $user = Auth::user();
+        $authorized = ($order->user_id && $order->user_id === $user->id) || ($order->customer_email && $order->customer_email === $user->email);
+        abort_if(! $authorized, 403);
 
         // Redirect to profile page since we handle order details via AJAX now
         return redirect(locale_route('profile'))->with('info', 'Vui lòng xem chi tiết đơn hàng trong trang tài khoản.');
@@ -182,7 +188,9 @@ class AuthController extends Controller
 
     public function orderDetailAjax(Order $order)
     {
-        abort_if($order->user_id !== Auth::id(), 403);
+        $user = Auth::user();
+        $authorized = ($order->user_id && $order->user_id === $user->id) || ($order->customer_email && $order->customer_email === $user->email);
+        abort_if(! $authorized, 403);
         $order->load(['items.product', 'statusHistories']);
 
         $html = view('account.partials.order-detail-content', compact('order'))->render();
