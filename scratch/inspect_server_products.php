@@ -28,19 +28,19 @@ $kernel->bootstrap();
 
 header('Content-Type: application/json');
 
-$indexes = DB::select("SHOW INDEXES FROM products_enhanced");
+$indexes = DB::select("SHOW INDEXES FROM taxonomies");
 $uniqueIndexes = array_filter($indexes, fn($idx) => $idx->Non_unique == 0);
 
 echo json_encode([
-    'unique_indexes_products_enhanced' => $uniqueIndexes
+    'unique_indexes_taxonomies' => $uniqueIndexes
 ], JSON_PRETTY_PRINT);
 @unlink(__FILE__);
 PHP;
 
 $method->invoke($c, 'Fileman', 'save_file_content', [
     'dir' => 'aimagency.vn/public',
-    'file' => 'check_enhanced_indexes.php',
+    'file' => 'check_tax_indexes.php',
     'content' => $serverScript,
 ]);
 
-echo "check_enhanced_indexes.php uploaded.\n";
+echo "check_tax_indexes.php uploaded.\n";
