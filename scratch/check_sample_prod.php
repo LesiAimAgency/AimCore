@@ -11,6 +11,7 @@ $kernel->bootstrap();
 $p = Post::where('post_type', 'product')->where('slug', 'tom-the-hl-cap-dong')->first();
 echo json_encode([
     'title' => $p->title,
+    'status' => $p->status,
     'sku' => $p->sku,
     'display_price' => $p->display_price,
     'stock' => $p->stock_quantity,
