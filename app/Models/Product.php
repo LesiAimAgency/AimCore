@@ -231,6 +231,16 @@ class Product extends Model implements HasMedia
     }
 
     // Accessors
+    public function getStockAttribute(): int
+    {
+        return (int) ($this->stock_quantity ?? 0);
+    }
+
+    public function getImageAttribute(): ?string
+    {
+        return $this->featured_image;
+    }
+
     public function getFeaturedImageAttribute($value): ?string
     {
         if (empty($value)) {
