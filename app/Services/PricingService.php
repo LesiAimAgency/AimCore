@@ -17,9 +17,10 @@ class PricingService
      * Tính giá cuối cùng cho sản phẩm
      * SINGLE SOURCE OF TRUTH cho toàn bộ hệ thống
      */
-    public function calculatePrice(Product $product): array
+    public function calculatePrice(Product $product, mixed $variant = null, mixed $mainProduct = null): array
     {
-        $basePrice = $product->price;
+        $basePrice = $variant?->price ?? $product->price;
+        $salePrice = $variant?->sale_price ?? $product->sale_price;
         $finalPrice = (float) $basePrice;
         $originalPrice = (float) $basePrice;
         $discountType = null;
@@ -31,6 +32,10 @@ class PricingService
             $finalPrice = $flashItem->calcFlashPrice($originalPrice);
             $discountType = 'flash_sale';
             $discountValue = $originalPrice - $finalPrice;
+        } elseif ($salePrice > 0 && $salePrice < $originalPrice) {
+            $finalPrice = (float) $salePrice;
+            $discountType = 'sale';
+            $discountValue = $originalPrice - $finalPrice;
         }
 
         return [
@@ -40,6 +45,7 @@ class PricingService
             'discount_value' => $discountValue,
             'savings' => $originalPrice - $finalPrice,
             'discount_percent' => $originalPrice > 0 ? round((($originalPrice - $finalPrice) / $originalPrice) * 100) : 0,
+            'is_combo' => false,
         ];
     }
 
