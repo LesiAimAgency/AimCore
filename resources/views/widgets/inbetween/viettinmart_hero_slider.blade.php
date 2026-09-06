@@ -51,10 +51,10 @@
                                     <div class="category-area-main-wrapper-one position-relative overflow-hidden" style="border-radius: 6px;">
                                         @if(!empty($slide['btn_link']))
                                             <a href="{{ $slide['btn_link'] }}" class="d-block w-100">
-                                                <img src="{{ $imgUrl }}" alt="{{ $slide['title'] ?? 'Banner' }}" class="w-100 d-block" style="height: auto; max-height: 520px; object-fit: cover; border-radius: 6px;">
+                                                <img src="{{ $imgUrl }}" alt="{{ $slide['title'] ?? 'Banner' }}" class="w-100 d-block" style="height: auto; max-height: 520px; object-fit: cover; border-radius: 6px;" onerror="this.src='{{ asset('theme/images/banner/01.webp') }}'">
                                             </a>
                                         @else
-                                            <img src="{{ $imgUrl }}" alt="{{ $slide['title'] ?? 'Banner' }}" class="w-100 d-block" style="height: auto; max-height: 520px; object-fit: cover; border-radius: 6px;">
+                                            <img src="{{ $imgUrl }}" alt="{{ $slide['title'] ?? 'Banner' }}" class="w-100 d-block" style="height: auto; max-height: 520px; object-fit: cover; border-radius: 6px;" onerror="this.src='{{ asset('theme/images/banner/01.webp') }}'">
                                         @endif
                                     </div>
                                 @else

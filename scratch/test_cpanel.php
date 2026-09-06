@@ -12,8 +12,15 @@ $ref = new ReflectionClass($c);
 $method = $ref->getMethod('callUapi');
 $method->setAccessible(true);
 
-$res = $method->invoke($c, 'Fileman', 'list_files', [
+$method->invoke($c, 'Fileman', 'save_file_content', [
     'dir' => 'aimagency.vn/public',
-    'types' => 'dir|file|symlink'
+    'file' => 'cleanup.php',
+    'content' => '<?php
+@unlink(__DIR__ . "/fix_storage.php");
+@unlink(__DIR__ . "/test_symlink.php");
+@unlink(__DIR__ . "/cleanup.php");
+echo "CLEANUP_DONE";
+'
 ]);
-echo json_encode($res, JSON_PRETTY_PRINT);
+
+echo "cleanup.php created.\n";

@@ -43,16 +43,32 @@ class ViettinmartDealFlashWidget extends BaseWidget
         $config = $this->settings;
         $limit = (int) ($config['limit'] ?? 6);
 
+        $projectId = $config['project_id']
+            ?? (function_exists('current_project') && current_project() ? current_project()->id : null)
+            ?? (session('current_project_id') ?: null);
+
         $table = (new Product)->getTable();
         $query = Product::query();
-        if (Schema::hasColumn($table, 'sale_price')) {
-            $query->whereNotNull('sale_price')->where('sale_price', '>', 0);
+
+        if ($projectId && (Schema::hasColumn($table, 'project_id') || Schema::hasColumn('products_enhanced', 'project_id'))) {
+            $query->where('project_id', $projectId);
         }
+
         if (Schema::hasColumn($table, 'status')) {
             $query->whereIn('status', ['published', 'active', 1]);
         }
 
-        $products = $query->latest()->take($limit)->get();
+        $saleQuery = clone $query;
+        if (Schema::hasColumn($table, 'sale_price')) {
+            $saleQuery->whereNotNull('sale_price')->where('sale_price', '>', 0);
+        }
+
+        $products = $saleQuery->latest()->take($limit)->get();
+
+        // Fallback to latest project products if no on-sale products
+        if ($products->isEmpty()) {
+            $products = $query->latest()->take($limit)->get();
+        }
 
         return view('widgets.inbetween.viettinmart_deal_flash', [
             'widget' => $this,

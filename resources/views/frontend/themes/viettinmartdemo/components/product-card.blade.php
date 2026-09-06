@@ -29,7 +29,7 @@
                 @endif
                 <i class="fa-solid fa-bookmark"></i>
             </div>
-            <img src="{{ $thumbnailUrl }}" alt="{{ $product->name }}">
+            <img src="{{ $thumbnailUrl }}" alt="{{ $product->name }}" onerror="this.src='{{ asset('theme/images/grocery/01.jpg') }}'">
         </a>
         <div class="action-share-option">
             <div class="single-action openuptip message-show-action" data-flow="up" title="{{ __('product_add_to_wishlist') }}"

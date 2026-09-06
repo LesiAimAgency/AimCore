@@ -38,7 +38,7 @@
                 @endif
             @endif
         </div>
-        <img src="{{ $thumbnailUrl }}" alt="{{ $product->name }}">
+        <img src="{{ $thumbnailUrl }}" alt="{{ $product->name }}" onerror="this.src='{{ asset('theme/images/grocery/01.jpg') }}'">
     </a>
     <div class="body-content">
 

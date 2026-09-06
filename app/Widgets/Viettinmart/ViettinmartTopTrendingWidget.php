@@ -136,7 +136,16 @@ class ViettinmartTopTrendingWidget extends BaseWidget
         $categoryId = $config['category_id'] ?? null;
         $orderBy = $config['order_by'] ?? 'views_desc';
 
+        $projectId = $config['project_id']
+            ?? (function_exists('current_project') && current_project() ? current_project()->id : null)
+            ?? (session('current_project_id') ?: null);
+
         $query = Product::query();
+
+        if ($projectId && (Schema::hasColumn('products', 'project_id') || Schema::hasColumn('products_enhanced', 'project_id'))) {
+            $query->where('project_id', $projectId);
+        }
+
         if (Schema::hasColumn('products', 'status') || Schema::hasColumn('products_enhanced', 'status')) {
             $query->whereIn('status', ['published', 'active', 1]);
         }
@@ -156,9 +165,7 @@ class ViettinmartTopTrendingWidget extends BaseWidget
             'price_asc' => $query->orderBy('price', 'asc'),
             'price_desc' => $query->orderBy('price', 'desc'),
             'name_asc' => $query->orderBy('name', 'asc'),
-            default => (Schema::hasColumn('products', 'views') || Schema::hasColumn('products_enhanced', 'views'))
-                ? $query->orderBy('views', 'desc')
-                : $query->latest(),
+            default => $query->orderByDesc('views')->latest(),
         };
 
         $products = $query->take($limit)->get();

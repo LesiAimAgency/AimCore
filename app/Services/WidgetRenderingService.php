@@ -211,6 +211,12 @@ class WidgetRenderingService
                 if (! isset($settings['id'])) {
                     $settings['id'] = $widget->id;
                 }
+                if ($widget->project_id && ! isset($settings['project_id'])) {
+                    $settings['project_id'] = $widget->project_id;
+                }
+                if ($widget->tenant_id && ! isset($settings['tenant_id'])) {
+                    $settings['tenant_id'] = $widget->tenant_id;
+                }
 
                 $html .= $this->render(
                     $widget->type,

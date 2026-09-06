@@ -340,15 +340,69 @@ if (! function_exists('media_url')) {
     function media_url($path, $default = '')
     {
         if (empty($path)) {
-            return $default ? asset($default) : asset('images/default.png');
+            return $default ? asset($default) : asset('theme/images/grocery/01.jpg');
         }
+
+        // 1. Clean corrupt prefixes like /storage/https://... or hardcoded domains
+        if (is_string($path)) {
+            $path = preg_replace('#^/storage/https?://[^/]+#', '', $path);
+            if (Str::contains($path, '127.0.0.1:8000') || Str::contains($path, 'viettinmart.vnglobaltech.com')) {
+                $path = preg_replace('#^https?://[^/]+#', '', $path);
+            }
+        }
+
         if (Str::contains($path, '://')) {
             return $path;
         }
-        if (str_starts_with($path, 'media/')) {
-            return Storage::disk('public')->url($path);
+
+        $cleanPath = ltrim($path, '/');
+
+        // 2. Direct existence check in public_path
+        if (file_exists(public_path($cleanPath))) {
+            return asset($cleanPath);
         }
 
-        return asset($path);
+        // 3. Check crossover between media-files and storage
+        if (str_starts_with($cleanPath, 'storage/')) {
+            $relativeMedia = preg_replace('#^storage/#', '', $cleanPath);
+            // Check in public/media-files/...
+            if (file_exists(public_path('media-files/' . $relativeMedia))) {
+                return asset('media-files/' . $relativeMedia);
+            }
+            // Check in storage/app/public/...
+            if (file_exists(storage_path('app/public/' . $relativeMedia))) {
+                return asset($cleanPath);
+            }
+        } elseif (str_starts_with($cleanPath, 'media-files/')) {
+            $relativeStorage = preg_replace('#^media-files/#', '', $cleanPath);
+            // Check in public/storage/...
+            if (file_exists(public_path('storage/' . $relativeStorage))) {
+                return asset('storage/' . $relativeStorage);
+            }
+            // Check in storage/app/public/...
+            if (file_exists(storage_path('app/public/' . $relativeStorage))) {
+                return asset('storage/' . $relativeStorage);
+            }
+        } elseif (str_starts_with($cleanPath, 'media/')) {
+            // Check in public/media-files/media/...
+            if (file_exists(public_path('media-files/' . $cleanPath))) {
+                return asset('media-files/' . $cleanPath);
+            }
+            // Check in public/storage/media/...
+            if (file_exists(public_path('storage/' . $cleanPath))) {
+                return asset('storage/' . $cleanPath);
+            }
+            // Check in storage/app/public/media/...
+            if (file_exists(storage_path('app/public/' . $cleanPath))) {
+                return Storage::disk('public')->url($cleanPath);
+            }
+        }
+
+        // 4. Default asset or fallback
+        if (! empty($default)) {
+            return asset($default);
+        }
+
+        return asset($cleanPath);
     }
 }

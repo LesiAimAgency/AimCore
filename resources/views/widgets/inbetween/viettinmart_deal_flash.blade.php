@@ -85,7 +85,7 @@
                                                             @endif
                                                             <i class="fa-solid fa-bookmark"></i>
                                                         </div>
-                                                        <img src="{{ $product->thumbnail_url ?: asset('theme/images/grocery/01.jpg') }}" alt="{{ $product->name }}">
+                                                        <img src="{{ $product->thumbnail_url ?: asset('theme/images/grocery/01.jpg') }}" alt="{{ $product->name }}" onerror="this.src='{{ asset('theme/images/grocery/01.jpg') }}'">
                                                     </a>
                                                     <div class="body-content">
                                                         <a href="{{ locale_route('shop.show', $product->slug) }}">

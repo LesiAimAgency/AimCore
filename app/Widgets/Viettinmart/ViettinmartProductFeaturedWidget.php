@@ -230,20 +230,42 @@ class ViettinmartProductFeaturedWidget extends BaseWidget
         $productIds = $config['product_ids'] ?? [];
         $orderBy = $config['order_by'] ?? 'latest';
 
-        // Auto-match category if not explicitly set in category mode
-        if (empty($categoryId) && ($source === 'category' || empty($source))) {
-            $widgetTitle = $config['title'] ?? '';
-            if (! empty($widgetTitle)) {
-                $matchedCategory = ProductCategory::withoutGlobalScopes()
-                    ->where('name', 'like', '%'.trim($widgetTitle).'%')
-                    ->first();
-                if ($matchedCategory) {
-                    $categoryId = $matchedCategory->id;
+        $projectId = $config['project_id']
+            ?? (function_exists('current_project') && current_project() ? current_project()->id : null)
+            ?? (session('current_project_id') ?: null);
+
+        // Auto-match category if not explicitly set or if categoryId does not belong to current project
+        if ($source === 'category' || empty($source)) {
+            $catBelongsToProject = false;
+            if (! empty($categoryId) && $projectId) {
+                $catBelongsToProject = ProductCategory::withoutGlobalScopes()
+                    ->where('project_id', $projectId)
+                    ->where('id', (int) $categoryId)
+                    ->exists();
+            }
+
+            if (empty($categoryId) || ($projectId && ! $catBelongsToProject)) {
+                $widgetTitle = $config['title'] ?? '';
+                if (! empty($widgetTitle)) {
+                    $matchedCategory = ProductCategory::withoutGlobalScopes()
+                        ->when($projectId, fn($q) => $q->where('project_id', $projectId))
+                        ->where(function ($q) use ($widgetTitle) {
+                            $q->where('name', 'like', '%'.trim($widgetTitle).'%')
+                              ->orWhere('slug', 'like', '%'.\Illuminate\Support\Str::slug($widgetTitle).'%');
+                        })
+                        ->first();
+                    if ($matchedCategory) {
+                        $categoryId = $matchedCategory->id;
+                    }
                 }
             }
         }
 
         $query = Product::query();
+
+        if ($projectId && (Schema::hasColumn('products', 'project_id') || Schema::hasColumn('products_enhanced', 'project_id'))) {
+            $query->where('project_id', $projectId);
+        }
 
         // Status check
         if (Schema::hasColumn('products', 'status') || Schema::hasColumn('products_enhanced', 'status')) {

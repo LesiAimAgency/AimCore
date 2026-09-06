@@ -50,23 +50,9 @@
                 <div class="single-blog-area-start">
                             <a href="{{ locale_route('blog.show', $post->slug) }}" class="thumbnail">
                         @php
-                            $thumb = $post->thumbnail;
+                            $rawThumb = $post->featured_image ?? $post->thumbnail ?? null;
                             $defaultImg = asset('theme/images/blog/01.jpg');
-                            if (!$thumb) {
-                                $thumbUrl = $defaultImg;
-                            } elseif (str_starts_with($thumb, 'http')) {
-                                if (preg_match('#/storage/(media/.+)$#', $thumb, $m)) {
-                                    $thumbUrl = asset('storage/' . $m[1]);
-                                } elseif (preg_match('#/public/(storage/media/.+)$#', $thumb, $m)) {
-                                    $thumbUrl = asset($m[1]);
-                                } else {
-                                    $thumbUrl = $thumb;
-                                }
-                            } elseif (str_starts_with($thumb, 'storage/') || str_starts_with($thumb, 'media/')) {
-                                $thumbUrl = asset(ltrim($thumb, '/'));
-                            } else {
-                                $thumbUrl = asset('storage/' . ltrim($thumb, '/'));
-                            }
+                            $thumbUrl = !empty($rawThumb) ? media_url($rawThumb, 'theme/images/blog/01.jpg') : $defaultImg;
                         @endphp
                         <img src="{{ $thumbUrl }}" alt="{{ $post->title }}" class="post-thumbnail" style="width:100%;height:200px;object-fit:cover;" onerror="this.src='{{ $defaultImg }}'">
                     </a>

@@ -44,7 +44,16 @@ class ViettinmartPostsLatestWidget extends BaseWidget
         $config = $this->settings;
         $limit = (int) ($config['limit'] ?? 4);
 
+        $projectId = $config['project_id']
+            ?? (function_exists('current_project') && current_project() ? current_project()->id : null)
+            ?? (session('current_project_id') ?: null);
+
         $query = Post::query();
+
+        if ($projectId && Schema::hasColumn('posts', 'project_id')) {
+            $query->where('project_id', $projectId);
+        }
+
         if (Schema::hasColumn('posts', 'post_type')) {
             $query->where('post_type', 'post');
         }

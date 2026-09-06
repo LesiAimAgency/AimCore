@@ -237,11 +237,21 @@ class Product extends Model implements HasMedia
             return null;
         }
 
-        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://') || str_starts_with($value, '/storage/')) {
+        // Clean up malformed prefixes or hardcoded domains
+        if (str_contains($value, '127.0.0.1:8000') || str_contains($value, 'viettinmart.vnglobaltech.com')) {
+            $value = preg_replace('#^/storage/https?://[^/]+#', '', $value);
+            $value = preg_replace('#^https?://[^/]+#', '', $value);
+        }
+
+        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://')) {
             return $value;
         }
 
-        if (str_starts_with($value, 'storage/')) {
+        if (str_starts_with($value, '/storage/') || str_starts_with($value, '/media-files/')) {
+            return $value;
+        }
+
+        if (str_starts_with($value, 'storage/') || str_starts_with($value, 'media-files/')) {
             return '/'.$value;
         }
 
@@ -251,7 +261,7 @@ class Product extends Model implements HasMedia
     public function getThumbnailUrlAttribute(): ?string
     {
         if (! empty($this->featured_image)) {
-            return $this->featured_image;
+            return media_url($this->featured_image, 'theme/images/grocery/01.jpg');
         }
 
         return asset('theme/images/grocery/01.jpg');

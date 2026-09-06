@@ -66,9 +66,18 @@ class ViettinmartProductTabsWidget extends BaseWidget
             ['label' => 'Rau củ quả'],
         ];
 
+        $projectId = $config['project_id']
+            ?? (function_exists('current_project') && current_project() ? current_project()->id : null)
+            ?? (session('current_project_id') ?: null);
+
         $tabProducts = [];
         $table = (new Product)->getTable();
         $baseQuery = Product::query();
+
+        if ($projectId && (Schema::hasColumn($table, 'project_id') || Schema::hasColumn('products_enhanced', 'project_id'))) {
+            $baseQuery->where('project_id', $projectId);
+        }
+
         if (Schema::hasColumn($table, 'status')) {
             $baseQuery->whereIn('status', ['published', 'active', 1]);
         }
@@ -77,6 +86,17 @@ class ViettinmartProductTabsWidget extends BaseWidget
         foreach ($tabs as $i => $tab) {
             $catIds = (array) ($tab['category_id'] ?? []);
             $catIds = array_filter(array_map('intval', $catIds));
+
+            // Validate that these catIds actually belong to this project
+            if (! empty($catIds) && $projectId) {
+                $validCatCount = ProductCategory::withoutGlobalScopes()
+                    ->where('project_id', $projectId)
+                    ->whereIn('id', $catIds)
+                    ->count();
+                if ($validCatCount === 0) {
+                    $catIds = []; // clear to trigger name/slug matching below
+                }
+            }
 
             $filter = $tab['filter'] ?? 'latest';
 
@@ -91,7 +111,11 @@ class ViettinmartProductTabsWidget extends BaseWidget
                 });
             } elseif (! empty($tab['label']) && $tab['label'] !== 'Tất cả') {
                 $matchedCat = ProductCategory::withoutGlobalScopes()
-                    ->where('name', 'like', '%'.trim($tab['label']).'%')
+                    ->when($projectId, fn($q) => $q->where('project_id', $projectId))
+                    ->where(function ($q) use ($tab) {
+                        $q->where('name', 'like', '%'.trim($tab['label']).'%')
+                          ->orWhere('slug', 'like', '%'.\Illuminate\Support\Str::slug($tab['label']).'%');
+                    })
                     ->first();
                 if ($matchedCat) {
                     $tabQuery->where('product_category_id', $matchedCat->id);
@@ -99,7 +123,7 @@ class ViettinmartProductTabsWidget extends BaseWidget
             }
 
             if ($filter === 'best_selling' && Schema::hasColumn($table, 'views')) {
-                $tabQuery->orderBy('views', 'desc');
+                $tabQuery->orderByDesc('views')->latest();
             } else {
                 $tabQuery->latest();
             }
