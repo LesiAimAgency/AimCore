@@ -402,7 +402,7 @@ class ShopController extends Controller
 
             // Check if it's a CMS page
             if (class_exists(\App\Http\Controllers\Frontend\PageController::class)) {
-                return app(\App\Http\Controllers\Frontend\PageController::class)->show($projectCode, $slug);
+                return app(\App\Http\Controllers\Frontend\PageController::class)->show($projectCode, $slug, fromShop: true);
             }
 
             abort(404);

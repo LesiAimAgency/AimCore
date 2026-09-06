@@ -188,6 +188,9 @@ return new class extends Migration
                 $table->string('path')->nullable();
                 $table->integer('sort_order')->default(0);
                 $table->boolean('is_active')->default(true);
+                $table->string('image')->nullable();
+                $table->string('meta_title')->nullable();
+                $table->text('meta_description')->nullable();
                 $table->softDeletes();
                 $table->timestamps();
             });
@@ -230,6 +233,21 @@ return new class extends Migration
                 $table->string('thumbnail')->nullable();
                 $table->text('description')->nullable();
                 $table->softDeletes();
+                $table->timestamps();
+            });
+        }
+
+        // 12. Product Reviews fallback
+        if (! Schema::hasTable('product_reviews')) {
+            Schema::create('product_reviews', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('product_id')->nullable()->index();
+                $table->unsignedBigInteger('user_id')->nullable()->index();
+                $table->unsignedBigInteger('project_id')->nullable()->index();
+                $table->unsignedBigInteger('tenant_id')->nullable()->index();
+                $table->integer('rating')->default(5);
+                $table->text('comment')->nullable();
+                $table->string('status')->default('approved');
                 $table->timestamps();
             });
         }

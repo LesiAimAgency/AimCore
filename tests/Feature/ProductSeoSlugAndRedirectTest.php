@@ -20,21 +20,31 @@ class ProductSeoSlugAndRedirectTest extends TestCase
 
         $this->project = Project::firstOrCreate(
             ['code' => 'viettinmart-eco'],
-            ['name' => 'Viettinmart Eco', 'domain' => 'viettinmart-eco.aimagency.vn', 'status' => 'active']
+            [
+                'name' => 'Viettinmart Eco',
+                'domain' => 'viettinmart-eco.aimagency.vn',
+                'status' => 'active',
+            ]
         );
 
-        session(['current_project' => $this->project]);
+        session(['current_project' => $this->project, 'current_tenant_id' => $this->project->id]);
         app()->instance('current_project', $this->project);
+        app()->instance('current_tenant_id', $this->project->id);
 
         $this->product = Product::firstOrCreate(
             ['slug' => 'tom-the-pd-xien-que-cap-dong'],
             [
                 'project_id' => $this->project->id,
+                'tenant_id' => $this->project->id,
                 'name' => 'Tôm thẻ PD xiên que cấp đông',
                 'price' => 120000,
                 'status' => 'active',
             ]
         );
+        $this->product->project_id = $this->project->id;
+        $this->product->tenant_id = $this->project->id;
+        $this->product->status = 'active';
+        $this->product->save();
     }
 
     public function test_locale_route_generates_one_level_product_slug()
@@ -50,6 +60,7 @@ class ProductSeoSlugAndRedirectTest extends TestCase
 
     public function test_clean_one_level_product_url_returns_200()
     {
+        $this->withoutExceptionHandling();
         $response = $this->get("/{$this->project->code}/{$this->product->slug}");
         $response->assertStatus(200);
     }
