@@ -50,7 +50,12 @@ class ViettinmartProductsSeeder extends Seeder
                     ->first();
 
                 if (! $tax) {
-                    $tax = Taxonomy::create($t);
+                    $tax = Taxonomy::withoutGlobalScopes()->where('slug', $t['slug'])->first();
+                    if ($tax) {
+                        $tax->update($t);
+                    } else {
+                        $tax = Taxonomy::create($t);
+                    }
                 } else {
                     $tax->update($t);
                 }
@@ -76,7 +81,12 @@ class ViettinmartProductsSeeder extends Seeder
                     ->first();
 
                 if (! $cat) {
-                    $cat = ProductCategory::create($c);
+                    $cat = ProductCategory::withoutGlobalScopes()->where('slug', $c['slug'])->first();
+                    if ($cat) {
+                        $cat->update($c);
+                    } else {
+                        $cat = ProductCategory::create($c);
+                    }
                 } else {
                     $cat->update($c);
                 }
@@ -106,7 +116,12 @@ class ViettinmartProductsSeeder extends Seeder
                     ->first();
 
                 if (! $prod) {
-                    $prod = Product::create($p);
+                    $prod = Product::withoutGlobalScopes()->where('slug', $p['slug'])->first();
+                    if ($prod) {
+                        $prod->update($p);
+                    } else {
+                        $prod = Product::create($p);
+                    }
                 } else {
                     $prod->update($p);
                 }
@@ -140,7 +155,12 @@ class ViettinmartProductsSeeder extends Seeder
                     ->first();
 
                 if (! $post) {
-                    $post = Post::create($p);
+                    $post = Post::withoutGlobalScopes()->where('slug', $p['slug'])->first();
+                    if ($post) {
+                        $post->update($p);
+                    } else {
+                        $post = Post::create($p);
+                    }
                 } else {
                     $post->update($p);
                 }
