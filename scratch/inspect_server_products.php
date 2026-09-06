@@ -28,30 +28,15 @@ $kernel->bootstrap();
 
 header('Content-Type: application/json');
 
-$out = [];
-try {
-    $out['projects'] = DB::table('projects')->get(['id', 'code', 'name']);
-    $out['products_enhanced_counts'] = DB::table('products_enhanced')
-        ->select('project_id', 'tenant_id', 'status', DB::raw('count(*) as total'))
-        ->groupBy('project_id', 'tenant_id', 'status')
-        ->get();
-    $out['cms_users'] = DB::table('users')
-        ->where('username', 'like', '%viettin%')
-        ->orWhere('role', 'cms')
-        ->get(['id', 'username', 'email', 'role', 'level', 'tenant_id', 'project_ids']);
-    $out['tenants'] = DB::table('tenants')->get(['id', 'name', 'code', 'domain']);
-} catch (\Throwable $e) {
-    $out['error'] = $e->getMessage();
-}
-
-echo json_encode($out, JSON_PRETTY_PRINT);
+$cats = DB::table('product_categories')->get();
+echo json_encode($cats, JSON_PRETTY_PRINT);
 @unlink(__FILE__);
 PHP;
 
 $method->invoke($c, 'Fileman', 'save_file_content', [
     'dir' => 'aimagency.vn/public',
-    'file' => 'check_enhanced_products.php',
+    'file' => 'check_cats_server.php',
     'content' => $serverScript,
 ]);
 
-echo "check_enhanced_products.php uploaded.\n";
+echo "check_cats_server.php uploaded.\n";
