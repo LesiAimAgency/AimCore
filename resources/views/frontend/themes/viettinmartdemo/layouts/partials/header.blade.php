@@ -153,7 +153,7 @@
                                         style="max-height: 450px; overflow-y: auto;">
                                         @foreach(\App\Models\ProjectProductCategory::where('is_active', true)->whereNull('parent_id')->orderBy('sort_order')->limit(-1)->get() as $cat)
                                             <li>
-                                                <a href="{{ locale_route('shop.show', $cat->slug) }}" class="menu-item">
+                                                <a href="{{ locale_route('shop.category', ['slug' => $cat->slug]) }}" class="menu-item">
                                                     <x-theme-icon :name="$cat->icon ?: 'placeholder'"
                                                         default="theme/images/icons/01.svg" />
                                                     <span>{{ $cat->name }}</span>
@@ -608,7 +608,7 @@
                         style="max-height: 400px; overflow-y: auto;">
                         @foreach(\App\Models\ProjectProductCategory::where('is_active', true)->whereNull('parent_id')->orderBy('sort_order')->get() as $cat)
                             <li>
-                                <a href="{{ locale_route('shop.show', $cat->slug) }}" class="menu-item">
+                                <a href="{{ locale_route('shop.category', ['slug' => $cat->slug]) }}" class="menu-item">
                                     @if($cat->icon)
                                         <img src="{{ $cat->icon_url }}" alt="{{ $cat->name }}">
                                     @else

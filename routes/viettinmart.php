@@ -15,7 +15,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/sitemap', [SitemapController::class, 'htmlIndex'])->name('sitemap_html');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
 Route::get('/cua-hang', [ShopController::class, 'index'])->name('shop.index');
-Route::get('/danh-muc/{slug}', [ShopController::class, 'index'])->name('shop.category');
+Route::get('/{slug}', [ShopController::class, 'index'])->name('shop.category');
 Route::get('/search-suggest', [ShopController::class, 'searchSuggest'])->name('shop.suggest');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');

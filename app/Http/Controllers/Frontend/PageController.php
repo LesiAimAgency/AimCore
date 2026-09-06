@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Viettinmart\ShopController;
+use App\Models\Category;
 use App\Models\FormSubmission;
 use App\Models\Post;
+use App\Models\Product;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
@@ -58,20 +61,20 @@ class PageController extends Controller
 
         if (! $page) {
             // Check if slug belongs to a product category
-            $category = \App\Models\Category::where('slug', $slug)->where('is_active', true)->first();
+            $category = Category::where('slug', $slug)->where('is_active', true)->first();
             if ($category) {
-                if (class_exists(\App\Http\Controllers\Viettinmart\ShopController::class)) {
-                    return app(\App\Http\Controllers\Viettinmart\ShopController::class)->index(request(), $project?->code, $slug);
+                if (class_exists(ShopController::class)) {
+                    return app(ShopController::class)->index(request(), $project?->code, $slug);
                 }
 
                 return redirect(locale_route('shop.category', ['slug' => $slug]));
             }
 
             // Check if slug belongs to a product
-            $product = \App\Models\Product::where('slug', $slug)->active()->first();
+            $product = Product::where('slug', $slug)->active()->first();
             if ($product) {
-                if (class_exists(\App\Http\Controllers\Viettinmart\ShopController::class)) {
-                    return app(\App\Http\Controllers\Viettinmart\ShopController::class)->show($project?->code, $slug);
+                if (class_exists(ShopController::class)) {
+                    return app(ShopController::class)->show($project?->code, $slug);
                 }
 
                 return redirect(locale_route('shop.show', ['slug' => $slug]));

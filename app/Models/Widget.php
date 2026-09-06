@@ -168,8 +168,17 @@ class Widget extends Model
                     ! str_starts_with($url, 'javascript:')
                 ) {
                     $trimmed = ltrim($url, '/');
+
+                    if (! empty($item['type']) && strtolower($item['type']) === 'category') {
+                        if (! str_starts_with($trimmed, 'danh-muc/') && ! str_starts_with($trimmed, $projectCode.'/danh-muc/')) {
+                            $trimmed = 'danh-muc/'.$trimmed;
+                        }
+                    }
+
                     if (! str_starts_with($trimmed, $projectCode)) {
                         $item['url'] = '/'.$projectCode.($trimmed !== '' ? '/'.$trimmed : '');
+                    } else {
+                        $item['url'] = '/'.$trimmed;
                     }
                 }
             }
