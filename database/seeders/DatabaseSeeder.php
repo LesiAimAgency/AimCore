@@ -15,8 +15,6 @@ class DatabaseSeeder extends Seeder
             CmsSystemSeeder::class,
             CmsAdminDataSeeder::class,
             EcommerceSeeder::class,
-            ProjectSeeder::class,
-            WebsiteConfigSeeder::class,
             InbetweenThemeSeeder::class,
             InbetweenHomepageMainSeeder::class,
             ViettinmartMasterSeeder::class,
