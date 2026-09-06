@@ -5,7 +5,9 @@ namespace Database\Seeders;
 use App\Models\Post;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\Project;
 use App\Models\Taxonomy;
+use App\Models\Tenant;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -22,7 +24,17 @@ class ViettinmartProductsSeeder extends Seeder
             $project = Project::where('code', 'viettinmart-eco')->orWhere('code', 'viettinmart')->first();
             $projectId = $project ? $project->id : 10;
         }
-        $tenantId = $tenantId ?? $projectId;
+
+        if (! $tenantId || ! Tenant::where('id', $tenantId)->exists()) {
+            $tenant = Tenant::where('code', 'viettinmart')
+                ->orWhere('code', 'viettinmart-eco')
+                ->orWhere('name', 'like', '%Viettinmart%')
+                ->first();
+            if (! $tenant) {
+                $tenant = Tenant::find(3) ?? Tenant::first();
+            }
+            $tenantId = $tenant ? $tenant->id : null;
+        }
 
         $dataPath = database_path('seeders/data/viettinmart');
         if (! File::isDirectory($dataPath)) {
