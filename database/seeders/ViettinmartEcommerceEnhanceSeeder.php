@@ -102,10 +102,17 @@ class ViettinmartEcommerceEnhanceSeeder extends Seeder
         ];
 
         foreach ($coupons as $c) {
-            Coupon::updateOrCreate(
-                ['code' => $c['code']],
-                array_merge($c, ['project_id' => $pId, 'tenant_id' => $tId])
-            );
+            $coupon = Coupon::where('code', $c['code'])
+                ->where(function ($q) use ($pId) {
+                    $q->where('project_id', $pId)->orWhereNull('project_id');
+                })
+                ->first();
+
+            if ($coupon) {
+                $coupon->update(array_merge($c, ['project_id' => $pId, 'tenant_id' => $tId]));
+            } else {
+                Coupon::create(array_merge($c, ['project_id' => $pId, 'tenant_id' => $tId]));
+            }
         }
 
         // 2. FLASH SALE CAMPAIGN & ITEMS
@@ -186,10 +193,27 @@ class ViettinmartEcommerceEnhanceSeeder extends Seeder
         ];
 
         foreach ($brands as $b) {
-            ProjectBrand::updateOrCreate(
-                ['project_id' => $pId, 'slug' => $b['slug']],
-                array_merge($b, ['tenant_id' => $tId])
-            );
+            $brand = ProjectBrand::withTrashed()
+                ->where('slug', $b['slug'])
+                ->where(function ($q) use ($pId) {
+                    $q->where('project_id', $pId)->orWhereNull('project_id');
+                })
+                ->first();
+
+            if ($brand) {
+                if ($brand->trashed()) {
+                    $brand->restore();
+                }
+                $brand->update(array_merge($b, [
+                    'project_id' => $pId,
+                    'tenant_id' => $tId,
+                ]));
+            } else {
+                ProjectBrand::create(array_merge($b, [
+                    'project_id' => $pId,
+                    'tenant_id' => $tId,
+                ]));
+            }
         }
 
         // 4. SHIPPING CARRIERS (Đơn vị vận chuyển)
