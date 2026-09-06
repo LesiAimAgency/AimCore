@@ -25,6 +25,15 @@ class ShopController extends Controller
         }
 
         // === 1. Đọc tham số từ URL ===
+        // 301 Redirect legacy query string (?danh-muc=... or ?category=...) to clean SEO slug URL
+        $legacyCategory = $request->get('danh-muc') ?: $request->get('category');
+        if ($legacyCategory && ! $request->ajax() && ! $request->wantsJson()) {
+            $projCode = $projectCode ?: request()->route('projectCode');
+            $targetUrl = $projCode ? "/{$projCode}/{$legacyCategory}" : "/{$legacyCategory}";
+
+            return redirect($targetUrl, 301);
+        }
+
         // Hỗ trợ: ?categories[]=slug1&categories[]=slug2  (form checkbox array)
         //      OR: ?categories=slug1,slug2 (legacy comma-string)
         $rawCategories = $request->get('categories', []);
@@ -35,10 +44,33 @@ class ShopController extends Controller
         }
         $selectedSlugs = array_values($selectedSlugs);
 
+        if ($legacyCategory && ! in_array($legacyCategory, $selectedSlugs)) {
+            $selectedSlugs[] = $legacyCategory;
+        }
+
         // Nếu vào qua route /shop/category/{slug}, thêm vào danh sách
         if ($category_slug && ! in_array($category_slug, $selectedSlugs)) {
             $selectedSlugs[] = $category_slug;
         }
+
+        // Expand category aliases for SEO friendly slugs (e.g. dong-lanh -> san-pham-tuoi-cap-dong-chua-so-che)
+        $catAliases = [
+            'dong-lanh' => ['dong-lanh', 'san-pham-tuoi-cap-dong-chua-so-che', 'thuc-pham-dong-lanh'],
+            'thuc-pham-dong-lanh' => ['thuc-pham-dong-lanh', 'dong-lanh', 'san-pham-tuoi-cap-dong-chua-so-che'],
+            'thit-hai-san' => ['thit-hai-san', 'cac-san-pham-tu-thit'],
+            'rau-cu-qua' => ['rau-cu-qua', 'san-pham-da-lam-sach'],
+            'do-uong' => ['do-uong', 'cac-san-pham-khac'],
+            'banh-keo' => ['banh-keo', 'cac-san-pham-khac'],
+        ];
+        $expandedSlugs = [];
+        foreach ($selectedSlugs as $sSlug) {
+            if (isset($catAliases[$sSlug])) {
+                $expandedSlugs = array_merge($expandedSlugs, $catAliases[$sSlug]);
+            } else {
+                $expandedSlugs[] = $sSlug;
+            }
+        }
+        $selectedSlugs = array_values(array_unique($expandedSlugs));
 
         $minPrice = sanitize_numeric($request->get('min_price'), 0);
         $maxPrice = sanitize_numeric($request->get('max_price'), 0);

@@ -65,7 +65,7 @@ class MenuItem extends Model
 
             return match ($this->linkable_type) {
                 'App\\Models\\Post' => ($this->linkable->post_type === 'page') ? "{$prefix}/{$slug}" : "{$prefix}/blog/{$slug}",
-                'App\\Models\\ProductCategory' => "{$prefix}/cua-hang?category={$slug}",
+                'App\\Models\\ProductCategory' => "{$prefix}/{$slug}",
                 'App\\Models\\Product' => "{$prefix}/san-pham/{$slug}",
                 'App\\Models\\Taxonomy' => "{$prefix}/blog?category={$slug}",
                 'App\\Models\\Brand' => "{$prefix}/cua-hang?brand={$slug}",

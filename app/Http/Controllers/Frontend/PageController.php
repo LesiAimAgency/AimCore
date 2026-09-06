@@ -61,13 +61,33 @@ class PageController extends Controller
 
         if (! $page) {
             // Check if slug belongs to a product category
-            $category = Category::where('slug', $slug)->where('is_active', true)->first();
+            $catAliases = [
+                'dong-lanh' => ['dong-lanh', 'san-pham-tuoi-cap-dong-chua-so-che', 'thuc-pham-dong-lanh'],
+                'thuc-pham-dong-lanh' => ['thuc-pham-dong-lanh', 'dong-lanh', 'san-pham-tuoi-cap-dong-chua-so-che'],
+                'thit-hai-san' => ['thit-hai-san', 'cac-san-pham-tu-thit'],
+                'rau-cu-qua' => ['rau-cu-qua', 'san-pham-da-lam-sach'],
+                'do-uong' => ['do-uong', 'cac-san-pham-khac'],
+                'banh-keo' => ['banh-keo', 'cac-san-pham-khac'],
+            ];
+            $lookupSlugs = $catAliases[$slug] ?? [$slug];
+
+            $categoryQuery = Category::withoutGlobalScopes()->where('is_active', true);
+            if ($project) {
+                $category = (clone $categoryQuery)->where('project_id', $project->id)->whereIn('slug', $lookupSlugs)->first();
+            } else {
+                $category = null;
+            }
+
+            if (! $category) {
+                $category = $categoryQuery->whereIn('slug', $lookupSlugs)->first();
+            }
+
             if ($category) {
                 if (class_exists(ShopController::class)) {
-                    return app(ShopController::class)->index(request(), $project?->code, $slug);
+                    return app(ShopController::class)->index(request(), $project?->code, $category->slug);
                 }
 
-                return redirect(locale_route('shop.category', ['slug' => $slug]));
+                return redirect(locale_route('shop.category', ['slug' => $category->slug]));
             }
 
             // Check if slug belongs to a product

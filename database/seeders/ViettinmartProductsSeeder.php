@@ -104,6 +104,25 @@ class ViettinmartProductsSeeder extends Seeder
                 }
                 $prodCatMap[$oldId] = $cat->id;
             }
+            $defaultCats = [
+                ['name' => 'Thực phẩm đông lạnh', 'slug' => 'dong-lanh'],
+                ['name' => 'Thịt & Hải sản', 'slug' => 'thit-hai-san'],
+                ['name' => 'Rau củ quả', 'slug' => 'rau-cu-qua'],
+                ['name' => 'Đồ uống', 'slug' => 'do-uong'],
+                ['name' => 'Bánh kẹo & Snack', 'slug' => 'banh-keo'],
+            ];
+            foreach ($defaultCats as $dCat) {
+                ProductCategory::withoutGlobalScopes()->firstOrCreate(
+                    ['project_id' => $projectId, 'slug' => $dCat['slug']],
+                    [
+                        'tenant_id' => $tenantId,
+                        'name' => $dCat['name'],
+                        'is_active' => true,
+                        'sort_order' => 10,
+                    ]
+                );
+            }
+
             $this->command?->info('✓ Seeded '.count($prodCatMap).' product categories.');
         }
 

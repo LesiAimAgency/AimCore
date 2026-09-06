@@ -233,6 +233,16 @@ if (! function_exists('locale_route')) {
             $name = 'project.'.$name;
         }
 
+        // Clean SEO Category URL: /{projectCode}/{slug} or /{slug}
+        if ($name === 'project.shop.category' || $name === 'shop.category') {
+            $slug = is_array($params) ? ($params['slug'] ?? ($params[0] ?? '')) : (string) $params;
+            $projectCode = is_array($params) && isset($params['projectCode'])
+                ? $params['projectCode']
+                : (request()->route('projectCode') ?? (session('current_project')['code'] ?? (session('current_project')->code ?? (function_exists('current_project') ? current_project()?->code : null))));
+
+            return $projectCode ? "/{$projectCode}/{$slug}" : "/{$slug}";
+        }
+
         if (! Route::has($name)) {
             $cleanName = str_replace('project.', '', $name);
             if (Route::has($cleanName)) {

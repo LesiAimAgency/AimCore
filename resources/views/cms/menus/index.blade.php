@@ -105,14 +105,14 @@
                     @foreach($productCategories as $category)
                     <div class="mb-1">
                         <label class="flex items-center p-1.5 hover:bg-amber-50/50 rounded cursor-pointer font-medium text-gray-800">
-                            <input type="checkbox" class="mr-2 rounded border-gray-300 text-amber-600" data-type="productcategory" data-id="{{ $category->id }}" data-title="{{ $category->name }}" data-url="{{ $urlPrefix }}/cua-hang?category={{ $category->slug ?? $category->id }}">
+                            <input type="checkbox" class="mr-2 rounded border-gray-300 text-amber-600" data-type="productcategory" data-id="{{ $category->id }}" data-title="{{ $category->name }}" data-url="{{ $urlPrefix }}/{{ $category->slug ?? $category->id }}">
                             <span class="text-sm">{{ $category->name }}</span>
                         </label>
                         @if($category->children && $category->children->count() > 0)
                         <div class="ml-6 space-y-0.5 border-l-2 border-amber-100 pl-2">
                             @foreach($category->children as $child)
                             <label class="flex items-center p-1 hover:bg-amber-50/50 rounded cursor-pointer">
-                                <input type="checkbox" class="mr-2 rounded border-gray-300 text-amber-600" data-type="productcategory" data-id="{{ $child->id }}" data-title="{{ $child->name }}" data-url="{{ $urlPrefix }}/cua-hang?category={{ $child->slug ?? $child->id }}">
+                                <input type="checkbox" class="mr-2 rounded border-gray-300 text-amber-600" data-type="productcategory" data-id="{{ $child->id }}" data-title="{{ $child->name }}" data-url="{{ $urlPrefix }}/{{ $child->slug ?? $child->id }}">
                                 <span class="text-xs text-gray-600">↳ {{ $child->name }}</span>
                             </label>
                             @endforeach
