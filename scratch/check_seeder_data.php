@@ -19,7 +19,7 @@ $runner = <<<'PHP'
 <?php
 header('Content-Type: application/json');
 
-$dataPath = __DIR__ . '/../database/seeders/data';
+$dataPath = __DIR__ . '/../database/seeders/data/viettinmart';
 $files = [];
 if (is_dir($dataPath)) {
     $files = scandir($dataPath);
