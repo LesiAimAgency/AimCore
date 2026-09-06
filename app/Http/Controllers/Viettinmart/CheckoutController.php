@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\Project;
 use App\Services\CouponService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -206,7 +207,7 @@ class CheckoutController extends Controller
 
             $project = request()->attributes->get('project')
                 ?? (function_exists('current_project') ? current_project() : null)
-                ?? (session('current_project_id') ? \App\Models\Project::find(session('current_project_id')) : null);
+                ?? (session('current_project_id') ? Project::find(session('current_project_id')) : null);
             $projectId = $project ? $project->id : (session('current_project_id') ?: 10);
             $tenantId = session('current_tenant_id')
                 ?? ($project?->tenant_id ?? null)
