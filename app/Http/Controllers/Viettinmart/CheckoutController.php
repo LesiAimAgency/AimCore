@@ -208,7 +208,10 @@ class CheckoutController extends Controller
                 ?? (function_exists('current_project') ? current_project() : null)
                 ?? (session('current_project_id') ? \App\Models\Project::find(session('current_project_id')) : null);
             $projectId = $project ? $project->id : (session('current_project_id') ?: 10);
-            $tenantId = $project ? ($project->tenant_id ?? 1) : (session('current_tenant_id') ?: 1);
+            $tenantId = session('current_tenant_id')
+                ?? ($project?->tenant_id ?? null)
+                ?? (function_exists('current_tenant') ? current_tenant()?->id : null)
+                ?? 1;
 
             $order = Order::create([
                 'project_id' => $projectId,
@@ -288,7 +291,7 @@ class CheckoutController extends Controller
             $orderNumber = $projectCode;
         }
 
-        $order = Order::where('order_number', $orderNumber)->firstOrFail();
+        $order = Order::withoutGlobalScope('tenant')->where('order_number', $orderNumber)->firstOrFail();
 
         return view('shop.success', compact('order'));
     }
@@ -311,7 +314,8 @@ class CheckoutController extends Controller
             $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
 
             // SỬ DỤNG ELOQUENT (KHÔNG CÓ SQL INJECTION)
-            $order = Order::where('order_number', $orderNumber)
+            $order = Order::withoutGlobalScope('tenant')
+                ->where('order_number', $orderNumber)
                 ->where('customer_email', $email)
                 ->with(['items'])
                 ->first();
@@ -342,7 +346,8 @@ class CheckoutController extends Controller
         $email = filter_var(trim($validated['email']), FILTER_SANITIZE_EMAIL);
 
         // SỬ DỤNG ELOQUENT (AN TOÀN, KHÔNG CÓ SQL INJECTION)
-        $order = Order::where('order_number', $orderNumber)
+        $order = Order::withoutGlobalScope('tenant')
+            ->where('order_number', $orderNumber)
             ->where('customer_email', $email)
             ->with(['items'])
             ->first();
