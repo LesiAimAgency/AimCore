@@ -139,7 +139,7 @@
                 <div id="products-section" class="hidden p-3 border-t max-h-56 overflow-y-auto space-y-1">
                     @forelse($products ?? [] as $prod)
                     <label class="flex items-center p-2 hover:bg-rose-50/50 rounded cursor-pointer transition">
-                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-rose-600" data-type="product" data-id="{{ $prod->id }}" data-title="{{ $prod->name }}" data-url="{{ $urlPrefix }}/san-pham/{{ $prod->slug ?? $prod->id }}">
+                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-rose-600" data-type="product" data-id="{{ $prod->id }}" data-title="{{ $prod->name }}" data-url="{{ $urlPrefix }}/{{ $prod->slug ?? $prod->id }}">
                         <span class="text-sm text-gray-700 truncate">{{ $prod->name }}</span>
                     </label>
                     @empty

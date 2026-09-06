@@ -129,7 +129,7 @@ html { scroll-behavior: smooth; }
     </div>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         @foreach($products as $product)
-        <a href="/{{ request()->route('projectCode') }}/san-pham/{{ $product->slug }}" class="group block bg-white rounded-xl p-3 border border-gray-100 hover:border-blue-200 hover:shadow-lg transition">
+        <a href="/{{ request()->route('projectCode') }}/{{ $product->slug }}" class="group block bg-white rounded-xl p-3 border border-gray-100 hover:border-blue-200 hover:shadow-lg transition">
             @php
                 $productImage = $product->image ?? $product->featured_image;
                 if (!$productImage) {

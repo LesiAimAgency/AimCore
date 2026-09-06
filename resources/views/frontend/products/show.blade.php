@@ -287,7 +287,7 @@ html { scroll-behavior: smooth; }
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
     @foreach($relatedProducts->take(4) as $related)
     <div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
-      <a href="/{{ $projectCode }}/san-pham/{{ $related->slug }}" class="block">
+      <a href="/{{ $projectCode }}/{{ $related->slug }}" class="block">
         <div class="relative overflow-hidden">
           <img src="{{ $related->featured_image ?? '/assets/img/placeholder-images-image_large.webp' }}" 
              alt="{{ $related->title }}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
@@ -298,7 +298,7 @@ html { scroll-behavior: smooth; }
         </div>
       </a>
       <div class="p-5">
-        <a href="/{{ $projectCode }}/san-pham/{{ $related->slug }}" class="font-bold hover:text-blue-600 line-clamp-2 mb-2 block">
+        <a href="/{{ $projectCode }}/{{ $related->slug }}" class="font-bold hover:text-blue-600 line-clamp-2 mb-2 block">
           {{ $related->title }}
         </a>
         <div class="flex items-center justify-between">
@@ -370,7 +370,7 @@ function decreaseQuantity() {
           ->get();
       @endphp
       @foreach($hotProducts as $hot)
-      <a href="/{{ $projectCode }}/san-pham/{{ $hot->slug }}" class="flex gap-3 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+      <a href="/{{ $projectCode }}/{{ $hot->slug }}" class="flex gap-3 hover:bg-gray-50 p-2 rounded-lg transition-colors">
         <img src="{{ $hot->featured_image ?? '/assets/img/placeholder-images-image_large.webp' }}" 
            alt="{{ $hot->title }}" class="w-16 h-16 object-cover rounded-lg">
         <div class="flex-1">

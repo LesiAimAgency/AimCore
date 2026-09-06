@@ -16,7 +16,7 @@
         <!-- Product Images -->
         <div class="product-gallery flex flex-col gap-4">
             <div class="main-image relative rounded-2xl overflow-hidden bg-gray-50 aspect-[4/3] flex items-center justify-center border border-gray-100 shadow-sm group">
-                <img src="https://xulynuoctrungdieptin.com/uploads/source/san-pham/may-loc-nuoc-bien/he-thong-loc-nuoc-bien-trung-diep-tin.png" alt="Máy lọc nước biển cs 377l/h" class="w-full h-full object-contain p-8 transform transition duration-500 group-hover:scale-110">
+                <img src="https://xulynuoctrungdieptin.com/uploads/source/may-loc-nuoc-bien/he-thong-loc-nuoc-bien-trung-diep-tin.png" alt="Máy lọc nước biển cs 377l/h" class="w-full h-full object-contain p-8 transform transition duration-500 group-hover:scale-110">
                 <div class="absolute top-4 left-4 flex gap-2">
                     <span class="px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full shadow-md uppercase tracking-wide">Mới</span>
                     <span class="px-3 py-1 bg-green-500 text-white text-xs font-bold rounded-full shadow-md uppercase tracking-wide">ISO 9001:2015</span>
@@ -26,10 +26,10 @@
             <!-- Thumbnails -->
             <div class="grid grid-cols-4 gap-4">
                 <button class="rounded-xl overflow-hidden border-2 border-blue-600 aspect-square bg-gray-50 p-2">
-                    <img src="https://xulynuoctrungdieptin.com/uploads/source/san-pham/may-loc-nuoc-bien/he-thong-loc-nuoc-bien-trung-diep-tin.png" class="w-full h-full object-contain" alt="Thumb 1">
+                    <img src="https://xulynuoctrungdieptin.com/uploads/source/may-loc-nuoc-bien/he-thong-loc-nuoc-bien-trung-diep-tin.png" class="w-full h-full object-contain" alt="Thumb 1">
                 </button>
                 <button class="rounded-xl overflow-hidden border border-gray-200 hover:border-blue-400 transition aspect-square bg-gray-50 p-2">
-                    <img src="https://xulynuoctrungdieptin.com/uploads/source/san-pham/may-loc-nuoc-bien/he-thong-loc-nuoc-bien-trung-diep-tin.png" class="w-full h-full object-contain opacity-70 hover:opacity-100" alt="Thumb 2">
+                    <img src="https://xulynuoctrungdieptin.com/uploads/source/may-loc-nuoc-bien/he-thong-loc-nuoc-bien-trung-diep-tin.png" class="w-full h-full object-contain opacity-70 hover:opacity-100" alt="Thumb 2">
                 </button>
             </div>
         </div>

@@ -47,7 +47,7 @@ Route::post('/wishlist/remove', [CustomerActionController::class, 'removeFromWis
 Route::post('/compare/add', [CustomerActionController::class, 'addToCompare'])->name('compare.add');
 Route::post('/compare/remove', [CustomerActionController::class, 'removeFromCompare'])->name('compare.remove');
 
-Route::get('/san-pham/{slug}', [ShopController::class, 'show'])->name('shop.show');
+Route::get('/{slug}', [ShopController::class, 'show'])->name('shop.show');
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');

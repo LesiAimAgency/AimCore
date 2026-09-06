@@ -44,7 +44,7 @@
   <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
     <!-- Image Container -->
     <div class="relative overflow-hidden">
-      <a href="/{{ $projectCode }}/san-pham/{{ $product->slug }}" class="block">
+      <a href="/{{ $projectCode }}/{{ $product->slug }}" class="block">
         <img src="{{ $product->featured_image ?? '/assets/img/placeholder-images-image_large.webp' }}" 
            alt="{{ $product->name }}" 
            class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
@@ -72,7 +72,7 @@
     
     <!-- Content -->
     <div class="p-5">
-      <a href="/{{ $projectCode }}/san-pham/{{ $product->slug }}" class="block">
+      <a href="/{{ $projectCode }}/{{ $product->slug }}" class="block">
         <h3 class="font-bold mb-2 text-lg hover:text-blue-600 transition-colors line-clamp-2">
           {{ $product->name }}
         </h3>
@@ -209,7 +209,7 @@
     <h3 class="font-bold mb-4 text-lg text-gray-900">⭐ Sản phẩm nổi bật</h3>
     <div class="space-y-3">
       @foreach($featuredProducts->take(3) as $product)
-      <a href="/{{ $projectCode }}/san-pham/{{ $product->slug }}" class="flex gap-3 p-2 rounded-lg hover:bg-purple-100 transition-colors">
+      <a href="/{{ $projectCode }}/{{ $product->slug }}" class="flex gap-3 p-2 rounded-lg hover:bg-purple-100 transition-colors">
         <img src="{{ $product->featured_image ?? '/assets/img/placeholder-images-image_large.webp' }}" 
            alt="{{ $product->name }}" class="w-16 h-16 object-cover rounded-lg">
         <div class="flex-1">
