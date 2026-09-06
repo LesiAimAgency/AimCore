@@ -42,7 +42,6 @@ class ViettinmartProductsSeeder extends Seeder
                 $t['tenant_id'] = $tenantId;
 
                 $tax = Taxonomy::withoutGlobalScopes()
-                    ->where('project_id', $projectId)
                     ->where('slug', $t['slug'])
                     ->first();
 
@@ -68,7 +67,6 @@ class ViettinmartProductsSeeder extends Seeder
                 $c['tenant_id'] = $tenantId;
 
                 $cat = ProductCategory::withoutGlobalScopes()
-                    ->where('project_id', $projectId)
                     ->where('slug', $c['slug'])
                     ->first();
 
@@ -98,7 +96,6 @@ class ViettinmartProductsSeeder extends Seeder
                 }
 
                 $prod = Product::withoutGlobalScopes()
-                    ->where('project_id', $projectId)
                     ->where('slug', $p['slug'])
                     ->first();
 
@@ -132,9 +129,7 @@ class ViettinmartProductsSeeder extends Seeder
                 }
 
                 $post = Post::withoutGlobalScopes()
-                    ->where('project_id', $projectId)
                     ->where('slug', $p['slug'])
-                    ->where('post_type', $p['post_type'])
                     ->first();
 
                 if (! $post) {
