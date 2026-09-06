@@ -18,43 +18,48 @@ $method->setAccessible(true);
 
 $serverScript = <<<'PHP'
 <?php
-use Illuminate\Contracts\Console\Kernel;
-
-require __DIR__ . '/../vendor/autoload.php';
-$app = require_once __DIR__ . '/../bootstrap/app.php';
-$kernel = $app->make(Kernel::class);
-$kernel->bootstrap();
-
 header('Content-Type: application/json');
 
-$out = [
-    'locale' => app()->getLocale(),
-    'fallback' => config('app.fallback_locale'),
-    'lang_path' => app()->langPath(),
-    'lang_path_exists' => is_dir(app()->langPath()),
-    'lang_files_in_path' => is_dir(app()->langPath()) ? scandir(app()->langPath()) : null,
-    'test_sidebar' => __('sidebar_offers_title'),
-    'test_bank' => __('offer_bank_transfer'),
-    'test_sku' => __('product_sku'),
-    'test_discount' => __('product_discount'),
-    'test_out_of_stock' => __('product_out_of_stock'),
-];
+$root = dirname(__DIR__);
 
-app()->setLocale('vi');
-$out['after_set_vi'] = [
-    'test_sidebar' => __('sidebar_offers_title'),
-    'test_bank' => __('offer_bank_transfer'),
-    'test_sku' => __('product_sku'),
-];
+$env = file_get_contents($root . '/.env');
+preg_match('/APP_LOCALE=(.*)/', $env, $mLocale);
+preg_match('/APP_FALLBACK_LOCALE=(.*)/', $env, $mFallback);
 
-echo json_encode($out, JSON_PRETTY_PRINT);
+// Check database settings
+$envContent = $env;
+preg_match('/DB_DATABASE=(.*)/', $envContent, $db);
+preg_match('/DB_USERNAME=(.*)/', $envContent, $user);
+preg_match('/DB_PASSWORD=(.*)/', $envContent, $pass);
+preg_match('/DB_HOST=(.*)/', $envContent, $host);
+
+$pdo = new PDO(
+    "mysql:host=" . trim($host[1] ?? '127.0.0.1') . ";dbname=" . trim($db[1] ?? ''),
+    trim($user[1] ?? ''),
+    trim($pass[1] ?? '')
+);
+
+$stmt = $pdo->query("SELECT id, project_id, `key`, value FROM settings WHERE `key` IN ('languages', 'locale', 'default_locale', 'app_locale')");
+$settings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Check project_settings
+$stmt2 = $pdo->query("SELECT id, project_id, `key`, value FROM project_settings WHERE `key` IN ('languages', 'locale', 'default_locale', 'app_locale')");
+$pSettings = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+echo json_encode([
+    'env_locale' => $mLocale[1] ?? null,
+    'env_fallback' => $mFallback[1] ?? null,
+    'settings' => $settings,
+    'project_settings' => $pSettings
+], JSON_PRETTY_PRINT);
+
 @unlink(__FILE__);
 PHP;
 
 $method->invoke($c, 'Fileman', 'save_file_content', [
     'dir' => 'aimagency.vn/public',
-    'file' => 'debug_trans_server.php',
+    'file' => 'check_locale_origin.php',
     'content' => $serverScript,
 ]);
 
-echo "debug_trans_server.php uploaded.\n";
+echo "check_locale_origin.php uploaded.\n";
