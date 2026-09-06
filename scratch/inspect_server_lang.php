@@ -20,19 +20,44 @@ $serverScript = <<<'PHP'
 <?php
 header('Content-Type: text/plain');
 $root = dirname(__DIR__);
-$env = file_get_contents($root . '/.env');
-foreach (explode("\n", $env) as $line) {
-    if (str_contains($line, 'LOCALE')) {
-        echo bin2hex($line) . " => " . $line . "\n";
+$envPath = $root . '/.env';
+$env = file_get_contents($envPath);
+
+// Replace APP_LOCALE=en1 with APP_LOCALE=vi
+// Replace APP_FALLBACK_LOCALE=en with APP_FALLBACK_LOCALE=vi
+// Ensure clean unix line endings for these lines
+$newEnv = preg_replace('/APP_LOCALE=.*\r?\n/', "APP_LOCALE=vi\n", $env);
+$newEnv = preg_replace('/APP_FALLBACK_LOCALE=.*\r?\n/', "APP_FALLBACK_LOCALE=vi\n", $newEnv);
+
+if ($newEnv !== $env) {
+    file_put_contents($envPath, $newEnv);
+    echo "ENV_UPDATED_SUCCESSFULLY\n";
+} else {
+    echo "ENV_ALREADY_MATCHED\n";
+}
+
+// Clear config and route cache if any
+@unlink($root . '/bootstrap/cache/config.php');
+@unlink($root . '/bootstrap/cache/routes-v7.php');
+@unlink($root . '/bootstrap/cache/services.php');
+@unlink($root . '/bootstrap/cache/packages.php');
+
+// Also clear view cache
+$views = glob($root . '/storage/framework/views/*');
+if ($views) {
+    foreach ($views as $v) {
+        if (is_file($v)) @unlink($v);
     }
 }
+echo "CACHE_CLEARED\n";
+
 @unlink(__FILE__);
 PHP;
 
 $method->invoke($c, 'Fileman', 'save_file_content', [
     'dir' => 'aimagency.vn/public',
-    'file' => 'check_raw_env.php',
+    'file' => 'fix_env_server.php',
     'content' => $serverScript,
 ]);
 
-echo "check_raw_env.php uploaded.\n";
+echo "fix_env_server.php uploaded.\n";
