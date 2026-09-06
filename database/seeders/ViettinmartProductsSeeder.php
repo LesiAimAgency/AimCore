@@ -7,7 +7,9 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Taxonomy;
 use Illuminate\Database\Seeder;
-use PDO;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 
 class ViettinmartProductsSeeder extends Seeder
 {
@@ -19,226 +21,175 @@ class ViettinmartProductsSeeder extends Seeder
         $projectId = $projectId ?? 10;
         $tenantId = $tenantId ?? 3;
 
-        $this->command->info("Seeding Viettinmart products for project {$projectId}...");
-
-        try {
-            $pdo = new PDO('mysql:host=127.0.0.1;port=3306;dbname=viettinmartdemo_demo1', 'root', 'root');
-        } catch (\Exception $e) {
-            $this->command->error('Could not connect to viettinmartdemo_demo1: '.$e->getMessage());
+        $dataPath = database_path('seeders/data/viettinmart');
+        if (! File::isDirectory($dataPath)) {
+            $this->command?->error("Data directory not found at {$dataPath}");
 
             return;
         }
 
-        // 1. Categories
-        $stmtCats = $pdo->query('SELECT * FROM categories ORDER BY id ASC');
-        $sourceCats = $stmtCats->fetchAll(PDO::FETCH_ASSOC);
+        $this->command?->info("Seeding authentic Viettinmart catalog for Project ID: {$projectId}, Tenant ID: {$tenantId}...");
 
-        $taxCategoryMap = [];
-        $prodCategoryMap = [];
+        // 1. Categories / Taxonomies
+        $taxFile = $dataPath.'/p10_taxonomies.json';
+        $taxCategoryMap = []; // old_id => new_id
+        if (File::exists($taxFile) && Schema::hasTable('taxonomies')) {
+            $taxonomies = json_decode(File::get($taxFile), true) ?? [];
+            foreach ($taxonomies as $t) {
+                $oldId = $t['id'];
+                unset($t['id']);
+                $t['project_id'] = $projectId;
+                $t['tenant_id'] = $tenantId;
 
-        foreach ($sourceCats as $cat) {
-            // A. Taxonomies (for Post / Admin)
-            $tax = Taxonomy::withoutGlobalScopes()->where('slug', $cat['slug'])->first();
-            if (! $tax) {
-                $tax = Taxonomy::create([
-                    'project_id' => $projectId,
-                    'tenant_id' => $tenantId,
-                    'name' => $cat['name'],
-                    'slug' => $cat['slug'],
-                    'taxonomy' => 'product_cat',
-                    'status' => 'published',
-                    'order' => (int) $cat['id'],
-                ]);
-            } else {
-                $tax->update([
-                    'project_id' => $projectId,
-                    'tenant_id' => $tenantId,
-                    'name' => $cat['name'],
-                    'taxonomy' => 'product_cat',
-                    'status' => 'published',
-                    'order' => (int) $cat['id'],
-                ]);
+                $tax = Taxonomy::withoutGlobalScopes()
+                    ->where('project_id', $projectId)
+                    ->where('slug', $t['slug'])
+                    ->first();
+
+                if (! $tax) {
+                    $tax = Taxonomy::create($t);
+                } else {
+                    $tax->update($t);
+                }
+                $taxCategoryMap[$oldId] = $tax->id;
             }
-            $taxCategoryMap[$cat['id']] = $tax->id;
-
-            // B. ProductCategory (for Product / Widgets)
-            $prodCat = ProductCategory::withoutGlobalScopes()->where([
-                'project_id' => $projectId,
-                'slug' => $cat['slug'],
-            ])->first();
-
-            if (! $prodCat) {
-                $prodCat = ProductCategory::create([
-                    'project_id' => $projectId,
-                    'tenant_id' => $tenantId,
-                    'name' => $cat['name'],
-                    'slug' => $cat['slug'],
-                    'is_active' => 1,
-                    'sort_order' => (int) $cat['id'],
-                ]);
-            } else {
-                $prodCat->update([
-                    'name' => $cat['name'],
-                    'is_active' => 1,
-                    'sort_order' => (int) $cat['id'],
-                ]);
-            }
-            $prodCategoryMap[$cat['id']] = $prodCat->id;
+            $this->command?->info('✓ Seeded '.count($taxCategoryMap).' taxonomies.');
         }
 
-        // 2. Category links
-        $stmtCp = $pdo->query('SELECT product_id, category_id FROM category_product');
-        $cpRows = $stmtCp->fetchAll(PDO::FETCH_ASSOC);
-        $prodCatLinks = [];
-        foreach ($cpRows as $cp) {
-            $prodCatLinks[$cp['product_id']][] = (int) $cp['category_id'];
+        // 1B. Product Categories
+        $catFile = $dataPath.'/p10_product_categories.json';
+        $prodCatMap = []; // old_id => new_id
+        if (File::exists($catFile) && Schema::hasTable('product_categories')) {
+            $categories = json_decode(File::get($catFile), true) ?? [];
+            foreach ($categories as $c) {
+                $oldId = $c['id'];
+                unset($c['id']);
+                $c['project_id'] = $projectId;
+                $c['tenant_id'] = $tenantId;
+
+                $cat = ProductCategory::withoutGlobalScopes()
+                    ->where('project_id', $projectId)
+                    ->where('slug', $c['slug'])
+                    ->first();
+
+                if (! $cat) {
+                    $cat = ProductCategory::create($c);
+                } else {
+                    $cat->update($c);
+                }
+                $prodCatMap[$oldId] = $cat->id;
+            }
+            $this->command?->info('✓ Seeded '.count($prodCatMap).' product categories.');
         }
 
-        // 3. Products
-        $stmtProds = $pdo->query('SELECT * FROM products ORDER BY id ASC');
-        $sourceProds = $stmtProds->fetchAll(PDO::FETCH_ASSOC);
+        // 2. Products Enhanced
+        $prodFile = $dataPath.'/p10_products.json';
+        $prodIdMap = []; // old_id => new_id
+        if (File::exists($prodFile) && Schema::hasTable('products_enhanced')) {
+            $products = json_decode(File::get($prodFile), true) ?? [];
+            foreach ($products as $p) {
+                $oldId = $p['id'];
+                unset($p['id']);
+                $p['project_id'] = $projectId;
+                $p['tenant_id'] = $tenantId;
 
-        $syncedPosts = 0;
-        $syncedProducts = 0;
+                if (isset($p['product_category_id']) && isset($prodCatMap[$p['product_category_id']])) {
+                    $p['product_category_id'] = $prodCatMap[$p['product_category_id']];
+                }
 
-        foreach ($sourceProds as $p) {
-            $pPrice = (float) $p['price'];
-            $pCompare = ! empty($p['compare_price']) ? (float) $p['compare_price'] : 0;
+                $prod = Product::withoutGlobalScopes()
+                    ->where('project_id', $projectId)
+                    ->where('slug', $p['slug'])
+                    ->first();
 
-            if ($pCompare > $pPrice) {
-                $regularPrice = $pCompare;
-                $salePrice = $pPrice;
-            } else {
-                $regularPrice = $pPrice;
-                $salePrice = null;
+                if (! $prod) {
+                    $prod = Product::create($p);
+                } else {
+                    $prod->update($p);
+                }
+                $prodIdMap[$oldId] = $prod->id;
             }
+            $this->command?->info('✓ Seeded '.count($prodIdMap).' products in products_enhanced.');
+        }
 
-            $imgPath = '/storage/'.ltrim($p['image'], '/');
-            $sku = ! empty($p['sku']) ? $p['sku'] : 'VTM-'.str_pad($p['id'], 4, '0', STR_PAD_LEFT);
-            $catIds = $prodCatLinks[$p['id']] ?? [];
+        // 3. Posts (Products, Blog posts, Pages)
+        $postsFile = $dataPath.'/p10_posts.json';
+        $postIdMap = []; // old_id => new_id
+        if (File::exists($postsFile) && Schema::hasTable('posts')) {
+            $posts = json_decode(File::get($postsFile), true) ?? [];
+            foreach ($posts as $p) {
+                $oldId = $p['id'];
+                unset($p['id']);
+                $p['project_id'] = $projectId;
+                $p['tenant_id'] = $tenantId;
 
-            $gallery = [];
-            if (! empty($p['images'])) {
-                $decoded = is_string($p['images']) ? json_decode($p['images'], true) : $p['images'];
-                if (is_array($decoded)) {
-                    foreach ($decoded as $gImg) {
-                        $gallery[] = '/storage/'.ltrim($gImg, '/');
-                    }
+                // Handle json fields if array
+                if (isset($p['seo_data']) && is_array($p['seo_data'])) {
+                    $p['seo_data'] = json_encode($p['seo_data']);
+                }
+                if (isset($p['meta_data']) && is_array($p['meta_data'])) {
+                    $p['meta_data'] = json_encode($p['meta_data']);
+                }
+
+                $post = Post::withoutGlobalScopes()
+                    ->where('project_id', $projectId)
+                    ->where('slug', $p['slug'])
+                    ->where('post_type', $p['post_type'])
+                    ->first();
+
+                if (! $post) {
+                    $post = Post::create($p);
+                } else {
+                    $post->update($p);
+                }
+                $postIdMap[$oldId] = $post->id;
+            }
+            $this->command?->info('✓ Seeded '.count($postIdMap).' posts (products, articles, pages).');
+        }
+
+        // 4. Term Relationships (Post <-> Taxonomy)
+        $termRelFile = $dataPath.'/p10_post_taxonomies.json';
+        if (File::exists($termRelFile) && Schema::hasTable('term_relationships')) {
+            $relations = json_decode(File::get($termRelFile), true) ?? [];
+            foreach ($relations as $rel) {
+                $oldPostId = $rel['object_id'];
+                $oldTaxId = $rel['term_taxonomy_id'];
+
+                if (isset($postIdMap[$oldPostId]) && isset($taxCategoryMap[$oldTaxId])) {
+                    DB::table('term_relationships')->updateOrInsert(
+                        [
+                            'object_id' => $postIdMap[$oldPostId],
+                            'term_taxonomy_id' => $taxCategoryMap[$oldTaxId],
+                        ],
+                        [
+                            'order' => $rel['order'] ?? 0,
+                        ]
+                    );
                 }
             }
-
-            // Sync to posts
-            $metaData = [
-                'sku' => $sku,
-                'price' => $regularPrice,
-                'sale_price' => $salePrice,
-                'product_type' => 'simple',
-                'stock_quantity' => (int) ($p['stock'] ?: 999),
-                'manage_stock' => true,
-                'stock_status' => 'in_stock',
-                'is_featured' => (bool) $p['is_featured'],
-                'gallery' => $gallery,
-            ];
-
-            $post = Post::withoutGlobalScopes()->where('slug', $p['slug'])->first();
-
-            if (! $post) {
-                $post = Post::create([
-                    'project_id' => $projectId,
-                    'tenant_id' => $tenantId,
-                    'title' => $p['name'],
-                    'slug' => $p['slug'],
-                    'excerpt' => $p['short_description'],
-                    'content' => $p['description'],
-                    'featured_image' => $imgPath,
-                    'post_type' => 'product',
-                    'status' => 'published',
-                    'meta_title' => $p['meta_title'] ?? $p['name'],
-                    'meta_description' => $p['meta_description'] ?? null,
-                    'meta_data' => $metaData,
-                    'published_at' => $p['created_at'] ?? now(),
-                    'author_id' => 41,
-                ]);
-            } else {
-                $post->update([
-                    'project_id' => $projectId,
-                    'tenant_id' => $tenantId,
-                    'title' => $p['name'],
-                    'excerpt' => $p['short_description'],
-                    'content' => $p['description'],
-                    'featured_image' => $imgPath,
-                    'post_type' => 'product',
-                    'status' => 'published',
-                    'meta_title' => $p['meta_title'] ?? $p['name'],
-                    'meta_description' => $p['meta_description'] ?? null,
-                    'meta_data' => $metaData,
-                ]);
-            }
-
-            $targetTaxIds = [];
-            foreach ($catIds as $cId) {
-                if (isset($taxCategoryMap[$cId])) {
-                    $targetTaxIds[] = $taxCategoryMap[$cId];
-                }
-            }
-            if (! empty($targetTaxIds)) {
-                $post->taxonomies()->sync($targetTaxIds);
-            }
-            $syncedPosts++;
-
-            // Sync to products_enhanced
-            $firstCatId = $catIds[0] ?? null;
-            $targetProdCatId = $firstCatId && isset($prodCategoryMap[$firstCatId]) ? $prodCategoryMap[$firstCatId] : null;
-
-            $prod = Product::withoutGlobalScopes()->where([
-                'project_id' => $projectId,
-                'slug' => $p['slug'],
-            ])->first();
-
-            if (! $prod) {
-                $prod = Product::create([
-                    'project_id' => $projectId,
-                    'tenant_id' => $tenantId,
-                    'name' => $p['name'],
-                    'slug' => $p['slug'],
-                    'short_description' => $p['short_description'],
-                    'description' => $p['description'],
-                    'sku' => $sku,
-                    'price' => $regularPrice,
-                    'sale_price' => $salePrice,
-                    'has_price' => 1,
-                    'stock_quantity' => (int) ($p['stock'] ?: 999),
-                    'manage_stock' => 1,
-                    'stock_status' => 'in_stock',
-                    'featured_image' => $imgPath,
-                    'gallery' => $gallery,
-                    'product_category_id' => $targetProdCatId,
-                    'status' => 'published',
-                    'is_featured' => (bool) $p['is_featured'],
-                ]);
-            } else {
-                $prod->update([
-                    'tenant_id' => $tenantId,
-                    'name' => $p['name'],
-                    'short_description' => $p['short_description'],
-                    'description' => $p['description'],
-                    'sku' => $sku,
-                    'price' => $regularPrice,
-                    'sale_price' => $salePrice,
-                    'has_price' => 1,
-                    'stock_quantity' => (int) ($p['stock'] ?: 999),
-                    'manage_stock' => 1,
-                    'stock_status' => 'in_stock',
-                    'featured_image' => $imgPath,
-                    'gallery' => $gallery,
-                    'product_category_id' => $targetProdCatId,
-                    'status' => 'published',
-                    'is_featured' => (bool) $p['is_featured'],
-                ]);
-            }
-            $syncedProducts++;
+            $this->command?->info('✓ Seeded post-taxonomy relationships.');
         }
 
-        $this->command->info("Synced {$syncedPosts} products to posts and {$syncedProducts} products to products_enhanced.");
+        // 5. Product Category Pivot (Product <-> Category)
+        $pivotFile = $dataPath.'/p10_product_category_product.json';
+        if (File::exists($pivotFile) && Schema::hasTable('product_category_product')) {
+            $pivots = json_decode(File::get($pivotFile), true) ?? [];
+            foreach ($pivots as $piv) {
+                $oldProdId = $piv['product_id'];
+                $oldCatId = $piv['product_category_id'];
+
+                if (isset($prodIdMap[$oldProdId]) && isset($prodCatMap[$oldCatId])) {
+                    DB::table('product_category_product')->updateOrInsert(
+                        [
+                            'product_id' => $prodIdMap[$oldProdId],
+                            'product_category_id' => $prodCatMap[$oldCatId],
+                        ]
+                    );
+                }
+            }
+            $this->command?->info('✓ Seeded product-category pivot relations.');
+        }
+
+        $this->command?->info("=== Hoàn tất Seeder dữ liệu thực tế Viettinmart cho dự án {$projectId}! ===");
     }
 }

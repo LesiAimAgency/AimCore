@@ -8,10 +8,13 @@ use App\Models\ProjectSetting;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Models\Widget;
+use Database\Seeders\ViettinmartEcommerceEnhanceSeeder;
 use Database\Seeders\ViettinmartFooterWidgetSeeder;
 use Database\Seeders\ViettinmartFormTemplateSeeder;
 use Database\Seeders\ViettinmartMenuSeeder;
 use Database\Seeders\ViettinmartProductEnTranslationSeeder;
+use Database\Seeders\ViettinmartProductsSeeder;
+use Database\Seeders\ViettinmartSettingsSeeder;
 use Database\Seeders\ViettinmartWidgetsSeeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -108,14 +111,24 @@ class ViettinmartDeployService
             Log::warning('ViettinmartMenuSeeder warning: '.$e->getMessage());
         }
 
-        // 7. Migrate Legacy VTM Data (Products, Categories, Orders, Posts, etc.)
+        // 7. Seed Authentic Viettinmart Catalog (62 Products, 22 Taxonomies, Categories, Posts)
         try {
-            Artisan::call('migrate:legacy-vtm', [
-                'project_id' => $project->id,
-                'tenant_id' => $tenantId,
-            ]);
+            (new ViettinmartProductsSeeder)->run($project->id, $tenantId);
         } catch (\Throwable $e) {
-            Log::warning('migrate:legacy-vtm warning: '.$e->getMessage());
+            Log::warning('ViettinmartProductsSeeder warning: '.$e->getMessage());
+        }
+
+        // 7b. Seed Settings, Theme Options & Ecommerce Enhancements
+        try {
+            (new ViettinmartSettingsSeeder)->run($project->id, $tenantId);
+        } catch (\Throwable $e) {
+            Log::warning('ViettinmartSettingsSeeder warning: '.$e->getMessage());
+        }
+
+        try {
+            (new ViettinmartEcommerceEnhanceSeeder)->run($project->id);
+        } catch (\Throwable $e) {
+            Log::warning('ViettinmartEcommerceEnhanceSeeder warning: '.$e->getMessage());
         }
 
         // 8. Seed English Product Translations & UI Translations

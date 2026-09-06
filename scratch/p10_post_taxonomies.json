@@ -1,0 +1,572 @@
+[
+    {
+        "object_id": 43,
+        "term_taxonomy_id": 36,
+        "order": 0
+    },
+    {
+        "object_id": 43,
+        "term_taxonomy_id": 39,
+        "order": 0
+    },
+    {
+        "object_id": 43,
+        "term_taxonomy_id": 42,
+        "order": 0
+    },
+    {
+        "object_id": 43,
+        "term_taxonomy_id": 46,
+        "order": 0
+    },
+    {
+        "object_id": 44,
+        "term_taxonomy_id": 35,
+        "order": 0
+    },
+    {
+        "object_id": 44,
+        "term_taxonomy_id": 42,
+        "order": 0
+    },
+    {
+        "object_id": 44,
+        "term_taxonomy_id": 43,
+        "order": 0
+    },
+    {
+        "object_id": 45,
+        "term_taxonomy_id": 34,
+        "order": 0
+    },
+    {
+        "object_id": 45,
+        "term_taxonomy_id": 41,
+        "order": 0
+    },
+    {
+        "object_id": 45,
+        "term_taxonomy_id": 42,
+        "order": 0
+    },
+    {
+        "object_id": 45,
+        "term_taxonomy_id": 47,
+        "order": 0
+    },
+    {
+        "object_id": 46,
+        "term_taxonomy_id": 37,
+        "order": 0
+    },
+    {
+        "object_id": 46,
+        "term_taxonomy_id": 39,
+        "order": 0
+    },
+    {
+        "object_id": 46,
+        "term_taxonomy_id": 42,
+        "order": 0
+    },
+    {
+        "object_id": 47,
+        "term_taxonomy_id": 36,
+        "order": 0
+    },
+    {
+        "object_id": 47,
+        "term_taxonomy_id": 39,
+        "order": 0
+    },
+    {
+        "object_id": 47,
+        "term_taxonomy_id": 46,
+        "order": 0
+    },
+    {
+        "object_id": 48,
+        "term_taxonomy_id": 35,
+        "order": 0
+    },
+    {
+        "object_id": 48,
+        "term_taxonomy_id": 43,
+        "order": 0
+    },
+    {
+        "object_id": 48,
+        "term_taxonomy_id": 44,
+        "order": 0
+    },
+    {
+        "object_id": 49,
+        "term_taxonomy_id": 38,
+        "order": 0
+    },
+    {
+        "object_id": 49,
+        "term_taxonomy_id": 40,
+        "order": 0
+    },
+    {
+        "object_id": 49,
+        "term_taxonomy_id": 47,
+        "order": 0
+    },
+    {
+        "object_id": 49,
+        "term_taxonomy_id": 48,
+        "order": 0
+    },
+    {
+        "object_id": 57,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 59,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 60,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 61,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 62,
+        "term_taxonomy_id": 28,
+        "order": 0
+    },
+    {
+        "object_id": 63,
+        "term_taxonomy_id": 28,
+        "order": 0
+    },
+    {
+        "object_id": 64,
+        "term_taxonomy_id": 28,
+        "order": 0
+    },
+    {
+        "object_id": 65,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 66,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 67,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 68,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 69,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 70,
+        "term_taxonomy_id": 28,
+        "order": 0
+    },
+    {
+        "object_id": 71,
+        "term_taxonomy_id": 28,
+        "order": 0
+    },
+    {
+        "object_id": 72,
+        "term_taxonomy_id": 28,
+        "order": 0
+    },
+    {
+        "object_id": 73,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 74,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 75,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 76,
+        "term_taxonomy_id": 28,
+        "order": 0
+    },
+    {
+        "object_id": 77,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 78,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 79,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 80,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 81,
+        "term_taxonomy_id": 28,
+        "order": 0
+    },
+    {
+        "object_id": 82,
+        "term_taxonomy_id": 28,
+        "order": 0
+    },
+    {
+        "object_id": 83,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 84,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 85,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 86,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 87,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 88,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 89,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 90,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 91,
+        "term_taxonomy_id": 32,
+        "order": 0
+    },
+    {
+        "object_id": 92,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 93,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 94,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 95,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 96,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 97,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 98,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 99,
+        "term_taxonomy_id": 27,
+        "order": 0
+    },
+    {
+        "object_id": 100,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 101,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 102,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 103,
+        "term_taxonomy_id": 29,
+        "order": 0
+    },
+    {
+        "object_id": 104,
+        "term_taxonomy_id": 29,
+        "order": 0
+    },
+    {
+        "object_id": 105,
+        "term_taxonomy_id": 29,
+        "order": 0
+    },
+    {
+        "object_id": 106,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 107,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 108,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 109,
+        "term_taxonomy_id": 29,
+        "order": 0
+    },
+    {
+        "object_id": 110,
+        "term_taxonomy_id": 29,
+        "order": 0
+    },
+    {
+        "object_id": 111,
+        "term_taxonomy_id": 29,
+        "order": 0
+    },
+    {
+        "object_id": 112,
+        "term_taxonomy_id": 26,
+        "order": 0
+    },
+    {
+        "object_id": 113,
+        "term_taxonomy_id": 30,
+        "order": 0
+    },
+    {
+        "object_id": 114,
+        "term_taxonomy_id": 30,
+        "order": 0
+    },
+    {
+        "object_id": 115,
+        "term_taxonomy_id": 30,
+        "order": 0
+    },
+    {
+        "object_id": 116,
+        "term_taxonomy_id": 30,
+        "order": 0
+    },
+    {
+        "object_id": 117,
+        "term_taxonomy_id": 30,
+        "order": 0
+    },
+    {
+        "object_id": 118,
+        "term_taxonomy_id": 30,
+        "order": 0
+    },
+    {
+        "object_id": 119,
+        "term_taxonomy_id": 30,
+        "order": 0
+    },
+    {
+        "object_id": 120,
+        "term_taxonomy_id": 30,
+        "order": 0
+    },
+    {
+        "object_id": 121,
+        "term_taxonomy_id": 32,
+        "order": 0
+    },
+    {
+        "object_id": 122,
+        "term_taxonomy_id": 32,
+        "order": 0
+    },
+    {
+        "object_id": 123,
+        "term_taxonomy_id": 32,
+        "order": 0
+    },
+    {
+        "object_id": 124,
+        "term_taxonomy_id": 32,
+        "order": 0
+    },
+    {
+        "object_id": 125,
+        "term_taxonomy_id": 32,
+        "order": 0
+    },
+    {
+        "object_id": 126,
+        "term_taxonomy_id": 29,
+        "order": 0
+    },
+    {
+        "object_id": 127,
+        "term_taxonomy_id": 28,
+        "order": 0
+    },
+    {
+        "object_id": 129,
+        "term_taxonomy_id": 34,
+        "order": 0
+    },
+    {
+        "object_id": 129,
+        "term_taxonomy_id": 40,
+        "order": 0
+    },
+    {
+        "object_id": 129,
+        "term_taxonomy_id": 41,
+        "order": 0
+    },
+    {
+        "object_id": 129,
+        "term_taxonomy_id": 45,
+        "order": 0
+    },
+    {
+        "object_id": 130,
+        "term_taxonomy_id": 35,
+        "order": 0
+    },
+    {
+        "object_id": 130,
+        "term_taxonomy_id": 40,
+        "order": 0
+    },
+    {
+        "object_id": 130,
+        "term_taxonomy_id": 43,
+        "order": 0
+    },
+    {
+        "object_id": 130,
+        "term_taxonomy_id": 46,
+        "order": 0
+    },
+    {
+        "object_id": 131,
+        "term_taxonomy_id": 38,
+        "order": 0
+    },
+    {
+        "object_id": 131,
+        "term_taxonomy_id": 40,
+        "order": 0
+    },
+    {
+        "object_id": 131,
+        "term_taxonomy_id": 47,
+        "order": 0
+    },
+    {
+        "object_id": 131,
+        "term_taxonomy_id": 48,
+        "order": 0
+    },
+    {
+        "object_id": 132,
+        "term_taxonomy_id": 37,
+        "order": 0
+    },
+    {
+        "object_id": 132,
+        "term_taxonomy_id": 39,
+        "order": 0
+    },
+    {
+        "object_id": 132,
+        "term_taxonomy_id": 42,
+        "order": 0
+    },
+    {
+        "object_id": 132,
+        "term_taxonomy_id": 47,
+        "order": 0
+    },
+    {
+        "object_id": 133,
+        "term_taxonomy_id": 36,
+        "order": 0
+    },
+    {
+        "object_id": 133,
+        "term_taxonomy_id": 39,
+        "order": 0
+    },
+    {
+        "object_id": 133,
+        "term_taxonomy_id": 40,
+        "order": 0
+    },
+    {
+        "object_id": 133,
+        "term_taxonomy_id": 46,
+        "order": 0
+    }
+]

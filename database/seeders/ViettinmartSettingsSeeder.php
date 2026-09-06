@@ -9,16 +9,12 @@ use Illuminate\Support\Facades\DB;
 
 class ViettinmartSettingsSeeder extends Seeder
 {
-    public function run(): void
+    public function run(?int $projectId = null, ?int $tenantId = null): void
     {
-        $project = Project::where('code', 'viettinmart-eco')->first();
-        if (! $project) {
-            $this->command->error('Project viettinmart-eco not found');
-
-            return;
+        if (! $projectId) {
+            $project = Project::where('code', 'viettinmart-eco')->orWhere('code', 'viettinmart')->first() ?? Project::find(10);
+            $projectId = $project ? $project->id : 10;
         }
-
-        $projectId = $project->id;
 
         $settings = [
             // 1. Contact Settings
