@@ -18,33 +18,35 @@ $method->setAccessible(true);
 
 $serverScript = <<<'PHP'
 <?php
-use Illuminate\Contracts\Console\Kernel;
-use Illuminate\Support\Facades\DB;
-use App\Models\Post;
-
 require __DIR__ . '/../vendor/autoload.php';
 $app = require_once __DIR__ . '/../bootstrap/app.php';
-$kernel = $app->make(Kernel::class);
+$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 
 header('Content-Type: application/json');
 
-$post = DB::table('posts')->where('id', 63)->first();
-$model = Post::withoutGlobalScopes()->find(63);
+$row = Illuminate\Support\Facades\DB::table('products_enhanced')->where('id', 116)->first();
+$projects = Illuminate\Support\Facades\DB::table('projects')->select(['id', 'code', 'name'])->get();
+$projectInContext = request()->attributes->get('project');
 
 echo json_encode([
-    'raw_row' => $post,
-    'model_meta_data' => $model->meta_data,
-    'model_sku' => $model->sku,
-    'model_price' => $model->price,
+    'product_116' => $row ? [
+        'id' => $row->id,
+        'name' => $row->name,
+        'project_id' => $row->project_id,
+        'tenant_id' => $row->tenant_id,
+    ] : null,
+    'projects' => $projects,
+    'default_tenant_id' => config('app.default_tenant_id'),
+    'current_tenant_id' => session('current_tenant_id'),
 ], JSON_PRETTY_PRINT);
 @unlink(__FILE__);
 PHP;
 
 $method->invoke($c, 'Fileman', 'save_file_content', [
     'dir' => 'aimagency.vn/public',
-    'file' => 'check_post63.php',
+    'file' => 'check_p116_ids.php',
     'content' => $serverScript,
 ]);
 
-echo "check_post63.php uploaded.\n";
+echo file_get_contents('https://aimagency.vn/check_p116_ids.php');
