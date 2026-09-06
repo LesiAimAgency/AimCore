@@ -38,6 +38,19 @@ class ProjectSubdomainMiddleware
             session(['current_project' => $project]);
         }
 
+        // Ensure active locale is set for the project
+        $sessionLocale = session('locale');
+        if ($sessionLocale) {
+            app()->setLocale(trim($sessionLocale));
+        } else {
+            $languages = setting('languages', []);
+            if (is_string($languages)) {
+                $languages = json_decode($languages, true) ?: [];
+            }
+            $defaultLocale = collect($languages)->firstWhere('is_default', true)['code'] ?? config('app.locale', 'vi');
+            app()->setLocale(trim($defaultLocale) ?: 'vi');
+        }
+
         return $next($request);
     }
 
