@@ -11,8 +11,14 @@ use Illuminate\Support\Str;
 
 class ViettinmartMenuSeeder extends Seeder
 {
-    public function run(int $projectId = 10, int $tenantId = 3): void
+    public function run(?int $projectId = null, ?int $tenantId = null): void
     {
+        if (! $projectId) {
+            $project = Project::where('code', 'viettinmart-eco')->orWhere('code', 'viettinmart')->first();
+            $projectId = $project ? $project->id : 10;
+        }
+        $tenantId = $tenantId ?? $projectId;
+
         // Delete only type=menu for this project
         Widget::where('project_id', $projectId)->where('type', 'menu')->delete();
 

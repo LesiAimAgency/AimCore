@@ -13,11 +13,41 @@ class InbetweenThemeSeeder extends Seeder
 {
     public function run(?int $projectId = null, ?int $tenantId = null): void
     {
-        if (! $projectId) {
-            $project = Project::where('code', 'HD001')->orWhere('name', 'Aim Agency')->first() ?? Project::find(5);
-            $projectId = $project ? $project->id : 5;
+        if ($projectId) {
+            $this->seedForProject($projectId, $tenantId ?? $projectId);
+
+            return;
         }
-        $tenantId = $tenantId ?? $projectId;
+
+        // Auto-detect all projects using Inbetween theme (HD001, DA005, etc.)
+        $projectIds = Project::whereIn('code', ['HD001', 'DA005'])
+            ->orWhere('name', 'like', '%Aim Agency%')
+            ->orWhere('name', 'like', '%Inbetween%')
+            ->pluck('id')
+            ->toArray();
+
+        $themeProjectIds = Setting::where('key', 'theme')
+            ->where('value', 'inbetween')
+            ->whereNotNull('project_id')
+            ->pluck('project_id')
+            ->toArray();
+
+        $allProjectIds = array_unique(array_filter(array_merge($projectIds, $themeProjectIds)));
+
+        if (empty($allProjectIds)) {
+            $fallback = Project::find(5) ?? Project::first();
+            if ($fallback) {
+                $allProjectIds = [$fallback->id];
+            }
+        }
+
+        foreach ($allProjectIds as $pId) {
+            $this->seedForProject($pId, $pId);
+        }
+    }
+
+    public function seedForProject(int $projectId, int $tenantId): void
+    {
 
         // 1. SEED SETTINGS
         $settings = [
@@ -103,6 +133,9 @@ class InbetweenThemeSeeder extends Seeder
             })->where('key', $key)->first();
 
             if ($existing) {
+                if (in_array($key, ['site_name', 'site_logo', 'site_logo_footer']) && ! empty($existing->value) && $existing->value !== 'INBETWEEN') {
+                    continue;
+                }
                 $existing->update([
                     'project_id' => $projectId,
                     'tenant_id' => $tenantId,

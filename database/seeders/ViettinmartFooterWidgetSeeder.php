@@ -11,8 +11,14 @@ class ViettinmartFooterWidgetSeeder extends Seeder
     /**
      * Chạy seeder chỉ cho khu vực Footer.
      */
-    public function run(int $projectId = 10, int $tenantId = 3): void
+    public function run(?int $projectId = null, ?int $tenantId = null): void
     {
+        if (! $projectId) {
+            $project = Project::where('code', 'viettinmart-eco')->orWhere('code', 'viettinmart')->first();
+            $projectId = $project ? $project->id : 10;
+        }
+        $tenantId = $tenantId ?? $projectId;
+
         // Xóa widget footer cũ của project
         Widget::where('project_id', $projectId)->where('area', 'footer')->delete();
 

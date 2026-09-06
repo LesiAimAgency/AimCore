@@ -18,8 +18,11 @@ class ViettinmartProductsSeeder extends Seeder
      */
     public function run(?int $projectId = null, ?int $tenantId = null): void
     {
-        $projectId = $projectId ?? 10;
-        $tenantId = $tenantId ?? 3;
+        if (! $projectId) {
+            $project = Project::where('code', 'viettinmart-eco')->orWhere('code', 'viettinmart')->first();
+            $projectId = $project ? $project->id : 10;
+        }
+        $tenantId = $tenantId ?? $projectId;
 
         $dataPath = database_path('seeders/data/viettinmart');
         if (! File::isDirectory($dataPath)) {

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Project;
+use App\Models\Setting;
 use App\Models\Widget;
 use Illuminate\Database\Seeder;
 
@@ -10,12 +11,41 @@ class InbetweenHomepageMainSeeder extends Seeder
 {
     public function run(?int $projectId = null, ?int $tenantId = null): void
     {
-        if (! $projectId) {
-            $project = Project::where('code', 'HD001')->orWhere('name', 'Aim Agency')->first() ?? Project::find(5);
-            $projectId = $project ? $project->id : 5;
-        }
-        $tenantId = $tenantId ?? $projectId;
+        if ($projectId) {
+            $this->seedForProject($projectId, $tenantId ?? $projectId);
 
+            return;
+        }
+
+        // Auto-detect all projects using Inbetween theme (HD001, DA005, etc.)
+        $projectIds = Project::whereIn('code', ['HD001', 'DA005'])
+            ->orWhere('name', 'like', '%Aim Agency%')
+            ->orWhere('name', 'like', '%Inbetween%')
+            ->pluck('id')
+            ->toArray();
+
+        $themeProjectIds = Setting::where('key', 'theme')
+            ->where('value', 'inbetween')
+            ->whereNotNull('project_id')
+            ->pluck('project_id')
+            ->toArray();
+
+        $allProjectIds = array_unique(array_filter(array_merge($projectIds, $themeProjectIds)));
+
+        if (empty($allProjectIds)) {
+            $fallback = Project::find(5) ?? Project::first();
+            if ($fallback) {
+                $allProjectIds = [$fallback->id];
+            }
+        }
+
+        foreach ($allProjectIds as $pId) {
+            $this->seedForProject($pId, $pId);
+        }
+    }
+
+    public function seedForProject(int $projectId, int $tenantId): void
+    {
         $widgets = [
             1 => [
                 'name' => '1. Hero Section',
