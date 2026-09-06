@@ -113,27 +113,16 @@ class Widget extends Model
         $projectId = $project?->id;
         $projectCode = $project?->code ?? request()->route('projectCode');
 
-        // 1. Try finding widget with area and matching locale
-        $query = static::where('area', $area)->where('is_active', true);
-        if ($projectId) {
-            $query->where('project_id', $projectId);
-        }
-
-        $widget = (clone $query)->where('settings->locale', $currentLocale)->first();
-
-        // 2. Fallback: Any active widget for this area in this project
-        if (! $widget) {
-            $widget = $query->first();
-        }
-
-        // 3. Fallback: Check Menu model for this project
-        if (! $widget && $projectId && class_exists('\App\Models\Menu')) {
+        // 1. Primary Source: Check dynamic Menu model for this project
+        if ($projectId && class_exists('\App\Models\Menu')) {
             $dbMenu = Menu::withoutGlobalScopes()
                 ->where('project_id', $projectId)
                 ->where(function ($q) use ($area) {
                     $q->where('slug', $area)
+                        ->orWhere('slug', str_replace('-menu', '', $area))
                         ->orWhere('location', str_contains($area, 'header') ? 'header' : (str_contains($area, 'footer') ? 'footer' : $area));
                 })
+                ->where('is_active', true)
                 ->with(['items' => function ($q) {
                     $q->withoutGlobalScopes()->whereNull('parent_id')->with(['children' => function ($cq) {
                         $cq->withoutGlobalScopes()->orderBy('order');
@@ -144,11 +133,14 @@ class Widget extends Model
             if ($dbMenu && $dbMenu->items && $dbMenu->items->isNotEmpty()) {
                 $formatItem = function ($item) use (&$formatItem) {
                     return [
+                        'id' => $item->id,
                         'label' => $item->title,
                         'url' => $item->url,
                         'target' => $item->target ?? '_self',
                         'icon' => $item->icon ?? null,
                         'image' => $item->image ?? null,
+                        'badge' => $item->badge ?? null,
+                        'badge_color' => $item->badge_color ?? null,
                         'children' => $item->children && $item->children->isNotEmpty() ? $item->children->map($formatItem)->toArray() : [],
                     ];
                 };
@@ -163,7 +155,20 @@ class Widget extends Model
             }
         }
 
-        // 4. Fallback: Only global widgets (project_id IS NULL), NEVER leak other projects' widgets
+        // 2. Secondary Source: Try finding widget with area and matching locale
+        $query = static::where('area', $area)->where('is_active', true);
+        if ($projectId) {
+            $query->where('project_id', $projectId);
+        }
+
+        $widget = (clone $query)->where('settings->locale', $currentLocale)->first();
+
+        // 3. Fallback: Any active widget for this area in this project
+        if (! $widget) {
+            $widget = $query->first();
+        }
+
+        // 4. Fallback: Global widgets (project_id IS NULL)
         if (! $widget && $projectId) {
             $widget = static::where('area', $area)
                 ->whereNull('project_id')

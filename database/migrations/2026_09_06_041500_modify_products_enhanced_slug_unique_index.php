@@ -12,25 +12,23 @@ return new class extends Migration
     public function up(): void
     {
         if (Schema::hasTable('products_enhanced')) {
-            Schema::table('products_enhanced', function (Blueprint $table) {
-                try {
+            $existingIndexes = collect(Schema::getIndexes('products_enhanced'))->pluck('name')->toArray();
+
+            Schema::table('products_enhanced', function (Blueprint $table) use ($existingIndexes) {
+                if (in_array('products_enhanced_slug_unique', $existingIndexes)) {
                     $table->dropUnique('products_enhanced_slug_unique');
-                } catch (Exception $e) {
                 }
 
-                try {
+                if (in_array('products_enhanced_sku_unique', $existingIndexes)) {
                     $table->dropUnique('products_enhanced_sku_unique');
-                } catch (Exception $e) {
                 }
 
-                try {
+                if (! in_array('products_enhanced_project_slug_unique', $existingIndexes)) {
                     $table->unique(['project_id', 'slug'], 'products_enhanced_project_slug_unique');
-                } catch (Exception $e) {
                 }
 
-                try {
+                if (! in_array('products_enhanced_project_sku_unique', $existingIndexes)) {
                     $table->unique(['project_id', 'sku'], 'products_enhanced_project_sku_unique');
-                } catch (Exception $e) {
                 }
             });
         }

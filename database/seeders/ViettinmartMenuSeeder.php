@@ -341,21 +341,35 @@ class ViettinmartMenuSeeder extends Seeder
             ['tenant_id' => $tenantId, 'name' => 'Menu chính', 'location' => 'header', 'is_active' => true]
         );
         $vtmMainMenu->allItems()->delete();
-        $vtmMainItems = [
-            ['title' => 'Trang chủ', 'url' => '/', 'order' => 1],
-            ['title' => 'Cửa hàng', 'url' => '/cua-hang', 'order' => 2],
-            ['title' => 'Blog', 'url' => '/blog', 'order' => 3],
-            ['title' => 'Liên hệ', 'url' => '/lien-he', 'order' => 4],
-        ];
-        foreach ($vtmMainItems as $item) {
-            MenuItem::create([
+
+        $headerSeedItems = $menus[0]['settings']['items'] ?? [];
+        $order = 1;
+        foreach ($headerSeedItems as $hItem) {
+            $parent = MenuItem::create([
                 'menu_id' => $vtmMainMenu->id,
                 'project_id' => $projectId,
                 'tenant_id' => $tenantId,
-                'title' => $item['title'],
-                'url' => $item['url'],
-                'order' => $item['order'],
+                'title' => $hItem['label'] ?? $hItem['title'] ?? 'Item',
+                'url' => $hItem['url'] ?? '#',
+                'target' => ! empty($hItem['target']) ? '_blank' : '_self',
+                'order' => $order++,
             ]);
+
+            if (! empty($hItem['children'])) {
+                $childOrder = 1;
+                foreach ($hItem['children'] as $cItem) {
+                    MenuItem::create([
+                        'menu_id' => $vtmMainMenu->id,
+                        'project_id' => $projectId,
+                        'tenant_id' => $tenantId,
+                        'parent_id' => $parent->id,
+                        'title' => $cItem['label'] ?? $cItem['title'] ?? 'Sub Item',
+                        'url' => $cItem['url'] ?? '#',
+                        'target' => ! empty($cItem['target']) ? '_blank' : '_self',
+                        'order' => $childOrder++,
+                    ]);
+                }
+            }
         }
 
         $vtmFooterMenu = Menu::updateOrCreate(
@@ -363,20 +377,25 @@ class ViettinmartMenuSeeder extends Seeder
             ['tenant_id' => $tenantId, 'name' => 'Menu chân trang', 'location' => 'footer', 'is_active' => true]
         );
         $vtmFooterMenu->allItems()->delete();
-        $vtmFooterItems = [
-            ['title' => 'Hướng dẫn mua hàng', 'url' => '/huong-dan-mua-hang', 'order' => 1],
-            ['title' => 'Chính sách giao hàng', 'url' => '/chinh-sach-giao-hang', 'order' => 2],
-            ['title' => 'Chính sách đổi trả', 'url' => '/chinh-sach-doi-tra', 'order' => 3],
-            ['title' => 'Câu hỏi thường gặp', 'url' => '/faq', 'order' => 4],
+
+        $footerSeedItems = [
+            ['title' => 'Hướng dẫn mua hàng', 'url' => '/huong-dan-mua-hang'],
+            ['title' => 'Chính sách giao hàng', 'url' => '/chinh-sach-giao-hang'],
+            ['title' => 'Chính sách đổi trả', 'url' => '/chinh-sach-doi-tra'],
+            ['title' => 'Câu hỏi thường gặp', 'url' => '/faq'],
+            ['title' => 'Theo dõi đơn hàng', 'url' => '/order-track'],
+            ['title' => 'Điều khoản sử dụng', 'url' => '/dieu-khoan-su-dung'],
         ];
-        foreach ($vtmFooterItems as $item) {
+        $fOrder = 1;
+        foreach ($footerSeedItems as $item) {
             MenuItem::create([
                 'menu_id' => $vtmFooterMenu->id,
                 'project_id' => $projectId,
                 'tenant_id' => $tenantId,
                 'title' => $item['title'],
                 'url' => $item['url'],
-                'order' => $item['order'],
+                'target' => '_self',
+                'order' => $fOrder++,
             ]);
         }
     }

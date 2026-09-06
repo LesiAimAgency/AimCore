@@ -6,46 +6,66 @@
 @section('content')
 @php
     $currentProj = function_exists('current_project') ? current_project() : null;
-    $projCode = $currentProj?->code ?? request()->route('projectCode') ?? request()->segment(1);
+    $projCode = $currentProj?->code ?? request()->route('projectCode');
     $urlPrefix = $projCode ? '/' . $projCode : '';
 @endphp
 <!-- Alert Container -->
 <div id="alert-container" class="fixed top-4 right-4 z-50 space-y-2 max-w-md"></div>
 
 <div class="grid grid-cols-12 gap-4">
-    <!-- Cột trái: Danh sách menu -->
-    <div class="col-span-3 bg-white rounded-lg shadow-sm p-4">
-        <button onclick="openCreateMenuModal()" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 mb-4 flex items-center justify-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            Thêm menu
-        </button>
+    <!-- Cột 1: Danh sách menu của dự án -->
+    <div class="col-span-12 lg:col-span-3 bg-white rounded-lg shadow-sm p-4">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold text-gray-800 text-base">Menu Dự Án</h3>
+            <button onclick="openCreateMenuModal()" class="px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 flex items-center gap-1 shadow-xs transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                Tạo Menu
+            </button>
+        </div>
         
         <div class="space-y-2">
-            @foreach($menus as $menu)
-            <div class="flex items-center gap-2">
-                <a href="{{ url(request()->segment(1) . '/admin/menus/' . $menu->id) }}" class="flex-1 p-3 rounded-lg hover:bg-gray-50 {{ $selectedMenu && $selectedMenu->id == $menu->id ? 'bg-blue-50 border-l-4 border-blue-600' : 'border-l-4 border-transparent' }}">
-                    <div class="font-medium">{{ $menu->name }}</div>
-                    <div class="text-xs text-gray-500">
-                        {{ $menu->allItems->count() }} mục
+            @forelse($menus as $menu)
+            @php
+                $isActiveMenu = $selectedMenu && $selectedMenu->id == $menu->id;
+                $menuUrl = $projCode 
+                    ? route('project.admin.menus.show', ['projectCode' => $projCode, 'menu' => $menu->id])
+                    : (\Illuminate\Support\Facades\Route::has('cms.menus.show') ? route('cms.menus.show', $menu->id) : url("/admin/menus/{$menu->id}"));
+            @endphp
+            <div class="flex items-center gap-2 group">
+                <a href="{{ $menuUrl }}" class="flex-1 p-3 rounded-lg hover:bg-gray-50 transition {{ $isActiveMenu ? 'bg-blue-50 border-l-4 border-blue-600 text-blue-900 font-semibold' : 'border-l-4 border-transparent text-gray-700' }}">
+                    <div class="flex items-center justify-between">
+                        <span class="truncate">{{ $menu->name }}</span>
+                        @if($menu->location)
+                            <span class="text-[10px] px-1.5 py-0.5 rounded bg-gray-200 text-gray-700 font-normal">
+                                {{ strtoupper($menu->location) }}
+                            </span>
+                        @endif
+                    </div>
+                    <div class="text-xs text-gray-400 font-normal mt-0.5">
+                        {{ $menu->allItems ? $menu->allItems->count() : 0 }} mục
                     </div>
                 </a>
-                <button onclick="deleteMenu({{ $menu->id }})" class="p-2 text-red-600 hover:bg-red-50 rounded" title="Xóa menu">
+                <button onclick="deleteMenu({{ $menu->id }})" class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition opacity-0 group-hover:opacity-100" title="Xóa menu">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                 </button>
             </div>
-            @endforeach
+            @empty
+            <div class="p-4 text-center text-sm text-gray-400 border border-dashed rounded-lg">
+                Chưa có menu nào. Hãy tạo menu đầu tiên!
+            </div>
+            @endforelse
         </div>
     </div>
     
-    <!-- Cột giữa: Chọn lựa -->
-    <div class="col-span-4 bg-white rounded-lg shadow-sm p-4">
-        <h3 class="font-semibold text-lg mb-4 flex items-center justify-between">
+    <!-- Cột 2: Chọn lựa nguồn dữ liệu -->
+    <div class="col-span-12 lg:col-span-4 bg-white rounded-lg shadow-sm p-4">
+        <h3 class="font-semibold text-base mb-3 flex items-center justify-between text-gray-800">
             <span>Chọn lựa nguồn dữ liệu</span>
-            <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-normal">7 Nguồn</span>
+            <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-medium">7 Nguồn</span>
         </h3>
         
         @if($selectedMenu)
-        <div class="space-y-3 max-h-[650px] overflow-y-auto pr-1">
+        <div class="space-y-3 max-h-[700px] overflow-y-auto pr-1">
             
             <!-- 1. Trang Tĩnh (Pages) -->
             <div class="border rounded-lg shadow-xs overflow-hidden">
@@ -59,11 +79,11 @@
                 <div id="pages-section" class="p-3 border-t max-h-56 overflow-y-auto space-y-1">
                     @forelse($pages ?? [] as $page)
                     <label class="flex items-center p-2 hover:bg-blue-50/50 rounded cursor-pointer transition">
-                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-blue-600" data-type="page" data-id="{{ $page->id }}" data-title="{{ $page->title }}" data-url="{{ $urlPrefix }}/page/{{ $page->slug ?? $page->id }}">
+                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-blue-600" data-type="page" data-id="{{ $page->id }}" data-title="{{ $page->title }}" data-url="{{ $urlPrefix }}/{{ $page->slug ?? $page->id }}">
                         <span class="text-sm text-gray-700">{{ $page->title }}</span>
                     </label>
                     @empty
-                    <p class="text-gray-400 text-xs text-center py-2">Chưa có trang tĩnh</p>
+                    <p class="text-gray-400 text-xs text-center py-2">Chưa có trang tĩnh cho dự án này</p>
                     @endforelse
                     @if(!empty($pages) && count($pages) > 0)
                     <button onclick="addSelectedItems('page')" class="mt-2 w-full px-3 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 shadow-xs">Thêm trang vào menu</button>
@@ -71,55 +91,7 @@
                 </div>
             </div>
 
-            <!-- 2. Bài Viết (Posts) -->
-            <div class="border rounded-lg shadow-xs overflow-hidden">
-                <button onclick="toggleSection('posts')" class="w-full p-3 flex justify-between items-center bg-gray-50 hover:bg-gray-100 text-left font-medium text-gray-800 text-sm">
-                    <span class="flex items-center gap-2">
-                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
-                        Bài Viết & Tin Tức (Posts)
-                    </span>
-                    <span class="text-xs text-gray-500 font-normal">({{ count($posts ?? []) }}) ▼</span>
-                </button>
-                <div id="posts-section" class="hidden p-3 border-t max-h-56 overflow-y-auto space-y-1">
-                    @forelse($posts ?? [] as $postItem)
-                    <label class="flex items-center p-2 hover:bg-emerald-50/50 rounded cursor-pointer transition">
-                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-emerald-600" data-type="post" data-id="{{ $postItem->id }}" data-title="{{ $postItem->title }}" data-url="{{ $urlPrefix }}/post/{{ $postItem->slug ?? $postItem->id }}">
-                        <span class="text-sm text-gray-700 truncate">{{ $postItem->title }}</span>
-                    </label>
-                    @empty
-                    <p class="text-gray-400 text-xs text-center py-2">Chưa có bài viết</p>
-                    @endforelse
-                    @if(!empty($posts) && count($posts) > 0)
-                    <button onclick="addSelectedItems('post')" class="mt-2 w-full px-3 py-2 bg-emerald-600 text-white text-xs font-semibold rounded-lg hover:bg-emerald-700 shadow-xs">Thêm bài viết vào menu</button>
-                    @endif
-                </div>
-            </div>
-
-            <!-- 3. Danh Mục Bài Viết (Post Categories) -->
-            <div class="border rounded-lg shadow-xs overflow-hidden">
-                <button onclick="toggleSection('post-categories')" class="w-full p-3 flex justify-between items-center bg-gray-50 hover:bg-gray-100 text-left font-medium text-gray-800 text-sm">
-                    <span class="flex items-center gap-2">
-                        <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
-                        Danh Mục Bài Viết (Blog Categories)
-                    </span>
-                    <span class="text-xs text-gray-500 font-normal">({{ count($postCategories ?? []) }}) ▼</span>
-                </button>
-                <div id="post-categories-section" class="hidden p-3 border-t max-h-56 overflow-y-auto space-y-1">
-                    @forelse($postCategories ?? [] as $cat)
-                    <label class="flex items-center p-2 hover:bg-purple-50/50 rounded cursor-pointer transition">
-                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-purple-600" data-type="postcategory" data-id="{{ $cat->id }}" data-title="{{ $cat->name }}" data-url="{{ $urlPrefix }}/blog/category/{{ $cat->slug ?? $cat->id }}">
-                        <span class="text-sm text-gray-700">{{ $cat->name }}</span>
-                    </label>
-                    @empty
-                    <p class="text-gray-400 text-xs text-center py-2">Chưa có danh mục bài viết</p>
-                    @endforelse
-                    @if(!empty($postCategories) && count($postCategories) > 0)
-                    <button onclick="addSelectedItems('postcategory')" class="mt-2 w-full px-3 py-2 bg-purple-600 text-white text-xs font-semibold rounded-lg hover:bg-purple-700 shadow-xs">Thêm danh mục tin vào menu</button>
-                    @endif
-                </div>
-            </div>
-
-            <!-- 4. Danh Mục Sản Phẩm (Product Categories) -->
+            <!-- 2. Danh Mục Sản Phẩm (Product Categories) -->
             <div class="border rounded-lg shadow-xs overflow-hidden">
                 <button onclick="toggleSection('product-categories')" class="w-full p-3 flex justify-between items-center bg-gray-50 hover:bg-gray-100 text-left font-medium text-gray-800 text-sm">
                     <span class="flex items-center gap-2">
@@ -133,14 +105,14 @@
                     @foreach($productCategories as $category)
                     <div class="mb-1">
                         <label class="flex items-center p-1.5 hover:bg-amber-50/50 rounded cursor-pointer font-medium text-gray-800">
-                            <input type="checkbox" class="mr-2 rounded border-gray-300 text-amber-600" data-type="productcategory" data-id="{{ $category->id }}" data-title="{{ $category->name }}" data-url="{{ $urlPrefix }}/category/{{ $category->slug ?? $category->id }}">
+                            <input type="checkbox" class="mr-2 rounded border-gray-300 text-amber-600" data-type="productcategory" data-id="{{ $category->id }}" data-title="{{ $category->name }}" data-url="{{ $urlPrefix }}/cua-hang?category={{ $category->slug ?? $category->id }}">
                             <span class="text-sm">{{ $category->name }}</span>
                         </label>
                         @if($category->children && $category->children->count() > 0)
                         <div class="ml-6 space-y-0.5 border-l-2 border-amber-100 pl-2">
                             @foreach($category->children as $child)
                             <label class="flex items-center p-1 hover:bg-amber-50/50 rounded cursor-pointer">
-                                <input type="checkbox" class="mr-2 rounded border-gray-300 text-amber-600" data-type="productcategory" data-id="{{ $child->id }}" data-title="{{ $child->name }}" data-url="{{ $urlPrefix }}/category/{{ $child->slug ?? $child->id }}">
+                                <input type="checkbox" class="mr-2 rounded border-gray-300 text-amber-600" data-type="productcategory" data-id="{{ $child->id }}" data-title="{{ $child->name }}" data-url="{{ $urlPrefix }}/cua-hang?category={{ $child->slug ?? $child->id }}">
                                 <span class="text-xs text-gray-600">↳ {{ $child->name }}</span>
                             </label>
                             @endforeach
@@ -155,7 +127,7 @@
                 </div>
             </div>
 
-            <!-- 5. Sản Phẩm Chi Tiết (Products) -->
+            <!-- 3. Sản Phẩm Chi Tiết (Products) -->
             <div class="border rounded-lg shadow-xs overflow-hidden">
                 <button onclick="toggleSection('products')" class="w-full p-3 flex justify-between items-center bg-gray-50 hover:bg-gray-100 text-left font-medium text-gray-800 text-sm">
                     <span class="flex items-center gap-2">
@@ -167,7 +139,7 @@
                 <div id="products-section" class="hidden p-3 border-t max-h-56 overflow-y-auto space-y-1">
                     @forelse($products ?? [] as $prod)
                     <label class="flex items-center p-2 hover:bg-rose-50/50 rounded cursor-pointer transition">
-                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-rose-600" data-type="product" data-id="{{ $prod->id }}" data-title="{{ $prod->name }}" data-url="{{ $urlPrefix }}/product/{{ $prod->slug ?? $prod->id }}">
+                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-rose-600" data-type="product" data-id="{{ $prod->id }}" data-title="{{ $prod->name }}" data-url="{{ $urlPrefix }}/san-pham/{{ $prod->slug ?? $prod->id }}">
                         <span class="text-sm text-gray-700 truncate">{{ $prod->name }}</span>
                     </label>
                     @empty
@@ -175,6 +147,54 @@
                     @endforelse
                     @if(!empty($products) && count($products) > 0)
                     <button onclick="addSelectedItems('product')" class="mt-2 w-full px-3 py-2 bg-rose-600 text-white text-xs font-semibold rounded-lg hover:bg-rose-700 shadow-xs">Thêm sản phẩm vào menu</button>
+                    @endif
+                </div>
+            </div>
+
+            <!-- 4. Bài Viết (Posts) -->
+            <div class="border rounded-lg shadow-xs overflow-hidden">
+                <button onclick="toggleSection('posts')" class="w-full p-3 flex justify-between items-center bg-gray-50 hover:bg-gray-100 text-left font-medium text-gray-800 text-sm">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+                        Bài Viết & Tin Tức (Posts)
+                    </span>
+                    <span class="text-xs text-gray-500 font-normal">({{ count($posts ?? []) }}) ▼</span>
+                </button>
+                <div id="posts-section" class="hidden p-3 border-t max-h-56 overflow-y-auto space-y-1">
+                    @forelse($posts ?? [] as $postItem)
+                    <label class="flex items-center p-2 hover:bg-emerald-50/50 rounded cursor-pointer transition">
+                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-emerald-600" data-type="post" data-id="{{ $postItem->id }}" data-title="{{ $postItem->title }}" data-url="{{ $urlPrefix }}/blog/{{ $postItem->slug ?? $postItem->id }}">
+                        <span class="text-sm text-gray-700 truncate">{{ $postItem->title }}</span>
+                    </label>
+                    @empty
+                    <p class="text-gray-400 text-xs text-center py-2">Chưa có bài viết</p>
+                    @endforelse
+                    @if(!empty($posts) && count($posts) > 0)
+                    <button onclick="addSelectedItems('post')" class="mt-2 w-full px-3 py-2 bg-emerald-600 text-white text-xs font-semibold rounded-lg hover:bg-emerald-700 shadow-xs">Thêm bài viết vào menu</button>
+                    @endif
+                </div>
+            </div>
+
+            <!-- 5. Danh Mục Bài Viết (Post Categories) -->
+            <div class="border rounded-lg shadow-xs overflow-hidden">
+                <button onclick="toggleSection('post-categories')" class="w-full p-3 flex justify-between items-center bg-gray-50 hover:bg-gray-100 text-left font-medium text-gray-800 text-sm">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+                        Danh Mục Bài Viết (Blog Categories)
+                    </span>
+                    <span class="text-xs text-gray-500 font-normal">({{ count($postCategories ?? []) }}) ▼</span>
+                </button>
+                <div id="post-categories-section" class="hidden p-3 border-t max-h-56 overflow-y-auto space-y-1">
+                    @forelse($postCategories ?? [] as $cat)
+                    <label class="flex items-center p-2 hover:bg-purple-50/50 rounded cursor-pointer transition">
+                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-purple-600" data-type="postcategory" data-id="{{ $cat->id }}" data-title="{{ $cat->name }}" data-url="{{ $urlPrefix }}/blog?category={{ $cat->slug ?? $cat->id }}">
+                        <span class="text-sm text-gray-700">{{ $cat->name }}</span>
+                    </label>
+                    @empty
+                    <p class="text-gray-400 text-xs text-center py-2">Chưa có danh mục bài viết</p>
+                    @endforelse
+                    @if(!empty($postCategories) && count($postCategories) > 0)
+                    <button onclick="addSelectedItems('postcategory')" class="mt-2 w-full px-3 py-2 bg-purple-600 text-white text-xs font-semibold rounded-lg hover:bg-purple-700 shadow-xs">Thêm danh mục tin vào menu</button>
                     @endif
                 </div>
             </div>
@@ -191,7 +211,7 @@
                 <div id="brands-section" class="hidden p-3 border-t max-h-56 overflow-y-auto space-y-1">
                     @forelse($brands ?? [] as $brand)
                     <label class="flex items-center p-2 hover:bg-cyan-50/50 rounded cursor-pointer transition">
-                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-cyan-600" data-type="brand" data-id="{{ $brand->id }}" data-title="{{ $brand->name }}" data-url="{{ $urlPrefix }}/brand/{{ $brand->slug ?? $brand->id }}">
+                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-cyan-600" data-type="brand" data-id="{{ $brand->id }}" data-title="{{ $brand->name }}" data-url="{{ $urlPrefix }}/cua-hang?brand={{ $brand->slug ?? $brand->id }}">
                         <span class="text-sm text-gray-700">{{ $brand->name }}</span>
                     </label>
                     @empty
@@ -216,7 +236,7 @@
                     <form onsubmit="addCustomLink(event)" class="space-y-2">
                         <div>
                             <label class="block text-xs font-medium text-gray-600 mb-1">Tên nhãn đường dẫn</label>
-                            <input type="text" id="link-title" placeholder="VD: Trang Khuyến Mãi" class="w-full px-3 py-1.5 border rounded-lg text-sm" required>
+                            <input type="text" id="link-title" placeholder="VD: Khuyến Mãi Đặc Biệt" class="w-full px-3 py-1.5 border rounded-lg text-sm" required>
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-gray-600 mb-1">Đường dẫn / URL</label>
@@ -233,39 +253,57 @@
         @endif
     </div>
 
-    
-    <!-- Cột phải: Cấu trúc menu -->
-    <div class="col-span-5 bg-white rounded-lg shadow-sm p-4">
+    <!-- Cột 3: Cấu trúc menu & Sắp xếp -->
+    <div class="col-span-12 lg:col-span-5 bg-white rounded-lg shadow-sm p-4">
         @if($selectedMenu)
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="font-semibold text-lg">{{ $selectedMenu->name }}</h3>
-            <div class="flex gap-2">
-                <button onclick="saveMenuOrder()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-medium">
-                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12"></path>
-                    </svg>
-                    Lưu thay đổi
+        <div class="flex flex-wrap justify-between items-center gap-2 mb-4 pb-3 border-b">
+            <div>
+                <div class="flex items-center gap-2">
+                    <h3 class="font-bold text-gray-800 text-lg">{{ $selectedMenu->name }}</h3>
+                    <button type="button" onclick="openEditMenuModal()" class="text-gray-400 hover:text-blue-600 p-1 rounded" title="Cài đặt tên & vị trí menu">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </button>
+                </div>
+                <div class="text-xs text-gray-500 flex items-center gap-2 mt-0.5">
+                    <span>Vị trí: <strong>{{ strtoupper($selectedMenu->location ?? 'Chưa gán') }}</strong></span>
+                    <span>•</span>
+                    <span>Slug: <code>{{ $selectedMenu->slug }}</code></span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button onclick="saveMenuOrder()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold text-xs shadow-sm flex items-center gap-1.5 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                    <span>Lưu thay đổi</span>
                 </button>
-                <button onclick="deleteMenu({{ $selectedMenu->id }})" class="px-3 py-1 text-red-600 hover:bg-red-50 rounded">Xóa menu</button>
+                <button onclick="deleteMenu({{ $selectedMenu->id }})" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition" title="Xóa menu">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </button>
             </div>
         </div>
         
-        <div id="menu-structure" class="min-h-[400px] sortable-menu">
-            @if($selectedMenu->allItems && $selectedMenu->allItems->count() > 0)
-                @foreach($selectedMenu->allItems->sortBy('order') as $item)
-                    @php
-                        $depth = 0;
-                        $current = $item;
-                        while($current->parent_id) {
-                            $depth++;
-                            $current = $selectedMenu->allItems->where('id', $current->parent_id)->first();
-                            if (!$current) break;
+        <div id="menu-structure" class="min-h-[420px] sortable-menu space-y-1">
+            @php
+                if (!function_exists('renderMenuItemsRecursive')) {
+                    function renderMenuItemsRecursive($items, $depth = 0) {
+                        foreach ($items as $item) {
+                            echo view('cms.menus.partials.menu-item', ['item' => $item, 'depth' => $depth])->render();
+                            if ($item->children && $item->children->count() > 0) {
+                                renderMenuItemsRecursive($item->children, $depth + 1);
+                            }
                         }
-                    @endphp
-                    @include('cms.menus.partials.menu-item', ['item' => $item, 'depth' => $depth])
-                @endforeach
+                    }
+                }
+            @endphp
+
+            @if($selectedMenu->items && $selectedMenu->items->count() > 0)
+                @php renderMenuItemsRecursive($selectedMenu->items, 0); @endphp
             @else
-                <p class="text-gray-400 text-center py-8">Chưa có mục nào</p>
+                <div class="text-gray-400 text-center py-12 border-2 border-dashed rounded-lg">
+                    <svg class="w-8 h-8 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    <p class="text-sm">Chưa có mục nào trong menu này</p>
+                    <p class="text-xs text-gray-400 mt-1">Chọn từ cột bên trái để thêm mục vào menu</p>
+                </div>
             @endif
         </div>
         @else
@@ -274,97 +312,115 @@
     </div>
 </div>
 
-<!-- Modal tạo menu -->
-<div id="createMenuModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg p-6 w-96">
-        <h3 class="text-lg font-semibold mb-4">Tạo menu mới</h3>
-        <form onsubmit="createMenu(event)">
-            <div class="mb-4">
-                <label class="block text-sm font-medium mb-2">Tên menu</label>
-                <input type="text" id="menu-name" name="name" class="w-full px-3 py-2 border rounded-lg" required>
+<!-- Modal tạo menu mới -->
+<div id="createMenuModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+        <div class="p-4 border-b flex justify-between items-center bg-gray-50">
+            <h3 class="font-bold text-gray-800 text-base">Tạo menu mới</h3>
+            <button onclick="closeCreateMenuModal()" class="text-gray-400 hover:text-gray-600">✕</button>
+        </div>
+        <form onsubmit="createMenu(event)" class="p-4 space-y-3">
+            <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Tên menu *</label>
+                <input type="text" id="menu-name" name="name" placeholder="vd: Menu chính, Menu phụ..." class="w-full px-3 py-2 border rounded-lg text-sm" required>
             </div>
-
-            <div class="flex gap-2">
-                <button type="button" onclick="closeCreateMenuModal()" class="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50">Hủy</button>
-                <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Tạo</button>
+            <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Vị trí hiển thị (Location)</label>
+                <select id="menu-location" name="location" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
+                    <option value="header">Header (Menu thanh điều hướng trên)</option>
+                    <option value="footer">Footer (Menu chân trang)</option>
+                    <option value="topbar">Topbar (Menu thanh trên cùng)</option>
+                    <option value="mobile">Mobile (Menu di động)</option>
+                    <option value="custom">Tùy chỉnh khác</option>
+                </select>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button type="button" onclick="closeCreateMenuModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50">Hủy</button>
+                <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg text-sm hover:bg-blue-700">Tạo menu</button>
             </div>
         </form>
     </div>
 </div>
 
+<!-- Modal chỉnh sửa menu hiện tại -->
+@if($selectedMenu)
+<div id="editMenuModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+        <div class="p-4 border-b flex justify-between items-center bg-gray-50">
+            <h3 class="font-bold text-gray-800 text-base">Cài đặt Menu: {{ $selectedMenu->name }}</h3>
+            <button onclick="closeEditMenuModal()" class="text-gray-400 hover:text-gray-600">✕</button>
+        </div>
+        <form onsubmit="updateMenuMeta(event)" class="p-4 space-y-3">
+            <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Tên menu *</label>
+                <input type="text" id="edit-menu-name" value="{{ $selectedMenu->name }}" class="w-full px-3 py-2 border rounded-lg text-sm" required>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Vị trí hiển thị (Location)</label>
+                <select id="edit-menu-location" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
+                    <option value="header" {{ $selectedMenu->location === 'header' ? 'selected' : '' }}>Header (Menu thanh điều hướng trên)</option>
+                    <option value="footer" {{ $selectedMenu->location === 'footer' ? 'selected' : '' }}>Footer (Menu chân trang)</option>
+                    <option value="topbar" {{ $selectedMenu->location === 'topbar' ? 'selected' : '' }}>Topbar (Menu thanh trên cùng)</option>
+                    <option value="mobile" {{ $selectedMenu->location === 'mobile' ? 'selected' : '' }}>Mobile (Menu di động)</option>
+                    <option value="custom" {{ !in_array($selectedMenu->location, ['header', 'footer', 'topbar', 'mobile']) ? 'selected' : '' }}>Tùy chỉnh khác</option>
+                </select>
+            </div>
+            <div class="flex items-center gap-2 pt-1">
+                <input type="checkbox" id="edit-menu-active" {{ $selectedMenu->is_active ? 'checked' : '' }} class="rounded text-blue-600">
+                <label for="edit-menu-active" class="text-xs font-medium text-gray-700">Đang kích hoạt (Active)</label>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button type="button" onclick="closeEditMenuModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50">Đóng</button>
+                <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg text-sm hover:bg-blue-700">Lưu cài đặt</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+
 <script>
-// Alert System
+// Alert Notification System
 function showAlert(message, type = 'success') {
     const container = document.getElementById('alert-container');
     const alertId = 'alert-' + Date.now();
     
-    const icons = {
-        success: '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>',
-        error: '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>',
-        warning: '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>',
-        info: '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>'
-    };
-    
     const colors = {
-        success: 'bg-green-50 border-green-200 text-green-800',
-        error: 'bg-red-50 border-red-200 text-red-800',
-        warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
-        info: 'bg-blue-50 border-blue-200 text-blue-800'
-    };
-    
-    const iconColors = {
-        success: 'text-green-400',
-        error: 'text-red-400',
-        warning: 'text-yellow-400',
-        info: 'text-blue-400'
+        success: 'bg-green-600 text-white',
+        error: 'bg-red-600 text-white',
+        warning: 'bg-yellow-500 text-white',
+        info: 'bg-blue-600 text-white'
     };
     
     const alert = document.createElement('div');
     alert.id = alertId;
-    alert.className = `${colors[type]} border-l-4 p-4 rounded-lg shadow-lg transform transition-all duration-300 ease-out translate-x-full opacity-0`;
+    alert.className = `${colors[type]} p-3 rounded-lg shadow-lg flex items-center justify-between text-xs font-medium transition-all duration-300 transform translate-x-full opacity-0`;
     alert.innerHTML = `
-        <div class="flex items-start">
-            <div class="flex-shrink-0 ${iconColors[type]}">
-                ${icons[type]}
-            </div>
-            <div class="ml-3 flex-1">
-                <p class="text-sm font-medium">${message}</p>
-            </div>
-            <button onclick="closeAlert('${alertId}')" class="ml-4 flex-shrink-0 inline-flex text-gray-400 hover:text-gray-600 focus:outline-none">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-            </button>
-        </div>
+        <span>${message}</span>
+        <button onclick="closeAlert('${alertId}')" class="ml-3 text-white/80 hover:text-white font-bold">✕</button>
     `;
     
     container.appendChild(alert);
     
-    // Animate in
     setTimeout(() => {
         alert.classList.remove('translate-x-full', 'opacity-0');
     }, 10);
     
-    // Auto remove after 5 seconds
     setTimeout(() => {
         closeAlert(alertId);
-    }, 5000);
+    }, 4000);
 }
 
 function closeAlert(alertId) {
     const alert = document.getElementById(alertId);
     if (alert) {
         alert.classList.add('translate-x-full', 'opacity-0');
-        setTimeout(() => {
-            alert.remove();
-        }, 300);
+        setTimeout(() => alert.remove(), 300);
     }
 }
 
-const isProjectRoute = window.location.pathname.match(/^\/[a-zA-Z0-9_-]+\/admin/);
-const routePrefix = isProjectRoute ? 'project.admin' : 'cms';
-
 function toggleSection(section) {
     const el = document.getElementById(section + '-section');
-    el.classList.toggle('hidden');
+    if (el) el.classList.toggle('hidden');
 }
 
 function openCreateMenuModal() {
@@ -373,6 +429,16 @@ function openCreateMenuModal() {
 
 function closeCreateMenuModal() {
     document.getElementById('createMenuModal').classList.add('hidden');
+}
+
+function openEditMenuModal() {
+    const el = document.getElementById('editMenuModal');
+    if (el) el.classList.remove('hidden');
+}
+
+function closeEditMenuModal() {
+    const el = document.getElementById('editMenuModal');
+    if (el) el.classList.add('hidden');
 }
 
 function generateSlug(name) {
@@ -390,9 +456,10 @@ function generateSlug(name) {
 function createMenu(e) {
     e.preventDefault();
     const name = document.getElementById('menu-name').value.trim();
+    const locationVal = document.getElementById('menu-location').value;
     
     if (!name) {
-        alert('Vui lòng nhập tên menu');
+        showAlert('Vui lòng nhập tên menu', 'warning');
         return;
     }
     
@@ -400,8 +467,6 @@ function createMenu(e) {
     const submitBtn = e.target.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
     submitBtn.textContent = 'Đang tạo...';
-    
-    const payload = { name, slug };
     
     const currentPath = window.location.pathname;
     const storeUrl = currentPath.replace(/\/menus.*/, '/menus');
@@ -413,100 +478,131 @@ function createMenu(e) {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
             'Accept': 'application/json'
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ name, slug, location: locationVal })
     })
-    .then(response => response.json().then(data => ({ status: response.status, data })))
-    .then(({ status, data }) => {
+    .then(res => res.json())
+    .then(data => {
         if (data.success) {
             showAlert('Menu đã được tạo thành công!', 'success');
             closeCreateMenuModal();
-            document.getElementById('menu-name').value = '';
-            
-            // Reload trang để hiển thị menu mới
             setTimeout(() => {
                 window.location.href = `${storeUrl}/${data.menu.id}`;
-            }, 500);
+            }, 400);
         } else {
             showAlert(data.message || 'Không thể tạo menu', 'error');
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Tạo';
+            submitBtn.textContent = 'Tạo menu';
         }
     })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('Lỗi kết nối. Vui lòng thử lại.', 'error');
+    .catch(err => {
+        showAlert('Lỗi kết nối khi tạo menu', 'error');
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Tạo';
+        submitBtn.textContent = 'Tạo menu';
     });
 }
 
-function addMenuToList(menu) {
-    const menuList = document.querySelector('.space-y-2');
-    const menuItem = document.createElement('div');
-    menuItem.className = 'flex items-center gap-2';
+function updateMenuMeta(e) {
+    e.preventDefault();
+    const name = document.getElementById('edit-menu-name').value.trim();
+    const locationVal = document.getElementById('edit-menu-location').value;
+    const isActive = document.getElementById('edit-menu-active').checked ? 1 : 0;
+    
     const currentPath = window.location.pathname;
     const baseUrl = currentPath.replace(/\/menus.*/, '/menus');
-    menuItem.innerHTML = `
-        <a href="${baseUrl}" class="flex-1 p-3 rounded-lg hover:bg-gray-50 border-l-4 border-transparent">
-            <div class="font-medium">${menu.name}</div>
-            <div class="text-xs text-gray-500">0 mục</div>
-        </a>
-        <button onclick="deleteMenu(${menu.id})" class="p-2 text-red-600 hover:bg-red-50 rounded" title="Xóa menu">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-        </button>
-    `;
-    menuList.appendChild(menuItem);
+    
+    fetch(`${baseUrl}/{{ $selectedMenu->id ?? 0 }}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ name, location: locationVal, is_active: isActive })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            showAlert('Đã lưu cài đặt menu thành công!', 'success');
+            closeEditMenuModal();
+            setTimeout(() => location.reload(), 400);
+        } else {
+            showAlert(data.message || 'Lỗi cập nhật menu', 'error');
+        }
+    })
+    .catch(err => showAlert('Lỗi kết nối', 'error'));
 }
 
+function deleteMenu(id) {
+    if (confirm('Bạn có chắc chắn muốn xóa menu này? Tất cả các mục bên trong sẽ bị xóa!')) {
+        const currentPath = window.location.pathname;
+        const baseUrl = currentPath.replace(/\/menus.*/, '/menus');
+        
+        fetch(`${baseUrl}/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('Đã xóa menu thành công!', 'success');
+                setTimeout(() => {
+                    window.location.href = baseUrl;
+                }, 400);
+            } else {
+                showAlert(data.message || 'Lỗi khi xóa menu', 'error');
+            }
+        })
+        .catch(err => showAlert('Lỗi kết nối khi xóa menu', 'error'));
+    }
+}
+
+// Thêm các mục được chọn từ cột trái
 function addSelectedItems(type) {
     const checkboxes = document.querySelectorAll(`input[data-type="${type}"]:checked`);
+    if (checkboxes.length === 0) {
+        showAlert('Vui lòng chọn ít nhất một mục để thêm', 'warning');
+        return;
+    }
+
     checkboxes.forEach(cb => {
         let modelName = 'Post';
-        let customUrl = cb.dataset.url || null;
-
-        if (type === 'productcategory') {
-            modelName = 'ProductCategory';
-        } else if (type === 'page' || type === 'post') {
-            modelName = 'Post';
-        } else if (type === 'postcategory') {
-            modelName = 'Taxonomy';
-        } else if (type === 'product') {
-            modelName = 'Product';
-        } else if (type === 'brand') {
-            modelName = 'Brand';
-        }
+        if (type === 'productcategory') modelName = 'ProductCategory';
+        else if (type === 'postcategory') modelName = 'Taxonomy';
+        else if (type === 'product') modelName = 'Product';
+        else if (type === 'brand') modelName = 'Brand';
 
         const itemPayload = {
             title: cb.dataset.title,
+            url: cb.dataset.url || null,
             linkable_type: 'App\\Models\\' + modelName,
             linkable_id: cb.dataset.id,
             target: '_self'
         };
-
-        if (customUrl) {
-            itemPayload.url = customUrl;
-        }
 
         addMenuItem(itemPayload);
         cb.checked = false;
     });
 }
 
-
 function addCustomLink(e) {
     e.preventDefault();
-    const title = document.getElementById('link-title').value;
+    const title = document.getElementById('link-title').value.trim();
     const slug = document.getElementById('link-slug').value.trim();
     
-    // Tạo URL từ slug
-    const url = '/' + slug.replace(/^\/+/, '');
-    
+    let url = slug;
+    if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('#') && !url.startsWith('/')) {
+        url = '/' + url;
+    }
+
     addMenuItem({
         title: title,
         url: url,
         target: '_self'
     });
-    
+
     e.target.reset();
 }
 
@@ -514,6 +610,7 @@ function addMenuItem(data) {
     @if($selectedMenu)
     const currentPath = window.location.pathname;
     const baseUrl = currentPath.replace(/\/menus.*/, '/menus');
+    
     fetch(`${baseUrl}/{{ $selectedMenu->id }}/items`, {
         method: 'POST',
         headers: {
@@ -523,148 +620,108 @@ function addMenuItem(data) {
         },
         body: JSON.stringify(data)
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(result => {
         if (result.success) {
             showAlert('Đã thêm mục menu thành công!', 'success');
-            // Thêm menu item mới vào cấu trúc menu
-            addMenuItemToStructure(result.item);
-            // Cập nhật số lượng menu items
-            updateMenuItemCount();
-            // Mark as changed
-            markAsChanged();
+            setTimeout(() => location.reload(), 400);
         } else {
             showAlert(result.message || 'Không thể thêm mục menu', 'error');
         }
     })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('Không thể thêm mục menu', 'error');
+    .catch(err => {
+        showAlert('Lỗi kết nối khi thêm mục menu', 'error');
     });
     @else
-    alert('Vui lòng chọn menu trước');
+    showAlert('Vui lòng chọn hoặc tạo menu trước', 'warning');
     @endif
 }
 
-function addMenuItemToStructure(item) {
-    const menuStructure = document.getElementById('menu-structure');
-    const emptyMessage = menuStructure.querySelector('p');
-    
-    // Xóa thông báo trống nếu có
-    if (emptyMessage) {
-        emptyMessage.remove();
-    }
-    
-    // Tạo menu item mới
-    const menuItemDiv = document.createElement('div');
-    menuItemDiv.className = 'menu-item border rounded-lg p-3 bg-gray-50';
-    menuItemDiv.setAttribute('data-id', item.id);
-    
-    let linkInfo = '';
-    if (item.linkable_type) {
-        const modelName = item.linkable_type.split('\\').pop();
-        linkInfo = modelName;
-    } else if (item.url) {
-        linkInfo = `Link → ${item.url}`;
-    }
-    
-    menuItemDiv.innerHTML = `
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2 flex-1">
-                <div class="drag-handle w-5 h-5 flex flex-col justify-center items-center text-gray-400 cursor-grab hover:text-gray-600" title="Kéo thả để sắp xếp">
-                    <div class="w-1 h-1 bg-current rounded-full mb-0.5"></div>
-                    <div class="w-1 h-1 bg-current rounded-full mb-0.5"></div>
-                    <div class="w-1 h-1 bg-current rounded-full mb-0.5"></div>
-                    <div class="w-1 h-1 bg-current rounded-full mb-0.5"></div>
-                    <div class="w-1 h-1 bg-current rounded-full"></div>
-                </div>
-                <div class="flex-1">
-                    <div class="font-medium text-sm">${item.title}</div>
-                    <div class="text-xs text-gray-500">${linkInfo}</div>
-                </div>
-            </div>
-            <div class="flex gap-1">
-                <button onclick="moveUp(${item.id})" class="p-1 hover:bg-blue-100 text-blue-600 rounded" title="Di chuyển lên">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-                </button>
-                <button onclick="moveDown(${item.id})" class="p-1 hover:bg-blue-100 text-blue-600 rounded" title="Di chuyển xuống">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </button>
-                <button onclick="indentRight(${item.id})" class="p-1 hover:bg-green-100 text-green-600 rounded" title="Tạo menu con">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </button>
-                <button onclick="deleteItem(${item.id})" class="p-1 hover:bg-red-100 text-red-600 rounded" title="Xóa">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                </button>
-            </div>
-        </div>
-    `;
-    
-    menuStructure.appendChild(menuItemDiv);
-    
-    // Khởi tạo lại sortable cho menu item mới
-    if (window.sortableInstance) {
-        window.sortableInstance.destroy();
-        initSortable();
+function toggleItemEdit(id, event) {
+    if (event) event.stopPropagation();
+    const panel = document.getElementById(`item-edit-panel-${id}`);
+    if (panel) {
+        panel.classList.toggle('hidden');
     }
 }
 
-function updateMenuItemCount() {
-    const menuItems = document.querySelectorAll('#menu-structure .menu-item');
-    const countElement = document.querySelector('.bg-blue-50 .text-xs');
-    if (countElement) {
-        countElement.textContent = `${menuItems.length} mục`;
-    }
-}
+function saveItemDetails(id, event) {
+    event.preventDefault();
+    const btn = document.getElementById(`save-item-btn-${id}`);
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span>Đang lưu...</span>';
 
-function deleteMenu(id) {
-    if(confirm('Xóa menu này? Tất cả mục menu bên trong cũng sẽ bị xóa!')) {
-        const menuElement = event.target.closest('.flex.items-center.gap-2');
-        const deleteBtn = event.target.closest('button');
-        deleteBtn.disabled = true;
-        deleteBtn.style.opacity = '0.5';
-        
-        const currentPath = window.location.pathname;
-        const baseUrl = currentPath.replace(/\/menus.*/, '/menus');
-        fetch(`${baseUrl}/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            }
+    const title = document.getElementById(`edit-title-${id}`).value.trim();
+    const url = document.getElementById(`edit-url-${id}`).value.trim();
+    const target = document.getElementById(`edit-target-${id}`).value;
+    const icon = document.getElementById(`edit-icon-${id}`).value.trim();
+    const image = document.getElementById(`edit-image-${id}`).value.trim();
+    const badge = document.getElementById(`edit-badge-${id}`).value.trim();
+    const badgeColor = document.getElementById(`edit-badge-color-${id}`).value;
+
+    const currentPath = window.location.pathname;
+    const baseUrl = currentPath.replace(/\/menus.*/, '/menus');
+
+    fetch(`${baseUrl}/items/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            title: title,
+            url: url,
+            target: target,
+            icon: icon,
+            image: image,
+            badge: badge,
+            badge_color: badgeColor
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showAlert('Menu đã được xóa thành công!', 'success');
-                menuElement.remove();
-                
-                const remainingMenus = document.querySelectorAll('.space-y-2 > .flex');
-                if (remainingMenus.length === 0) {
-                    setTimeout(() => location.reload(), 500);
-                } else if (window.location.pathname.includes(`/menus/${id}`)) {
-                    const basePath = window.location.pathname.replace(/\/menus.*/, '/menus');
-                    setTimeout(() => window.location.href = basePath, 500);
+    })
+    .then(res => res.json())
+    .then(data => {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        if (data.success) {
+            showAlert('Đã cập nhật mục menu!', 'success');
+            
+            // Update display elements
+            const titleDisplay = document.getElementById(`item-title-display-${id}`);
+            if (titleDisplay) titleDisplay.textContent = title;
+            
+            const urlDisplay = document.getElementById(`item-url-display-${id}`);
+            if (urlDisplay) urlDisplay.textContent = `→ ${url}`;
+            
+            const badgePreview = document.getElementById(`item-badge-preview-${id}`);
+            if (badgePreview) {
+                if (badge) {
+                    badgePreview.textContent = badge;
+                    badgePreview.style.backgroundColor = badgeColor || '#ef4444';
+                    badgePreview.classList.remove('hidden');
+                } else {
+                    badgePreview.classList.add('hidden');
                 }
-            } else {
-                showAlert(data.message || 'Không thể xóa menu', 'error');
-                deleteBtn.disabled = false;
-                deleteBtn.style.opacity = '1';
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showAlert('Không thể xóa menu', 'error');
-            deleteBtn.disabled = false;
-            deleteBtn.style.opacity = '1';
-        });
-    }
+
+            toggleItemEdit(id);
+        } else {
+            showAlert(data.message || 'Lỗi cập nhật mục menu', 'error');
+        }
+    })
+    .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        showAlert('Lỗi kết nối khi cập nhật mục menu', 'error');
+    });
 }
 
 function deleteItem(id) {
-    if(confirm('Xóa mục này?')) {
+    if (confirm('Xác nhận xóa mục menu này?')) {
         const currentPath = window.location.pathname;
         const baseUrl = currentPath.replace(/\/menus.*/, '/menus');
+        
         fetch(`${baseUrl}/items/${id}`, {
             method: 'DELETE',
             headers: {
@@ -672,36 +729,24 @@ function deleteItem(id) {
                 'Accept': 'application/json'
             }
         })
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
             if (data.success) {
-                showAlert('Đã xóa mục menu thành công!', 'success');
-                // Xóa menu item khỏi giao diện
-                const menuItem = document.querySelector(`[data-id="${id}"]`);
-                if (menuItem) {
-                    menuItem.remove();
-                    updateMenuItemCount();
-                    
-                    // Hiển thị thông báo trống nếu không còn item nào
-                    const remainingItems = document.querySelectorAll('#menu-structure .menu-item');
-                    if (remainingItems.length === 0) {
-                        const menuStructure = document.getElementById('menu-structure');
-                        menuStructure.innerHTML = '<p class="text-gray-400 text-center py-8">Chưa có mục nào</p>';
-                    }
-                }
+                showAlert('Đã xóa mục menu!', 'success');
+                const el = document.querySelector(`.menu-item[data-id="${id}"]`);
+                if (el) el.remove();
+                markAsChanged();
             } else {
                 showAlert('Không thể xóa mục menu', 'error');
             }
         })
-        .catch(error => {
-            console.error('Error:', error);
-            showAlert('Không thể xóa mục menu', 'error');
-        });
+        .catch(err => showAlert('Lỗi kết nối khi xóa', 'error'));
     }
 }
 
+// Di chuyển thứ tự và cấp độ
 function moveUp(id) {
-    const item = document.querySelector(`[data-id="${id}"]`);
+    const item = document.querySelector(`.menu-item[data-id="${id}"]`);
     const prev = item.previousElementSibling;
     if (prev && prev.classList.contains('menu-item')) {
         item.parentNode.insertBefore(item, prev);
@@ -710,7 +755,7 @@ function moveUp(id) {
 }
 
 function moveDown(id) {
-    const item = document.querySelector(`[data-id="${id}"]`);
+    const item = document.querySelector(`.menu-item[data-id="${id}"]`);
     const next = item.nextElementSibling;
     if (next && next.classList.contains('menu-item')) {
         item.parentNode.insertBefore(next, item);
@@ -719,356 +764,89 @@ function moveDown(id) {
 }
 
 function indentRight(id) {
-    const item = document.querySelector(`[data-id="${id}"]`);
+    const item = document.querySelector(`.menu-item[data-id="${id}"]`);
     const currentDepth = parseInt(item.dataset.depth || 0);
     if (currentDepth < 3) {
-        const newDepth = currentDepth + 1;
-        updateItemDepth(item, newDepth);
+        updateItemDepth(item, currentDepth + 1);
         markAsChanged();
     }
 }
 
 function indentLeft(id) {
-    const item = document.querySelector(`[data-id="${id}"]`);
+    const item = document.querySelector(`.menu-item[data-id="${id}"]`);
     const currentDepth = parseInt(item.dataset.depth || 0);
     if (currentDepth > 0) {
-        const newDepth = currentDepth - 1;
-        updateItemDepth(item, newDepth);
+        updateItemDepth(item, currentDepth - 1);
         markAsChanged();
     }
 }
 
 function updateItemDepth(item, depth) {
-    // Remove old depth class
     item.classList.remove(...Array.from(item.classList).filter(cls => cls.startsWith('depth-')));
-    
-    // Add new depth class
     item.classList.add(`depth-${depth}`);
     item.dataset.depth = depth;
-    
-    // Update buttons visibility
-    updateItemButtons(item, depth);
-    
-    // Visual feedback for depth change
-    if (depth > 0) {
-        item.style.animation = 'indentSuccess 0.5s ease';
-        setTimeout(() => {
-            item.style.animation = '';
-        }, 500);
-    }
+    updateIndentButtons(item, depth);
 }
 
-function updateItemButtons(item, depth) {
-    const buttons = item.querySelector('.flex.gap-1');
-    if (!buttons) return;
+function updateIndentButtons(item, depth) {
+    const btnContainer = item.querySelector('.flex.items-center.gap-1');
+    if (!btnContainer) return;
     
-    // Remove existing indent buttons
-    const existingIndentBtns = buttons.querySelectorAll('[title="Tạo menu con"], [title="Hủy phân cấp"]');
-    existingIndentBtns.forEach(btn => btn.remove());
+    // Refresh indent buttons
+    const oldIndentRight = btnContainer.querySelector('[title="Tạo menu con"]');
+    const oldIndentLeft = btnContainer.querySelector('[title="Hủy phân cấp"]');
+    if (oldIndentRight) oldIndentRight.remove();
+    if (oldIndentLeft) oldIndentLeft.remove();
     
-    const deleteBtn = buttons.querySelector('[title="Xóa"]');
+    const deleteBtn = btnContainer.querySelector('[title="Xóa"]');
     
-    // Add indent right button if depth < 3
     if (depth < 3) {
-        const btn = document.createElement('button');
-        btn.onclick = () => indentRight(item.dataset.id);
-        btn.className = 'p-1 hover:bg-green-100 text-green-600 rounded';
-        btn.title = 'Tạo menu con';
-        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>';
-        buttons.insertBefore(btn, deleteBtn);
+        const rBtn = document.createElement('button');
+        rBtn.type = 'button';
+        rBtn.onclick = () => indentRight(item.dataset.id);
+        rBtn.className = 'p-1 hover:bg-green-100 text-green-600 rounded transition';
+        rBtn.title = 'Tạo menu con';
+        rBtn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>';
+        btnContainer.insertBefore(rBtn, deleteBtn);
     }
     
-    // Add indent left button if depth > 0
     if (depth > 0) {
-        const btn = document.createElement('button');
-        btn.onclick = () => indentLeft(item.dataset.id);
-        btn.className = 'p-1 hover:bg-orange-100 text-orange-600 rounded';
-        btn.title = 'Hủy phân cấp';
-        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>';
-        buttons.insertBefore(btn, deleteBtn);
+        const lBtn = document.createElement('button');
+        lBtn.type = 'button';
+        lBtn.onclick = () => indentLeft(item.dataset.id);
+        lBtn.className = 'p-1 hover:bg-orange-100 text-orange-600 rounded transition';
+        lBtn.title = 'Hủy phân cấp';
+        lBtn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>';
+        btnContainer.insertBefore(lBtn, deleteBtn);
     }
 }
-
-// Drag and Drop functionality
-document.addEventListener('DOMContentLoaded', function() {
-    @if($selectedMenu)
-    initSortable();
-    @endif
-});
-
-function initSortable() {
-    const menuStructure = document.getElementById('menu-structure');
-    if (!menuStructure) return;
-    
-    window.sortableInstance = new Sortable(menuStructure, {
-        group: 'menu-items',
-        animation: 150,
-        ghostClass: 'sortable-ghost',
-        chosenClass: 'sortable-chosen',
-        dragClass: 'sortable-drag',
-        swapThreshold: 0.65,
-        direction: 'vertical',
-        forceFallback: false,
-        fallbackTolerance: 3,
-        
-        // Allow dropping on drop zones
-        onMove: function(evt) {
-            return evt.related.className.indexOf('drop-zone-submenu') !== -1 || 
-                   evt.related.className.indexOf('menu-item') !== -1;
-        },
-        
-        onStart: function(evt) {
-            evt.item.classList.add('dragging');
-        },
-        
-
-        
-        onAdd: function(evt) {
-            const item = evt.item;
-            const target = evt.to;
-            
-            // Check if dropped on a drop zone
-            if (target && target.classList && target.classList.contains('drop-zone-submenu')) {
-                const parentId = target.dataset.parentId;
-                const parentItem = document.querySelector(`[data-id="${parentId}"]`);
-                
-                if (parentItem) {
-                    const parentDepth = parseInt(parentItem.dataset.depth || 0);
-                    const newDepth = Math.min(parentDepth + 1, 3);
-                    
-                    // Apply indentRight effect
-                    updateItemDepth(item, newDepth);
-                    
-                    // Move item to correct position (after parent)
-                    const menuStructure = document.getElementById('menu-structure');
-                    target.remove(); // Remove drop zone
-                    
-                    // Find correct insertion point
-                    let insertAfter = parentItem;
-                    let nextSibling = parentItem.nextElementSibling;
-                    
-                    // Find last child of this parent
-                    while (nextSibling && nextSibling.classList.contains('menu-item')) {
-                        const siblingDepth = parseInt(nextSibling.dataset.depth || 0);
-                        if (siblingDepth <= parentDepth) break;
-                        insertAfter = nextSibling;
-                        nextSibling = nextSibling.nextElementSibling;
-                    }
-                    
-                    insertAfter.insertAdjacentElement('afterend', item);
-                }
-            }
-        },
-        
-        onEnd: function(evt) {
-            if (!evt.item) return;
-            
-            evt.item.classList.remove('dragging');
-            // Chỉ đánh dấu thay đổi thứ tự, không thay đổi cấp độ
-            markAsChanged();
-        },
-        
-
-    });
-    
-
-}
-
-
 
 function markAsChanged() {
     const saveBtn = document.querySelector('button[onclick="saveMenuOrder()"]');
     if (saveBtn) {
-        saveBtn.classList.add('bg-orange-600', 'hover:bg-orange-700');
         saveBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-        saveBtn.innerHTML = `
-            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            Có thay đổi - Bấm để lưu
-        `;
+        saveBtn.classList.add('bg-orange-600', 'hover:bg-orange-700');
+        saveBtn.querySelector('span').textContent = 'Có thay đổi - Bấm để lưu';
     }
-}
-
-function saveMenuOrder() {
-    const saveBtn = document.querySelector('button[onclick="saveMenuOrder()"]');
-    if (saveBtn) {
-        saveBtn.disabled = true;
-        saveBtn.innerHTML = `
-            <svg class="w-4 h-4 inline mr-1 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-            </svg>
-            Đang lưu...
-        `;
-    }
-    
-    updateMenuOrder();
-}
-
-function updateMenuOrder() {
-    const menuTree = buildMenuTree();
-    
-    // Send update to server
-    const currentPath = window.location.pathname;
-    const baseUrl = currentPath.replace(/\/menus.*/, '/menus');
-    fetch(`${baseUrl}/{{ $selectedMenu->id ?? 0 }}/update-tree`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({ tree: menuTree })
-    })
-    .then(response => response.json())
-    .then(data => {
-        const saveBtn = document.querySelector('button[onclick="saveMenuOrder()"]');
-        if (data.success) {
-            showAlert('Cấu trúc menu đã được lưu thành công!', 'success');
-            if (saveBtn) {
-                saveBtn.disabled = false;
-                saveBtn.classList.remove('bg-orange-600', 'hover:bg-orange-700');
-                saveBtn.classList.add('bg-green-600', 'hover:bg-green-700');
-                saveBtn.innerHTML = `
-                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Đã lưu!
-                `;
-                
-                setTimeout(() => {
-                    saveBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
-                    saveBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
-                    saveBtn.innerHTML = `
-                        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12"></path>
-                        </svg>
-                        Lưu thay đổi
-                    `;
-                }, 2000);
-            }
-        } else {
-            showAlert('Lỗi khi lưu cấu trúc menu', 'error');
-            if (saveBtn) {
-                saveBtn.disabled = false;
-                saveBtn.classList.add('bg-red-600', 'hover:bg-red-700');
-                saveBtn.innerHTML = `
-                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                    Lỗi - Thử lại
-                `;
-            }
-        }
-    })
-    .catch(error => {
-        console.error('Error updating menu order:', error);
-        showAlert('Lỗi kết nối khi lưu menu', 'error');
-    });
-}
-
-function createDropZones() {
-    const menuItems = document.querySelectorAll('.menu-item:not(.dragging)');
-    
-    menuItems.forEach(item => {
-        const itemDepth = parseInt(item.dataset.depth || 0);
-        
-        // Chỉ tạo drop zone cho items có thể làm parent (depth < 3)
-        if (itemDepth < 3) {
-            const dropZone = document.createElement('div');
-            dropZone.className = 'drop-zone-submenu';
-            dropZone.innerHTML = `<span>→ Thả vào đây để tạo menu con</span>`;
-            dropZone.dataset.parentId = item.dataset.id;
-            dropZone.style.marginLeft = `${(itemDepth + 1) * 30}px`;
-            
-            // Add drop event listener
-            dropZone.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                this.classList.add('active');
-            });
-            
-            dropZone.addEventListener('dragleave', function(e) {
-                this.classList.remove('active');
-            });
-            
-            dropZone.addEventListener('drop', function(e) {
-                e.preventDefault();
-                const draggedItem = document.querySelector('.dragging');
-                if (draggedItem) {
-                    handleDropToSubmenu(draggedItem, this.dataset.parentId);
-                }
-            });
-            
-            // Thêm drop zone sau item
-            item.insertAdjacentElement('afterend', dropZone);
-            
-            // Highlight item có thể làm parent
-            item.classList.add('can-be-parent');
-        }
-    });
-}
-
-function handleDropToSubmenu(draggedItem, parentId) {
-    const parentItem = document.querySelector(`[data-id="${parentId}"]`);
-    if (!parentItem) return;
-    
-    const parentDepth = parseInt(parentItem.dataset.depth || 0);
-    const newDepth = Math.min(parentDepth + 1, 3);
-    
-    // Apply indentRight effect exactly like the button
-    updateItemDepth(draggedItem, newDepth);
-    
-    // Find correct position to insert
-    let insertAfter = parentItem;
-    let nextSibling = parentItem.nextElementSibling;
-    
-    // Skip drop zones and find last child
-    while (nextSibling) {
-        if (nextSibling.classList.contains('drop-zone-submenu')) {
-            nextSibling = nextSibling.nextElementSibling;
-            continue;
-        }
-        if (nextSibling.classList.contains('menu-item')) {
-            const siblingDepth = parseInt(nextSibling.dataset.depth || 0);
-            if (siblingDepth <= parentDepth) break;
-            insertAfter = nextSibling;
-        }
-        nextSibling = nextSibling.nextElementSibling;
-    }
-    
-    // Insert the dragged item
-    insertAfter.insertAdjacentElement('afterend', draggedItem);
-    
-    // Mark as changed
-    markAsChanged();
-}
-
-function removeDropZones() {
-    document.querySelectorAll('.drop-zone-submenu').forEach(zone => zone.remove());
-    document.querySelectorAll('.can-be-parent').forEach(item => {
-        item.classList.remove('can-be-parent');
-    });
 }
 
 function buildMenuTree() {
     const menuStructure = document.getElementById('menu-structure');
     const items = [];
-    const parentStack = []; // Stack to track parents at each depth
+    const parentStack = [];
     
     Array.from(menuStructure.children).forEach((item, index) => {
-        if (item.classList.contains('menu-item')) {
+        if (item.classList && item.classList.contains('menu-item')) {
             const depth = parseInt(item.dataset.depth || 0);
             const itemId = parseInt(item.dataset.id);
             
-            // Adjust parent stack to current depth
             parentStack.length = depth;
             
-            // Find parent_id
             let parentId = null;
             if (depth > 0 && parentStack.length > 0) {
                 parentId = parentStack[depth - 1];
             }
             
-            // Add current item to stack
             parentStack[depth] = itemId;
             
             items.push({
@@ -1083,391 +861,90 @@ function buildMenuTree() {
     return items;
 }
 
+function saveMenuOrder() {
+    const saveBtn = document.querySelector('button[onclick="saveMenuOrder()"]');
+    if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.querySelector('span').textContent = 'Đang lưu...';
+    }
 
+    const currentPath = window.location.pathname;
+    const baseUrl = currentPath.replace(/\/menus.*/, '/menus');
+    const tree = buildMenuTree();
 
+    fetch(`${baseUrl}/{{ $selectedMenu->id ?? 0 }}/update-tree`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ tree: tree })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (saveBtn) {
+            saveBtn.disabled = false;
+        }
+        if (data.success) {
+            showAlert('Cấu trúc menu đã được lưu thành công!', 'success');
+            if (saveBtn) {
+                saveBtn.classList.remove('bg-orange-600', 'hover:bg-orange-700');
+                saveBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+                saveBtn.querySelector('span').textContent = 'Đã lưu!';
+                setTimeout(() => {
+                    saveBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    saveBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                    saveBtn.querySelector('span').textContent = 'Lưu thay đổi';
+                }, 2000);
+            }
+        } else {
+            showAlert(data.message || 'Lỗi khi lưu cấu trúc menu', 'error');
+            if (saveBtn) {
+                saveBtn.classList.remove('bg-orange-600', 'hover:bg-orange-700');
+                saveBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                saveBtn.querySelector('span').textContent = 'Lưu thay đổi';
+            }
+        }
+    })
+    .catch(err => {
+        if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.querySelector('span').textContent = 'Lưu thay đổi';
+        }
+        showAlert('Lỗi kết nối khi lưu cấu trúc', 'error');
+    });
+}
 
-
-
+// Khởi tạo SortableJS khi tải trang
+document.addEventListener('DOMContentLoaded', function() {
+    const menuStructure = document.getElementById('menu-structure');
+    if (menuStructure && typeof Sortable !== 'undefined') {
+        new Sortable(menuStructure, {
+            animation: 150,
+            handle: '.drag-handle',
+            ghostClass: 'opacity-40',
+            chosenClass: 'bg-blue-50',
+            onEnd: function() {
+                markAsChanged();
+            }
+        });
+    }
+});
 </script>
 
 <style>
-/* Smooth Drag Styles */
-.sortable-ghost {
-    opacity: 0.4;
-    background: #f0f8ff;
-    border: 2px dashed #0073aa;
-    transform: rotate(2deg);
-}
-
-.sortable-chosen {
-    background: #e1f5fe;
-    border-color: #0073aa;
-    box-shadow: 0 4px 12px rgba(0,115,170,0.3);
-    transform: scale(1.02);
-    z-index: 1000;
-}
-
-.sortable-drag {
-    background: #fff;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    transform: rotate(3deg);
-    opacity: 0.9;
-}
-
-.dragging {
-    cursor: grabbing;
-    transition: none;
-}
-
-.drag-handle {
-    cursor: grab;
-    transition: all 0.2s ease;
-    opacity: 0.6;
-}
-
-.drag-handle:hover {
-    opacity: 1;
-    color: #3b82f6;
-    transform: scale(1.1);
-}
-
-.drag-handle:active {
-    cursor: grabbing;
-}
+/* Indentation styling based on depth */
+.depth-0 { margin-left: 0 !important; border-left: 4px solid #3b82f6 !important; }
+.depth-1 { margin-left: 28px !important; border-left: 4px solid #10b981 !important; }
+.depth-2 { margin-left: 56px !important; border-left: 4px solid #f59e0b !important; }
+.depth-3 { margin-left: 84px !important; border-left: 4px solid #8b5cf6 !important; }
 
 .menu-item {
-    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    position: relative;
-    overflow: hidden;
+    transition: transform 0.15s ease, margin-left 0.2s ease, box-shadow 0.15s ease;
 }
-
-
-
-.sub-menu-container {
-    position: relative;
-    transition: all 0.3s ease;
-}
-
-
-
-/* WordPress-style menu structure */
-.menu-structure {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.menu-item {
-    position: relative;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-/* Depth-based indentation - WordPress style */
-.depth-0 { margin-left: 0; }
-.depth-1 { margin-left: 30px; }
-.depth-2 { margin-left: 60px; }
-.depth-3 { margin-left: 90px; }
-.depth-4 { margin-left: 120px; }
-.depth-5 { margin-left: 150px; }
-
-/* Tree lines - WordPress style */
-.depth-1::before {
-    content: '';
-    position: absolute;
-    left: -15px;
-    top: 0;
-    width: 1px;
-    height: 100%;
-    background: #ddd;
-    z-index: 1;
-}
-
-.depth-1::after {
-    content: '';
-    position: absolute;
-    left: -15px;
-    top: 50%;
-    width: 8px;
-    height: 1px;
-    background: #ddd;
-    z-index: 1;
-}
-
-.depth-2::before {
-    content: '';
-    position: absolute;
-    left: -45px;
-    top: 0;
-    width: 1px;
-    height: 100%;
-    background: #ddd;
-    z-index: 1;
-}
-
-.depth-2::after {
-    content: '';
-    position: absolute;
-    left: -15px;
-    top: 50%;
-    width: 8px;
-    height: 1px;
-    background: #ddd;
-    z-index: 1;
-}
-
-.depth-3::before {
-    content: '';
-    position: absolute;
-    left: -75px;
-    top: 0;
-    width: 1px;
-    height: 100%;
-    background: #ddd;
-    z-index: 1;
-}
-
-.depth-3::after {
-    content: '';
-    position: absolute;
-    left: -15px;
-    top: 50%;
-    width: 8px;
-    height: 1px;
-    background: #ddd;
-    z-index: 1;
-}
-
-/* Hide vertical line for last items */
-.menu-item:last-child::before {
-    height: 50%;
-}
-
-/* WordPress-style drag handle */
-.drag-handle {
-    opacity: 0.6;
-    transition: opacity 0.2s;
-    pointer-events: none; /* Không cần click vào handle nữa */
-}
-
-.menu-item:hover .drag-handle {
-    opacity: 1;
-}
-
-/* WordPress-style menu item */
-.menu-item {
-    background: #fff;
-    border: 1px solid #ddd;
-    margin-bottom: 1px;
-    position: relative;
-    min-height: 50px;
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: grab;
-    will-change: transform;
-}
-
-.menu-item:active {
-    cursor: grabbing;
-}
-
-.menu-item:not(.sortable-chosen):not(.sortable-ghost):hover {
-    background: #f9f9f9;
-    border-color: #999;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
 .menu-item:hover {
-    background: #f9f9f9;
-    border-color: #999;
-}
-
-.menu-item.sortable-chosen {
-    background: #e1f5fe;
-    border-color: #0073aa;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.menu-item.sortable-ghost {
-    opacity: 0.5;
-    background: #f0f0f0;
-}
-
-
-
-
-
-/* Control buttons */
-.menu-item .flex.gap-1 button {
-    transition: all 0.2s ease;
-    opacity: 0.7;
-    cursor: pointer;
-    pointer-events: auto;
-}
-
-.menu-item .flex.gap-1 {
-    pointer-events: auto;
-}
-
-.menu-item:hover .flex.gap-1 button {
-    opacity: 1;
-}
-
-.menu-item .flex.gap-1 button:hover {
-    transform: scale(1.1);
-}
-
-/* Drag feedback animations */
-@keyframes indentSuccess {
-    0% { transform: translateX(0); background-color: transparent; }
-    50% { transform: translateX(10px); background-color: #dcfce7; }
-    100% { transform: translateX(0); background-color: transparent; }
-}
-
-/* Drag visual feedback */
-.menu-item.dragging {
-    opacity: 0.8;
-    transform: rotate(2deg);
-}
-
-/* Drop zones for submenu */
-.drop-zone-submenu {
-    height: 50px;
-    margin: 8px 0;
-    border: 2px dashed #22c55e;
-    border-radius: 8px;
-    background: rgba(34, 197, 94, 0.05);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 1;
-    transform: scaleY(1);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    cursor: pointer;
-}
-
-.drop-zone-submenu::before {
-    content: '';
-    position: absolute;
-    left: -15px;
-    top: 50%;
-    width: 1px;
-    height: 20px;
-    background: #22c55e;
-    transform: translateY(-50%);
-}
-
-.drop-zone-submenu::after {
-    content: '';
-    position: absolute;
-    left: -15px;
-    top: 50%;
-    width: 8px;
-    height: 1px;
-    background: #22c55e;
-    transform: translateY(-50%);
-}
-
-.drop-zone-submenu.active,
-.drop-zone-submenu:hover {
-    background: rgba(34, 197, 94, 0.15);
-    border-color: #16a34a;
-    border-style: solid;
-    transform: scaleY(1.05);
-    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.2);
-}
-
-.drop-zone-submenu span {
-    color: #16a34a;
-    font-size: 13px;
-    font-weight: 600;
-    pointer-events: none;
-    text-shadow: 0 1px 2px rgba(255,255,255,0.8);
-}
-
-/* Parent highlight */
-.can-be-parent {
-    position: relative;
-}
-
-.can-be-parent::after {
-    content: '';
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 6px solid #22c55e;
-    border-top: 4px solid transparent;
-    border-bottom: 4px solid transparent;
-    opacity: 0.7;
-}
-
-/* Smooth show/hide drop zones */
-.drop-zone-submenu {
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    margin: 0;
-    padding: 0;
-}
-
-.dragging ~ .drop-zone-submenu,
-.menu-item:not(.dragging) + .drop-zone-submenu {
-    max-height: 50px;
-    opacity: 1;
-    margin: 8px 0;
-    padding: 0 16px;
-}
-
-/* Button tooltips */
-.menu-item .flex.gap-1 button[title]:hover::after {
-    content: attr(title);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #333;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    white-space: nowrap;
-    z-index: 1000;
-    margin-bottom: 4px;
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
-    .sortable-ghost,
-    .sortable-chosen,
-    .sortable-drag {
-        transform: none;
-    }
-    
-    .menu-item[class*="depth-"] .flex.items-center.gap-2.flex-1 {
-        padding-left: calc(var(--depth-indent) * 0.5);
-    }
-    
-    .menu-item .flex.gap-1 {
-        gap: 2px;
-    }
-    
-    .menu-item .flex.gap-1 button {
-        padding: 2px;
-    }
-    
-    .menu-item .flex.gap-1 button svg {
-        width: 12px;
-        height: 12px;
-    }
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 </style>
-
 @endsection

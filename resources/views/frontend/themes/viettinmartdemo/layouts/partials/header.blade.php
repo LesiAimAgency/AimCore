@@ -461,27 +461,36 @@
                                         @endphp
                                         @if($hasChildren)
                                             <li class="has-dropdown">
-                                                <a class="nav-link" href="{{ $item['url'] ?? '#' }}">
+                                                <a class="nav-link" href="{{ $item['url'] ?? '#' }}" target="{{ $item['target'] ?? '_self' }}">
                                                     @if(!empty($item['icon'])) <i class="{{ $item['icon'] }}"></i> @endif
                                                     @if(!empty($item['image'])) <img src="{{ media_url($item['image']) }}" style="width: 20px; height: 20px; object-fit: contain; margin-right: 5px; vertical-align: middle; border-radius: 2px;"> @endif
                                                     {{ $item['label'] }}
+                                                    @if(!empty($item['badge']))
+                                                        <span class="badge" style="font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 4px; color: #fff; background-color: {{ $item['badge_color'] ?: '#ef4444' }};">{{ $item['badge'] }}</span>
+                                                    @endif
                                                 </a>
                                                 <ul class="submenu">
                                                     @foreach($item['children'] as $child)
-                                                        <li><a href="{{ $child['url'] ?? '#' }}">
+                                                        <li><a href="{{ $child['url'] ?? '#' }}" target="{{ $child['target'] ?? '_self' }}">
                                                             @if(!empty($child['icon'])) <i class="{{ $child['icon'] }}"></i> @endif
                                                             @if(!empty($child['image'])) <img src="{{ media_url($child['image']) }}" style="width: 18px; height: 18px; object-fit: contain; margin-right: 5px; vertical-align: middle; border-radius: 2px;"> @endif
                                                             {{ $child['label'] }}
+                                                            @if(!empty($child['badge']))
+                                                                <span class="badge" style="font-size: 9px; padding: 1px 5px; border-radius: 10px; margin-left: 4px; color: #fff; background-color: {{ $child['badge_color'] ?: '#ef4444' }};">{{ $child['badge'] }}</span>
+                                                            @endif
                                                         </a></li>
                                                     @endforeach
                                                 </ul>
                                             </li>
                                         @else
                                             <li class="parent"><a class="nav-link"
-                                                    href="{{ $item['url'] ?? '#' }}">
+                                                    href="{{ $item['url'] ?? '#' }}" target="{{ $item['target'] ?? '_self' }}">
                                                         @if(!empty($item['icon'])) <i class="{{ $item['icon'] }}"></i> @endif
                                                         @if(!empty($item['image'])) <img src="{{ media_url($item['image']) }}" style="width: 20px; height: 20px; object-fit: contain; margin-right: 5px; vertical-align: middle; border-radius: 2px;"> @endif
                                                         {{ $item['label'] }}
+                                                        @if(!empty($item['badge']))
+                                                            <span class="badge" style="font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 4px; color: #fff; background-color: {{ $item['badge_color'] ?: '#ef4444' }};">{{ $item['badge'] }}</span>
+                                                        @endif
                                                     </a></li>
                                         @endif
                                     @endforeach
@@ -574,27 +583,36 @@
                             @foreach(\App\Models\Widget::getMenu('header-menu') as $item)
                                 @if(!empty($item['children']))
                                     <li class="has-droupdown">
-                                        <a href="{{ $item['url'] ?? '#' }}" class="main">
+                                        <a href="{{ $item['url'] ?? '#' }}" class="main" target="{{ $item['target'] ?? '_self' }}">
                                             @if(!empty($item['icon'])) <i class="{{ $item['icon'] }}" style="margin-right: 8px;"></i> @endif
                                             @if(!empty($item['image'])) <img src="{{ media_url($item['image']) }}" style="width: 24px; height: 24px; object-fit: contain; margin-right: 8px; vertical-align: middle;"> @endif
                                             {{ $item['label'] }}
+                                            @if(!empty($item['badge']))
+                                                <span class="badge" style="font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 6px; color: #fff; background-color: {{ $item['badge_color'] ?: '#ef4444' }};">{{ $item['badge'] }}</span>
+                                            @endif
                                         </a>
                                         <ul class="submenu mm-collapse">
                                             @foreach($item['children'] as $child)
                                                 <li><a class="mobile-menu-link"
-                                                        href="{{ $child['url'] ?? '#' }}">
+                                                        href="{{ $child['url'] ?? '#' }}" target="{{ $child['target'] ?? '_self' }}">
                                                         @if(!empty($child['icon'])) <i class="{{ $child['icon'] }}" style="margin-right: 8px;"></i> @endif
                                                         @if(!empty($child['image'])) <img src="{{ media_url($child['image']) }}" style="width: 20px; height: 20px; object-fit: contain; margin-right: 8px; vertical-align: middle;"> @endif
                                                         {{ $child['label'] }}
+                                                        @if(!empty($child['badge']))
+                                                            <span class="badge" style="font-size: 9px; padding: 1px 5px; border-radius: 10px; margin-left: 4px; color: #fff; background-color: {{ $child['badge_color'] ?: '#ef4444' }};">{{ $child['badge'] }}</span>
+                                                        @endif
                                                     </a></li>
                                             @endforeach
                                         </ul>
                                     </li>
                                 @else
-                                    <li><a href="{{ $item['url'] ?? '#' }}" class="main">
+                                    <li><a href="{{ $item['url'] ?? '#' }}" class="main" target="{{ $item['target'] ?? '_self' }}">
                                         @if(!empty($item['icon'])) <i class="{{ $item['icon'] }}" style="margin-right: 8px;"></i> @endif
                                         @if(!empty($item['image'])) <img src="{{ media_url($item['image']) }}" style="width: 24px; height: 24px; object-fit: contain; margin-right: 8px; vertical-align: middle;"> @endif
                                         {{ $item['label'] }}
+                                        @if(!empty($item['badge']))
+                                            <span class="badge" style="font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 6px; color: #fff; background-color: {{ $item['badge_color'] ?: '#ef4444' }};">{{ $item['badge'] }}</span>
+                                        @endif
                                     </a></li>
                                 @endif
                             @endforeach

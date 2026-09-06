@@ -13,7 +13,22 @@ class MenuItem extends Model
 {
     use BelongsToTenant, ProjectScoped;
 
-    protected $fillable = ['menu_id', 'parent_id', 'title', 'url', 'target', 'linkable_type', 'linkable_id', 'order', 'tenant_id', 'project_id'];
+    protected $fillable = [
+        'menu_id',
+        'parent_id',
+        'title',
+        'url',
+        'target',
+        'icon',
+        'image',
+        'badge',
+        'badge_color',
+        'linkable_type',
+        'linkable_id',
+        'order',
+        'tenant_id',
+        'project_id',
+    ];
 
     public function menu(): BelongsTo
     {
@@ -35,22 +50,27 @@ class MenuItem extends Model
         return $this->belongsTo(MenuItem::class, 'parent_id');
     }
 
-    public function getUrlAttribute($value)
+    public function getUrlAttribute($value): ?string
     {
         if ($value) {
             return $value;
         }
 
         if ($this->linkable) {
-            // Generate URL based on linkable type
-            switch ($this->linkable_type) {
-                case 'App\\Models\\Post':
-                    return route('frontend.page', $this->linkable->slug ?? $this->linkable->id);
-                case 'App\\Models\\ProductCategory':
-                    return route('frontend.category', $this->linkable->slug ?? $this->linkable->id);
-                default:
-                    return '#';
-            }
+            $project = function_exists('current_project') ? current_project() : null;
+            $code = $project?->code;
+            $prefix = $code ? '/'.$code : '';
+
+            $slug = $this->linkable->slug ?? $this->linkable->id;
+
+            return match ($this->linkable_type) {
+                'App\\Models\\Post' => ($this->linkable->post_type === 'page') ? "{$prefix}/{$slug}" : "{$prefix}/blog/{$slug}",
+                'App\\Models\\ProductCategory' => "{$prefix}/cua-hang?category={$slug}",
+                'App\\Models\\Product' => "{$prefix}/san-pham/{$slug}",
+                'App\\Models\\Taxonomy' => "{$prefix}/blog?category={$slug}",
+                'App\\Models\\Brand' => "{$prefix}/cua-hang?brand={$slug}",
+                default => '#',
+            };
         }
 
         return '#';
