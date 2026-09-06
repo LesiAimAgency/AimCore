@@ -135,6 +135,11 @@ class User extends Authenticatable
         return $this->hasMany(Order::class, 'customer_email', 'email');
     }
 
+    public function addresses()
+    {
+        return $this->hasMany(UserAddress::class);
+    }
+
     public function manager()
     {
         return $this->belongsTo(User::class, 'manager_id');
