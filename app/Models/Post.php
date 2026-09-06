@@ -128,6 +128,19 @@ class Post extends Model
         return 'slug';
     }
 
+    private function getMetaArray(): array
+    {
+        $meta = $this->meta_data;
+        if (is_string($meta)) {
+            $decoded = json_decode($meta, true);
+            if (is_array($decoded)) {
+                return $decoded;
+            }
+        }
+
+        return is_array($meta) ? $meta : [];
+    }
+
     public function getNameAttribute(): string
     {
         return $this->title ?? '';
@@ -135,7 +148,7 @@ class Post extends Model
 
     public function getSkuAttribute(): ?string
     {
-        return $this->meta_data['sku'] ?? null;
+        return $this->getMetaArray()['sku'] ?? null;
     }
 
     public function getShortDescriptionAttribute(): ?string
@@ -145,17 +158,18 @@ class Post extends Model
 
     public function getPriceAttribute()
     {
-        return $this->meta_data['price'] ?? 0;
+        return $this->getMetaArray()['price'] ?? 0;
     }
 
     public function getSalePriceAttribute()
     {
-        return $this->meta_data['sale_price'] ?? null;
+        return $this->getMetaArray()['sale_price'] ?? null;
     }
 
     public function getDisplayPriceAttribute(): string
     {
-        $price = $this->meta_data['sale_price'] ?? $this->meta_data['price'] ?? 0;
+        $meta = $this->getMetaArray();
+        $price = $meta['sale_price'] ?? $meta['price'] ?? 0;
         if (! $price) {
             return 'Liên hệ';
         }
@@ -165,13 +179,14 @@ class Post extends Model
 
     public function getStockQuantityAttribute(): int
     {
-        return (int) ($this->meta_data['stock_quantity'] ?? 0);
+        return (int) ($this->getMetaArray()['stock_quantity'] ?? 0);
     }
 
     public function getStockStatusAttribute(): string
     {
-        if (isset($this->meta_data['stock_status'])) {
-            return $this->meta_data['stock_status'];
+        $meta = $this->getMetaArray();
+        if (isset($meta['stock_status'])) {
+            return $meta['stock_status'];
         }
 
         return $this->stock_quantity > 0 ? 'in_stock' : 'out_of_stock';

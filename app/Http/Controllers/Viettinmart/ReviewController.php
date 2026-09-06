@@ -22,7 +22,7 @@ class ReviewController extends Controller
 
             // VALIDATION CHẶT CHẼ
             $validator = Validator::make($request->all(), [
-                'product_id' => 'required|integer|exists:products,id',
+                'product_id' => 'required|integer|exists:products_enhanced,id',
                 'rating' => 'required|integer|min:1|max:5',
                 'customer_name' => 'required|string|max:255|regex:/^[\p{L}\s]+$/u',
                 'customer_email' => 'required|email:rfc,dns|max:255',

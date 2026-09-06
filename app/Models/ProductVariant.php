@@ -2,6 +2,4 @@
 
 namespace App\Models;
 
-class ProductVariant extends ProductVariation
-{
-}
+class ProductVariant extends ProductVariation {}

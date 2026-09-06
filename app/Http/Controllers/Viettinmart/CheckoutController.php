@@ -125,14 +125,19 @@ class CheckoutController extends Controller
                         throw new \Exception("Sản phẩm '{$item['name']}' ({$item['variant_label']}) đã hết hàng hoặc không đủ số lượng.");
                     }
                     // TRỪ STOCK NGAY LẬP TỨC
-                    $variant->decrement('stock', $item['qty']);
+                    $variant->decrement('stock_quantity', $item['qty']);
                 } else {
                     $product = Product::lockForUpdate()->find($item['id']);
-                    if (! $product || $product->stock < $item['qty']) {
+                    if (! $product) {
+                        throw new \Exception("Sản phẩm '{$item['name']}' không tồn tại.");
+                    }
+                    if ($product->manage_stock && $product->stock < $item['qty']) {
                         throw new \Exception("Sản phẩm '{$item['name']}' đã hết hàng hoặc không đủ số lượng.");
                     }
                     // TRỪ STOCK NGAY LẬP TỨC
-                    $product->decrement('stock', $item['qty']);
+                    if ($product->manage_stock) {
+                        $product->decrement('stock_quantity', $item['qty']);
+                    }
                 }
             }
 

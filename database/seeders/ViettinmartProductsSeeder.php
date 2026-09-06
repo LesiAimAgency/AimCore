@@ -120,12 +120,12 @@ class ViettinmartProductsSeeder extends Seeder
                 $p['project_id'] = $projectId;
                 $p['tenant_id'] = $tenantId;
 
-                // Handle json fields if array
-                if (isset($p['seo_data']) && is_array($p['seo_data'])) {
-                    $p['seo_data'] = json_encode($p['seo_data']);
+                // Handle json fields - decode to array so Eloquent array cast handles it cleanly
+                if (isset($p['seo_data']) && is_string($p['seo_data'])) {
+                    $p['seo_data'] = json_decode($p['seo_data'], true);
                 }
-                if (isset($p['meta_data']) && is_array($p['meta_data'])) {
-                    $p['meta_data'] = json_encode($p['meta_data']);
+                if (isset($p['meta_data']) && is_string($p['meta_data'])) {
+                    $p['meta_data'] = json_decode($p['meta_data'], true);
                 }
 
                 $post = Post::withoutGlobalScopes()

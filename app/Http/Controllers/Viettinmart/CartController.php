@@ -41,14 +41,15 @@ class CartController extends Controller
     public function add(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'product_id' => 'required|exists:products_enhanced,id',
             'qty' => 'integer|min:1',
         ]);
 
         $product = Product::findOrFail($request->product_id);
 
         // Check product stock
-        if ($product->stock < ($request->qty ?? 1)) {
+        $currentStock = $product->stock ?? $product->stock_quantity ?? 0;
+        if ($product->manage_stock && $currentStock < ($request->qty ?? 1)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Sản phẩm không đủ số lượng trong kho!',
@@ -70,7 +71,7 @@ class CartController extends Controller
                 'name' => $product->name,
                 'price' => $pricing['final_price'],
                 'original_price' => $pricing['original_price'],
-                'image' => $this->normalizeImagePath($product->image),
+                'image' => $this->normalizeImagePath($product->image ?? $product->featured_image),
                 'slug' => $product->slug,
                 'qty' => $request->qty ?? 1,
                 'sku' => $product->sku,
