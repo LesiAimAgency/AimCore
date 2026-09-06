@@ -306,8 +306,16 @@ class ShopController extends Controller
             ->active()
             ->with([
                 'categories',
-            ])
-            ->firstOrFail();
+            ])->first();
+
+        if (! $product) {
+            $category = Category::where('slug', $slug)->where('is_active', true)->first();
+            if ($category) {
+                return redirect(locale_route('shop.category', ['slug' => $slug]));
+            }
+
+            abort(404);
+        }
 
         $relatedQuery = Product::active();
         if ($product->categories && $product->categories->isNotEmpty()) {

@@ -57,6 +57,26 @@ class PageController extends Controller
         }
 
         if (! $page) {
+            // Check if slug belongs to a product category
+            $category = \App\Models\Category::where('slug', $slug)->where('is_active', true)->first();
+            if ($category) {
+                if (class_exists(\App\Http\Controllers\Viettinmart\ShopController::class)) {
+                    return app(\App\Http\Controllers\Viettinmart\ShopController::class)->index(request(), $project?->code, $slug);
+                }
+
+                return redirect(locale_route('shop.category', ['slug' => $slug]));
+            }
+
+            // Check if slug belongs to a product
+            $product = \App\Models\Product::where('slug', $slug)->active()->first();
+            if ($product) {
+                if (class_exists(\App\Http\Controllers\Viettinmart\ShopController::class)) {
+                    return app(\App\Http\Controllers\Viettinmart\ShopController::class)->show($project?->code, $slug);
+                }
+
+                return redirect(locale_route('shop.show', ['slug' => $slug]));
+            }
+
             abort(404);
         }
 
