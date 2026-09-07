@@ -30,7 +30,7 @@ preg_match('/Đang active\s*<\/span>\s*<span[^>]*>\s*(\d+)/i', $content, $m1) ||
 echo "Active widgets in HTML: " . ($m1[1] ?? 'not found') . PHP_EOL;
 
 // Check if widget cards are in homepage-main
-preg_match_all('/data-widget-id/i', $content, $mW);
+preg_match_all('/widget-row/i', $content, $mW);
 echo "Widget elements in DOM: " . count($mW[0]) . PHP_EOL;
 
 // Check DB direct count
