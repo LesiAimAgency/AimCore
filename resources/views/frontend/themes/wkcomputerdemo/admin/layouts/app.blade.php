@@ -367,6 +367,14 @@
     $inSettings = request()->routeIs('admin.settings.*') || request()->routeIs('admin.languages.*') || request()->routeIs('admin.translations.*');
     $inSystem   = request()->routeIs('admin.modules.*') || request()->routeIs('admin.logs.*') || request()->routeIs('admin.seo.*');
     $inSpam     = request()->routeIs('admin.spam.*');
+
+    $authUser = $authUser ?? auth()->user();
+    if (! $authUser && session('project_user_id')) {
+        $authUser = \App\Models\ProjectUser::find(session('project_user_id'));
+    }
+    if ($authUser && ! auth()->check()) {
+        \Illuminate\Support\Facades\Auth::setUser($authUser);
+    }
 @endphp
 
 <div style="display:flex;height:100vh;overflow:hidden;"

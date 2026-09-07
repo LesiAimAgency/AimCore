@@ -2,11 +2,12 @@
 
 require 'vendor/autoload.php';
 $app = require_once 'bootstrap/app.php';
-$kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
+$kernel = $app->make(Kernel::class);
 $kernel->bootstrap();
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Models\Project;
+use App\Models\ProjectUser;
 use App\Models\User;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Http\Request;
@@ -15,11 +16,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ViewErrorBag;
 
 $project = Project::where('code', 'viettinmart-eco')->first();
-$user = User::where('role', 'admin')->orWhere('role', 'super_admin')->first();
-if (! $user) {
-    $user = User::first();
+// Test 2: User is ProjectUser logged in via session
+$projectUser = ProjectUser::first();
+if ($projectUser) {
+    session(['project_user_id' => $projectUser->id, 'project_user_username' => $projectUser->username]);
+    Auth::setUser($projectUser);
 }
-Auth::setUser($user);
 
 session(['current_project' => $project, 'current_project_id' => $project->id]);
 

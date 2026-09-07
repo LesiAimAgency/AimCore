@@ -127,6 +127,19 @@ class ProjectUser extends Authenticatable
         return isset($this->level) && in_array($this->level, [0, 1]);
     }
 
+    public function getRoleNameAttribute(): string
+    {
+        return [
+            'admin' => 'Quản trị viên',
+            'manager' => 'Quản lý',
+            'store_manager' => 'Quản lý cửa hàng',
+            'web_admin' => 'Quản trị Website',
+            'cms' => 'Quản trị CMS',
+            'superadmin' => 'Super Admin',
+            'super_admin' => 'Super Admin',
+        ][$this->role] ?? ($this->role ?: 'Quản trị viên');
+    }
+
     public function permissions()
     {
         return $this->belongsToMany(ProjectPermission::class, 'user_permissions', 'user_id', 'permission_id');

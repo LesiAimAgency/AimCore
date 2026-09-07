@@ -367,6 +367,14 @@
     $inSettings = request()->routeIs('admin.settings.*') || request()->routeIs('admin.languages.*') || request()->routeIs('admin.translations.*');
     $inSystem   = request()->routeIs('admin.modules.*') || request()->routeIs('admin.logs.*') || request()->routeIs('admin.seo.*');
     $inSpam     = request()->routeIs('admin.spam.*');
+
+    $authUser = $authUser ?? auth()->user();
+    if (! $authUser && session('project_user_id')) {
+        $authUser = \App\Models\ProjectUser::find(session('project_user_id'));
+    }
+    if ($authUser && ! auth()->check()) {
+        \Illuminate\Support\Facades\Auth::setUser($authUser);
+    }
 @endphp
 
 <div style="display:flex;height:100vh;overflow:hidden;"
@@ -389,7 +397,7 @@
                 Dashboard
             </a>
 
-            @if(auth()->user()->canAccess('products'))
+            @if(auth()->user()?->canAccess('products'))
             <button @click="open = open === 'shop' ? '' : 'shop'" class="nav-item {{ $inShop ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fa-solid fa-box"></i></span>
                 <span class="flex-1">Sản phẩm</span>
@@ -397,7 +405,7 @@
             </button>
             <div x-show="open==='shop'" x-cloak x-collapse class="sub-menu">
                 <a href="{{ locale_route('admin.products.index', ['locale' => 'vi']) }}" class="sub-item {{ request()->routeIs('admin.products.index') ? 'active' : '' }}"><span class="dot"></span> Danh sách</a>
-                @if(auth()->user()->isAdmin() || auth()->user()->isManager() || auth()->user()->isWebAdmin())
+                @if(auth()->user()?->isAdmin() || auth()->user()?->isManager() || auth()->user()?->isWebAdmin())
                 <a href="{{ locale_route('admin.products.create') }}" class="sub-item {{ request()->routeIs('admin.products.create') ? 'active' : '' }}"><span class="dot"></span> Thêm mới</a>
                 <a href="{{ locale_route('admin.categories.index', ['type' => 'product']) }}" class="sub-item {{ request()->routeIs('admin.categories.*') && request()->get('type','product') === 'product' ? 'active' : '' }}"><span class="dot"></span> Chuyên mục</a>
                 <a href="{{ locale_route('admin.attributes.index') }}" class="sub-item {{ request()->routeIs('admin.attributes.*') ? 'active' : '' }}"><span class="dot"></span> Thuộc tính</a>
@@ -405,40 +413,40 @@
             </div>
             @endif
 
-            @if(auth()->user()->canAccess('orders'))
+            @if(auth()->user()?->canAccess('orders'))
             <a href="{{ locale_route('admin.orders.index') }}" class="nav-item {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fa-solid fa-bag-shopping"></i></span>
                 Đơn hàng
             </a>
             @endif
-            @if(auth()->user()->canAccess('flash-sales'))
+            @if(auth()->user()?->canAccess('flash-sales'))
             <a href="{{ locale_route('admin.flash-sales.index') }}" class="nav-item {{ request()->routeIs('admin.flash-sales.*') ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fa-solid fa-bolt"></i></span>
                 Flash Sale
             </a>
             @endif
-            @if(auth()->user()->canAccess('coupons'))
+            @if(auth()->user()?->canAccess('coupons'))
             <a href="{{ locale_route('admin.coupons.index') }}" class="nav-item {{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fa-solid fa-tag"></i></span>
                 Mã giảm giá
             </a>
             @endif
-            @if(auth()->user()->canAccess('reviews'))
+            @if(auth()->user()?->canAccess('reviews'))
             <a href="{{ locale_route('admin.reviews.index') }}" class="nav-item {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fa-solid fa-star"></i></span>
                 Đánh giá
             </a>
             @endif
-            @if(auth()->user()->canAccess('agents'))
+            @if(auth()->user()?->canAccess('agents'))
             <a href="{{ locale_route('admin.agents.index') }}" class="nav-item {{ request()->routeIs('admin.agents.*') ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fa-solid fa-handshake"></i></span>
                 Đại lý
             </a>
             @endif
 
-            @if(auth()->user()->canAccess('posts') || auth()->user()->canAccess('pages'))
+            @if(auth()->user()?->canAccess('posts') || auth()->user()?->canAccess('pages'))
             <p class="nav-label">Nội dung</p>
-            @if(auth()->user()->isAdmin() || auth()->user()->isManager())
+            @if(auth()->user()?->isAdmin() || auth()->user()?->isManager())
             <a href="{{ locale_route('admin.form-submissions.overview') }}" class="nav-item {{ request()->routeIs('admin.form-submissions.*') ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
                 Tổng quan Forms
@@ -452,14 +460,14 @@
             <div x-show="open==='content'" x-cloak x-collapse class="sub-menu">
                 <a href="{{ locale_route('admin.posts.index') }}" class="sub-item {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}"><span class="dot"></span> Blog</a>
                 <a href="{{ locale_route('admin.pages.index') }}" class="sub-item {{ request()->routeIs('admin.pages.*') ? 'active' : '' }}"><span class="dot"></span> Trang tĩnh</a>
-                @if(auth()->user()->canAccess('form-templates'))
+                @if(auth()->user()?->canAccess('form-templates'))
                 <a href="{{ locale_route('admin.form-templates.index') }}" class="sub-item {{ request()->routeIs('admin.form-templates.*') ? 'active' : '' }}"><span class="dot"></span> Form Templates</a>
                 @endif
                 <a href="{{ locale_route('admin.categories.index', ['type' => 'post']) }}" class="sub-item {{ request()->routeIs('admin.categories.*') && request()->get('type') === 'post' ? 'active' : '' }}"><span class="dot"></span> Chuyên mục tin</a>
             </div>
             @endif
 
-            @if(auth()->user()->canAccess('appearance'))
+            @if(auth()->user()?->canAccess('appearance'))
             <button @click="open = open === 'appearance' ? '' : 'appearance'" class="nav-item {{ $inMedia ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fa-solid fa-swatchbook"></i></span>
                 <span class="flex-1">Giao diện</span>
@@ -474,43 +482,43 @@
             @endif
 
             <p class="nav-label">Hệ thống</p>
-            @if(auth()->user()->canAccess('settings'))
+            @if(auth()->user()?->canAccess('settings'))
             <a href="{{ locale_route('admin.settings.index') }}" class="nav-item {{ request()->routeIs('admin.settings.index') ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fa-solid fa-sliders"></i></span>
                 Cài đặt
             </a>
             @endif
-            @if(auth()->user()->canAccess('languages'))
+            @if(auth()->user()?->canAccess('languages'))
             <a href="{{ locale_route('admin.languages.index') }}" class="nav-item {{ request()->routeIs('admin.languages.*') ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fa-solid fa-language"></i></span>
                 Ngôn ngữ
             </a>
             @endif
-            @if(auth()->user()->canAccess('spam'))
+            @if(auth()->user()?->canAccess('spam'))
             <a href="{{ locale_route('admin.spam.dashboard') }}" class="nav-item {{ request()->routeIs('admin.spam.*') ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fa-solid fa-shield-virus"></i></span>
                 Anti-Spam
             </a>
             @endif
-            @if(auth()->user()->canAccess('modules') || auth()->user()->canAccess('seo') || auth()->user()->canAccess('logs'))
+            @if(auth()->user()?->canAccess('modules') || auth()->user()?->canAccess('seo') || auth()->user()?->canAccess('logs'))
             <button @click="open = open === 'system' ? '' : 'system'" class="nav-item {{ $inSystem ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fa-solid fa-shield-halved"></i></span>
                 <span class="flex-1">Hệ thống</span>
                 <i class="fa-solid fa-chevron-down text-[10px] transition-transform" :class="open==='system' ? 'rotate-180' : ''"></i>
             </button>
             <div x-show="open==='system'" x-cloak x-collapse class="sub-menu">
-                @if(auth()->user()->canAccess('modules'))
+                @if(auth()->user()?->canAccess('modules'))
                 <a href="{{ locale_route('admin.modules.index') }}" class="sub-item {{ request()->routeIs('admin.modules.*') ? 'active' : '' }}"><span class="dot"></span> Modules</a>
                 @endif
-                @if(auth()->user()->canAccess('seo'))
+                @if(auth()->user()?->canAccess('seo'))
                 <a href="{{ locale_route('admin.seo.index') }}" class="sub-item {{ request()->routeIs('admin.seo.*') ? 'active' : '' }}"><span class="dot"></span> SEO</a>
                 @endif
-                @if(auth()->user()->canAccess('logs'))
+                @if(auth()->user()?->canAccess('logs'))
                 <a href="{{ locale_route('admin.logs.index') }}" class="sub-item {{ request()->routeIs('admin.logs.*') ? 'active' : '' }}"><span class="dot"></span> Logs</a>
                 @endif
             </div>
             @endif
-            @if(auth()->user()->canAccess('users'))
+            @if(auth()->user()?->canAccess('users'))
             <a href="{{ locale_route('admin.users.index') }}" class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                 <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
                 Người dùng
@@ -522,11 +530,11 @@
         <div style="padding:12px;border-top:1px solid rgba(255,255,255,.05);">
             <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);padding:10px 12px;border-radius:10px;">
                 <div style="width:32px;height:32px;border-radius:8px;background:#2563eb;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px;flex-shrink:0;">
-                    {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
+                    {{ strtoupper(substr(($authUser ?? auth()->user())?->name ?? 'A', 0, 1)) }}
                 </div>
                 <div style="flex:1;min-width:0;">
-                    <p style="font-size:12.5px;font-weight:600;color:#e2e8f0;truncate;">{{ auth()->user()->name ?? 'Admin' }}</p>
-                    <p style="font-size:10px;color:#475569;margin-top:1px;">{{ auth()->user()->role_name }}</p>
+                    <p style="font-size:12.5px;font-weight:600;color:#e2e8f0;truncate;">{{ ($authUser ?? auth()->user())?->name ?? 'Admin' }}</p>
+                    <p style="font-size:10px;color:#475569;margin-top:1px;">{{ ($authUser ?? auth()->user())?->role_name ?? 'Quản trị viên' }}</p>
                 </div>
                 <form action="{{ locale_route('admin.logout') }}" method="POST">
                     @csrf

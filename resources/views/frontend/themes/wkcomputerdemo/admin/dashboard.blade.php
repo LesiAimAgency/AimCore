@@ -2,12 +2,12 @@
 @section('title', 'Bảng điều khiển')
 @section('page-title', 'Bảng điều khiển')
 @section('page-subtitle')
-    Xin chào, {{ auth()->user()->name ?? 'Admin' }}! Đây là báo cáo kinh doanh của bạn.
+    Xin chào, {{ ($authUser ?? auth()->user())->name ?? 'Admin' }}! Đây là báo cáo kinh doanh của bạn.
 @endsection
 
 @section('content')
 
-@php $user = auth()->user(); @endphp
+@php $user = $authUser ?? auth()->user(); @endphp
 
 {{-- Order Pipeline Hub --}}
 <div class="mb-6">
@@ -21,7 +21,7 @@
 
     <div class="grid grid-cols-5 gap-4">
         {{-- Pipeline Item: New/Unassigned (Special for Admin) --}}
-        @if($user->isAdmin())
+        @if($user?->isAdmin())
         <div class="card" style="padding:15px;border-left:4px solid #ef4444;">
             <div style="display:flex;align-items:center;gap:12px;">
                 <div style="width:36px;height:36px;border-radius:10px;background:#fef2f2;color:#ef4444;display:flex;align-items:center;justify-content:center;">
@@ -163,7 +163,7 @@
     {{-- High Level Insights (60%) --}}
     <div class="col-span-8 flex flex-col gap-6">
         {{-- SPECIAL: Dispatch Hub for Admin / Work Hub for Agent --}}
-        @if($user->isAdmin() && $stats['unassigned_orders'] > 0)
+        @if($user?->isAdmin() && ($stats['unassigned_orders'] ?? 0) > 0)
         <div class="card overflow-hidden" style="border-top: 3px solid #ef4444;">
             <div style="padding:12px 16px;background:#fef2f2;display:flex;align-items:center;justify-content:space-between;">
                 <h3 style="font-size:11px;font-weight:800;color:#b91c1c;text-transform:uppercase;letter-spacing:.05em;">
@@ -289,7 +289,7 @@
         </div>
 
         {{-- DA-01: Agent Performance (Admin Only) --}}
-        @if($user->isAdmin() && $stats['agent_performance'])
+        @if($user?->isAdmin() && !empty($stats['agent_performance']) && count($stats['agent_performance']) > 0)
         <div class="card overflow-hidden">
             <div style="padding:12px 16px;border-bottom:1px solid #e0f2fe;background:#f0f9ff;">
                 <h3 style="font-size:11px;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:8px;">
