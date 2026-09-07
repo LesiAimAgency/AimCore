@@ -3,9 +3,11 @@
 namespace App\Http\Middleware;
 
 use App\Models\Project;
+use App\Models\Tenant;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProjectSubdomainMiddleware
@@ -30,14 +32,25 @@ class ProjectSubdomainMiddleware
             abort(404, 'Project not found'.($projectCode ? ': '.$projectCode : ''));
         }
 
-        $tenantId = $project->tenant_id;
+        $hasTenantCol = false;
+        try {
+            $hasTenantCol = Schema::hasColumn('projects', 'tenant_id');
+        } catch (\Throwable $e) {
+            $hasTenantCol = false;
+        }
+
+        $tenantId = $hasTenantCol ? $project->tenant_id : null;
         if (! $tenantId) {
-            $matchedTenant = \App\Models\Tenant::where('code', $project->code)
+            $matchedTenant = Tenant::where('code', $project->code)
                 ->orWhere('code', str_replace(['-eco', '-ecommerce', '-demo'], '', $project->code))
                 ->first();
             $tenantId = $matchedTenant?->id;
-            if ($tenantId) {
-                $project->update(['tenant_id' => $tenantId]);
+            if ($tenantId && $hasTenantCol) {
+                try {
+                    $project->update(['tenant_id' => $tenantId]);
+                } catch (\Throwable $e) {
+                    // Fallback gracefully if database table is not migrated yet
+                }
             }
         }
 

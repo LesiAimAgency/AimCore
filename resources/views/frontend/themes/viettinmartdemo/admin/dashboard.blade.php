@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('frontend.themes.viettinmartdemo.admin.layouts.app')
 @section('title', 'Bảng điều khiển')
 @section('page-title', 'Bảng điều khiển')
 @section('page-subtitle')

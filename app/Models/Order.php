@@ -234,11 +234,6 @@ class Order extends Model
         return $value;
     }
 
-    public function getTotalAttribute(): float
-    {
-        return (float) ($this->attributes['total_amount'] ?? ($this->attributes['total'] ?? 0));
-    }
-
     public function getShippingProvinceAttribute(): ?string
     {
         return $this->attributes['shipping_province'] ?? ($this->shipping_address ?? 'Toàn quốc');

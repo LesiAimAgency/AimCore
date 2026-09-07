@@ -233,7 +233,7 @@ class Product extends Model implements HasMedia
     // Accessors
     public function getStockAttribute(): int
     {
-        return (int) ($this->stock_quantity ?? 0);
+        return (int) ($this->attributes['stock_quantity'] ?? ($this->attributes['stock'] ?? 0));
     }
 
     public function getImageAttribute(): ?string
@@ -252,11 +252,12 @@ class Product extends Model implements HasMedia
 
     public function getThumbnailUrlAttribute(): ?string
     {
-        if (! empty($this->featured_image)) {
-            return media_url($this->featured_image, 'theme/images/grocery/01.jpg');
+        $img = $this->featured_image ?? ($this->attributes['image'] ?? null);
+        if (! empty($img)) {
+            return function_exists('media_url') ? media_url($img, 'theme/images/grocery/01.jpg') : asset($img);
         }
 
-        return asset('theme/images/grocery/01.jpg');
+        return $this->getFeaturedImageUrl() ?: asset('theme/images/grocery/01.jpg');
     }
 
     public function getEffectivePriceAttribute(): float
@@ -378,20 +379,5 @@ class Product extends Model implements HasMedia
     public function getUrlAttribute(): string
     {
         return locale_route('shop.show', $this->slug);
-    }
-
-    public function getThumbnailUrlAttribute(): ?string
-    {
-        $img = $this->featured_image ?? ($this->attributes['image'] ?? null);
-        if ($img) {
-            return function_exists('media_url') ? media_url($img) : asset($img);
-        }
-
-        return $this->getFeaturedImageUrl();
-    }
-
-    public function getStockAttribute(): int
-    {
-        return (int) ($this->attributes['stock_quantity'] ?? ($this->attributes['stock'] ?? 0));
     }
 }
