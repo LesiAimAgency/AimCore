@@ -168,7 +168,7 @@
                                                 <div class="icon-circle text-primary" style="font-size: 20px; width: 24px;"><i class="fa-light fa-location-dot"></i></div>
                                                 <div>
                                                     <p class="mb-1 text-heading fw-bold small">{{ Lang('shipping_address') }}</p>
-                                                    <p class="mb-0 text-muted small lh-base">{{ $order->shipping_address }}</p>
+                                                    <p class="mb-0 text-muted small lh-base">{{ is_array($order->shipping_address) ? ($order->shipping_address['full_address'] ?? implode(', ', array_filter($order->shipping_address))) : $order->shipping_address }}</p>
                                                 </div>
                                             </div>
                                             <div class="d-flex gap-3">

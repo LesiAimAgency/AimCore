@@ -32,16 +32,39 @@ Route::get('/search-suggest', [ShopController::class, 'searchSuggest'])->name('s
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/gio-hang', [CartController::class, 'page'])->name('cart.page');
+Route::get('/cart', [CartController::class, 'page'])->name('cart');
 Route::get('/gio-hang/so-luong', [CartController::class, 'count'])->name('cart.count');
 Route::get('/gio-hang/dropdown', [CartController::class, 'dropdown'])->name('cart.dropdown');
 Route::get('/gio-hang/tong', [CartController::class, 'total'])->name('cart.total');
+
 Route::get('/dat-hang', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.en');
+Route::get('/thanh-toan', [CheckoutController::class, 'index'])->name('checkout.alias');
+Route::post('/dat-hang', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store.en');
+Route::post('/thanh-toan', [CheckoutController::class, 'store'])->name('checkout.store.alias');
 Route::get('/dat-hang/thanh-cong/{orderNumber}', [CheckoutController::class, 'success'])->name('checkout.success');
+Route::get('/checkout/thanh-cong/{orderNumber}', [CheckoutController::class, 'success.en']);
+Route::get('/thanh-toan/thanh-cong/{orderNumber}', [CheckoutController::class, 'success.alias']);
+
 Route::get('/lien-he', [ContactController::class, 'index'])->name('contact.index');
 Route::get('/order-track', [CheckoutController::class, 'trackOrder'])->name('order.track');
 Route::post('/order-track', [CheckoutController::class, 'trackOrderPost'])->name('order.track.post');
+
+// Wishlist
 Route::get('/wishlist', [CustomerActionController::class, 'wishlistIndex'])->name('wishlist');
+Route::get('/wishlist/ids', [CustomerActionController::class, 'getWishlistIds'])->name('wishlist.ids');
+Route::post('/wishlist/add', [CustomerActionController::class, 'addToWishlist'])->name('wishlist.add');
+Route::post('/wishlist/remove', [CustomerActionController::class, 'removeFromWishlist'])->name('wishlist.remove');
+
+// Compare
+Route::get('/compare/data', [CustomerActionController::class, 'getCompareData'])->name('compare.data');
 Route::get('/so-sanh', [CustomerActionController::class, 'compareIndex'])->name('compare.index');
+Route::get('/so-sanh-sp', [CustomerActionController::class, 'compareIndex'])->name('compare.alias');
+Route::get('/compare', [CustomerActionController::class, 'compareIndex'])->name('compare.en');
+Route::post('/compare/add', [CustomerActionController::class, 'addToCompare'])->name('compare.add');
+Route::post('/compare/remove', [CustomerActionController::class, 'removeFromCompare'])->name('compare.remove');
+
 Route::get('/quick-view/{id}', [CustomerActionController::class, 'getQuickView'])->name('product.quickview');
 
 Route::post('/gio-hang/them', [CartController::class, 'add'])->name('cart.add');
@@ -50,12 +73,8 @@ Route::post('/gio-hang/cap-nhat', [CartController::class, 'update'])->name('cart
 Route::post('/gio-hang/xoa-het', [CartController::class, 'clear'])->name('cart.clear');
 Route::post('/gio-hang/apply-coupon', [CartController::class, 'applyCoupon'])->name('cart.apply-coupon');
 Route::post('/gio-hang/remove-coupon', [CartController::class, 'removeCoupon'])->name('cart.remove-coupon');
-Route::post('/dat-hang', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::post('/lien-he', [ContactController::class, 'send'])->name('contact.send');
-Route::post('/wishlist/add', [CustomerActionController::class, 'addToWishlist'])->name('wishlist.add');
-Route::post('/wishlist/remove', [CustomerActionController::class, 'removeFromWishlist'])->name('wishlist.remove');
-Route::post('/compare/add', [CustomerActionController::class, 'addToCompare'])->name('compare.add');
-Route::post('/compare/remove', [CustomerActionController::class, 'removeFromCompare'])->name('compare.remove');
+Route::post('/newsletter/subscribe', fn () => response()->json(['success' => true, 'message' => 'Đăng ký nhận tin thành công!']))->name('newsletter.subscribe');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');

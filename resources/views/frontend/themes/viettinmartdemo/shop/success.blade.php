@@ -33,7 +33,7 @@
                         <div class="col-md-6">
                             <p class="mb--5"><strong>{{ Lang('account_order_receiver_info') }}:</strong> {{ $order->customer_name }}</p>
                             <p class="mb--5"><strong>{{ Lang('checkout_phone') }}:</strong> {{ $order->customer_phone }}</p>
-                            <p class="mb--5"><strong>{{ Lang('account_address_detail') }}:</strong> {{ $order->shipping_address }}</p>
+                            <p class="mb--5"><strong>{{ Lang('account_address_detail') }}:</strong> {{ is_array($order->shipping_address) ? ($order->shipping_address['full_address'] ?? implode(', ', array_filter($order->shipping_address))) : $order->shipping_address }}</p>
                         </div>
                         <div class="col-md-6">
                             <p class="mb--5"><strong>{{ Lang('account_col_date') }}:</strong> {{ $order->created_at->format('d/m/Y H:i') }}</p>

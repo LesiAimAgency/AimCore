@@ -31,7 +31,7 @@
         <p><strong>Ngày đặt hàng:</strong> {{ $order->created_at->format('d/m/Y H:i') }}</p>
         <p><strong>Trạng thái:</strong> <span class="status-badge status-pending">Chờ xử lý</span></p>
         <p><strong>Phương thức thanh toán:</strong> {{ strtoupper($order->payment_method) }}</p>
-        <p><strong>Địa chỉ nhận hàng:</strong> {{ $order->shipping_address }}</p>
+        <p><strong>Địa chỉ nhận hàng:</strong> {{ is_array($order->shipping_address) ? ($order->shipping_address['full_address'] ?? implode(', ', array_filter($order->shipping_address))) : $order->shipping_address }}</p>
 
         <h3 style="border-left: 4px solid #3b82f6; padding-left: 10px; margin-top: 30px;">Chi tiết sản phẩm</h3>
         <table>

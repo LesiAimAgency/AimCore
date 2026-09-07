@@ -24,7 +24,7 @@
         </div>
         <div class="col-md-6">
             <h6><i class="fa-regular fa-location-dot"></i> {{ __('order_detail_shipping_address') }}</h6>
-            <p class="mb-0">{{ $order->shipping_address }}</p>
+            <p class="mb-0">{{ is_array($order->shipping_address) ? ($order->shipping_address['full_address'] ?? implode(', ', array_filter($order->shipping_address))) : $order->shipping_address }}</p>
         </div>
     </div>
 </div>

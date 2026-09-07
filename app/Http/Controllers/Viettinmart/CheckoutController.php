@@ -71,13 +71,14 @@ class CheckoutController extends Controller
     {
         // VALIDATION ĐẦY ĐỦ VÀ CHẶT CHẼ
         $validated = $request->validate([
-            'first_name' => 'required|string|max:100|regex:/^[\p{L}\s]+$/u',
-            'last_name' => 'required|string|max:100|regex:/^[\p{L}\s]+$/u',
-            'email' => 'required|email:rfc,dns|max:255',
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
+            'email' => 'required|email|max:255',
             'phone' => 'required|string|regex:/^[0-9]{10,11}$/|max:20',
             'street_address' => 'required|string|max:500',
-            'province_code' => 'required|string|max:10',
-            'ward_code' => 'required|string|max:10',
+            'province_code' => 'nullable|string|max:100',
+            'district_code' => 'nullable|string|max:100',
+            'ward_code' => 'nullable|string|max:100',
             'province_name' => 'required|string|max:100',
             'district_name' => 'required|string|max:100',
             'ward_name' => 'required|string|max:100',
@@ -85,9 +86,7 @@ class CheckoutController extends Controller
             'notes' => 'nullable|string|max:1000',
         ], [
             'first_name.required' => 'Vui lòng nhập họ',
-            'first_name.regex' => 'Họ chỉ được chứa chữ cái và khoảng trắng',
             'last_name.required' => 'Vui lòng nhập tên',
-            'last_name.regex' => 'Tên chỉ được chứa chữ cái và khoảng trắng',
             'email.required' => 'Vui lòng nhập email',
             'email.email' => 'Email không hợp lệ',
             'phone.required' => 'Vui lòng nhập số điện thoại',
@@ -205,14 +204,16 @@ class CheckoutController extends Controller
                 }
             }
 
+            $projectCode = request()->route('projectCode');
             $project = request()->attributes->get('project')
                 ?? (function_exists('current_project') ? current_project() : null)
+                ?? ($projectCode ? Project::where('code', $projectCode)->first() : null)
                 ?? (session('current_project_id') ? Project::find(session('current_project_id')) : null);
             $projectId = $project ? $project->id : (session('current_project_id') ?: 10);
             $tenantId = session('current_tenant_id')
                 ?? ($project?->tenant_id ?? null)
-                ?? (function_exists('current_tenant') ? current_tenant()?->id : null)
-                ?? 1;
+                ?? ($user?->tenant_id ?? null)
+                ?? 3;
 
             $order = Order::create([
                 'project_id' => $projectId,
@@ -334,7 +335,7 @@ class CheckoutController extends Controller
         // VALIDATION CHẶT CHẼ
         $validated = $request->validate([
             'order_number' => 'required|string|max:50|regex:/^[A-Z0-9\-]+$/',
-            'email' => 'required|email:rfc,dns|max:255',
+            'email' => 'required|email|max:255',
         ], [
             'order_number.required' => 'Vui lòng nhập mã đơn hàng',
             'order_number.regex' => 'Mã đơn hàng không hợp lệ',
