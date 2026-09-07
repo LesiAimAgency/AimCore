@@ -218,7 +218,7 @@ class WidgetRenderingService
             // Auto-heal fallback for Viettinmart if homepage is empty
             if ($widgets->isEmpty() && $area === 'homepage-main' && $project && ($project->code === 'viettinmart-eco' || $project->code === 'viettinmart')) {
                 try {
-                    app(\App\Services\ViettinmartDataSyncService::class)->syncProjectId($projectId ?? 10, $tenantId);
+                    app(ViettinmartDataSyncService::class)->syncProjectId($projectId ?? 10, $tenantId);
                     $widgets = Widget::withoutGlobalScope('tenant')
                         ->where('area', $area)
                         ->where('is_active', true)

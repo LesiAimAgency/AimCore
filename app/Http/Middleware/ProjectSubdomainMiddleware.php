@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use App\Models\Project;
 use App\Models\Tenant;
 use App\Models\User;
+use App\Models\Widget;
+use App\Services\ViettinmartDataSyncService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
@@ -70,9 +72,9 @@ class ProjectSubdomainMiddleware
         // Auto-heal check for Viettinmart project data
         if ($project->code === 'viettinmart-eco' || $project->code === 'viettinmart') {
             try {
-                $hasWidgets = \App\Models\Widget::withoutGlobalScopes()->where('project_id', $project->id)->exists();
+                $hasWidgets = Widget::withoutGlobalScopes()->where('project_id', $project->id)->exists();
                 if (! $hasWidgets) {
-                    app(\App\Services\ViettinmartDataSyncService::class)->syncProjectId($project->id, $tenantId);
+                    app(ViettinmartDataSyncService::class)->syncProjectId($project->id, $tenantId);
                 }
             } catch (\Throwable $e) {
                 \Log::warning('Viettinmart auto-heal check failed: '.$e->getMessage());
