@@ -266,16 +266,24 @@ class ShopController extends Controller
             ]);
         }
 
+        $currentCategory = null;
+        if (! empty($matchedCategories) && $matchedCategories->isNotEmpty()) {
+            $currentCategory = $matchedCategories->first();
+        } elseif ($category_slug) {
+            $currentCategory = Category::withoutGlobalScopes()->where('slug', $category_slug)->first();
+        }
+
         return view('shop.index', compact(
             'products', 'categories', 'activeFilters',
-            'priceFilterType', 'pricePresets'
+            'priceFilterType', 'pricePresets', 'currentCategory'
         ));
     }
 
     public function category(Request $request, $projectCode = null, $category_slug = null)
     {
-        if ($category_slug === null) {
-            $category_slug = $projectCode;
+        $category_slug = $category_slug ?? $request->route('slug') ?? $request->route('category_slug') ?? $projectCode;
+        if ($category_slug === $projectCode && Project::where('code', $projectCode)->exists()) {
+            $category_slug = $request->route('slug');
         }
 
         return $this->index($request, $projectCode, $category_slug);
