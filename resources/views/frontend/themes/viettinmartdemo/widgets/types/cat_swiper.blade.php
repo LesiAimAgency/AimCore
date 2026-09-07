@@ -1,4 +1,4 @@
-﻿<div class="rts-caregory-area-one" {!! $sectionStyles ?? '' !!}>
+<div class="rts-caregory-area-one" {!! $sectionStyles ?? '' !!}>
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -32,7 +32,7 @@
                         <div class="swiper-wrapper">
                             @foreach($categories as $cat)
                             <div class="swiper-slide">
-                                <a href="{{ locale_route('shop.show', $cat->slug) }}" class="single-category-one">
+                                <a href="{{ locale_route('shop.category', ['slug' => $cat->slug]) }}" class="single-category-one">
                                     <img src="{{ $cat->image ?: asset('theme/images/category/01.png') }}" alt="{{ $cat->name }}" loading="lazy">
                                     <p>{{ $cat->name }}</p>
                                 </a>

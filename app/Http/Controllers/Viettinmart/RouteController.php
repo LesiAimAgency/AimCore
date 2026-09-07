@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Viettinmart;
 
-use App\Http\Controllers\ShopController;
+use App\Http\Controllers\Viettinmart\ShopController;
 use App\Models\Category;
 use App\Models\Language;
 use App\Models\Page;
@@ -86,7 +86,6 @@ class RouteController extends Controller
                 });
         })
             ->where('is_active', true)
-            ->where('type', 'product')
             ->with('translations')
             ->first();
 
@@ -100,7 +99,7 @@ class RouteController extends Controller
             }
 
             // Redirect đến shop index với filter category
-            return app(ShopController::class)->index($request, $slug);
+            return app(ShopController::class)->index($request, null, $category->slug);
         }
 
         // 3. Thử tìm bài viết
