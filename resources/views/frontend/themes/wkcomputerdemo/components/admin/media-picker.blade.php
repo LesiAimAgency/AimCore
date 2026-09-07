@@ -1,4 +1,35 @@
 @once
+@php
+    $pCode = request()->route('projectCode') 
+        ?? (is_array(session('current_project')) ? (session('current_project')['code'] ?? null) : (session('current_project')->code ?? null))
+        ?? (function_exists('current_project') ? current_project()?->code : null)
+        ?? (request()->segment(2) === 'admin' ? request()->segment(1) : null);
+
+    $uploadUrl = locale_route('project.admin.media.upload');
+    if ($uploadUrl === '#' || empty($uploadUrl)) {
+        $uploadUrl = $pCode ? url("/{$pCode}/admin/media/upload") : url('/admin/media/upload');
+    }
+
+    $listUrl = locale_route('project.admin.media.list');
+    if ($listUrl === '#' || empty($listUrl)) {
+        $listUrl = $pCode ? url("/{$pCode}/admin/media/list") : url('/admin/media/list');
+    }
+
+    $createFolderUrl = locale_route('project.admin.media.folder.create');
+    if ($createFolderUrl === '#' || empty($createFolderUrl)) {
+        $createFolderUrl = $pCode ? url("/{$pCode}/admin/media/folder") : url('/admin/media/folder');
+    }
+
+    $deleteFolderUrl = locale_route('project.admin.media.folder.delete');
+    if ($deleteFolderUrl === '#' || empty($deleteFolderUrl)) {
+        $deleteFolderUrl = $pCode ? url("/{$pCode}/admin/media/folder") : url('/admin/media/folder');
+    }
+
+    $moveUrl = locale_route('project.admin.media.move');
+    if ($moveUrl === '#' || empty($moveUrl)) {
+        $moveUrl = $pCode ? url("/{$pCode}/admin/media/move") : url('/admin/media/move');
+    }
+@endphp
 {{--
     Media Picker Modal — dùng chung toàn admin
     Cách dùng:
@@ -10,6 +41,7 @@
      x-data="mediaPickerData()" 
      x-show="show" 
      x-cloak 
+     style="display: none;"
      class="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6"
      @keydown.window.escape="show = false">
     
@@ -292,34 +324,55 @@
 
             async uploadFile(e) {
                 const files = e.target.files;
-                if (!files.length) return;
+                if (!files || !files.length) return;
 
                 const formData = new FormData();
                 for (let i = 0; i < files.length; i++) {
                     formData.append('files[]', files[i]);
                 }
-                formData.append('folder_id', this.currentFolderId || '');
-                formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+                formData.append('path', this.currentFolderId || '');
+                const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
+                if (csrf) {
+                    formData.append('_token', csrf);
+                }
 
                 this.uploading = true;
                 try {
-                    const response = await fetch('{{ route('admin.media.store') }}', {
+                    const response = await fetch('{{ $uploadUrl }}', {
                         method: 'POST',
                         body: formData,
-                        headers: { 'Accept': 'application/json' }
+                        headers: { 
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': csrf,
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        credentials: 'same-origin'
                     });
-                    const data = await response.json();
+
+                    const text = await response.text();
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch (parseErr) {
+                        throw new Error('Máy chủ phản hồi không hợp lệ (HTTP ' + response.status + ')');
+                    }
+
+                    if (!response.ok || (data && data.success === false)) {
+                        throw new Error(data.message || ('Lỗi máy chủ: HTTP ' + response.status));
+                    }
                     
                     e.target.value = ''; // clear input
                     await this.fetchMedia();
                     
                     // Auto select the FIRST of the newly uploaded files
-                    if (data.items && data.items.length > 0) {
-                        const newItem = this.items.find(i => i.id === data.items[0].id);
+                    const uploadedList = data.uploaded || data.items || [];
+                    if (uploadedList && uploadedList.length > 0) {
+                        const firstUploaded = uploadedList[0];
+                        const newItem = this.items.find(i => i.id === firstUploaded.id || i.url === firstUploaded.url || i.path === firstUploaded.path);
                         if (newItem) this.selectItem(newItem);
                     }
                 } catch (err) {
-                    alert('Lỗi' + ' tải lên: ' + err.message);
+                    alert('Lỗi tải lên: ' + err.message);
                 } finally {
                     this.uploading = false;
                 }
@@ -329,14 +382,32 @@
                 this.loading = true;
                 try {
                     const params = new URLSearchParams({ 
-                        folder_id: this.currentFolderId || '',
-                        search: this.search
+                        path: this.currentFolderId || '',
+                        search: this.search || ''
                     });
-                    const response = await fetch(`/admin/media/picker?${params.toString()}`);
+                    const response = await fetch(`{{ $listUrl }}?${params.toString()}`, {
+                        headers: { 
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        credentials: 'same-origin'
+                    });
                     const data = await response.json();
-                    this.items = data.items || [];
-                    this.subFolders = data.folders || [];
-                    this.roots = data.roots || [];
+                    let rawFiles = data.files || data.items || [];
+                    if (this.search) {
+                        const q = this.search.toLowerCase();
+                        rawFiles = rawFiles.filter(f => (f.name || '').toLowerCase().includes(q));
+                    }
+                    this.items = rawFiles.map(f => ({
+                        ...f,
+                        mime: f.mime || (['jpg','jpeg','png','gif','webp','svg'].includes((f.name || '').split('.').pop().toLowerCase()) ? 'image/' + (f.name || '').split('.').pop().toLowerCase() : 'application/octet-stream')
+                    }));
+                    this.subFolders = (data.folders || []).map(f => ({
+                        id: f.path || f.name,
+                        name: f.name,
+                        path: f.path
+                    }));
+                    this.roots = [];
                 } catch (e) {
                     console.error('Picker error:', e);
                 } finally {
@@ -349,15 +420,12 @@
                 this.fetchMedia();
             },
 
-            async goUp() {
+            goUp() {
                 if (!this.currentFolderId) return;
-                try {
-                    const response = await fetch(`/admin/media/folder/${this.currentFolderId}/parent`);
-                    const data = await response.json();
-                    this.setFolder(data.parent_id);
-                } catch (e) {
-                    this.setFolder(null);
-                }
+                const parts = this.currentFolderId.replace(/\\/g, '/').split('/').filter(p => p);
+                parts.pop();
+                this.currentFolderId = parts.join('/');
+                this.fetchMedia();
             },
 
             selectItem(item) {
@@ -369,17 +437,20 @@
                 const name = prompt('Nhập tên thư mục mới:');
                 if (!name) return;
 
+                const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
                 try {
-                    const response = await fetch("{{ route('admin.media.create-folder') }}", {
+                    const response = await fetch("{{ $createFolderUrl }}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json'
+                            'X-CSRF-TOKEN': csrf,
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
                         },
+                        credentials: 'same-origin',
                         body: JSON.stringify({
                             name: name,
-                            parent_id: this.currentFolderId
+                            path: this.currentFolderId || ''
                         })
                     });
                     if (response.ok) this.fetchMedia();
@@ -389,22 +460,30 @@
             async saveRename(id, isFolder) {
                 const inputId = isFolder ? `rename-folder-${id}` : `rename-file-${id}`;
                 const input = document.getElementById(inputId);
+                if (!input) return (this.editingId = null);
                 const newName = input.value.trim();
                 if (!newName) return (this.editingId = null);
 
-                const route = isFolder
-                    ? "{{ route('admin.media.index') }}/folder/" + id + "/rename"
-                    : "{{ route('admin.media.index') }}/file/" + id + "/rename";
+                const currentBase = this.currentFolderId ? this.currentFolderId.replace(/\\/g, '/').replace(/\/$/, '') + '/' : '';
+                const fromPath = id;
+                const toPath = currentBase + newName;
 
+                const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
                 try {
-                    const res = await fetch(route, {
+                    const res = await fetch("{{ $moveUrl }}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json'
+                            'X-CSRF-TOKEN': csrf,
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
                         },
-                        body: JSON.stringify({ name: newName })
+                        credentials: 'same-origin',
+                        body: JSON.stringify({
+                            from: fromPath,
+                            to: toPath,
+                            type: isFolder ? 'folder' : 'file'
+                        })
                     });
                     if (res.ok) this.fetchMedia();
                 } catch(e) {}
@@ -412,22 +491,37 @@
             },
 
             async deleteFolder(id) {
-                if (!confirm('Xóa' + ' thư mục này?')) return;
+                if (!confirm('Xóa thư mục này?')) return;
+                const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
                 try {
-                    const res = await fetch("{{ route('admin.media.index') }}/folder/" + id, {
+                    const res = await fetch("{{ $deleteFolderUrl }}", {
                         method: 'DELETE',
-                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrf,
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify({ path: id })
                     });
                     if (res.ok) this.fetchMedia();
                 } catch(e) {}
             },
 
             async deleteItem(id) {
-                if (!confirm('Xóa' + ' tệp này?')) return;
+                if (!confirm('Xóa tệp này?')) return;
+                const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
+                const deleteUrl = "{{ $listUrl }}".replace(/\/list$/, '');
                 try {
-                    const res = await fetch("{{ route('admin.media.index') }}/" + id, {
+                    const res = await fetch(deleteUrl + '/' + encodeURIComponent(id), {
                         method: 'DELETE',
-                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
+                        headers: { 
+                            'X-CSRF-TOKEN': csrf,
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        credentials: 'same-origin'
                     });
                     if (res.ok) {
                         this.fetchMedia();
@@ -450,6 +544,10 @@
                         const previewId = this.targetId + '_preview';
                         if (window.updateImgPreview) {
                             window.updateImgPreview(previewId, this.selectedItem.url);
+                        }
+                        const previewImg = document.getElementById(previewId) || document.getElementById(this.targetId + '-preview');
+                        if (previewImg && previewImg.tagName === 'IMG') {
+                            previewImg.src = this.selectedItem.url;
                         }
                     }
                 }

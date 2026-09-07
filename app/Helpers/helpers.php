@@ -280,8 +280,12 @@ if (! function_exists('locale_route')) {
         $aliases = [
             'project.admin.media.index' => 'project.admin.media.list',
             'admin.media.index' => 'project.admin.media.list',
+            'project.admin.media.list' => 'project.admin.media.list',
+            'admin.media.list' => 'project.admin.media.list',
             'project.admin.media.store' => 'project.admin.media.upload',
             'admin.media.store' => 'project.admin.media.upload',
+            'project.admin.media.upload' => 'project.admin.media.upload',
+            'admin.media.upload' => 'project.admin.media.upload',
             'project.admin.media.create-folder' => 'project.admin.media.folder.create',
             'admin.media.create-folder' => 'project.admin.media.folder.create',
             'project.admin.media.delete-folder' => 'project.admin.media.folder.delete',
@@ -290,6 +294,8 @@ if (! function_exists('locale_route')) {
             'admin.media.picker' => 'project.admin.media.list',
             'project.admin.media.move' => 'project.admin.media.move',
             'admin.media.move' => 'project.admin.media.move',
+            'project.admin.media.destroy' => 'project.admin.media.destroy',
+            'admin.media.destroy' => 'project.admin.media.destroy',
             'project.admin.languages.index' => 'project.admin.settings.languages',
             'admin.languages.index' => 'project.admin.settings.languages',
             'project.admin.seo.index' => 'project.admin.settings.seo',
@@ -312,7 +318,12 @@ if (! function_exists('locale_route')) {
         }
 
         $projectCode = request()->route('projectCode')
-            ?? (is_array(session('current_project')) ? (session('current_project')['code'] ?? null) : (session('current_project')->code ?? null));
+            ?? (is_array(session('current_project')) ? (session('current_project')['code'] ?? null) : (session('current_project')->code ?? null))
+            ?? (function_exists('current_project') ? current_project()?->code : null);
+
+        if (! $projectCode && request()->segment(1) && request()->segment(2) === 'admin') {
+            $projectCode = request()->segment(1);
+        }
 
         if (! Route::has($name)) {
             if ($projectCode && Route::has('project.'.$name)) {

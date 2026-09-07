@@ -1,4 +1,35 @@
 @once
+@php
+    $pCode = request()->route('projectCode') 
+        ?? (is_array(session('current_project')) ? (session('current_project')['code'] ?? null) : (session('current_project')->code ?? null))
+        ?? (function_exists('current_project') ? current_project()?->code : null)
+        ?? (request()->segment(2) === 'admin' ? request()->segment(1) : null);
+
+    $uploadUrl = locale_route('project.admin.media.upload');
+    if ($uploadUrl === '#' || empty($uploadUrl)) {
+        $uploadUrl = $pCode ? url("/{$pCode}/admin/media/upload") : url('/admin/media/upload');
+    }
+
+    $listUrl = locale_route('project.admin.media.list');
+    if ($listUrl === '#' || empty($listUrl)) {
+        $listUrl = $pCode ? url("/{$pCode}/admin/media/list") : url('/admin/media/list');
+    }
+
+    $createFolderUrl = locale_route('project.admin.media.folder.create');
+    if ($createFolderUrl === '#' || empty($createFolderUrl)) {
+        $createFolderUrl = $pCode ? url("/{$pCode}/admin/media/folder") : url('/admin/media/folder');
+    }
+
+    $deleteFolderUrl = locale_route('project.admin.media.folder.delete');
+    if ($deleteFolderUrl === '#' || empty($deleteFolderUrl)) {
+        $deleteFolderUrl = $pCode ? url("/{$pCode}/admin/media/folder") : url('/admin/media/folder');
+    }
+
+    $moveUrl = locale_route('project.admin.media.move');
+    if ($moveUrl === '#' || empty($moveUrl)) {
+        $moveUrl = $pCode ? url("/{$pCode}/admin/media/move") : url('/admin/media/move');
+    }
+@endphp
 {{--
     Media Picker Modal — dùng chung toàn admin
     Cách dùng:
@@ -307,7 +338,7 @@
 
                 this.uploading = true;
                 try {
-                    const response = await fetch('{{ locale_route('admin.media.store') }}', {
+                    const response = await fetch('{{ $uploadUrl }}', {
                         method: 'POST',
                         body: formData,
                         headers: { 
@@ -354,7 +385,7 @@
                         path: this.currentFolderId || '',
                         search: this.search || ''
                     });
-                    const response = await fetch(`{{ locale_route('admin.media.list') }}?${params.toString()}`, {
+                    const response = await fetch(`{{ $listUrl }}?${params.toString()}`, {
                         headers: { 
                             'Accept': 'application/json',
                             'X-Requested-With': 'XMLHttpRequest'
@@ -408,7 +439,7 @@
 
                 const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
                 try {
-                    const response = await fetch("{{ locale_route('admin.media.create-folder') }}", {
+                    const response = await fetch("{{ $createFolderUrl }}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -439,7 +470,7 @@
 
                 const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
                 try {
-                    const res = await fetch("{{ locale_route('admin.media.move') }}", {
+                    const res = await fetch("{{ $moveUrl }}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -463,7 +494,7 @@
                 if (!confirm('Xóa thư mục này?')) return;
                 const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
                 try {
-                    const res = await fetch("{{ locale_route('admin.media.delete-folder') }}", {
+                    const res = await fetch("{{ $deleteFolderUrl }}", {
                         method: 'DELETE',
                         headers: { 
                             'Content-Type': 'application/json',
@@ -481,7 +512,7 @@
             async deleteItem(id) {
                 if (!confirm('Xóa tệp này?')) return;
                 const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
-                const deleteUrl = "{{ locale_route('admin.media.list') }}".replace(/\/list$/, '');
+                const deleteUrl = "{{ $listUrl }}".replace(/\/list$/, '');
                 try {
                     const res = await fetch(deleteUrl + '/' + encodeURIComponent(id), {
                         method: 'DELETE',

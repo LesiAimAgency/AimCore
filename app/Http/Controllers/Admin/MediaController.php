@@ -42,26 +42,52 @@ class MediaController extends Controller
     {
         $basePath = $this->getMediaPath($request);
         $path = $request->get('path', '');
-        $fullPath = $path ? $basePath.'/'.ltrim($path, '/') : $basePath;
+        $path = ltrim(str_replace('\\', '/', $path), '/');
+
+        $fullPath = $path ? $basePath.'/'.$path : $basePath;
+        $sharedFullPath = $path ? 'media/'.$path : 'media';
 
         // Ensure base directory exists
         if (! Storage::disk('public')->exists($basePath)) {
             Storage::disk('public')->makeDirectory($basePath);
         }
 
-        // Get folders
-        $directories = Storage::disk('public')->directories($fullPath);
-        $folders = collect($directories)->map(function ($dir) use ($basePath) {
+        // Get folders: collect from project directory
+        $dirList = collect(Storage::disk('public')->exists($fullPath) ? Storage::disk('public')->directories($fullPath) : []);
+
+        // Also include shared media folders if root or shared folder exists
+        if ($path === '' || Storage::disk('public')->exists($sharedFullPath)) {
+            $sharedDirs = collect(Storage::disk('public')->directories($sharedFullPath))
+                ->reject(function ($dir) {
+                    $base = basename($dir);
+
+                    return str_starts_with($base, 'project-') || str_starts_with($base, 'tenant-');
+                });
+            $dirList = $dirList->merge($sharedDirs);
+        }
+
+        $folders = $dirList->map(function ($dir) use ($basePath) {
+            $relPath = str_replace([$basePath.'/', 'media/'], '', $dir);
+
             return [
                 'name' => basename($dir),
-                'path' => str_replace($basePath.'/', '', $dir),
+                'path' => $relPath,
             ];
-        })->values();
+        })->unique('name')->values();
 
-        // Get files
-        $files = Storage::disk('public')->files($fullPath);
-        $media = collect($files)->filter(function ($file) {
-            return in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'gif', 'webp', 'mp4', 'webm', 'mov', 'avi', 'mkv']);
+        // Get files: collect from project directory
+        $fileList = collect(Storage::disk('public')->exists($fullPath) ? Storage::disk('public')->files($fullPath) : []);
+
+        // Also include shared media files if root or shared folder exists
+        if ($path === '' || Storage::disk('public')->exists($sharedFullPath)) {
+            $sharedFiles = collect(Storage::disk('public')->files($sharedFullPath));
+            $fileList = $fileList->merge($sharedFiles);
+        }
+
+        $media = $fileList->filter(function ($file) {
+            return in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'mp4', 'webm', 'mov', 'avi', 'mkv']);
+        })->unique(function ($file) {
+            return basename($file);
         })->map(function ($file) {
             return [
                 'id' => $file,
