@@ -567,4 +567,32 @@ class MediaController extends Controller
 
         return response()->json(['success' => false, 'message' => 'File not found'], 404);
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'string',
+        ]);
+
+        $deleted = 0;
+        foreach ($request->ids as $id) {
+            $path = ltrim($id, '/');
+            if (str_starts_with($path, 'storage/')) {
+                $path = substr($path, 8);
+            }
+            if (Storage::disk('public')->directoryExists($path)) {
+                Storage::disk('public')->deleteDirectory($path);
+                $deleted++;
+            } elseif (Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
+                $deleted++;
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'deleted' => $deleted,
+        ]);
+    }
 }

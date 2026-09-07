@@ -44,9 +44,15 @@ class SelectField extends BaseFieldType
         }
 
         if ($isMultiple) {
-            $fieldHtml = '<div class="space-y-1">';
+            $fieldHtml = '<div class="space-y-1.5">';
+            if (count($options) > 8) {
+                $fieldHtml .= '<input type="text" placeholder="Gõ để lọc nhanh danh sách..." oninput="const q = this.value.toLowerCase(); Array.from(this.nextElementSibling.options).forEach(opt => { opt.style.display = opt.text.toLowerCase().includes(q) ? \'\' : \'none\'; });" class="w-full px-3 py-1.5 text-xs border border-gray-200 rounded-lg bg-gray-50 focus:bg-white focus:border-blue-400 outline-none transition">';
+            }
             $fieldHtml .= '<select'.$this->renderAttributes($attributes).">{$optionsHtml}</select>";
-            $fieldHtml .= '<p class="text-[11px] text-gray-400">Giữ phím Ctrl (hoặc Cmd trên Mac) để chọn nhiều mục</p>';
+            $fieldHtml .= '<div class="flex items-center justify-between text-[11px] text-gray-400">';
+            $fieldHtml .= '<span>Giữ phím Ctrl (hoặc Cmd) để chọn/bỏ chọn nhiều mục</span>';
+            $fieldHtml .= '<button type="button" onclick="const sel = this.parentElement.previousElementSibling; Array.from(sel.options).forEach(o => o.selected = false); sel.dispatchEvent(new Event(\'change\'));" class="text-blue-500 hover:underline">Bỏ chọn tất cả</button>';
+            $fieldHtml .= '</div>';
             $fieldHtml .= '</div>';
         } else {
             $fieldHtml = '<div class="relative">';

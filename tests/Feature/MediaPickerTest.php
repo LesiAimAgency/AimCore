@@ -121,5 +121,41 @@ class MediaPickerTest extends TestCase
         $response->assertOk();
         $response->assertSee('media-picker-modal', false);
         $response->assertSee('openMediaPicker', false);
+        $response->assertSee('Chọn nhiều', false);
+        $response->assertSee('Xóa nhiều', false);
+        $response->assertSee('bulkDelete', false);
+    }
+
+    public function test_media_bulk_delete_endpoint_successfully_removes_multiple_files_and_directories(): void
+    {
+        Storage::disk('public')->put('media/project-viettinmart-eco/file1.png', 'content1');
+        Storage::disk('public')->put('media/project-viettinmart-eco/file2.png', 'content2');
+        Storage::disk('public')->put('media/project-viettinmart-eco/subfolder/file3.png', 'content3');
+
+        Storage::disk('public')->assertExists('media/project-viettinmart-eco/file1.png');
+        Storage::disk('public')->assertExists('media/project-viettinmart-eco/file2.png');
+        Storage::disk('public')->assertExists('media/project-viettinmart-eco/subfolder/file3.png');
+
+        $response = $this->withSession([
+            'project_user_id' => $this->admin->id,
+            'project_user_username' => $this->admin->username,
+            'current_project' => 'viettinmart-eco',
+        ])->postJson('/viettinmart-eco/admin/media/bulk-delete', [
+            'ids' => [
+                'media/project-viettinmart-eco/file1.png',
+                'media/project-viettinmart-eco/file2.png',
+                'media/project-viettinmart-eco/subfolder',
+            ],
+        ]);
+
+        $response->assertOk();
+        $response->assertJson([
+            'success' => true,
+            'deleted' => 3,
+        ]);
+
+        Storage::disk('public')->assertMissing('media/project-viettinmart-eco/file1.png');
+        Storage::disk('public')->assertMissing('media/project-viettinmart-eco/file2.png');
+        Storage::disk('public')->assertMissing('media/project-viettinmart-eco/subfolder/file3.png');
     }
 }

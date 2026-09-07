@@ -241,6 +241,7 @@ Route::prefix('{projectCode}/admin')
         // Media Management
         Route::get('media/list', [MediaController::class, 'list'])->name('media.list');
         Route::post('media/upload', [MediaController::class, 'upload'])->name('media.upload');
+        Route::post('media/bulk-delete', [MediaController::class, 'bulkDelete'])->name('media.bulk-delete');
         Route::post('media/folder', [MediaController::class, 'createFolder'])->name('media.folder.create');
         Route::delete('media/folder', [MediaController::class, 'deleteFolder'])->name('media.folder.delete');
         Route::post('media/move', [MediaController::class, 'move'])->name('media.move');

@@ -6,6 +6,7 @@ use App\Contracts\FieldTypeInterface;
 use App\Services\FieldTypes\CheckboxField;
 use App\Services\FieldTypes\ColorField;
 use App\Services\FieldTypes\DateField;
+use App\Services\FieldTypes\DateTimeField;
 use App\Services\FieldTypes\EmailField;
 use App\Services\FieldTypes\GalleryField;
 use App\Services\FieldTypes\ImageField;
@@ -45,6 +46,7 @@ class FieldTypeService
         $this->register(new EmailField);
         $this->register(new UrlField);
         $this->register(new DateField);
+        $this->register(new DateTimeField);
 
         // Choice fields
         $this->register(new SelectField);
@@ -80,6 +82,10 @@ class FieldTypeService
      */
     public function get(string $type): ?FieldTypeInterface
     {
+        if ($type === 'datetime-local' || $type === 'picktime') {
+            $type = 'datetime';
+        }
+
         return $this->fieldTypes[$type] ?? null;
     }
 
@@ -88,6 +94,10 @@ class FieldTypeService
      */
     public function exists(string $type): bool
     {
+        if ($type === 'datetime-local' || $type === 'picktime') {
+            $type = 'datetime';
+        }
+
         return isset($this->fieldTypes[$type]);
     }
 

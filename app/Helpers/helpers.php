@@ -296,6 +296,8 @@ if (! function_exists('locale_route')) {
             'admin.media.move' => 'project.admin.media.move',
             'project.admin.media.destroy' => 'project.admin.media.destroy',
             'admin.media.destroy' => 'project.admin.media.destroy',
+            'project.admin.media.bulk-delete' => 'project.admin.media.bulk-delete',
+            'admin.media.bulk-delete' => 'project.admin.media.bulk-delete',
             'project.admin.languages.index' => 'project.admin.settings.languages',
             'admin.languages.index' => 'project.admin.settings.languages',
             'project.admin.seo.index' => 'project.admin.settings.seo',

@@ -1,7 +1,28 @@
 @php
     $uniqueId  = 'deal-' . ($widget->id ?? $widget->settings['id'] ?? uniqid());
-    $endDate   = $config['end_date'] ?? now()->addDays(7)->format('m/d/Y H:i:s');
     $title     = $config['title'] ?? __('frontend.widget_deal_default_title');
+
+    // Parse end_date to m/d/Y H:i:s format required by theme's countdown JS
+    $rawEndDate = $config['end_date'] ?? now()->addDays(7)->format('Y-m-d H:i:s');
+    try {
+        $endDt = \Carbon\Carbon::parse($rawEndDate);
+        $endDate = $endDt->format('m/d/Y H:i:s');
+    } catch (\Throwable $e) {
+        $endDate = $rawEndDate;
+    }
+
+    $rawStartDate = $config['start_date'] ?? null;
+    $startDate = null;
+    $isUpcoming = false;
+    if ($rawStartDate) {
+        try {
+            $startDt = \Carbon\Carbon::parse($rawStartDate);
+            $startDate = $startDt->format('m/d/Y H:i:s');
+            if (now()->lt($startDt)) {
+                $isUpcoming = true;
+            }
+        } catch (\Throwable $e) {}
+    }
 @endphp
 
 
@@ -14,8 +35,13 @@
                 <div class="title-area-between">
                     <div class="title-left-area" style="display: flex; align-items: center; gap: 20px;">
                         <h2 class="title-left" style="margin-bottom: 0;">{{ $title }}</h2>
+                        @if($isUpcoming && $rawStartDate)
+                            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill font-bold" style="font-size: 11px;">
+                                <i class="fa-regular fa-clock mr-1"></i> Bắt đầu: {{ \Carbon\Carbon::parse($rawStartDate)->format('H:i d/m/Y') }}
+                            </span>
+                        @endif
                         <div class="countdown" style="margin-bottom: 0;">
-                            <div class="countDown">{{ $endDate }}</div>
+                            <div class="countDown">{{ $isUpcoming ? $startDate : $endDate }}</div>
                         </div>
                     </div>
                 </div>
