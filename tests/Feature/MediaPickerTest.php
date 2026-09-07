@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Project;
+use App\Models\ProjectUser;
 use App\Models\Tenant;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +16,7 @@ class MediaPickerTest extends TestCase
 
     protected Project $project;
 
-    protected User $admin;
+    protected ProjectUser $admin;
 
     protected function setUp(): void
     {
@@ -41,10 +41,13 @@ class MediaPickerTest extends TestCase
             'tenant_id' => 3,
         ]);
 
-        $this->admin = User::factory()->create([
+        $this->admin = ProjectUser::forceCreate([
+            'username' => 'admin_test',
+            'name' => 'Admin Test',
             'role' => 'admin',
             'level' => 1,
             'tenant_id' => 3,
+            'project_ids' => [$this->project->id],
         ]);
     }
 
@@ -55,8 +58,10 @@ class MediaPickerTest extends TestCase
         Storage::disk('public')->put('media/shared-logo.png', 'fake-logo');
         Storage::disk('public')->makeDirectory('media/products');
 
-        $response = $this->actingAs($this->admin)
-            ->getJson('/viettinmart-eco/admin/media/list');
+        $response = $this->withSession([
+            'project_user_id' => $this->admin->id,
+            'current_project' => $this->project->code,
+        ])->getJson('/viettinmart-eco/admin/media/list');
 
         $response->assertOk();
         $response->assertJsonStructure([
@@ -80,11 +85,13 @@ class MediaPickerTest extends TestCase
     {
         $file = UploadedFile::fake()->image('my_uploaded_logo.png', 200, 200);
 
-        $response = $this->actingAs($this->admin)
-            ->postJson('/viettinmart-eco/admin/media/upload', [
-                'files' => [$file],
-                'path' => '',
-            ]);
+        $response = $this->withSession([
+            'project_user_id' => $this->admin->id,
+            'current_project' => $this->project->code,
+        ])->postJson('/viettinmart-eco/admin/media/upload', [
+            'files' => [$file],
+            'path' => '',
+        ]);
 
         $response->assertOk();
         $response->assertJson([
@@ -103,8 +110,10 @@ class MediaPickerTest extends TestCase
 
     public function test_appearance_settings_page_renders_media_picker(): void
     {
-        $response = $this->actingAs($this->admin)
-            ->get('/viettinmart-eco/admin/settings/group/appearance');
+        $response = $this->withSession([
+            'project_user_id' => $this->admin->id,
+            'current_project' => $this->project->code,
+        ])->get('/viettinmart-eco/admin/settings/group/appearance');
 
         $response->assertOk();
         $response->assertSee('media-picker-modal', false);
