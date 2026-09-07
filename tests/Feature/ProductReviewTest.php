@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
-use App\Models\ProductCategory;
 use App\Models\Project;
 use App\Models\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -43,15 +42,9 @@ class ProductReviewTest extends TestCase
         app()->instance('current_tenant_id', 3);
         app()->instance('current_project_id', 10);
 
-        $category = ProductCategory::factory()->create([
-            'tenant_id' => 3,
-            'project_id' => 10,
-        ]);
-
         $this->product = Product::forceCreate([
             'tenant_id' => 3,
             'project_id' => 10,
-            'product_category_id' => $category->id,
             'name' => 'Sản phẩm Test',
             'slug' => 'san-pham-test',
             'status' => 'active',

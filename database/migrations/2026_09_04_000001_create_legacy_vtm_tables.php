@@ -257,9 +257,12 @@ return new class extends Migration
                 $table->unsignedBigInteger('user_id')->nullable()->index();
                 $table->unsignedBigInteger('project_id')->nullable()->index();
                 $table->unsignedBigInteger('tenant_id')->nullable()->index();
+                $table->string('reviewer_name')->nullable();
+                $table->string('reviewer_email')->nullable();
                 $table->integer('rating')->default(5);
                 $table->text('comment')->nullable();
                 $table->string('status')->default('approved');
+                $table->boolean('is_verified')->default(false);
                 $table->timestamps();
             });
         }

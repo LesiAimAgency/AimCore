@@ -262,6 +262,7 @@
                 <div class="col-lg-12">
                     <div class="navigator-breadcrumb-wrapper">
                         <a href="{{ locale_route('home') }}">{{ Lang('home') }}</a>
+                        <i class="fa-regular fa-chevron-right"></i>
                         @if(isset($currentCategory) && $currentCategory)
                             <a href="{{ locale_route('shop.index') }}">{{ Lang('shop') }}</a>
                             <i class="fa-regular fa-chevron-right"></i>

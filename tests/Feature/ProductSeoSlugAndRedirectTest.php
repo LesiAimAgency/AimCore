@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class ProductSeoSlugAndRedirectTest extends TestCase
@@ -18,6 +20,32 @@ class ProductSeoSlugAndRedirectTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        foreach (['sqlite', 'project'] as $connection) {
+            try {
+                if (! Schema::connection($connection)->hasTable('media')) {
+                    Schema::connection($connection)->create('media', function ($table) {
+                        $table->id();
+                        $table->morphs('model');
+                        $table->uuid('uuid')->nullable()->unique();
+                        $table->string('collection_name');
+                        $table->string('name');
+                        $table->string('file_name');
+                        $table->string('mime_type')->nullable();
+                        $table->string('disk');
+                        $table->string('conversions_disk')->nullable();
+                        $table->unsignedBigInteger('size');
+                        $table->json('manipulations');
+                        $table->json('custom_properties');
+                        $table->json('generated_conversions');
+                        $table->json('responsive_images');
+                        $table->unsignedInteger('order_column')->nullable()->index();
+                        $table->nullableTimestamps();
+                    });
+                }
+            } catch (\Throwable $e) {
+            }
+        }
 
         $this->project = Project::firstOrCreate(
             ['code' => 'viettinmart-eco'],
@@ -39,6 +67,7 @@ class ProductSeoSlugAndRedirectTest extends TestCase
                 'tenant_id' => $this->project->id,
                 'name' => 'Tôm thẻ PD xiên que cấp đông',
                 'price' => 120000,
+                'image' => 'theme/images/grocery/01.jpg',
                 'status' => 'active',
             ]
         );
@@ -85,5 +114,39 @@ class ProductSeoSlugAndRedirectTest extends TestCase
         $response = $this->get("/{$this->project->code}/san-pham");
         $response->assertStatus(301);
         $this->assertStringEndsWith("/{$this->project->code}/cua-hang", $response->headers->get('Location'));
+    }
+
+    public function test_category_one_level_slug_returns_200()
+    {
+        $category = Category::firstOrCreate(
+            ['slug' => 'san-pham-tuoi-cap-dong-chua-so-che'],
+            [
+                'project_id' => $this->project->id,
+                'tenant_id' => $this->project->id,
+                'name' => 'Sản phẩm tươi cấp đông chưa sơ chế',
+                'is_active' => true,
+            ]
+        );
+
+        $response = $this->get("/{$this->project->code}/{$category->slug}");
+        $response->assertStatus(200);
+        $response->assertSee($category->name);
+    }
+
+    public function test_category_danh_muc_route_returns_200()
+    {
+        $category = Category::firstOrCreate(
+            ['slug' => 'san-pham-da-lam-sach'],
+            [
+                'project_id' => $this->project->id,
+                'tenant_id' => $this->project->id,
+                'name' => 'Sản phẩm đã làm sạch',
+                'is_active' => true,
+            ]
+        );
+
+        $response = $this->get("/{$this->project->code}/danh-muc/{$category->slug}");
+        $response->assertStatus(200);
+        $response->assertSee($category->name);
     }
 }
