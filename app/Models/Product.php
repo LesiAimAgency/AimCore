@@ -379,4 +379,19 @@ class Product extends Model implements HasMedia
     {
         return locale_route('shop.show', $this->slug);
     }
+
+    public function getThumbnailUrlAttribute(): ?string
+    {
+        $img = $this->featured_image ?? ($this->attributes['image'] ?? null);
+        if ($img) {
+            return function_exists('media_url') ? media_url($img) : asset($img);
+        }
+
+        return $this->getFeaturedImageUrl();
+    }
+
+    public function getStockAttribute(): int
+    {
+        return (int) ($this->attributes['stock_quantity'] ?? ($this->attributes['stock'] ?? 0));
+    }
 }

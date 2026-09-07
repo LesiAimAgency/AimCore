@@ -12,7 +12,12 @@ class ProjectProduct extends Model
 {
     use BelongsToTenant, HasFactory, ProjectScoped;
 
-    protected $connection = 'project';
+    public function getConnectionName()
+    {
+        return (app()->environment('testing') || ! config('database.connections.project'))
+            ? config('database.default')
+            : 'project';
+    }
 
     protected $table = 'products_enhanced';
 

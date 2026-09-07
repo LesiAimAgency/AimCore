@@ -270,6 +270,93 @@ class User extends Authenticatable
         return isset($this->level) && \in_array($this->level, [0, 1, 2]);
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN
+            || $this->role === 'superadmin'
+            || $this->role === 'super_admin'
+            || $this->isSuperAdmin()
+            || $this->getIsAdminAttribute();
+    }
+
+    public function isStoreManager(): bool
+    {
+        return $this->role === self::ROLE_STORE_MANAGER;
+    }
+
+    public function isWebAdmin(): bool
+    {
+        return $this->role === self::ROLE_WEB_ADMIN;
+    }
+
+    public function hasAdminAccess(): bool
+    {
+        return in_array($this->role, [
+            self::ROLE_ADMIN,
+            self::ROLE_MANAGER,
+            self::ROLE_STORE_MANAGER,
+            self::ROLE_WEB_ADMIN,
+            'superadmin',
+            'super_admin',
+        ]) || $this->isSuperAdmin();
+    }
+
+    public function canAccess(string $feature): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        $restrictedForManager = ['spam', 'modules', 'seo', 'logs', 'settings'];
+
+        $restrictedForStoreManager = [
+            'spam', 'modules', 'seo', 'logs', 'settings', 'translations', 'languages',
+            'users', 'appearance', 'posts', 'pages', 'form-templates', 'modal-forms',
+            'flash-sales', 'coupons', 'reviews', 'agents',
+        ];
+
+        $restrictedForWebAdmin = [
+            'spam', 'modules', 'seo', 'logs', 'settings', 'translations', 'languages',
+            'users', 'agents', 'flash-sales', 'coupons',
+        ];
+
+        if ($this->isManager()) {
+            return ! in_array($feature, $restrictedForManager);
+        }
+
+        if ($this->isStoreManager()) {
+            return ! in_array($feature, $restrictedForStoreManager);
+        }
+
+        if ($this->isWebAdmin()) {
+            return ! in_array($feature, $restrictedForWebAdmin);
+        }
+
+        return false;
+    }
+
+    public function getRoleNameAttribute(): string
+    {
+        return [
+            self::ROLE_ADMIN => 'Quản trị viên',
+            self::ROLE_MANAGER => 'Quản lý',
+            self::ROLE_STORE_MANAGER => 'Quản lý cửa hàng',
+            self::ROLE_WEB_ADMIN => 'Quản trị Website',
+            'superadmin' => 'Super Admin',
+            'super_admin' => 'Super Admin',
+        ][$this->role] ?? 'Thành viên';
+    }
+
+    public function agent()
+    {
+        return $this->hasOne(Agent::class, 'user_id');
+    }
+
+    public function getManagedAgentId()
+    {
+        return $this->agent?->id;
+    }
+
     public function hasAccessToProject(int $projectId): bool
     {
         return $this->project_ids && \in_array($projectId, $this->project_ids);

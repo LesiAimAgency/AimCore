@@ -524,3 +524,14 @@ if (! function_exists('media_url')) {
         return clean_asset_url(asset($cleanPath));
     }
 }
+
+if (! function_exists('get_setting')) {
+    function get_setting(string $key, mixed $default = null): mixed
+    {
+        if (function_exists('setting')) {
+            return setting($key, $default);
+        }
+
+        return $default;
+    }
+}

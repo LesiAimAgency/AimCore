@@ -18,7 +18,12 @@ class ProjectProductCategory extends Model
      */
     const MAX_DEPTH = 3;
 
-    protected $connection = 'project';
+    public function getConnectionName()
+    {
+        return (app()->environment('testing') || ! config('database.connections.project'))
+            ? config('database.default')
+            : 'project';
+    }
 
     protected $table = 'product_categories';
 

@@ -43,6 +43,13 @@ class DashboardController extends Controller
 
         $data = $this->getDashboardData($project);
 
+        $isViettinmart = ($project && ($project->code === 'viettinmart-eco' || ($project->features['theme'] ?? null) === 'viettinmartdemo'))
+            || ($request->route('projectCode') === 'viettinmart-eco');
+
+        if ($isViettinmart && view()->exists('frontend.themes.viettinmartdemo.admin.dashboard')) {
+            return view('frontend.themes.viettinmartdemo.admin.dashboard', $data);
+        }
+
         return view('cms.dashboard.index', $data);
     }
 
@@ -105,6 +112,13 @@ class DashboardController extends Controller
             $unassignedOrders = $pendingOrders;
         }
 
+        $recentUnassigned = (clone $orderQuery)
+            ->when($hasAgentId, fn ($q) => $q->whereNull('agent_id'))
+            ->whereNotIn('status', ['cancelled', 'refunded'])
+            ->latest()
+            ->take(5)
+            ->get();
+
         // Revenue Metrics
         $todayRevenue = (float) (clone $orderQuery)->whereNotIn('status', ['cancelled', 'refunded'])
             ->where('created_at', '>=', $todayStart)
@@ -148,7 +162,7 @@ class DashboardController extends Controller
         // Recent Orders
         $recentOrders = (clone $orderQuery)->latest()->take(6)->get();
 
-        // Top Selling Products
+        // Top Selling Products with rich image_url & total_qty
         $topSelling = collect();
         try {
             $itemQuery = DB::table('order_items')
@@ -161,30 +175,80 @@ class DashboardController extends Controller
                 });
             }
 
-            $topSelling = $itemQuery->select(
+            $hasImageCol = Schema::hasColumn('order_items', 'image');
+            $selects = [
                 'order_items.product_id',
                 'order_items.product_name',
-                DB::raw('SUM(order_items.quantity) as total_sold'),
-                DB::raw('SUM(order_items.total_price) as revenue')
-            )
-                ->groupBy('order_items.product_id', 'order_items.product_name')
-                ->orderByDesc('total_sold')
+                DB::raw('SUM(order_items.quantity) as total_qty'),
+                DB::raw('SUM(order_items.total_price) as revenue'),
+            ];
+            if ($hasImageCol) {
+                $selects[] = 'order_items.image';
+            }
+
+            $topSelling = $itemQuery->select($selects)
+                ->groupBy(array_filter([
+                    'order_items.product_id',
+                    'order_items.product_name',
+                    $hasImageCol ? 'order_items.image' : null,
+                ]))
+                ->orderByDesc('total_qty')
                 ->take(5)
-                ->get();
+                ->get()
+                ->map(function ($item) {
+                    $item->total_sold = $item->total_qty;
+                    $img = $item->image ?? null;
+                    if (! $img && $item->product_id) {
+                        $p = Product::find($item->product_id);
+                        $img = $p?->thumbnail_url;
+                    }
+                    $item->image_url = $img
+                        ? (str_starts_with($img, 'http') ? $img : (str_starts_with($img, 'media/') ? \Storage::url($img) : asset($img)))
+                        : asset('theme/images/no-image.png');
+
+                    return $item;
+                });
         } catch (\Throwable $e) {
             $topSelling = collect();
         }
 
-        // Low stock items
+        // Low stock items / Slow moving items
         $lowSelling = (clone $productQuery)
             ->where(function ($q) {
                 $q->where('stock_quantity', '<=', 5)->orWhere('stock_status', 'out_of_stock');
             })
             ->latest()
             ->take(5)
-            ->get();
+            ->get()
+            ->map(function ($lp) {
+                if (empty($lp->thumbnail_url)) {
+                    $lp->thumbnail_url = asset('theme/images/no-image.png');
+                }
 
-        // 7 Days Chart Data
+                return $lp;
+            });
+
+        // 6 Months Revenue Chart for public_html dashboard
+        $revenueChartMonthly = collect();
+        for ($i = 5; $i >= 0; $i--) {
+            $m = now()->subMonths($i);
+            $mStart = $m->copy()->startOfMonth();
+            $mEnd = $m->copy()->endOfMonth();
+            $mLabel = $m->format('m/Y');
+
+            $mRev = (float) (clone $orderQuery)
+                ->whereNotIn('status', ['cancelled', 'refunded'])
+                ->whereBetween('created_at', [$mStart, $mEnd])
+                ->sum('total_amount');
+
+            $revenueChartMonthly->push((object) [
+                'month' => $mLabel,
+                'month_key' => $m->format('Y-m'),
+                'revenue' => $mRev,
+            ]);
+        }
+
+        // 7 Days Chart Data for legacy/CMS views
         $revenueChart = collect();
         $ordersChart = collect();
         for ($i = 6; $i >= 0; $i--) {
@@ -213,24 +277,87 @@ class DashboardController extends Controller
             ]);
         }
 
-        // Top Buyers for CRM care
+        // Repeat Customers rate for CRM care
+        $repeatCustomers = (function () use ($orderQuery, $totalUsers) {
+            if ($totalUsers === 0) {
+                return ['rate' => 0, 'count' => 0, 'total' => 0];
+            }
+
+            try {
+                $repeatCount = (clone $orderQuery)
+                    ->select(DB::raw('COALESCE(user_id, customer_email) as buyer_id'))
+                    ->where(function ($q) {
+                        $q->whereNotNull('user_id')->orWhereNotNull('customer_email');
+                    })
+                    ->whereNotIn('status', ['cancelled', 'refunded'])
+                    ->groupBy('buyer_id')
+                    ->havingRaw('COUNT(*) >= 2')
+                    ->get()
+                    ->count();
+
+                return [
+                    'rate' => round($repeatCount / max($totalUsers, 1) * 100, 1),
+                    'count' => $repeatCount,
+                    'total' => $totalUsers,
+                ];
+            } catch (\Throwable $e) {
+                return ['rate' => 0, 'count' => 0, 'total' => max($totalUsers, 0)];
+            }
+        })();
+
+        // Agent Performance ranking
+        $agentPerformance = collect();
+        try {
+            if (class_exists(\App\Models\Agent::class)) {
+                $agentQuery = \App\Models\Agent::query();
+                if ($projectId && Schema::hasColumn('agents', 'project_id')) {
+                    $agentQuery->where('project_id', $projectId);
+                }
+                $agentPerformance = $agentQuery->withCount(['orders' => fn ($q) => $q->where('status', 'completed')])
+                    ->withSum(['orders' => fn ($q) => $q->where('status', 'completed')], 'total_amount')
+                    ->orderByDesc('orders_sum_total_amount')
+                    ->take(5)
+                    ->get()
+                    ->map(function ($ag) {
+                        $ag->orders_sum_total = (float) ($ag->orders_sum_total_amount ?? 0);
+
+                        return $ag;
+                    });
+            }
+        } catch (\Throwable $e) {
+            $agentPerformance = collect();
+        }
+
+        // Top Buyers for CRM care (VIP 10 customers)
         $topBuyers = collect();
         try {
             $topBuyers = (clone $orderQuery)
                 ->whereNotIn('status', ['cancelled', 'refunded'])
-                ->whereNotNull('customer_email')
+                ->where(function ($q) {
+                    $q->whereNotNull('customer_email')->orWhereNotNull('customer_phone')->orWhereNotNull('user_id');
+                })
                 ->select(
+                    'user_id',
                     'customer_name',
                     'customer_email',
                     'customer_phone',
+                    'shipping_address',
                     DB::raw('COUNT(id) as order_count'),
                     DB::raw('SUM(total_amount) as total_spent'),
                     DB::raw('MAX(created_at) as last_order_at')
                 )
-                ->groupBy('customer_name', 'customer_email', 'customer_phone')
+                ->groupBy('user_id', 'customer_name', 'customer_email', 'customer_phone', 'shipping_address')
                 ->orderByDesc('total_spent')
-                ->take(5)
-                ->get();
+                ->take(10)
+                ->get()
+                ->map(function ($b) {
+                    $b->user_id_link = $b->user_id;
+                    $b->user_address = is_array($b->shipping_address)
+                        ? ($b->shipping_address['full_address'] ?? implode(', ', array_filter($b->shipping_address)))
+                        : $b->shipping_address;
+
+                    return $b;
+                });
         } catch (\Throwable $e) {
             $topBuyers = collect();
         }
@@ -251,6 +378,7 @@ class DashboardController extends Controller
 
         $stats = [
             'unassigned_orders' => $unassignedOrders,
+            'recent_unassigned' => $recentUnassigned,
             'pending_orders' => $pendingOrders,
             'processing_orders' => $processingOrders,
             'shipping_orders' => $shippingOrders,
@@ -268,8 +396,12 @@ class DashboardController extends Controller
             'out_of_stock_products' => $outOfStockProducts,
             'top_selling' => $topSelling,
             'low_selling' => $lowSelling,
+            'agent_performance' => $agentPerformance,
+            'repeat_customers' => $repeatCustomers,
             'top_buyers' => $topBuyers,
             'recent_orders' => $recentOrders,
+            'revenue_chart' => $revenueChartMonthly,
+            'orders_chart' => $ordersChart,
             'api_integrations' => $apiIntegrations,
         ];
 
@@ -296,6 +428,7 @@ class DashboardController extends Controller
             'currentProject' => $project,
             // Structured stats object for public_html pipeline & e-commerce cards
             'stats' => $stats,
+            'repeat' => $repeatCustomers,
         ];
     }
 

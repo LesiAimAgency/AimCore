@@ -31,8 +31,8 @@ class ProductCategory extends Model
     const MAX_DEPTH = 3;
 
     protected $fillable = [
-        'name', 'slug', 'description', 'image', 'parent_id', 'level', 'path',
-        'sort_order', 'is_active', 'meta_title', 'meta_description', 'tenant_id',
+        'project_id', 'tenant_id', 'name', 'slug', 'description', 'image', 'parent_id', 'level', 'path',
+        'sort_order', 'is_active', 'meta_title', 'meta_description',
     ];
 
     protected $casts = [
