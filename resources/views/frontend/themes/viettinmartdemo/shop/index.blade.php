@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', setting('shop_meta_title', 'Cửa hàng - ' . setting('site_name')))
-@section('meta_description', setting('shop_meta_description'))
-@section('meta_keywords', setting('shop_meta_keywords'))
+@section('title', isset($currentCategory) && $currentCategory ? ($currentCategory->name . ' - ' . setting('site_name', 'VietTin Mart')) : setting('shop_meta_title', 'Cửa hàng - ' . setting('site_name', 'VietTin Mart')))
+@section('meta_description', isset($currentCategory) && $currentCategory ? ($currentCategory->meta_description ?: $currentCategory->description) : setting('shop_meta_description'))
+@section('meta_keywords', isset($currentCategory) && $currentCategory ? ($currentCategory->meta_keywords ?? '') : setting('shop_meta_keywords'))
 
 @push('styles')
     <style>
@@ -262,8 +262,13 @@
                 <div class="col-lg-12">
                     <div class="navigator-breadcrumb-wrapper">
                         <a href="{{ locale_route('home') }}">{{ Lang('home') }}</a>
-                        <i class="fa-regular fa-chevron-right"></i>
-                        <a class="current" href="{{ locale_route('shop.index') }}">{{ Lang('shop') }}</a>
+                        @if(isset($currentCategory) && $currentCategory)
+                            <a href="{{ locale_route('shop.index') }}">{{ Lang('shop') }}</a>
+                            <i class="fa-regular fa-chevron-right"></i>
+                            <span class="current">{{ $currentCategory->name }}</span>
+                        @else
+                            <a class="current" href="{{ locale_route('shop.index') }}">{{ Lang('shop') }}</a>
+                        @endif
                     </div>
                 </div>
             </div>
