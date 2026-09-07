@@ -23,6 +23,7 @@
         width: 250px !important;
         min-width: 250px !important;
         max-width: 250px !important;
+        height: 100% !important;
         background: #0f172a !important;
         display: flex !important;
         flex-direction: column !important;

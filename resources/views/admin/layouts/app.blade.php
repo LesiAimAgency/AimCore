@@ -51,16 +51,35 @@
 
     @php
         $currentProject = $currentProject ?? (request()->attributes->get('project') ?? session('current_project'));
-        $projectCode = $currentProject?->code ?? request()->route('projectCode');
+        $projectCode = is_object($currentProject) ? ($currentProject->code ?? null) : (is_string($currentProject) ? $currentProject : request()->route('projectCode'));
+        if (!$projectCode && request()->route('projectCode')) {
+            $projectCode = request()->route('projectCode');
+        }
+        $projectTheme = is_object($currentProject) ? ($currentProject->features['theme'] ?? '') : '';
+
         $isVtm = ($projectCode === 'viettinmart-eco') 
-            || (($currentProject->features['theme'] ?? '') === 'viettinmartdemo') 
-            || request()->is('viettinmart-eco/*');
+            || (is_string($projectCode) && str_contains($projectCode, 'viettinmart'))
+            || ($projectTheme === 'viettinmartdemo') 
+            || request()->is('viettinmart-eco/*')
+            || request()->is('viettinmart*');
+
+        $isWk = ($projectCode === 'wkcomputer')
+            || (is_string($projectCode) && str_contains($projectCode, 'wkcomputer'))
+            || ($projectTheme === 'wkcomputerdemo')
+            || request()->is('wkcomputer/*')
+            || request()->is('wkcomputer*');
+
+        $hasCustomSidebar = $isVtm || $isWk;
     @endphp
 
     <div class="min-h-screen flex w-full">
         @if($isVtm)
             <div class="fixed top-0 left-0 h-screen z-40">
                 @include('frontend.themes.viettinmartdemo.admin.layouts.sidebar')
+            </div>
+        @elseif($isWk)
+            <div class="fixed top-0 left-0 h-screen z-40">
+                @include('frontend.themes.wkcomputerdemo.admin.layouts.sidebar')
             </div>
         @else
         <!-- Sidebar -->
@@ -395,7 +414,7 @@
         @endif
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col {{ $isVtm ? 'ml-[250px]' : 'ml-72' }}">
+        <div class="flex-1 flex flex-col {{ $hasCustomSidebar ? 'ml-[250px]' : 'ml-72' }}">
             <!-- Header -->
             <header class="bg-white shadow-sm border-b border-gray-200">
                 <div class="flex justify-between items-center px-6 py-4">
