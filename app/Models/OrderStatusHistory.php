@@ -4,13 +4,14 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
 use App\Traits\ProjectScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class OrderStatusHistory extends Model
 {
-    use HasFactory, ProjectScoped;
+    use BelongsToTenant, HasFactory, ProjectScoped;
 
     /**
      * Get the database connection for the model.

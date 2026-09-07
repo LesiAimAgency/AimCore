@@ -49,8 +49,13 @@ class SetProjectDatabase
         $request->attributes->set('main_database', config('database.default'));
 
         // Set tenant ID và project ID cho session TRƯỚC KHI query
+        // Set tenant ID và project ID cho session TRƯỚC KHI query (100% Tenant-based)
         $tenantId = $project->tenant_id ?? null;
-        if (! $tenantId) {
+        if ($project->code === 'viettinmart-eco' || str_contains($project->code, 'viettinmart')) {
+            $tenantId = 3;
+        } elseif (str_contains($project->code, 'wkcomputer')) {
+            $tenantId = 4;
+        } elseif (! $tenantId) {
             $matchedTenant = Tenant::where('code', $project->code)
                 ->orWhere('code', str_replace(['-eco', '-ecommerce', '-demo'], '', $project->code))
                 ->first();
@@ -61,10 +66,21 @@ class SetProjectDatabase
                 ?? $project->id;
         }
 
+        if ($tenantId && \Illuminate\Support\Facades\Schema::hasColumn('projects', 'tenant_id')) {
+            if ($project->tenant_id !== $tenantId) {
+                try {
+                    $project->update(['tenant_id' => $tenantId]);
+                } catch (\Throwable $e) {
+                }
+            }
+        }
+
         session(['current_tenant_id' => $tenantId]);
         session(['current_project_id' => $project->id]);
         app()->instance('current_project_id', $project->id);
         app()->instance('current_tenant_id', $tenantId);
+        config(['app.current_tenant_id' => $tenantId]);
+        config(['app.default_tenant_id' => $tenantId]);
 
         // Clear settings cache để load lại từ project database
         if (class_exists('\App\Services\SettingsService')) {
