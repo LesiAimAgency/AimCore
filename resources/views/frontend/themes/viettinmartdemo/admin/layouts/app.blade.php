@@ -50,6 +50,9 @@
             return translation;
         };
     </script>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -57,6 +60,87 @@
         [x-cloak] { display: none !important; }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { height: 100%; }
+
+        /* ── CRITICAL LAYOUT UTILITIES (Zero-FOUC, immediate render before CDN JS) ── */
+        .flex { display: flex !important; }
+        .inline-flex { display: inline-flex !important; }
+        .flex-col { flex-direction: column !important; }
+        .flex-row { flex-direction: row !important; }
+        .flex-wrap { flex-wrap: wrap !important; }
+        .flex-1 { flex: 1 1 0% !important; }
+        .flex-shrink-0 { flex-shrink: 0 !important; }
+        .min-w-0 { min-width: 0 !important; }
+        .w-full { width: 100% !important; }
+        .h-full { height: 100% !important; }
+        .w-fit { width: fit-content !important; }
+        .items-center { align-items: center !important; }
+        .items-start { align-items: flex-start !important; }
+        .justify-between { justify-content: space-between !important; }
+        .justify-center { justify-content: center !important; }
+        .justify-end { justify-content: flex-end !important; }
+
+        /* Grid */
+        .grid { display: grid !important; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
+        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+        .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+        .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+        .grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+        .grid-cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; }
+        .grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)) !important; }
+
+        /* Gaps & Spacing */
+        .gap-1 { gap: 0.25rem !important; }
+        .gap-1\.5 { gap: 0.375rem !important; }
+        .gap-2 { gap: 0.5rem !important; }
+        .gap-3 { gap: 0.75rem !important; }
+        .gap-4 { gap: 1rem !important; }
+        .gap-6 { gap: 1.5rem !important; }
+        .gap-8 { gap: 2rem !important; }
+        .p-1\.5 { padding: 0.375rem !important; }
+        .p-4 { padding: 1rem !important; }
+        .p-6 { padding: 1.5rem !important; }
+        .py-2 { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; }
+        .py-2\.5 { padding-top: 0.625rem !important; padding-bottom: 0.625rem !important; }
+        .py-4 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+        .px-4 { padding-left: 1rem !important; padding-right: 1rem !important; }
+        .px-6 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+        .px-8 { padding-left: 2rem !important; padding-right: 2rem !important; }
+        .mb-2 { margin-bottom: 0.5rem !important; }
+        .mb-3 { margin-bottom: 0.75rem !important; }
+        .mb-4 { margin-bottom: 1rem !important; }
+        .mb-6 { margin-bottom: 1.5rem !important; }
+        .mb-8 { margin-bottom: 2rem !important; }
+        .mr-1 { margin-right: 0.25rem !important; }
+        .mr-2 { margin-right: 0.5rem !important; }
+        .ml-1 { margin-left: 0.25rem !important; }
+        .space-y-3 > * + * { margin-top: 0.75rem !important; }
+        .space-y-4 > * + * { margin-top: 1rem !important; }
+        .space-y-6 > * + * { margin-top: 1.5rem !important; }
+        .space-y-8 > * + * { margin-top: 2rem !important; }
+
+        /* Appearance & Admin Visual Utilities */
+        .bg-white { background-color: #ffffff !important; }
+        .bg-slate-50 { background-color: #f8fafc !important; }
+        .bg-slate-100 { background-color: #f1f5f9 !important; }
+        .text-slate-800 { color: #1e293b !important; }
+        .text-slate-700 { color: #334155 !important; }
+        .text-slate-600 { color: #475569 !important; }
+        .text-slate-500 { color: #64748b !important; }
+        .text-slate-400 { color: #94a3b8 !important; }
+        .text-slate-300 { color: #cbd5e1 !important; }
+        .rounded-lg { border-radius: 0.5rem !important; }
+        .rounded-xl { border-radius: 0.75rem !important; }
+        .rounded-2xl { border-radius: 1rem !important; }
+        .border-slate-50 { border-color: #f8fafc !important; }
+        .border-slate-100 { border-color: #f1f5f9 !important; }
+        .border-slate-200 { border-color: #e2e8f0 !important; }
+        .overflow-hidden { overflow: hidden !important; }
+        .overflow-y-auto { overflow-y: auto !important; }
+        .relative { position: relative !important; }
+        .sticky { position: sticky !important; }
+        .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important; }
+        .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1) !important; }
         body {
             font-family: 'Be Vietnam Pro', sans-serif;
             font-size: 13.5px;

@@ -12,6 +12,45 @@
     margin-bottom:1px;background:transparent;color:#475569;
 }
 .ap-nav-btn.active { background:#2563eb !important; color:#fff !important; }
+
+/* ── Zero-FOUC Tab System ── */
+/* 1. Hide all tabs by default before Alpine is ready */
+html:not(.alpine-loaded) .ap-tab-pane {
+    display: none !important;
+}
+
+/* 2. Show the initial active tab immediately from Frame 1 before Alpine boots */
+html:not(.alpine-loaded)[data-admin-tab="design"] .ap-tab-pane[data-tab="design"],
+html:not(.alpine-loaded)[data-admin-tab="general"] .ap-tab-pane[data-tab="general"],
+html:not(.alpine-loaded)[data-admin-tab="topbar"] .ap-tab-pane[data-tab="topbar"],
+html:not(.alpine-loaded)[data-admin-tab="header"] .ap-tab-pane[data-tab="header"],
+html:not(.alpine-loaded)[data-admin-tab="mobile"] .ap-tab-pane[data-tab="mobile"],
+html:not(.alpine-loaded)[data-admin-tab="navigation"] .ap-tab-pane[data-tab="navigation"],
+html:not(.alpine-loaded)[data-admin-tab="map"] .ap-tab-pane[data-tab="map"],
+html:not(.alpine-loaded)[data-admin-tab="footer"] .ap-tab-pane[data-tab="footer"],
+html:not(.alpine-loaded)[data-admin-tab="logo_icons"] .ap-tab-pane[data-tab="logo_icons"] {
+    display: block !important;
+}
+
+/* Fallback if no data-admin-tab is set */
+html:not(.alpine-loaded):not([data-admin-tab]) .ap-tab-pane[data-tab="design"] {
+    display: block !important;
+}
+
+/* 3. Highlight sidebar active button before Alpine boots */
+html:not(.alpine-loaded)[data-admin-tab="design"] .ap-nav-btn[data-tab-target="design"],
+html:not(.alpine-loaded)[data-admin-tab="general"] .ap-nav-btn[data-tab-target="general"],
+html:not(.alpine-loaded)[data-admin-tab="topbar"] .ap-nav-btn[data-tab-target="topbar"],
+html:not(.alpine-loaded)[data-admin-tab="header"] .ap-nav-btn[data-tab-target="header"],
+html:not(.alpine-loaded)[data-admin-tab="mobile"] .ap-nav-btn[data-tab-target="mobile"],
+html:not(.alpine-loaded)[data-admin-tab="navigation"] .ap-nav-btn[data-tab-target="navigation"],
+html:not(.alpine-loaded)[data-admin-tab="map"] .ap-nav-btn[data-tab-target="map"],
+html:not(.alpine-loaded)[data-admin-tab="footer"] .ap-nav-btn[data-tab-target="footer"],
+html:not(.alpine-loaded)[data-admin-tab="logo_icons"] .ap-nav-btn[data-tab-target="logo_icons"],
+html:not(.alpine-loaded):not([data-admin-tab]) .ap-nav-btn[data-tab-target="design"] {
+    background: #2563eb !important;
+    color: #fff !important;
+}
 </style>
 @endpush
 
@@ -26,6 +65,14 @@
             }
         }
     @endphp
+    <script>
+        (function() {
+            var validTabs = ['design', 'general', 'topbar', 'header', 'mobile', 'navigation', 'map', 'footer', 'logo_icons'];
+            var hash = (window.location.hash ? window.location.hash.substring(1) : 'design') || 'design';
+            if (!validTabs.includes(hash)) hash = 'design';
+            document.documentElement.setAttribute('data-admin-tab', hash);
+        })();
+    </script>
     <div x-data="{ 
             activeTab: window.location.hash ? window.location.hash.substring(1) : 'design',
             topbarShow: '{{ $settingsMap['topbar_show'] ?? '0' }}',
@@ -35,7 +82,11 @@
             navFontWeight: '{{ $settingsMap['nav_font_weight'] ?? '500' }}',
             navPosition: '{{ $settingsMap['nav_position'] ?? 'right' }}',
             init() {
-                this.$watch('activeTab', (val) => { location.hash = val; });
+                document.documentElement.classList.add('alpine-loaded');
+                this.$watch('activeTab', (val) => { 
+                    location.hash = val; 
+                    document.documentElement.setAttribute('data-admin-tab', val);
+                });
                 window.addEventListener('hashchange', () => {
                     const h = window.location.hash.substring(1);
                     if (h && h !== this.activeTab) this.activeTab = h;
@@ -63,8 +114,10 @@
                 ];
                 @endphp
                 @foreach($navItems as $item)
-                <button @click="activeTab = '{{ $item['tab'] }}'"
-                    :class="activeTab === '{{ $item['tab'] }}' ? 'ap-nav-btn active' : 'ap-nav-btn'">
+                <button type="button" @click="activeTab = '{{ $item['tab'] }}'"
+                    data-tab-target="{{ $item['tab'] }}"
+                    :class="activeTab === '{{ $item['tab'] }}' ? 'ap-nav-btn active' : 'ap-nav-btn'"
+                    class="ap-nav-btn">
                     <i class="fa-solid {{ $item['icon'] }}" style="width:14px;text-align:center;font-size:11px;"></i>
                     {{ $item['label'] }}
                 </button>
@@ -83,7 +136,7 @@
                 <div style="padding:20px 24px;">
 
                     {{-- GENERAL --}}
-                    <div x-show="activeTab === 'general'" x-cloak
+                    <div x-show="activeTab === 'general'" x-cloak class="ap-tab-pane" data-tab="general"
                         x-transition:enter="transition ease-out duration-300 transform"
                         x-transition:enter-start="opacity-0 translate-y-4"
                         x-transition:enter-end="opacity-100 translate-y-0">
@@ -115,7 +168,7 @@
                     </div>
 
 
-                    <div x-show="activeTab === 'topbar'" x-cloak
+                    <div x-show="activeTab === 'topbar'" x-cloak class="ap-tab-pane" data-tab="topbar"
                         x-transition:enter="transition ease-out duration-300 transform"
                         x-transition:enter-start="opacity-0 translate-y-4"
                         x-transition:enter-end="opacity-100 translate-y-0">
@@ -222,7 +275,7 @@
                     </div>
 
                     {{-- HEADER --}}
-                    <div x-show="activeTab === 'header'" x-cloak
+                    <div x-show="activeTab === 'header'" x-cloak class="ap-tab-pane" data-tab="header"
                         x-transition:enter="transition ease-out duration-300 transform"
                         x-transition:enter-start="opacity-0 translate-y-4"
                         x-transition:enter-end="opacity-100 translate-y-0">
@@ -375,7 +428,7 @@
                     </div>
 
                     {{-- MOBILE --}}
-                    <div x-show="activeTab === 'mobile'" x-cloak
+                    <div x-show="activeTab === 'mobile'" x-cloak class="ap-tab-pane" data-tab="mobile"
                         x-transition:enter="transition ease-out duration-300 transform"
                         x-transition:enter-start="opacity-0 translate-y-4"
                         x-transition:enter-end="opacity-100 translate-y-0">
@@ -483,7 +536,7 @@
                     </div>
 
                     {{-- NAVIGATION --}}
-                    <div x-show="activeTab === 'navigation'" x-cloak
+                    <div x-show="activeTab === 'navigation'" x-cloak class="ap-tab-pane" data-tab="navigation"
                         x-transition:enter="transition ease-out duration-300 transform"
                         x-transition:enter-start="opacity-0 translate-y-4"
                         x-transition:enter-end="opacity-100 translate-y-0">
@@ -604,7 +657,7 @@
 
 
                     {{-- MAP --}}
-                    <div x-show="activeTab === 'map'" x-cloak
+                    <div x-show="activeTab === 'map'" x-cloak class="ap-tab-pane" data-tab="map"
                         x-transition:enter="transition ease-out duration-300 transform"
                         x-transition:enter-start="opacity-0 translate-y-4"
                         x-transition:enter-end="opacity-100 translate-y-0">
@@ -622,7 +675,7 @@
                     </div>
 
                     {{-- FOOTER --}}
-                    <div x-show="activeTab === 'footer'" x-cloak
+                    <div x-show="activeTab === 'footer'" x-cloak class="ap-tab-pane" data-tab="footer"
                         x-transition:enter="transition ease-out duration-300 transform"
                         x-transition:enter-start="opacity-0 translate-y-4"
                         x-transition:enter-end="opacity-100 translate-y-0">
@@ -640,7 +693,7 @@
                         </div>
                     </div>
                     {{-- DESIGN SYSTEM --}}
-                    <div x-show="activeTab === 'design'" x-cloak
+                    <div x-show="activeTab === 'design'" x-cloak class="ap-tab-pane" data-tab="design"
                         x-transition:enter="transition ease-out duration-200"
                         x-transition:enter-start="opacity-0 translate-y-2"
                         x-transition:enter-end="opacity-100 translate-y-0">
@@ -823,7 +876,7 @@
                             </div>
                         </div>
                         {{-- LOGO & ICONS --}}
-                    <div x-show="activeTab === 'logo_icons'" x-cloak
+                    <div x-show="activeTab === 'logo_icons'" x-cloak class="ap-tab-pane" data-tab="logo_icons"
                         x-transition:enter="transition ease-out duration-200"
                         x-transition:enter-start="opacity-0 translate-y-2"
                         x-transition:enter-end="opacity-100 translate-y-0">

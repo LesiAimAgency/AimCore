@@ -136,6 +136,11 @@ class ViettinmartSettingsAndThemeOptionsTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Cấu hình Giao diện');
+        $response->assertSee('CRITICAL LAYOUT UTILITIES', false);
+        $response->assertSee('Zero-FOUC Tab System', false);
+        $response->assertSee('data-tab="design"', false);
+        $response->assertSee('ap-tab-pane', false);
+        $response->assertSee('data-admin-tab', false);
     }
 
     public function test_appearance_settings_update_correctly_saves_appearance_group(): void

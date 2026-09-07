@@ -5,36 +5,43 @@
         color: '{{ $value }}',
         pickr: null,
         init() {
-            this.pickr = Pickr.create({
-                el: $refs.picker,
-                theme: 'classic',
-                default: this.color,
-                swatches: [
-                    'rgba(98, 157, 35, 1)',
-                    'rgba(31, 31, 37, 1)',
-                    'rgba(255, 255, 255, 1)',
-                    'rgba(0, 0, 0, 1)',
-                    'rgba(220, 38, 36, 1)',
-                    'rgba(62, 183, 94, 1)'
-                ],
-                components: {
-                    preview: true,
-                    opacity: true,
-                    hue: true,
-                    interaction: {
-                        hex: true,
-                        rgba: true,
-                        input: true,
-                        clear: true,
-                        save: true
-                    }
-                }
-            });
+            const initPickr = () => {
+                if (typeof Pickr !== 'undefined' && this.$refs.picker) {
+                    this.pickr = Pickr.create({
+                        el: this.$refs.picker,
+                        theme: 'classic',
+                        default: this.color,
+                        swatches: [
+                            'rgba(98, 157, 35, 1)',
+                            'rgba(31, 31, 37, 1)',
+                            'rgba(255, 255, 255, 1)',
+                            'rgba(0, 0, 0, 1)',
+                            'rgba(220, 38, 36, 1)',
+                            'rgba(62, 183, 94, 1)'
+                        ],
+                        components: {
+                            preview: true,
+                            opacity: true,
+                            hue: true,
+                            interaction: {
+                                hex: true,
+                                rgba: true,
+                                input: true,
+                                clear: true,
+                                save: true
+                            }
+                        }
+                    });
 
-            this.pickr.on('save', (color) => {
-                this.color = color.toHEXA().toString();
-                this.pickr.hide();
-            });
+                    this.pickr.on('save', (color) => {
+                        this.color = color.toHEXA().toString();
+                        this.pickr.hide();
+                    });
+                } else {
+                    setTimeout(initPickr, 60);
+                }
+            };
+            initPickr();
         }
      }">
     @if($label)
@@ -44,7 +51,7 @@
     <div class="flex items-center gap-4 p-4 bg-white rounded-[2rem] border-2 border-slate-50 shadow-sm hover:shadow-md transition-all group">
         {{-- The Picker Trigger --}}
         <div class="relative">
-            <div x-ref="picker" class="pickr-trigger"></div>
+            <div x-ref="picker" class="pickr-trigger" style="width:44px;height:44px;border-radius:12px;background:{{ $value }};cursor:pointer;"></div>
         </div>
 
         {{-- Value Display --}}
