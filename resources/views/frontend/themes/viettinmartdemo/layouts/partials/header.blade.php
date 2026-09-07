@@ -211,14 +211,14 @@
                                                 catMenu.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
                                             });
                                             
-                                            console.log('✅ Category menu initialized');
+                                            console.log(' Category menu initialized');
                                         }
 
                                         // ===== 2. CART DROPDOWN HOVER (Smooth hover with delay) =====
                                         const cartBtn = document.querySelector('.btn-border-only.cart.category-hover-header');
                                         const cartDropdown = cartBtn ? cartBtn.querySelector('.cart-dropdown-container') : null;
 
-                                        console.log('🛒 Cart Debug:', {
+                                        console.log(' Cart Debug:', {
                                             cartBtn: cartBtn,
                                             cartDropdown: cartDropdown,
                                             cartBtnExists: !!cartBtn,
@@ -232,7 +232,7 @@
 
                                             // Show dropdown khi hover vào button
                                             cartBtn.addEventListener('mouseenter', function() {
-                                                console.log('🛒 Mouse entered cart button - SHOWING');
+                                                console.log(' Mouse entered cart button - SHOWING');
                                                 clearTimeout(cartHoverTimeout);
                                                 isCartHovered = true;
                                                 // Dùng setProperty với 'important' priority
@@ -241,12 +241,12 @@
                                                 cartDropdown.style.setProperty('opacity', '1', 'important');
                                                 cartDropdown.style.setProperty('transform', 'translateY(0)', 'important');
                                                 cartDropdown.style.setProperty('pointer-events', 'all', 'important');
-                                                console.log('🛒 Dropdown styles applied:', cartDropdown.style.display);
+                                                console.log(' Dropdown styles applied:', cartDropdown.style.display);
                                             });
 
                                             // Delay hide khi rời button
                                             cartBtn.addEventListener('mouseleave', function(e) {
-                                                console.log('🛒 Mouse left cart button - HIDING');
+                                                console.log('Mouse left cart button - HIDING');
                                                 isCartHovered = false;
                                                 // Chỉ hide nếu không hover vào dropdown
                                                 cartHoverTimeout = setTimeout(() => {
@@ -266,14 +266,14 @@
 
                                             // Keep visible khi hover vào dropdown
                                             cartDropdown.addEventListener('mouseenter', function() {
-                                                console.log('🛒 Mouse entered dropdown');
+                                                console.log(' Mouse entered dropdown');
                                                 clearTimeout(cartHoverTimeout);
                                                 isDropdownHovered = true;
                                             });
 
                                             // Hide khi rời dropdown
                                             cartDropdown.addEventListener('mouseleave', function() {
-                                                console.log('🛒 Mouse left dropdown - HIDING');
+                                                console.log(' Mouse left dropdown - HIDING');
                                                 isDropdownHovered = false;
                                                 cartHoverTimeout = setTimeout(() => {
                                                     if (!isCartHovered) {
@@ -290,9 +290,9 @@
                                                 }, 100);
                                             });
 
-                                            console.log('✅ Cart dropdown hover initialized');
+                                            console.log(' Cart dropdown hover initialized');
                                         } else {
-                                            console.error('❌ Cart dropdown NOT initialized:', {
+                                            console.error(' Cart dropdown NOT initialized:', {
                                                 cartBtn: cartBtn,
                                                 cartDropdown: cartDropdown
                                             });
@@ -425,7 +425,7 @@
                                     <div class="btn-border-only cart category-hover-header">
                                         <x-theme-icon name="cart" :default="setting('icon_cart')" />
                                         <span class="text">{{ Lang('nav_cart') }}</span>
-                                        <span class="number">{{ count(session()->get('cart', [])) }}</span>
+                                        <span class="number cart-count-badge">{{ count(session()->get('cart', [])) }}</span>
                                         <div class="cart-dropdown-container">
                                             @include('layouts.partials.cart-dropdown')
                                         </div>

@@ -319,28 +319,8 @@
                                             <div class="col-lg-7 col-md-12">
                                                 <div class="contents" x-data="{ 
                                                     qty: 1,
-                                                    adding: false,
-                                                    async addToCart() {
-                                                        this.adding = true;
-                                                        try {
-                                                            await cart.add({{ $product->id }}, null, this.qty);
-                                                            // SweetAlert được xử lý trong update.js
-                                                        } catch (error) {
-                                                            console.error('Add to cart error:', error);
-                                                            if (typeof Swal !== 'undefined') {
-                                                                Swal.fire({
-                                                                    title: '{{ __("Lỗi") }}',
-                                                                    text: '{{ __("Không thể thêm sản phẩm vào giỏ hàng") }}',
-                                                                    icon: 'error',
-                                                                    timer: 3000,
-                                                                    showConfirmButton: false,
-                                                                    toast: true,
-                                                                    position: 'top-end'
-                                                                });
-                                                            }
-                                                        } finally {
-                                                            this.adding = false;
-                                                        }
+                                                    async addToCart(btn = null) {
+                                                        return await window.cart.add({{ $product->id }}, btn, this.qty);
                                                     }
                                                 }">
                                                     <div class="product-status">

@@ -532,27 +532,43 @@ if (typeof window.cwAction === 'undefined') {
 if (typeof window.cart === 'undefined') {
     window.cart = {
     add: function (productId, buttonElement = null, quantity = null) {
-        let $btn;
-        
-        // Handle button element parameter
-        if (buttonElement && typeof buttonElement === 'object' && buttonElement.tagName) {
-            $btn = $(buttonElement);
-        } else {
-            // Fallback to body if no valid button element
-            $btn = $('body');
+        // Defensive check: if quantity passed as 2nd arg
+        if (typeof buttonElement === 'number' && (quantity === null || quantity === undefined)) {
+            quantity = buttonElement;
+            buttonElement = null;
         }
 
-        const originalHtml = $btn.html();
+        let $btn = null;
+        let originalHtml = null;
+        
+        // Handle button element parameter safely without ever touching $('body')
+        if (buttonElement) {
+            let actualEl = buttonElement;
+            if (actualEl.currentTarget) {
+                actualEl = actualEl.currentTarget;
+            } else if (actualEl.target && actualEl.target.nodeType) {
+                actualEl = actualEl.target;
+            }
+            if (actualEl instanceof HTMLElement || (actualEl.jquery && actualEl.length)) {
+                const $closestBtn = $(actualEl).closest('a, button, .rts-btn, .add-to-cart');
+                $btn = $closestBtn.length ? $closestBtn : $(actualEl);
+                originalHtml = $btn.html();
+                $btn.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin"></i>');
+            }
+        }
 
         // Auto-detect quantity from nearby input if not explicitly provided
         if (quantity === null || quantity === undefined) {
-            const container = $btn.closest('.cart-counter-action, .quantity-edit, .qv-cta-group, .product-card, .qv-quantity-control, .contents');
-            const qtyInput = container.find('.qv-qty-input, .input');
-            quantity = qtyInput.length ? parseInt(qtyInput.val()) : 1;
+            if ($btn && $btn.length) {
+                const container = $btn.closest('.cart-counter-action, .quantity-edit, .qv-cta-group, .product-card, .qv-quantity-control, .contents');
+                const qtyInput = container.find('.qv-qty-input, .input, .cart-qty-input');
+                quantity = qtyInput.length ? parseInt(qtyInput.val()) : 1;
+            } else {
+                quantity = 1;
+            }
         }
 
-        $btn.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin"></i>');
-
+        const baseUrl = (window.VTM_CONFIG && window.VTM_CONFIG.baseUrl) ? window.VTM_CONFIG.baseUrl : '';
         const requestData = {
             product_id: productId,
             qty: quantity,
@@ -560,38 +576,54 @@ if (typeof window.cart === 'undefined') {
         };
 
         return $.ajax({
-            url: window.VTM_CONFIG ? window.VTM_CONFIG.baseUrl + '/gio-hang/them' : '/gio-hang/them',
+            url: baseUrl ? baseUrl + '/gio-hang/them' : '/gio-hang/them',
             method: 'POST',
             data: requestData,
             success: function (response) {
-                // Update cart counts in UI
-                $('.cart .number, .shopping-cart-number').each(function () {
-                    $(this).text(response.count);
-                });
+                // 1. Update cart counts in header and dropdown
+                if (response.count !== undefined) {
+                    $('.cart > .number, .cart-count-badge, .header-cart-count').text(response.count);
+                }
+                if (response.item_count !== undefined) {
+                    $('.cart-items-count').text(String(response.item_count).padStart(2, '0'));
+                }
 
-                // Show success message
-                Swal.fire({
-                    title: 'Thành công!',
-                    text: 'Sản phẩm đã được thêm vào giỏ hàng',
-                    icon: 'success',
-                    timer: 2500,
-                    showConfirmButton: false,
-                    toast: true,
-                    position: 'top-end',
-                    timerProgressBar: true,
-                    background: '#fff',
-                    color: '#333',
-                    iconColor: '#28a745',
-                    customClass: {
-                        container: 'swal-no-nice-select'
-                    },
-                    didOpen: () => {
-                        // Remove nice-select elements from SweetAlert
-                        document.querySelectorAll('.swal2-container .nice-select').forEach(el => el.remove());
-                    }
-                });
+                // 2. Update mini-cart dropdown immediately
+                if (response.cart_html) {
+                    $('.cart-dropdown-container').html(response.cart_html);
+                } else {
+                    cart.updateDropdown();
+                }
 
-                cart.updateDropdown();
+                // 3. Dispatch global events
+                window.dispatchEvent(new CustomEvent('cart:updated', { detail: response }));
+                $(document).trigger('cart:updated', [response]);
+                if (window.Alpine) {
+                    window.Alpine.dispatch(document, 'cart-updated', response);
+                }
+
+                // 4. Show success message
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Thành công!',
+                        text: response.message || 'Sản phẩm đã được thêm vào giỏ hàng',
+                        icon: 'success',
+                        timer: 2500,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true,
+                        background: '#fff',
+                        color: '#333',
+                        iconColor: '#28a745',
+                        customClass: {
+                            container: 'swal-no-nice-select'
+                        },
+                        didOpen: () => {
+                            document.querySelectorAll('.swal2-container .nice-select').forEach(el => el.remove());
+                        }
+                    });
+                }
             },
             error: function(xhr, status, error) {
                 let errorMessage = 'Có lỗi xảy ra khi thêm vào giỏ hàng';
@@ -599,40 +631,52 @@ if (typeof window.cart === 'undefined') {
                     errorMessage = xhr.responseJSON.message;
                 }
                 
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: errorMessage,
-                    icon: 'error',
-                    timer: 4000,
-                    showConfirmButton: false,
-                    toast: true,
-                    position: 'top-end',
-                    timerProgressBar: true,
-                    background: '#fff',
-                    color: '#333',
-                    iconColor: '#dc3545'
-                });
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: errorMessage,
+                        icon: 'error',
+                        timer: 4000,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true,
+                        background: '#fff',
+                        color: '#333',
+                        iconColor: '#dc3545'
+                    });
+                }
             },
             complete: function () {
-                $btn.prop('disabled', false).html(originalHtml);
+                if ($btn && originalHtml !== null) {
+                    $btn.prop('disabled', false).html(originalHtml);
+                }
             }
         });
     },
 
     remove: function (rowId) {
-        $.ajax({
-            url: window.VTM_CONFIG ? window.VTM_CONFIG.baseUrl + '/gio-hang/xoa' : '/gio-hang/xoa',
+        const baseUrl = (window.VTM_CONFIG && window.VTM_CONFIG.baseUrl) ? window.VTM_CONFIG.baseUrl : '';
+        return $.ajax({
+            url: baseUrl ? baseUrl + '/gio-hang/xoa' : '/gio-hang/xoa',
             method: 'POST',
             data: {
                 rowId: rowId,
                 _token: $('meta[name="csrf-token"]').attr('content')
             },
             success: function (response) {
-                cart.updateDropdown();
-                // Update header counts
-                $.get(window.VTM_CONFIG ? window.VTM_CONFIG.baseUrl + '/gio-hang/so-luong' : '/gio-hang/so-luong', function (data) {
-                    $('.cart .number').text(data.count);
-                });
+                if (response.cart_html) {
+                    $('.cart-dropdown-container').html(response.cart_html);
+                } else {
+                    cart.updateDropdown();
+                }
+                const count = response.count !== undefined ? response.count : 0;
+                $('.cart > .number, .cart-count-badge, .header-cart-count').text(count);
+                if (response.item_count !== undefined) {
+                    $('.cart-items-count').text(String(response.item_count).padStart(2, '0'));
+                }
+                window.dispatchEvent(new CustomEvent('cart:updated', { detail: response }));
+                $(document).trigger('cart:updated', [response]);
             }
         });
     },
@@ -640,7 +684,8 @@ if (typeof window.cart === 'undefined') {
     updateDropdown: function () {
         const dropdownContainer = $('.cart-dropdown-container');
         if (dropdownContainer.length) {
-            $.get(window.VTM_CONFIG ? window.VTM_CONFIG.baseUrl + '/gio-hang/dropdown' : '/gio-hang/dropdown', function (html) {
+            const baseUrl = (window.VTM_CONFIG && window.VTM_CONFIG.baseUrl) ? window.VTM_CONFIG.baseUrl : '';
+            $.get(baseUrl ? baseUrl + '/gio-hang/dropdown' : '/gio-hang/dropdown', function (html) {
                 dropdownContainer.html(html);
             });
         }
@@ -751,8 +796,9 @@ $(document).ready(function () {
         }
     });
 
-    $.get('/gio-hang/so-luong', function (data) {
-        $('.cart .number').text(data.count);
+    const countUrl = (window.VTM_CONFIG && window.VTM_CONFIG.baseUrl) ? window.VTM_CONFIG.baseUrl + '/gio-hang/so-luong' : '/gio-hang/so-luong';
+    $.get(countUrl, function (data) {
+        $('.cart > .number, .cart-count-badge, .header-cart-count').text(data.count);
     });
     
     // Load wishlist state và update UI cho các sản phẩm đã có trong wishlist

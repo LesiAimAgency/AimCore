@@ -10,7 +10,7 @@
 <div class="category-sub-menu card-number-show">
     <h5 class="shopping-cart-number">
         <i class="fa-solid fa-cart-shopping"></i>
-        {{ __('cart_dropdown_title') }} ({{ str_pad($itemCount, 2, '0', STR_PAD_LEFT) }})
+        {{ __('cart_dropdown_title') }} (<span class="cart-items-count">{{ str_pad($itemCount, 2, '0', STR_PAD_LEFT) }}</span>)
     </h5>
 
     <div class="cart-items-mini-list">

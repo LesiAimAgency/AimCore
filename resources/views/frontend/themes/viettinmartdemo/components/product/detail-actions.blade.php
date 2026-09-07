@@ -27,12 +27,16 @@
             @endif
 
             {{-- Add to Cart Button --}}
-            <a href="javascript:void(0);" @click="addToCart()" class="rts-btn btn-primary radious-sm with-icon" :class="{ 'opacity-50': adding }" :disabled="adding" style="height: 48px; display: inline-flex; align-items: center; padding: 0 28px; border-radius: 8px; font-weight: 600; font-size: 15px; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);">
+            <a href="javascript:void(0);" @click="window.cart.add({{ $product->id }}, $event.target, qty)" class="rts-btn btn-primary radious-sm with-icon">
                 <div class="btn-text">
-                    <span x-show="!adding">{{ __('product_add_to_cart') }}</span>
-                    <span x-show="adding">{{ __('action_processing') }}</span>
+                    {{ __('product_add_to_cart') }}
                 </div>
-                <div class="arrow-icon" style="margin-left: 10px;"><i class="far fa-shopping-cart"></i></div>
+                <div class="arrow-icon">
+                    <i class="fa-regular fa-cart-shopping"></i>
+                </div>
+                <div class="arrow-icon">
+                    <i class="fa-regular fa-cart-shopping"></i>
+                </div>
             </a>
 
             @if($showBuyNow)

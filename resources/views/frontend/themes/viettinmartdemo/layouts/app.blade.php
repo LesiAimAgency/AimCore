@@ -582,6 +582,55 @@
         </svg>
     </div>
 
+    <script>
+        window.VTM_CONFIG = {
+            baseUrl: "{{ request()->route('projectCode') ? url(request()->route('projectCode')) : url('/') }}",
+            siteName: "{{ setting('site_name', 'VietTinMart') }}",
+            hotline: "{{ setting('hotline', setting('contact_phone', '')) }}",
+            address: "{{ setting('site_address', setting('address', '')) }}",
+            currency: "{{ setting('currency_symbol', 'đ') }}",
+            currencyPos: "{{ setting('currency_position', 'right') }}",
+            badges: {
+                bestSeller: "{{ setting('badge_best_seller_img') ? media_url(setting('badge_best_seller_img')) : '' }}",
+                featured: "{{ setting('badge_featured_img') ? media_url(setting('badge_featured_img')) : '' }}",
+                discount: "{{ setting('badge_discount_img') ? media_url(setting('badge_discount_img')) : '' }}",
+            }
+        };
+        window.VTM_I18N = {
+            compare: {
+                title: "{{ __('compare_title') }}",
+                loading: "{{ __('compare_loading') }}",
+                emptyList: "{{ __('compare_empty_list') }}",
+                emptyListDesc: "{{ __('compare_empty_list_desc') }}",
+                errorLoad: "{{ __('compare_error_load') }}",
+                errorLoadDesc: "{{ __('compare_error_load_desc') }}",
+                colSpec: "{{ __('compare_col_spec') }}",
+                colPrice: "{{ __('compare_col_price') }}",
+                colCategory: "{{ __('compare_col_category') }}",
+                colSku: "{{ __('compare_col_sku') }}",
+                colUnit: "{{ __('compare_col_unit') }}",
+                colStock: "{{ __('compare_col_stock') }}",
+                colDescription: "{{ __('compare_col_description') }}",
+                colAction: "{{ __('compare_col_action') }}",
+                removeBtn: "{{ __('compare_remove_btn') }}",
+                contactBtn: "{{ __('compare_contact_btn') }}",
+                addToCartBtn: "{{ __('compare_add_to_cart_btn') }}",
+                inStock: "{{ __('product_in_stock') }}",
+                outOfStock: "{{ __('product_out_of_stock') }}",
+                confirmTitle: "{{ __('compare_confirm_title') }}",
+                confirmText: "{{ __('compare_confirm_text') }}",
+                removedText: "{{ __('compare_removed_text') }}",
+                errorText: "{{ __('compare_error_text') }}",
+                errorRetry: "{{ __('compare_error_retry') }}",
+                openingModal: "{{ __('compare_opening_modal') }}",
+                addSuccess: "{{ __('compare_add_success_title') }}",
+                close: "{{ __('swal_close') }}",
+                cancel: "{{ __('swal_cancel') }}",
+                continueShopping: "{{ __('compare_continue_shopping') }}",
+            }
+        };
+    </script>
+
     <!-- plugins js -->
     <script src="{{ asset('theme/js/plugins.js') }}"></script>
     <script src="{{ asset('theme/js/main.js') }}"></script>
@@ -710,7 +759,6 @@
                 
                 const rowId = $(this).data('row-id');
                 const productName = $(this).data('product-name');
-                const $item = $(this).closest('.cart-item-1');
                 
                 Swal.fire({
                     title: 'Xóa sản phẩm?',
@@ -724,12 +772,24 @@
                     reverseButtons: true
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $.post('{{ locale_route('cart.remove') }}', {
+                        const removeUrl = '{{ locale_route('cart.remove') }}';
+                        $.post(removeUrl, {
                             rowId: rowId,
                             _token: '{{ csrf_token() }}'
                         }, function(response) {
-                            // Reload page to update cart
-                            location.reload();
+                            if (response.cart_html) {
+                                $('.cart-dropdown-container').html(response.cart_html);
+                            } else if (window.cart && window.cart.updateDropdown) {
+                                window.cart.updateDropdown();
+                            }
+                            const count = response.count !== undefined ? response.count : 0;
+                            $('.cart > .number, .cart-count-badge, .header-cart-count').text(count);
+                            if (response.item_count !== undefined) {
+                                $('.cart-items-count').text(String(response.item_count).padStart(2, '0'));
+                            }
+                            if (window.location.pathname.includes('/gio-hang') && !window.location.pathname.includes('/gio-hang/')) {
+                                location.reload();
+                            }
                         }).fail(function() {
                             Swal.fire({
                                 title: 'Lỗi!',
@@ -742,55 +802,7 @@
             });
         });
     </script>
-    
-    <script>
-        window.VTM_CONFIG = {
-            baseUrl: "{{ request()->route('projectCode') ? url(request()->route('projectCode')) : url('/') }}",
-            siteName: "{{ setting('site_name', 'VietTinMart') }}",
-            hotline: "{{ setting('hotline', setting('contact_phone', '')) }}",
-            address: "{{ setting('site_address', setting('address', '')) }}",
-            currency: "{{ setting('currency_symbol', 'đ') }}",
-            currencyPos: "{{ setting('currency_position', 'right') }}",
-            badges: {
-                bestSeller: "{{ setting('badge_best_seller_img') ? media_url(setting('badge_best_seller_img')) : '' }}",
-                featured: "{{ setting('badge_featured_img') ? media_url(setting('badge_featured_img')) : '' }}",
-                discount: "{{ setting('badge_discount_img') ? media_url(setting('badge_discount_img')) : '' }}",
-            }
-        };
-        window.VTM_I18N = {
-            compare: {
-                title: "{{ __('compare_title') }}",
-                loading: "{{ __('compare_loading') }}",
-                emptyList: "{{ __('compare_empty_list') }}",
-                emptyListDesc: "{{ __('compare_empty_list_desc') }}",
-                errorLoad: "{{ __('compare_error_load') }}",
-                errorLoadDesc: "{{ __('compare_error_load_desc') }}",
-                colSpec: "{{ __('compare_col_spec') }}",
-                colPrice: "{{ __('compare_col_price') }}",
-                colCategory: "{{ __('compare_col_category') }}",
-                colSku: "{{ __('compare_col_sku') }}",
-                colUnit: "{{ __('compare_col_unit') }}",
-                colStock: "{{ __('compare_col_stock') }}",
-                colDescription: "{{ __('compare_col_description') }}",
-                colAction: "{{ __('compare_col_action') }}",
-                removeBtn: "{{ __('compare_remove_btn') }}",
-                contactBtn: "{{ __('compare_contact_btn') }}",
-                addToCartBtn: "{{ __('compare_add_to_cart_btn') }}",
-                inStock: "{{ __('product_in_stock') }}",
-                outOfStock: "{{ __('product_out_of_stock') }}",
-                confirmTitle: "{{ __('compare_confirm_title') }}",
-                confirmText: "{{ __('compare_confirm_text') }}",
-                removedText: "{{ __('compare_removed_text') }}",
-                errorText: "{{ __('compare_error_text') }}",
-                errorRetry: "{{ __('compare_error_retry') }}",
-                openingModal: "{{ __('compare_opening_modal') }}",
-                addSuccess: "{{ __('compare_add_success_title') }}",
-                close: "{{ __('swal_close') }}",
-                cancel: "{{ __('swal_cancel') }}",
-                continueShopping: "{{ __('compare_continue_shopping') }}",
-            }
-        };
-    </script>
+
 
     @stack('scripts')
 

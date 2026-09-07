@@ -85,7 +85,9 @@ class CartController extends Controller
         return response()->json([
             'success' => true,
             'count' => array_sum(array_column($cart, 'qty')),
+            'item_count' => count($cart),
             'cart' => $cart,
+            'cart_html' => $this->renderDropdownHtml(),
             'message' => 'Sản phẩm đã được thêm vào giỏ hàng!',
         ]);
     }
@@ -96,7 +98,13 @@ class CartController extends Controller
         unset($cart[$request->rowId]);
         session(['cart' => $cart]);
 
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success' => true,
+            'count' => array_sum(array_column($cart, 'qty')),
+            'item_count' => count($cart),
+            'cart_html' => $this->renderDropdownHtml(),
+            'message' => 'Đã xóa sản phẩm khỏi giỏ hàng',
+        ]);
     }
 
     public function update(Request $request)
@@ -114,6 +122,8 @@ class CartController extends Controller
             'success' => true,
             'item_subtotal_formatted' => $itemSubtotalFormatted,
             'count' => array_sum(array_column($cart, 'qty')),
+            'item_count' => count($cart),
+            'cart_html' => $this->renderDropdownHtml(),
         ]);
     }
 
@@ -229,12 +239,30 @@ class CartController extends Controller
     {
         session()->forget('cart');
 
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success' => true,
+            'count' => 0,
+            'item_count' => 0,
+            'cart_html' => $this->renderDropdownHtml(),
+        ]);
     }
 
     public function dropdown()
     {
-        return response(view('layouts.partials.cart-dropdown')->render());
+        return response($this->renderDropdownHtml());
+    }
+
+    private function renderDropdownHtml(): string
+    {
+        if (view()->exists('layouts.partials.cart-dropdown')) {
+            return view('layouts.partials.cart-dropdown')->render();
+        }
+
+        if (view()->exists('frontend.themes.viettinmartdemo.layouts.partials.cart-dropdown')) {
+            return view('frontend.themes.viettinmartdemo.layouts.partials.cart-dropdown')->render();
+        }
+
+        return '';
     }
 
     private function normalizeImagePath(?string $image): ?string
