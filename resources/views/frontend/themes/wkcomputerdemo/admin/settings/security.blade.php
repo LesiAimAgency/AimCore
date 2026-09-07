@@ -5,13 +5,13 @@
 @section('page-subtitle', 'Configure security and anti-spam features')
 
 @section('page-actions')
-    <a href="{{ route('admin.spam.dashboard') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.spam.dashboard') }}" class="btn btn-secondary">
         <i class="fa-solid fa-shield-halved"></i> Security Dashboard
     </a>
 @endsection
 
 @section('content')
-<form action="{{ route('admin.security.update') }}" method="POST" class="max-w-4xl">
+<form action="{{ locale_route('admin.security.update') }}" method="POST" class="max-w-4xl">
     @csrf
     
     <div class="space-y-6">
@@ -230,7 +230,7 @@
 
         {{-- Save Button --}}
         <div class="flex justify-end gap-3">
-            <a href="{{ route('admin.settings.index') }}" class="btn btn-secondary">
+            <a href="{{ locale_route('admin.settings.index') }}" class="btn btn-secondary">
                 <i class="fa-solid fa-times"></i> Cancel
             </a>
             <button type="submit" class="btn btn-primary">

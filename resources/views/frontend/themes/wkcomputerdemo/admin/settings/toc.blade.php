@@ -4,14 +4,14 @@
 @section('page-subtitle', 'Quản lý hiển thị mục lục tự động cho bài viết')
 
 @section('page-actions')
-<a href="{{ route('admin.settings.index') }}" class="btn btn-secondary">
+<a href="{{ locale_route('admin.settings.index') }}" class="btn btn-secondary">
     <i class="fa-solid fa-arrow-left text-xs"></i> Quay lại
 </a>
 @endsection
 
 @section('content')
 <div class="max-w-4xl">
-    <form action="{{ route('admin.settings.group.update', 'toc') }}" method="POST">
+    <form action="{{ locale_route('admin.settings.group.update', 'toc') }}" method="POST">
         @csrf @method('PUT')
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -126,7 +126,7 @@
             <button type="submit" class="btn btn-primary">
                 <i class="fa-solid fa-circle-check"></i> Lưu cài đặt TOC
             </button>
-            <a href="{{ route('admin.settings.index') }}" class="btn btn-secondary">Hủy bỏ</a>
+            <a href="{{ locale_route('admin.settings.index') }}" class="btn btn-secondary">Hủy bỏ</a>
         </div>
     </form>
 </div>

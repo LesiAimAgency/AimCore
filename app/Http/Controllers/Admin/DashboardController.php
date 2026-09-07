@@ -51,6 +51,13 @@ class DashboardController extends Controller
             return view('frontend.themes.viettinmartdemo.admin.dashboard', $data);
         }
 
+        $isWkcomputer = ($project && ($project->code === 'wkcomputer' || ($project->features['theme'] ?? null) === 'wkcomputerdemo'))
+            || ($request->route('projectCode') === 'wkcomputer');
+
+        if ($isWkcomputer && view()->exists('frontend.themes.wkcomputerdemo.admin.dashboard')) {
+            return view('frontend.themes.wkcomputerdemo.admin.dashboard', $data);
+        }
+
         return view('cms.dashboard.index', $data);
     }
 

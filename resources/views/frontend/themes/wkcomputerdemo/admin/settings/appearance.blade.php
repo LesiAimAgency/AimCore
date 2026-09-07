@@ -135,7 +135,7 @@ html:not(.alpine-loaded):not([data-admin-tab]) .ap-nav-btn[data-tab-target="desi
         </div>
 
         {{-- Main Form Container --}}
-        <form action="{{ route('admin.settings.group.update', 'appearance') }}" method="POST" class="flex-1 min-w-0" 
+        <form action="{{ locale_route('admin.settings.group.update', 'appearance') }}" method="POST" class="flex-1 min-w-0" 
               @submit="this.action = this.action.split('#')[0] + '#' + activeTab">
             @csrf @method('PUT')
 
@@ -999,7 +999,7 @@ html:not(.alpine-loaded):not([data-admin-tab]) .ap-nav-btn[data-tab-target="desi
                         <p style="color:#475569;font-size:11px;margin-top:2px;">Cài đặt áp dụng ngay lập tức cho toàn website</p>
                     </div>
                     <div style="display:flex;gap:8px;">
-                        <a href="{{ route('admin.settings.index') }}" class="btn btn-secondary">Hủy</a>
+                        <a href="{{ locale_route('admin.settings.index') }}" class="btn btn-secondary">Hủy</a>
                         <button type="submit" class="btn btn-primary">
                             <i class="fa-solid fa-floppy-disk"></i> Lưu cấu hình
                         </button>

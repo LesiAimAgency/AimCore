@@ -4,7 +4,7 @@
 @section('page-subtitle', $module['description'])
 
 @section('page-actions')
-<a href="{{ route('admin.settings.index') }}" class="btn btn-secondary">
+<a href="{{ locale_route('admin.settings.index') }}" class="btn btn-secondary">
     <i class="fa-solid fa-arrow-left text-xs"></i> Quay lại
 </a>
 @endsection
@@ -14,7 +14,7 @@
     $sections = $settings->groupBy('section');
 @endphp
 
-<form action="{{ route('admin.settings.group.update', $module['group']) }}" method="POST">
+<form action="{{ locale_route('admin.settings.group.update', $module['group']) }}" method="POST">
     @csrf @method('PUT')
 
     <div class="space-y-5 max-w-3xl">
@@ -487,7 +487,7 @@
             <button type="submit" class="btn btn-primary">
                 <i class="fa-solid fa-check text-xs"></i> Lưu cài đặt
             </button>
-            <a href="{{ route('admin.settings.index') }}" class="btn btn-secondary">Hủy</a>
+            <a href="{{ locale_route('admin.settings.index') }}" class="btn btn-secondary">Hủy</a>
         </div>
         @endif
 

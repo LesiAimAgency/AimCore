@@ -134,7 +134,7 @@ class SettingsService
                     $globalSettings = $this->parseSettingsRows($globalRows);
 
                     // Load tenant / project-specific settings (override global)
-                    $tenantId = $project->tenant_id ?? session('current_tenant_id') ?? ($project->code === 'viettinmart-eco' ? 3 : null);
+                    $tenantId = $project->tenant_id ?? session('current_tenant_id') ?? ($project->code === 'viettinmart-eco' ? 3 : (str_contains($project->code ?? '', 'wkcomputer') ? 4 : null));
                     $projectRows = DB::connection($mainConn)
                         ->table('settings')
                         ->where(function ($q) use ($project, $tenantId) {

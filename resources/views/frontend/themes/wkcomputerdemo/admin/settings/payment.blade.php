@@ -4,7 +4,7 @@
 @section('page-subtitle', 'Quản lý và cấu hình các cổng thanh toán')
 
 @section('page-actions')
-<a href="{{ route('admin.settings.index') }}" class="btn btn-secondary">
+<a href="{{ locale_route('admin.settings.index') }}" class="btn btn-secondary">
     <i class="fa-solid fa-arrow-left text-xs"></i> Quay lại
 </a>
 @endsection
@@ -137,7 +137,7 @@ $gateways = [
             {{-- Actions --}}
             <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
                 {{-- Toggle enable --}}
-                <form method="POST" action="{{ route('admin.settings.group.update', 'payment') }}" style="display:inline;">
+                <form method="POST" action="{{ locale_route('admin.settings.group.update', 'payment') }}" style="display:inline;">
                     @csrf @method('PUT')
                     <input type="hidden" name="settings[{{ $gw['enabled_key'] }}]" value="{{ $isEnabled ? '0' : '1' }}">
                     <button type="submit"
@@ -214,7 +214,7 @@ $gateways = [
         </div>
 
         {{-- Modal body --}}
-        <form method="POST" action="{{ route('admin.settings.group.update', 'payment') }}">
+        <form method="POST" action="{{ locale_route('admin.settings.group.update', 'payment') }}">
             @csrf @method('PUT')
             <div style="padding:24px;display:flex;flex-direction:column;gap:16px;">
 

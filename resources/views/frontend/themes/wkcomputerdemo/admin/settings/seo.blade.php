@@ -4,7 +4,7 @@
 @section('page-subtitle', 'Quản lý thông tin hỗ trợ SEO website')
 
 @section('page-actions')
-<a href="{{ route('admin.settings.index') }}" class="btn btn-secondary">
+<a href="{{ locale_route('admin.settings.index') }}" class="btn btn-secondary">
     <i class="fa-solid fa-arrow-left text-xs"></i> Quay lại
 </a>
 @endsection
@@ -38,7 +38,7 @@
 </div>
 
 {{-- Main form --}}
-<form action="{{ route('admin.settings.group.update', 'seo') }}" method="POST" class="flex-1 min-w-0">
+<form action="{{ locale_route('admin.settings.group.update', 'seo') }}" method="POST" class="flex-1 min-w-0">
 @csrf @method('PUT')
 <div class="space-y-5 max-w-3xl">
 
@@ -330,7 +330,7 @@
     <button type="submit" class="btn btn-primary">
         <i class="fa-solid fa-check text-xs"></i> Lưu cài đặt
     </button>
-    <a href="{{ route('admin.settings.index') }}" class="btn btn-secondary">Hủy</a>
+    <a href="{{ locale_route('admin.settings.index') }}" class="btn btn-secondary">Hủy</a>
 </div>
 
 </div>

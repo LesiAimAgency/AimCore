@@ -4,7 +4,7 @@
 @section('page-subtitle', 'Bộ lọc sản phẩm, danh mục, thuộc tính hiển thị ngoài shop')
 
 @section('page-actions')
-    <a href="{{ route('admin.settings.index') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.settings.index') }}" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left text-xs"></i> Quay lại
     </a>
 @endsection
@@ -22,7 +22,7 @@
     $attrConfigMap = collect($attrConfig)->keyBy('id');
 @endphp
 
-<form action="{{ route('admin.settings.group.update', 'shop') }}" method="POST"
+<form action="{{ locale_route('admin.settings.group.update', 'shop') }}" method="POST"
       x-data="shopSettingsForm()" x-init="init()">
     @csrf @method('PUT')
 
@@ -191,7 +191,7 @@
                             <div class="text-center py-8">
                                 <i class="fa-solid fa-folder-open text-3xl text-slate-300 mb-3 block"></i>
                                 <p class="text-slate-400 text-sm">Chưa có danh mục nào.</p>
-                                <a href="{{ route('admin.categories.index', ['type' => 'product']) }}" class="btn btn-primary btn-sm mt-4">
+                                <a href="{{ locale_route('admin.categories.index', ['type' => 'product']) }}" class="btn btn-primary btn-sm mt-4">
                                     <i class="fa-solid fa-plus"></i> Quản lý danh mục
                                 </a>
                             </div>
@@ -220,7 +220,7 @@
                                         <span class="badge {{ $cat->is_active ? 'badge-green' : 'badge-gray' }}">
                                             {{ $cat->is_active ? 'Hiện' : 'Ẩn' }}
                                         </span>
-                                        <a href="{{ route('admin.categories.index', ['type' => 'product']) }}" class="act-btn edit">
+                                        <a href="{{ locale_route('admin.categories.index', ['type' => 'product']) }}" class="act-btn edit">
                                             <i class="fa-solid fa-pen"></i>
                                         </a>
                                     </div>
@@ -228,7 +228,7 @@
                                 @endforeach
                             </div>
                             <div class="mt-4 pt-4 border-t border-slate-100">
-                                <a href="{{ route('admin.categories.index', ['type' => 'product']) }}" class="btn btn-secondary btn-sm">
+                                <a href="{{ locale_route('admin.categories.index', ['type' => 'product']) }}" class="btn btn-secondary btn-sm">
                                     <i class="fa-solid fa-arrow-right"></i> Quản lý tất cả danh mục
                                 </a>
                             </div>
@@ -258,7 +258,7 @@
                             <div class="text-center py-8">
                                 <i class="fa-solid fa-sliders text-3xl text-slate-300 mb-3 block"></i>
                                 <p class="text-slate-400 text-sm">Chưa có thuộc tính nào.</p>
-                                <a href="{{ route('admin.attributes.create') }}" class="btn btn-primary btn-sm mt-4">
+                                <a href="{{ locale_route('admin.attributes.create') }}" class="btn btn-primary btn-sm mt-4">
                                     <i class="fa-solid fa-plus"></i> Tạo thuộc tính
                                 </a>
                             </div>
@@ -307,7 +307,7 @@
                                             <span class="badge badge-gray shrink-0">Không lọc</span>
                                         @endif
 
-                                        <a href="{{ route('admin.attributes.edit', $attr) }}" class="act-btn edit shrink-0">
+                                        <a href="{{ locale_route('admin.attributes.edit', $attr) }}" class="act-btn edit shrink-0">
                                             <i class="fa-solid fa-pen"></i>
                                         </a>
                                     </div>
@@ -394,7 +394,7 @@
                             </div>
 
                             <div class="mt-4 pt-4 border-t border-slate-100">
-                                <a href="{{ route('admin.attributes.index') }}" class="btn btn-secondary btn-sm">
+                                <a href="{{ locale_route('admin.attributes.index') }}" class="btn btn-secondary btn-sm">
                                     <i class="fa-solid fa-arrow-right"></i> Quản lý tất cả thuộc tính
                                 </a>
                             </div>

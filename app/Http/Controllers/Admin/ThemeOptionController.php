@@ -37,7 +37,7 @@ class ThemeOptionController extends Controller
         $project = $request->attributes->get('project');
 
         if ($project) {
-            $tenantId = $project->tenant_id ?? session('current_tenant_id') ?? ($project->code === 'viettinmart-eco' ? 3 : null);
+            $tenantId = $project->tenant_id ?? session('current_tenant_id') ?? ($project->code === 'viettinmart-eco' ? 3 : (str_contains($project->code ?? '', 'wkcomputer') ? 4 : null));
             // Project context - load from main database with tenant_id or project_id
             $settings = \DB::table('settings')
                 ->where('key', "theme_option_{$tab}")
@@ -74,7 +74,7 @@ class ThemeOptionController extends Controller
         ]);
 
         if ($project) {
-            $tenantId = $project->tenant_id ?? session('current_tenant_id') ?? ($project->code === 'viettinmart-eco' ? 3 : null);
+            $tenantId = $project->tenant_id ?? session('current_tenant_id') ?? ($project->code === 'viettinmart-eco' ? 3 : (str_contains($project->code ?? '', 'wkcomputer') ? 4 : null));
             // Project context - save to main database with tenant_id and project_id
             \DB::table('settings')
                 ->where('key', "theme_option_{$tab}")

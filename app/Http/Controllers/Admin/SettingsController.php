@@ -371,7 +371,7 @@ class SettingsController extends Controller
         ];
 
         // 1. Theme specific view
-        $theme = ($project?->features['theme'] ?? null) ?: ($project?->code === 'viettinmart-eco' ? 'viettinmartdemo' : setting('theme'));
+        $theme = ($project?->features['theme'] ?? null) ?: ($project?->code === 'viettinmart-eco' ? 'viettinmartdemo' : ($project?->code === 'wkcomputer' ? 'wkcomputerdemo' : setting('theme')));
         if ($theme && view()->exists("frontend.themes.{$theme}.admin.settings.{$group}")) {
             return view("frontend.themes.{$theme}.admin.settings.{$group}", $viewData);
         }
@@ -493,6 +493,8 @@ class SettingsController extends Controller
         $tenantId = $project?->tenant_id;
         if (! $tenantId && ($project?->code === 'viettinmart-eco' || str_contains($project?->code ?? '', 'viettinmart'))) {
             $tenantId = 3;
+        } elseif (! $tenantId && str_contains($project?->code ?? '', 'wkcomputer')) {
+            $tenantId = 4;
         }
         if (! $tenantId) {
             $tenantId = session('current_tenant_id') ?? config('app.default_tenant_id') ?? 3;

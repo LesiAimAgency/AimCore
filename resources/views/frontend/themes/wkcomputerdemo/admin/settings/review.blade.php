@@ -6,7 +6,7 @@
 
 @section('page-actions')
     <div class="flex items-center gap-2">
-        <a href="{{ route('admin.settings.index') }}"
+        <a href="{{ locale_route('admin.settings.index') }}"
             class="btn btn-secondary bg-blue-500 text-white border-0 hover:bg-blue-600">
             <i class="fa-solid fa-rotate-left text-xs"></i> Quay lại
         </a>
@@ -22,7 +22,7 @@
         $map = $settingsMap;
     @endphp
 
-    <form action="{{ route('admin.settings.group.update', 'review') }}" method="POST" id="review-settings-form">
+    <form action="{{ locale_route('admin.settings.group.update', 'review') }}" method="POST" id="review-settings-form">
         @csrf @method('PUT')
 
         <div class="space-y-6 max-w-5xl">

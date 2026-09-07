@@ -20,7 +20,7 @@ $colors = ['#2563eb','#16a34a','#ea580c','#7c3aed','#0891b2','#db2777','#64748b'
 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
     @foreach($modules as $i => $module)
     @php $color = $colors[$i % count($colors)]; @endphp
-    <a href="{{ route('admin.settings.group', $module['group']) }}"
+    <a href="{{ locale_route('admin.settings.group', $module['group']) }}"
        style="background:#fff;border-radius:14px;border:1.5px solid #f1f5f9;box-shadow:0 1px 4px rgba(0,0,0,.05);padding:20px;display:flex;align-items:flex-start;gap:14px;text-decoration:none;transition:all .15s;"
        onmouseover="this.style.borderColor='#e2e8f0';this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)';this.style.transform='translateY(-2px)'"
        onmouseout="this.style.borderColor='#f1f5f9';this.style.boxShadow='0 1px 4px rgba(0,0,0,.05)';this.style.transform='none'">
@@ -38,7 +38,7 @@ $colors = ['#2563eb','#16a34a','#ea580c','#7c3aed','#0891b2','#db2777','#64748b'
 
 {{-- Quick links --}}
 <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px;">
-    <a href="{{ route('admin.languages.index') }}"
+    <a href="{{ locale_route('admin.languages.index') }}"
        style="background:#fff;border-radius:14px;border:1.5px solid #f1f5f9;box-shadow:0 1px 4px rgba(0,0,0,.05);padding:20px;display:flex;align-items:flex-start;gap:14px;text-decoration:none;transition:all .15s;"
        onmouseover="this.style.borderColor='#e2e8f0';this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)';this.style.transform='translateY(-2px)'"
        onmouseout="this.style.borderColor='#f1f5f9';this.style.boxShadow='0 1px 4px rgba(0,0,0,.05)';this.style.transform='none'">

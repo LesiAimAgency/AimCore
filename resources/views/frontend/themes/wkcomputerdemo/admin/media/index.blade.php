@@ -23,12 +23,12 @@
 
             {{-- Breadcrumbs --}}
             <div class="flex items-center gap-2 flex-1 min-w-0">
-                <a href="{{ route('admin.media.index') }}" class="w-8 h-8 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-all shadow-sm">
+                <a href="{{ locale_route('admin.media.index') }}" class="w-8 h-8 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-all shadow-sm">
                     <i class="fa-solid fa-house text-[10px]"></i>
                 </a>
                 @foreach($breadcrumbs as $bc)
                     <i class="fa-solid fa-chevron-right text-[9px] text-slate-300"></i>
-                    <a href="{{ route('admin.media.index', ['folder_id' => $bc->id]) }}"
+                    <a href="{{ locale_route('admin.media.index', ['folder_id' => $bc->id]) }}"
                        class="px-3 py-1.5 rounded-xl bg-white border border-slate-100 text-[10px] font-black uppercase text-slate-500 hover:text-blue-600 transition-all shadow-sm">
                         {{ $bc->name }}
                     </a>
@@ -73,7 +73,7 @@
                 {{-- Folders --}}
                 @foreach($folders as $f)
                     <div x-show="searchFilter === '' || '{{ strtolower($f->name) }}'.includes(searchFilter.toLowerCase())"
-                         @dblclick="window.location.href='{{ route('admin.media.index', ['folder_id' => $f->id]) }}'"
+                         @dblclick="window.location.href='{{ locale_route('admin.media.index', ['folder_id' => $f->id]) }}'"
                          class="group relative aspect-square bg-slate-50/50 rounded-[32px] border-2 border-transparent hover:border-blue-300 cursor-pointer overflow-hidden transition-all flex flex-col items-center justify-center shadow-sm">
 
                         <template x-if="editingId === 'folder-{{ $f->id }}'">
@@ -155,7 +155,7 @@
                     <tbody>
                         @foreach($folders as $f)
                             <tr x-show="searchFilter === '' || '{{ strtolower($f->name) }}'.includes(searchFilter.toLowerCase())"
-                                @dblclick="window.location.href='{{ route('admin.media.index', ['folder_id' => $f->id]) }}'"
+                                @dblclick="window.location.href='{{ locale_route('admin.media.index', ['folder_id' => $f->id]) }}'"
                                 class="hover:bg-slate-50 border-b border-slate-100 transition-colors group cursor-pointer">
                                 <td class="px-6 py-3 font-bold text-slate-700 flex items-center gap-3">
                                     <i class="fa-solid fa-folder text-amber-400"></i>
@@ -168,7 +168,7 @@
                                     <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button @click.stop="editingId = 'folder-{{ $f->id }}'" class="w-8 h-8 rounded-lg bg-white shadow-sm border border-slate-100 text-slate-400 hover:text-blue-500"><i class="fa-solid fa-pencil text-[10px]"></i></button>
                                         <button @click.stop="deleteFolder({{ $f->id }})" class="w-8 h-8 rounded-lg bg-white shadow-sm border border-slate-100 text-slate-400 hover:text-rose-500"><i class="fa-solid fa-trash-can text-[10px]"></i></button>
-                                        <a href="{{ route('admin.media.index', ['folder_id' => $f->id]) }}" class="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-[9px] font-black uppercase tracking-widest ml-1">Mở</a>
+                                        <a href="{{ locale_route('admin.media.index', ['folder_id' => $f->id]) }}" class="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-[9px] font-black uppercase tracking-widest ml-1">Mở</a>
                                     </div>
                                 </td>
                             </tr>
@@ -355,8 +355,8 @@
                 if (!newName) return (this.editingId = null);
 
                 const route = isFolder
-                    ? "{{ route('admin.media.index') }}/folder/" + id + "/rename"
-                    : "{{ route('admin.media.index') }}/file/" + id + "/rename";
+                    ? "{{ locale_route('admin.media.index') }}/folder/" + id + "/rename"
+                    : "{{ locale_route('admin.media.index') }}/file/" + id + "/rename";
 
                 const res = await fetch(route, {
                     method: 'POST',
@@ -391,7 +391,7 @@
                     formData.append('folder_id', folder);
                     formData.append('_token', '{{ csrf_token() }}');
                     try {
-                        const response = await fetch("{{ route('admin.media.store') }}", {
+                        const response = await fetch("{{ locale_route('admin.media.store') }}", {
                             method: 'POST', body: formData, headers: { 'Accept': 'application/json' }
                         });
                         if (response.ok) { this.uploadCount++; this.uploadProgress = Math.round((this.uploadCount / this.totalFiles) * 100); }
@@ -404,7 +404,7 @@
             async openNewFolder() {
                 const name = prompt('Nhập tên thư mục mới:');
                 if (!name) return;
-                const res = await fetch("{{ route('admin.media.create-folder') }}", {
+                const res = await fetch("{{ locale_route('admin.media.create-folder') }}", {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
                     body: JSON.stringify({ name: name, parent_id: {{ $currentFolder->id ?? 'null' }} })
@@ -414,7 +414,7 @@
 
             async deleteFolder(id) {
                 if (!confirm('Xóa thư mục này và toàn bộ nội dung bên trong?')) return;
-                const res = await fetch("{{ route('admin.media.index') }}/folder/" + id, {
+                const res = await fetch("{{ locale_route('admin.media.index') }}/folder/" + id, {
                     method: 'DELETE',
                     headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
                 });
@@ -435,7 +435,7 @@
 
             async deleteSingle(id) {
                 if (!confirm('Xóa tệp này?')) return;
-                const res = await fetch("{{ route('admin.media.index') }}/" + id, {
+                const res = await fetch("{{ locale_route('admin.media.index') }}/" + id, {
                     method: 'DELETE',
                     headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
                 });
@@ -445,7 +445,7 @@
             openMoveModal() { this.moveTarget = ''; this.showMoveModal = true; },
 
             async confirmMove() {
-                const res = await fetch("{{ route('admin.media.move') }}", {
+                const res = await fetch("{{ locale_route('admin.media.move') }}", {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
                     body: JSON.stringify({ ids: this.selected, folder_id: this.moveTarget })
@@ -455,7 +455,7 @@
 
             async bulkDelete() {
                 if (!confirm(`Xóa ${this.selected.length} tệp đã chọn?`)) return;
-                const res = await fetch("{{ route('admin.media.bulk-delete') }}", {
+                const res = await fetch("{{ locale_route('admin.media.bulk-delete') }}", {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
                     body: JSON.stringify({ ids: this.selected })

@@ -109,7 +109,7 @@ class WidgetController extends Controller
                 try {
                     $theme = Setting::where(function ($q) use ($projId, $tenantId) {
                         $q->where('project_id', $projId)->orWhere('tenant_id', $tenantId);
-                    })->where('key', 'theme')->value('value') ?: ($currentProject?->code === 'viettinmart-eco' ? 'viettinmartdemo' : null);
+                    })->where('key', 'theme')->value('value') ?: ($currentProject?->code === 'viettinmart-eco' ? 'viettinmartdemo' : ($currentProject?->code === 'wkcomputer' ? 'wkcomputerdemo' : null));
 
                     if ($theme === 'inbetween' && class_exists('\Database\Seeders\InbetweenHomepageMainSeeder')) {
                         (new InbetweenHomepageMainSeeder)->run($projId, $tenantId);
