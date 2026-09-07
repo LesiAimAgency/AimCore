@@ -370,7 +370,7 @@
                 if (!name) return;
 
                 try {
-                    const response = await fetch("{{ route('admin.media.create-folder') }}", {
+                    const response = await fetch("{{ locale_route('admin.media.create-folder') }}", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -393,8 +393,8 @@
                 if (!newName) return (this.editingId = null);
 
                 const route = isFolder
-                    ? "{{ route('admin.media.index') }}/folder/" + id + "/rename"
-                    : "{{ route('admin.media.index') }}/file/" + id + "/rename";
+                    ? "{{ locale_route('admin.media.index') }}/folder/" + id + "/rename"
+                    : "{{ locale_route('admin.media.index') }}/file/" + id + "/rename";
 
                 try {
                     const res = await fetch(route, {
@@ -414,7 +414,7 @@
             async deleteFolder(id) {
                 if (!confirm('Xóa' + ' thư mục này?')) return;
                 try {
-                    const res = await fetch("{{ route('admin.media.index') }}/folder/" + id, {
+                    const res = await fetch("{{ locale_route('admin.media.index') }}/folder/" + id, {
                         method: 'DELETE',
                         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
                     });
@@ -425,7 +425,7 @@
             async deleteItem(id) {
                 if (!confirm('Xóa' + ' tệp này?')) return;
                 try {
-                    const res = await fetch("{{ route('admin.media.index') }}/" + id, {
+                    const res = await fetch("{{ locale_route('admin.media.index') }}/" + id, {
                         method: 'DELETE',
                         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
                     });
