@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Project;
+use Illuminate\Support\Facades\Schema;
 
 trait ProjectScoped
 {
@@ -31,14 +32,14 @@ trait ProjectScoped
 
             // Check if model uses BelongsToTenant trait
             $traits = class_uses_recursive($builder->getModel());
-            $hasTenantTrait = in_array(\App\Traits\BelongsToTenant::class, $traits);
+            $hasTenantTrait = in_array(BelongsToTenant::class, $traits);
 
             if ($hasTenantTrait && $tenantId) {
                 // 100% TENANT_ID: BelongsToTenant global scope handles filtering by tenant_id!
                 return;
             }
 
-            if ($tenantId && \Illuminate\Support\Facades\Schema::hasColumn($table, 'tenant_id')) {
+            if ($tenantId && Schema::hasColumn($table, 'tenant_id')) {
                 $builder->where(function ($q) use ($table, $tenantId, $projectId) {
                     $q->where($table.'.tenant_id', $tenantId);
                     if ($tenantId == 3) {
@@ -48,6 +49,7 @@ trait ProjectScoped
                         $q->orWhere($table.'.project_id', $projectId);
                     }
                 });
+
                 return;
             }
 
@@ -72,7 +74,7 @@ trait ProjectScoped
             if ($projectId && ! $model->project_id) {
                 $model->project_id = $projectId;
             }
-            if ($tenantId && empty($model->tenant_id) && \Illuminate\Support\Facades\Schema::hasColumn($model->getTable(), 'tenant_id')) {
+            if ($tenantId && empty($model->tenant_id) && Schema::hasColumn($model->getTable(), 'tenant_id')) {
                 $model->tenant_id = $tenantId;
             }
         });

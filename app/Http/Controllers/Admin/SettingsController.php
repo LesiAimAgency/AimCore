@@ -22,7 +22,12 @@ class SettingsController extends Controller
                 \DB::setDefaultConnection($mainConn);
             }
 
-            $enabledSettings = ProjectSetting::where('project_id', $project->id)
+            $enabledSettings = ProjectSetting::where(function ($q) use ($project) {
+                $q->where('project_id', $project->id);
+                if ($project->code === 'viettinmart-eco' || str_contains($project->code, 'viettinmart')) {
+                    $q->orWhere('project_id', 10);
+                }
+            })
                 ->where('value', '1')
                 ->pluck('key')
                 ->toArray();
@@ -172,21 +177,34 @@ class SettingsController extends Controller
                         }
                     }
 
-                    // DEMO MODE: Sử dụng shared database với project scoping
+                    // DEMO MODE: Sử dụng shared database với project scoping & tenant isolation
                     if ($project) {
+                        $tenantId = $project->tenant_id ?? session('current_tenant_id') ?? (app()->bound('current_tenant_id') ? app('current_tenant_id') : 3);
+                        if ($project->code === 'viettinmart-eco' || str_contains($project->code, 'viettinmart')) {
+                            $tenantId = 3;
+                        }
+
                         // Xóa setting cũ trước (nếu có) để tránh duplicate
                         \DB::table('settings')
                             ->where('key', $key)
-                            ->where('project_id', $project->id)
+                            ->where(function ($q) use ($project, $tenantId) {
+                                $q->where('project_id', $project->id);
+                                if ($tenantId) {
+                                    $q->orWhere('tenant_id', $tenantId);
+                                }
+                                if ($tenantId == 3) {
+                                    $q->orWhere('project_id', 10);
+                                }
+                            })
                             ->delete();
 
-                        // Insert setting mới
+                        // Insert setting mới (100% tenant_id + project_id)
                         \DB::table('settings')->insert([
                             'key' => $key,
                             'payload' => json_encode(is_array($value) ? $value : ['value' => $value]),
                             'group' => 'general',
                             'project_id' => $project->id,
-                            'tenant_id' => null,
+                            'tenant_id' => $tenantId,
                             'created_at' => now(),
                             'updated_at' => now(),
                         ]);
@@ -241,7 +259,12 @@ class SettingsController extends Controller
             \DB::setDefaultConnection($mainConn);
         }
 
-        $enabledSettings = ProjectSetting::where('project_id', $project->id)
+        $enabledSettings = ProjectSetting::where(function ($q) use ($project) {
+            $q->where('project_id', $project->id);
+            if ($project->code === 'viettinmart-eco' || str_contains($project->code, 'viettinmart')) {
+                $q->orWhere('project_id', 10);
+            }
+        })
             ->where('value', '1')
             ->pluck('key')
             ->toArray();

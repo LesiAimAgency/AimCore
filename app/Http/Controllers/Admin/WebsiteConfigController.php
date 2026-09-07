@@ -32,7 +32,16 @@ class WebsiteConfigController extends Controller
         }
 
         if ($project) {
-            $menus = Menu::withoutGlobalScopes()->where('project_id', $project->id)->get();
+            $tenantId = $project->tenant_id ?? session('current_tenant_id') ?? (app()->bound('current_tenant_id') ? app('current_tenant_id') : 3);
+            $menus = Menu::withoutGlobalScopes()
+                ->where(function ($q) use ($project, $tenantId) {
+                    $q->where('tenant_id', $tenantId)
+                        ->orWhere('project_id', $project->id);
+                    if ($tenantId == 3) {
+                        $q->orWhere('project_id', 10);
+                    }
+                })
+                ->get();
             if ($menus->isEmpty()) {
                 $menus = Menu::withoutGlobalScopes()->whereNull('project_id')->get();
             }

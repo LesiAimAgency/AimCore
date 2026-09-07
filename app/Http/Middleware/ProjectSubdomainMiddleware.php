@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use App\Models\Project;
 use App\Models\Tenant;
 use App\Models\User;
-use App\Models\Widget;
 use App\Services\ViettinmartDataSyncService;
 use Closure;
 use Illuminate\Http\Request;
@@ -42,17 +41,22 @@ class ProjectSubdomainMiddleware
         }
 
         $tenantId = $hasTenantCol ? $project->tenant_id : null;
-        if (! $tenantId) {
+        if ($project->code === 'viettinmart-eco' || str_contains($project->code, 'viettinmart')) {
+            $tenantId = 3;
+        } elseif (str_contains($project->code, 'wkcomputer')) {
+            $tenantId = 4;
+        } elseif (! $tenantId) {
             $matchedTenant = Tenant::where('code', $project->code)
                 ->orWhere('code', str_replace(['-eco', '-ecommerce', '-demo'], '', $project->code))
                 ->first();
             $tenantId = $matchedTenant?->id ?? $project->id;
-            if ($tenantId && $hasTenantCol) {
-                try {
-                    $project->update(['tenant_id' => $tenantId]);
-                } catch (\Throwable $e) {
-                    // Fallback gracefully if database table is not migrated yet
-                }
+        }
+
+        if ($tenantId && $hasTenantCol && $project->tenant_id !== $tenantId) {
+            try {
+                $project->update(['tenant_id' => $tenantId]);
+            } catch (\Throwable $e) {
+                // Fallback gracefully if database table is not migrated yet
             }
         }
 
@@ -69,13 +73,10 @@ class ProjectSubdomainMiddleware
             session(['current_tenant_id' => $tenantId]);
         }
 
-        // Auto-heal check for Viettinmart project data
-        if ($project->code === 'viettinmart-eco' || $project->code === 'viettinmart') {
+        // Auto-heal check for Viettinmart project data (100% Tenant Isolation)
+        if ($project->code === 'viettinmart-eco' || str_contains($project->code, 'viettinmart')) {
             try {
-                $hasWidgets = Widget::withoutGlobalScopes()->where('project_id', $project->id)->exists();
-                if (! $hasWidgets) {
-                    app(ViettinmartDataSyncService::class)->syncProjectId($project->id, $tenantId);
-                }
+                app(ViettinmartDataSyncService::class)->syncProjectId($project->id, 3);
             } catch (\Throwable $e) {
                 \Log::warning('Viettinmart auto-heal check failed: '.$e->getMessage());
             }

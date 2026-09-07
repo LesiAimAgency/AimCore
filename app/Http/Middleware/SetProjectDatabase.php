@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Symfony\Component\HttpFoundation\Response;
 
 class SetProjectDatabase
@@ -31,7 +32,7 @@ class SetProjectDatabase
             $this->resetToMainDatabase();
         }
 
-        return $response;
+        return $response instanceof Response ? $response : response($response);
     }
 
     private function setProjectDatabase($project, Request $request)
@@ -48,7 +49,6 @@ class SetProjectDatabase
         // Store main database name for later reset
         $request->attributes->set('main_database', config('database.default'));
 
-        // Set tenant ID và project ID cho session TRƯỚC KHI query
         // Set tenant ID và project ID cho session TRƯỚC KHI query (100% Tenant-based)
         $tenantId = $project->tenant_id ?? null;
         if ($project->code === 'viettinmart-eco' || str_contains($project->code, 'viettinmart')) {
@@ -66,7 +66,7 @@ class SetProjectDatabase
                 ?? $project->id;
         }
 
-        if ($tenantId && \Illuminate\Support\Facades\Schema::hasColumn('projects', 'tenant_id')) {
+        if ($tenantId && Schema::hasColumn('projects', 'tenant_id')) {
             if ($project->tenant_id !== $tenantId) {
                 try {
                     $project->update(['tenant_id' => $tenantId]);

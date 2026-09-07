@@ -29,6 +29,9 @@ class ViettinmartDataSyncService
         'menu_items',
         'orders',
         'order_items',
+        'order_status_histories',
+        'product_variations',
+        'product_attribute_value_mappings',
         'coupons',
         'brands',
         'form_templates',
@@ -92,9 +95,8 @@ class ViettinmartDataSyncService
 
             if ($targetProjectId !== 10 && Schema::hasColumn($table, 'project_id')) {
                 $count10 = DB::table($table)->where('project_id', 10)->count();
-                $countTarget = DB::table($table)->where('project_id', $targetProjectId)->count();
 
-                if ($count10 > 0 && $countTarget === 0) {
+                if ($count10 > 0) {
                     DB::table($table)->where('project_id', 10)->update([
                         'project_id' => $targetProjectId,
                     ]);
@@ -111,10 +113,9 @@ class ViettinmartDataSyncService
                             $q->orWhere('project_id', 10);
                         }
                     })
-                    ->where(function ($q) {
+                    ->where(function ($q) use ($targetTenantId) {
                         $q->whereNull('tenant_id')
-                            ->orWhere('tenant_id', 0)
-                            ->orWhere('tenant_id', 10);
+                            ->orWhere('tenant_id', '!=', $targetTenantId);
                     })
                     ->update(['tenant_id' => $targetTenantId]);
             }

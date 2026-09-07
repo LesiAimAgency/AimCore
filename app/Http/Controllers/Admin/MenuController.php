@@ -27,8 +27,17 @@ class MenuController extends Controller
 
         if ($project) {
             $this->autoInitializeProjectMenus($project);
+            $tenantId = $project->tenant_id ?? session('current_tenant_id') ?? 3;
             $menus = Menu::withoutGlobalScopes()
-                ->where('project_id', $project->id)
+                ->where(function ($q) use ($project, $tenantId) {
+                    $q->where('project_id', $project->id);
+                    if ($tenantId) {
+                        $q->orWhere('tenant_id', $tenantId);
+                    }
+                    if ($tenantId == 3) {
+                        $q->orWhere('project_id', 10);
+                    }
+                })
                 ->with(['items' => function ($q) {
                     $q->withoutGlobalScopes()->whereNull('parent_id')->with(['children' => function ($cq) {
                         $cq->withoutGlobalScopes()->orderBy('order');
@@ -71,8 +80,17 @@ class MenuController extends Controller
 
         if ($project) {
             $this->autoInitializeProjectMenus($project);
+            $tenantId = $project->tenant_id ?? session('current_tenant_id') ?? 3;
             $menus = Menu::withoutGlobalScopes()
-                ->where('project_id', $project->id)
+                ->where(function ($q) use ($project, $tenantId) {
+                    $q->where('project_id', $project->id);
+                    if ($tenantId) {
+                        $q->orWhere('tenant_id', $tenantId);
+                    }
+                    if ($tenantId == 3) {
+                        $q->orWhere('project_id', 10);
+                    }
+                })
                 ->with(['items' => function ($q) {
                     $q->withoutGlobalScopes()->whereNull('parent_id')->with(['children' => function ($cq) {
                         $cq->withoutGlobalScopes()->orderBy('order');
@@ -81,7 +99,15 @@ class MenuController extends Controller
                 ->get();
 
             $menu = Menu::withoutGlobalScopes()
-                ->where('project_id', $project->id)
+                ->where(function ($q) use ($project, $tenantId) {
+                    $q->where('project_id', $project->id);
+                    if ($tenantId) {
+                        $q->orWhere('tenant_id', $tenantId);
+                    }
+                    if ($tenantId == 3) {
+                        $q->orWhere('project_id', 10);
+                    }
+                })
                 ->with(['items' => function ($q) {
                     $q->withoutGlobalScopes()->whereNull('parent_id')->with(['children' => function ($cq) {
                         $cq->withoutGlobalScopes()->orderBy('order');
@@ -390,15 +416,29 @@ class MenuController extends Controller
     private function getSourcesData($project): array
     {
         $projectId = $project?->id;
+        $tenantId = $project?->tenant_id ?? session('current_tenant_id') ?? 3;
+        $scopeFilter = function ($q) use ($projectId, $tenantId) {
+            $q->where(function ($sub) use ($projectId, $tenantId) {
+                if ($projectId) {
+                    $sub->where('project_id', $projectId);
+                }
+                if ($tenantId) {
+                    $sub->orWhere('tenant_id', $tenantId);
+                }
+                if ($tenantId == 3) {
+                    $sub->orWhere('project_id', 10);
+                }
+            });
+        };
 
         $pages = Post::withoutGlobalScopes()
-            ->when($projectId, fn ($q) => $q->where('project_id', $projectId))
+            ->when($projectId || $tenantId, $scopeFilter)
             ->where('post_type', 'page')
             ->select('id', 'title', 'slug')
             ->get();
 
         $posts = Post::withoutGlobalScopes()
-            ->when($projectId, fn ($q) => $q->where('project_id', $projectId))
+            ->when($projectId || $tenantId, $scopeFilter)
             ->where('post_type', 'post')
             ->select('id', 'title', 'slug')
             ->latest()
@@ -407,7 +447,7 @@ class MenuController extends Controller
 
         $postCategories = Schema::hasTable('taxonomies')
             ? Taxonomy::withoutGlobalScopes()
-                ->when($projectId && Schema::hasColumn('taxonomies', 'project_id'), fn ($q) => $q->where('project_id', $projectId))
+                ->when(($projectId || $tenantId) && Schema::hasColumn('taxonomies', 'project_id'), $scopeFilter)
                 ->where('taxonomy', 'category')
                 ->select('id', 'name', 'slug')
                 ->get()
@@ -415,18 +455,18 @@ class MenuController extends Controller
 
         $productCategories = Schema::hasTable('product_categories')
             ? ProductCategory::withoutGlobalScopes()
-                ->when($projectId && Schema::hasColumn('product_categories', 'project_id'), fn ($q) => $q->where('project_id', $projectId))
+                ->when(($projectId || $tenantId) && Schema::hasColumn('product_categories', 'project_id'), $scopeFilter)
                 ->whereNull('parent_id')
-                ->with(['children' => function ($cq) use ($projectId) {
+                ->with(['children' => function ($cq) use ($scopeFilter) {
                     $cq->withoutGlobalScopes()
-                        ->when($projectId && Schema::hasColumn('product_categories', 'project_id'), fn ($q) => $q->where('project_id', $projectId));
+                        ->when(Schema::hasColumn('product_categories', 'project_id'), $scopeFilter);
                 }])
                 ->get()
             : collect();
 
         $products = Schema::hasTable('products')
             ? Product::withoutGlobalScopes()
-                ->when($projectId && Schema::hasColumn('products', 'project_id'), fn ($q) => $q->where('project_id', $projectId))
+                ->when(($projectId || $tenantId) && Schema::hasColumn('products', 'project_id'), $scopeFilter)
                 ->select('id', 'name', 'slug')
                 ->latest()
                 ->limit(60)
@@ -435,7 +475,7 @@ class MenuController extends Controller
 
         $brands = Schema::hasTable('brands')
             ? Brand::withoutGlobalScopes()
-                ->when($projectId && Schema::hasColumn('brands', 'project_id'), fn ($q) => $q->where('project_id', $projectId))
+                ->when(($projectId || $tenantId) && Schema::hasColumn('brands', 'project_id'), $scopeFilter)
                 ->select('id', 'name', 'slug')
                 ->get()
             : collect();
