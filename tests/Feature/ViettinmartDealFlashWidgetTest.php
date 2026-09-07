@@ -8,6 +8,7 @@ use App\Models\Tenant;
 use App\Models\User;
 use App\Widgets\Viettinmart\ViettinmartDealFlashWidget;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class ViettinmartDealFlashWidgetTest extends TestCase
@@ -47,6 +48,28 @@ class ViettinmartDealFlashWidgetTest extends TestCase
             'tenant_id' => 3,
             'project_ids' => [$this->project->id],
         ]);
+
+        if (! Schema::hasTable('media')) {
+            Schema::create('media', function ($table) {
+                $table->id();
+                $table->string('model_type');
+                $table->unsignedBigInteger('model_id');
+                $table->uuid('uuid')->nullable();
+                $table->string('collection_name')->default('default');
+                $table->string('name')->default('');
+                $table->string('file_name')->default('');
+                $table->string('mime_type')->nullable();
+                $table->string('disk')->default('public');
+                $table->string('conversions_disk')->nullable();
+                $table->unsignedBigInteger('size')->default(0);
+                $table->json('manipulations')->nullable();
+                $table->json('custom_properties')->nullable();
+                $table->json('generated_conversions')->nullable();
+                $table->json('responsive_images')->nullable();
+                $table->unsignedInteger('order_column')->nullable();
+                $table->nullableTimestamps();
+            });
+        }
     }
 
     public function test_deal_flash_widget_config_has_start_date_end_date_and_products_fields(): void
