@@ -495,6 +495,13 @@ Contact: support@vnglobaltech.com';
             'product_attribute_product',
             'product_category_product',
             'reviews',
+            'coupons',
+            'flash_sale_campaigns',
+            'flash_sale_items',
+            'agents',
+            'user_addresses',
+            'form_templates',
+            'modal_forms',
             // Orders
             'orders',
             'order_items',
@@ -523,10 +530,18 @@ Contact: support@vnglobaltech.com';
         $sql .= "/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;\n\n";
 
         // Get the list of tables that actually exist in the DB
-        $existingTables = array_map(
-            fn ($t) => array_values((array) $t)[0],
-            DB::select('SHOW TABLES')
-        );
+        $driver = DB::connection()->getDriverName();
+        if ($driver === 'sqlite') {
+            $existingTables = array_map(
+                fn ($t) => $t->name,
+                DB::select("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")
+            );
+        } else {
+            $existingTables = array_map(
+                fn ($t) => array_values((array) $t)[0],
+                DB::select('SHOW TABLES')
+            );
+        }
 
         // Only export tables that are in the whitelist AND actually exist
         $tablesToExport = array_intersect($this->getCmsTableWhitelist(), $existingTables);
@@ -550,9 +565,15 @@ Contact: support@vnglobaltech.com';
 
         try {
             // Get table structure
-            $createTable = DB::select("SHOW CREATE TABLE `{$table}`");
-            $sql .= "DROP TABLE IF EXISTS `{$table}`;\n";
-            $sql .= $createTable[0]->{'Create Table'}.";\n\n";
+            if (DB::connection()->getDriverName() === 'sqlite') {
+                $create = DB::select("SELECT sql FROM sqlite_master WHERE type='table' AND name = ?", [$table]);
+                $sql .= "DROP TABLE IF EXISTS `{$table}`;\n";
+                $sql .= ($create[0]->sql ?? '').";\n\n";
+            } else {
+                $createTable = DB::select("SHOW CREATE TABLE `{$table}`");
+                $sql .= "DROP TABLE IF EXISTS `{$table}`;\n";
+                $sql .= $createTable[0]->{'Create Table'}.";\n\n";
+            }
 
             // Get table data
             $sql .= $this->getTableData($table, $project);

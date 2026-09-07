@@ -148,17 +148,29 @@ return new class extends Migration
                 $table->id();
                 $table->unsignedBigInteger('project_id')->nullable()->index();
                 $table->unsignedBigInteger('tenant_id')->nullable()->index();
+                $table->string('form_name')->default('Liên hệ')->index();
                 $table->unsignedBigInteger('form_template_id')->nullable()->index();
                 $table->unsignedBigInteger('modal_form_id')->nullable()->index();
                 $table->json('data');
                 $table->string('source')->default('widget');
                 $table->string('ip_address')->nullable();
                 $table->text('user_agent')->nullable();
+                $table->string('status')->default('pending')->index();
+                $table->text('admin_note')->nullable();
                 $table->timestamp('submitted_at')->nullable();
                 $table->timestamps();
             });
         } else {
             Schema::table('form_submissions', function (Blueprint $table) {
+                if (! Schema::hasColumn('form_submissions', 'form_name')) {
+                    $table->string('form_name')->default('Liên hệ')->index();
+                }
+                if (! Schema::hasColumn('form_submissions', 'status')) {
+                    $table->string('status')->default('pending')->index();
+                }
+                if (! Schema::hasColumn('form_submissions', 'admin_note')) {
+                    $table->text('admin_note')->nullable();
+                }
                 if (! Schema::hasColumn('form_submissions', 'modal_form_id')) {
                     $table->unsignedBigInteger('modal_form_id')->nullable()->index();
                 }

@@ -61,7 +61,7 @@
         <button id="bulkEditBtn" onclick="openBulkEdit()" class="px-3.5 py-1.5 text-sm font-medium bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 transition-colors" disabled>
             Sửa nhanh (<span id="selectedCount">0</span>)
         </button>
-        <a href="{{ isset($currentProject) && $currentProject ? route('project.admin.products.create', $currentProject->code) : route('cms.products.create') }}" 
+        <a href="{{ isset($currentProject) && $currentProject ? route('project.admin.products.create', $currentProject->code) : (Route::has('cms.products.create') ? route('cms.products.create') : '#') }}" 
            class="px-3.5 py-1.5 text-sm font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
             Thêm sản phẩm
         </a>
@@ -95,7 +95,7 @@
                         <div class="flex items-center gap-3">
                             <div class="flex-shrink-0 h-10 w-10 rounded-lg overflow-hidden border border-gray-200 bg-gray-50 flex items-center justify-center">
                                 @if($product->featured_image)
-                                    <img class="h-10 w-10 object-cover" src="{{ $product->featured_image }}" alt="{{ $product->name }}">
+                                    <img class="h-10 w-10 object-cover" src="{{ media_url($product->featured_image) }}" alt="{{ $product->name }}" onerror="this.onerror=null; this.src='/assets/img/placeholder-images-image_large.webp';">
                                 @else
                                     <div class="h-10 w-10 bg-gray-200 flex items-center justify-center">
                                         <span class="text-gray-500 text-xs font-medium">IMG</span>
@@ -103,7 +103,7 @@
                                 @endif
                             </div>
                             <div class="min-w-0">
-                                <a href="{{ isset($currentProject) && $currentProject ? route('project.admin.products.edit', [$currentProject->code, $product]) : route('cms.products.edit', $product) }}" 
+                                <a href="{{ isset($currentProject) && $currentProject ? route('project.admin.products.edit', [$currentProject->code, $product]) : (Route::has('cms.products.edit') ? route('cms.products.edit', $product) : '#') }}" 
                                    class="text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors line-clamp-2" title="{{ $product->name }}">
                                     {{ $product->name }}
                                 </a>

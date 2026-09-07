@@ -2,16 +2,17 @@
 
 namespace Tests\Feature;
 
-use App\Models\Category;
 use App\Models\Product;
 use App\Models\Project;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ProductSeoSlugAndRedirectTest extends TestCase
 {
-    use \Illuminate\Foundation\Testing\RefreshDatabase;
+    use RefreshDatabase;
 
     protected Project $project;
+
     protected Product $product;
 
     protected function setUp(): void

@@ -27,6 +27,13 @@
           Deploy 1-Click VTM
         </button>
       </form>
+      <form method="POST" action="{{ route('superadmin.projects.deploy-wkcomputer', $project) }}" class="inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn Triển khai Mẫu WKComputer (1-Click WK)? Toàn bộ Theme Gaming, 21 Module, Menu, Widgets và 1.035 Sản phẩm linh kiện sẽ được tự động cài đặt.')">
+        @csrf
+        <button type="submit" class="px-3 py-1.5 bg-gradient-to-r from-rose-600 to-red-600 text-white rounded-lg hover:from-rose-700 hover:to-red-700 text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 shadow-xs transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          Deploy 1-Click WK
+        </button>
+      </form>
       <span class="px-3 py-1 text-xs sm:text-sm font-semibold rounded-full 
         {{ $project->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
         {{ ucfirst($project->status) }}
@@ -181,6 +188,18 @@
           @php $activeFeatureCount = count(is_array($project->cms_features) ? $project->cms_features : json_decode($project->cms_features ?? '[]', true) ?? []); @endphp
           @if($activeFeatureCount > 0)
             <span class="bg-blue-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center">{{ $activeFeatureCount }}</span>
+          @endif
+        </button>
+        <button type="button" id="tab-btn-api" class="tab-button px-4 py-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 flex items-center gap-2" onclick="showTab('api', this)">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+          </svg>
+          API Hub & Tích hợp
+          @php
+            $activeApiCount = count(array_filter($settings, fn($v, $k) => (str_starts_with($k, 'api.') || in_array($k, ['openai_key', 'vietqr_bank_id', 'momo_partner_code', 'ghn_token', 'telegram_bot_token'])) && !empty($v), ARRAY_FILTER_USE_BOTH));
+          @endphp
+          @if($activeApiCount > 0)
+            <span class="bg-emerald-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center">{{ $activeApiCount }}</span>
           @endif
         </button>
         <button type="button" id="tab-btn-history" class="tab-button px-4 py-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 flex items-center gap-2" onclick="showTab('history', this)">
@@ -461,6 +480,269 @@
         <div class="flex justify-end gap-3 mt-4 pt-4 border-t">
           <a href="{{ route('superadmin.projects.index') }}" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Hủy</a>
           <button type="button" onclick="this.form.submit()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"> Lưu Feature Packs</button>
+        </div>
+      </div>
+
+      <!-- API Hub Tab -->
+      <div id="api-tab" class="tab-content hidden space-y-6">
+        <div class="bg-gradient-to-r from-slate-900 to-indigo-950 p-5 rounded-xl text-white shadow-xs border border-slate-800">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Centralized Control Hub</span>
+                <span class="text-xs text-slate-400">Dự án: <strong class="text-white">{{ $project->name }} ({{ $project->code }})</strong></span>
+              </div>
+              <h4 class="text-lg font-bold mt-1 text-white flex items-center gap-2">
+                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                Quản lý Cấu hình API & Tích hợp Dịch vụ Bên thứ 3
+              </h4>
+              <p class="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                Thiết lập tập trung API keys cho các nguồn rải rác từ SuperAdmin. Khi lưu, cấu hình sẽ được lưu vào hệ thống và tự động sẵn sàng cho các chức năng AI, Cổng thanh toán, Đơn vị vận chuyển và Webhook của website con.
+              </p>
+            </div>
+            <span class="text-2xl">⚡</span>
+          </div>
+        </div>
+
+        <div class="space-y-5 max-h-[620px] overflow-y-auto pr-1">
+
+          <!-- 1. Remote Bridge & Connection -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs">
+            <h5 class="text-sm font-bold text-slate-800 flex items-center gap-2 mb-3">
+              <span class="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs font-bold">1</span>
+              Kết nối Bridge & Remote Source (Điều khiển từ xa)
+            </h5>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Remote Website URL (Nếu là Source độc lập):</label>
+                <input type="url" name="remote_url" value="{{ $project->remote_url }}" class="w-full text-xs font-mono border-slate-300 rounded-lg px-3 py-2 bg-slate-50 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500" placeholder="https://viettinmart.vnglobaltech.com">
+                <p class="text-[11px] text-slate-500 mt-1">URL trang web con khi chạy ở hosting/server độc lập (như public_html).</p>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">API Token (Bridge Secret Key):</label>
+                <div class="flex items-center gap-2">
+                  <input type="text" name="custom_api_token" value="{{ $project->api_token }}" class="w-full text-xs font-mono border-slate-300 rounded-lg px-3 py-2 bg-slate-50 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500" placeholder="Tự sinh hoặc dán token bí mật">
+                </div>
+                <label class="inline-flex items-center gap-2 mt-2 cursor-pointer">
+                  <input type="checkbox" name="regenerate_api_token" value="1" class="w-3.5 h-3.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+                  <span class="text-xs text-indigo-600 font-medium">Tạo mới API Token ngẫu nhiên (64 ký tự)</span>
+                </label>
+              </div>
+            </div>
+
+            @if($project->remote_url)
+            <div class="mt-3 p-3 bg-indigo-50/70 border border-indigo-100 rounded-lg flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-sm">🔄</span>
+                <span class="text-xs font-semibold text-indigo-900">Bắn cấu hình tức thì qua Bridge:</span>
+                <span class="text-xs text-indigo-700 font-mono">{{ $project->remote_url }}/api/bridge</span>
+              </div>
+              <label class="inline-flex items-center gap-2 cursor-pointer bg-white px-3 py-1 rounded-md border border-indigo-200">
+                <input type="checkbox" name="sync_api_to_remote" value="1" checked class="w-3.5 h-3.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+                <span class="text-xs font-bold text-indigo-900">Gửi qua Bridge khi bấm Lưu</span>
+              </label>
+            </div>
+            @endif
+          </div>
+
+          <!-- 2. AI Providers -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs">
+            <h5 class="text-sm font-bold text-slate-800 flex items-center gap-2 mb-3">
+              <span class="w-6 h-6 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs font-bold">2</span>
+              Trí tuệ nhân tạo (AI Providers & Models)
+            </h5>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">OpenAI API Key:</label>
+                <div class="relative">
+                  <input type="password" id="api_openai_key" name="api[openai_key]" value="{{ $settings['api.openai_key'] ?? ($settings['openai_key'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded-lg px-3 py-2 pr-8 bg-slate-50 focus:bg-white focus:ring-emerald-500 focus:border-emerald-500" placeholder="sk-proj-...">
+                  <button type="button" onclick="togglePasswordVisibility('api_openai_key')" class="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                  </button>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-1">Dùng cho AI Content Writer, SEO Meta Generator.</p>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Gemini API Key:</label>
+                <div class="relative">
+                  <input type="password" id="api_gemini_key" name="api[gemini_key]" value="{{ $settings['api.gemini_key'] ?? ($settings['gemini_key'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded-lg px-3 py-2 pr-8 bg-slate-50 focus:bg-white focus:ring-emerald-500 focus:border-emerald-500" placeholder="AIzaSy...">
+                  <button type="button" onclick="togglePasswordVisibility('api_gemini_key')" class="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                  </button>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-1">Google Gemini 1.5 Flash / Pro API.</p>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Model mặc định:</label>
+                @php $selectedModel = $settings['api.ai_default_model'] ?? ($settings['ai_default_model'] ?? 'gpt-4o-mini'); @endphp
+                <select name="api[ai_default_model]" class="w-full text-xs border-slate-300 rounded-lg px-3 py-2 bg-slate-50 focus:bg-white focus:ring-emerald-500 focus:border-emerald-500">
+                  <option value="gpt-4o-mini" {{ $selectedModel === 'gpt-4o-mini' ? 'selected' : '' }}>OpenAI - GPT-4o Mini (Khuyên dùng - Nhanh & Rẻ)</option>
+                  <option value="gpt-4o" {{ $selectedModel === 'gpt-4o' ? 'selected' : '' }}>OpenAI - GPT-4o (Thông minh nhất)</option>
+                  <option value="gemini-1.5-flash" {{ $selectedModel === 'gemini-1.5-flash' ? 'selected' : '' }}>Google - Gemini 1.5 Flash</option>
+                  <option value="gemini-1.5-pro" {{ $selectedModel === 'gemini-1.5-pro' ? 'selected' : '' }}>Google - Gemini 1.5 Pro</option>
+                </select>
+                <p class="text-[11px] text-slate-400 mt-1">Model ưu tiên khi gọi sinh bài viết tự động.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Payment Gateways -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs">
+            <h5 class="text-sm font-bold text-slate-800 flex items-center gap-2 mb-3">
+              <span class="w-6 h-6 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold">3</span>
+              Cổng thanh toán trực tuyến (Payment Gateways)
+            </h5>
+
+            <!-- VietQR -->
+            <div class="mb-4 pb-4 border-b border-slate-100">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-xs font-bold text-slate-900 bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-200">VietQR Ngân Hàng</span>
+                <span class="text-xs text-slate-500">Tạo mã QR động cho khách thanh toán chuyển khoản</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-700 mb-1">Mã ngân hàng (BIN / Code):</label>
+                  <input type="text" name="api[vietqr_bank_id]" value="{{ $settings['api.vietqr_bank_id'] ?? ($settings['vietqr_bank_id'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded px-2.5 py-1.5 uppercase" placeholder="MB, VCB, TCB...">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-700 mb-1">Số tài khoản:</label>
+                  <input type="text" name="api[vietqr_account_no]" value="{{ $settings['api.vietqr_account_no'] ?? ($settings['vietqr_account_no'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded px-2.5 py-1.5" placeholder="0123456789">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-700 mb-1">Tên chủ tài khoản:</label>
+                  <input type="text" name="api[vietqr_account_name]" value="{{ $settings['api.vietqr_account_name'] ?? ($settings['vietqr_account_name'] ?? '') }}" class="w-full text-xs border-slate-300 rounded px-2.5 py-1.5 uppercase" placeholder="NGUYEN VAN A">
+                </div>
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-700 mb-1">Template QR:</label>
+                  @php $qrTpl = $settings['api.vietqr_template'] ?? ($settings['vietqr_template'] ?? 'compact2'); @endphp
+                  <select name="api[vietqr_template]" class="w-full text-xs border-slate-300 rounded px-2.5 py-1.5">
+                    <option value="compact2" {{ $qrTpl === 'compact2' ? 'selected' : '' }}>compact2 (540×640)</option>
+                    <option value="compact" {{ $qrTpl === 'compact' ? 'selected' : '' }}>compact (540×540)</option>
+                    <option value="qr_only" {{ $qrTpl === 'qr_only' ? 'selected' : '' }}>qr_only (Chỉ QR)</option>
+                    <option value="print" {{ $qrTpl === 'print' ? 'selected' : '' }}>print (Đầy đủ)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- MoMo & VNPay -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- MoMo -->
+              <div class="p-3 bg-pink-50/50 border border-pink-100 rounded-lg">
+                <span class="text-xs font-bold text-pink-700 block mb-2">Ví điện tử MoMo</span>
+                <div class="space-y-2">
+                  <div>
+                    <label class="block text-[11px] font-medium text-slate-600 mb-0.5">Partner Code:</label>
+                    <input type="text" name="api[momo_partner_code]" value="{{ $settings['api.momo_partner_code'] ?? ($settings['momo_partner_code'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded px-2.5 py-1" placeholder="MOMO_PARTNER_CODE">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-medium text-slate-600 mb-0.5">Access Key:</label>
+                    <input type="text" name="api[momo_access_key]" value="{{ $settings['api.momo_access_key'] ?? ($settings['momo_access_key'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded px-2.5 py-1" placeholder="Access Key">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-medium text-slate-600 mb-0.5">Secret Key:</label>
+                    <input type="password" name="api[momo_secret_key]" value="{{ $settings['api.momo_secret_key'] ?? ($settings['momo_secret_key'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded px-2.5 py-1" placeholder="Secret Key">
+                  </div>
+                </div>
+              </div>
+
+              <!-- VNPay -->
+              <div class="p-3 bg-blue-50/50 border border-blue-100 rounded-lg">
+                <span class="text-xs font-bold text-blue-700 block mb-2">Cổng VNPay</span>
+                <div class="space-y-2">
+                  <div>
+                    <label class="block text-[11px] font-medium text-slate-600 mb-0.5">TMN Code (Merchant Code):</label>
+                    <input type="text" name="api[vnpay_tmn_code]" value="{{ $settings['api.vnpay_tmn_code'] ?? ($settings['vnpay_tmn_code'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded px-2.5 py-1" placeholder="VNPAY_TMN_CODE">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-medium text-slate-600 mb-0.5">Hash Secret:</label>
+                    <input type="password" name="api[vnpay_hash_secret]" value="{{ $settings['api.vnpay_hash_secret'] ?? ($settings['vnpay_hash_secret'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded px-2.5 py-1" placeholder="Hash Secret Key">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Shipping Carriers -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs">
+            <h5 class="text-sm font-bold text-slate-800 flex items-center gap-2 mb-3">
+              <span class="w-6 h-6 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center text-xs font-bold">4</span>
+              Đơn vị vận chuyển (Shipping Carriers)
+            </h5>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="p-3 bg-orange-50/40 border border-orange-100 rounded-lg">
+                <span class="text-xs font-bold text-orange-800 block mb-2">Giao Hàng Nhanh (GHN)</span>
+                <div class="space-y-2">
+                  <div>
+                    <label class="block text-[11px] font-medium text-slate-600 mb-0.5">API Token:</label>
+                    <input type="password" name="api[ghn_token]" value="{{ $settings['api.ghn_token'] ?? ($settings['ghn_token'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded px-2.5 py-1" placeholder="GHN API Token">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-medium text-slate-600 mb-0.5">Shop ID:</label>
+                    <input type="text" name="api[ghn_shop_id]" value="{{ $settings['api.ghn_shop_id'] ?? ($settings['ghn_shop_id'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded px-2.5 py-1" placeholder="Shop ID">
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-3 bg-emerald-50/40 border border-emerald-100 rounded-lg">
+                <span class="text-xs font-bold text-emerald-800 block mb-2">Giao Hàng Tiết Kiệm (GHTK)</span>
+                <div class="space-y-2">
+                  <div>
+                    <label class="block text-[11px] font-medium text-slate-600 mb-0.5">API Token:</label>
+                    <input type="password" name="api[ghtk_token]" value="{{ $settings['api.ghtk_token'] ?? ($settings['ghtk_token'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded px-2.5 py-1" placeholder="GHTK API Token">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Notifications & Webhooks -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs">
+            <h5 class="text-sm font-bold text-slate-800 flex items-center gap-2 mb-3">
+              <span class="w-6 h-6 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-xs font-bold">5</span>
+              Thông báo & Webhooks (Telegram Bot & Outbound Webhook)
+            </h5>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="p-3 bg-sky-50/40 border border-sky-100 rounded-lg">
+                <span class="text-xs font-bold text-sky-800 block mb-2">Telegram Báo đơn hàng</span>
+                <div class="space-y-2">
+                  <div>
+                    <label class="block text-[11px] font-medium text-slate-600 mb-0.5">Bot Token:</label>
+                    <input type="password" name="api[telegram_bot_token]" value="{{ $settings['api.telegram_bot_token'] ?? ($settings['telegram_bot_token'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded px-2.5 py-1" placeholder="123456789:ABC-DEF1234ghIkl-zyx57W2v1u123ew11">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-medium text-slate-600 mb-0.5">Chat ID / Group ID:</label>
+                    <input type="text" name="api[telegram_chat_id]" value="{{ $settings['api.telegram_chat_id'] ?? ($settings['telegram_chat_id'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded px-2.5 py-1" placeholder="-1001234567890">
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-3 bg-purple-50/40 border border-purple-100 rounded-lg">
+                <span class="text-xs font-bold text-purple-800 block mb-2">Outbound Webhook (Bắn dữ liệu sang CRM ngoài)</span>
+                <div class="space-y-2">
+                  <div>
+                    <label class="block text-[11px] font-medium text-slate-600 mb-0.5">Webhook URL:</label>
+                    <input type="url" name="api[webhook_url]" value="{{ $settings['api.webhook_url'] ?? ($settings['webhook_url'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded px-2.5 py-1" placeholder="https://external-crm.com/api/webhooks/orders">
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-medium text-slate-600 mb-0.5">Secret Key / Signing Token:</label>
+                    <input type="password" name="api[webhook_secret]" value="{{ $settings['api.webhook_secret'] ?? ($settings['webhook_secret'] ?? '') }}" class="w-full text-xs font-mono border-slate-300 rounded px-2.5 py-1" placeholder="Secret Key để verify chữ ký">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="flex justify-end gap-3 mt-4 pt-4 border-t">
+          <a href="{{ route('superadmin.projects.index') }}" class="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 text-xs font-medium">Hủy</a>
+          <button type="submit" class="px-6 py-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-lg hover:from-indigo-700 hover:to-blue-700 text-xs font-bold flex items-center gap-1.5 shadow-xs">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            Lưu Cấu Hình API Hub
+          </button>
         </div>
       </div>
     </form>
@@ -1070,6 +1352,13 @@ function updateDefaultSelectOption(code) {
     opt.value = code;
     opt.textContent = code.toUpperCase();
     select.appendChild(opt);
+  }
+}
+
+function togglePasswordVisibility(id) {
+  const input = document.getElementById(id);
+  if (input) {
+    input.type = (input.type === 'password') ? 'text' : 'password';
   }
 }
 </script>

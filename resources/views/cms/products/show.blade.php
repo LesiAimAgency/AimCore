@@ -40,7 +40,7 @@
                 
                 <div class="border-2 border-dashed border-gray-300 rounded-lg overflow-hidden bg-gray-50 aspect-square flex items-center justify-center">
                     @if($product->featured_image)
-                        <img src="{{ $product->featured_image }}" class="w-full h-full object-cover" alt="{{ $product->name }}">
+                        <img src="{{ media_url($product->featured_image) }}" class="w-full h-full object-cover" alt="{{ $product->name }}" onerror="this.onerror=null; this.src='/assets/img/placeholder-images-image_large.webp';">
                     @else
                         <div class="text-center py-12 text-gray-500">
                             <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">

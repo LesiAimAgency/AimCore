@@ -11,6 +11,7 @@ use App\Services\WidgetPermissionService;
 use App\Widgets\WidgetRegistry;
 use Database\Seeders\InbetweenHomepageMainSeeder;
 use Database\Seeders\ViettinmartWidgetsSeeder;
+use Database\Seeders\WkcomputerWidgetsSeeder;
 use Illuminate\Http\Request;
 
 class WidgetController extends Controller
@@ -66,7 +67,7 @@ class WidgetController extends Controller
         }
 
         $projId = $currentProject?->id;
-        $tenantId = $currentProject?->tenant_id ?? $projId;
+        $tenantId = session('current_tenant_id') ?? $currentProject?->tenant_id ?? $projId;
 
         // Auto-seed widgets if project currently has 0 widgets
         if ($projId) {
@@ -79,6 +80,8 @@ class WidgetController extends Controller
 
                     if ($theme === 'inbetween' && class_exists('\Database\Seeders\InbetweenHomepageMainSeeder')) {
                         (new InbetweenHomepageMainSeeder)->run($projId, $tenantId);
+                    } elseif ($theme === 'wkcomputerdemo' && class_exists('\Database\Seeders\WkcomputerWidgetsSeeder')) {
+                        (new WkcomputerWidgetsSeeder)->run($projId, $tenantId);
                     } elseif (class_exists('\Database\Seeders\ViettinmartWidgetsSeeder')) {
                         (new ViettinmartWidgetsSeeder)->run($projId, $tenantId);
                     }
@@ -215,7 +218,7 @@ class WidgetController extends Controller
         }
 
         $projId = $currentProject?->id;
-        $tenantId = $currentProject?->tenant_id ?? $projId;
+        $tenantId = session('current_tenant_id') ?? $currentProject?->tenant_id ?? $projId;
 
         if ($projId) {
             $validated['project_id'] = $projId;

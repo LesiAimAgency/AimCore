@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
+use App\Traits\ProjectScoped;
 use App\Widgets\WidgetRegistry;
 use Illuminate\Database\Eloquent\Model;
 
 class Widget extends Model
 {
+    use BelongsToTenant, ProjectScoped;
+
     protected $fillable = ['project_id', 'name', 'type', 'area', 'settings', 'sort_order', 'is_active', 'variant', 'metadata', 'tenant_id', 'widget_code', 'rules', 'data', 'is_lazy_loaded'];
 
     protected $casts = [

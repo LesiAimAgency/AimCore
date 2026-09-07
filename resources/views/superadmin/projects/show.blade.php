@@ -38,6 +38,13 @@
           Deploy 1-Click VTM
         </button>
       </form>
+      <form method="POST" action="{{ route('superadmin.projects.deploy-wkcomputer', $project) }}" class="inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn Triển khai Mẫu WKComputer (1-Click WK)? Toàn bộ Theme Gaming, 21 Module, Menu, Widgets và 1.035 Sản phẩm linh kiện sẽ được tự động cài đặt.')">
+        @csrf
+        <button type="submit" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-rose-600 to-red-600 text-white rounded-lg hover:from-rose-700 hover:to-red-700 text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 shadow-xs transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          Deploy 1-Click WK
+        </button>
+      </form>
       <a href="{{ route('superadmin.projects.edit', $project) }}" 
         class="px-3 py-1.5 sm:px-4 sm:py-2 bg-[#001B4E] text-white rounded-lg hover:bg-[#002D80] text-xs sm:text-sm font-medium">Sửa</a>
     </div>

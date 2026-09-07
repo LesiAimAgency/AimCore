@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Project;
 use App\Models\ProjectUser;
 use Closure;
 use Illuminate\Http\Request;
@@ -70,6 +71,17 @@ class CheckCmsRole
             // Share user with views
             view()->share('authUser', $user);
             $request->attributes->set('auth_user', $user);
+
+            // Enforce Tenant Isolation: Ensure user belongs to this project
+            $project = $request->attributes->get('project') ?? Project::where('code', $projectCode)->first();
+            $isSuperAdmin = ($user->level === 0) || in_array($user->role, ['super_admin', 'superadmin', 'dev']);
+
+            if (! $isSuperAdmin && $project) {
+                $projectIds = is_array($user->project_ids) ? $user->project_ids : json_decode($user->project_ids ?? '[]', true);
+                if (! in_array($project->id, $projectIds ?? [])) {
+                    abort(403, 'Bạn không có quyền truy cập dự án này.');
+                }
+            }
 
             // Allow superadmin (level=0), administrator (level=1) and dev (level=2)
             if (isset($user->level) && in_array($user->level, [0, 1, 2])) {

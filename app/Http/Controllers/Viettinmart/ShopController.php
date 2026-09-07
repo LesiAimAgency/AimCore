@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Viettinmart;
 
+use App\Http\Controllers\Frontend\PageController;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Project;
@@ -401,8 +402,8 @@ class ShopController extends Controller
             }
 
             // Check if it's a CMS page
-            if (class_exists(\App\Http\Controllers\Frontend\PageController::class)) {
-                return app(\App\Http\Controllers\Frontend\PageController::class)->show($projectCode, $slug, fromShop: true);
+            if (class_exists(PageController::class)) {
+                return app(PageController::class)->show($projectCode, $slug, fromShop: true);
             }
 
             abort(404);

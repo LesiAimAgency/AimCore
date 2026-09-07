@@ -13,15 +13,15 @@ trait BelongsToTenant
         // Tự động thêm tenant_id khi tạo mới
         static::creating(function ($model) {
             if (empty($model->tenant_id)) {
-                $model->tenant_id = session('current_tenant_id') ?? config('app.default_tenant_id');
+                $model->tenant_id = session('current_tenant_id') ?? config('app.default_tenant_id') ?? (app()->bound('current_tenant_id') ? app('current_tenant_id') : null);
             }
         });
 
         // Tự động filter theo tenant_id
         static::addGlobalScope('tenant', function (Builder $builder) {
-            $tenantId = session('current_tenant_id') ?? config('app.default_tenant_id');
+            $tenantId = session('current_tenant_id') ?? config('app.default_tenant_id') ?? (app()->bound('current_tenant_id') ? app('current_tenant_id') : null);
             if ($tenantId) {
-                $builder->where('tenant_id', $tenantId);
+                $builder->where($builder->getModel()->getTable().'.tenant_id', $tenantId);
             }
         });
     }

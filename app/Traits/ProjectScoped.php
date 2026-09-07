@@ -21,16 +21,18 @@ trait ProjectScoped
             // this system uses shared DB mode where 'project' connection = same DB as 'mysql'.
             // Scoping must always apply to prevent cross-site data leaks.
             $project = request()->attributes->get('project');
-            if ($project && $builder->getModel()->getTable() !== 'users') {
-                $builder->where($builder->getModel()->getTable().'.project_id', $project->id);
+            $projectId = $project?->id ?? session('current_project_id') ?? (app()->bound('current_project_id') ? app('current_project_id') : null);
+            if ($projectId && $builder->getModel()->getTable() !== 'users') {
+                $builder->where($builder->getModel()->getTable().'.project_id', $projectId);
             }
         });
 
         // Automatically set project_id when creating
         static::creating(function ($model) {
             $project = request()->attributes->get('project');
-            if ($project && ! $model->project_id) {
-                $model->project_id = $project->id;
+            $projectId = $project?->id ?? session('current_project_id') ?? (app()->bound('current_project_id') ? app('current_project_id') : null);
+            if ($projectId && ! $model->project_id) {
+                $model->project_id = $projectId;
             }
         });
     }

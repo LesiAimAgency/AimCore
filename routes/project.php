@@ -33,12 +33,24 @@ use App\Http\Middleware\CheckCmsRole;
 use App\Http\Middleware\ProjectSubdomainMiddleware;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\SetProjectDatabase;
+use App\Http\Middleware\WkcomputerMiddleware;
 use App\Livewire\Admin\CodeWidgetList;
 use App\Livewire\Admin\WidgetEditor;
 use App\Livewire\Admin\WidgetTemplateBuilder;
 use App\Models\Project;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
+
+// ============================================
+// WKCOMPUTER DEDICATED FRONTEND (100% ISOLATED)
+// ============================================
+Route::prefix('wkcomputer')
+    ->middleware([
+        WkcomputerMiddleware::class,
+        SetProjectDatabase::class,
+    ])
+    ->group(base_path('routes/wkcomputer.php'));
 
 Route::prefix('{projectCode}')
     ->name('project.')
@@ -76,12 +88,12 @@ Route::prefix('{projectCode}')
     });
 
 // Legacy /san-pham 301 Redirects to clean 1-level SEO URLs
-Route::get('/{projectCode}/san-pham/{slug}', function (\Illuminate\Http\Request $request, $projectCode, $slug) {
+Route::get('/{projectCode}/san-pham/{slug}', function (Request $request, $projectCode, $slug) {
     $target = $request->getSchemeAndHttpHost()."/{$projectCode}/{$slug}";
 
     return redirect()->away($target, 301);
 });
-Route::get('/{projectCode}/san-pham', function (\Illuminate\Http\Request $request, $projectCode) {
+Route::get('/{projectCode}/san-pham', function (Request $request, $projectCode) {
     $target = $request->getSchemeAndHttpHost()."/{$projectCode}/cua-hang";
 
     return redirect()->away($target, 301);

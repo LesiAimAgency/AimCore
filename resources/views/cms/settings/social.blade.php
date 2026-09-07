@@ -2,12 +2,14 @@
 
 @php
     // Helper để lấy giá trị string từ setting (có thể là array hoặc string)
-    function getSocialValue($key) {
-        $value = setting($key, '');
-        if (is_array($value)) {
-            return $value['value'] ?? '';
+    if (! function_exists('getSocialValue')) {
+        function getSocialValue($key) {
+            $value = setting($key, '');
+            if (is_array($value)) {
+                return $value['value'] ?? '';
+            }
+            return $value ?? '';
         }
-        return $value ?? '';
     }
 @endphp
 

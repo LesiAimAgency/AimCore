@@ -2,20 +2,22 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
+use App\Traits\ProjectScoped;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ProjectProduct extends Model
 {
-    use HasFactory;
+    use BelongsToTenant, HasFactory, ProjectScoped;
 
     protected $connection = 'project';
 
     protected $table = 'products_enhanced';
 
     protected $fillable = [
-        'name', 'slug', 'description', 'short_description', 'sku', 'price', 'sale_price',
+        'tenant_id', 'project_id', 'name', 'slug', 'description', 'short_description', 'sku', 'price', 'sale_price',
         'stock_quantity', 'manage_stock', 'stock_status', 'weight', 'dimensions',
         'product_category_id', 'brand_id', 'status', 'is_featured', 'is_favorite', 'is_bestseller',
         'gallery', 'meta_title', 'meta_description', 'has_price', 'featured_image', 'badges',

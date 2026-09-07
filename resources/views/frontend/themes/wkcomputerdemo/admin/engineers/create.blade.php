@@ -1,0 +1,22 @@
+@extends('admin.layouts.app')
+
+@section('title', 'Thêm Chuyên gia mới')
+@section('page-title', 'Thêm Chuyên gia mới')
+@section('page-subtitle', 'Tạo hồ sơ chuyên gia / kỹ sư')
+
+@section('page-actions')
+<a href="{{ route('admin.engineers.index') }}" class="btn btn-ghost btn-sm">
+    <i class="fa-solid fa-arrow-left"></i> Quay lại
+</a>
+@endsection
+
+@section('content')
+<form action="{{ route('admin.engineers.store') }}" method="POST" style="display:flex;flex-direction:column;gap:16px;">
+    @csrf
+    @include('admin.engineers._form')
+    <div style="display:flex;justify-content:flex-end;gap:10px;">
+        <a href="{{ route('admin.engineers.index') }}" class="btn btn-secondary">Hủy</a>
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>
+    </div>
+</form>
+@endsection

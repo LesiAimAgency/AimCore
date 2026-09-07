@@ -101,6 +101,7 @@ class ViettinmartMasterSeeder extends Seeder
             $cmsUser = User::where('email', 'admin@viettinmart.com')->first();
             if ($cmsUser) {
                 $cmsUser->username = 'admin_vtm';
+                $cmsUser->password = 'admin123';
                 $cmsUser->role = 'cms';
                 $cmsUser->project_ids = [$projectId];
                 $cmsUser->save();

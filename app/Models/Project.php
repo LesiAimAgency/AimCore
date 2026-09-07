@@ -9,7 +9,7 @@ class Project extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['customer_id', 'contract_id', 'name', 'code', 'subdomain', 'remote_url', 'api_token', 'external_domain', 'sync_enabled', 'client_name', 'start_date', 'deadline', 'status', 'total_gold', 'contract_value', 'contract_file', 'technical_requirements', 'features', 'cms_features', 'environment', 'notes', 'admin_id', 'employee_ids', 'created_by', 'project_admin_username', 'project_admin_password', 'project_admin_password_plain', 'password_updated_at', 'password_updated_by', 'approved_at', 'initialized_at', 'department_id', 'service_id', 'current_stage_id', 'dynamic_form_data', 'project_type'];
+    protected $fillable = ['tenant_id', 'customer_id', 'contract_id', 'name', 'code', 'subdomain', 'remote_url', 'api_token', 'external_domain', 'sync_enabled', 'client_name', 'start_date', 'deadline', 'status', 'total_gold', 'contract_value', 'contract_file', 'technical_requirements', 'features', 'cms_features', 'environment', 'notes', 'admin_id', 'employee_ids', 'created_by', 'project_admin_username', 'project_admin_password', 'project_admin_password_plain', 'password_updated_at', 'password_updated_by', 'approved_at', 'initialized_at', 'department_id', 'service_id', 'current_stage_id', 'dynamic_form_data', 'project_type'];
 
     protected $casts = [
         'start_date' => 'date',
@@ -25,6 +25,11 @@ class Project extends Model
     ];
 
     protected $hidden = ['project_admin_password', 'project_admin_password_plain'];
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
+    }
 
     public function customer()
     {
@@ -112,16 +117,6 @@ class Project extends Model
 
         return substr(str_shuffle(str_repeat($chars, 12)), 0, 12);
     }
-
-    // public function members()
-    // {
-    //     return $this->belongsToMany(Employee::class, 'project_members')->withPivot('role')->withTimestamps();
-    // }
-
-    // public function tasks()
-    // {
-    //     return $this->hasMany(Task::class);
-    // }
 
     public function permissions()
     {

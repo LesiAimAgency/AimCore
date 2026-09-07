@@ -2,22 +2,27 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
+use App\Traits\ProjectScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class FormSubmission extends Model
 {
-    use HasFactory;
+    use BelongsToTenant, HasFactory, ProjectScoped;
 
     protected $fillable = [
         'project_id',
         'tenant_id',
+        'form_name',
         'form_template_id',
         'modal_form_id',
         'data',
         'ip_address',
         'user_agent',
-        'source', // 'modal', 'widget', 'page'
+        'status',
+        'admin_note',
+        'source', // 'modal', 'widget', 'page', 'contact'
         'submitted_at',
     ];
 

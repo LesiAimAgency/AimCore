@@ -22,6 +22,7 @@ use App\Livewire\Admin\WidgetTemplateBuilder;
 use App\Models\User;
 use App\Services\WidgetPermissionService;
 use App\Widgets\WidgetRegistry;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -222,7 +223,7 @@ Route::prefix('admin')->name('cms.')->middleware(['auth'])->group(function () {
 require __DIR__.'/superadmin.php';
 
 // Redirect /public/... to /... (strip /public prefix and collapse legacy /san-pham in 1 hop)
-Route::get('/public/{any}', function (\Illuminate\Http\Request $request, $any) {
+Route::get('/public/{any}', function (Request $request, $any) {
     $cleaned = preg_replace('#(^|/)san-pham/#', '$1', ltrim($any, '/'));
     if ($cleaned === 'san-pham') {
         $cleaned = 'cua-hang';
@@ -233,7 +234,7 @@ Route::get('/public/{any}', function (\Illuminate\Http\Request $request, $any) {
 })->where('any', '.*');
 
 // 301 Redirect legacy /san-pham to clean 1-level SEO URL
-Route::get('/san-pham/{slug}', function (\Illuminate\Http\Request $request, $slug) {
+Route::get('/san-pham/{slug}', function (Request $request, $slug) {
     $project = function_exists('current_project') ? current_project() : null;
     $prefix = $project?->code ? '/'.$project->code : '';
     $target = $request->getSchemeAndHttpHost()."{$prefix}/{$slug}";
@@ -241,7 +242,7 @@ Route::get('/san-pham/{slug}', function (\Illuminate\Http\Request $request, $slu
     return redirect()->away($target, 301);
 });
 
-Route::get('/san-pham', function (\Illuminate\Http\Request $request) {
+Route::get('/san-pham', function (Request $request) {
     $project = function_exists('current_project') ? current_project() : null;
     $prefix = $project?->code ? '/'.$project->code : '';
     $target = $request->getSchemeAndHttpHost()."{$prefix}/cua-hang";

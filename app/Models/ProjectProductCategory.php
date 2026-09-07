@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
+use App\Traits\ProjectScoped;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +11,7 @@ use Illuminate\Support\Str;
 
 class ProjectProductCategory extends Model
 {
-    use HasFactory;
+    use BelongsToTenant, HasFactory, ProjectScoped;
 
     /**
      * Maximum allowed category depth (0-based, so 3 means 4 levels: 0,1,2,3)
@@ -21,7 +23,7 @@ class ProjectProductCategory extends Model
     protected $table = 'product_categories';
 
     protected $fillable = [
-        'name', 'slug', 'description', 'image', 'parent_id', 'level', 'path',
+        'tenant_id', 'project_id', 'name', 'slug', 'description', 'image', 'parent_id', 'level', 'path',
         'sort_order', 'is_active', 'meta_title', 'meta_description',
     ];
 

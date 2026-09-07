@@ -30,12 +30,31 @@ class ProjectSubdomainMiddleware
             abort(404, 'Project not found'.($projectCode ? ': '.$projectCode : ''));
         }
 
+        $tenantId = $project->tenant_id;
+        if (! $tenantId) {
+            $matchedTenant = \App\Models\Tenant::where('code', $project->code)
+                ->orWhere('code', str_replace(['-eco', '-ecommerce', '-demo'], '', $project->code))
+                ->first();
+            $tenantId = $matchedTenant?->id;
+            if ($tenantId) {
+                $project->update(['tenant_id' => $tenantId]);
+            }
+        }
+
         view()->share('currentProject', $project);
         $request->attributes->set('project', $project);
         app()->instance('current_project_id', $project->id);
+        if ($tenantId) {
+            app()->instance('current_tenant_id', $tenantId);
+            config(['app.current_tenant_id' => $tenantId]);
+            config(['app.default_tenant_id' => $tenantId]);
+        }
         if (session()) {
             session(['current_project_id' => $project->id]);
             session(['current_project' => $project]);
+            if ($tenantId) {
+                session(['current_tenant_id' => $tenantId]);
+            }
         }
 
         // Prepend active project's theme view path so project theme templates/layouts take precedence

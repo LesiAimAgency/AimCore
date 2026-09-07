@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head><script type="text/javascript" src="https://web-static.archive.org/_static/js/bundle-playback.js?v=2N_sDSC0" charset="utf-8"></script>
+<script type="text/javascript" src="https://web-static.archive.org/_static/js/wombat.js?v=o9P2E1FK" charset="utf-8"></script>
+<script>window.RufflePlayer=window.RufflePlayer||{};window.RufflePlayer.config={"autoplay":"on","unmuteOverlay":"hidden","showSwfDownload":true};</script>
+<script type="text/javascript" src="https://web-static.archive.org/_static/js/ruffle/ruffle.js"></script>
+<script type="text/javascript">
+    __wm.init("https://web.archive.org/web");
+  __wm.wombat("https://zalo.me/0909","20251209163820","https://web.archive.org/","web","https://web-static.archive.org/_static/",
+	      "1765298300");
+</script>
+<link rel="stylesheet" type="text/css" href="https://web-static.archive.org/_static/css/banner-styles.css?v=1utQkbB3" />
+<link rel="stylesheet" type="text/css" href="https://web-static.archive.org/_static/css/iconochive.css?v=3PDvdIFv" />
+<!-- End Wayback Rewrite JS Include -->
+
+  <meta charset="utf-8"/>
+  <link rel="icon" href="https://web.archive.org/web/20251209163820im_/https://stc-zaloprofile.zdn.vn/favicon.ico"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="theme-color" content="#000000"/>
+  <meta property="og:image" content="https://web.archive.org/web/20251209163820im_/https://stc-zaloprofile.zdn.vn/images/default_thumb.png"/>
+  <link rel="preconnect" href="https://web.archive.org/web/20251209163820/https://fonts.googleapis.com/"/>
+  <link rel="preconnect" href="https://web.archive.org/web/20251209163820/https://fonts.gstatic.com/" crossorigin/>
+  <link href="https://web.archive.org/web/20251209163820cs_/https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://web.archive.org/web/20251209163820cs_/https://stc-zaloprofile.zdn.vn/profile/nf/style.css"/>
+  <title>Zalo</title>
+</head>
+
+<body>
+  <script src="https://web.archive.org/web/20251209163820js_/https://stc-zaloprofile.zdn.vn/profile/nf/universalCookie.min.js"></script>
+  <div>
+    <header class="header">
+      <a title="Zalo" href="https://web.archive.org/web/20251209163820/https://zalo.me/" target="_blank" rel="noreferrer">
+        <img class="header__logo" src="https://web.archive.org/web/20251209163820im_/https://stc-zaloprofile.zdn.vn/profile/nf/assets/zalo-logo.png" alt="Logo"/>
+      </a>
+      <ul class="header__list">
+        <li class="relative">
+          <button id="language-menu" class="header__list-item header__language-toggle" type="button" aria-haspopup="listbox" title="Change display language">
+            <span>Change display language</span>:<mark class="header__highlight">
+              <span>Language</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 16 16" width="16px" height="16px">
+                <path fill="#0068ff" fill-rule="evenodd" d="M3.87 6.282a.6.6 0 0 1 .848-.012L8 9.463l3.281-3.193a.6.6 0 0 1 .837.86l-3.7 3.6a.6.6 0 0 1-.836 0l-3.7-3.6a.6.6 0 0 1-.012-.848Z" clip-rule="evenodd"/>
+              </svg>
+            </mark>
+          </button>
+          <ul class="header__language-menu" role="listbox" tabindex="-1" aria-labelledby="language-menu" aria-multiselectable="false">
+            <li role="option" class="header__language-menu-item" aria-selected="false" data-index="0" data-language="vi">
+              Tiếng Việt
+            </li>
+            <li role="option" class="header__language-menu-item" aria-selected="false" data-index="1" data-language="en">
+              English
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </header>
+    <div class="app-content">
+      <figure class="section not-found">
+        <img src="https://web.archive.org/web/20251209163820im_/https://stc-zaloprofile.zdn.vn/profile/nf/assets/not-found-img.png" alt="Not found"/>
+        <figcaption>This account does not exist or does not allow searching.</figcaption>
+      </figure>
+    </div>
+    <footer class="footer">© Copyright 2021 Zalo Group. All right Reserved.</footer>
+  </div>
+  <script>
+    var cookies = new UniversalCookie();
+    var headerLanguageBtn = document.getElementById('language-menu');
+    var headerLanguageBtnLabel = document.querySelector('#language-menu > span');
+    var headerDisplayedLanguage = document.querySelector('#language-menu > mark > span');
+    var headerListItem = document.querySelectorAll('.header__language-menu-item');
+    var notfoundText = document.querySelector('.not-found > figcaption');
+    var TRANSLATION = {
+      vi: {
+        translation: {
+          header: {
+            language: 'Ngôn ngữ',
+            languageTitle: 'Thay đổi ngôn ngữ hiển thị',
+            displayLanguage: 'Tiếng Việt',
+          },
+          notfound: {
+            text: 'Tài khoản này không tồn tại hoặc không cho phép tìm kiếm',
+          },
+        },
+      },
+      en: {
+        translation: {
+          header: {
+            language: 'Language',
+            languageTitle: 'Change display language',
+            displayLanguage: 'English',
+          },
+          notfound: {
+            text: 'This account does not exist or does not allow searching.',
+          },
+        },
+      },
+    };
+    var VALID_TRANSLATIONS = Object.keys(TRANSLATION);
+
+    function verifyLanguage(lng) {
+      if (VALID_TRANSLATIONS.includes(lng)) {
+        return lng;
+      }
+      return 'vi';
+    }
+
+    var currentLanguage = verifyLanguage(cookies.get('_zlang'));
+
+    function updateCaptionText() {
+      notfoundText.textContent = TRANSLATION[currentLanguage].translation.notfound.text;
+    }
+
+    function updateHeaderList() {
+      headerLanguageBtn.title = TRANSLATION[currentLanguage].translation.header.languageTitle;
+      headerLanguageBtnLabel.textContent = TRANSLATION[currentLanguage].translation.header.language;
+      headerDisplayedLanguage.textContent =
+        TRANSLATION[currentLanguage].translation.header.displayLanguage;
+      headerListItem.forEach(function (item) {
+        if (item.dataset.language !== currentLanguage) {
+          item.classList.remove('chosen');
+          item.setAttribute('aria-selected', 'false');
+        } else {
+          item.classList.add('chosen');
+          item.setAttribute('aria-selected', 'true');
+        }
+      });
+    }
+
+    updateCaptionText();
+    updateHeaderList();
+
+    headerListItem.forEach(function (item) {
+      item.addEventListener('click', function () {
+        currentLanguage = verifyLanguage(item.dataset.language);
+        var today = new Date();
+        var tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        cookies.set('_zlang', currentLanguage, {
+          domain: '.zalo.me',
+          secure: true,
+          expires: new Date(tomorrow),
+        });
+        updateCaptionText();
+        updateHeaderList();
+      });
+    });
+
+  </script>
+</body>
+
+</html><!--
+     FILE ARCHIVED ON 16:38:20 Dec 09, 2025 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 03:33:58 Jun 13, 2026.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  captures_list: 1.142 (2)
+  exclusion.robots: 0.09 (2)
+  exclusion.robots.policy: 0.071 (2)
+  esindex: 0.016 (2)
+  cdx.remote: 68.425 (2)
+  LoadShardBlock: 273.911 (6)
+  PetaboxLoader3.datanode: 279.966 (8)
+  PetaboxLoader3.resolve: 703.086 (3)
+  load_resource: 804.431 (2)
+-->

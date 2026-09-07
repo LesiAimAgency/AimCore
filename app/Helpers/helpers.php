@@ -274,7 +274,7 @@ if (! function_exists('locale_route')) {
                 ?? (session('current_project')->code
                 ?? (function_exists('current_project') ? current_project()?->code : null))));
 
-            return $projectCode ? "/{$projectCode}/cua-hang" : "/cua-hang";
+            return $projectCode ? "/{$projectCode}/cua-hang" : '/cua-hang';
         }
 
         if (! Route::has($name)) {
@@ -349,17 +349,31 @@ if (! function_exists('Lang')) {
         return $key;
     }
 }
+if (! function_exists('clean_asset_url')) {
+    function clean_asset_url(?string $url): string
+    {
+        if (empty($url)) {
+            return '';
+        }
+
+        return preg_replace('#(?<!:)//+#', '/', $url);
+    }
+}
+
 if (! function_exists('resolve_image')) {
     function resolve_image($name, $default = null)
     {
         if (empty($name)) {
-            return $default ? asset($default) : asset('theme/images/logo/logo-01.svg');
+            return clean_asset_url($default ? asset($default) : asset('theme/images/logo/logo-01.svg'));
         }
         if (Str::contains($name, '://')) {
-            return $name;
+            return clean_asset_url($name);
         }
-        if (str_starts_with($name, 'theme/') || str_starts_with($name, 'storage/') || str_starts_with($name, 'assets/') || str_starts_with($name, 'media/')) {
-            return asset($name);
+        if (str_starts_with($name, 'media/')) {
+            return clean_asset_url(Storage::disk('public')->url($name));
+        }
+        if (str_starts_with($name, 'theme/') || str_starts_with($name, 'storage/') || str_starts_with($name, 'assets/')) {
+            return clean_asset_url(asset($name));
         }
 
         $dbKey = match ($name) {
@@ -370,23 +384,26 @@ if (! function_exists('resolve_image')) {
         $dbValue = setting($dbKey);
         if ($dbValue) {
             if (Str::contains($dbValue, '://')) {
-                return $dbValue;
+                return clean_asset_url($dbValue);
             }
             if (str_starts_with($dbValue, 'media/')) {
-                return Storage::disk('public')->url($dbValue);
+                return clean_asset_url(Storage::disk('public')->url($dbValue));
             }
 
-            return asset($dbValue);
+            return clean_asset_url(asset($dbValue));
         }
         if ($default) {
             if (Str::contains($default, '://') || str_starts_with($default, 'theme/') || str_starts_with($default, 'assets/') || str_starts_with($default, 'storage/')) {
-                return asset($default);
+                return clean_asset_url(asset($default));
+            }
+            if (str_starts_with($default, 'media/')) {
+                return clean_asset_url(Storage::disk('public')->url($default));
             }
 
-            return asset("frontend/themes/viettinmartdemo/assets/images/$default");
+            return clean_asset_url(asset("frontend/themes/viettinmartdemo/assets/images/$default"));
         }
 
-        return asset('theme/images/logo/logo-01.svg');
+        return clean_asset_url(asset('theme/images/logo/logo-01.svg'));
     }
 }
 if (! function_exists('resolve_icon')) {
@@ -395,27 +412,30 @@ if (! function_exists('resolve_icon')) {
         $dbValue = setting('icon_'.$name);
         if ($dbValue) {
             if (Str::contains($dbValue, '://')) {
-                return $dbValue;
+                return clean_asset_url($dbValue);
             }
             if (str_starts_with($dbValue, 'media/')) {
-                return Storage::disk('public')->url($dbValue);
+                return clean_asset_url(Storage::disk('public')->url($dbValue));
             }
             if (str_contains($dbValue, 'fa-') && ! str_contains($dbValue, '/')) {
                 return $dbValue;
             }
 
-            return asset($dbValue);
+            return clean_asset_url(asset($dbValue));
         }
 
         if ($default) {
             if (Str::contains($default, '://') || str_starts_with($default, 'theme/') || str_starts_with($default, 'assets/') || str_starts_with($default, 'storage/')) {
-                return asset($default);
+                return clean_asset_url(asset($default));
+            }
+            if (str_starts_with($default, 'media/')) {
+                return clean_asset_url(Storage::disk('public')->url($default));
             }
             if (str_contains($default, 'fa-') && ! str_contains($default, '/')) {
                 return $default;
             }
             if (file_exists(public_path('theme/images/icons/'.$default))) {
-                return asset('theme/images/icons/'.$default);
+                return clean_asset_url(asset('theme/images/icons/'.$default));
             }
         }
 
@@ -438,26 +458,26 @@ if (! function_exists('media_url')) {
     function media_url($path, $default = '')
     {
         if (empty($path)) {
-            return $default ? asset($default) : asset('theme/images/grocery/01.jpg');
+            return clean_asset_url($default ? asset($default) : asset('theme/images/grocery/01.jpg'));
         }
 
         // 1. Clean corrupt prefixes like /storage/https://... or hardcoded domains
         if (is_string($path)) {
             $path = preg_replace('#^/storage/https?://[^/]+#', '', $path);
-            if (Str::contains($path, '127.0.0.1:8000') || Str::contains($path, 'viettinmart.vnglobaltech.com')) {
+            if (Str::contains($path, '127.0.0.1:8000') || Str::contains($path, 'localhost:8000') || Str::contains($path, 'viettinmart.vnglobaltech.com')) {
                 $path = preg_replace('#^https?://[^/]+#', '', $path);
             }
         }
 
         if (Str::contains($path, '://')) {
-            return $path;
+            return clean_asset_url($path);
         }
 
         $cleanPath = ltrim($path, '/');
 
         // 2. Direct existence check in public_path
         if (file_exists(public_path($cleanPath))) {
-            return asset($cleanPath);
+            return clean_asset_url(asset($cleanPath));
         }
 
         // 3. Check crossover between media-files and storage
@@ -465,42 +485,42 @@ if (! function_exists('media_url')) {
             $relativeMedia = preg_replace('#^storage/#', '', $cleanPath);
             // Check in public/media-files/...
             if (file_exists(public_path('media-files/'.$relativeMedia))) {
-                return asset('media-files/'.$relativeMedia);
+                return clean_asset_url(asset('media-files/'.$relativeMedia));
             }
             // Check in storage/app/public/...
             if (file_exists(storage_path('app/public/'.$relativeMedia))) {
-                return asset($cleanPath);
+                return clean_asset_url(asset($cleanPath));
             }
         } elseif (str_starts_with($cleanPath, 'media-files/')) {
             $relativeStorage = preg_replace('#^media-files/#', '', $cleanPath);
             // Check in public/storage/...
             if (file_exists(public_path('storage/'.$relativeStorage))) {
-                return asset('storage/'.$relativeStorage);
+                return clean_asset_url(asset('storage/'.$relativeStorage));
             }
             // Check in storage/app/public/...
             if (file_exists(storage_path('app/public/'.$relativeStorage))) {
-                return asset('storage/'.$relativeStorage);
+                return clean_asset_url(asset('storage/'.$relativeStorage));
             }
         } elseif (str_starts_with($cleanPath, 'media/')) {
             // Check in public/media-files/media/...
             if (file_exists(public_path('media-files/'.$cleanPath))) {
-                return asset('media-files/'.$cleanPath);
+                return clean_asset_url(asset('media-files/'.$cleanPath));
             }
             // Check in public/storage/media/...
             if (file_exists(public_path('storage/'.$cleanPath))) {
-                return asset('storage/'.$cleanPath);
+                return clean_asset_url(asset('storage/'.$cleanPath));
             }
             // Check in storage/app/public/media/...
             if (file_exists(storage_path('app/public/'.$cleanPath))) {
-                return Storage::disk('public')->url($cleanPath);
+                return clean_asset_url(Storage::disk('public')->url($cleanPath));
             }
         }
 
         // 4. Default asset or fallback
         if (! empty($default)) {
-            return asset($default);
+            return clean_asset_url(asset($default));
         }
 
-        return asset($cleanPath);
+        return clean_asset_url(asset($cleanPath));
     }
 }

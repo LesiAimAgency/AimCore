@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Services\RemoteProjectService;
 use App\Services\SettingsService;
 use App\Services\ViettinmartDeployService;
+use App\Services\WkcomputerDeployService;
 use Database\Seeders\InbetweenHomepageMainSeeder;
 use Database\Seeders\InbetweenThemeSeeder;
 use Database\Seeders\ViettinmartMenuSeeder;
@@ -26,6 +27,7 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller implements HasMiddleware
 {
@@ -432,6 +434,30 @@ class ProjectController extends Controller implements HasMiddleware
             return back()->with('alert', [
                 'type' => 'error',
                 'message' => 'Lỗi triển khai mẫu Viettinmart: '.$e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * 1-Click Deploy complete WKComputer Gaming & PC template for a project.
+     */
+    public function deployWkcomputer(Request $request, Project $project, WkcomputerDeployService $deployService)
+    {
+        try {
+            $result = $deployService->deploy($project);
+
+            return back()->with('alert', [
+                'type' => 'success',
+                'message' => "🎉 Triển khai mẫu WKComputer cho '{$project->name}' thành công!\n\n"
+                    ."• CMS Username: {$result['admin_username']}\n"
+                    ."• CMS Password: {$result['admin_password']}\n"
+                    ."• Frontend: {$result['site_url']}\n"
+                    ."• CMS Admin: {$result['admin_url']}",
+            ]);
+        } catch (\Throwable $e) {
+            return back()->with('alert', [
+                'type' => 'error',
+                'message' => 'Lỗi triển khai mẫu WKComputer: '.$e->getMessage(),
             ]);
         }
     }
@@ -960,6 +986,52 @@ class ProjectController extends Controller implements HasMiddleware
                 $project->update(['cms_features' => $request->cms_features]);
             } else {
                 $project->update(['cms_features' => []]);
+            }
+
+            // Xử lý lưu cấu hình API Hub & Tích hợp bên thứ 3
+            if ($request->has('api') && is_array($request->api)) {
+                foreach ($request->api as $apiKey => $apiVal) {
+                    $cleanVal = is_string($apiVal) ? trim($apiVal) : $apiVal;
+                    $fullKey = str_starts_with($apiKey, 'api.') ? $apiKey : 'api.'.$apiKey;
+
+                    ProjectSetting::set($project->id, $fullKey, (string) $cleanVal);
+
+                    // Đồng bộ sang bảng settings (cả key gốc và prefix api.) để website/storefront dễ truy xuất
+                    \DB::table('settings')->updateOrInsert(
+                        ['project_id' => $project->id, 'key' => $fullKey],
+                        ['payload' => json_encode($cleanVal), 'updated_at' => now()]
+                    );
+
+                    $shortKey = str_replace('api.', '', $fullKey);
+                    \DB::table('settings')->updateOrInsert(
+                        ['project_id' => $project->id, 'key' => $shortKey],
+                        ['payload' => json_encode($cleanVal), 'updated_at' => now()]
+                    );
+                }
+            }
+
+            // Xử lý Remote URL & API Token
+            $projectUpdates = [];
+            if ($request->filled('remote_url')) {
+                $projectUpdates['remote_url'] = rtrim(trim($request->remote_url), '/');
+            }
+            if ($request->boolean('regenerate_api_token')) {
+                $projectUpdates['api_token'] = Str::random(64);
+            } elseif ($request->filled('custom_api_token')) {
+                $projectUpdates['api_token'] = trim($request->custom_api_token);
+            }
+            if (! empty($projectUpdates)) {
+                $project->update($projectUpdates);
+            }
+
+            // Đồng bộ API config qua remote bridge nếu có yêu cầu
+            if ($request->boolean('sync_api_to_remote') && $project->remote_url && $request->has('api')) {
+                try {
+                    $remoteService = new RemoteProjectService;
+                    $remoteService->updateRemoteConfig($project->remote_url, $project->code, $request->input('api', []));
+                } catch (\Throwable $e) {
+                    \Log::warning('Remote API config sync warning: '.$e->getMessage());
+                }
             }
 
             if ($request->has('sync_data') && $request->sync_data) {

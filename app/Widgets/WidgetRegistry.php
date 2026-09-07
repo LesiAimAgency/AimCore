@@ -98,6 +98,20 @@ class WidgetRegistry implements WidgetRegistryInterface
         'vtm_footer_column' => ViettinmartFooterColumnWidget::class,
         'inbetween_footer_column' => ViettinmartFooterColumnWidget::class,
         'footer_column' => ViettinmartFooterColumnWidget::class,
+
+        // WKComputer Widgets
+        'wk_hero_slider' => ViettinmartHeroSliderWidget::class,
+        'hero_slider' => ViettinmartHeroSliderWidget::class,
+        'product_section' => ViettinmartProductFeaturedWidget::class,
+        'wk_product_featured' => ViettinmartProductFeaturedWidget::class,
+        'wk_deal_flash' => ViettinmartDealFlashWidget::class,
+        'wk_product_tabs' => ViettinmartProductTabsWidget::class,
+        'wk_promo_banners' => ViettinmartPromoBannersWidget::class,
+        'wk_posts_latest' => ViettinmartPostsLatestWidget::class,
+        'posts_latest' => ViettinmartPostsLatestWidget::class,
+        'wk_footer_column' => ViettinmartFooterColumnWidget::class,
+        'html_custom' => HTMLWidget::class,
+        'menu' => ViettinmartFooterColumnWidget::class,
     ];
 
     protected static array $discoveredWidgets = [];
@@ -346,10 +360,14 @@ class WidgetRegistry implements WidgetRegistryInterface
                 $metadata['class'] = $class;
 
                 return $metadata;
-            } catch (\Exception $e) {
-                \Log::error("Error loading config for widget {$type}: ".$e->getMessage());
-
-                return null;
+            } catch (\Throwable $e) {
+                return [
+                    'name' => class_basename($class),
+                    'type' => $type,
+                    'class' => $class,
+                    'category' => 'general',
+                    'fields' => [],
+                ];
             }
         }
 

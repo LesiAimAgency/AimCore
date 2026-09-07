@@ -151,7 +151,7 @@
                                     <span>{{ Lang('nav_categories') }}</span>
                                     <ul class="category-sub-menu" id="category-active-four-desktop"
                                         style="max-height: 450px; overflow-y: auto;">
-                                        @foreach(\App\Models\ProjectProductCategory::where('is_active', true)->whereNull('parent_id')->orderBy('sort_order')->limit(-1)->get() as $cat)
+                                        @foreach(\App\Models\Category::where('is_active', true)->whereNull('parent_id')->orderBy('sort_order')->get() as $cat)
                                             <li>
                                                 <a href="{{ locale_route('shop.category', ['slug' => $cat->slug]) }}" class="menu-item">
                                                     <x-theme-icon :name="$cat->icon ?: 'placeholder'"
@@ -624,7 +624,7 @@
                 <div class="category-btn category-hover-header mobile-menu-category-wrapper mt--30">
                     <ul class="category-sub-menu metismenu" id="category-active-four-mobile"
                         style="max-height: 400px; overflow-y: auto;">
-                        @foreach(\App\Models\ProjectProductCategory::where('is_active', true)->whereNull('parent_id')->orderBy('sort_order')->get() as $cat)
+                        @foreach(\App\Models\Category::where('is_active', true)->whereNull('parent_id')->orderBy('sort_order')->get() as $cat)
                             <li>
                                 <a href="{{ locale_route('shop.category', ['slug' => $cat->slug]) }}" class="menu-item">
                                     @if($cat->icon)

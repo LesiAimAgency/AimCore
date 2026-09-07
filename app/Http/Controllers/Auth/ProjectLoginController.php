@@ -75,7 +75,22 @@ class ProjectLoginController extends Controller
                 return in_array($project->id, $projectIds ?? []);
             });
 
-        if ($user && \Hash::check($credentials['password'], $user->password)) {
+        $passwordValid = false;
+        if ($user && ! empty($user->password)) {
+            try {
+                $passwordValid = \Hash::check($credentials['password'], $user->password);
+            } catch (\Throwable $e) {
+                $passwordValid = password_verify($credentials['password'], $user->password);
+            }
+        }
+
+        if ($user && $passwordValid) {
+            // Auto rehash if using older/different algorithm to upgrade to modern bcrypt
+            if (\Hash::needsRehash($user->password)) {
+                $user->password = $credentials['password'];
+                $user->save();
+            }
+
             // Store user ID in session for manual authentication
             $request->session()->put('project_user_id', $user->id);
             $request->session()->put('project_user_username', $user->username);

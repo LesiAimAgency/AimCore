@@ -156,7 +156,7 @@ class ProductWidget extends BaseWidget
 
         $projectCode = request()->route('projectCode') ?? (request()->attributes->get('project')->code ?? null);
 
-        $products = $productsList->map(function ($p) use ($projectCode) {
+        $products = $productsList->map(function ($p) {
             $link = '#';
             if ($p->slug) {
                 $link = locale_route('shop.show', $p->slug);

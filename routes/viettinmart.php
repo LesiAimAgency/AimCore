@@ -9,6 +9,7 @@ use App\Http\Controllers\Viettinmart\ContactController;
 use App\Http\Controllers\Viettinmart\CustomerActionController;
 use App\Http\Controllers\Viettinmart\HomeController;
 use App\Http\Controllers\Viettinmart\ShopController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -17,12 +18,12 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.i
 Route::get('/cua-hang', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/danh-muc/{slug}', [ShopController::class, 'index'])->name('shop.category.danh-muc');
 Route::get('/cua-hang/{slug}', [ShopController::class, 'index'])->name('shop.category.cua-hang');
-Route::get('/san-pham/{slug}', function (\Illuminate\Http\Request $request, $projectCode, $slug) {
+Route::get('/san-pham/{slug}', function (Request $request, $projectCode, $slug) {
     $target = $request->getSchemeAndHttpHost()."/{$projectCode}/{$slug}";
 
     return redirect()->away($target, 301);
 })->name('shop.san-pham.redirect');
-Route::get('/san-pham', function (\Illuminate\Http\Request $request, $projectCode) {
+Route::get('/san-pham', function (Request $request, $projectCode) {
     $target = $request->getSchemeAndHttpHost()."/{$projectCode}/cua-hang";
 
     return redirect()->away($target, 301);
@@ -66,4 +67,3 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/password/reset', function () {
     return 'Reset Password Page';
 })->name('password.request');
-

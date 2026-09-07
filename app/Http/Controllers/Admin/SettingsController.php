@@ -16,14 +16,20 @@ class SettingsController extends Controller
         $user = auth()->user();
 
         if ($project) {
-            \DB::setDefaultConnection('mysql');
+            $mainConn = app()->environment('testing') ? config('database.default', 'sqlite') : 'mysql';
+            $prevConn = \DB::getDefaultConnection();
+            if ($prevConn !== $mainConn) {
+                \DB::setDefaultConnection($mainConn);
+            }
 
             $enabledSettings = ProjectSetting::where('project_id', $project->id)
                 ->where('value', '1')
                 ->pluck('key')
                 ->toArray();
 
-            \DB::setDefaultConnection('project');
+            if (\DB::getDefaultConnection() !== $prevConn) {
+                \DB::setDefaultConnection($prevConn);
+            }
 
             // Luôn đảm bảo settings.languages hiển thị nếu dự án có đa ngôn ngữ hoặc được cấu hình
             if (! in_array('settings.languages', $enabledSettings)) {
@@ -229,15 +235,20 @@ class SettingsController extends Controller
     {
         $project = $request->attributes->get('project');
 
-        $mainDb = config('database.connections.mysql.database');
-        \DB::setDefaultConnection('mysql');
+        $mainConn = app()->environment('testing') ? config('database.default', 'sqlite') : 'mysql';
+        $prevConn = \DB::getDefaultConnection();
+        if ($prevConn !== $mainConn) {
+            \DB::setDefaultConnection($mainConn);
+        }
 
         $enabledSettings = ProjectSetting::where('project_id', $project->id)
             ->where('value', '1')
             ->pluck('key')
             ->toArray();
 
-        \DB::setDefaultConnection('project');
+        if (\DB::getDefaultConnection() !== $prevConn) {
+            \DB::setDefaultConnection($prevConn);
+        }
 
         // Chỉ hiển thị các module đã được bật
         $modules = collect(config('system_menu'))
