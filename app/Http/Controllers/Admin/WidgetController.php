@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Models\Setting;
 use App\Models\Widget;
 use App\Services\FieldTypeService;
+use App\Services\ViettinmartDataSyncService;
 use App\Services\WidgetImportExportService;
 use App\Services\WidgetPermissionService;
 use App\Widgets\WidgetRegistry;
@@ -67,16 +69,28 @@ class WidgetController extends Controller
         }
 
         $projId = $currentProject?->id;
-        $tenantId = session('current_tenant_id') ?? $currentProject?->tenant_id ?? $projId;
+        $tenantId = $currentProject?->tenant_id ?? session('current_tenant_id') ?? $projId;
 
-        // Auto-seed widgets if project currently has 0 widgets
+        // Auto-seed or auto-heal widgets if project currently has 0 widgets
         if ($projId) {
-            $widgetCount = Widget::where('project_id', $projId)->count();
+            $widgetCount = Widget::withoutGlobalScope('tenant')->where('project_id', $projId)->count();
+            if ($widgetCount === 0) {
+                // Auto-heal Viettinmart data if applicable
+                if ($currentProject && ($currentProject->code === 'viettinmart-eco' || $currentProject->code === 'viettinmart')) {
+                    try {
+                        app(ViettinmartDataSyncService::class)->syncProjectId($projId, $tenantId);
+                        $widgetCount = Widget::withoutGlobalScope('tenant')->where('project_id', $projId)->count();
+                    } catch (\Throwable $e) {
+                        \Log::warning('ViettinmartDataSyncService failed in WidgetController: '.$e->getMessage());
+                    }
+                }
+            }
+
             if ($widgetCount === 0) {
                 try {
                     $theme = Setting::where(function ($q) use ($projId, $tenantId) {
                         $q->where('project_id', $projId)->orWhere('tenant_id', $tenantId);
-                    })->where('key', 'theme')->value('value');
+                    })->where('key', 'theme')->value('value') ?: ($currentProject?->code === 'viettinmart-eco' ? 'viettinmartdemo' : null);
 
                     if ($theme === 'inbetween' && class_exists('\Database\Seeders\InbetweenHomepageMainSeeder')) {
                         (new InbetweenHomepageMainSeeder)->run($projId, $tenantId);
@@ -91,7 +105,7 @@ class WidgetController extends Controller
             }
         }
 
-        $query = Widget::orderBy('area')->orderBy('sort_order');
+        $query = Widget::withoutGlobalScope('tenant')->orderBy('area')->orderBy('sort_order');
         if ($projId) {
             $query->where('project_id', $projId);
         }
@@ -218,7 +232,7 @@ class WidgetController extends Controller
         }
 
         $projId = $currentProject?->id;
-        $tenantId = session('current_tenant_id') ?? $currentProject?->tenant_id ?? $projId;
+        $tenantId = $currentProject?->tenant_id ?? session('current_tenant_id') ?? $projId;
 
         if ($projId) {
             $validated['project_id'] = $projId;
@@ -239,7 +253,7 @@ class WidgetController extends Controller
     {
         $widget = $arg2 ?? $arg1;
         if (! $widget instanceof Widget) {
-            $widget = Widget::findOrFail($widget);
+            $widget = Widget::withoutGlobalScope('tenant')->findOrFail($widget);
         }
 
         return view('cms.widgets.edit', compact('widget'));
@@ -249,7 +263,7 @@ class WidgetController extends Controller
     {
         $widget = $arg2 ?? $arg1;
         if (! $widget instanceof Widget) {
-            $widget = Widget::findOrFail($widget);
+            $widget = Widget::withoutGlobalScope('tenant')->findOrFail($widget);
         }
 
         $validated = $request->validate([
@@ -297,7 +311,7 @@ class WidgetController extends Controller
     {
         $widget = $arg2 ?? $arg1;
         if (! $widget instanceof Widget) {
-            $widget = Widget::findOrFail($widget);
+            $widget = Widget::withoutGlobalScope('tenant')->findOrFail($widget);
         }
 
         $area = $widget->area;
@@ -359,7 +373,7 @@ class WidgetController extends Controller
             // Clear existing widgets for the areas being updated (strictly for this project)
             $areas = collect($widgets)->pluck('area')->unique()->values()->all();
             foreach ($areas as $area) {
-                $query = Widget::where('project_id', $projId)
+                $query = Widget::withoutGlobalScope('tenant')->where('project_id', $projId)
                     ->where(function ($q) use ($area) {
                         $q->where('area', $area);
                         if ($area === 'homepage-main') {
@@ -424,7 +438,7 @@ class WidgetController extends Controller
 
             foreach ($widgetIds as $index => $id) {
                 if ($id) {
-                    Widget::where('id', $id)->update(['sort_order' => $index]);
+                    Widget::withoutGlobalScope('tenant')->where('id', $id)->update(['sort_order' => $index]);
                 }
             }
 
@@ -483,7 +497,7 @@ class WidgetController extends Controller
             ], 400);
         }
 
-        $query = Widget::where('project_id', $projId)->where('area', $area);
+        $query = Widget::withoutGlobalScope('tenant')->where('project_id', $projId)->where('area', $area);
         $count = $query->count();
         $query->delete();
         clear_widget_cache($area);
@@ -654,7 +668,7 @@ class WidgetController extends Controller
         }
 
         if (! empty($id)) {
-            $dbWidget = Widget::find($id);
+            $dbWidget = Widget::withoutGlobalScope('tenant')->find($id);
             if ($dbWidget) {
                 $dbSettings = $dbWidget->settings;
                 if (\is_array($dbSettings) && ! empty($dbSettings)) {

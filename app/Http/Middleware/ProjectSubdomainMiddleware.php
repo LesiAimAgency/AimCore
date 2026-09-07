@@ -44,7 +44,7 @@ class ProjectSubdomainMiddleware
             $matchedTenant = Tenant::where('code', $project->code)
                 ->orWhere('code', str_replace(['-eco', '-ecommerce', '-demo'], '', $project->code))
                 ->first();
-            $tenantId = $matchedTenant?->id;
+            $tenantId = $matchedTenant?->id ?? $project->id;
             if ($tenantId && $hasTenantCol) {
                 try {
                     $project->update(['tenant_id' => $tenantId]);
@@ -57,16 +57,25 @@ class ProjectSubdomainMiddleware
         view()->share('currentProject', $project);
         $request->attributes->set('project', $project);
         app()->instance('current_project_id', $project->id);
-        if ($tenantId) {
-            app()->instance('current_tenant_id', $tenantId);
-            config(['app.current_tenant_id' => $tenantId]);
-            config(['app.default_tenant_id' => $tenantId]);
-        }
+        app()->instance('current_tenant_id', $tenantId);
+        config(['app.current_tenant_id' => $tenantId]);
+        config(['app.default_tenant_id' => $tenantId]);
+
         if (session()) {
             session(['current_project_id' => $project->id]);
             session(['current_project' => $project]);
-            if ($tenantId) {
-                session(['current_tenant_id' => $tenantId]);
+            session(['current_tenant_id' => $tenantId]);
+        }
+
+        // Auto-heal check for Viettinmart project data
+        if ($project->code === 'viettinmart-eco' || $project->code === 'viettinmart') {
+            try {
+                $hasWidgets = \App\Models\Widget::withoutGlobalScopes()->where('project_id', $project->id)->exists();
+                if (! $hasWidgets) {
+                    app(\App\Services\ViettinmartDataSyncService::class)->syncProjectId($project->id, $tenantId);
+                }
+            } catch (\Throwable $e) {
+                \Log::warning('Viettinmart auto-heal check failed: '.$e->getMessage());
             }
         }
 

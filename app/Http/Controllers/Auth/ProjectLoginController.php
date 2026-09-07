@@ -71,8 +71,24 @@ class ProjectLoginController extends Controller
 
                 // Check if this user is scoped to this project
                 $projectIds = is_array($u->project_ids) ? $u->project_ids : json_decode($u->project_ids ?? '[]', true);
+                if (! is_array($projectIds)) {
+                    $projectIds = [];
+                }
 
-                return in_array($project->id, $projectIds ?? []);
+                if (in_array($project->id, $projectIds)) {
+                    return true;
+                }
+
+                // If this is Viettinmart, allow legacy user with project_id 10
+                if (($project->code === 'viettinmart-eco' || $project->code === 'viettinmart') && in_array(10, $projectIds)) {
+                    $projectIds[] = $project->id;
+                    $u->project_ids = array_values(array_unique($projectIds));
+                    $u->saveQuietly();
+
+                    return true;
+                }
+
+                return false;
             });
 
         $passwordValid = false;
@@ -91,12 +107,21 @@ class ProjectLoginController extends Controller
                 $user->save();
             }
 
-            // Store user ID in session for manual authentication
+            // Store user ID and project context in session
+            $tenantId = $project->tenant_id ?? $project->id;
             $request->session()->put('project_user_id', $user->id);
             $request->session()->put('project_user_username', $user->username);
+            $request->session()->put('current_project', $project->code);
+            $request->session()->put('current_project_id', $project->id);
+            $request->session()->put('current_tenant_id', $tenantId);
             $request->session()->regenerate();
+            $request->session()->put('project_user_id', $user->id);
+            $request->session()->put('project_user_username', $user->username);
+            $request->session()->put('current_project', $project->code);
+            $request->session()->put('current_project_id', $project->id);
+            $request->session()->put('current_tenant_id', $tenantId);
 
-            \Log::info("Project login success: {$user->username} for project {$project->code}");
+            \Log::info("Project login success: {$user->username} for project {$project->code} (project_id: {$project->id}, tenant_id: {$tenantId})");
 
             return redirect()->intended('/'.$project->code.'/admin');
         }
