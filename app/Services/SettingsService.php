@@ -133,10 +133,18 @@ class SettingsService
                         ->get();
                     $globalSettings = $this->parseSettingsRows($globalRows);
 
-                    // Load project-specific settings (override global)
+                    // Load tenant / project-specific settings (override global)
+                    $tenantId = $project->tenant_id ?? session('current_tenant_id') ?? ($project->code === 'viettinmart-eco' ? 3 : null);
                     $projectRows = DB::connection($mainConn)
                         ->table('settings')
-                        ->where('project_id', $project->id)
+                        ->where(function ($q) use ($project, $tenantId) {
+                            if ($tenantId) {
+                                $q->where('tenant_id', $tenantId);
+                            }
+                            if ($project->id) {
+                                $q->orWhere('project_id', $project->id);
+                            }
+                        })
                         ->select(['key', 'payload', 'value'])
                         ->get();
                     $projectSettings = $this->parseSettingsRows($projectRows);

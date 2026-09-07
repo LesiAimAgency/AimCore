@@ -37,10 +37,18 @@ class ThemeOptionController extends Controller
         $project = $request->attributes->get('project');
 
         if ($project) {
-            // Project context - load from main database with project_id
+            $tenantId = $project->tenant_id ?? session('current_tenant_id') ?? ($project->code === 'viettinmart-eco' ? 3 : null);
+            // Project context - load from main database with tenant_id or project_id
             $settings = \DB::table('settings')
                 ->where('key', "theme_option_{$tab}")
-                ->where('project_id', $project->id)
+                ->where(function ($q) use ($project, $tenantId) {
+                    if ($tenantId) {
+                        $q->where('tenant_id', $tenantId);
+                    }
+                    if ($project->id) {
+                        $q->orWhere('project_id', $project->id);
+                    }
+                })
                 ->first();
             $data = $settings ? json_decode($settings->payload, true) : [];
         } else {
@@ -66,10 +74,18 @@ class ThemeOptionController extends Controller
         ]);
 
         if ($project) {
-            // Project context - save to main database with project_id
+            $tenantId = $project->tenant_id ?? session('current_tenant_id') ?? ($project->code === 'viettinmart-eco' ? 3 : null);
+            // Project context - save to main database with tenant_id and project_id
             \DB::table('settings')
                 ->where('key', "theme_option_{$tab}")
-                ->where('project_id', $project->id)
+                ->where(function ($q) use ($project, $tenantId) {
+                    if ($tenantId) {
+                        $q->where('tenant_id', $tenantId);
+                    }
+                    if ($project->id) {
+                        $q->orWhere('project_id', $project->id);
+                    }
+                })
                 ->delete();
 
             \DB::table('settings')->insert([
@@ -77,7 +93,7 @@ class ThemeOptionController extends Controller
                 'payload' => json_encode($data),
                 'group' => 'theme',
                 'project_id' => $project->id,
-                'tenant_id' => null,
+                'tenant_id' => $tenantId,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

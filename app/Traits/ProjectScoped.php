@@ -22,17 +22,39 @@ trait ProjectScoped
             // Scoping must always apply to prevent cross-site data leaks.
             $project = request()->attributes->get('project');
             $projectId = $project?->id ?? session('current_project_id') ?? (app()->bound('current_project_id') ? app('current_project_id') : null);
-            if ($projectId && $builder->getModel()->getTable() !== 'users') {
-                $builder->where($builder->getModel()->getTable().'.project_id', $projectId);
+            $tenantId = $project?->tenant_id ?? session('current_tenant_id') ?? (app()->bound('current_tenant_id') ? app('current_tenant_id') : null);
+            $table = $builder->getModel()->getTable();
+
+            if ($table === 'users') {
+                return;
+            }
+
+            // Check if model uses BelongsToTenant trait
+            $traits = class_uses_recursive($builder->getModel());
+            $hasTenantTrait = in_array(\App\Traits\BelongsToTenant::class, $traits);
+
+            if ($hasTenantTrait && $tenantId) {
+                // 100% TENANT_ID: BelongsToTenant global scope handles filtering by tenant_id!
+                // Do not enforce strict project_id condition which breaks when project_id shifts between local/server
+                return;
+            }
+
+            if ($projectId) {
+                $builder->where($table.'.project_id', $projectId);
             }
         });
 
-        // Automatically set project_id when creating
+        // Automatically set project_id and tenant_id when creating
         static::creating(function ($model) {
             $project = request()->attributes->get('project');
             $projectId = $project?->id ?? session('current_project_id') ?? (app()->bound('current_project_id') ? app('current_project_id') : null);
+            $tenantId = $project?->tenant_id ?? session('current_tenant_id') ?? (app()->bound('current_tenant_id') ? app('current_tenant_id') : null);
+
             if ($projectId && ! $model->project_id) {
                 $model->project_id = $projectId;
+            }
+            if ($tenantId && empty($model->tenant_id) && \Illuminate\Support\Facades\Schema::hasColumn($model->getTable(), 'tenant_id')) {
+                $model->tenant_id = $tenantId;
             }
         });
     }
