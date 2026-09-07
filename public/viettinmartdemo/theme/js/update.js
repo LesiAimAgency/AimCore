@@ -598,9 +598,6 @@ if (typeof window.cart === 'undefined') {
                 // 3. Dispatch global events
                 window.dispatchEvent(new CustomEvent('cart:updated', { detail: response }));
                 $(document).trigger('cart:updated', [response]);
-                if (window.Alpine) {
-                    window.Alpine.dispatch(document, 'cart-updated', response);
-                }
 
                 // 4. Show success message
                 if (typeof Swal !== 'undefined') {
