@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Project;
-use App\Models\ProjectUser;
 use App\Models\Tenant;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +16,7 @@ class MediaPickerTest extends TestCase
 
     protected Project $project;
 
-    protected ProjectUser $admin;
+    protected User $admin;
 
     protected function setUp(): void
     {
@@ -41,7 +41,7 @@ class MediaPickerTest extends TestCase
             'tenant_id' => 3,
         ]);
 
-        $this->admin = ProjectUser::forceCreate([
+        $this->admin = User::factory()->create([
             'username' => 'admin_test',
             'name' => 'Admin Test',
             'role' => 'admin',
@@ -60,7 +60,8 @@ class MediaPickerTest extends TestCase
 
         $response = $this->withSession([
             'project_user_id' => $this->admin->id,
-            'current_project' => $this->project->code,
+            'project_user_username' => $this->admin->username,
+            'current_project' => 'viettinmart-eco',
         ])->getJson('/viettinmart-eco/admin/media/list');
 
         $response->assertOk();
@@ -87,7 +88,8 @@ class MediaPickerTest extends TestCase
 
         $response = $this->withSession([
             'project_user_id' => $this->admin->id,
-            'current_project' => $this->project->code,
+            'project_user_username' => $this->admin->username,
+            'current_project' => 'viettinmart-eco',
         ])->postJson('/viettinmart-eco/admin/media/upload', [
             'files' => [$file],
             'path' => '',
@@ -112,7 +114,8 @@ class MediaPickerTest extends TestCase
     {
         $response = $this->withSession([
             'project_user_id' => $this->admin->id,
-            'current_project' => $this->project->code,
+            'project_user_username' => $this->admin->username,
+            'current_project' => 'viettinmart-eco',
         ])->get('/viettinmart-eco/admin/settings/group/appearance');
 
         $response->assertOk();
