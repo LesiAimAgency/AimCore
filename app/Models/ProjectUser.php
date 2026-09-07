@@ -87,6 +87,41 @@ class ProjectUser extends Authenticatable
         return isset($this->level) && $this->level === 1;
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin'
+            || $this->role === 'superadmin'
+            || $this->role === 'super_admin'
+            || $this->role === 'cms'
+            || (isset($this->level) && in_array($this->level, [0, 1, 2]))
+            || $this->isSuperAdmin()
+            || $this->isAdministrator();
+    }
+
+    public function isManager(): bool
+    {
+        return $this->role === 'manager' || (isset($this->level) && $this->level === 2);
+    }
+
+    public function isStoreManager(): bool
+    {
+        return $this->role === 'store_manager';
+    }
+
+    public function isWebAdmin(): bool
+    {
+        return $this->role === 'web_admin' || $this->role === 'cms';
+    }
+
+    public function canAccess(string $feature): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        return $this->hasPermission($feature);
+    }
+
     public function canAccessSuperAdmin()
     {
         return isset($this->level) && in_array($this->level, [0, 1]);

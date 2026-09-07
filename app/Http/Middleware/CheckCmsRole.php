@@ -39,6 +39,7 @@ class CheckCmsRole
 
             view()->share('authUser', $user);
             $request->attributes->set('auth_user', $user);
+            Auth::setUser($user);
 
             if (isset($user->level) && in_array($user->level, [0, 1, 2])) {
                 return $next($request);
@@ -71,6 +72,7 @@ class CheckCmsRole
             // Share user with views
             view()->share('authUser', $user);
             $request->attributes->set('auth_user', $user);
+            Auth::setUser($user);
 
             // Enforce Tenant Isolation: Ensure user belongs to this project
             $project = $request->attributes->get('project') ?? Project::where('code', $projectCode)->first();
