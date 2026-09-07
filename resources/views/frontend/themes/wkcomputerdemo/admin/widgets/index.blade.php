@@ -307,7 +307,7 @@
                                         <button class="act-btn" title="Nhân bản" onclick="cloneWidget({{ $widget->id }})">
                                             <i class="fa-regular fa-clone"></i>
                                         </button>
-                                        <form action="{{ route('admin.widgets.destroy', $widget) }}" method="POST" class="inline">
+                                        <form action="{{ locale_route('admin.widgets.destroy', $widget) }}" method="POST" class="inline">
                                             @csrf @method('DELETE')
                                             <button type="submit" class="act-btn del"
                                                 onclick="return confirm('Xóa Widget này?')" title="Xóa">>
@@ -377,8 +377,8 @@
 
     <script>
         // Global Config for External JS
-        window.REORDER_URL = '{{ route('admin.widgets.reorder') }}';
-        window.STORE_URL = '{{ route('admin.widgets.store') }}';
+        window.REORDER_URL = '{{ locale_route('admin.widgets.reorder') }}';
+        window.STORE_URL = '{{ locale_route('admin.widgets.store') }}';
         window.TOGGLE_URL = '{{ url("/admin/widgets/{id}/toggle") }}';
         window.DATA_URL = '{{ url("/admin/widgets/{id}/data") }}';
         window.TRANSLATIONS_URL = '{{ url("/admin/widgets/{id}/translations") }}';
