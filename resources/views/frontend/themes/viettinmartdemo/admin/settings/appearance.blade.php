@@ -56,9 +56,18 @@ html:not(.alpine-loaded):not([data-admin-tab]) .ap-nav-btn[data-tab-target="desi
 
 @section('content')
     @php
+        foreach ($settingsMap as $k => $v) {
+            if (is_array($v) && array_key_exists('value', $v)) {
+                $settingsMap[$k] = $v['value'] ?? '';
+            }
+        }
+
         if (! function_exists('_murl')) {
-            function _murl(?string $p, string $d = ''): string {
-                if (!$p) return $d ? asset($d) : '';
+            function _murl($p, string $d = ''): string {
+                if (is_array($p)) {
+                    $p = $p['value'] ?? '';
+                }
+                if (!$p || !is_string($p)) return $d ? asset($d) : '';
                 if (str_contains($p, '://')) return $p;
                 if (str_starts_with($p, 'media/')) return \Illuminate\Support\Facades\Storage::disk('public')->url($p);
                 return asset($p);
@@ -288,7 +297,7 @@ html:not(.alpine-loaded):not([data-admin-tab]) .ap-nav-btn[data-tab-target="desi
                                         website</label>
                                     <div class="flex gap-2 mb-4">
                                         <input type="text" name="settings[site_logo]" id="site_logo"
-                                            value="{{ $settingsMap['site_logo'] ?? '' }}"
+                                            value="{{ is_array($settingsMap['site_logo'] ?? '') ? ($settingsMap['site_logo']['value'] ?? '') : ($settingsMap['site_logo'] ?? '') }}"
                                             class="form-input rounded-2xl border-slate-100 py-4 text-xs font-mono"
                                             placeholder="">
                                         <button type="button" onclick="openMediaPicker('site_logo')"
@@ -297,7 +306,7 @@ html:not(.alpine-loaded):not([data-admin-tab]) .ap-nav-btn[data-tab-target="desi
                                     </div>
                                     <div class="p-4 bg-slate-50 rounded-3xl border border-slate-100 inline-block">
                                         @php
-                                            $logoVal = $settingsMap['site_logo'] ?? '';
+                                            $logoVal = is_array($settingsMap['site_logo'] ?? '') ? ($settingsMap['site_logo']['value'] ?? '') : ($settingsMap['site_logo'] ?? '');
                                             $logoSrc = $logoVal ? (str_starts_with($logoVal, 'media/') ? \Illuminate\Support\Facades\Storage::disk('public')->url($logoVal) : (str_contains($logoVal, '://') ? $logoVal : asset($logoVal))) : asset('logo/logo-default.png');
                                         @endphp
                                         <img src="{{ $logoSrc }}" class="max-h-20 object-contain">
@@ -893,7 +902,7 @@ html:not(.alpine-loaded):not([data-admin-tab]) .ap-nav-btn[data-tab-target="desi
                                     <div style="display:flex;flex-direction:column;gap:8px;">
                                         <label class="form-label">Logo chính (Header)</label>
                                         <div style="display:flex;gap:6px;">
-                                            <input type="text" id="logo_main" value="{{ $settingsMap['site_logo'] ?? '' }}" class="form-input" placeholder="URL logo..." readonly>
+                                            <input type="text" id="logo_main" value="{{ is_array($settingsMap['site_logo'] ?? '') ? ($settingsMap['site_logo']['value'] ?? '') : ($settingsMap['site_logo'] ?? '') }}" class="form-input" placeholder="URL logo..." readonly>
                                             <button type="button" onclick="openMediaPicker('site_logo'); document.getElementById('logo_main').value = document.getElementById('site_logo').value;" class="btn btn-secondary btn-sm" style="flex-shrink:0;"><i class="fa-solid fa-images"></i></button>
                                         </div>
                                         <div style="padding:10px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;min-height:72px;">
@@ -903,7 +912,7 @@ html:not(.alpine-loaded):not([data-admin-tab]) .ap-nav-btn[data-tab-target="desi
                                     <div style="display:flex;flex-direction:column;gap:8px;">
                                         <label class="form-label">Favicon (32x32px)</label>
                                         <div style="display:flex;gap:6px;">
-                                            <input type="text" id="logo_favicon_preview" value="{{ $settingsMap['site_favicon'] ?? '' }}" class="form-input" placeholder="URL favicon..." readonly>
+                                            <input type="text" id="logo_favicon_preview" value="{{ is_array($settingsMap['site_favicon'] ?? '') ? ($settingsMap['site_favicon']['value'] ?? '') : ($settingsMap['site_favicon'] ?? '') }}" class="form-input" placeholder="URL favicon..." readonly>
                                             <button type="button" onclick="openMediaPicker('header_favicon'); document.getElementById('logo_favicon_preview').value = document.getElementById('header_favicon').value;" class="btn btn-secondary btn-sm" style="flex-shrink:0;"><i class="fa-solid fa-images"></i></button>
                                         </div>
                                         <div style="padding:10px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;min-height:72px;">

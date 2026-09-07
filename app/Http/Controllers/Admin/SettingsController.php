@@ -520,21 +520,30 @@ class SettingsController extends Controller
             })
             ->get();
 
+        $resolveValue = function ($s) {
+            $val = $s->value;
+            if ($val === null && ! empty($s->payload)) {
+                if (is_array($s->payload)) {
+                    $val = array_key_exists('value', $s->payload) ? $s->payload['value'] : $s->payload;
+                } else {
+                    $val = $s->payload;
+                }
+            }
+
+            if (is_array($val) && array_key_exists('value', $val)) {
+                $val = $val['value'];
+            }
+
+            return $val;
+        };
+
         $map = [];
         foreach ($globalSettings as $s) {
-            $val = $s->value;
-            if (is_null($val) && ! empty($s->payload)) {
-                $val = is_array($s->payload) ? ($s->payload['value'] ?? $s->payload) : $s->payload;
-            }
-            $map[$s->key] = $val;
+            $map[$s->key] = $resolveValue($s);
         }
 
         foreach ($overrideSettings as $s) {
-            $val = $s->value;
-            if (is_null($val) && ! empty($s->payload)) {
-                $val = is_array($s->payload) ? ($s->payload['value'] ?? $s->payload) : $s->payload;
-            }
-            $map[$s->key] = $val;
+            $map[$s->key] = $resolveValue($s);
         }
 
         return $map;
