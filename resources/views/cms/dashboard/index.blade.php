@@ -30,50 +30,6 @@
     $api = $st['api_integrations'] ?? ['ai' => false, 'vietqr' => false, 'ghn' => false, 'telegram' => false];
 @endphp
 
-<!-- Header & Integration Status Bar -->
-<div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-    <div>
-        <div class="flex items-center gap-3">
-            <h1 class="text-xl font-black text-gray-900 tracking-tight">
-                {{ $currentProject->name ?? 'Hệ thống Quản trị Bán hàng' }}
-            </h1>
-            @if($currentProject)
-                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
-                    {{ strtoupper($currentProject->code) }}
-                </span>
-            @endif
-        </div>
-        <p class="text-xs text-gray-500 mt-1">
-            Chào mừng trở lại! Cập nhật tiến độ đơn hàng và chỉ số kinh doanh thời gian thực.
-        </p>
-    </div>
-
-    <!-- API Hub Status Indicators -->
-    <div class="flex flex-wrap items-center gap-2">
-        <span class="text-xs font-bold text-gray-400 uppercase tracking-wider mr-1">Tích hợp Hub:</span>
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold {{ $api['vietqr'] ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-gray-50 text-gray-400 border border-gray-200' }}" title="Cấu hình từ SuperAdmin API Hub">
-            <i class="fa-solid fa-qrcode text-xs"></i> VietQR
-            @if($api['vietqr'])<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>@endif
-        </span>
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold {{ $api['ai'] ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-gray-50 text-gray-400 border border-gray-200' }}" title="OpenAI / Gemini đã cấu hình">
-            <i class="fa-solid fa-wand-magic-sparkles text-xs"></i> AI Bot
-            @if($api['ai'])<span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>@endif
-        </span>
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold {{ $api['ghn'] ? 'bg-orange-50 text-orange-700 border border-orange-200' : 'bg-gray-50 text-gray-400 border border-gray-200' }}" title="Giao hàng nhanh">
-            <i class="fa-solid fa-truck text-xs"></i> Vận chuyển
-            @if($api['ghn'])<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>@endif
-        </span>
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold {{ $api['telegram'] ? 'bg-sky-50 text-sky-700 border border-sky-200' : 'bg-gray-50 text-gray-400 border border-gray-200' }}" title="Telegram Báo đơn hàng">
-            <i class="fa-brands fa-telegram text-xs"></i> Báo đơn
-            @if($api['telegram'])<span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>@endif
-        </span>
-        @if($currentProject && auth()->check() && auth()->user()->isSuperAdmin())
-        <a href="{{ route('superadmin.projects.config', $currentProject) }}#api" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold ml-1 hover:underline">
-            <i class="fa-solid fa-gear"></i> Hub Config
-        </a>
-        @endif
-    </div>
-</div>
 
 <!-- 5-Stage Order Pipeline Hub (From public_html) -->
 <div class="mb-8">
