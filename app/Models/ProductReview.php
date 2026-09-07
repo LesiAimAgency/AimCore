@@ -14,7 +14,7 @@ class ProductReview extends Model
 
     protected $fillable = [
         'product_id', 'reviewer_name', 'reviewer_email', 'rating',
-        'comment', 'status', 'is_verified', 'tenant_id',
+        'comment', 'status', 'is_verified', 'tenant_id', 'project_id',
     ];
 
     protected $casts = [

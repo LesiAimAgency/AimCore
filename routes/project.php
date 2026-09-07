@@ -101,12 +101,12 @@ Route::get('/{projectCode}/san-pham', function (Request $request, $projectCode) 
 
 // Dynamic Pages (must be last to avoid conflicts)
 Route::get('/{projectCode}/{slug}', [PageController::class, 'show'])
-    ->where('slug', '^(?!admin|login|logout|cart|checkout|products|product|blog|contact|api|san-pham).*$')
+    ->where('slug', '^(?!(?:admin|login|logout|cart|checkout|products|product|blog|contact|api|san-pham)$)[^/]+$')
     ->middleware([
         ProjectSubdomainMiddleware::class,
         SetProjectDatabase::class,
     ])
-    ->name('project.shop.show');
+    ->name('project.shop.show.fallback');
 
 // ============================================
 // AUTH ROUTES (Đăng nhập CMS)

@@ -8,6 +8,7 @@ use App\Http\Controllers\Viettinmart\CheckoutController;
 use App\Http\Controllers\Viettinmart\ContactController;
 use App\Http\Controllers\Viettinmart\CustomerActionController;
 use App\Http\Controllers\Viettinmart\HomeController;
+use App\Http\Controllers\Viettinmart\ReviewController;
 use App\Http\Controllers\Viettinmart\ShopController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,8 +17,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/sitemap', [SitemapController::class, 'htmlIndex'])->name('sitemap_html');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap.index');
 Route::get('/cua-hang', [ShopController::class, 'index'])->name('shop.index');
-Route::get('/danh-muc/{slug}', [ShopController::class, 'index'])->name('shop.category.danh-muc');
-Route::get('/cua-hang/{slug}', [ShopController::class, 'index'])->name('shop.category.cua-hang');
+Route::get('/danh-muc/{slug}', [ShopController::class, 'category'])->name('shop.category');
+Route::get('/cua-hang/{slug}', [ShopController::class, 'category'])->name('shop.category.cua-hang');
 Route::get('/san-pham/{slug}', function (Request $request, $projectCode, $slug) {
     $target = $request->getSchemeAndHttpHost()."/{$projectCode}/{$slug}";
 
@@ -75,6 +76,7 @@ Route::post('/gio-hang/apply-coupon', [CartController::class, 'applyCoupon'])->n
 Route::post('/gio-hang/remove-coupon', [CartController::class, 'removeCoupon'])->name('cart.remove-coupon');
 Route::post('/lien-he', [ContactController::class, 'send'])->name('contact.send');
 Route::post('/newsletter/subscribe', fn () => response()->json(['success' => true, 'message' => 'Đăng ký nhận tin thành công!']))->name('newsletter.subscribe');
+Route::post('/review/submit', [ReviewController::class, 'store'])->name('review.submit');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
@@ -86,3 +88,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/password/reset', function () {
     return 'Reset Password Page';
 })->name('password.request');
+
+// ─── DYNAMIC SLUG (LAST) ─────────────────────────────────────
+$slugBlacklist = 'admin|cua-hang|blog|gio-hang|cart|dat-hang|checkout|thanh-toan|lien-he|login|register|logout|profile|wishlist|so-sanh|so-sanh-sp|compare|quick-view|san-pham|bai-viet|order-track|search-suggest|newsletter|sitemap|sitemap.xml|password|danh-muc';
+Route::get('{slug}', [ShopController::class, 'show'])
+    ->where('slug', '^(?!(?:'.$slugBlacklist.')$)[^/]+$')
+    ->name('shop.show');

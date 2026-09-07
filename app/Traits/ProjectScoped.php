@@ -8,9 +8,29 @@ use Illuminate\Support\Facades\Schema;
 trait ProjectScoped
 {
     /**
+     * Cache table column existence to avoid repeated information_schema queries.
+     *
+     * @var array<string, bool>
+     */
+    protected static array $projectColumnCache = [];
+
+    /**
+     * Check if a table has a specific column with caching.
+     */
+    protected static function projectTableHasColumn(string $table, string $column): bool
+    {
+        $key = $table.'.'.$column;
+        if (! isset(static::$projectColumnCache[$key])) {
+            static::$projectColumnCache[$key] = Schema::hasColumn($table, $column);
+        }
+
+        return static::$projectColumnCache[$key];
+    }
+
+    /**
      * Boot the trait
      */
-    protected static function bootProjectScoped()
+    protected static function bootProjectScoped(): void
     {
         static::addGlobalScope('project', function ($builder) {
             if (config('app.bypass_project_scope', false)) {
@@ -39,21 +59,26 @@ trait ProjectScoped
                 return;
             }
 
-            if ($tenantId && Schema::hasColumn($table, 'tenant_id')) {
-                $builder->where(function ($q) use ($table, $tenantId, $projectId) {
+            $hasTenantColumn = static::projectTableHasColumn($table, 'tenant_id');
+            $hasProjectColumn = static::projectTableHasColumn($table, 'project_id');
+
+            if ($tenantId && $hasTenantColumn) {
+                $builder->where(function ($q) use ($table, $tenantId, $projectId, $hasProjectColumn) {
                     $q->where($table.'.tenant_id', $tenantId);
-                    if ($tenantId == 3) {
-                        $q->orWhere($table.'.project_id', 10);
-                    }
-                    if ($projectId) {
-                        $q->orWhere($table.'.project_id', $projectId);
+                    if ($hasProjectColumn) {
+                        if ($tenantId == 3) {
+                            $q->orWhere($table.'.project_id', 10);
+                        }
+                        if ($projectId) {
+                            $q->orWhere($table.'.project_id', $projectId);
+                        }
                     }
                 });
 
                 return;
             }
 
-            if ($projectId) {
+            if ($projectId && $hasProjectColumn) {
                 if ($tenantId == 3) {
                     $builder->where(function ($q) use ($table, $projectId) {
                         $q->where($table.'.project_id', $projectId)

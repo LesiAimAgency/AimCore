@@ -934,9 +934,9 @@
 function submitReview(event) {
     const form = event.target;
     const ratingInput = form.querySelector('input[name="rating"]');
-    const rating = parseInt(ratingInput.value);
+    const rating = parseInt(ratingInput ? ratingInput.value : 0);
     
-    if (rating < 1) {
+    if (!rating || rating < 1) {
         Swal.fire({
             title: '{{ __("validation_required") }}!',
             text: '{{ __("review_rating_required") }}',
@@ -954,17 +954,34 @@ function submitReview(event) {
     btn.disabled = true;
     
     const formData = new FormData(form);
+    const token = form.querySelector('input[name="_token"]')?.value || document.querySelector('meta[name="csrf-token"]')?.content;
     
     fetch(form.action, {
         method: 'POST',
         body: formData,
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            ...(token ? { 'X-CSRF-TOKEN': token } : {})
         }
     })
-    .then(response => response.json())
+    .then(async response => {
+        if (response.status === 419) {
+            Swal.fire({
+                title: 'Phiên làm việc đã hết hạn!',
+                text: 'Trang sẽ tự động tải lại để làm mới phiên bảo mật.',
+                icon: 'warning',
+                confirmButtonText: 'Tải lại trang'
+            }).then(() => {
+                window.location.reload();
+            });
+            return null;
+        }
+        return response.json();
+    })
     .then(data => {
+        if (!data) return;
+        
         if (data.success) {
             Swal.fire({
                 title: '{{ __("review_thank_you") }}!',
@@ -976,7 +993,6 @@ function submitReview(event) {
             
             // Reset form and Alpine.js data
             form.reset();
-            // Reset Alpine.js rating data
             if (window.Alpine && form._x_dataStack) {
                 const alpineData = form._x_dataStack[0];
                 if (alpineData) {
@@ -984,6 +1000,10 @@ function submitReview(event) {
                     alpineData.hoverRating = 0;
                 }
             }
+            
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
         } else {
             let errorMessage = '{{ __("error_review_submit") }}';
             if (data.errors) {

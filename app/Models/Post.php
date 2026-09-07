@@ -82,7 +82,7 @@ class Post extends Model
     // Relationships
     public function author(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(User::class, 'author_id')->withoutGlobalScope('tenant');
     }
 
     // public function tags(): BelongsToMany
