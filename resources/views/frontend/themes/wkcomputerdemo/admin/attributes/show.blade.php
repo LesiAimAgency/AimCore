@@ -2,7 +2,7 @@
 @section('title', $attribute->name)
 @section('page-title', $attribute->name)
 @section('page-actions')
-    <a href="{{ route('admin.attributes.edit', $attribute) }}" class="btn btn-primary">
+    <a href="{{ locale_route('admin.attributes.edit', $attribute) }}" class="btn btn-primary">
         <i class="fa-solid fa-pencil"></i> Chỉnh sửa
     </a>
 @endsection
@@ -71,7 +71,7 @@
                         @endif
                     </td>
                     <td class="tbl-td text-right">
-                        <form action="{{ route('admin.attributes.values.destroy', [$attribute, $value]) }}" method="POST">
+                        <form action="{{ locale_route('admin.attributes.values.destroy', [$attribute, $value]) }}" method="POST">
                             @csrf @method('DELETE')
                             <button onclick="return confirm('Xóa giá trị này?')"
                                 class="act-btn del">
@@ -91,7 +91,7 @@
 {{-- Modal thêm giá trị --}}
 <div id="addValueModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4">
-        <form action="{{ route('admin.attributes.values.store', $attribute) }}" method="POST">
+        <form action="{{ locale_route('admin.attributes.values.store', $attribute) }}" method="POST">
             @csrf
             <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                 <h3 class="font-bold text-gray-800">Thêm giá trị mới</h3>

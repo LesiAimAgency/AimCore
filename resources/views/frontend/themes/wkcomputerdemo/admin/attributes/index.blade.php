@@ -3,7 +3,7 @@
 @section('page-title', 'Thuộc tính sản phẩm')
 @section('page-subtitle', 'Quản lý màu sắc, kích thước và các thuộc tính lọc')
 @section('page-actions')
-    <a href="{{ route('admin.attributes.create') }}" class="btn btn-primary">
+    <a href="{{ locale_route('admin.attributes.create') }}" class="btn btn-primary">
         <i class="fa-solid fa-plus"></i> Thêm thuộc tính
     </a>
 @endsection
@@ -53,13 +53,13 @@
                 </td>
                 <td class="tbl-td" style="text-align:right;">
                     <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;">
-                        <a href="{{ route('admin.attributes.show', $attribute) }}" class="act-btn view" title="Xem">
+                        <a href="{{ locale_route('admin.attributes.show', $attribute) }}" class="act-btn view" title="Xem">
                             <i class="fa-solid fa-eye"></i>
                         </a>
-                        <a href="{{ route('admin.attributes.edit', $attribute) }}" class="act-btn edit" title="Sửa">
+                        <a href="{{ locale_route('admin.attributes.edit', $attribute) }}" class="act-btn edit" title="Sửa">
                             <i class="fa-solid fa-pencil"></i>
                         </a>
-                        <form action="{{ route('admin.attributes.destroy', $attribute) }}" method="POST" style="display:inline;">
+                        <form action="{{ locale_route('admin.attributes.destroy', $attribute) }}" method="POST" style="display:inline;">
                             @csrf @method('DELETE')
                             <button onclick="return confirm('Xóa thuộc tính và tất cả giá trị?')" class="act-btn del" title="Xóa">
                                 <i class="fa-solid fa-trash"></i>
@@ -73,7 +73,7 @@
                 <td colspan="5" style="padding:60px 20px;text-align:center;color:#94a3b8;">
                     <i class="fa-solid fa-tags" style="font-size:40px;opacity:.3;display:block;margin-bottom:12px;"></i>
                     <p style="font-size:14px;font-weight:600;color:#64748b;">Chưa có thuộc tính nào</p>
-                    <a href="{{ route('admin.attributes.create') }}" style="font-size:13px;color:#2563eb;margin-top:6px;display:inline-block;">Tạo thuộc tính đầu tiên <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+                    <a href="{{ locale_route('admin.attributes.create') }}" style="font-size:13px;color:#2563eb;margin-top:6px;display:inline-block;">Tạo thuộc tính đầu tiên <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
                 </td>
             </tr>
             @endforelse

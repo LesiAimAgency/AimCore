@@ -6,7 +6,7 @@
     @section('preview-url', url('/' . $product->slug))
 @endif
 @section('page-actions')
-    <a href="{{ route('admin.products.index') }}" class="btn btn-secondary btn-sm">
+    <a href="{{ locale_route('admin.products.index') }}" class="btn btn-secondary btn-sm">
         <i class="fa-solid fa-xmark"></i> Hủy
     </a>
     <button type="submit" form="product-form" class="btn btn-primary btn-sm">
@@ -15,7 +15,7 @@
 @endsection
 
 @section('content')
-<form action="{{ route('admin.products.update', $product) }}" method="POST" id="product-form">
+<form action="{{ locale_route('admin.products.update', $product) }}" method="POST" id="product-form">
     @csrf @method('PUT')
     @include('admin.products._form')
 </form>

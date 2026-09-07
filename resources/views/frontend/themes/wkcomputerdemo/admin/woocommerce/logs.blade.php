@@ -68,7 +68,7 @@
                         </td>
                         <td>
                             <div class="btn-group btn-group-sm">
-                                <a href="{{ route('admin.woocommerce.log-detail', $log->id) }}" 
+                                <a href="{{ locale_route('admin.woocommerce.log-detail', $log->id) }}" 
                                    class="btn btn-info" title="Xem chi tiết">
                                     <i class="fas fa-eye"></i>
                                 </a>
@@ -99,7 +99,7 @@ $(document).on('click', '.delete-log', function() {
     const row = $(this).closest('tr');
     
     $.ajax({
-        url: '{{ route("admin.woocommerce.log-delete", ":id") }}'.replace(':id', logId),
+        url: '{{ locale_route("admin.woocommerce.log-delete", ":id") }}'.replace(':id', logId),
         method: 'DELETE',
         data: { _token: '{{ csrf_token() }}' },
         success: function(response) {

@@ -3,14 +3,14 @@
 @section('page-title', isset($campaign) ? __('common.edit') . ' chiến dịch: ' . $campaign->name : 'Tạo chiến dịch Flash Sale')
 @section('page-subtitle', 'Cấu hình thời gian, sản phẩm và mức giảm giá')
 @section('page-actions')
-    <a href="{{ route('admin.flash-sales.index') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.flash-sales.index') }}" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
 @endsection
 
 @section('content')
 <form method="POST"
-      action="{{ isset($campaign) ? route('admin.flash-sales.update', $campaign) : route('admin.flash-sales.store') }}">
+      action="{{ isset($campaign) ? locale_route('admin.flash-sales.update', $campaign) : locale_route('admin.flash-sales.store') }}">
     @csrf
     @if(isset($campaign)) @method('PUT') @endif
 

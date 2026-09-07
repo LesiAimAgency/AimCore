@@ -3,7 +3,7 @@
 @section('page-title', 'Ghi nhận hàng huỷ')
 @section('page-subtitle', 'Ghi nhận hàng hỏng, hết hạn hoặc bị huỷ')
 @section('page-actions')
-    <a href="{{ route('admin.inventory.damages') }}" class="btn btn-ghost btn-sm">
+    <a href="{{ locale_route('admin.inventory.damages') }}" class="btn btn-ghost btn-sm">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
 @endsection
@@ -18,7 +18,7 @@
     </div>
 @endif
 
-<form action="{{ route('admin.inventory.damages.store') }}" method="POST">
+<form action="{{ locale_route('admin.inventory.damages.store') }}" method="POST">
     @csrf
     <div class="flex flex-col lg:flex-row gap-5 items-start">
 
@@ -92,7 +92,7 @@
                     <button type="submit" class="btn btn-danger" style="width:100%;justify-content:center;">
                         <i class="fa-solid fa-triangle-exclamation"></i> Ghi nhận huỷ
                     </button>
-                    <a href="{{ route('admin.inventory.damages') }}"
+                    <a href="{{ locale_route('admin.inventory.damages') }}"
                        class="btn btn-ghost" style="width:100%;justify-content:center;">Huỷ</a>
                 </div>
             </div>

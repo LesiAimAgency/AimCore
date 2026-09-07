@@ -32,7 +32,7 @@
                     <p style="font-size:18px;font-weight:800;color:#b91c1c;">{{ $stats['unassigned_orders'] }}</p>
                 </div>
             </div>
-            <a href="{{ route('admin.orders.index') }}?filter=unassigned" style="font-size:9px;color:#ef4444;text-decoration:none;font-weight:700;margin-top:8px;display:block;">Gán đơn ngay <i class="fa-solid fa-arrow-right ml-1"></i></a>
+            <a href="{{ locale_route('admin.orders.index') }}?filter=unassigned" style="font-size:9px;color:#ef4444;text-decoration:none;font-weight:700;margin-top:8px;display:block;">Gán đơn ngay <i class="fa-solid fa-arrow-right ml-1"></i></a>
         </div>
         @else
         <div class="card" style="padding:15px;border-left:4px solid #f59e0b;">
@@ -169,7 +169,7 @@
                 <h3 style="font-size:11px;font-weight:800;color:#b91c1c;text-transform:uppercase;letter-spacing:.05em;">
                     <i class="fa-solid fa-triangle-exclamation mr-2"></i> Đơn hàng chưa có đại lý (Cần đổ đơn)
                 </h3>
-                <a href="{{ route('admin.orders.index') }}?filter=unassigned" style="font-size:10px;font-weight:700;color:#ef4444;">Xem tất cả</a>
+                <a href="{{ locale_route('admin.orders.index') }}?filter=unassigned" style="font-size:10px;font-weight:700;color:#ef4444;">Xem tất cả</a>
             </div>
             <div class="tbl-wrap">
                 <table style="width:100%;border-collapse:collapse;">
@@ -181,7 +181,7 @@
                             <td class="tbl-td"><span class="badge badge-gray">{{ $uo->shipping_province }}</span></td>
                             <td class="tbl-td" style="font-weight:700;text-align:right;">{{ number_format($uo->total, 0, ',', '.') }}₫</td>
                             <td class="tbl-td" style="text-align:center;">
-                                <a href="{{ route('admin.orders.edit', $uo) }}" class="btn btn-primary btn-sm" style="padding:3px 10px;font-size:10px;">
+                                <a href="{{ locale_route('admin.orders.edit', $uo) }}" class="btn btn-primary btn-sm" style="padding:3px 10px;font-size:10px;">
                                     Gán ngay
                                 </a>
                             </td>
@@ -275,7 +275,7 @@
                             <span style="font-size:9px;color:#94a3b8;text-transform:uppercase;">{{ $lp->sku ?? 'NO SKU' }}</span>
                         </div>
                     </div>
-                    <a href="{{ route('admin.products.edit', $lp) }}" class="act-btn edit">
+                    <a href="{{ locale_route('admin.products.edit', $lp) }}" class="act-btn edit">
                         <i class="fa-solid fa-pen" style="font-size:10px;"></i>
                     </a>
                 </div>
@@ -320,13 +320,13 @@
         <div class="card" style="padding:14px 16px;">
             <h3 style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">Thao tác quản trị</h3>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                <a href="{{ route('admin.products.create') }}" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:10px;border:1px solid #e2e8f0;text-decoration:none;transition:all .15s;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'">
+                <a href="{{ locale_route('admin.products.create') }}" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:10px;border:1px solid #e2e8f0;text-decoration:none;transition:all .15s;" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background='transparent'">
                     <div style="width:32px;height:32px;border-radius:8px;background:#dcfce7;color:#16a34a;display:flex;align-items:center;justify-content:center;">
                         <i class="fa-solid fa-plus" style="font-size:13px;"></i>
                     </div>
                     <span style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.05em;text-align:center;">Thêm sản phẩm</span>
                 </a>
-                <a href="{{ route('admin.orders.index') }}" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:10px;border:1px solid #e2e8f0;text-decoration:none;transition:all .15s;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='transparent'">
+                <a href="{{ locale_route('admin.orders.index') }}" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:10px;border:1px solid #e2e8f0;text-decoration:none;transition:all .15s;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='transparent'">
                     <div style="width:32px;height:32px;border-radius:8px;background:#dbeafe;color:#2563eb;display:flex;align-items:center;justify-content:center;">
                         <i class="fa-solid fa-cart-shopping" style="font-size:13px;"></i>
                     </div>
@@ -467,7 +467,7 @@
                             @php
                                 $searchKey = $buyer->customer_email ?: $buyer->customer_phone;
                             @endphp
-                            <a href="{{ route('admin.orders.index') }}?search={{ urlencode($searchKey) }}"
+                            <a href="{{ locale_route('admin.orders.index') }}?search={{ urlencode($searchKey) }}"
                                class="act-btn"
                                style="background:#fef9c3;color:#a16207;border-color:#fde68a;"
                                title="Xem tất cả đơn hàng">
@@ -476,7 +476,7 @@
 
                             {{-- Hồ sơ — chỉ thành viên đã đăng ký --}}
                             @if($buyer->user_id_link)
-                            <a href="{{ route('admin.users.show', $buyer->user_id_link) }}"
+                            <a href="{{ locale_route('admin.users.show', $buyer->user_id_link) }}"
                                class="act-btn"
                                style="background:#ede9fe;color:#7c3aed;border-color:#ddd6fe;"
                                title="Xem hồ sơ thành viên">

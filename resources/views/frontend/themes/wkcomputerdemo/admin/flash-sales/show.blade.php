@@ -3,10 +3,10 @@
 @section('page-title', $campaign->name)
 @section('page-subtitle', 'Chi tiết chiến dịch flash sale')
 @section('page-actions')
-    <a href="{{ route('admin.flash-sales.edit', $campaign) }}" class="btn btn-primary">
+    <a href="{{ locale_route('admin.flash-sales.edit', $campaign) }}" class="btn btn-primary">
         <i class="fa-solid fa-pen"></i> Chỉnh sửa
     </a>
-    <a href="{{ route('admin.flash-sales.index') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.flash-sales.index') }}" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
 @endsection
@@ -152,7 +152,7 @@
         </div>
         @endif
 
-        <form method="POST" action="{{ route('admin.flash-sales.destroy', $campaign) }}"
+        <form method="POST" action="{{ locale_route('admin.flash-sales.destroy', $campaign) }}"
               onsubmit="return confirm('Xóa chiến dịch này? Hành động không thể hoàn tác.')">
             @csrf @method('DELETE')
             <button type="submit" class="btn w-full" style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;">

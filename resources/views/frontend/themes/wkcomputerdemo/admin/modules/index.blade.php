@@ -54,7 +54,7 @@
                 <button
                     @click="
                         loading = true;
-                        fetch('{{ route('admin.modules.toggle', $module['key']) }}', {
+                        fetch('{{ locale_route('admin.modules.toggle', $module['key']) }}', {
                             method: 'POST',
                             headers: {'Content-Type':'application/json','X-CSRF-TOKEN':'{{ csrf_token() }}'},
                             body: JSON.stringify({ enabled: !enabled })
@@ -99,7 +99,7 @@
         <span class="card-title"><i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i> Cấu hình Maintenance Mode</span>
     </div>
     <div class="card-body">
-        <form method="POST" action="{{ route('admin.modules.save-maintenance') }}">
+        <form method="POST" action="{{ locale_route('admin.modules.save-maintenance') }}">
             @csrf
             <label class="form-label">Thông báo hiển thị cho khách</label>
             <textarea name="maintenance_message" class="form-textarea" rows="3"

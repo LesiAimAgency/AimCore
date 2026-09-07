@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="mb-5 flex items-center justify-between">
-    <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.orders.index') }}" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
     <form method="GET" class="flex gap-2">
@@ -43,13 +43,13 @@
                 </td>
                 <td class="tbl-td">
                     <div class="flex items-center justify-center gap-2">
-                        <form action="{{ route('admin.orders.restore', $order->id) }}" method="POST">
+                        <form action="{{ locale_route('admin.orders.restore', $order->id) }}" method="POST">
                             @csrf
                             <button type="submit" class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Khôi phục">
                                 <i class="fa-solid fa-rotate-left"></i>
                             </button>
                         </form>
-                        <form action="{{ route('admin.orders.force-delete', $order->id) }}" method="POST" onsubmit="return confirm('Xóa vĩnh viễn đơn hàng này? Thao tác này không thể hoàn tác!')">
+                        <form action="{{ locale_route('admin.orders.force-delete', $order->id) }}" method="POST" onsubmit="return confirm('Xóa vĩnh viễn đơn hàng này? Thao tác này không thể hoàn tác!')">
                             @csrf @method('DELETE')
                             <button type="submit" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Xóa vĩnh viễn">
                                 <i class="fa-solid fa-trash-can"></i>

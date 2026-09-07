@@ -4,10 +4,10 @@
 @section('page-subtitle', 'Quản lý toàn bộ sản phẩm trong cửa hàng')
 @section('page-actions')
     @if(auth()->user()->isAdmin() || auth()->user()->isManager() || auth()->user()->isWebAdmin())
-    <a href="{{ route('admin.products.trash') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.products.trash') }}" class="btn btn-secondary">
         <i class="fa-solid fa-trash-can"></i> Thùng rác
     </a>
-    <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
+    <a href="{{ locale_route('admin.products.create') }}" class="btn btn-primary">
         <i class="fa-solid fa-plus-circle"></i> Thêm sản phẩm mới
     </a>
     @endif
@@ -16,7 +16,7 @@
 @section('content')
     <div x-data="productTable()" class="relative">
         {{-- Bộ lọc --}}
-        <form method="GET" action="{{ route('admin.products.index') }}" class="card mb-4">
+        <form method="GET" action="{{ locale_route('admin.products.index') }}" class="card mb-4">
             <div class="p-4 flex flex-wrap gap-3 items-end">
                 {{-- Language Switcher — đặt ở filter bar vì liên quan đến xem tên SP theo ngôn ngữ --}}
                 @if($activeLanguages->count() > 1)
@@ -24,7 +24,7 @@
                     <label class="form-label">Ngôn ngữ</label>
                     <div class="flex gap-1 bg-slate-100 p-1 rounded-xl">
                         @foreach($activeLanguages as $lang)
-                            <a href="{{ route('admin.products.index', ['locale' => $lang->code] + request()->except('locale', 'page')) }}"
+                            <a href="{{ locale_route('admin.products.index', ['locale' => $lang->code] + request()->except('locale', 'page')) }}"
                                class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all {{ request('locale', $defaultLocale) === $lang->code ? 'bg-white shadow text-blue-600' : 'text-slate-500 hover:text-slate-700' }}">
                                 @if($lang->flag_emoji)<span>{{ $lang->flag_emoji }}</span>@endif
                                 {{ strtoupper($lang->code) }}
@@ -89,7 +89,7 @@
                             </div>
                             @if($countSelected > 0)
                                 <div class="p-3 border-t border-slate-50 text-center">
-                                    <a href="{{ route('admin.products.index', request()->except('category_ids')) }}" class="text-[9px] font-black uppercase text-rose-500 hover:text-rose-600 transition-colors">
+                                    <a href="{{ locale_route('admin.products.index', request()->except('category_ids')) }}" class="text-[9px] font-black uppercase text-rose-500 hover:text-rose-600 transition-colors">
                                         <i class="fa-solid fa-rotate-left mr-1"></i> Xóa bộ lọc mục
                                     </a>
                                 </div>
@@ -111,7 +111,7 @@
                         <i class="fa-solid fa-magnifying-glass"></i> Lọc
                     </button>
                     @if(request()->hasAny(['search', 'category_id', 'category_ids', 'status']))
-                        <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">
+                        <a href="{{ locale_route('admin.products.index') }}" class="btn btn-secondary">
                             <i class="fa-solid fa-rotate-left"></i>
                         </a>
                     @endif
@@ -126,11 +126,11 @@
                     @if(auth()->user()->isAdmin() || auth()->user()->isManager() || auth()->user()->isWebAdmin())
                     {{-- Quick Tabs --}}
                     <div class="flex bg-slate-100 p-1.5 rounded-2xl gap-1">
-                        <a href="{{ route('admin.products.index') }}"
+                        <a href="{{ locale_route('admin.products.index') }}"
                             class="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all {{ !request()->routeIs('*.trash') ? 'bg-white shadow-sm text-blue-600' : 'text-slate-400 hover:text-slate-600' }}">
                             Đang bán
                         </a>
-                        <a href="{{ route('admin.products.trash') }}"
+                        <a href="{{ locale_route('admin.products.trash') }}"
                             class="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all {{ request()->routeIs('*.trash') ? 'bg-white shadow-sm text-rose-600' : 'text-slate-400 hover:text-slate-600' }}">
                             Thùng rác ({{ $counts['trashed'] }})
                         </a>
@@ -182,7 +182,7 @@
                                             @endif
                                         </div>
                                         <div class="flex-1 min-w-0">
-                                            <a href="{{ route('admin.products.edit', $product) }}"
+                                            <a href="{{ locale_route('admin.products.edit', $product) }}"
                                                 class="text-[15px] font-black text-slate-900 group-hover:text-blue-600 transition-colors block leading-tight mb-2 line-clamp-2 uppercase tracking-tighter">{{ $product->translate('name', $locale) ?: $product->name }}</a>
 
                                             {{-- Indicator bản dịch --}}
@@ -209,7 +209,7 @@
                                                         const fieldMap = { 'isFeatured': 'is_featured', 'isFavorite': 'is_favorite', 'isBestSeller': 'is_best_seller' };
                                                         const fieldName = fieldMap[key];
                                                         try {
-                                                            await fetch('{{ route('admin.products.quick-update', $product->id) }}', {
+                                                            await fetch('{{ locale_route('admin.products.quick-update', $product->id) }}', {
                                                                 method: 'PATCH',
                                                                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
                                                                 body: JSON.stringify({ [fieldName]: this[key] })
@@ -330,11 +330,11 @@
                                                 title="Mã QR">
                                             <i class="fa-solid fa-qrcode"></i>
                                         </button>
-                                        <a href="{{ route('admin.products.edit', $product) }}" class="act-btn edit"
+                                        <a href="{{ locale_route('admin.products.edit', $product) }}" class="act-btn edit"
                                             title="Sửa">
                                             <i class="fa-solid fa-pen-nib"></i>
                                         </a>
-                                        <form action="{{ route('admin.products.destroy', $product) }}" method="POST">
+                                        <form action="{{ locale_route('admin.products.destroy', $product) }}" method="POST">
                                             @csrf @method('DELETE')
                                             <button type="submit" onclick="return confirm('Xóa vĩnh viễn?')"
                                                 class="act-btn del" title="Xóa">
@@ -593,7 +593,7 @@
                 },
 
                 async quickUpdate(id, data) {
-                    const url = `{{ route('admin.products.quick-update', ':id') }}`.replace(':id', id);
+                    const url = `{{ locale_route('admin.products.quick-update', ':id') }}`.replace(':id', id);
                     try {
                         const response = await fetch(url, {
                             method: 'PATCH',
@@ -633,7 +633,7 @@
                     if (!confirm(`Áp dụng thay đổi cho ${this.selected.length} sản phẩm?`)) return;
 
                     try {
-                        const response = await fetch('{{ route('admin.products.bulk-update') }}', {
+                        const response = await fetch('{{ locale_route('admin.products.bulk-update') }}', {
                             method: 'PATCH',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -683,7 +683,7 @@
                 async bulkDelete() {
                     if (!confirm(`Chuyển ${this.selected.length} sản phẩm đã chọn vào thùng rác?`)) return;
                     try {
-                        const res = await fetch('{{ route('admin.products.bulk-delete') }}', {
+                        const res = await fetch('{{ locale_route('admin.products.bulk-delete') }}', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

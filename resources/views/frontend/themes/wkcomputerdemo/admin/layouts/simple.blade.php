@@ -25,13 +25,13 @@
             </div>
 
             <nav>
-                <a href="{{ route('admin.dashboard') }}" class="simple-nav-link"><i class="fas fa-gauge"></i> Dashboard</a>
-                <a href="{{ route('admin.widgets.index') }}" class="simple-nav-link"><i class="fas fa-layer-group"></i> Workspace</a>
-                <a href="{{ route('admin.contact-submissions.index') }}" class="simple-nav-link"><i class="fas fa-inbox"></i> Leads</a>
+                <a href="{{ locale_route('admin.dashboard') }}" class="simple-nav-link"><i class="fas fa-gauge"></i> Dashboard</a>
+                <a href="{{ locale_route('admin.widgets.index') }}" class="simple-nav-link"><i class="fas fa-layer-group"></i> Workspace</a>
+                <a href="{{ locale_route('admin.contact-submissions.index') }}" class="simple-nav-link"><i class="fas fa-inbox"></i> Leads</a>
             </nav>
 
             <div style="position:absolute;bottom:20px;">
-                <form action="{{ route('admin.logout') }}" method="POST" style="margin:0;">
+                <form action="{{ locale_route('admin.logout') }}" method="POST" style="margin:0;">
                     @csrf
                     <button type="submit" style="background:#dc2626;color:#fff;border:0;padding:8px 16px;border-radius:6px;cursor:pointer;">
                         <i class="fas fa-sign-out-alt"></i> Logout

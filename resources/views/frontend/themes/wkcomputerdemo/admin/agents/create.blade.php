@@ -3,13 +3,13 @@
 @section('page-title', 'Thêm đại lý mới')
 
 @section('page-actions')
-<a href="{{ route('admin.agents.index') }}" class="btn btn-secondary btn-sm">
+<a href="{{ locale_route('admin.agents.index') }}" class="btn btn-secondary btn-sm">
     <i class="fa-solid fa-arrow-left"></i> Quay lại
 </a>
 @endsection
 
 @section('content')
-<form action="{{ route('admin.agents.store') }}" method="POST">
+<form action="{{ locale_route('admin.agents.store') }}" method="POST">
     @csrf
     <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;">
 

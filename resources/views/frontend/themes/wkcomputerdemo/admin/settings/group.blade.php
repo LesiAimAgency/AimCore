@@ -356,7 +356,7 @@
                             btn.innerText = 'Đang gửi...';
                             resultDiv.style.display = 'none';
                             
-                            fetch('{{ route("admin.settings.test-mail") }}', {
+                            fetch('{{ locale_route("admin.settings.test-mail") }}', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',

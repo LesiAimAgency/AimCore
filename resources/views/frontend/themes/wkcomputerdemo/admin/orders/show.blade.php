@@ -5,13 +5,13 @@
 
 @section('page-actions')
 <div style="display:flex; gap:8px;">
-    <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.orders.index') }}" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
-    <a href="{{ route('admin.orders.edit', $order) }}" class="btn btn-warning" style="background:#f59e0b; color:#fff; border:none; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);">
+    <a href="{{ locale_route('admin.orders.edit', $order) }}" class="btn btn-warning" style="background:#f59e0b; color:#fff; border:none; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);">
         <i class="fa-solid fa-pen"></i> Sửa thông tin
     </a>
-    <a href="{{ route('admin.orders.print', $order) }}" target="_blank" class="btn btn-primary" style="box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
+    <a href="{{ locale_route('admin.orders.print', $order) }}" target="_blank" class="btn btn-primary" style="box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
         <i class="fa-solid fa-print"></i> In đơn hàng
     </a>
 </div>
@@ -145,7 +145,7 @@
                 <span class="card-title" style="font-size:14px; font-weight:800; color:#1e293b; text-transform:uppercase; letter-spacing:0.05em;">Xử lý đơn hàng</span>
             </div>
             <div class="card-body" style="padding:20px;">
-                <form action="{{ route('admin.orders.update-status', $order) }}" method="POST" style="display:flex; flex-direction:column; gap:12px;">
+                <form action="{{ locale_route('admin.orders.update-status', $order) }}" method="POST" style="display:flex; flex-direction:column; gap:12px;">
                     @csrf @method('PUT')
                     <div>
                         <label class="form-label" style="font-size:11px; font-weight:700; color:#94a3b8;">TRẠNG THÁI HIỆN TẠI</label>
@@ -166,7 +166,7 @@
 
                 <div style="height:1px; background:#f1f5f9; margin:20px 0;"></div>
 
-                <form action="{{ route('admin.orders.update-payment', $order) }}" method="POST" style="display:flex; flex-direction:column; gap:12px;">
+                <form action="{{ locale_route('admin.orders.update-payment', $order) }}" method="POST" style="display:flex; flex-direction:column; gap:12px;">
                     @csrf @method('PUT')
                     <div>
                         <label class="form-label" style="font-size:11px; font-weight:700; color:#94a3b8;">THANH TOÁN ({{ strtoupper($order->payment_method) }})</label>
@@ -189,7 +189,7 @@
             <div class="card-header" style="padding:16px 20px; border-bottom:1px solid #f1f5f9; display:flex; align-items:center; justify-content:space-between;">
                 <span class="card-title" style="font-size:14px; font-weight:800; color:#1e293b; text-transform:uppercase; letter-spacing:0.05em;">Đại lý phụ trách</span>
                 @if($order->agent)
-                    <a href="{{ route('admin.agents.show', $order->agent) }}" class="btn btn-ghost btn-sm" style="width:28px; height:28px; padding:0; border-radius:8px;">
+                    <a href="{{ locale_route('admin.agents.show', $order->agent) }}" class="btn btn-ghost btn-sm" style="width:28px; height:28px; padding:0; border-radius:8px;">
                         <i class="fa-solid fa-eye" style="font-size:12px;"></i>
                     </a>
                 @endif
@@ -215,7 +215,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.orders.update-agent', $order) }}" method="POST">
+                <form action="{{ locale_route('admin.orders.update-agent', $order) }}" method="POST">
                     @csrf @method('PUT')
                     <div style="display:flex; flex-direction:column; gap:10px;">
                         <select name="agent_id" class="form-select select2-agent" style="width:100%;">
@@ -278,7 +278,7 @@
             <div class="card-header" style="padding:16px 20px; border-bottom:1px solid #f1f5f9;">
                 <span class="card-title" style="font-size:14px; font-weight:800; color:#1e293b; text-transform:uppercase; letter-spacing:0.05em;">Ghi chú nội bộ</span>
             </div>
-            <form action="{{ route('admin.orders.update-note', $order) }}" method="POST">
+            <form action="{{ locale_route('admin.orders.update-note', $order) }}" method="POST">
                 @csrf @method('PUT')
                 <div class="card-body" style="padding:20px;">
                     <textarea name="admin_note" rows="3" class="form-textarea" placeholder="Chỉ quản trị viên nhìn thấy..." style="border-radius:10px; font-size:13px; margin-bottom:12px;">{{ $order->admin_note }}</textarea>
@@ -288,7 +288,7 @@
         </div>
 
         {{-- Actions --}}
-        <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" onsubmit="return confirm('Xác nhận xóa đơn hàng này?')">
+        <form action="{{ locale_route('admin.orders.destroy', $order) }}" method="POST" onsubmit="return confirm('Xác nhận xóa đơn hàng này?')">
             @csrf @method('DELETE')
             <button type="submit" class="btn btn-danger w-full justify-center" style="height:46px; border-radius:12px; background:#fee2e2; color:#ef4444; border:none; font-weight:700;">
                 <i class="fa-solid fa-trash-can"></i> Xóa đơn hàng

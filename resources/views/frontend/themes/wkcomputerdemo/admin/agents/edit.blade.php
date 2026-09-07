@@ -5,17 +5,17 @@
 
 @section('page-actions')
 <div style="display:flex; gap:8px;">
-    <a href="{{ route('admin.agents.show', $agent) }}" class="btn btn-ghost">
+    <a href="{{ locale_route('admin.agents.show', $agent) }}" class="btn btn-ghost">
         <i class="fa-solid fa-eye"></i> Xem chi tiết
     </a>
-    <a href="{{ route('admin.agents.index') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.agents.index') }}" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
 </div>
 @endsection
 
 @section('content')
-<form action="{{ route('admin.agents.update', $agent) }}" method="POST">
+<form action="{{ locale_route('admin.agents.update', $agent) }}" method="POST">
     @csrf @method('PUT')
     <div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;">
 

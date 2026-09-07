@@ -3,10 +3,10 @@
 @section('page-title', 'Quản lý kho')
 @section('page-subtitle', 'Tổng quan tồn kho — Nhập / Bán / Huỷ')
 @section('page-actions')
-    <a href="{{ route('admin.inventory.receipts.create') }}" class="btn btn-primary">
+    <a href="{{ locale_route('admin.inventory.receipts.create') }}" class="btn btn-primary">
         <i class="fa-solid fa-plus"></i> Nhập hàng
     </a>
-    <a href="{{ route('admin.inventory.damages.create') }}" class="btn btn-danger">
+    <a href="{{ locale_route('admin.inventory.damages.create') }}" class="btn btn-danger">
         <i class="fa-solid fa-triangle-exclamation"></i> Ghi huỷ
     </a>
 @endsection
@@ -15,11 +15,11 @@
 
 {{-- Stats --}}
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    <a href="{{ route('admin.inventory.receipts') }}" class="stat-card">
+    <a href="{{ locale_route('admin.inventory.receipts') }}" class="stat-card">
         <div class="stat-value" style="color:#2563eb;">{{ $stats['total_receipts'] }}</div>
         <div class="stat-label"><i class="fa-solid fa-file-import"></i> Phiếu nhập</div>
     </a>
-    <a href="{{ route('admin.inventory.damages') }}" class="stat-card">
+    <a href="{{ locale_route('admin.inventory.damages') }}" class="stat-card">
         <div class="stat-value" style="color:#dc2626;">{{ $stats['total_damages'] }}</div>
         <div class="stat-label"><i class="fa-solid fa-ban"></i> Phiếu huỷ</div>
     </a>
@@ -43,7 +43,7 @@
                 <i class="fa-solid fa-search"></i> Tìm
             </button>
             @if($search)
-                <a href="{{ route('admin.inventory.index') }}" class="btn btn-ghost btn-sm">Xoá lọc</a>
+                <a href="{{ locale_route('admin.inventory.index') }}" class="btn btn-ghost btn-sm">Xoá lọc</a>
             @endif
         </form>
     </div>
@@ -53,7 +53,7 @@
 <div class="card">
     <div class="card-header">
         <span class="card-title"><i class="fa-solid fa-table"></i> Bảng tồn kho (Nhập - Bán - Huỷ)</span>
-        <a href="{{ route('admin.inventory.transactions') }}" style="font-size:12px;color:#2563eb;">
+        <a href="{{ locale_route('admin.inventory.transactions') }}" style="font-size:12px;color:#2563eb;">
             Xem lịch sử →
         </a>
     </div>
@@ -94,7 +94,7 @@
                     <td colspan="6" style="text-align:center;color:#94a3b8;padding:60px 0;">
                         <i class="fa-solid fa-box-open" style="font-size:2.5rem;display:block;margin-bottom:12px;opacity:.3;"></i>
                         Chưa có dữ liệu kho.
-                        <a href="{{ route('admin.inventory.receipts.create') }}" style="color:#2563eb;">Tạo phiếu nhập đầu tiên →</a>
+                        <a href="{{ locale_route('admin.inventory.receipts.create') }}" style="color:#2563eb;">Tạo phiếu nhập đầu tiên →</a>
                     </td>
                 </tr>
                 @endforelse

@@ -2,7 +2,7 @@
 @section('title', __('common.edit') . ' mã giảm giá')
 @section('page-title', __('common.edit') . ' mã giảm giá: ' . $coupon->code)
 @section('page-actions')
-    <a href="{{ route('admin.coupons.index') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.coupons.index') }}" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left mr-2"></i> Quay lại
     </a>
 @endsection
@@ -21,7 +21,7 @@
     </div>
 </div>
 @endif
-<form action="{{ route('admin.coupons.update', $coupon) }}" method="POST">
+<form action="{{ locale_route('admin.coupons.update', $coupon) }}" method="POST">
     @csrf @method('PUT')
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2 space-y-6">

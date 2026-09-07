@@ -3,7 +3,7 @@
 @section('page-title', __('common.edit') . ': ' . $attribute->name)
 
 @section('content')
-<form action="{{ route('admin.attributes.update', $attribute) }}" method="POST">
+<form action="{{ locale_route('admin.attributes.update', $attribute) }}" method="POST">
     @csrf @method('PUT')
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
         <div class="xl:col-span-2">
@@ -46,7 +46,7 @@
             <button type="submit" class="w-full btn-primary justify-center py-2.5">
                 <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
             </button>
-            <a href="{{ route('admin.attributes.show', $attribute) }}" class="w-full btn-secondary justify-center py-2.5">
+            <a href="{{ locale_route('admin.attributes.show', $attribute) }}" class="w-full btn-secondary justify-center py-2.5">
                 Hủy bỏ
             </a>
         </div>

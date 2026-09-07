@@ -4,7 +4,7 @@
 @section('page-subtitle', 'Quản lý các mẫu form có thể tái sử dụng')
 
 @section('page-actions')
-    <a href="{{ route('admin.form-templates.create') }}" class="btn btn-primary">
+    <a href="{{ locale_route('admin.form-templates.create') }}" class="btn btn-primary">
         <i class="fa-solid fa-plus"></i> Tạo Form Template
     </a>
 @endsection
@@ -45,19 +45,19 @@
                                 @endif
                             </td>
                             <td class="tbl-td">
-                                <a href="{{ route('admin.form-templates.submissions', $template) }}" class="text-blue-600 hover:underline">
+                                <a href="{{ locale_route('admin.form-templates.submissions', $template) }}" class="text-blue-600 hover:underline">
                                     {{ $template->submissions_count }} submissions
                                 </a>
                             </td>
                             <td class="tbl-td">{{ $template->created_at->format('d/m/Y H:i') }}</td>
                             <td class="tbl-td">
-                                <a href="{{ route('admin.form-templates.show', $template) }}" class="act-btn view">
+                                <a href="{{ locale_route('admin.form-templates.show', $template) }}" class="act-btn view">
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
-                                <a href="{{ route('admin.form-templates.edit', $template) }}" class="act-btn edit">
+                                <a href="{{ locale_route('admin.form-templates.edit', $template) }}" class="act-btn edit">
                                     <i class="fa-solid fa-pen"></i>
                                 </a>
-                                <form action="{{ route('admin.form-templates.destroy', $template) }}" method="POST" 
+                                <form action="{{ locale_route('admin.form-templates.destroy', $template) }}" method="POST" 
                                       style="display:inline;" onsubmit="return confirm('Xóa form template này?')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="act-btn del">
@@ -77,7 +77,7 @@
         @else
             <div class="text-center py-5 text-muted">
                 <i class="fa-solid fa-wpforms fa-3x mb-3 opacity-50"></i>
-                <p>Chưa có form template nào. <a href="{{ route('admin.form-templates.create') }}">Tạo form template đầu tiên</a></p>
+                <p>Chưa có form template nào. <a href="{{ locale_route('admin.form-templates.create') }}">Tạo form template đầu tiên</a></p>
             </div>
         @endif
     </div>

@@ -3,7 +3,7 @@
 @section('page-title', 'Bảng nhập hàng')
 @section('page-subtitle', 'Lịch sử các phiếu nhập kho')
 @section('page-actions')
-    <a href="{{ route('admin.inventory.receipts.create') }}" class="btn btn-primary">
+    <a href="{{ locale_route('admin.inventory.receipts.create') }}" class="btn btn-primary">
         <i class="fa-solid fa-plus"></i> Tạo phiếu nhập
     </a>
 @endsection
@@ -33,7 +33,7 @@
                 <tr>
                     <td>{{ $receipt->received_date->format('d/m/Y') }}</td>
                     <td>
-                        <a href="{{ route('admin.inventory.receipts.show', $receipt) }}"
+                        <a href="{{ locale_route('admin.inventory.receipts.show', $receipt) }}"
                            style="font-weight:700;color:#2563eb;text-decoration:none;">
                             {{ $receipt->receipt_number }}
                         </a>
@@ -46,11 +46,11 @@
                     <td style="color:#64748b;font-size:12.5px;">{{ Str::limit($receipt->notes, 40) }}</td>
                     <td style="text-align:center;">
                         <div style="display:flex;gap:6px;justify-content:center;">
-                            <a href="{{ route('admin.inventory.receipts.show', $receipt) }}"
+                            <a href="{{ locale_route('admin.inventory.receipts.show', $receipt) }}"
                                class="act-btn view" title="Xem chi tiết">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
-                            <form action="{{ route('admin.inventory.receipts.destroy', $receipt) }}"
+                            <form action="{{ locale_route('admin.inventory.receipts.destroy', $receipt) }}"
                                   method="POST"
                                   onsubmit="return confirm('Xoá phiếu này sẽ hoàn tác tồn kho. Tiếp tục?')">
                                 @csrf @method('DELETE')
@@ -66,7 +66,7 @@
                     <td colspan="7" style="text-align:center;color:#94a3b8;padding:60px 0;">
                         <i class="fa-solid fa-file-import" style="font-size:2.5rem;display:block;margin-bottom:12px;opacity:.3;"></i>
                         Chưa có phiếu nhập nào.
-                        <a href="{{ route('admin.inventory.receipts.create') }}" style="color:#2563eb;">Tạo ngay →</a>
+                        <a href="{{ locale_route('admin.inventory.receipts.create') }}" style="color:#2563eb;">Tạo ngay →</a>
                     </td>
                 </tr>
                 @endforelse

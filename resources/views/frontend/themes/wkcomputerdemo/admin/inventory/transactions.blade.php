@@ -3,7 +3,7 @@
 @section('page-title', 'Lịch sử giao dịch')
 @section('page-subtitle', 'Toàn bộ biến động kho hàng')
 @section('page-actions')
-    <a href="{{ route('admin.inventory.index') }}" class="btn btn-ghost btn-sm">
+    <a href="{{ locale_route('admin.inventory.index') }}" class="btn btn-ghost btn-sm">
         <i class="fa-solid fa-warehouse"></i> Tổng quan kho
     </a>
 @endsection
@@ -32,7 +32,7 @@
             <button type="submit" class="btn btn-ghost btn-sm">
                 <i class="fa-solid fa-filter"></i> Lọc
             </button>
-            <a href="{{ route('admin.inventory.transactions') }}" class="btn btn-ghost btn-sm">Xoá lọc</a>
+            <a href="{{ locale_route('admin.inventory.transactions') }}" class="btn btn-ghost btn-sm">Xoá lọc</a>
         </form>
     </div>
 </div>

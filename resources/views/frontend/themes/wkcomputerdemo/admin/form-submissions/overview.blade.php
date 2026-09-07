@@ -60,7 +60,7 @@
             </div>
             <div class="card-body">
                 <p style="color: #64748b; margin-bottom: 15px;">Xem và quản lý các tin nhắn từ form liên hệ</p>
-                <a href="{{ route('admin.contact-submissions.index') }}" class="btn btn-primary" style="width: 100%;">
+                <a href="{{ locale_route('admin.contact-submissions.index') }}" class="btn btn-primary" style="width: 100%;">
                     <i class="fa-solid fa-envelope"></i> Xem tin nhắn liên hệ
                 </a>
             </div>
@@ -72,7 +72,7 @@
             </div>
             <div class="card-body">
                 <p style="color: #64748b; margin-bottom: 15px;">Xem danh sách đăng ký newsletter và xuất dữ liệu</p>
-                <a href="{{ route('admin.newsletter-subscriptions.index') }}" class="btn btn-primary" style="width: 100%;">
+                <a href="{{ locale_route('admin.newsletter-subscriptions.index') }}" class="btn btn-primary" style="width: 100%;">
                     <i class="fa-solid fa-newspaper"></i> Xem đăng ký newsletter
                 </a>
             </div>
@@ -133,7 +133,7 @@
                                     </td>
                                     <td class="tbl-td">
                                         @if($submission['type'] === 'contact')
-                                            <a href="{{ route('admin.contact-submissions.show', $submission['id']) }}" 
+                                            <a href="{{ locale_route('admin.contact-submissions.show', $submission['id']) }}" 
                                                class="act-btn view" title="Xem chi tiết">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>

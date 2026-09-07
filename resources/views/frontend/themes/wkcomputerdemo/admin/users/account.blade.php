@@ -5,7 +5,7 @@
 
 @section('content')
 <div style="max-width:680px;">
-    <form action="{{ route('admin.account.update') }}" method="POST" id="account-form">
+    <form action="{{ locale_route('admin.account.update') }}" method="POST" id="account-form">
         @csrf @method('PUT')
 
         {{-- Thông tin --}}

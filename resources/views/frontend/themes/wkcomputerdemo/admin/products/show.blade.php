@@ -2,10 +2,10 @@
 @section('title', __('common.products') . ': ' . $product->name)
 @section('page-title', $product->name)
 @section('page-actions')
-    <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-primary">
+    <a href="{{ locale_route('admin.products.edit', $product) }}" class="btn btn-primary">
         <i class="fa-solid fa-pencil"></i> Chỉnh sửa
     </a>
-    <a href="{{ route('admin.products.index') }}" class="btn btn-secondary ml-2">
+    <a href="{{ locale_route('admin.products.index') }}" class="btn btn-secondary ml-2">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
 @endsection
@@ -80,10 +80,10 @@
         @endif
 
         <div class="flex gap-3">
-            <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-primary">
+            <a href="{{ locale_route('admin.products.edit', $product) }}" class="btn btn-primary">
                 <i class="fa-solid fa-pencil"></i> Chỉnh sửa
             </a>
-            <form action="{{ route('admin.products.destroy', $product) }}" method="POST">
+            <form action="{{ locale_route('admin.products.destroy', $product) }}" method="POST">
                 @csrf @method('DELETE')
                 <button onclick="return confirm('Xóa sản phẩm này vĩnh viễn?')" class="btn btn-danger">
                     <i class="fa-solid fa-trash"></i> Xóa sản phẩm

@@ -7,7 +7,7 @@
         {{-- Language Switcher --}}
         <div style="display:flex;gap:4px;background:#f8fafc;padding:4px;border-radius:8px;border:1px solid #e2e8f0;">
             @foreach($activeLanguages as $lang)
-                <a href="{{ route('admin.pages.edit', [$page, 'locale' => $lang->code, 'edits' => 1]) }}" 
+                <a href="{{ locale_route('admin.pages.edit', [$page, 'locale' => $lang->code, 'edits' => 1]) }}" 
                    class="btn btn-sm {{ $locale === $lang->code ? 'btn-primary' : 'btn-ghost' }}" 
                    style="font-size:11px;padding:6px 12px;min-width:auto;">
                     @if($lang->flag_emoji)
@@ -22,11 +22,11 @@
     </div>
 @endsection
 @section('content')
-<form action="{{ route('admin.pages.update', [$page, 'locale' => $locale, 'edits' => 1]) }}" method="POST">
+<form action="{{ locale_route('admin.pages.update', [$page, 'locale' => $locale, 'edits' => 1]) }}" method="POST">
     @csrf @method('PUT')
     @include('admin.pages._form', ['page' => $page])
     <div class="flex justify-end gap-3 mt-6">
-        <a href="{{ route('admin.pages.index', ['locale' => $locale]) }}" class="btn btn-secondary">
+        <a href="{{ locale_route('admin.pages.index', ['locale' => $locale]) }}" class="btn btn-secondary">
             <i class="fa-solid fa-arrow-left"></i> Hủy
         </a>
         <button type="submit" class="btn btn-primary">

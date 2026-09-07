@@ -4,7 +4,7 @@
 @section('page-subtitle', 'Quản lý popup modal với form thu thập thông tin')
 
 @section('page-actions')
-    <a href="{{ route('admin.modal-forms.create') }}" class="btn btn-primary">
+    <a href="{{ locale_route('admin.modal-forms.create') }}" class="btn btn-primary">
         <i class="fa-solid fa-plus"></i> Tạo Modal Form
     </a>
 @endsection
@@ -50,19 +50,19 @@
                                 @endif
                             </td>
                             <td class="tbl-td">
-                                <a href="{{ route('admin.modal-forms.submissions', $form) }}" class="text-blue-600 hover:underline">
+                                <a href="{{ locale_route('admin.modal-forms.submissions', $form) }}" class="text-blue-600 hover:underline">
                                     {{ $form->submissions_count }} submissions
                                 </a>
                             </td>
                             <td class="tbl-td">{{ $form->created_at->format('d/m/Y H:i') }}</td>
                             <td class="tbl-td">
-                                <a href="{{ route('admin.modal-forms.show', $form) }}" class="act-btn view">
+                                <a href="{{ locale_route('admin.modal-forms.show', $form) }}" class="act-btn view">
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
-                                <a href="{{ route('admin.modal-forms.edit', $form) }}" class="act-btn edit">
+                                <a href="{{ locale_route('admin.modal-forms.edit', $form) }}" class="act-btn edit">
                                     <i class="fa-solid fa-pen"></i>
                                 </a>
-                                <form action="{{ route('admin.modal-forms.destroy', $form) }}" method="POST" 
+                                <form action="{{ locale_route('admin.modal-forms.destroy', $form) }}" method="POST" 
                                       style="display:inline;" onsubmit="return confirm('Xóa modal form này?')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="act-btn del">
@@ -82,7 +82,7 @@
         @else
             <div class="text-center py-5 text-muted">
                 <i class="fa-solid fa-window-maximize fa-3x mb-3 opacity-50"></i>
-                <p>Chưa có modal form nào. <a href="{{ route('admin.modal-forms.create') }}">Tạo modal form đầu tiên</a></p>
+                <p>Chưa có modal form nào. <a href="{{ locale_route('admin.modal-forms.create') }}">Tạo modal form đầu tiên</a></p>
             </div>
         @endif
     </div>

@@ -5,11 +5,11 @@
 
 @section('page-actions')
     @if($submissions->count() > 0)
-        <a href="{{ route('admin.form-templates.export', $formTemplate) }}" class="btn btn-primary">
+        <a href="{{ locale_route('admin.form-templates.export', $formTemplate) }}" class="btn btn-primary">
             <i class="fa-solid fa-download"></i> Export CSV
         </a>
     @endif
-    <a href="{{ route('admin.form-templates.show', $formTemplate) }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.form-templates.show', $formTemplate) }}" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
 @endsection
@@ -59,7 +59,7 @@
                                 <button class="act-btn view" onclick="viewSubmission({{ $submission->id }})">
                                     <i class="fa-solid fa-eye"></i>
                                 </button>
-                                <form action="{{ route('admin.form-templates.destroy', $formTemplate) }}" method="POST" 
+                                <form action="{{ locale_route('admin.form-templates.destroy', $formTemplate) }}" method="POST" 
                                       style="display:inline;" onsubmit="return confirm('Xóa submission này?')">
                                     @csrf @method('DELETE')
                                     <input type="hidden" name="submission_id" value="{{ $submission->id }}">

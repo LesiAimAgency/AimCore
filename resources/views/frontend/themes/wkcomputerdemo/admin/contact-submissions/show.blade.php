@@ -4,7 +4,7 @@
 @section('page-title', 'Chi tiết tin nhắn liên hệ')
 
 @section('page-actions')
-    <a href="{{ route('admin.contact-submissions.index') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.contact-submissions.index') }}" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
 @endsection

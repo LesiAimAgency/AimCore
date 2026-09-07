@@ -5,7 +5,7 @@
 @section('page-subtitle', 'Quản lý danh sách các dự án')
 
 @section('page-actions')
-<a href="{{ route('admin.projects.create') }}" class="btn btn-primary btn-sm">
+<a href="{{ locale_route('admin.projects.create') }}" class="btn btn-primary btn-sm">
     <i class="fa-solid fa-plus"></i> Thêm mới
 </a>
 @endsection
@@ -26,7 +26,7 @@
         <i class="fa-solid fa-magnifying-glass"></i> Lọc
     </button>
     @if(request()->hasAny(['search', 'service_category_id']))
-        <a href="{{ route('admin.projects.index') }}" class="btn btn-secondary btn-sm">Xóa lọc</a>
+        <a href="{{ locale_route('admin.projects.index') }}" class="btn btn-secondary btn-sm">Xóa lọc</a>
     @endif
 </form>
 
@@ -83,10 +83,10 @@
                         <td class="tbl-td">{{ $project->sort_order }}</td>
                         <td class="tbl-td" style="text-align:right;">
                             <div style="display:flex;gap:6px;justify-content:flex-end;">
-                                <a href="{{ route('admin.projects.edit', $project) }}" class="act-btn edit" title="Sửa">
+                                <a href="{{ locale_route('admin.projects.edit', $project) }}" class="act-btn edit" title="Sửa">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
-                                <form action="{{ route('admin.projects.destroy', $project) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa dự án này?')">
+                                <form action="{{ locale_route('admin.projects.destroy', $project) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa dự án này?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="act-btn del" title="Xóa">

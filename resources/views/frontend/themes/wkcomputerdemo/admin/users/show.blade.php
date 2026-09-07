@@ -5,10 +5,10 @@
 
 @section('page-actions')
 <div style="display:flex; gap:8px;">
-    <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-primary">
+    <a href="{{ locale_route('admin.users.edit', $user) }}" class="btn btn-primary">
         <i class="fa-solid fa-pen"></i> Chỉnh sửa
     </a>
-    <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.users.index') }}" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
 </div>
@@ -69,7 +69,7 @@
                         <span class="badge badge-orange" style="font-size:9px; padding:2px 8px;">{{ $user->agent->type_name }}</span>
                     </div>
                 </div>
-                <a href="{{ route('admin.agents.show', $user->agent) }}" class="btn btn-secondary w-full justify-center" style="font-size:12px; height:36px; border-radius:8px;">
+                <a href="{{ locale_route('admin.agents.show', $user->agent) }}" class="btn btn-secondary w-full justify-center" style="font-size:12px; height:36px; border-radius:8px;">
                     <i class="fa-solid fa-eye"></i> Xem hồ sơ Đại lý
                 </a>
             </div>
@@ -162,7 +162,7 @@
                 </div>
 
                 {{-- Filter Bar --}}
-                <form method="GET" action="{{ route('admin.users.show', $user) }}" style="display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end;">
+                <form method="GET" action="{{ locale_route('admin.users.show', $user) }}" style="display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end;">
                     <div style="display:flex; flex-direction:column; gap:6px;">
                         <label style="font-size:10px; font-weight:700; color:#64748b; text-transform:uppercase;">Từ ngày</label>
                         <input type="date" name="date_from" value="{{ request('date_from') }}" class="form-input" style="width:140px; padding:6px 12px; border-radius:8px; height:36px; font-size:13px;">
@@ -193,7 +193,7 @@
                         <i class="fa-solid fa-filter"></i> Lọc
                     </button>
                     @if(request()->anyFilled(['date_from', 'date_to', 'status', 'payment_status']))
-                        <a href="{{ route('admin.users.show', $user) }}" class="btn btn-secondary btn-sm" style="height:36px; padding:0 12px; border-radius:8px; font-weight:700;">
+                        <a href="{{ locale_route('admin.users.show', $user) }}" class="btn btn-secondary btn-sm" style="height:36px; padding:0 12px; border-radius:8px; font-weight:700;">
                             <i class="fa-solid fa-times"></i> Xóa lọc
                         </a>
                     @endif
@@ -226,7 +226,7 @@
                                 @foreach($orders as $order)
                                 <tr class="tbl-tr">
                                     <td class="tbl-td" style="padding:14px 20px;">
-                                        <a href="{{ route('admin.orders.show', $order) }}"
+                                        <a href="{{ locale_route('admin.orders.show', $order) }}"
                                            style="font-size:13px;font-weight:800;color:#2563eb;text-decoration:none;font-family:'Monaco', 'Consolas', monospace;">
                                             #{{ $order->order_number }}
                                         </a>
@@ -247,7 +247,7 @@
                                         <span class="badge badge-{{ $psc['color'] }}" style="font-size:11px; border-radius:20px; padding:3px 12px; font-weight:700;">{{ $psc['label'] }}</span>
                                     </td>
                                     <td class="tbl-td" style="text-align:center; padding:14px 20px;">
-                                        <a href="{{ route('admin.orders.show', $order) }}" class="act-btn view" style="width:32px; height:32px; border-radius:10px;">
+                                        <a href="{{ locale_route('admin.orders.show', $order) }}" class="act-btn view" style="width:32px; height:32px; border-radius:10px;">
                                             <i class="fa-solid fa-eye" style="font-size:12px;"></i>
                                         </a>
                                     </td>

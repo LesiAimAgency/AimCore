@@ -3,7 +3,7 @@
 @section('page-title', 'Thêm sản phẩm mới')
 @section('page-subtitle', 'Tạo sản phẩm mới cho cửa hàng')
 @section('page-actions')
-    <a href="{{ route('admin.products.index') }}" class="btn btn-secondary btn-sm">
+    <a href="{{ locale_route('admin.products.index') }}" class="btn btn-secondary btn-sm">
         <i class="fa-solid fa-xmark"></i> Hủy
     </a>
     <button type="submit" form="product-form" class="btn btn-primary btn-sm">
@@ -12,7 +12,7 @@
 @endsection
 
 @section('content')
-<form action="{{ route('admin.products.store') }}" method="POST" id="product-form">
+<form action="{{ locale_route('admin.products.store') }}" method="POST" id="product-form">
     @csrf
     @php $currentAttributes = []; @endphp
     @include('admin.products._form')

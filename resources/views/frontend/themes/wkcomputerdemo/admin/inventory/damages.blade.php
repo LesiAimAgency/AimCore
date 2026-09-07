@@ -3,7 +3,7 @@
 @section('page-title', 'Bảng hàng huỷ')
 @section('page-subtitle', 'Hàng hỏng, hết hạn, bị huỷ')
 @section('page-actions')
-    <a href="{{ route('admin.inventory.damages.create') }}" class="btn btn-danger">
+    <a href="{{ locale_route('admin.inventory.damages.create') }}" class="btn btn-danger">
         <i class="fa-solid fa-plus"></i> Ghi nhận huỷ
     </a>
 @endsection
@@ -40,7 +40,7 @@
                     <td><span class="badge badge-red">{{ $damage->reason ?: 'Hàng huỷ' }}</span></td>
                     <td>{{ $damage->creator?->name ?? '—' }}</td>
                     <td style="text-align:center;">
-                        <form action="{{ route('admin.inventory.damages.destroy', $damage) }}"
+                        <form action="{{ locale_route('admin.inventory.damages.destroy', $damage) }}"
                               method="POST"
                               onsubmit="return confirm('Xoá phiếu này sẽ hoàn tác tồn kho. Tiếp tục?')">
                             @csrf @method('DELETE')

@@ -17,7 +17,7 @@
                 <i class="fa-solid fa-shield-virus text-red-500"></i>
                 Anti-Spam Protection
             </h3>
-            <a href="{{ route('admin.spam.dashboard') }}" class="btn btn-sm btn-primary">
+            <a href="{{ locale_route('admin.spam.dashboard') }}" class="btn btn-sm btn-primary">
                 <i class="fa-solid fa-chart-line"></i> View Details
             </a>
         </div>
@@ -49,7 +49,7 @@
                 <i class="fa-solid fa-exclamation-triangle text-red-500"></i>
                 <div class="text-sm">
                     <strong>{{ $weekTotal }} spam attempts</strong> blocked this week.
-                    <a href="{{ route('admin.spam.dashboard') }}" class="text-blue-600 hover:underline">View details →</a>
+                    <a href="{{ locale_route('admin.spam.dashboard') }}" class="text-blue-600 hover:underline">View details →</a>
                 </div>
             </div>
         @else

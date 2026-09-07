@@ -27,7 +27,7 @@
         <i class="fa-solid fa-magnifying-glass"></i> Lọc
     </button>
     @if(request()->hasAny(['search','rating','status']))
-        <a href="{{ route('admin.reviews.index') }}" class="btn btn-secondary btn-sm">Xóa lọc</a>
+        <a href="{{ locale_route('admin.reviews.index') }}" class="btn btn-secondary btn-sm">Xóa lọc</a>
     @endif
 </form>
 
@@ -64,10 +64,10 @@
                 <td class="tbl-td">
                     @if($review->product)
                         <span class="badge badge-blue mb-1">Sản phẩm</span><br>
-                        <a href="{{ route('admin.products.edit', $review->product_id) }}" target="_blank" style="font-size:12.5px;color:#2563eb;text-decoration:none;">{{ $review->product->name }}</a>
+                        <a href="{{ locale_route('admin.products.edit', $review->product_id) }}" target="_blank" style="font-size:12.5px;color:#2563eb;text-decoration:none;">{{ $review->product->name }}</a>
                     @elseif($review->post)
                         <span class="badge badge-purple mb-1">Bài viết</span><br>
-                        <a href="{{ route('admin.posts.edit', $review->post_id) }}" target="_blank" style="font-size:12.5px;color:#7c3aed;text-decoration:none;">{{ $review->post->title }}</a>
+                        <a href="{{ locale_route('admin.posts.edit', $review->post_id) }}" target="_blank" style="font-size:12.5px;color:#7c3aed;text-decoration:none;">{{ $review->post->title }}</a>
                     @else
                         <span style="color:#94a3b8;font-size:12px;">Không xác định</span>
                     @endif
@@ -86,10 +86,10 @@
                 </td>
                 <td class="tbl-td">
                     <div style="display:flex;gap:4px;">
-                        <a href="{{ route('admin.reviews.edit', $review) }}" class="act-btn edit" title="Chi tiết">
+                        <a href="{{ locale_route('admin.reviews.edit', $review) }}" class="act-btn edit" title="Chi tiết">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </a>
-                        <form action="{{ route('admin.reviews.destroy', $review) }}" method="POST"
+                        <form action="{{ locale_route('admin.reviews.destroy', $review) }}" method="POST"
                               onsubmit="return confirm('Xóa đánh giá này?')">
                             @csrf @method('DELETE')
                             <button type="submit" class="act-btn del" title="Xóa">

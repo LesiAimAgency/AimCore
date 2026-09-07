@@ -7,7 +7,7 @@
         {{-- Language Switcher --}}
         <div style="display:flex;gap:4px;background:#f8fafc;padding:4px;border-radius:8px;border:1px solid #e2e8f0;">
             @foreach($activeLanguages as $lang)
-                <a href="{{ route('admin.posts.index', ['locale' => $lang->code]) }}" 
+                <a href="{{ locale_route('admin.posts.index', ['locale' => $lang->code]) }}" 
                    class="btn btn-sm {{ request('locale', $defaultLocale) === $lang->code ? 'btn-primary' : 'btn-ghost' }}" 
                    style="font-size:11px;padding:6px 12px;min-width:auto;">
                     @if($lang->flag_emoji)
@@ -22,10 +22,10 @@
         
         <div style="width:1px;height:24px;background:#e2e8f0;"></div>
         
-        <a href="{{ route('admin.posts.trash') }}" class="btn btn-secondary">
+        <a href="{{ locale_route('admin.posts.trash') }}" class="btn btn-secondary">
             <i class="fa-solid fa-trash-can"></i> Thùng rác
         </a>
-        <a href="{{ route('admin.posts.create') }}" class="btn btn-primary">
+        <a href="{{ locale_route('admin.posts.create') }}" class="btn btn-primary">
             <i class="fa-solid fa-plus"></i> Thêm bài viết
         </a>
     </div>
@@ -38,7 +38,7 @@
             {{-- Tabs Like Image --}}
             <div style="display:flex;align-items:center;gap:10px;">
                 {{-- Tab All --}}
-                <a href="{{ route('admin.posts.index') }}" title="Tất cả bài viết" style="position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;text-decoration:none;transition:all .2s;{{ !request()->routeIs('*.trash') ? 'background:#3b82f6;box-shadow:0 4px 12px rgba(59,130,246,0.3);' : 'background:#fff;border:1px solid #e2e8f0;' }}">
+                <a href="{{ locale_route('admin.posts.index') }}" title="Tất cả bài viết" style="position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;text-decoration:none;transition:all .2s;{{ !request()->routeIs('*.trash') ? 'background:#3b82f6;box-shadow:0 4px 12px rgba(59,130,246,0.3);' : 'background:#fff;border:1px solid #e2e8f0;' }}">
                     <i class="fa-solid fa-pencil" style="{{ !request()->routeIs('*.trash') ? 'color:#fff;' : 'color:#94a3b8;' }}font-size:14px;"></i>
                     <span style="position:absolute;-top:8px;-right:8px;background:#f1f5f9;color:#0f172a;font-size:10px;font-weight:800;padding:2px 6px;border-radius:10px;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.05);">{{ $counts['all'] }}</span>
                 </a>
@@ -46,7 +46,7 @@
                 <div style="width:2px;height:24px;background:#3b82f6;border-radius:2px;opacity:0.8;"></div>
 
                 {{-- Tab Trash --}}
-                <a href="{{ route('admin.posts.trash') }}" title="Thùng rác" style="position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;text-decoration:none;transition:all .2s;{{ request()->routeIs('*.trash') ? 'background:#3b82f6;box-shadow:0 4px 12px rgba(59,130,246,0.3);' : 'background:#fff;border:1px solid #e2e8f0;' }}">
+                <a href="{{ locale_route('admin.posts.trash') }}" title="Thùng rác" style="position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;text-decoration:none;transition:all .2s;{{ request()->routeIs('*.trash') ? 'background:#3b82f6;box-shadow:0 4px 12px rgba(59,130,246,0.3);' : 'background:#fff;border:1px solid #e2e8f0;' }}">
                     <i class="fa-solid fa-trash-can" style="{{ request()->routeIs('*.trash') ? 'color:#fff;' : 'color:#94a3b8;' }}font-size:14px;"></i>
                     <span style="position:absolute;-top:8px;-right:8px;background:#f1f5f9;color:#0f172a;font-size:10px;font-weight:800;padding:2px 6px;border-radius:10px;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.05);">{{ $counts['trashed'] }}</span>
                 </a>
@@ -102,7 +102,7 @@
                     },
                     async update(data) {
                         try {
-                            const response = await fetch('{{ route('admin.posts.quick-update', $post->id) }}', {
+                            const response = await fetch('{{ locale_route('admin.posts.quick-update', $post->id) }}', {
                                 method: 'PATCH',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -148,17 +148,17 @@
                 <td class="tbl-td" style="color:#94a3b8;font-size:12.5px;">{{ $post->created_at->format('d/m/Y') }}</td>
                 <td class="tbl-td" style="text-align:right;">
                     <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;">
-                        <form action="{{ route('admin.duplicate.item', ['type' => 'post', 'id' => $post->id]) }}" method="POST" style="display:inline;">
+                        <form action="{{ locale_route('admin.duplicate.item', ['type' => 'post', 'id' => $post->id]) }}" method="POST" style="display:inline;">
                             @csrf
                             <input type="hidden" name="locale" value="en">
                             <button type="submit" class="act-btn" title="Sao chép sang EN" style="background-color:#eff6ff;color:#3b82f6;border:0;width:34px;height:34px;border-radius:10px;justify-content:center;align-items:center;font-size:10px;font-weight:900;display:flex;cursor:pointer;">
                                 EN
                             </button>
                         </form>
-                        <a href="{{ route('admin.posts.edit', $post) }}" class="act-btn edit" title="Chỉnh sửa">
+                        <a href="{{ locale_route('admin.posts.edit', $post) }}" class="act-btn edit" title="Chỉnh sửa">
                             <i class="fa-solid fa-pencil"></i>
                         </a>
-                        <form action="{{ route('admin.posts.destroy', $post) }}" method="POST" style="display:inline;">
+                        <form action="{{ locale_route('admin.posts.destroy', $post) }}" method="POST" style="display:inline;">
                             @csrf @method('DELETE')
                             <button onclick="return confirm('Xóa bài viết này?')" class="act-btn del" title="Xóa">
                                 <i class="fa-solid fa-trash"></i>
@@ -172,7 +172,7 @@
                 <td colspan="5" style="padding:60px 20px;text-align:center;color:#94a3b8;">
                     <i class="fa-solid fa-newspaper" style="font-size:40px;opacity:.3;display:block;margin-bottom:12px;"></i>
                     <p style="font-size:14px;font-weight:600;color:#64748b;">Chưa có bài viết nào</p>
-                    <a href="{{ route('admin.posts.create') }}" style="font-size:13px;color:#2563eb;margin-top:6px;display:inline-block;">Viết bài đầu tiên <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+                    <a href="{{ locale_route('admin.posts.create') }}" style="font-size:13px;color:#2563eb;margin-top:6px;display:inline-block;">Viết bài đầu tiên <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
                 </td>
             </tr>
             @endforelse

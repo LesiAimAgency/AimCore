@@ -4,7 +4,7 @@
 @section('page-subtitle', 'Tạo popup modal mới với form thu thập thông tin')
 
 @section('content')
-<form action="{{ route('admin.modal-forms.store') }}" method="POST">
+<form action="{{ locale_route('admin.modal-forms.store') }}" method="POST">
     @csrf
     
     <div class="row g-4">
@@ -39,7 +39,7 @@
                                 <option value="{{ $template->id }}">{{ $template->name }} ({{ count($template->fields) }} fields)</option>
                             @endforeach
                         </select>
-                        <p class="form-hint">Chọn form template có sẵn hoặc <a href="{{ route('admin.form-templates.create') }}" target="_blank">tạo mới</a></p>
+                        <p class="form-hint">Chọn form template có sẵn hoặc <a href="{{ locale_route('admin.form-templates.create') }}" target="_blank">tạo mới</a></p>
                     </div>
                 </div>
             </div>
@@ -169,7 +169,7 @@
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="fa-solid fa-save"></i> Lưu Modal Form
                     </button>
-                    <a href="{{ route('admin.modal-forms.index') }}" class="btn btn-ghost w-100 mt-2">
+                    <a href="{{ locale_route('admin.modal-forms.index') }}" class="btn btn-ghost w-100 mt-2">
                         Hủy
                     </a>
                 </div>

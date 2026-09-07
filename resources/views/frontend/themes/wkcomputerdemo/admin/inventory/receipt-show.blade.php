@@ -3,7 +3,7 @@
 @section('page-title', 'Phiếu nhập ' . $receipt->receipt_number)
 @section('page-subtitle', 'Ngày ' . $receipt->received_date->format('d/m/Y') . ($receipt->supplier ? ' · ' . $receipt->supplier : ''))
 @section('page-actions')
-    <a href="{{ route('admin.inventory.receipts') }}" class="btn btn-ghost btn-sm">
+    <a href="{{ locale_route('admin.inventory.receipts') }}" class="btn btn-ghost btn-sm">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
 @endsection

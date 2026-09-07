@@ -4,7 +4,7 @@
 @section('page-subtitle', 'Tạo mẫu form có thể tái sử dụng')
 
 @section('content')
-<form action="{{ route('admin.form-templates.store') }}" method="POST">
+<form action="{{ locale_route('admin.form-templates.store') }}" method="POST">
     @csrf
     
     <div class="row g-4">
@@ -89,7 +89,7 @@
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="fa-solid fa-save"></i> Lưu Form Template
                     </button>
-                    <a href="{{ route('admin.form-templates.index') }}" class="btn btn-ghost w-100 mt-2">
+                    <a href="{{ locale_route('admin.form-templates.index') }}" class="btn btn-ghost w-100 mt-2">
                         Hủy
                     </a>
                 </div>

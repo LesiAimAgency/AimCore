@@ -367,7 +367,7 @@
         <strong>File CSV có sẵn trên server!</strong>
         <span>wc-product-export-14-7-2026 &nbsp;·&nbsp; ~7.6 MB &nbsp;·&nbsp; ~15.400 sản phẩm &nbsp;·&nbsp; Không cần upload lại</span>
     </div>
-    <form method="POST" action="{{ route('admin.woocommerce-csv.use-preloaded') }}">
+    <form method="POST" action="{{ locale_route('admin.woocommerce-csv.use-preloaded') }}">
         @csrf
         <button type="submit" class="btn-use">
             <i class="fas fa-bolt me-2"></i>Dùng file này ngay
@@ -412,7 +412,7 @@
             @else
 
             {{-- Drop zone --}}
-            <form id="upload-form" method="POST" action="{{ route('admin.woocommerce-csv.upload') }}" enctype="multipart/form-data">
+            <form id="upload-form" method="POST" action="{{ locale_route('admin.woocommerce-csv.upload') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="drop-zone" id="drop-zone">
                     <div class="dz-icon"><i class="fas fa-cloud-upload-alt"></i></div>
@@ -693,7 +693,7 @@ if (replaceInput) {
         const fd = new FormData();
         fd.append('_token', '{{ csrf_token() }}');
         fd.append('csv_file', this.files[0]);
-        fetch('{{ route("admin.woocommerce-csv.upload") }}', { method: 'POST', body: fd })
+        fetch('{{ locale_route("admin.woocommerce-csv.upload") }}', { method: 'POST', body: fd })
             .then(r => { if (r.redirected) location.href = r.url; else location.reload(); });
     });
 }
@@ -714,7 +714,7 @@ document.querySelectorAll('.batch-pill').forEach(pill => {
 ════════════════════════════════════════════ */
 document.getElementById('btn-clear-file')?.addEventListener('click', () => {
     if (!confirm('Xóa file CSV hiện tại?')) return;
-    fetch('{{ route("admin.woocommerce-csv.clear") }}', {
+    fetch('{{ locale_route("admin.woocommerce-csv.clear") }}', {
         method: 'POST',
         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' }
     }).then(() => location.reload());
@@ -766,7 +766,7 @@ async function runBatch() {
     logInfo('▶ Batch ' + curBatch + (totBatch ? '/' + totBatch : '') + ' — đang xử lý...');
 
     try {
-        const res = await fetch('{{ route("admin.woocommerce-csv.import") }}', {
+        const res = await fetch('{{ locale_route("admin.woocommerce-csv.import") }}', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',

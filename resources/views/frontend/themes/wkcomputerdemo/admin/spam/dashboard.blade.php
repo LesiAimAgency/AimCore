@@ -6,13 +6,13 @@
 
 @section('page-actions')
     <div class="flex gap-2">
-        <a href="{{ route('admin.spam.logs') }}" class="btn btn-secondary">
+        <a href="{{ locale_route('admin.spam.logs') }}" class="btn btn-secondary">
             <i class="fa-solid fa-file-lines"></i> View Logs
         </a>
-        <a href="{{ route('admin.spam.blocked-ips') }}" class="btn btn-secondary">
+        <a href="{{ locale_route('admin.spam.blocked-ips') }}" class="btn btn-secondary">
             <i class="fa-solid fa-ban"></i> Blocked IPs
         </a>
-        <a href="{{ route('admin.security.index') }}" class="btn btn-primary">
+        <a href="{{ locale_route('admin.security.index') }}" class="btn btn-primary">
             <i class="fa-solid fa-gear"></i> Settings
         </a>
     </div>
@@ -226,7 +226,7 @@ document.getElementById('manualBlockForm').addEventListener('submit', function(e
     const duration = document.getElementById('manualBlockDuration').value;
     const reason = document.getElementById('manualBlockReason').value || 'Manual block';
     
-    fetch('{{ route("admin.spam.block-ip") }}', {
+    fetch('{{ locale_route("admin.spam.block-ip") }}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -251,7 +251,7 @@ document.getElementById('manualBlockForm').addEventListener('submit', function(e
 // Unblock IP function
 function unblockIp(ip) {
     if (confirm(`Unblock IP ${ip}?`)) {
-        fetch('{{ route("admin.spam.unblock-ip") }}', {
+        fetch('{{ locale_route("admin.spam.unblock-ip") }}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -277,7 +277,7 @@ function unblockIp(ip) {
 // Bulk unblock all IPs
 function bulkUnblockIps() {
     if (confirm('Unblock ALL IPs? This cannot be undone.')) {
-        fetch('{{ route("admin.spam.bulk-unblock-ips") }}', {
+        fetch('{{ locale_route("admin.spam.bulk-unblock-ips") }}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -303,7 +303,7 @@ function bulkUnblockIps() {
 function bulkExtendBlocks() {
     const minutes = prompt('Extend all blocks by how many minutes?', '60');
     if (minutes && parseInt(minutes) > 0) {
-        fetch('{{ route("admin.spam.bulk-extend-blocks") }}', {
+        fetch('{{ locale_route("admin.spam.bulk-extend-blocks") }}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

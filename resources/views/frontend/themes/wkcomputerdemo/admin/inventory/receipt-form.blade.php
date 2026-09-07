@@ -3,7 +3,7 @@
 @section('page-title', 'Tạo phiếu nhập hàng')
 @section('page-subtitle', 'Ghi nhận hàng nhập vào kho')
 @section('page-actions')
-    <a href="{{ route('admin.inventory.receipts') }}" class="btn btn-ghost btn-sm">
+    <a href="{{ locale_route('admin.inventory.receipts') }}" class="btn btn-ghost btn-sm">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
 @endsection
@@ -18,7 +18,7 @@
     </div>
 @endif
 
-<form action="{{ route('admin.inventory.receipts.store') }}" method="POST" id="receipt-form">
+<form action="{{ locale_route('admin.inventory.receipts.store') }}" method="POST" id="receipt-form">
     @csrf
     <div class="flex flex-col lg:flex-row gap-5 items-start">
 
@@ -120,7 +120,7 @@
                     <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
                         <i class="fa-solid fa-floppy-disk"></i> Lưu phiếu nhập
                     </button>
-                    <a href="{{ route('admin.inventory.receipts') }}" class="btn btn-ghost"
+                    <a href="{{ locale_route('admin.inventory.receipts') }}" class="btn btn-ghost"
                        style="width:100%;justify-content:center;">Huỷ</a>
                 </div>
             </div>

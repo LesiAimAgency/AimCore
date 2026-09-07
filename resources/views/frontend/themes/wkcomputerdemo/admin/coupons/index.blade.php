@@ -3,7 +3,7 @@
 @section('page-title', 'Quản lý Mã giảm giá')
 @section('page-subtitle', 'Tạo và quản lý các chương trình khuyến mãi, mã giảm giá cho khách hàng')
 @section('page-actions')
-    <a href="{{ route('admin.coupons.create') }}" class="btn btn-primary">
+    <a href="{{ locale_route('admin.coupons.create') }}" class="btn btn-primary">
         <i class="fa-solid fa-plus mr-2"></i> Tạo mã mới
     </a>
 @endsection
@@ -79,10 +79,10 @@
                     </td>
                     <td class="tbl-td text-right">
                         <div class="flex justify-end gap-2 px-4 opacity-0 group-hover:opacity-100 transition-all">
-                            <a href="{{ route('admin.coupons.edit', $coupon) }}" class="act-btn edit" title="Sửa">
+                            <a href="{{ locale_route('admin.coupons.edit', $coupon) }}" class="act-btn edit" title="Sửa">
                                 <i class="fa-solid fa-pen-nib"></i>
                             </a>
-                            <form action="{{ route('admin.coupons.destroy', $coupon) }}" method="POST" onsubmit="return confirm('Xóa mã này?');">
+                            <form action="{{ locale_route('admin.coupons.destroy', $coupon) }}" method="POST" onsubmit="return confirm('Xóa mã này?');">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="act-btn del"><i class="fa-solid fa-trash-can"></i></button>
                             </form>

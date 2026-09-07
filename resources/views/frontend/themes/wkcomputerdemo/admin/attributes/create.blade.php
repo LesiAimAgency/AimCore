@@ -3,7 +3,7 @@
 @section('page-title', 'Thêm thuộc tính mới')
 
 @section('content')
-<form action="{{ route('admin.attributes.store') }}" method="POST">
+<form action="{{ locale_route('admin.attributes.store') }}" method="POST">
     @csrf
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
 
@@ -78,7 +78,7 @@
             <button type="submit" class="w-full btn-primary justify-center py-2.5">
                 <i class="fa-solid fa-plus"></i> Tạo thuộc tính
             </button>
-            <a href="{{ route('admin.attributes.index') }}" class="w-full btn-secondary justify-center py-2.5">
+            <a href="{{ locale_route('admin.attributes.index') }}" class="w-full btn-secondary justify-center py-2.5">
                 Hủy bỏ
             </a>
         </div>

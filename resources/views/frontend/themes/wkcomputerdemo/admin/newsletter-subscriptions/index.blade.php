@@ -19,13 +19,13 @@
         </button>
         
         @if(request()->hasAny(['search', 'date_from', 'date_to']))
-            <a href="{{ route('admin.newsletter-subscriptions.index') }}" class="btn btn-ghost btn-sm">
+            <a href="{{ locale_route('admin.newsletter-subscriptions.index') }}" class="btn btn-ghost btn-sm">
                 <i class="fa-solid fa-times"></i> Xóa bộ lọc
             </a>
         @endif
     </form>
     
-    <a href="{{ route('admin.newsletter-subscriptions.export', request()->all()) }}" class="btn btn-primary btn-sm">
+    <a href="{{ locale_route('admin.newsletter-subscriptions.export', request()->all()) }}" class="btn btn-primary btn-sm">
         <i class="fa-solid fa-download"></i> Xuất CSV
     </a>
 @endsection
@@ -44,7 +44,7 @@
         
         <div class="card-body p-0">
             @if($subscriptions->count() > 0)
-                <form id="bulkForm" method="POST" action="{{ route('admin.newsletter-subscriptions.bulk-delete') }}">
+                <form id="bulkForm" method="POST" action="{{ locale_route('admin.newsletter-subscriptions.bulk-delete') }}">
                     @csrf
                     @method('DELETE')
                     
@@ -81,7 +81,7 @@
                                             </div>
                                         </td>
                                         <td class="tbl-td">
-                                            <form method="POST" action="{{ route('admin.newsletter-subscriptions.destroy', $subscription) }}" 
+                                            <form method="POST" action="{{ locale_route('admin.newsletter-subscriptions.destroy', $subscription) }}" 
                                                   style="display: inline;" onsubmit="return confirm('Xác nhận xóa đăng ký này?')">
                                                 @csrf
                                                 @method('DELETE')

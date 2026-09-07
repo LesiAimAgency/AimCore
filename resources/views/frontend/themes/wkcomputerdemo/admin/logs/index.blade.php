@@ -5,10 +5,10 @@
 @section('page-subtitle', 'Hoạt động admin · Bảo mật · Vận hành · Laravel')
 
 @section('page-actions')
-    <a href="{{ route('admin.logs.download', ['tab' => $tab]) }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.logs.download', ['tab' => $tab]) }}" class="btn btn-secondary">
         <i class="fa-solid fa-download"></i> Tải xuống
     </a>
-    <form method="POST" action="{{ route('admin.logs.clear') }}"
+    <form method="POST" action="{{ locale_route('admin.logs.clear') }}"
           onsubmit="return confirm('Xóa toàn bộ log {{ $logFiles[$tab]['label'] }}?')">
         @csrf
         <input type="hidden" name="tab" value="{{ $tab }}">
@@ -28,7 +28,7 @@
 <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:2px solid #e2e8f0;padding-bottom:0;">
     @foreach($logFiles as $key => $meta)
     @php $isActive = $tab === $key; @endphp
-    <a href="{{ route('admin.logs.index', ['tab' => $key]) }}"
+    <a href="{{ locale_route('admin.logs.index', ['tab' => $key]) }}"
        style="display:flex;align-items:center;gap:8px;padding:10px 18px;font-size:13px;font-weight:600;text-decoration:none;border-radius:8px 8px 0 0;border:1.5px solid {{ $isActive ? '#e2e8f0' : 'transparent' }};border-bottom:{{ $isActive ? '2px solid #fff' : 'none' }};margin-bottom:{{ $isActive ? '-2px' : '0' }};background:{{ $isActive ? '#fff' : 'transparent' }};color:{{ $isActive ? $meta['color'] : '#64748b' }};">
         <i class="fa-solid {{ $meta['icon'] }}" style="color:{{ $meta['color'] }};"></i>
         {{ $meta['label'] }}

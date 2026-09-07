@@ -4,7 +4,7 @@
 @section('page-subtitle', 'Quản lý thông tin các cửa hàng, chi nhánh, văn phòng')
 
 @section('page-actions')
-<a href="{{ route('admin.contact-locations.create') }}" class="btn btn-primary">
+<a href="{{ locale_route('admin.contact-locations.create') }}" class="btn btn-primary">
     <i class="fa-solid fa-plus"></i> Thêm địa điểm
 </a>
 @endsection
@@ -17,7 +17,7 @@
                 <i class="fa-solid fa-map-location-dot" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
                 <h5 style="color: #666; margin-bottom: 10px;">Chưa có địa điểm nào</h5>
                 <p style="color: #999; font-size: 14px;">Thêm địa điểm đầu tiên để khách hàng có thể liên hệ</p>
-                <a href="{{ route('admin.contact-locations.create') }}" class="btn btn-primary mt-3">
+                <a href="{{ locale_route('admin.contact-locations.create') }}" class="btn btn-primary mt-3">
                     <i class="fa-solid fa-plus"></i> Thêm địa điểm đầu tiên
                 </a>
             </div>
@@ -80,13 +80,13 @@
                             </td>
                             <td class="tbl-td">
                                 <div class="flex items-center gap-2">
-                                    <a href="{{ route('admin.contact-locations.show', $location) }}" class="act-btn view">
+                                    <a href="{{ locale_route('admin.contact-locations.show', $location) }}" class="act-btn view">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('admin.contact-locations.edit', $location) }}" class="act-btn edit">
+                                    <a href="{{ locale_route('admin.contact-locations.edit', $location) }}" class="act-btn edit">
                                         <i class="fa-solid fa-pen"></i>
                                     </a>
-                                    <form action="{{ route('admin.contact-locations.destroy', $location) }}" method="POST" 
+                                    <form action="{{ locale_route('admin.contact-locations.destroy', $location) }}" method="POST" 
                                           onsubmit="return confirm('Bạn có chắc muốn xóa địa điểm này?')" class="inline">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="act-btn del">

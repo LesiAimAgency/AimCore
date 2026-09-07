@@ -22,7 +22,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-success fw-semibold" href="{{ route('admin.woocommerce-csv.index') }}">
+            <a class="nav-link text-success fw-semibold" href="{{ locale_route('admin.woocommerce-csv.index') }}">
                 <i class="fas fa-file-csv"></i> Import CSV
                 <span class="badge bg-success ms-1" style="font-size:10px;">MỚI</span>
             </a>
@@ -157,7 +157,7 @@ $(document).ready(function() {
         btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Đang lưu...');
 
         $.ajax({
-            url: '{{ route("admin.woocommerce.save-config") }}',
+            url: '{{ locale_route("admin.woocommerce.save-config") }}',
             method: 'POST',
             data: $(this).serialize(),
             success: function(response) {
@@ -179,7 +179,7 @@ $(document).ready(function() {
         btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...');
 
         $.ajax({
-            url: '{{ route("admin.woocommerce.test-connection") }}',
+            url: '{{ locale_route("admin.woocommerce.test-connection") }}',
             method: 'POST',
             data: { _token: '{{ csrf_token() }}' },
             success: function(response) {
@@ -227,8 +227,8 @@ function startSync(type) {
     $('#sync-result').html('');
 
     const url = type === 'categories' 
-        ? '{{ route("admin.woocommerce.sync-categories") }}'
-        : '{{ route("admin.woocommerce.sync-products") }}';
+        ? '{{ locale_route("admin.woocommerce.sync-categories") }}'
+        : '{{ locale_route("admin.woocommerce.sync-products") }}';
 
     $.ajax({
         url: url,
@@ -285,7 +285,7 @@ function startProgressTracking() {
         if (!currentLogId) return;
         
         $.ajax({
-            url: '{{ route("admin.woocommerce.log-progress", ":id") }}'.replace(':id', currentLogId),
+            url: '{{ locale_route("admin.woocommerce.log-progress", ":id") }}'.replace(':id', currentLogId),
             method: 'GET',
             success: function(data) {
                 updateProgress(data);
@@ -333,7 +333,7 @@ function loadLogs() {
     `);
 
     $.ajax({
-        url: '{{ route("admin.woocommerce.logs") }}',
+        url: '{{ locale_route("admin.woocommerce.logs") }}',
         method: 'GET',
         success: function(html) {
             $('#logs-container').html($(html).find('#logs-container').html());

@@ -5,7 +5,7 @@
 @section('page-subtitle', 'View and filter security events')
 
 @section('page-actions')
-    <a href="{{ route('admin.spam.dashboard') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.spam.dashboard') }}" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
     </a>
 @endsection
@@ -19,7 +19,7 @@
             <h3 class="card-title">Filters</h3>
         </div>
         <div class="card-body">
-            <form method="GET" action="{{ route('admin.spam.logs') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <form method="GET" action="{{ locale_route('admin.spam.logs') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                     <label class="form-label">Date</label>
                     <input type="date" name="date" class="form-input" value="{{ $date }}">
@@ -46,7 +46,7 @@
                     <button type="submit" class="btn btn-primary flex-1">
                         <i class="fa-solid fa-filter"></i> Filter
                     </button>
-                    <a href="{{ route('admin.spam.logs') }}" class="btn btn-secondary">
+                    <a href="{{ locale_route('admin.spam.logs') }}" class="btn btn-secondary">
                         <i class="fa-solid fa-times"></i>
                     </a>
                 </div>
@@ -121,7 +121,7 @@ document.getElementById('clearLogsForm').addEventListener('submit', function(e) 
         return;
     }
     
-    fetch('{{ route("admin.spam.clear-logs") }}', {
+    fetch('{{ locale_route("admin.spam.clear-logs") }}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -35,7 +35,7 @@
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
                 @if(!$lang->is_default)
-                <form action="{{ route('admin.languages.set-default', $lang) }}" method="POST">
+                <form action="{{ locale_route('admin.languages.set-default', $lang) }}" method="POST">
                     @csrf
                     <button type="submit" class="text-xs text-blue-600 hover:underline">Đặt mặc định</button>
                 </form>
@@ -47,7 +47,7 @@
                 </button>
 
                 @if(!$lang->is_default)
-                <form action="{{ route('admin.languages.destroy', $lang) }}" method="POST"
+                <form action="{{ locale_route('admin.languages.destroy', $lang) }}" method="POST"
                       onsubmit="return confirm('Xóa ngôn ngữ này? Toàn bộ bản dịch sẽ bị mất.')">
                     @csrf @method('DELETE')
                     <button type="submit" class="act-btn del">
@@ -71,7 +71,7 @@
             <div class="card-header">
                 <p class="text-sm font-semibold text-gray-800">Thêm ngôn ngữ mới</p>
             </div>
-            <form action="{{ route('admin.languages.store') }}" method="POST">
+            <form action="{{ locale_route('admin.languages.store') }}" method="POST">
                 @csrf
                 <div class="card-body space-y-4">
                     <div>

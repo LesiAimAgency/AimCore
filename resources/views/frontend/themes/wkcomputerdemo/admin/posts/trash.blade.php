@@ -3,7 +3,7 @@
 @section('page-title', 'Thùng rác')
 @section('page-subtitle', __('common.view') . ' và khôi phục các bài viết đã xóa tạm thời')
 @section('page-actions')
-    <a href="{{ route('admin.posts.index') }}" style="text-decoration:none;color:#64748b;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;">
+    <a href="{{ locale_route('admin.posts.index') }}" style="text-decoration:none;color:#64748b;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;">
         <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
     </a>
 @endsection
@@ -15,7 +15,7 @@
             {{-- Tabs Like Image --}}
             <div style="display:flex;align-items:center;gap:10px;">
                 {{-- Tab All --}}
-                <a href="{{ route('admin.posts.index') }}" title="Tất cả bài viết" style="position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;text-decoration:none;transition:all .2s;{{ !request()->routeIs('*.trash') ? 'background:#3b82f6;' : 'background:#fff;border:1px solid #e2e8f0;' }}">
+                <a href="{{ locale_route('admin.posts.index') }}" title="Tất cả bài viết" style="position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;text-decoration:none;transition:all .2s;{{ !request()->routeIs('*.trash') ? 'background:#3b82f6;' : 'background:#fff;border:1px solid #e2e8f0;' }}">
                     <i class="fa-solid fa-pencil" style="{{ !request()->routeIs('*.trash') ? 'color:#fff;' : 'color:#94a3b8;' }}font-size:14px;"></i>
                     <span style="position:absolute;-top:8px;-right:8px;background:#f1f5f9;color:#0f172a;font-size:10px;font-weight:800;padding:2px 6px;border-radius:10px;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.05);">{{ $counts['all'] }}</span>
                 </a>
@@ -23,7 +23,7 @@
                 <div style="width:2px;height:24px;background:#3b82f6;border-radius:2px;opacity:0.8;"></div>
 
                 {{-- Tab Trash --}}
-                <a href="{{ route('admin.posts.trash') }}" title="Thùng rác" style="position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;text-decoration:none;transition:all .2s;{{ request()->routeIs('*.trash') ? 'background:#3b82f6;box-shadow:0 4px 12px rgba(59,130,246,0.3);' : 'background:#fff;border:1px solid #e2e8f0;' }}">
+                <a href="{{ locale_route('admin.posts.trash') }}" title="Thùng rác" style="position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;text-decoration:none;transition:all .2s;{{ request()->routeIs('*.trash') ? 'background:#3b82f6;box-shadow:0 4px 12px rgba(59,130,246,0.3);' : 'background:#fff;border:1px solid #e2e8f0;' }}">
                     <i class="fa-solid fa-trash-can" style="{{ request()->routeIs('*.trash') ? 'color:#fff;' : 'color:#94a3b8;' }}font-size:14px;"></i>
                     <span style="position:absolute;-top:8px;-right:8px;background:#f1f5f9;color:#0f172a;font-size:10px;font-weight:800;padding:2px 6px;border-radius:10px;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.05);">{{ $counts['trashed'] }}</span>
                 </a>
@@ -72,13 +72,13 @@
                 <td class="tbl-td" style="color:#94a3b8;font-size:12.5px;">{{ $post->deleted_at->format('d/m/Y H:i') }}</td>
                 <td class="tbl-td" style="text-align:right;">
                     <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;">
-                        <form action="{{ route('admin.posts.restore', $post->id) }}" method="POST" style="display:inline;">
+                        <form action="{{ locale_route('admin.posts.restore', $post->id) }}" method="POST" style="display:inline;">
                             @csrf
                             <button type="submit" class="act-btn" style="background:#10b981;color:white;border:none;padding:6px 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;">
                                 <i class="fa-solid fa-rotate-left"></i> Khôi phục
                             </button>
                         </form>
-                        <form action="{{ route('admin.posts.force-delete', $post->id) }}" method="POST" style="display:inline;">
+                        <form action="{{ locale_route('admin.posts.force-delete', $post->id) }}" method="POST" style="display:inline;">
                             @csrf @method('DELETE')
                             <button type="submit" onclick="return confirm('XÓA VĨNH VIỄN bài viết này? Hành động này không thể hoàn tác!')" class="act-btn" style="background:#ef4444;color:white;border:none;padding:6px 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;">
                                 <i class="fa-solid fa-circle-xmark"></i> Xóa vĩnh viễn

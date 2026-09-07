@@ -8,7 +8,7 @@
     <span style="font-size:12px;color:#64748b; font-weight:600;">
         Tổng: <strong style="color:#0f172a;">{{ $users->total() }}</strong> tài khoản
     </span>
-    <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+    <a href="{{ locale_route('admin.users.create') }}" class="btn btn-primary">
         <i class="fa-solid fa-plus"></i> Thêm tài khoản
     </a>
 </div>
@@ -37,7 +37,7 @@
             <i class="fa-solid fa-filter"></i> Lọc
         </button>
         @if(request()->hasAny(['search','role']))
-            <a href="{{ route('admin.users.index') }}" class="btn btn-secondary" style="height:40px; border-radius:10px; display:flex; align-items:center;">
+            <a href="{{ locale_route('admin.users.index') }}" class="btn btn-secondary" style="height:40px; border-radius:10px; display:flex; align-items:center;">
                 <i class="fa-solid fa-xmark"></i> Xóa lọc
             </a>
         @endif
@@ -68,7 +68,7 @@
                                 {{ strtoupper(mb_substr($user->name, 0, 1)) }}
                             </div>
                             <div>
-                                <a href="{{ route('admin.users.show', $user) }}" style="font-size:14px;font-weight:700;color:#1e293b;text-decoration:none;display:block;margin-bottom:2px;" class="hover:text-blue-600">
+                                <a href="{{ locale_route('admin.users.show', $user) }}" style="font-size:14px;font-weight:700;color:#1e293b;text-decoration:none;display:block;margin-bottom:2px;" class="hover:text-blue-600">
                                     {{ $user->name }}
                                 </a>
                                 <p style="font-size:11px;color:#64748b;display:flex;align-items:center;gap:4px;">
@@ -114,7 +114,7 @@
                     {{-- Số đơn --}}
                     <td class="tbl-td" style="text-align:center; padding:16px;">
                         @if($user->orders_count > 0)
-                            <a href="{{ route('admin.users.show', $user) }}"
+                            <a href="{{ locale_route('admin.users.show', $user) }}"
                                style="display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;color:#2563eb;text-decoration:none; background:#eff6ff; padding:4px 10px; border-radius:8px;">
                                 <i class="fa-solid fa-bag-shopping" style="font-size:11px;"></i>
                                 {{ $user->orders_count }}
@@ -133,14 +133,14 @@
                     {{-- Thao tác --}}
                     <td class="tbl-td" style="text-align:center; padding:16px;">
                         <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
-                            <a href="{{ route('admin.users.show', $user) }}" class="act-btn view" style="width:34px; height:34px; border-radius:10px;" title="Xem hồ sơ">
+                            <a href="{{ locale_route('admin.users.show', $user) }}" class="act-btn view" style="width:34px; height:34px; border-radius:10px;" title="Xem hồ sơ">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
-                            <a href="{{ route('admin.users.edit', $user) }}" class="act-btn edit" style="width:34px; height:34px; border-radius:10px;" title="Chỉnh sửa">
+                            <a href="{{ locale_route('admin.users.edit', $user) }}" class="act-btn edit" style="width:34px; height:34px; border-radius:10px;" title="Chỉnh sửa">
                                 <i class="fa-solid fa-pen"></i>
                             </a>
                             @if($user->id !== auth()->id())
-                            <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
+                            <form action="{{ locale_route('admin.users.destroy', $user) }}" method="POST"
                                   onsubmit="return confirmDelete('Xóa tài khoản {{ addslashes($user->name) }}?', () => this.submit())">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="act-btn del" style="width:34px; height:34px; border-radius:10px;" title="Xóa">

@@ -4,7 +4,7 @@
 @section('page-subtitle', __('common.view') . ' và trả lời đánh giá của khách hàng')
 
 @section('page-actions')
-    <a href="{{ route('admin.reviews.index') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.reviews.index') }}" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
 @endsection
@@ -74,7 +74,7 @@
 
     {{-- Cột phải (Trả lời và Cập nhật) --}}
     <div style="width:340px;display:flex;flex-direction:column;gap:24px;flex-shrink:0;">
-        <form action="{{ route('admin.reviews.update', $review) }}" method="POST" class="card">
+        <form action="{{ locale_route('admin.reviews.update', $review) }}" method="POST" class="card">
             @csrf @method('PUT')
             <div class="card-header">
                 <h3 class="card-title">Xử lý & Phản hồi</h3>
@@ -123,7 +123,7 @@
                         </div>
                         <div style="flex:1;">
                             <span class="badge badge-blue mb-1">Sản phẩm</span>
-                            <a href="{{ route('admin.products.edit', $review->product_id) }}" target="_blank" style="font-size:13px;font-weight:600;color:#2563eb;text-decoration:none;display:block;">{{ $review->product->name }}</a>
+                            <a href="{{ locale_route('admin.products.edit', $review->product_id) }}" target="_blank" style="font-size:13px;font-weight:600;color:#2563eb;text-decoration:none;display:block;">{{ $review->product->name }}</a>
                         </div>
                     </div>
                 @elseif($review->post)
@@ -137,7 +137,7 @@
                         </div>
                         <div style="flex:1;">
                             <span class="badge badge-purple mb-1">Bài viết</span>
-                            <a href="{{ route('admin.posts.edit', $review->post_id) }}" target="_blank" style="font-size:13px;font-weight:600;color:#7c3aed;text-decoration:none;display:block;">{{ $review->post->title }}</a>
+                            <a href="{{ locale_route('admin.posts.edit', $review->post_id) }}" target="_blank" style="font-size:13px;font-weight:600;color:#7c3aed;text-decoration:none;display:block;">{{ $review->post->title }}</a>
                         </div>
                     </div>
                 @else

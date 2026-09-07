@@ -2,7 +2,7 @@
 @section('title', 'Tạo mã giảm giá')
 @section('page-title', 'Tạo mã giảm giá mới')
 @section('page-actions')
-    <a href="{{ route('admin.coupons.index') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.coupons.index') }}" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left mr-2"></i> Quay lại
     </a>
 @endsection
@@ -21,7 +21,7 @@
     </div>
 </div>
 @endif
-<form action="{{ route('admin.coupons.store') }}" method="POST">
+<form action="{{ locale_route('admin.coupons.store') }}" method="POST">
     @csrf
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2 space-y-6">

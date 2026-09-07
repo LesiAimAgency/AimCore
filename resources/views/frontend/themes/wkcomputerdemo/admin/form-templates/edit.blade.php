@@ -4,13 +4,13 @@
 @section('page-subtitle', 'Cập nhật thông tin form template')
 
 @section('page-actions')
-    <a href="{{ route('admin.form-templates.index') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.form-templates.index') }}" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
 @endsection
 
 @section('content')
-<form action="{{ route('admin.form-templates.update', $formTemplate) }}" method="POST">
+<form action="{{ locale_route('admin.form-templates.update', $formTemplate) }}" method="POST">
     @csrf
     @method('PUT')
     
@@ -77,11 +77,11 @@
                         <i class="fa-solid fa-save"></i> Cập nhật Form Template
                     </button>
                     
-                    <a href="{{ route('admin.form-templates.show', $formTemplate) }}" class="btn btn-ghost w-100 mb-2">
+                    <a href="{{ locale_route('admin.form-templates.show', $formTemplate) }}" class="btn btn-ghost w-100 mb-2">
                         <i class="fa-solid fa-eye"></i> Xem chi tiết
                     </a>
                     
-                    <a href="{{ route('admin.form-templates.submissions', $formTemplate) }}" class="btn btn-ghost w-100">
+                    <a href="{{ locale_route('admin.form-templates.submissions', $formTemplate) }}" class="btn btn-ghost w-100">
                         <i class="fa-solid fa-list"></i> Xem Submissions ({{ $formTemplate->submissions()->count() }})
                     </a>
                 </div>

@@ -47,7 +47,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('admin.login') }}">
+                <form method="POST" action="{{ locale_route('admin.login') }}">
                     @csrf
                     <div class="form-group">
                         <label class="form-label"><i class="fa-solid fa-envelope"></i>Email</label>

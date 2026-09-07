@@ -6,7 +6,7 @@
 
 @section('page-actions')
     <div class="flex gap-2">
-        <a href="{{ route('admin.spam.dashboard') }}" class="btn btn-secondary">
+        <a href="{{ locale_route('admin.spam.dashboard') }}" class="btn btn-secondary">
             <i class="fa-solid fa-arrow-left"></i> Back
         </a>
         @if(count($blockedIps) > 0)
@@ -162,7 +162,7 @@ document.getElementById('blockIpForm').addEventListener('submit', function(e) {
     const duration = document.getElementById('blockDuration').value;
     const reason = document.getElementById('blockReason').value || 'Manual block';
     
-    fetch('{{ route("admin.spam.block-ip") }}', {
+    fetch('{{ locale_route("admin.spam.block-ip") }}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -187,7 +187,7 @@ document.getElementById('blockIpForm').addEventListener('submit', function(e) {
 // Unblock IP
 function unblockIp(ip) {
     if (confirm(`Unblock IP ${ip}?`)) {
-        fetch('{{ route("admin.spam.unblock-ip") }}', {
+        fetch('{{ locale_route("admin.spam.unblock-ip") }}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -213,7 +213,7 @@ function unblockIp(ip) {
 // Bulk unblock all IPs
 function bulkUnblockIps() {
     if (confirm('Unblock ALL IPs? This cannot be undone.')) {
-        fetch('{{ route("admin.spam.bulk-unblock-ips") }}', {
+        fetch('{{ locale_route("admin.spam.bulk-unblock-ips") }}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -239,7 +239,7 @@ function bulkUnblockIps() {
 function bulkExtendBlocks() {
     const minutes = prompt('Extend all blocks by how many minutes?', '60');
     if (minutes && parseInt(minutes) > 0) {
-        fetch('{{ route("admin.spam.bulk-extend-blocks") }}', {
+        fetch('{{ locale_route("admin.spam.bulk-extend-blocks") }}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

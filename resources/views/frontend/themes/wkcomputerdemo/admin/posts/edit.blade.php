@@ -6,7 +6,7 @@
     @section('preview-url', url('/' . $post->slug))
 @endif
 @section('page-actions')
-    <a href="{{ route('admin.posts.index') }}" class="btn btn-secondary btn-sm">
+    <a href="{{ locale_route('admin.posts.index') }}" class="btn btn-secondary btn-sm">
         <i class="fa-solid fa-xmark"></i> Hủy
     </a>
     <button type="submit" form="post-form" class="btn btn-primary btn-sm">
@@ -15,7 +15,7 @@
 @endsection
 
 @section('content')
-<form action="{{ route('admin.posts.update', $post) }}" method="POST" id="post-form">
+<form action="{{ locale_route('admin.posts.update', $post) }}" method="POST" id="post-form">
     @csrf @method('PUT')
     @include('admin.posts._form', ['post' => $post])
 </form>

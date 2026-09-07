@@ -3,13 +3,13 @@
 @section('page-title', 'Thêm địa điểm liên hệ')
 
 @section('page-actions')
-<a href="{{ route('admin.contact-locations.index') }}" class="btn btn-secondary">
+<a href="{{ locale_route('admin.contact-locations.index') }}" class="btn btn-secondary">
     <i class="fa-solid fa-arrow-left"></i> Quay lại
 </a>
 @endsection
 
 @section('content')
-<form action="{{ route('admin.contact-locations.store') }}" method="POST">
+<form action="{{ locale_route('admin.contact-locations.store') }}" method="POST">
     @csrf
     
     <div class="row">
@@ -186,7 +186,7 @@
                 <button type="submit" class="btn btn-primary flex-1">
                     <i class="fa-solid fa-save"></i> Lưu địa điểm
                 </button>
-                <a href="{{ route('admin.contact-locations.index') }}" class="btn btn-secondary">
+                <a href="{{ locale_route('admin.contact-locations.index') }}" class="btn btn-secondary">
                     Hủy
                 </a>
             </div>

@@ -26,7 +26,7 @@
     @endif
 </form>
 
-<form method="POST" action="{{ route('admin.seo.bulk-update') }}">
+<form method="POST" action="{{ locale_route('admin.seo.bulk-update') }}">
     @csrf
     <input type="hidden" name="type" value="{{ $type }}">
 
@@ -56,9 +56,9 @@
                         $metaDesc  = $item->meta_description ?? '';
                         $status    = $item->status ?? ($item->is_active ?? true);
                         $editRoute = match($type) {
-                            'posts'      => route('admin.posts.edit', $item->id),
-                            'pages'      => route('admin.pages.edit', $item->id),
-                            'products'   => route('admin.products.edit', $item->id),
+                            'posts'      => locale_route('admin.posts.edit', $item->id),
+                            'pages'      => locale_route('admin.pages.edit', $item->id),
+                            'products'   => locale_route('admin.products.edit', $item->id),
                             default      => '#',
                         };
                         $titleScore = strlen($metaTitle) >= 30 && strlen($metaTitle) <= 60;

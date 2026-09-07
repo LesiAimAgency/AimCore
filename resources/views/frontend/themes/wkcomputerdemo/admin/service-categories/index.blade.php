@@ -5,7 +5,7 @@
 @section('page-subtitle', 'Quản lý các danh mục dịch vụ hiển thị trên trang')
 
 @section('page-actions')
-<a href="{{ route('admin.service-categories.create') }}" class="btn btn-primary btn-sm">
+<a href="{{ locale_route('admin.service-categories.create') }}" class="btn btn-primary btn-sm">
     <i class="fa-solid fa-plus"></i> Thêm mới
 </a>
 @endsection
@@ -18,7 +18,7 @@
         <i class="fa-solid fa-magnifying-glass"></i> Lọc
     </button>
     @if(request()->has('search'))
-        <a href="{{ route('admin.service-categories.index') }}" class="btn btn-secondary btn-sm">Xóa lọc</a>
+        <a href="{{ locale_route('admin.service-categories.index') }}" class="btn btn-secondary btn-sm">Xóa lọc</a>
     @endif
 </form>
 
@@ -60,10 +60,10 @@
                         <td class="tbl-td">{{ $category->sort_order }}</td>
                         <td class="tbl-td" style="text-align:right;">
                             <div style="display:flex;gap:6px;justify-content:flex-end;">
-                                <a href="{{ route('admin.service-categories.edit', $category) }}" class="act-btn edit" title="Sửa">
+                                <a href="{{ locale_route('admin.service-categories.edit', $category) }}" class="act-btn edit" title="Sửa">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
-                                <form action="{{ route('admin.service-categories.destroy', $category) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa dịch vụ này và các dự án của nó?')">
+                                <form action="{{ locale_route('admin.service-categories.destroy', $category) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa dịch vụ này và các dự án của nó?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="act-btn del" title="Xóa">

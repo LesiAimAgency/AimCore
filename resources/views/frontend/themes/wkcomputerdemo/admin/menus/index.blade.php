@@ -25,10 +25,10 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-1">
-                    <a href="{{ route('admin.menus.edit', $menu->id) }}" class="act-btn edit" title="Chỉnh sửa cấu trúc">
+                    <a href="{{ locale_route('admin.menus.edit', $menu->id) }}" class="act-btn edit" title="Chỉnh sửa cấu trúc">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </a>
-                    <form action="{{ route('admin.widgets.destroy', $menu->id) }}" method="POST" onsubmit="return confirm('Xóa menu này?')">
+                    <form action="{{ locale_route('admin.widgets.destroy', $menu->id) }}" method="POST" onsubmit="return confirm('Xóa menu này?')">
                         @csrf @method('DELETE')
                         <button type="submit" class="act-btn del"><i class="fa-solid fa-trash-can"></i></button>
                     </form>
@@ -47,7 +47,7 @@
             </div>
         </div>
         <div class="bg-slate-50 px-5 py-3 border-top flex justify-end">
-            <a href="{{ route('admin.menus.edit', $menu->id) }}" class="text-xs font-bold text-blue-600 hover:underline">Thiết lập Menu &rarr;</a>
+            <a href="{{ locale_route('admin.menus.edit', $menu->id) }}" class="text-xs font-bold text-blue-600 hover:underline">Thiết lập Menu &rarr;</a>
         </div>
     </div>
     @empty
@@ -66,7 +66,7 @@
 <dialog id="addMenuModal" class="p-0 rounded-2xl border-none shadow-2xl bg-white w-full max-w-md">
     <div class="p-6">
         <h3 class="text-lg font-bold mb-4">Tạo Menu mới</h3>
-        <form action="{{ route('admin.menus.store') }}" method="POST">
+        <form action="{{ locale_route('admin.menus.store') }}" method="POST">
             @csrf
             <div class="space-y-4">
                 <div>

@@ -8,7 +8,7 @@
     <span style="font-size:12px;color:#64748b; font-weight:600;">
         Tổng: <strong style="color:#0f172a;">{{ $orders->total() }}</strong> đơn
     </span>
-    <a href="{{ route('admin.orders.create') }}" class="btn btn-primary">
+    <a href="{{ locale_route('admin.orders.create') }}" class="btn btn-primary">
         <i class="fa-solid fa-plus"></i> Tạo đơn mới
     </a>
 </div>
@@ -41,12 +41,12 @@
             <i class="fa-solid fa-filter"></i> Lọc
         </button>
         @if(request()->hasAny(['search','status','payment_status']))
-            <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary" style="height:40px; border-radius:10px; display:flex; align-items:center;">
+            <a href="{{ locale_route('admin.orders.index') }}" class="btn btn-secondary" style="height:40px; border-radius:10px; display:flex; align-items:center;">
                 <i class="fa-solid fa-xmark"></i> Xóa lọc
             </a>
         @endif
         
-        <a href="{{ route('admin.orders.trash') }}" class="btn btn-ghost" style="height:40px; margin-left:auto;" title="Thùng rác">
+        <a href="{{ locale_route('admin.orders.trash') }}" class="btn btn-ghost" style="height:40px; margin-left:auto;" title="Thùng rác">
             <i class="fa-solid fa-trash-can text-slate-400"></i>
         </a>
     </form>
@@ -73,7 +73,7 @@
                 @forelse($orders as $order)
                 <tr class="tbl-tr">
                     <td class="tbl-td" style="padding:16px;">
-                        <a href="{{ route('admin.orders.show', $order) }}"
+                        <a href="{{ locale_route('admin.orders.show', $order) }}"
                            style="font-size:13px;font-weight:800;color:#2563eb;text-decoration:none;font-family:'Monaco', 'Consolas', monospace;" class="hover:underline">
                             #{{ $order->order_number }}
                         </a>
@@ -120,7 +120,7 @@
                         <span style="font-size:10px;color:#94a3b8;display:block;">{{ $order->created_at->format('H:i') }}</span>
                     </td>
                     <td class="tbl-td" style="text-align:center; padding:16px;">
-                        <a href="{{ route('admin.orders.show', $order) }}" class="act-btn view" style="width:34px; height:34px; border-radius:10px;">
+                        <a href="{{ locale_route('admin.orders.show', $order) }}" class="act-btn view" style="width:34px; height:34px; border-radius:10px;">
                             <i class="fa-solid fa-eye"></i>
                         </a>
                     </td>

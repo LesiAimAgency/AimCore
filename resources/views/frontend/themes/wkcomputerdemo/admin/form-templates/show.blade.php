@@ -4,10 +4,10 @@
 @section('page-subtitle', 'Chi tiết và submissions của form template')
 
 @section('page-actions')
-    <a href="{{ route('admin.form-templates.edit', $formTemplate) }}" class="btn btn-primary">
+    <a href="{{ locale_route('admin.form-templates.edit', $formTemplate) }}" class="btn btn-primary">
         <i class="fa-solid fa-pen"></i> Chỉnh sửa
     </a>
-    <a href="{{ route('admin.form-templates.index') }}" class="btn btn-secondary">
+    <a href="{{ locale_route('admin.form-templates.index') }}" class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
 @endsection
@@ -104,7 +104,7 @@
         <div class="card mt-4">
             <div class="card-header">
                 <span class="card-title">Submissions gần đây</span>
-                <a href="{{ route('admin.form-templates.submissions', $formTemplate) }}" class="btn btn-sm btn-ghost">
+                <a href="{{ locale_route('admin.form-templates.submissions', $formTemplate) }}" class="btn btn-sm btn-ghost">
                     Xem tất cả ({{ $submissions->total() }})
                 </a>
             </div>
@@ -151,21 +151,21 @@
                 <span class="card-title">Thao tác</span>
             </div>
             <div class="card-body">
-                <a href="{{ route('admin.form-templates.edit', $formTemplate) }}" class="btn btn-primary w-100 mb-2">
+                <a href="{{ locale_route('admin.form-templates.edit', $formTemplate) }}" class="btn btn-primary w-100 mb-2">
                     <i class="fa-solid fa-pen"></i> Chỉnh sửa
                 </a>
                 
-                <a href="{{ route('admin.form-templates.submissions', $formTemplate) }}" class="btn btn-ghost w-100 mb-2">
+                <a href="{{ locale_route('admin.form-templates.submissions', $formTemplate) }}" class="btn btn-ghost w-100 mb-2">
                     <i class="fa-solid fa-list"></i> Xem Submissions ({{ $formTemplate->submissions()->count() }})
                 </a>
                 
                 @if($formTemplate->submissions()->count() > 0)
-                <a href="{{ route('admin.form-templates.export', $formTemplate) }}" class="btn btn-ghost w-100 mb-2">
+                <a href="{{ locale_route('admin.form-templates.export', $formTemplate) }}" class="btn btn-ghost w-100 mb-2">
                     <i class="fa-solid fa-download"></i> Export CSV
                 </a>
                 @endif
                 
-                <form action="{{ route('admin.form-templates.destroy', $formTemplate) }}" method="POST" 
+                <form action="{{ locale_route('admin.form-templates.destroy', $formTemplate) }}" method="POST" 
                       onsubmit="return confirm('Xóa form template này? Tất cả submissions sẽ bị xóa theo.')">
                     @csrf @method('DELETE')
                     <button type="submit" class="btn btn-danger w-100">

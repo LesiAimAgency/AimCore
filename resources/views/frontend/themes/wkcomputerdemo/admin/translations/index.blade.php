@@ -39,7 +39,7 @@
     </div>
 </div>
 @else
-<form action="{{ route('admin.translations.bulk') }}" method="POST" id="bulk-form">
+<form action="{{ locale_route('admin.translations.bulk') }}" method="POST" id="bulk-form">
     @csrf
     <div class="card" style="overflow:hidden;">
         <div class="card-header" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
@@ -135,7 +135,7 @@
 
 @push('scripts')
 <script>
-const AUTO_TRANSLATE_URL = '{{ route('admin.translations.auto-translate') }}';
+const AUTO_TRANSLATE_URL = '{{ locale_route('admin.translations.auto-translate') }}';
 const CSRF = '{{ csrf_token() }}';
 const TARGET_LOCALE = '{{ $locale }}';
 // Lấy locale mặc định (ngôn ngữ nguồn) từ PHP

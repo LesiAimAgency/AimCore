@@ -3,14 +3,14 @@
 @section('page-title', 'Chiến dịch Flash Sale')
 @section('page-subtitle', 'Quản lý các chiến dịch giảm giá theo thời gian')
 @section('page-actions')
-    <a href="{{ route('admin.flash-sales.create') }}" class="btn btn-primary">
+    <a href="{{ locale_route('admin.flash-sales.create') }}" class="btn btn-primary">
         <i class="fa-solid fa-plus"></i> Tạo chiến dịch
     </a>
 @endsection
 
 @section('content')
 {{-- Filters --}}
-<form method="GET" action="{{ route('admin.flash-sales.index') }}" class="card mb-4">
+<form method="GET" action="{{ locale_route('admin.flash-sales.index') }}" class="card mb-4">
     <div class="p-4 flex flex-wrap items-end gap-3">
         <div class="flex-1 min-w-[300px]">
             <label class="form-label">search chiến dịch</label>
@@ -35,7 +35,7 @@
                 <i class="fa-solid fa-filter mr-2"></i> Áp dụng lọc
             </button>
             @if(request()->hasAny(['search','status']))
-            <a href="{{ route('admin.flash-sales.index') }}" class="btn btn-secondary">
+            <a href="{{ locale_route('admin.flash-sales.index') }}" class="btn btn-secondary">
                 <i class="fa-solid fa-rotate-left mr-2"></i> Đặt lại
             </a>
             @endif
@@ -67,7 +67,7 @@
                                 <i class="fa-solid fa-bolt text-sm"></i>
                             </div>
                             <div>
-                                <a href="{{ route('admin.flash-sales.show', $campaign) }}"
+                                <a href="{{ locale_route('admin.flash-sales.show', $campaign) }}"
                                    class="text-[15px] font-black text-slate-900 group-hover:text-blue-600 transition-colors uppercase tracking-tighter">
                                     {{ $campaign->name }}
                                 </a>
@@ -105,11 +105,11 @@
                     </td>
                     <td class="tbl-td">
                         <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;">
-                            <a href="{{ route('admin.flash-sales.edit', $campaign) }}"
+                            <a href="{{ locale_route('admin.flash-sales.edit', $campaign) }}"
                                class="act-btn edit" title="Chỉnh sửa">
                                 <i class="fa-solid fa-pen-nib"></i>
                             </a>
-                            <form method="POST" action="{{ route('admin.flash-sales.destroy', $campaign) }}"
+                            <form method="POST" action="{{ locale_route('admin.flash-sales.destroy', $campaign) }}"
                                   onsubmit="return confirm('Bạn chắc chắn muốn xóa chiến dịch này?')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="act-btn del" title="Xóa bỏ">

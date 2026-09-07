@@ -6,7 +6,7 @@
         {{-- Language Switcher --}}
         <div style="display:flex;gap:4px;background:#f8fafc;padding:4px;border-radius:8px;border:1px solid #e2e8f0;">
             @foreach($activeLanguages as $lang)
-                <a href="{{ route('admin.categories.index', ['type' => $type, 'locale' => $lang->code]) }}" 
+                <a href="{{ locale_route('admin.categories.index', ['type' => $type, 'locale' => $lang->code]) }}" 
                    class="btn btn-sm {{ request('locale', $defaultLocale) === $lang->code ? 'btn-primary' : 'btn-ghost' }}" 
                    style="font-size:11px;padding:6px 12px;min-width:auto;">
                     @if($lang->flag_emoji)
@@ -21,11 +21,11 @@
         
         <div style="width:1px;height:24px;background:#e2e8f0;"></div>
         
-        <a href="{{ route('admin.categories.index', ['type' => 'product']) }}" 
+        <a href="{{ locale_route('admin.categories.index', ['type' => 'product']) }}" 
            class="btn {{ $type === 'product' ? 'btn-primary' : 'btn-secondary' }}" style="font-size:13px;padding:8px 16px;">
             <i class="fa-solid fa-box"></i> Sản phẩm
         </a>
-        <a href="{{ route('admin.categories.index', ['type' => 'post']) }}" 
+        <a href="{{ locale_route('admin.categories.index', ['type' => 'post']) }}" 
            class="btn {{ $type === 'post' ? 'btn-primary' : 'btn-secondary' }}" style="font-size:13px;padding:8px 16px;">
             <i class="fa-solid fa-newspaper"></i> Bài viết
         </a>
@@ -123,7 +123,7 @@
                 </td>
                 <td class="tbl-td" style="text-align:right;">
                     <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;">
-                        <form action="{{ route('admin.duplicate.item', ['type' => 'category', 'id' => $cat->id]) }}" method="POST" style="display:inline;">
+                        <form action="{{ locale_route('admin.duplicate.item', ['type' => 'category', 'id' => $cat->id]) }}" method="POST" style="display:inline;">
                             @csrf
                             <input type="hidden" name="locale" value="en">
                             <button type="submit" class="act-btn" title="Copy to EN">EN</button>
@@ -131,7 +131,7 @@
                         <button onclick="openEdit({{ json_encode($cat) }})" class="act-btn edit" title="Sửa">
                             <i class="fa-solid fa-pencil"></i>
                         </button>
-                        <form action="{{ route('admin.categories.destroy', $cat) }}" method="POST" style="display:inline;">
+                        <form action="{{ locale_route('admin.categories.destroy', $cat) }}" method="POST" style="display:inline;">
                             @csrf @method('DELETE')
                             <input type="hidden" name="type" value="{{ $type }}">
                             <button onclick="return confirm('Xóa «{{ addslashes($cat->name) }}»? Sub danh mục sẽ được chuyển lên.')" class="act-btn del">
@@ -167,7 +167,7 @@
                 </td>
                 <td class="tbl-td" style="text-align:right;">
                     <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;">
-                        <form action="{{ route('admin.duplicate.item', ['type' => 'category', 'id' => $child->id]) }}" method="POST" style="display:inline;">
+                        <form action="{{ locale_route('admin.duplicate.item', ['type' => 'category', 'id' => $child->id]) }}" method="POST" style="display:inline;">
                             @csrf
                             <input type="hidden" name="locale" value="en">
                             <button type="submit" class="act-btn" title="Copy to EN">EN</button>
@@ -175,7 +175,7 @@
                         <button onclick="openEdit({{ json_encode($child) }})" class="act-btn edit" title="Sửa">
                             <i class="fa-solid fa-pencil"></i>
                         </button>
-                        <form action="{{ route('admin.categories.destroy', $child) }}" method="POST" style="display:inline;">
+                        <form action="{{ locale_route('admin.categories.destroy', $child) }}" method="POST" style="display:inline;">
                             @csrf @method('DELETE')
                             <input type="hidden" name="type" value="{{ $type }}">
                             <button onclick="return confirm('Xóa «{{ addslashes($child->name) }}»?')" class="act-btn del">
@@ -214,7 +214,7 @@
 
     {{-- FORM THÊM --}}
     <div id="panelAdd" class="card" style="border-radius:0 0 16px 16px;border-top:none;">
-        <form action="{{ route('admin.categories.store') }}" method="POST" id="formAdd">
+        <form action="{{ locale_route('admin.categories.store') }}" method="POST" id="formAdd">
             @csrf
             <input type="hidden" name="type" value="{{ $type }}">
             <input type="hidden" name="current_locale" value="{{ $locale }}">

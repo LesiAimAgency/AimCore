@@ -31,12 +31,12 @@
                                     <td class="tbl-td contact-time-col">{{ $submission->created_at->format('d/m/Y H:i') }}</td>
                                     <td class="tbl-td">
                                         <div style="display: flex; gap: 5px;">
-                                            <a href="{{ route('admin.contact-submissions.show', $submission) }}" 
+                                            <a href="{{ locale_route('admin.contact-submissions.show', $submission) }}" 
                                                class="act-btn view" title="Xem chi tiết">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
                                             
-                                            <form method="POST" action="{{ route('admin.contact-submissions.destroy', $submission) }}" 
+                                            <form method="POST" action="{{ locale_route('admin.contact-submissions.destroy', $submission) }}" 
                                                   style="display: inline;" onsubmit="return confirm('Xác nhận xóa tin nhắn này?')">
                                                 @csrf
                                                 @method('DELETE')

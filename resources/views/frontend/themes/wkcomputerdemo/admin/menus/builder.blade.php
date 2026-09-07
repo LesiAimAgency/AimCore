@@ -4,7 +4,7 @@
 @section('page-subtitle', 'Bấm vào nhóm bên trái để thêm mục. Kéo thả để sắp xếp.')
 
 @section('page-actions')
-    <a href="{{ route('admin.menus.index') }}" class="btn btn-secondary btn-sm">
+    <a href="{{ locale_route('admin.menus.index') }}" class="btn btn-secondary btn-sm">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
     <button id="btn-save-menu" class="btn btn-primary">
@@ -22,7 +22,7 @@
             style="width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:7px 32px 7px 12px;font-size:13px;font-weight:600;color:#1e293b;background:#fff;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;">
             @foreach($allMenus as $m)
                 @php $mLoc = is_array($m->config) ? ($m->config['locale'] ?? 'vi') : 'vi'; @endphp
-                <option value="{{ route('admin.menus.edit', ['id' => $m->id, 'locale' => $mLoc]) }}"
+                <option value="{{ locale_route('admin.menus.edit', ['id' => $m->id, 'locale' => $mLoc]) }}"
                     {{ $m->id == $menu->id ? 'selected' : '' }}>
                     {{ $m->name }} ({{ strtoupper($mLoc) }})
                 </option>
@@ -32,7 +32,7 @@
     </div>
     <div style="display:flex;gap:6px;margin-left:auto;">
         @foreach(['vi' => '🇻🇳 VI', 'en' => '🇬🇧 EN'] as $loc => $lbl)
-            <a href="{{ route('admin.menus.edit', ['id' => $menu->id, 'locale' => $loc]) }}"
+            <a href="{{ locale_route('admin.menus.edit', ['id' => $menu->id, 'locale' => $loc]) }}"
                class="btn btn-sm {{ $currentLocale === $loc ? 'btn-primary' : 'btn-secondary' }}">{{ $lbl }}</a>
         @endforeach
     </div>
@@ -488,7 +488,7 @@ $srcGroups = [
                 });
             } else {
                 // Fallback nếu modal không hoạt động
-                const win = window.open('{{ route('admin.media.index') }}?target=' + inputId, 'MediaManager', 'width=1200,height=800');
+                const win = window.open('{{ locale_route('admin.media.index') }}?target=' + inputId, 'MediaManager', 'width=1200,height=800');
             }
         },
         del: function(key) {
@@ -580,7 +580,7 @@ $srcGroups = [
         btn.disabled = true;
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
 
-        fetch('{{ route('admin.menus.update', $menu->id) }}', {
+        fetch('{{ locale_route('admin.menus.update', $menu->id) }}', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

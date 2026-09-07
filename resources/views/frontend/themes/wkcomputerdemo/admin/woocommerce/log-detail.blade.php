@@ -3,7 +3,7 @@
 @section('title', 'Chi tiết log đồng bộ')
 
 @section('page-actions')
-<a href="{{ route('admin.woocommerce.index') }}" class="btn btn-secondary">
+<a href="{{ locale_route('admin.woocommerce.index') }}" class="btn btn-secondary">
     <i class="fa-solid fa-arrow-left text-xs"></i> Quay lại
 </a>
 @endsection

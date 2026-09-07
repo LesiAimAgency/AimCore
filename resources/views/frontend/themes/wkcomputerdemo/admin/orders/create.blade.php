@@ -4,7 +4,7 @@
 @section('page-subtitle', 'Tạo đơn hàng thủ công cho khách hàng')
 
 @section('content')
-<form action="{{ route('admin.orders.store') }}" method="POST" x-data="orderManager()" x-init="init()">
+<form action="{{ locale_route('admin.orders.store') }}" method="POST" x-data="orderManager()" x-init="init()">
     @csrf
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
@@ -227,7 +227,7 @@
                         <i class="fa-solid fa-check"></i> XÁC NHẬN TẠO ĐƠN
                     </button>
                     
-                    <a href="{{ route('admin.orders.index') }}" style="display:block; text-align:center; margin-top:16px; font-size:13px; font-weight:700; color:#94a3b8; text-decoration:none;">
+                    <a href="{{ locale_route('admin.orders.index') }}" style="display:block; text-align:center; margin-top:16px; font-size:13px; font-weight:700; color:#94a3b8; text-decoration:none;">
                         Hủy bỏ & Quay lại
                     </a>
                 </div>

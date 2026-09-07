@@ -4,7 +4,7 @@
 @section('page-subtitle', 'Chỉnh sửa thông tin đơn hàng hệ thống')
 
 @section('content')
-<form action="{{ route('admin.orders.update', $order) }}" method="POST" x-data="orderManager()" x-init="init()">
+<form action="{{ locale_route('admin.orders.update', $order) }}" method="POST" x-data="orderManager()" x-init="init()">
     @csrf
     @method('PUT')
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -227,7 +227,7 @@
                         <i class="fa-solid fa-save"></i> LƯU THAY ĐỔI
                     </button>
                     
-                    <a href="{{ route('admin.orders.show', $order) }}" style="display:block; text-align:center; margin-top:16px; font-size:13px; font-weight:700; color:#94a3b8; text-decoration:none;">
+                    <a href="{{ locale_route('admin.orders.show', $order) }}" style="display:block; text-align:center; margin-top:16px; font-size:13px; font-weight:700; color:#94a3b8; text-decoration:none;">
                         Hủy bỏ & Quay lại
                     </a>
                 </div>

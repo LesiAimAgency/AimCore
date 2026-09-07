@@ -1084,7 +1084,7 @@ window.productInitData = {
                             {{ $isEdit ? 'LƯU THÀNH QUẢ' : 'TẠO SẢN PHẨM MỚI' }}
                         </span>
                     </button>
-                    <a href="{{ route('admin.products.index') }}" class="btn bg-white hover:bg-slate-50 text-slate-400 w-full justify-center py-3 text-[10px] font-black tracking-widest border border-slate-200 rounded-xl">HỦY BỎ THAY ĐỔI</a>
+                    <a href="{{ locale_route('admin.products.index') }}" class="btn bg-white hover:bg-slate-50 text-slate-400 w-full justify-center py-3 text-[10px] font-black tracking-widest border border-slate-200 rounded-xl">HỦY BỎ THAY ĐỔI</a>
                 </div>
             </div>
         </div>

@@ -4,13 +4,13 @@
 @section('page-subtitle', 'Thêm quản trị viên hoặc khách hàng mới vào hệ thống')
 
 @section('page-actions')
-<a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
+<a href="{{ locale_route('admin.users.index') }}" class="btn btn-secondary">
     <i class="fa-solid fa-arrow-left"></i> Quay lại
 </a>
 @endsection
 
 @section('content')
-<form action="{{ route('admin.users.store') }}" method="POST" id="user-form">
+<form action="{{ locale_route('admin.users.store') }}" method="POST" id="user-form">
     @csrf
     <div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;">
 

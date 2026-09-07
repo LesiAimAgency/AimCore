@@ -7,7 +7,7 @@
         {{-- Language Switcher --}}
         <div style="display:flex;gap:4px;background:#f8fafc;padding:4px;border-radius:8px;border:1px solid #e2e8f0;">
             @foreach($activeLanguages as $lang)
-                <a href="{{ route('admin.pages.index', ['locale' => $lang->code]) }}" 
+                <a href="{{ locale_route('admin.pages.index', ['locale' => $lang->code]) }}" 
                    class="btn btn-sm {{ request('locale', $defaultLocale) === $lang->code ? 'btn-primary' : 'btn-ghost' }}" 
                    style="font-size:11px;padding:6px 12px;min-width:auto;">
                     @if($lang->flag_emoji)
@@ -22,7 +22,7 @@
         
         <div style="width:1px;height:24px;background:#e2e8f0;"></div>
         
-        <a href="{{ route('admin.pages.create') }}" class="btn btn-primary">
+        <a href="{{ locale_route('admin.pages.create') }}" class="btn btn-primary">
             <i class="fa-solid fa-plus"></i> Thêm trang
         </a>
     </div>
@@ -58,17 +58,17 @@
                 </td>
                 <td class="tbl-td" style="text-align:right;">
                     <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;">
-                        <form action="{{ route('admin.duplicate.item', ['type' => 'page', 'id' => $page->id]) }}" method="POST" style="display:inline;">
+                        <form action="{{ locale_route('admin.duplicate.item', ['type' => 'page', 'id' => $page->id]) }}" method="POST" style="display:inline;">
                             @csrf
                             <input type="hidden" name="locale" value="en">
                             <button type="submit" class="act-btn" title="Sao chép sang EN" style="background-color:#eff6ff;color:#3b82f6;border:0;width:34px;height:34px;border-radius:10px;justify-content:center;align-items:center;font-size:10px;font-weight:900;display:flex;">
                                 EN
                             </button>
                         </form>
-                        <a href="{{ route('admin.pages.edit', [$page, 'locale' => $locale]) }}" class="act-btn edit" title="Chỉnh sửa">
+                        <a href="{{ locale_route('admin.pages.edit', [$page, 'locale' => $locale]) }}" class="act-btn edit" title="Chỉnh sửa">
                             <i class="fa-solid fa-pencil"></i>
                         </a>
-                        <form action="{{ route('admin.pages.destroy', $page) }}" method="POST" style="display:inline;">
+                        <form action="{{ locale_route('admin.pages.destroy', $page) }}" method="POST" style="display:inline;">
                             @csrf @method('DELETE')
                             <button onclick="return confirm('Xóa trang này?')" class="act-btn del" title="Xóa">
                                 <i class="fa-solid fa-trash"></i>
@@ -82,7 +82,7 @@
                 <td colspan="5" style="padding:60px 20px;text-align:center;color:#94a3b8;">
                     <i class="fa-solid fa-file-lines" style="font-size:40px;opacity:.3;display:block;margin-bottom:12px;"></i>
                     <p style="font-size:14px;font-weight:600;color:#64748b;">Chưa có trang nào</p>
-                    <a href="{{ route('admin.pages.create') }}" style="font-size:13px;color:#2563eb;margin-top:6px;display:inline-block;">Tạo trang đầu tiên <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+                    <a href="{{ locale_route('admin.pages.create') }}" style="font-size:13px;color:#2563eb;margin-top:6px;display:inline-block;">Tạo trang đầu tiên <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
                 </td>
             </tr>
             @endforelse

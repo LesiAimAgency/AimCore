@@ -4,7 +4,7 @@
 @section('page-subtitle', 'Quản lý hệ thống đại lý phân phối và doanh thu')
 
 @section('page-actions')
-<a href="{{ route('admin.agents.create') }}" class="btn btn-primary">
+<a href="{{ locale_route('admin.agents.create') }}" class="btn btn-primary">
     <i class="fa-solid fa-plus"></i> Thêm đại lý
 </a>
 @endsection
@@ -35,7 +35,7 @@
             <i class="fa-solid fa-filter"></i> Lọc
         </button>
         @if(request()->hasAny(['search','type','status']))
-            <a href="{{ route('admin.agents.index') }}" class="btn btn-secondary" style="height:40px; border-radius:10px; display:flex; align-items:center;">
+            <a href="{{ locale_route('admin.agents.index') }}" class="btn btn-secondary" style="height:40px; border-radius:10px; display:flex; align-items:center;">
                 <i class="fa-solid fa-xmark"></i> Xóa lọc
             </a>
         @endif
@@ -65,7 +65,7 @@
                                 {{ strtoupper(mb_substr($agent->name, 0, 1)) }}
                             </div>
                             <div>
-                                <a href="{{ route('admin.agents.show', $agent) }}" style="font-size:14px;font-weight:700;color:#1e293b;text-decoration:none;display:block;margin-bottom:2px;" class="hover:text-blue-600">
+                                <a href="{{ locale_route('admin.agents.show', $agent) }}" style="font-size:14px;font-weight:700;color:#1e293b;text-decoration:none;display:block;margin-bottom:2px;" class="hover:text-blue-600">
                                     {{ $agent->name }}
                                 </a>
                                 <div style="display:flex;align-items:center;gap:6px;">
@@ -105,7 +105,7 @@
                     <td class="tbl-td" style="text-align:right; padding:16px;">
                         <div style="text-align:right;">
                             <p style="font-size:14px;font-weight:800;color:#0f172a;margin-bottom:2px;">{{ number_format($agent->orders_sum_total ?: 0, 0, ',', '.') }}₫</p>
-                            <a href="{{ route('admin.orders.index') }}?search={{ urlencode($agent->name) }}"
+                            <a href="{{ locale_route('admin.orders.index') }}?search={{ urlencode($agent->name) }}"
                                style="font-size:11px;font-weight:600;color:#2563eb;text-decoration:none;background:#eff6ff;padding:2px 8px;border-radius:6px;">
                                 {{ $agent->orders_count }} đơn hàng
                             </a>
@@ -127,13 +127,13 @@
                     </td>
                     <td class="tbl-td" style="text-align:center; padding:16px;">
                         <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
-                            <a href="{{ route('admin.agents.show', $agent) }}" class="act-btn view" style="width:34px; height:34px; border-radius:10px;" title="Xem chi tiết">
+                            <a href="{{ locale_route('admin.agents.show', $agent) }}" class="act-btn view" style="width:34px; height:34px; border-radius:10px;" title="Xem chi tiết">
                                 <i class="fa-solid fa-eye"></i>
                             </a>
-                            <a href="{{ route('admin.agents.edit', $agent) }}" class="act-btn edit" style="width:34px; height:34px; border-radius:10px;" title="Chỉnh sửa">
+                            <a href="{{ locale_route('admin.agents.edit', $agent) }}" class="act-btn edit" style="width:34px; height:34px; border-radius:10px;" title="Chỉnh sửa">
                                 <i class="fa-solid fa-pen"></i>
                             </a>
-                            <form action="{{ route('admin.agents.destroy', $agent) }}" method="POST"
+                            <form action="{{ locale_route('admin.agents.destroy', $agent) }}" method="POST"
                                   onsubmit="return confirm('Xóa đại lý {{ addslashes($agent->name) }}?')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="act-btn del" style="width:34px; height:34px; border-radius:10px;" title="Xóa">
