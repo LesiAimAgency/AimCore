@@ -60,14 +60,14 @@ class ViettinmartDataSyncService
                     ->first();
 
                 if (! $tenant) {
-                    $tenant = Tenant::firstOrCreate(
+                    $tenant = Tenant::find(3) ?? Tenant::firstOrCreate(
                         ['code' => 'viettinmart-eco'],
                         ['name' => 'Viettinmart E-commerce', 'status' => 'active']
                     );
                 }
-                $targetTenantId = $tenant?->id ?? $targetProjectId;
+                $targetTenantId = $tenant?->id ?? 3;
             } else {
-                $targetTenantId = $targetTenantId ?: $targetProjectId;
+                $targetTenantId = $targetTenantId ?: 3;
             }
         }
 
@@ -83,14 +83,14 @@ class ViettinmartDataSyncService
             }
         }
 
-        // 3. Remap tables from legacy project_id = 10 to targetProjectId if needed
+        // 3. Remap tables from legacy project_id = 10 to targetProjectId if needed & normalize tenant_id
         $remappedTables = [];
-        if ($targetProjectId !== 10) {
-            foreach ($this->projectTables as $table) {
-                if (! Schema::hasTable($table) || ! Schema::hasColumn($table, 'project_id')) {
-                    continue;
-                }
+        foreach ($this->projectTables as $table) {
+            if (! Schema::hasTable($table)) {
+                continue;
+            }
 
+            if ($targetProjectId !== 10 && Schema::hasColumn($table, 'project_id')) {
                 $count10 = DB::table($table)->where('project_id', 10)->count();
                 $countTarget = DB::table($table)->where('project_id', $targetProjectId)->count();
 
@@ -100,25 +100,29 @@ class ViettinmartDataSyncService
                     ]);
                     $remappedTables[$table] = $count10;
                 }
-
-                // Also normalize tenant_id if column exists
-                if (Schema::hasColumn($table, 'tenant_id') && $targetTenantId) {
-                    DB::table($table)
-                        ->where('project_id', $targetProjectId)
-                        ->where(function ($q) {
-                            $q->whereNull('tenant_id')
-                                ->orWhere('tenant_id', 0)
-                                ->orWhere('tenant_id', 3)
-                                ->orWhere('tenant_id', 10);
-                        })
-                        ->update(['tenant_id' => $targetTenantId]);
-                }
             }
 
-            if (! empty($remappedTables)) {
-                $log[] = 'Remapped tables from project_id=10: '.json_encode($remappedTables);
-                Log::info("ViettinmartDataSyncService: Remapped tables for project {$targetProjectId}", $remappedTables);
+            // Always ensure tenant_id is normalized to targetTenantId
+            if (Schema::hasColumn($table, 'tenant_id') && $targetTenantId) {
+                DB::table($table)
+                    ->where(function ($q) use ($targetProjectId) {
+                        $q->where('project_id', $targetProjectId);
+                        if ($targetProjectId !== 10) {
+                            $q->orWhere('project_id', 10);
+                        }
+                    })
+                    ->where(function ($q) {
+                        $q->whereNull('tenant_id')
+                            ->orWhere('tenant_id', 0)
+                            ->orWhere('tenant_id', 10);
+                    })
+                    ->update(['tenant_id' => $targetTenantId]);
             }
+        }
+
+        if (! empty($remappedTables)) {
+            $log[] = 'Remapped tables from project_id=10: '.json_encode($remappedTables);
+            Log::info("ViettinmartDataSyncService: Remapped tables for project {$targetProjectId}", $remappedTables);
         }
 
         // 4. Sanitize widgets settings JSON to replace project_id and tenant_id

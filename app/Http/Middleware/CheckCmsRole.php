@@ -74,13 +74,25 @@ class CheckCmsRole
             $request->attributes->set('auth_user', $user);
             Auth::setUser($user);
 
-            // Enforce Tenant Isolation: Ensure user belongs to this project
+            // Enforce Tenant Isolation: Ensure user belongs to this project 100% based on tenant_id
             $project = $request->attributes->get('project') ?? Project::where('code', $projectCode)->first();
             $isSuperAdmin = ($user->level === 0) || in_array($user->role, ['super_admin', 'superadmin', 'dev']);
 
             if (! $isSuperAdmin && $project) {
-                $projectIds = is_array($user->project_ids) ? $user->project_ids : json_decode($user->project_ids ?? '[]', true);
-                if (! in_array($project->id, $projectIds ?? [])) {
+                $projectTenantId = $project->tenant_id ?? (Tenant::where('code', $project->code)->value('id') ?? $project->id);
+                $userTenantId = $user->tenant_id;
+
+                // 100% TENANT_ID BASED:
+                $hasAccess = (! empty($userTenantId) && ! empty($projectTenantId) && (int) $userTenantId === (int) $projectTenantId);
+
+                if (! $hasAccess) {
+                    $projectIds = is_array($user->project_ids) ? $user->project_ids : json_decode($user->project_ids ?? '[]', true);
+                    if (is_array($projectIds) && (in_array($project->id, $projectIds) || in_array($projectTenantId, $projectIds))) {
+                        $hasAccess = true;
+                    }
+                }
+
+                if (! $hasAccess) {
                     abort(403, 'Bạn không có quyền truy cập dự án này.');
                 }
             }
@@ -90,8 +102,8 @@ class CheckCmsRole
                 return $next($request);
             }
 
-            // Allow all users with cms, admin, or dev role
-            if (isset($user->role) && in_array($user->role, ['cms', 'admin', 'dev'])) {
+            // Allow all users with cms, admin, dev, manager, web_admin, store_manager role
+            if (isset($user->role) && in_array($user->role, ['cms', 'admin', 'dev', 'manager', 'web_admin', 'store_manager'])) {
                 return $next($request);
             }
 

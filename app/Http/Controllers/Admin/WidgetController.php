@@ -72,14 +72,33 @@ class WidgetController extends Controller
         $tenantId = $currentProject?->tenant_id ?? session('current_tenant_id') ?? $projId;
 
         // Auto-seed or auto-heal widgets if project currently has 0 widgets
-        if ($projId) {
-            $widgetCount = Widget::withoutGlobalScope('tenant')->where('project_id', $projId)->count();
+        if ($projId || $tenantId) {
+            $widgetCount = Widget::withoutGlobalScope('tenant')
+                ->where(function ($q) use ($tenantId, $projId) {
+                    if ($tenantId) {
+                        $q->where('tenant_id', $tenantId);
+                    }
+                    if ($projId) {
+                        $q->orWhere('project_id', $projId);
+                    }
+                })
+                ->count();
+
             if ($widgetCount === 0) {
                 // Auto-heal Viettinmart data if applicable
                 if ($currentProject && ($currentProject->code === 'viettinmart-eco' || $currentProject->code === 'viettinmart')) {
                     try {
                         app(ViettinmartDataSyncService::class)->syncProjectId($projId, $tenantId);
-                        $widgetCount = Widget::withoutGlobalScope('tenant')->where('project_id', $projId)->count();
+                        $widgetCount = Widget::withoutGlobalScope('tenant')
+                            ->where(function ($q) use ($tenantId, $projId) {
+                                if ($tenantId) {
+                                    $q->where('tenant_id', $tenantId);
+                                }
+                                if ($projId) {
+                                    $q->orWhere('project_id', $projId);
+                                }
+                            })
+                            ->count();
                     } catch (\Throwable $e) {
                         \Log::warning('ViettinmartDataSyncService failed in WidgetController: '.$e->getMessage());
                     }
@@ -106,8 +125,15 @@ class WidgetController extends Controller
         }
 
         $query = Widget::withoutGlobalScope('tenant')->orderBy('area')->orderBy('sort_order');
-        if ($projId) {
-            $query->where('project_id', $projId);
+        if ($tenantId || $projId) {
+            $query->where(function ($q) use ($tenantId, $projId) {
+                if ($tenantId) {
+                    $q->where('tenant_id', $tenantId);
+                }
+                if ($projId) {
+                    $q->orWhere('project_id', $projId);
+                }
+            });
         }
 
         $existingWidgets = $query->get()

@@ -13,11 +13,17 @@ class ViettinmartWidgetsSeeder extends Seeder
 {
     public function run(?int $projectId = null, ?int $tenantId = null): void
     {
+        $project = null;
         if (! $projectId) {
-            $project = Project::where('code', 'viettinmart-eco')->orWhere('code', 'viettinmart')->first() ?? Project::find(10);
+            $project = Project::where('code', 'viettinmart-eco')->orWhere('code', 'viettinmart')->first();
             $projectId = $project ? $project->id : 10;
+        } else {
+            $project = Project::find($projectId);
         }
-        $tenantId = $tenantId ?? $projectId;
+
+        if (! $tenantId) {
+            $tenantId = $project?->tenant_id ?? (Tenant::where('code', 'viettinmart')->value('id') ?? 3);
+        }
 
         if (! Schema::hasTable('widgets')) {
             return;
@@ -30,7 +36,7 @@ class ViettinmartWidgetsSeeder extends Seeder
             return;
         }
 
-        $this->command?->info("Seeding authentic 30 Viettinmart widgets for project {$projectId}...");
+        $this->command?->info("Seeding authentic 30 Viettinmart widgets for project {$projectId} (tenant {$tenantId})...");
 
         $widgets = json_decode(File::get($widgetsFile), true) ?? [];
 
@@ -40,7 +46,14 @@ class ViettinmartWidgetsSeeder extends Seeder
         if (File::exists($p10CatFile) && Schema::hasTable('product_categories')) {
             $p10Cats = json_decode(File::get($p10CatFile), true) ?? [];
             $currentCats = ProductCategory::withoutGlobalScopes()
-                ->where('project_id', $projectId)
+                ->where(function ($q) use ($tenantId, $projectId) {
+                    if ($tenantId) {
+                        $q->where('tenant_id', $tenantId);
+                    }
+                    if ($projectId) {
+                        $q->orWhere('project_id', $projectId);
+                    }
+                })
                 ->pluck('id', 'slug')
                 ->toArray();
 
@@ -53,8 +66,17 @@ class ViettinmartWidgetsSeeder extends Seeder
             }
         }
 
-        // Delete existing widgets for this project
-        Widget::where('project_id', $projectId)->delete();
+        // Delete existing widgets for this tenant / project
+        Widget::withoutGlobalScopes()
+            ->where(function ($q) use ($tenantId, $projectId) {
+                if ($tenantId) {
+                    $q->where('tenant_id', $tenantId);
+                }
+                if ($projectId) {
+                    $q->orWhere('project_id', $projectId);
+                }
+            })
+            ->delete();
 
         foreach ($widgets as $item) {
             $settings = $item['settings'];

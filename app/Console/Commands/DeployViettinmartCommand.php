@@ -25,18 +25,9 @@ class DeployViettinmartCommand extends Command
         if (! $projectId) {
             $project = Project::where('code', 'viettinmart-eco')
                 ->orWhere('code', 'viettinmart')
+                ->orWhere('tenant_id', 3)
+                ->orWhere('name', 'like', '%Viettinmart%')
                 ->first();
-
-            if (! $project) {
-                $candidate = Project::find(10);
-                if ($candidate && (str_contains(strtolower($candidate->code), 'viettinmart') || str_contains(strtolower($candidate->name), 'viettinmart') || str_contains(strtolower($candidate->code), 'vtm'))) {
-                    $project = $candidate;
-                }
-            }
-
-            if (! $project) {
-                $project = Project::where('name', 'like', '%Viettinmart%')->first();
-            }
 
             if (! $project) {
                 $this->info('Chưa có dự án Viettinmart trong hệ thống. Đang tự động tạo dự án mới: Viettinmart (code: viettinmart-eco)...');

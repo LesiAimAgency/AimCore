@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Agent;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Project;
@@ -308,8 +309,8 @@ class DashboardController extends Controller
         // Agent Performance ranking
         $agentPerformance = collect();
         try {
-            if (class_exists(\App\Models\Agent::class)) {
-                $agentQuery = \App\Models\Agent::query();
+            if (class_exists(Agent::class)) {
+                $agentQuery = Agent::query();
                 if ($projectId && Schema::hasColumn('agents', 'project_id')) {
                     $agentQuery->where('project_id', $projectId);
                 }

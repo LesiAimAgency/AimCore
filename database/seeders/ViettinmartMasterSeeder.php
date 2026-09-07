@@ -21,9 +21,12 @@ class ViettinmartMasterSeeder extends Seeder
         if (! $projectId) {
             $project = Project::where('code', 'viettinmart-eco')
                 ->orWhere('code', 'viettinmart')
+                ->orWhere('tenant_id', 3)
                 ->orWhere('name', 'like', '%Viettinmart%')
                 ->first();
             $projectId = $project ? $project->id : 10;
+        } else {
+            $project = Project::find($projectId);
         }
 
         if (! $tenantId || ! Tenant::where('id', $tenantId)->exists()) {
@@ -31,6 +34,9 @@ class ViettinmartMasterSeeder extends Seeder
                 ->orWhere('code', 'viettinmart-eco')
                 ->orWhere('name', 'like', '%Viettinmart%')
                 ->first();
+            if (! $tenant && $project && $project->tenant_id) {
+                $tenant = Tenant::find($project->tenant_id);
+            }
             if (! $tenant) {
                 $tenant = Tenant::find(3) ?? Tenant::first();
             }
@@ -41,7 +47,7 @@ class ViettinmartMasterSeeder extends Seeder
                     'status' => 'active',
                 ]);
             }
-            $tenantId = $tenant ? $tenant->id : null;
+            $tenantId = $tenant ? $tenant->id : 3;
         }
 
         $this->command->info("=== BẮT ĐẦU SEED DỮ LIỆU VIETTINMART VÀO VGT CORE (Project ID: {$projectId}, Tenant ID: {$tenantId}) ===");

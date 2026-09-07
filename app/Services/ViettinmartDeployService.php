@@ -356,8 +356,11 @@ class ViettinmartDeployService
         // If translations are empty, copy from project 10 or from frontend.php
         if (empty($translations)) {
             $vtmTranslations = DB::table('settings')
-                ->where('project_id', 10)
                 ->where('key', 'translations')
+                ->where(function ($q) {
+                    $q->where('tenant_id', 3)
+                        ->orWhere('project_id', 10);
+                })
                 ->value('value');
 
             if ($vtmTranslations) {

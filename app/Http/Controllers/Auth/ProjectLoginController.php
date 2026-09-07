@@ -47,12 +47,9 @@ class ProjectLoginController extends Controller
         ]);
 
         // Store project code in session for later use
-        $request->session()->put('current_project', $project->code);
+        $projectTenantId = $project->tenant_id ?? (Tenant::where('code', $project->code)->value('id') ?? $project->id);
 
-        // DEMO MODE: Find user in shared database, scoped to this project
-        // Force 'mysql' connection + bypass tenant scope because:
-        // 1. SetProjectDatabase middleware switches default connection to 'project'
-        // 2. BelongsToTenant adds WHERE tenant_id = session(current_tenant_id) but CMS users have tenant_id = NULL
+        // DEMO MODE: Find user in shared database, scoped 100% by tenant_id
         $user = User::on('mysql')
             ->withoutGlobalScope('tenant')
             ->where(function ($q) use ($credentials) {
@@ -60,30 +57,27 @@ class ProjectLoginController extends Controller
                     ->orWhere('email', $credentials['username']);
             })
             ->where(function ($q) {
-                $q->whereIn('role', ['cms', 'admin', 'dev', 'super_admin', 'superadmin']);
+                $q->whereIn('role', ['cms', 'admin', 'dev', 'super_admin', 'superadmin', 'manager', 'web_admin', 'store_manager']);
             })
             ->get()
-            ->first(function ($u) use ($project) {
+            ->first(function ($u) use ($project, $projectTenantId) {
                 // Super admin and Dev can access any project
-                if (in_array($u->role, ['super_admin', 'superadmin', 'dev'])) {
+                if (in_array($u->role, ['super_admin', 'superadmin', 'dev']) || (isset($u->level) && $u->level === 0)) {
                     return true;
                 }
 
-                // Check if this user is scoped to this project
+                // 100% TENANT_ID BASED:
+                if (! empty($u->tenant_id) && ! empty($projectTenantId) && (int) $u->tenant_id === (int) $projectTenantId) {
+                    return true;
+                }
+
+                // Fallback for legacy users without tenant_id
                 $projectIds = is_array($u->project_ids) ? $u->project_ids : json_decode($u->project_ids ?? '[]', true);
-                if (! is_array($projectIds)) {
-                    $projectIds = [];
-                }
-
-                if (in_array($project->id, $projectIds)) {
-                    return true;
-                }
-
-                // If this is Viettinmart, allow legacy user with project_id 10
-                if (($project->code === 'viettinmart-eco' || $project->code === 'viettinmart') && in_array(10, $projectIds)) {
-                    $projectIds[] = $project->id;
-                    $u->project_ids = array_values(array_unique($projectIds));
-                    $u->saveQuietly();
+                if (is_array($projectIds) && (in_array($project->id, $projectIds) || in_array($projectTenantId, $projectIds))) {
+                    if (empty($u->tenant_id) && $projectTenantId) {
+                        $u->tenant_id = $projectTenantId;
+                        $u->saveQuietly();
+                    }
 
                     return true;
                 }
@@ -107,21 +101,21 @@ class ProjectLoginController extends Controller
                 $user->save();
             }
 
-            // Store user ID and project context in session
-            $tenantId = $project->tenant_id ?? $project->id;
+            // 100% TENANT_ID BASED: store tenant context in session
+            $tenantId = $user->tenant_id ?: ($project->tenant_id ?? $project->id);
+            $request->session()->put('current_tenant_id', $tenantId);
             $request->session()->put('project_user_id', $user->id);
             $request->session()->put('project_user_username', $user->username);
             $request->session()->put('current_project', $project->code);
             $request->session()->put('current_project_id', $project->id);
-            $request->session()->put('current_tenant_id', $tenantId);
             $request->session()->regenerate();
+            $request->session()->put('current_tenant_id', $tenantId);
             $request->session()->put('project_user_id', $user->id);
             $request->session()->put('project_user_username', $user->username);
             $request->session()->put('current_project', $project->code);
             $request->session()->put('current_project_id', $project->id);
-            $request->session()->put('current_tenant_id', $tenantId);
 
-            \Log::info("Project login success: {$user->username} for project {$project->code} (project_id: {$project->id}, tenant_id: {$tenantId})");
+            \Log::info("Project login success: {$user->username} for project {$project->code} (tenant_id: {$tenantId})");
 
             return redirect()->intended('/'.$project->code.'/admin');
         }

@@ -193,18 +193,49 @@ class WidgetRenderingService
             }
 
             $projectId = $project?->id;
+            $tenantId = $project?->tenant_id ?? session('current_tenant_id') ?? ($project?->code === 'viettinmart-eco' ? 3 : null);
 
-            $query = Widget::where('area', $area)
+            $query = Widget::withoutGlobalScope('tenant')
+                ->where('area', $area)
                 ->where('is_active', true)
                 ->orderBy('sort_order');
 
-            if ($projectId) {
-                $query->where('project_id', $projectId);
+            if ($tenantId || $projectId) {
+                $query->where(function ($q) use ($tenantId, $projectId) {
+                    if ($tenantId) {
+                        $q->where('tenant_id', $tenantId);
+                    }
+                    if ($projectId) {
+                        $q->orWhere('project_id', $projectId);
+                    }
+                });
             } else {
                 $query->whereNull('project_id');
             }
 
             $widgets = $query->get();
+
+            // Auto-heal fallback for Viettinmart if homepage is empty
+            if ($widgets->isEmpty() && $area === 'homepage-main' && $project && ($project->code === 'viettinmart-eco' || $project->code === 'viettinmart')) {
+                try {
+                    app(\App\Services\ViettinmartDataSyncService::class)->syncProjectId($projectId ?? 10, $tenantId);
+                    $widgets = Widget::withoutGlobalScope('tenant')
+                        ->where('area', $area)
+                        ->where('is_active', true)
+                        ->where(function ($q) use ($tenantId, $projectId) {
+                            if ($tenantId) {
+                                $q->where('tenant_id', $tenantId);
+                            }
+                            if ($projectId) {
+                                $q->orWhere('project_id', $projectId);
+                            }
+                        })
+                        ->orderBy('sort_order')
+                        ->get();
+                } catch (\Throwable $e) {
+                    // Ignore auto-heal error on render
+                }
+            }
 
             foreach ($widgets as $widget) {
                 $settings = $widget->settings ?? [];
