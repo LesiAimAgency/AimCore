@@ -383,14 +383,6 @@ class ShopController extends Controller
             ->active()
             ->with([
                 'categories',
-                'productAttributes.attribute',
-                'productAttributes.attributeValue',
-                'activeVariants' => function ($query) {
-                    $query->with(['variantAttributes.attribute', 'variantAttributes.attributeValue'])
-                        ->orderBy('sort_order');
-                },
-                'variants',
-                'activeCombos.activeVariants',
                 'translations',
                 'approvedReviews',
             ])->first();
