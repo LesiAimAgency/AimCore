@@ -35,12 +35,31 @@ trait ProjectScoped
 
             if ($hasTenantTrait && $tenantId) {
                 // 100% TENANT_ID: BelongsToTenant global scope handles filtering by tenant_id!
-                // Do not enforce strict project_id condition which breaks when project_id shifts between local/server
+                return;
+            }
+
+            if ($tenantId && \Illuminate\Support\Facades\Schema::hasColumn($table, 'tenant_id')) {
+                $builder->where(function ($q) use ($table, $tenantId, $projectId) {
+                    $q->where($table.'.tenant_id', $tenantId);
+                    if ($tenantId == 3) {
+                        $q->orWhere($table.'.project_id', 10);
+                    }
+                    if ($projectId) {
+                        $q->orWhere($table.'.project_id', $projectId);
+                    }
+                });
                 return;
             }
 
             if ($projectId) {
-                $builder->where($table.'.project_id', $projectId);
+                if ($tenantId == 3) {
+                    $builder->where(function ($q) use ($table, $projectId) {
+                        $q->where($table.'.project_id', $projectId)
+                            ->orWhere($table.'.project_id', 10);
+                    });
+                } else {
+                    $builder->where($table.'.project_id', $projectId);
+                }
             }
         });
 

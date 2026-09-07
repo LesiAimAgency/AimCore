@@ -17,11 +17,23 @@ trait BelongsToTenant
             }
         });
 
-        // Tự động filter theo tenant_id
+        // Tự động filter theo tenant_id (100% tenant-based với fallback project_id)
         static::addGlobalScope('tenant', function (Builder $builder) {
             $tenantId = session('current_tenant_id') ?? config('app.default_tenant_id') ?? (app()->bound('current_tenant_id') ? app('current_tenant_id') : null);
             if ($tenantId) {
-                $builder->where($builder->getModel()->getTable().'.tenant_id', $tenantId);
+                $table = $builder->getModel()->getTable();
+                $projectId = session('current_project_id') ?? (app()->bound('current_project_id') ? app('current_project_id') : null);
+
+                $builder->where(function ($query) use ($table, $tenantId, $projectId) {
+                    $query->where($table.'.tenant_id', $tenantId);
+                    if ($tenantId == 3) {
+                        // Viettinmart legacy data project_id was 10
+                        $query->orWhere($table.'.project_id', 10);
+                    }
+                    if ($projectId) {
+                        $query->orWhere($table.'.project_id', $projectId);
+                    }
+                });
             }
         });
     }

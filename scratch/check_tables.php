@@ -29,7 +29,8 @@ echo "Posts: " . Post::withoutGlobalScopes()->where('project_id', $pId)->count()
 echo "Orders: " . Order::withoutGlobalScopes()->where('project_id', $pId)->count() . "\n";
 echo "OrderItems: " . OrderItem::withoutGlobalScopes()->where('project_id', $pId)->count() . "\n";
 echo "Settings: " . DB::table('settings')->where('project_id', $pId)->count() . "\n";
-echo "Menus: " . Menu::withoutGlobalScopes()->where('project_id', $pId)->count() . "\n";
+echo "Orders with null agent: " . Order::withoutGlobalScopes()->whereNull('agent_id')->count() . "\n";
+echo "Orders with agent: " . Order::withoutGlobalScopes()->whereNotNull('agent_id')->count() . "\n";
 
 echo "\n--- BY TENANT_ID = 3 ---\n";
 echo "Widgets: " . Widget::withoutGlobalScopes()->where('tenant_id', 3)->count() . "\n";
