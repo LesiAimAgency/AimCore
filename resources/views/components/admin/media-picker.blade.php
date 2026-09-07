@@ -10,6 +10,7 @@
      x-data="mediaPickerData()" 
      x-show="show" 
      x-cloak 
+     style="display: none;"
      class="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6"
      @keydown.window.escape="show = false">
     
