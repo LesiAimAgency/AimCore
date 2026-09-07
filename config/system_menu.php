@@ -2,6 +2,14 @@
 
 return [
     [
+        'title' => 'Cấu hình Giao diện',
+        'description' => 'Logo, favicon, màu sắc, font chữ, header, footer',
+        'icon' => 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z',
+        'color' => 'purple',
+        'route' => 'cms.settings.appearance',
+        'permission' => 'settings.appearance',
+    ],
+    [
         'title' => 'Thông tin liên hệ',
         'description' => 'Cấu hình email, số điện thoại, địa chỉ công ty',
         'icon' => 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Project;
 use App\Models\ProjectSetting;
 use App\Models\Setting;
 use App\Services\SettingsService;
@@ -36,9 +37,12 @@ class SettingsController extends Controller
                 \DB::setDefaultConnection($prevConn);
             }
 
-            // Luôn đảm bảo settings.languages hiển thị nếu dự án có đa ngôn ngữ hoặc được cấu hình
+            // Luôn đảm bảo settings.languages và settings.appearance hiển thị
             if (! in_array('settings.languages', $enabledSettings)) {
                 $enabledSettings[] = 'settings.languages';
+            }
+            if (! in_array('settings.appearance', $enabledSettings)) {
+                $enabledSettings[] = 'settings.appearance';
             }
 
             // Chỉ hiển thị các module đã được bật
@@ -273,6 +277,14 @@ class SettingsController extends Controller
             \DB::setDefaultConnection($prevConn);
         }
 
+        // Luôn đảm bảo settings.languages và settings.appearance hiển thị
+        if (! in_array('settings.languages', $enabledSettings)) {
+            $enabledSettings[] = 'settings.languages';
+        }
+        if (! in_array('settings.appearance', $enabledSettings)) {
+            $enabledSettings[] = 'settings.appearance';
+        }
+
         // Chỉ hiển thị các module đã được bật
         $modules = collect(config('system_menu'))
             ->filter(function ($module) use ($enabledSettings) {
@@ -318,5 +330,196 @@ class SettingsController extends Controller
                 'message' => 'Lỗi: '.$e->getMessage(),
             ]);
         }
+    }
+
+    public function appearance(Request $request)
+    {
+        return $this->group($request, 'appearance');
+    }
+
+    public function group(Request $request, string $group = 'appearance')
+    {
+        [$project, $tenantId] = $this->resolveProjectAndTenant($request);
+        $settingsMap = $this->getSettingsMap($project, $tenantId, $group);
+
+        $languages = $settingsMap['languages'] ?? setting('languages', []);
+        if (is_string($languages)) {
+            $languages = json_decode($languages, true) ?: [];
+        }
+        $activeLanguages = collect($languages)->where('is_active', true)->values()->toArray();
+        if (empty($activeLanguages)) {
+            $activeLanguages = [
+                ['code' => 'vi', 'name' => 'Tiếng Việt', 'flag_emoji' => '🇻🇳', 'flag_url' => '', 'is_default' => true, 'is_active' => true],
+            ];
+        }
+
+        $viewData = [
+            'group' => $group,
+            'settings' => $settingsMap,
+            'settingsMap' => $settingsMap,
+            'activeLanguages' => $activeLanguages,
+            'project' => $project,
+            'currentProject' => $project,
+        ];
+
+        // 1. Theme specific view
+        $theme = ($project?->features['theme'] ?? null) ?: ($project?->code === 'viettinmart-eco' ? 'viettinmartdemo' : setting('theme'));
+        if ($theme && view()->exists("frontend.themes.{$theme}.admin.settings.{$group}")) {
+            return view("frontend.themes.{$theme}.admin.settings.{$group}", $viewData);
+        }
+        if (view()->exists("admin.settings.{$group}")) {
+            return view("admin.settings.{$group}", $viewData);
+        }
+        if (view()->exists("cms.settings.{$group}")) {
+            return view("cms.settings.{$group}", $viewData);
+        }
+
+        return view('cms.settings.group', $viewData);
+    }
+
+    public function updateAppearance(Request $request)
+    {
+        return $this->updateGroup($request, 'appearance');
+    }
+
+    public function updateGroup(Request $request, string $group = 'appearance')
+    {
+        [$project, $tenantId] = $this->resolveProjectAndTenant($request);
+
+        $inputs = $request->input('settings', $request->except(['_token', '_method', 'active_tab']));
+
+        // Handle file uploads if any
+        if ($request->hasFile('settings')) {
+            foreach ($request->file('settings') as $key => $file) {
+                if ($file && $file->isValid()) {
+                    $path = $file->store('settings', 'public');
+                    $inputs[$key] = '/storage/'.$path;
+                }
+            }
+        }
+
+        \DB::beginTransaction();
+        try {
+            foreach ($inputs as $key => $value) {
+                $encodedVal = is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE) : (string) $value;
+                $payload = is_array($value) ? $value : ['value' => $value];
+
+                // Delete previous setting for tenant/project to ensure clean state
+                \DB::table('settings')
+                    ->where('key', $key)
+                    ->where(function ($q) use ($project, $tenantId) {
+                        if ($tenantId) {
+                            $q->where('tenant_id', $tenantId);
+                        }
+                        if ($project) {
+                            $q->orWhere('project_id', $project->id);
+                        }
+                        if ($tenantId == 3) {
+                            $q->orWhere('project_id', 10);
+                        }
+                    })
+                    ->delete();
+
+                // Insert clean setting record
+                \DB::table('settings')->insert([
+                    'key' => $key,
+                    'value' => $encodedVal,
+                    'payload' => json_encode($payload),
+                    'group' => $group,
+                    'project_id' => $project?->id,
+                    'tenant_id' => $tenantId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+            \DB::commit();
+
+            SettingsService::getInstance()->clearCache();
+            \Cache::flush();
+
+            $activeTab = $request->input('active_tab');
+            $redirectUrl = url()->previous();
+            if ($activeTab && ! str_contains($redirectUrl, '#')) {
+                $redirectUrl .= '#'.ltrim($activeTab, '#');
+            }
+
+            return redirect($redirectUrl)->with('alert', [
+                'type' => 'success',
+                'message' => 'Cập nhật cấu hình thành công!',
+            ])->with('success', 'Cập nhật cấu hình thành công!');
+        } catch (\Throwable $e) {
+            \DB::rollBack();
+
+            return back()->withInput()->with('alert', [
+                'type' => 'error',
+                'message' => 'Lỗi lưu cấu hình: '.$e->getMessage(),
+            ]);
+        }
+    }
+
+    protected function resolveProjectAndTenant(Request $request): array
+    {
+        $project = $request->attributes->get('project');
+        if (! $project && function_exists('current_project')) {
+            $project = current_project();
+        }
+        if (! $project && app()->bound('current_project_id')) {
+            $project = Project::find(app('current_project_id'));
+        }
+        if (! $project && session('current_project_id')) {
+            $project = Project::find(session('current_project_id'));
+        }
+        if (! $project && $request->route('projectCode')) {
+            $project = Project::where('code', $request->route('projectCode'))->first();
+        }
+
+        $tenantId = $project?->tenant_id;
+        if (! $tenantId && ($project?->code === 'viettinmart-eco' || str_contains($project?->code ?? '', 'viettinmart'))) {
+            $tenantId = 3;
+        }
+        if (! $tenantId) {
+            $tenantId = session('current_tenant_id') ?? config('app.default_tenant_id') ?? 3;
+        }
+
+        return [$project, (int) $tenantId];
+    }
+
+    protected function getSettingsMap(?Project $project, int $tenantId, string $group = 'appearance'): array
+    {
+        $globalSettings = Setting::withoutGlobalScopes()
+            ->whereNull('tenant_id')
+            ->whereNull('project_id')
+            ->get();
+
+        $overrideSettings = Setting::withoutGlobalScopes()
+            ->where(function ($q) use ($tenantId, $project) {
+                $q->where('tenant_id', $tenantId);
+                if ($project) {
+                    $q->orWhere('project_id', $project->id);
+                }
+                if ($tenantId == 3) {
+                    $q->orWhere('project_id', 10);
+                }
+            })
+            ->get();
+
+        $map = [];
+        foreach ($globalSettings as $s) {
+            $val = $s->value;
+            if (is_null($val) && ! empty($s->payload)) {
+                $val = is_array($s->payload) ? ($s->payload['value'] ?? $s->payload) : $s->payload;
+            }
+            $map[$s->key] = $val;
+        }
+
+        foreach ($overrideSettings as $s) {
+            $val = $s->value;
+            if (is_null($val) && ! empty($s->payload)) {
+                $val = is_array($s->payload) ? ($s->payload['value'] ?? $s->payload) : $s->payload;
+            }
+            $map[$s->key] = $val;
+        }
+
+        return $map;
     }
 }

@@ -292,8 +292,6 @@ if (! function_exists('locale_route')) {
             'admin.form-submissions.overview' => 'project.admin.form-submissions.index',
             'project.admin.form-templates.index' => 'project.admin.widget-templates.index',
             'admin.form-templates.index' => 'project.admin.widget-templates.index',
-            'project.admin.settings.group' => 'project.admin.theme-options.index',
-            'admin.settings.group' => 'project.admin.theme-options.index',
             'project.admin.modules.index' => 'project.admin.settings.index',
             'admin.modules.index' => 'project.admin.settings.index',
             'project.admin.spam.dashboard' => 'project.admin.settings.index',
@@ -303,24 +301,41 @@ if (! function_exists('locale_route')) {
             $name = $aliases[$name];
         }
 
+        $projectCode = request()->route('projectCode')
+            ?? (is_array(session('current_project')) ? (session('current_project')['code'] ?? null) : (session('current_project')->code ?? null));
+
         if (! Route::has($name)) {
-            $cleanName = str_replace('project.', '', $name);
-            if (Route::has($cleanName)) {
-                $name = $cleanName;
+            if ($projectCode && Route::has('project.'.$name)) {
+                $name = 'project.'.$name;
             } else {
-                return '#';
+                $cleanName = str_replace('project.', '', $name);
+                if (Route::has($cleanName)) {
+                    $name = $cleanName;
+                } else {
+                    return '#';
+                }
             }
         }
 
         if (! is_array($params)) {
-            $params = ['slug' => $params];
-        } elseif (isset($params[0]) && ! isset($params['slug'])) {
-            $params['slug'] = $params[0];
-            unset($params[0]);
+            if (str_contains($name, 'group')) {
+                $params = ['group' => $params];
+            } else {
+                $params = ['slug' => $params];
+            }
+        } elseif (isset($params[0])) {
+            if (str_contains($name, 'group')) {
+                if (! isset($params['group'])) {
+                    $params['group'] = $params[0];
+                    unset($params[0]);
+                }
+            } else {
+                if (! isset($params['slug'])) {
+                    $params['slug'] = $params[0];
+                    unset($params[0]);
+                }
+            }
         }
-
-        $projectCode = request()->route('projectCode')
-            ?? (session('current_project')['code'] ?? (session('current_project')->code ?? null));
 
         if ($projectCode && ! isset($params['projectCode'])) {
             $params['projectCode'] = $projectCode;

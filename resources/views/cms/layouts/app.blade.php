@@ -337,6 +337,12 @@
                                 </svg>
                                 <span class="text-sm nav-text">Cấu hình Website</span>
                             </a>
+                            <a href="{{ isset($currentProject) && $currentProject ? (Route::has('project.admin.settings.appearance') ? route('project.admin.settings.appearance', $currentProject->code) : url($currentProject->code . '/admin/settings/appearance')) : (Route::has('admin.settings.appearance') ? route('admin.settings.appearance') : url('admin/settings/appearance')) }}" class="flex items-center px-4 py-2 text-slate-400 hover:bg-[#98191F] hover:text-white rounded-lg transition-all duration-200 {{ request()->is('*/admin/settings/appearance*') || request()->is('*/admin/settings/group/appearance*') || request()->routeIs('*.settings.appearance*') ? 'bg-[#98191F] text-white' : '' }}">
+                                <svg class="h-4 w-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                                </svg>
+                                <span class="text-sm nav-text">Cấu hình Giao diện</span>
+                            </a>
                              <a href="{{ isset($currentProject) && $currentProject ? route('project.admin.theme-options.index', $currentProject->code) : route('cms.theme-options.index') }}" class="flex items-center px-4 py-2 text-slate-400 hover:bg-[#98191F] hover:text-white rounded-lg transition-all duration-200 {{ request()->routeIs('project.admin.theme-options.*') || request()->routeIs('cms.theme-options.*') ? 'bg-[#98191F] text-white' : '' }}">
                                 <svg class="h-4 w-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>

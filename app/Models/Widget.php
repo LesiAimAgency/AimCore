@@ -155,7 +155,7 @@ class Widget extends Model
                     $items = static::prefixMenuItemsUrl($items, $projectCode);
                 }
 
-                return $items;
+                return static::deduplicateMenuItems($items);
             }
         }
 
@@ -198,7 +198,20 @@ class Widget extends Model
             $items = static::prefixMenuItemsUrl($items, $projectCode);
         }
 
-        return $items;
+        return static::deduplicateMenuItems($items);
+    }
+
+    protected static function deduplicateMenuItems(array $items): array
+    {
+        return array_values(collect($items)->unique(function ($i) {
+            return ($i['label'] ?? '').'|'.($i['url'] ?? '');
+        })->map(function ($i) {
+            if (! empty($i['children']) && is_array($i['children'])) {
+                $i['children'] = static::deduplicateMenuItems($i['children']);
+            }
+
+            return $i;
+        })->toArray());
     }
 
     protected static function prefixMenuItemsUrl(array $items, string $projectCode): array

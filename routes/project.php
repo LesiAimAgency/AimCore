@@ -347,6 +347,10 @@ Route::prefix('{projectCode}/admin')
         })->name('widgets.clear-cache');
 
         Route::prefix('settings')->name('settings.')->group(function () {
+            Route::get('appearance', [SettingsController::class, 'appearance'])->name('appearance');
+            Route::match(['put', 'post'], 'appearance', [SettingsController::class, 'updateAppearance'])->name('appearance.update');
+            Route::get('group/{group}', [SettingsController::class, 'group'])->name('group');
+            Route::match(['put', 'post'], 'group/{group}', [SettingsController::class, 'updateGroup'])->name('group.update');
             Route::post('scan-translations', [SettingsController::class, 'scanTranslations'])->name('scan-translations');
             Route::get('contact', fn () => view('cms.settings.contact'))->name('contact');
             Route::get('notifications', fn () => view('cms.settings.notifications'))->name('notifications');

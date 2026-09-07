@@ -1,7 +1,7 @@
 @php
     $inShop     = request()->routeIs('*.products.*') || request()->routeIs('*.attributes.*') || (request()->routeIs('*.categories.*') && request()->get('type','product') === 'product');
     $inContent  = request()->routeIs('*.posts.*') || request()->routeIs('*.pages.*') || request()->routeIs('*.form-templates.*') || request()->routeIs('*.widget-templates.*') || request()->routeIs('*.modal-forms.*') || request()->routeIs('*.form-submissions.*') || (request()->routeIs('*.categories.*') && request()->get('type') === 'post');
-    $inMedia    = request()->routeIs('*.media.*') || request()->routeIs('*.widgets.*') || request()->routeIs('*.code-widgets.*') || request()->routeIs('*.menus.*') || request()->routeIs('*.theme-options.*') || request()->routeIs('*.website-config.*') || request()->is('*/admin/settings/group/appearance');
+    $inMedia    = request()->routeIs('*.media.*') || request()->routeIs('*.widgets.*') || request()->routeIs('*.code-widgets.*') || request()->routeIs('*.menus.*') || request()->routeIs('*.theme-options.*') || request()->routeIs('*.website-config.*') || request()->is('*/admin/settings/group/appearance*') || request()->is('*/admin/settings/appearance*');
     $inSettings = request()->routeIs('*.settings.*') || request()->routeIs('*.languages.*') || request()->routeIs('*.translations.*');
     $inSystem   = request()->routeIs('*.modules.*') || request()->routeIs('*.logs.*') || request()->routeIs('*.seo.*') || request()->routeIs('*.spam.*');
 

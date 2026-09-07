@@ -126,7 +126,59 @@ class ViettinmartDataSyncService
             Log::info("ViettinmartDataSyncService: Remapped tables for project {$targetProjectId}", $remappedTables);
         }
 
-        // 4. Sanitize widgets settings JSON to replace project_id and tenant_id
+        // 4. Deduplicate product_categories by slug for tenant / project
+        if (Schema::hasTable('product_categories')) {
+            $duplicateSlugs = DB::table('product_categories')
+                ->where(function ($q) use ($targetProjectId, $targetTenantId) {
+                    $q->where('tenant_id', $targetTenantId)
+                        ->orWhere('project_id', $targetProjectId);
+                    if ($targetProjectId !== 10) {
+                        $q->orWhere('project_id', 10);
+                    }
+                })
+                ->whereNull('deleted_at')
+                ->select('slug', DB::raw('count(*) as total'))
+                ->groupBy('slug')
+                ->having('total', '>', 1)
+                ->pluck('slug');
+
+            foreach ($duplicateSlugs as $slug) {
+                $categories = DB::table('product_categories')
+                    ->where('slug', $slug)
+                    ->where(function ($q) use ($targetProjectId, $targetTenantId) {
+                        $q->where('tenant_id', $targetTenantId)
+                            ->orWhere('project_id', $targetProjectId);
+                        if ($targetProjectId !== 10) {
+                            $q->orWhere('project_id', 10);
+                        }
+                    })
+                    ->whereNull('deleted_at')
+                    ->orderBy('id', 'asc')
+                    ->get();
+
+                if ($categories->count() > 1) {
+                    $primaryCategory = $categories->first();
+                    $duplicateIds = $categories->slice(1)->pluck('id')->toArray();
+
+                    // Remap product references to primary category
+                    if (Schema::hasTable('products') && Schema::hasColumn('products', 'product_category_id')) {
+                        DB::table('products')->whereIn('product_category_id', $duplicateIds)->update(['product_category_id' => $primaryCategory->id]);
+                    }
+                    if (Schema::hasTable('products_enhanced') && Schema::hasColumn('products_enhanced', 'product_category_id')) {
+                        DB::table('products_enhanced')->whereIn('product_category_id', $duplicateIds)->update(['product_category_id' => $primaryCategory->id]);
+                    }
+                    if (Schema::hasTable('product_category_product') && Schema::hasColumn('product_category_product', 'product_category_id')) {
+                        DB::table('product_category_product')->whereIn('product_category_id', $duplicateIds)->update(['product_category_id' => $primaryCategory->id]);
+                    }
+
+                    // Delete duplicate category records
+                    DB::table('product_categories')->whereIn('id', $duplicateIds)->delete();
+                    $log[] = "Deduplicated category '{$slug}': kept ID {$primaryCategory->id}, removed IDs: ".implode(', ', $duplicateIds);
+                }
+            }
+        }
+
+        // 5. Sanitize widgets settings JSON to replace project_id and tenant_id
         if (Schema::hasTable('widgets')) {
             $widgets = Widget::withoutGlobalScopes()
                 ->where('project_id', $targetProjectId)
