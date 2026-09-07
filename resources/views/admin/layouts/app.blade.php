@@ -49,7 +49,20 @@
         </div>
     </div>
 
+    @php
+        $currentProject = $currentProject ?? (request()->attributes->get('project') ?? session('current_project'));
+        $projectCode = $currentProject?->code ?? request()->route('projectCode');
+        $isVtm = ($projectCode === 'viettinmart-eco') 
+            || (($currentProject->features['theme'] ?? '') === 'viettinmartdemo') 
+            || request()->is('viettinmart-eco/*');
+    @endphp
+
     <div class="min-h-screen flex w-full">
+        @if($isVtm)
+            <div class="fixed top-0 left-0 h-screen z-40">
+                @include('frontend.themes.viettinmartdemo.admin.layouts.sidebar')
+            </div>
+        @else
         <!-- Sidebar -->
         <div id="sidebar" class="w-72 bg-[#001B4E] shadow-2xl transition-all duration-300 fixed h-screen overflow-y-auto">
             <!-- Logo -->
@@ -379,9 +392,10 @@
                 </div>
             </div>
         </div>
+        @endif
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col ml-72">
+        <div class="flex-1 flex flex-col {{ $isVtm ? 'ml-[250px]' : 'ml-72' }}">
             <!-- Header -->
             <header class="bg-white shadow-sm border-b border-gray-200">
                 <div class="flex justify-between items-center px-6 py-4">
@@ -470,26 +484,28 @@ const sidebar = document.getElementById('sidebar');
 const sidebarToggle = document.getElementById('sidebarToggle');
 const sidebarTexts = document.querySelectorAll('.sidebar-text, .nav-text');
 const navIcons = document.querySelectorAll('.nav-icon');
-const mainContent = document.querySelector('.flex-1.flex.flex-col.ml-72');
+const mainContent = document.querySelector('.flex-1.flex.flex-col.ml-72') || document.querySelector('.flex-1.flex.flex-col');
 
-sidebarToggle.addEventListener('click', function() {
-    sidebar.classList.toggle('w-72');
-    sidebar.classList.toggle('w-16');
-    
-    if (mainContent) {
-        mainContent.classList.toggle('ml-72');
-        mainContent.classList.toggle('ml-16');
-    }
-    
-    sidebarTexts.forEach(text => {
-        text.classList.toggle('hidden');
+if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', function() {
+        sidebar.classList.toggle('w-72');
+        sidebar.classList.toggle('w-16');
+        
+        if (mainContent) {
+            mainContent.classList.toggle('ml-72');
+            mainContent.classList.toggle('ml-16');
+        }
+        
+        sidebarTexts.forEach(text => {
+            text.classList.toggle('hidden');
+        });
+        
+        navIcons.forEach(icon => {
+            icon.classList.toggle('mr-3');
+            icon.classList.toggle('mx-auto');
+        });
     });
-    
-    navIcons.forEach(icon => {
-        icon.classList.toggle('mr-3');
-        icon.classList.toggle('mx-auto');
-    });
-});
+}
 
 // Dropdown Menus
 document.querySelectorAll('.dropdown-parent').forEach(parent => {

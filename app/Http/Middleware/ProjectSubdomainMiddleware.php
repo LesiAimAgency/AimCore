@@ -71,7 +71,7 @@ class ProjectSubdomainMiddleware
         }
 
         // Prepend active project's theme view path so project theme templates/layouts take precedence
-        $theme = setting('theme');
+        $theme = ($project->features['theme'] ?? null) ?: ($project->code === 'viettinmart-eco' ? 'viettinmartdemo' : setting('theme'));
         if ($theme) {
             $themeViewPath = resource_path("views/frontend/themes/{$theme}");
             if (is_dir($themeViewPath)) {

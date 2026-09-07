@@ -16,15 +16,36 @@ echo "Global setting('theme'): " . setting('theme', 'none') . "\n";
 $urls = [
     '/viettinmart-eco/admin',
     '/viettinmart-eco/admin/products',
+    '/viettinmart-eco/admin/products/create',
     '/viettinmart-eco/admin/orders',
     '/viettinmart-eco/admin/categories',
-    '/viettinmart-eco/admin/settings',
+    '/viettinmart-eco/admin/attributes',
+    '/viettinmart-eco/admin/reviews',
     '/viettinmart-eco/admin/posts',
+    '/viettinmart-eco/admin/pages',
+    '/viettinmart-eco/admin/form-submissions',
+    '/viettinmart-eco/admin/widget-templates',
+    '/viettinmart-eco/admin/theme-options',
+    '/viettinmart-eco/admin/menus',
     '/viettinmart-eco/admin/widgets',
+    '/viettinmart-eco/admin/media/list',
+    '/viettinmart-eco/admin/settings',
+    '/viettinmart-eco/admin/settings/languages',
+    '/viettinmart-eco/admin/settings/seo',
+    '/viettinmart-eco/admin/settings/logs',
+    '/viettinmart-eco/admin/users',
 ];
 
+$session = $app->make('session')->driver();
+$session->start();
+$session->put('current_project', $project);
+$session->put('current_project_id', $project->id);
+$session->put('current_tenant_id', $project->tenant_id);
+$session->put('project_user_id', $user->id);
+$session->put('project_user_username', $user->username ?? $user->email);
+
 foreach ($urls as $url) {
-    $request = Illuminate\Http\Request::create($url, 'GET');
+    $request = Illuminate\Http\Request::create($url, 'GET', [], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
     $request->headers->set('Accept', 'text/html');
     $request->setLaravelSession($session);
     \Illuminate\Support\Facades\Auth::setUser($user);
@@ -35,13 +56,14 @@ foreach ($urls as $url) {
 
     preg_match_all('/id=["\']sidebar["\']/i', $content, $matches);
     $isViettinSidebar = str_contains($content, 'VietTin Mart');
-    $isCmsSidebar = str_contains($content, 'sidebar-text');
-    $isVgtLogo = str_contains($content, 'Logo.png') || str_contains($content, 'logo.png');
+    $isOldVgtSidebar = str_contains($content, 'bg-[#001B4E]');
+    $isVgtLogo = str_contains($content, 'Logo.png') || str_contains($content, 'alt="VGT"');
 
     echo "URL: {$url} => Status: " . $response->getStatusCode() 
+         . ($response->isRedirect() ? " -> " . $response->headers->get('Location') : "")
          . " | Sidebars: " . count($matches[0]) 
          . " | VietTinMart SB: " . ($isViettinSidebar ? 'YES' : 'NO')
-         . " | VGT/CMS SB: " . ($isCmsSidebar ? 'YES' : 'NO')
-         . " | Logo.png: " . ($isVgtLogo ? 'YES' : 'NO')
+         . " | Old VGT SB: " . ($isOldVgtSidebar ? 'YES' : 'NO')
+         . " | VGT Logo: " . ($isVgtLogo ? 'YES' : 'NO')
          . "\n";
 }

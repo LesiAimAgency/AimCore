@@ -277,6 +277,32 @@ if (! function_exists('locale_route')) {
             return $projectCode ? "/{$projectCode}/cua-hang" : '/cua-hang';
         }
 
+        $aliases = [
+            'project.admin.media.index' => 'project.admin.media.list',
+            'admin.media.index' => 'project.admin.media.list',
+            'project.admin.languages.index' => 'project.admin.settings.languages',
+            'admin.languages.index' => 'project.admin.settings.languages',
+            'project.admin.seo.index' => 'project.admin.settings.seo',
+            'admin.seo.index' => 'project.admin.settings.seo',
+            'project.admin.logs.index' => 'project.admin.settings.logs',
+            'admin.logs.index' => 'project.admin.settings.logs',
+            'project.admin.logout' => 'project.logout',
+            'admin.logout' => 'project.logout',
+            'project.admin.form-submissions.overview' => 'project.admin.form-submissions.index',
+            'admin.form-submissions.overview' => 'project.admin.form-submissions.index',
+            'project.admin.form-templates.index' => 'project.admin.widget-templates.index',
+            'admin.form-templates.index' => 'project.admin.widget-templates.index',
+            'project.admin.settings.group' => 'project.admin.theme-options.index',
+            'admin.settings.group' => 'project.admin.theme-options.index',
+            'project.admin.modules.index' => 'project.admin.settings.index',
+            'admin.modules.index' => 'project.admin.settings.index',
+            'project.admin.spam.dashboard' => 'project.admin.settings.index',
+            'admin.spam.dashboard' => 'project.admin.settings.index',
+        ];
+        if (isset($aliases[$name])) {
+            $name = $aliases[$name];
+        }
+
         if (! Route::has($name)) {
             $cleanName = str_replace('project.', '', $name);
             if (Route::has($cleanName)) {
