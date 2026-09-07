@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Viettinmart;
 
-use App\Http\Controllers\Viettinmart\ShopController;
 use App\Models\Category;
 use App\Models\Language;
 use App\Models\Page;

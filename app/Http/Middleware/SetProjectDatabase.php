@@ -108,6 +108,11 @@ class SetProjectDatabase
             // If sqlite in-memory database, share PDO instance so tables exist across connections
             if (config("database.connections.{$defaultConnection}.driver") === 'sqlite' && config("database.connections.{$defaultConnection}.database") === ':memory:') {
                 DB::connection('project')->setPdo(DB::connection($defaultConnection)->getPdo());
+                if (DB::connection($defaultConnection)->getPdo()->inTransaction()) {
+                    $ref = new \ReflectionProperty(DB::connection('project'), 'transactions');
+                    $ref->setAccessible(true);
+                    $ref->setValue(DB::connection('project'), max(1, DB::connection($defaultConnection)->transactionLevel()));
+                }
             }
 
             // Test connection before switching

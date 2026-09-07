@@ -334,11 +334,15 @@ class SettingsController extends Controller
 
     public function appearance(Request $request)
     {
-        return $this->group($request, 'appearance');
+        return $this->group($request, null, 'appearance');
     }
 
-    public function group(Request $request, string $group = 'appearance')
+    public function group(Request $request, $projectCodeOrGroup = null, $group = null)
     {
+        $group = $group
+            ?: ($request->route('group')
+            ?: ($projectCodeOrGroup ?: 'appearance'));
+
         [$project, $tenantId] = $this->resolveProjectAndTenant($request);
         $settingsMap = $this->getSettingsMap($project, $tenantId, $group);
 
@@ -346,11 +350,15 @@ class SettingsController extends Controller
         if (is_string($languages)) {
             $languages = json_decode($languages, true) ?: [];
         }
-        $activeLanguages = collect($languages)->where('is_active', true)->values()->toArray();
-        if (empty($activeLanguages)) {
-            $activeLanguages = [
-                ['code' => 'vi', 'name' => 'Tiếng Việt', 'flag_emoji' => '🇻🇳', 'flag_url' => '', 'is_default' => true, 'is_active' => true],
-            ];
+        $activeLanguages = collect($languages)
+            ->filter(fn ($l) => is_array($l) ? ($l['is_active'] ?? false) : ($l->is_active ?? false))
+            ->map(fn ($l) => (object) $l)
+            ->values();
+
+        if ($activeLanguages->isEmpty()) {
+            $activeLanguages = collect([
+                (object) ['code' => 'vi', 'name' => 'Tiếng Việt', 'flag_emoji' => '🇻🇳', 'flag_url' => '', 'is_default' => true, 'is_active' => true],
+            ]);
         }
 
         $viewData = [
@@ -374,16 +382,25 @@ class SettingsController extends Controller
             return view("cms.settings.{$group}", $viewData);
         }
 
-        return view('cms.settings.group', $viewData);
+        if (view()->exists('cms.settings.group')) {
+            return view('cms.settings.group', $viewData);
+        }
+
+        return redirect()->route('project.admin.settings.index', ['projectCode' => $project?->code ?? 'viettinmart-eco'])
+            ->with('error', "Không tìm thấy giao diện cấu hình cho nhóm '{$group}'.");
     }
 
     public function updateAppearance(Request $request)
     {
-        return $this->updateGroup($request, 'appearance');
+        return $this->updateGroup($request, null, 'appearance');
     }
 
-    public function updateGroup(Request $request, string $group = 'appearance')
+    public function updateGroup(Request $request, $projectCodeOrGroup = null, $group = null)
     {
+        $group = $group
+            ?: ($request->route('group')
+            ?: ($projectCodeOrGroup ?: 'appearance'));
+
         [$project, $tenantId] = $this->resolveProjectAndTenant($request);
 
         $inputs = $request->input('settings', $request->except(['_token', '_method', 'active_tab']));
@@ -398,41 +415,41 @@ class SettingsController extends Controller
             }
         }
 
-        \DB::beginTransaction();
         try {
-            foreach ($inputs as $key => $value) {
-                $encodedVal = is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE) : (string) $value;
-                $payload = is_array($value) ? $value : ['value' => $value];
+            \DB::transaction(function () use ($inputs, $group, $project, $tenantId) {
+                foreach ($inputs as $key => $value) {
+                    $encodedVal = is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE) : (string) $value;
+                    $payload = is_array($value) ? $value : ['value' => $value];
 
-                // Delete previous setting for tenant/project to ensure clean state
-                \DB::table('settings')
-                    ->where('key', $key)
-                    ->where(function ($q) use ($project, $tenantId) {
-                        if ($tenantId) {
-                            $q->where('tenant_id', $tenantId);
-                        }
-                        if ($project) {
-                            $q->orWhere('project_id', $project->id);
-                        }
-                        if ($tenantId == 3) {
-                            $q->orWhere('project_id', 10);
-                        }
-                    })
-                    ->delete();
+                    // Delete previous setting for tenant/project to ensure clean state
+                    \DB::table('settings')
+                        ->where('key', $key)
+                        ->where(function ($q) use ($project, $tenantId) {
+                            if ($tenantId) {
+                                $q->where('tenant_id', $tenantId);
+                            }
+                            if ($project) {
+                                $q->orWhere('project_id', $project->id);
+                            }
+                            if ($tenantId == 3) {
+                                $q->orWhere('project_id', 10);
+                            }
+                        })
+                        ->delete();
 
-                // Insert clean setting record
-                \DB::table('settings')->insert([
-                    'key' => $key,
-                    'value' => $encodedVal,
-                    'payload' => json_encode($payload),
-                    'group' => $group,
-                    'project_id' => $project?->id,
-                    'tenant_id' => $tenantId,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-            \DB::commit();
+                    // Insert clean setting record
+                    \DB::table('settings')->insert([
+                        'key' => $key,
+                        'value' => $encodedVal,
+                        'payload' => json_encode($payload),
+                        'group' => $group,
+                        'project_id' => $project?->id,
+                        'tenant_id' => $tenantId,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            });
 
             SettingsService::getInstance()->clearCache();
             \Cache::flush();

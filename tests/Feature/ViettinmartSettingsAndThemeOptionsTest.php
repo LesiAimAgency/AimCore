@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Project;
 use App\Models\Setting;
+use App\Models\Tenant;
 use App\Models\User;
 use App\Services\SettingsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -21,16 +22,28 @@ class ViettinmartSettingsAndThemeOptionsTest extends TestCase
     {
         parent::setUp();
 
-        $this->admin = User::factory()->create([
-            'role' => 'admin',
-            'level' => 1,
+        Tenant::forceCreate([
+            'id' => 3,
+            'name' => 'VietTinMart',
+            'code' => 'viettinmart-eco',
+            'domain' => 'viettinmart.local',
+            'database_name' => 'fukkatsu_Animcore',
         ]);
 
         $this->project = Project::factory()->create([
+            'id' => 10,
             'code' => 'viettinmart-eco',
             'name' => 'VietTinMart',
             'status' => 'active',
             'project_type' => 'website',
+            'tenant_id' => 3,
+        ]);
+
+        $this->admin = User::factory()->create([
+            'role' => 'admin',
+            'level' => 1,
+            'tenant_id' => 3,
+            'project_ids' => [$this->project->id],
         ]);
 
         request()->attributes->set('project', $this->project);
@@ -111,5 +124,49 @@ class ViettinmartSettingsAndThemeOptionsTest extends TestCase
         // Default layout fallback is 'full-width'
         $this->assertEquals('full-width', get_theme_layout('unknown_type'));
         $this->assertEquals('Default Value', get_theme_option('non_existent', 'some_key', 'Default Value'));
+    }
+
+    public function test_appearance_settings_group_route_renders_successfully(): void
+    {
+        $response = $this->withSession([
+            'project_user_id' => $this->admin->id,
+            'project_user_username' => $this->admin->username,
+            'current_project' => 'viettinmart-eco',
+        ])->get('/viettinmart-eco/admin/settings/group/appearance');
+
+        $response->assertStatus(200);
+        $response->assertSee('Cấu hình Giao diện');
+    }
+
+    public function test_appearance_settings_update_correctly_saves_appearance_group(): void
+    {
+        $response = $this->withSession([
+            'project_user_id' => $this->admin->id,
+            'project_user_username' => $this->admin->username,
+            'current_project' => 'viettinmart-eco',
+        ])->put('/viettinmart-eco/admin/settings/group/appearance', [
+            'settings' => [
+                'topbar_show' => '1',
+            ],
+        ]);
+
+        $response->assertStatus(302);
+
+        $saved = \DB::table('settings')->where('key', 'topbar_show')->where('group', 'appearance')->first();
+        $this->assertNotNull($saved);
+        $this->assertEquals('1', $saved->value);
+        $this->assertEquals('appearance', $saved->group);
+    }
+
+    public function test_settings_group_fallback_renders_for_unmapped_group(): void
+    {
+        $response = $this->withSession([
+            'project_user_id' => $this->admin->id,
+            'project_user_username' => $this->admin->username,
+            'current_project' => 'viettinmart-eco',
+        ])->get('/viettinmart-eco/admin/settings/group/customgroup');
+
+        $response->assertStatus(200);
+        $response->assertSee('Cấu hình Customgroup');
     }
 }

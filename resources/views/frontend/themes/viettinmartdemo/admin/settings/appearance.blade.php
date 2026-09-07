@@ -17,11 +17,13 @@
 
 @section('content')
     @php
-        function _murl(?string $p, string $d = ''): string {
-            if (!$p) return $d ? asset($d) : '';
-            if (str_contains($p, '://')) return $p;
-            if (str_starts_with($p, 'media/')) return \Illuminate\Support\Facades\Storage::disk('public')->url($p);
-            return asset($p);
+        if (! function_exists('_murl')) {
+            function _murl(?string $p, string $d = ''): string {
+                if (!$p) return $d ? asset($d) : '';
+                if (str_contains($p, '://')) return $p;
+                if (str_starts_with($p, 'media/')) return \Illuminate\Support\Facades\Storage::disk('public')->url($p);
+                return asset($p);
+            }
         }
     @endphp
     <div x-data="{ 
