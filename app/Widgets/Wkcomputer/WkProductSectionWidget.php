@@ -168,10 +168,10 @@ class WkProductSectionWidget extends BaseWidget
 
         $icon = $config['icon'] ?? $this->resolveIcon($title, $category?->slug);
         $bannerImage = $config['banner_image'] ?? null;
-        if (empty($bannerImage) && $category && !empty($category->image)) {
+        if (empty($bannerImage) && $category && ! empty($category->image)) {
             $bannerImage = $category->image;
         }
-        $bannerLink = !empty($config['banner_link']) ? $config['banner_link'] : ($viewAllUrl ?: route('shop.index'));
+        $bannerLink = ! empty($config['banner_link']) ? $config['banner_link'] : ($viewAllUrl ?: route('shop.index'));
 
         return view('widgets.wkcomputer.product_section', [
             'widget' => $this,

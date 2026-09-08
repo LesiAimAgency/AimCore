@@ -24,13 +24,28 @@ class CheckoutController extends Controller
         $couponList = [];
         $availableCoupons = collect();
 
+        $provinces = [];
+        $provincesFile = public_path('data/provinces.json');
+        if (file_exists($provincesFile)) {
+            $raw = json_decode(file_get_contents($provincesFile), true);
+            if (is_array($raw)) {
+                foreach ($raw as $p) {
+                    $provinces[] = [
+                        'code' => $p['code'],
+                        'name' => $p['name'],
+                    ];
+                }
+            }
+        }
+
         return view('shop.checkout', compact(
             'cart',
             'subtotal',
             'totalDiscount',
             'total',
             'couponList',
-            'availableCoupons'
+            'availableCoupons',
+            'provinces'
         ));
     }
 

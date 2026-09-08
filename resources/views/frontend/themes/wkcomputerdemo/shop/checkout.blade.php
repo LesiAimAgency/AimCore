@@ -37,6 +37,11 @@
                         <div class="wk-form-row-3col">
                             <select name="province_code" id="province" required style="border:1px solid #e2e8f0; padding:12px; border-radius:4px; width:100%; outline:none; font-size:14px; background:#fff; cursor:pointer;" onchange="loadDistricts()">
                                 <option value="">Tỉnh/Thành phố *</option>
+                                @if(!empty($provinces))
+                                    @foreach($provinces as $p)
+                                        <option value="{{ $p['code'] }}">{{ $p['name'] }}</option>
+                                    @endforeach
+                                @endif
                             </select>
                             <input type="hidden" name="province_name" id="province_name" value="">
                             
@@ -255,25 +260,40 @@ function selectPayment(element) {
 }
 
 let locationData = [];
+async function initLocations() {
+    const urls = [
+        '/data/provinces.json',
+        '{{ asset("data/provinces.json") }}',
+        '/data/vietnam-provinces.json'
+    ];
+    
+    for (const url of urls) {
+        try {
+            const res = await fetch(url);
+            if (res.ok) {
+                const data = await res.json();
+                if (Array.isArray(data) && data.length > 0) {
+                    locationData = data;
+                    let provinceSelect = document.getElementById('province');
+                    if (provinceSelect && provinceSelect.options.length <= 1) {
+                        data.forEach(province => {
+                            let option = document.createElement('option');
+                            option.value = province.code;
+                            option.textContent = province.name;
+                            provinceSelect.appendChild(option);
+                        });
+                    }
+                    return; // Successfully loaded
+                }
+            }
+        } catch (err) {
+            console.warn('Could not load provinces from ' + url, err);
+        }
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function() {
-    fetch('{{ asset("data/provinces.json") }}')
-        .then(response => response.json())
-        .then(data => {
-            locationData = data;
-            let provinceSelect = document.getElementById('province');
-            data.forEach(province => {
-                let option = document.createElement('option');
-                option.value = province.code;
-                option.textContent = province.name;
-                provinceSelect.appendChild(option);
-            });
-        })
-        .catch(error => {
-            console.error('Error loading provinces:', error);
-            document.getElementById('province')?.removeAttribute('required');
-            document.getElementById('district')?.removeAttribute('required');
-            document.getElementById('ward')?.removeAttribute('required');
-        });
+    initLocations();
 
     document.getElementById('checkout-form')?.addEventListener('submit', function() {
         let pSelect = document.getElementById('province');
