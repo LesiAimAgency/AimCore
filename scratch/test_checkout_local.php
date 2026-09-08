@@ -1,25 +1,39 @@
 <?php
+
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Http\Request;
+use Illuminate\Support\ViewErrorBag;
+
 require 'vendor/autoload.php';
 $app = require_once 'bootstrap/app.php';
-$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+$kernel = $app->make(Kernel::class);
 $kernel->bootstrap();
+$app->instance('request', Request::create('/wkcomputer/dat-hang'));
 
 session()->start();
 session(['cart' => [
     1098 => [
         'id' => 1098,
+        'slug' => 'ram-kingston-8gb',
         'name' => 'RAM Kingston 8GB',
         'price' => 500000,
         'qty' => 1,
         'image' => null,
-    ]
+    ],
 ]]);
 
-$controller = new App\Http\Controllers\Wkcomputer\CheckoutController();
-$view = $controller->index();
+view()->getFinder()->prependLocation(resource_path('views/frontend/themes/wkcomputerdemo'));
+$view = view('shop.checkout', [
+    'cart' => session('cart'),
+    'subtotal' => 500000,
+    'totalDiscount' => 0,
+    'total' => 500000,
+    'provinces' => [['code' => 8, 'name' => 'Tỉnh Tuyên Quang']],
+    'errors' => new ViewErrorBag,
+]);
 $html = $view->render();
 
-echo "Rendered HTML length: " . strlen($html) . "\n";
+echo 'Rendered HTML length: '.strlen($html)."\n";
 if (str_contains($html, 'function selectPayment(element)')) {
     echo "PASS: selectPayment function present!\n";
 } else {
