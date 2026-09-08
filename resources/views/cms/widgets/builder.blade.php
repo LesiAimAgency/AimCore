@@ -1016,12 +1016,32 @@
                 // Always re-write the iframe with full HTML so all scripts/styles load correctly
                 var isVtm = (drawerWidgetType && drawerWidgetType.startsWith('vtm_')) || 
                             ('{{ $projectCode }}'.indexOf('viettinmart') !== -1 || '{{ $projectCode }}'.indexOf('vtm') !== -1);
+                var isWk = (drawerWidgetType && (drawerWidgetType.startsWith('wk_') || ['product_section', 'hero_slider', 'deal_flash', 'posts_latest', 'footer_column'].indexOf(drawerWidgetType) !== -1)) ||
+                           ('{{ $projectCode }}'.indexOf('wkcomputer') !== -1 || '{{ $projectCode }}'.indexOf('wk') !== -1);
 
                 var themeStyles = '';
                 var themeScripts = '';
                 var tailwindScript = '';
 
-                if (isVtm) {
+                if (isWk) {
+                    themeStyles = 
+                        '<link rel="preconnect" href="https://fonts.googleapis.com">' +
+                        '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
+                        '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700;900&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">' +
+                        '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">' +
+                        '<link rel="stylesheet" href="/themes/wkcomputerdemo/css/frontend.css">' +
+                        '<link rel="stylesheet" href="/themes/wkcomputerdemo/css/components.css">' +
+                        '<style>' +
+                        'html, body { margin: 0 !important; padding: 12px !important; background: #f8fafc !important; font-family: "Inter", sans-serif !important; overflow-x: hidden !important; }' +
+                        'img { max-width: 100% !important; height: auto !important; }' +
+                        '.wk-card-img { width: 100% !important; height: 180px !important; object-fit: contain !important; display: block !important; margin: 0 auto !important; }' +
+                        '.wk-card-img-wrap { width: 100% !important; height: 180px !important; display: flex !important; align-items: center !important; justify-content: center !important; overflow: hidden !important; position: relative !important; background: #fff !important; }' +
+                        '.wk-product-card { background: #fff !important; border: 1px solid #e2e8f0 !important; border-radius: 10px !important; padding: 10px !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important; position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; }' +
+                        '</style>';
+
+                    themeScripts = '<script src="/themes/wkcomputerdemo/js/frontend.js"><\/script>';
+                    tailwindScript = '<script src="https://cdn.tailwindcss.com"><\/script>';
+                } else if (isVtm) {
                     themeStyles = 
                         '<link rel="preconnect" href="https://fonts.googleapis.com">' +
                         '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +

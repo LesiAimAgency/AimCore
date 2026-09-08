@@ -307,21 +307,23 @@ PHP;
     {
         return [
             // Content
-            'posts', 'page_sections', 'taxonomies', 'translations',
-            'archive_templates', 'form_submissions',
+            'posts', 'page_sections', 'taxonomies', 'term_relationships', 'translations',
+            'archive_templates', 'form_submissions', 'form_templates', 'modal_forms',
             // Widgets & Navigation
             'widgets', 'widget_templates', 'menus', 'menu_items',
             // Media / Fonts / Settings
             'fonts', 'settings', 'languages',
-            // Users & Roles (project-level)
+            // Users & Roles (project-level + admin accounts)
             'users', 'roles', 'permissions',
-            'user_roles', 'user_permissions', 'role_permissions',
+            'user_roles', 'user_permissions', 'role_permissions', 'user_addresses',
             // E-commerce
             'products_enhanced', 'product_categories',
+            'product_attributes', 'attribute_groups',
             'product_attribute_values', 'product_attribute_value_mappings',
             'product_variations', 'brands',
             'brand_product', 'product_attribute_product', 'product_category_product',
-            'reviews',
+            'reviews', 'product_reviews',
+            'coupons', 'flash_sale_campaigns', 'flash_sale_items',
             // Orders
             'orders', 'order_items', 'order_status_history',
             // Shipping
@@ -336,12 +338,12 @@ PHP;
     {
         $sql = "-- CMS Database snapshot for {$project->name} (Project: {$project->code})\n";
         $sql .= '-- Generated on: '.now()->format('Y-m-d H:i:s')."\n";
-        $sql .= "-- NOTE: Only CMS tables are included. Central system tables are excluded.\n\n";
+        $sql .= "-- NOTE: Includes project data and shared test/template data.\n\n";
+        $sql .= "SET FOREIGN_KEY_CHECKS=0;\n";
+        $sql .= "SET SQL_MODE='NO_AUTO_VALUE_ON_ZERO';\n";
         $sql .= "/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;\n";
         $sql .= "/*!40101 SET NAMES utf8mb4 */;\n";
         $sql .= "/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;\n";
-        $sql .= "/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;\n";
-        $sql .= "/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;\n";
         $sql .= "/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;\n\n";
 
         $existingTables = array_map(
@@ -355,8 +357,8 @@ PHP;
             $sql .= $this->exportTableSQL($table, $project);
         }
 
+        $sql .= "SET FOREIGN_KEY_CHECKS=1;\n";
         $sql .= "/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;\n";
-        $sql .= "/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;\n";
         $sql .= "/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;\n";
         $sql .= "/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;\n";
         $sql .= "/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;\n";
@@ -386,30 +388,53 @@ PHP;
         $columns = Schema::getColumnListing($table);
         $query = DB::table($table);
 
-        // Scope to project
+        // Scope to project + shared test data
         if ($table === 'projects') {
             $query->where('id', $project->id);
-        } elseif (in_array('project_id', $columns)) {
-            $query->where('project_id', $project->id);
-        } elseif (in_array('tenant_id', $columns)) {
-            $query->where('tenant_id', $project->id);
-        }
-        // Pivot table overrides
-        if ($table === 'brand_product' || $table === 'product_attribute_product' || $table === 'product_category_product') {
-            $productIds = DB::table('products_enhanced')->where('project_id', $project->id)->pluck('id');
+        } elseif ($table === 'users') {
+            // Include project users + all admin/root accounts (so user can login with their credentials)
+            $query->where(function ($q) use ($project) {
+                if ($project->tenant_id) {
+                    $q->where('tenant_id', $project->tenant_id);
+                }
+                $q->orWhereNull('tenant_id')
+                  ->orWhere('tenant_id', 0);
+            });
+        } elseif (in_array($table, ['roles', 'permissions', 'role_permissions', 'languages', 'fonts', 'term_relationships', 'product_attributes', 'attribute_groups', 'product_reviews', 'coupons', 'flash_sale_campaigns', 'flash_sale_items'])) {
+            // Shared system and e-commerce test tables: export all
+        } elseif ($table === 'brand_product' || $table === 'product_attribute_product' || $table === 'product_category_product') {
+            // Pivot tables for products
+            $productIds = DB::table('products_enhanced')
+                ->where('project_id', $project->id)
+                ->orWhereNull('project_id')
+                ->pluck('id');
             $query = DB::table($table)->whereIn('product_id', $productIds);
         } elseif ($table === 'user_roles' || $table === 'user_permissions') {
-            $userIds = DB::table('users')->where('project_id', $project->id)->pluck('id');
-            if ($userIds->isEmpty()) {
-                $userIds = DB::table('users')->where('tenant_id', $project->id)->pluck('id');
-            }
+            $userIds = DB::table('users')
+                ->where(function ($q) use ($project) {
+                    if ($project->tenant_id) {
+                        $q->where('tenant_id', $project->tenant_id);
+                    }
+                    $q->orWhereNull('tenant_id');
+                })
+                ->pluck('id');
             $query = DB::table($table)->whereIn('user_id', $userIds);
-        } elseif ($table === 'role_permissions') {
-            $roleIds = DB::table('roles')->where('project_id', $project->id)->pluck('id');
-            if ($roleIds->isEmpty()) {
-                $roleIds = DB::table('roles')->where('tenant_id', $project->id)->pluck('id');
-            }
-            $query = DB::table($table)->whereIn('role_id', $roleIds);
+        } elseif (in_array('project_id', $columns)) {
+            // Project data + all shared/default test data (where project_id is null or 0)
+            $query->where(function ($q) use ($project) {
+                $q->where('project_id', $project->id)
+                  ->orWhereNull('project_id')
+                  ->orWhere('project_id', 0);
+            });
+        } elseif (in_array('tenant_id', $columns)) {
+            $query->where(function ($q) use ($project) {
+                if ($project->tenant_id) {
+                    $q->where('tenant_id', $project->tenant_id);
+                }
+                $q->orWhere('tenant_id', $project->id)
+                  ->orWhereNull('tenant_id')
+                  ->orWhere('tenant_id', 0);
+            });
         }
 
         try {
@@ -471,7 +496,7 @@ LOG_DEPRECATIONS_CHANNEL=null
 LOG_LEVEL=error
 
 DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
+DB_HOST=localhost
 DB_PORT=3306
 DB_DATABASE=__DB_DATABASE__
 DB_USERNAME=__DB_USERNAME__
@@ -555,7 +580,7 @@ foreach (file($envPath) as $line) {
     $env[trim($key)] = trim($value, " \t\n\r\0\x0B\"'");
 }
 
-$dbHost = $env['DB_HOST'] ?? '127.0.0.1';
+$dbHost = $env['DB_HOST'] ?? 'localhost';
 $dbName = $env['DB_DATABASE'] ?? '';
 $dbUser = $env['DB_USERNAME'] ?? '';
 $dbPass = $env['DB_PASSWORD'] ?? '';
@@ -565,11 +590,24 @@ echo "Connecting to database {$dbName} on {$dbHost}...\n";
 // 2. Import database SQL
 $sqlFile = $baseDir . '/database/database.sql';
 if (file_exists($sqlFile)) {
-    $mysqli = new mysqli($dbHost, $dbUser, $dbPass, $dbName);
-    if ($mysqli->connect_error) {
-        die('ERROR: DB connect failed: ' . $mysqli->connect_error);
+    $mysqli = null;
+    $hostsToTry = array_unique([$dbHost, 'localhost', '127.0.0.1']);
+    foreach ($hostsToTry as $h) {
+        try {
+            $mysqli = @new mysqli($h, $dbUser, $dbPass, $dbName);
+            if (! $mysqli->connect_error) {
+                echo "Connected successfully using host '{$h}'.\n";
+                break;
+            }
+        } catch (\Throwable $ex) {
+            // try next host
+        }
     }
-    $mysqli->set_charset('utf8mb4');
+
+    if (! $mysqli || $mysqli->connect_error) {
+        echo "WARN: Could not connect to MySQL: " . ($mysqli ? $mysqli->connect_error : 'Connection error') . "\n";
+    } else {
+        $mysqli->set_charset('utf8mb4');
 
     // Chunked import – safer than multi_query on large files
     $sql       = file_get_contents($sqlFile);

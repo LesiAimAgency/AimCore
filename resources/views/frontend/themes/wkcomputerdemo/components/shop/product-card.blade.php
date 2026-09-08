@@ -255,6 +255,8 @@
 <style>
     .wk-product-card { position: relative; overflow: visible !important; }
     .wk-product-card:hover { z-index: 99999 !important; }
+    .wk-card-img-wrap { position: relative; display: block; width: 100%; height: 180px; overflow: hidden; background: #fff; text-align: center; }
+    .wk-card-img { max-width: 100% !important; max-height: 180px !important; width: auto !important; height: auto !important; object-fit: contain !important; display: inline-block !important; margin: 0 auto !important; }
     .wk-product-tooltip {
         display: none;
         position: absolute;
