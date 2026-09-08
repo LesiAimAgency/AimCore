@@ -2,6 +2,29 @@
     $slides = $slides ?? ($config['slides'] ?? []);
     $featuredCategories = $featuredCategories ?? collect();
     $showServices = $config['show_services'] ?? true;
+
+    $getBannerImg = function($customVal, $settingKey, $defaultPath) {
+        $val = !empty(trim((string)$customVal)) ? trim((string)$customVal) : (setting($settingKey) ?: $defaultPath);
+        if (empty($val)) return '';
+        if (str_starts_with($val, 'http://') || str_starts_with($val, 'https://') || str_starts_with($val, '/')) {
+            return $val;
+        }
+        return asset($val);
+    };
+
+    $rb1Image = $getBannerImg($config['rb1_image'] ?? null, 'wk_hero_rb1_image', '/storage/media/project-wkcomputer/1788832998_banner1-1-min.png.webp');
+    $rb2Image = $getBannerImg($config['rb2_image'] ?? null, 'wk_hero_rb2_image', '/storage/media/project-wkcomputer/1788832999_banner2.png.webp');
+    $b1Image  = $getBannerImg($config['b1_image'] ?? null, 'wk_hero_b1_image', '/storage/media/project-wkcomputer/1788832996_baner-1.jpg.webp');
+    $b2Image  = $getBannerImg($config['b2_image'] ?? null, 'wk_hero_b2_image', '/storage/media/project-wkcomputer/1788832997_Baner-2.jpg.webp');
+    $b3Image  = $getBannerImg($config['b3_image'] ?? null, 'wk_hero_b3_image', '/storage/media/project-wkcomputer/1788832997_baner-3.jpg.webp');
+    $b4Image  = $getBannerImg($config['b4_image'] ?? null, 'wk_hero_b4_image', '/storage/media/project-wkcomputer/1788832998_baner-4.jpg.webp');
+
+    $rb1Link = !empty(trim((string)($config['rb1_link'] ?? ''))) ? $config['rb1_link'] : setting('wk_hero_rb1_link', route('shop.index'));
+    $rb2Link = !empty(trim((string)($config['rb2_link'] ?? ''))) ? $config['rb2_link'] : setting('wk_hero_rb2_link', route('shop.index'));
+    $b1Link = !empty(trim((string)($config['b1_link'] ?? ''))) ? $config['b1_link'] : setting('wk_hero_b1_link', route('build_pc.index'));
+    $b2Link = !empty(trim((string)($config['b2_link'] ?? ''))) ? $config['b2_link'] : setting('wk_hero_b2_link', route('shop.index'));
+    $b3Link = !empty(trim((string)($config['b3_link'] ?? ''))) ? $config['b3_link'] : setting('wk_hero_b3_link', route('shop.index'));
+    $b4Link = !empty(trim((string)($config['b4_link'] ?? ''))) ? $config['b4_link'] : setting('wk_hero_b4_link', route('shop.index'));
 @endphp
 
 {{-- HERO SECTION: 3-column layout --}}
@@ -274,13 +297,13 @@
                     {{-- Right Banners --}}
                     <div class="wk-hero-right-banners" style="width:260px; display:flex; flex-direction:column; gap:12px;">
                         <div class="wk-hero-banner-item" style="flex:1;">
-                            <a href="{{ $config['rb1_link'] ?? setting('wk_hero_rb1_link', route('shop.index')) }}" style="text-decoration:none;display:block;height:100%;">
-                                <img src="{{ $config['rb1_image'] ?? setting('wk_hero_rb1_image', '/storage/media/project-wkcomputer/1788832998_banner1-1-min.png.webp') }}" alt="{{ setting('wk_hero_rb1_tag', 'Ưu đãi học sinh sinh viên') }}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;display:block;">
+                            <a href="{{ $rb1Link }}" style="text-decoration:none;display:block;height:100%;">
+                                <img src="{{ $rb1Image }}" alt="{{ setting('wk_hero_rb1_tag', 'Ưu đãi học sinh sinh viên') }}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;display:block;">
                             </a>
                         </div>
                         <div class="wk-hero-banner-item" style="flex:1;">
-                            <a href="{{ $config['rb2_link'] ?? setting('wk_hero_rb2_link', route('shop.index')) }}" style="text-decoration:none;display:block;height:100%;">
-                                <img src="{{ $config['rb2_image'] ?? setting('wk_hero_rb2_image', '/storage/media/project-wkcomputer/1788832999_banner2.png.webp') }}" alt="{{ setting('wk_hero_rb2_tag', 'Khuyến mãi tháng này') }}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;display:block;">
+                            <a href="{{ $rb2Link }}" style="text-decoration:none;display:block;height:100%;">
+                                <img src="{{ $rb2Image }}" alt="{{ setting('wk_hero_rb2_tag', 'Khuyến mãi tháng này') }}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;display:block;">
                             </a>
                         </div>
                     </div>
@@ -289,23 +312,23 @@
                 {{-- Bottom: 4 small banners --}}
                 <div class="wk-hero-bottom-row" style="display:flex; gap:12px; height: 180px;">
                     <div class="wk-hero-banner-item" style="flex:1;">
-                        <a href="{{ $config['b1_link'] ?? setting('wk_hero_b1_link', route('build_pc.index')) }}" style="text-decoration:none;display:block;height:100%;">
-                            <img src="{{ $config['b1_image'] ?? setting('wk_hero_b1_image', '/storage/media/project-wkcomputer/1788832996_baner-1.jpg.webp') }}" alt="{{ setting('wk_hero_b1_title', 'Build PC') }}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;display:block;">
+                        <a href="{{ $b1Link }}" style="text-decoration:none;display:block;height:100%;">
+                            <img src="{{ $b1Image }}" alt="{{ setting('wk_hero_b1_title', 'Build PC') }}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;display:block;">
                         </a>
                     </div>
                     <div class="wk-hero-banner-item" style="flex:1;">
-                        <a href="{{ $config['b2_link'] ?? setting('wk_hero_b2_link', route('shop.index')) }}" style="text-decoration:none;display:block;height:100%;">
-                            <img src="{{ $config['b2_image'] ?? setting('wk_hero_b2_image', '/storage/media/project-wkcomputer/1788832997_Baner-2.jpg.webp') }}" alt="Laptop Gaming" style="width:100%;height:100%;object-fit:cover;border-radius:8px;display:block;">
+                        <a href="{{ $b2Link }}" style="text-decoration:none;display:block;height:100%;">
+                            <img src="{{ $b2Image }}" alt="Laptop Gaming" style="width:100%;height:100%;object-fit:cover;border-radius:8px;display:block;">
                         </a>
                     </div>
                     <div class="wk-hero-banner-item" style="flex:1;">
-                        <a href="{{ $config['b3_link'] ?? setting('wk_hero_b3_link', route('shop.index')) }}" style="text-decoration:none;display:block;height:100%;">
-                            <img src="{{ $config['b3_image'] ?? setting('wk_hero_b3_image', '/storage/media/project-wkcomputer/1788832997_baner-3.jpg.webp') }}" alt="iPhone & Phụ Kiện" style="width:100%;height:100%;object-fit:cover;border-radius:8px;display:block;">
+                        <a href="{{ $b3Link }}" style="text-decoration:none;display:block;height:100%;">
+                            <img src="{{ $b3Image }}" alt="iPhone & Phụ Kiện" style="width:100%;height:100%;object-fit:cover;border-radius:8px;display:block;">
                         </a>
                     </div>
                     <div class="wk-hero-banner-item" style="flex:1;">
-                        <a href="{{ $config['b4_link'] ?? setting('wk_hero_b4_link', route('shop.index')) }}" style="text-decoration:none;display:block;height:100%;">
-                            <img src="{{ $config['b4_image'] ?? setting('wk_hero_b4_image', '/storage/media/project-wkcomputer/1788832998_baner-4.jpg.webp') }}" alt="Màn Hình Máy Tính" style="width:100%;height:100%;object-fit:cover;border-radius:8px;display:block;">
+                        <a href="{{ $b4Link }}" style="text-decoration:none;display:block;height:100%;">
+                            <img src="{{ $b4Image }}" alt="Màn Hình Máy Tính" style="width:100%;height:100%;object-fit:cover;border-radius:8px;display:block;">
                         </a>
                     </div>
                 </div>

@@ -233,14 +233,47 @@
     }
 
     function addToCartAll() {
-        const keys = Object.keys(buildState);
-        if (keys.length === 0) {
+        const items = Object.values(buildState).map(i => ({ id: i.id, qty: 1 }));
+        if (items.length === 0) {
             alert('Vui lòng chọn ít nhất 1 linh kiện!');
             return;
         }
-        // In real app: send array of product IDs to /cart/add-multiple
-        alert('Đã thêm ' + keys.length + ' sản phẩm vào giỏ hàng thành công!');
-        window.location.href = '{{ route('cart.page') }}';
+
+        const btn = document.querySelector('.wk-btn-checkout');
+        const oldText = btn ? btn.innerText : '';
+        if (btn) {
+            btn.innerText = 'Đang thêm vào giỏ...';
+            btn.disabled = true;
+        }
+
+        fetch('{{ route("cart.addMultiple") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ items: items })
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.success) {
+                window.location.href = res.redirect || '{{ route("cart.page") }}';
+            } else {
+                alert(res.message || 'Có lỗi xảy ra khi thêm vào giỏ hàng.');
+                if (btn) {
+                    btn.innerText = oldText;
+                    btn.disabled = false;
+                }
+            }
+        })
+        .catch(() => {
+            alert('Có lỗi xảy ra khi thêm vào giỏ hàng. Vui lòng thử lại.');
+            if (btn) {
+                btn.innerText = oldText;
+                btn.disabled = false;
+            }
+        });
     }
 </script>
 @endpush

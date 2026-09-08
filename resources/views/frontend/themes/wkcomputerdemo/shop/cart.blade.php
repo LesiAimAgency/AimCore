@@ -88,21 +88,23 @@
                     </div>
                     
                     <div style="text-align:center; display:flex; flex-direction:column; align-items:center; padding-top:20px;">
-                        <form method="POST" action="{{ route('cart.update') }}" class="cart-qty-form" style="display:flex; border:1px solid #e2e8f0; border-radius:4px; overflow:hidden;">
+                        <form method="POST" action="{{ route('cart.update') }}" class="cart-qty-form" data-key="{{ $key }}" style="display:flex; border:1px solid #e2e8f0; border-radius:4px; overflow:hidden;">
                             @csrf
+                            <input type="hidden" name="key" value="{{ $key }}">
                             <input type="hidden" name="product_id" value="{{ $key }}">
                             <button type="button" onclick="changeQty(this, -1)" style="width:30px; height:28px; background:#f8f9fa; border:none; cursor:pointer; color:#64748b; font-size:16px;">-</button>
-                            <input type="number" name="qty" value="{{ $item['qty'] ?? 1 }}" min="1" max="99" onchange="this.form.submit()" style="width:40px; height:28px; text-align:center; border:none; border-left:1px solid #e2e8f0; border-right:1px solid #e2e8f0; font-size:14px; outline:none; -moz-appearance:textfield;">
+                            <input type="number" name="qty" value="{{ $item['qty'] ?? 1 }}" min="1" max="99" onchange="submitQty(this)" style="width:40px; height:28px; text-align:center; border:none; border-left:1px solid #e2e8f0; border-right:1px solid #e2e8f0; font-size:14px; outline:none; -moz-appearance:textfield;">
                             <button type="button" onclick="changeQty(this, 1)" style="width:30px; height:28px; background:#f8f9fa; border:none; cursor:pointer; color:#64748b; font-size:16px;">+</button>
                         </form>
-                        <form method="POST" action="{{ route('cart.remove') }}" style="margin-top:8px;">
+                        <form method="POST" action="{{ route('cart.remove') }}" class="cart-remove-form" data-key="{{ $key }}" onsubmit="return removeItem(this, event);" style="margin-top:8px;">
                             @csrf
+                            <input type="hidden" name="key" value="{{ $key }}">
                             <input type="hidden" name="product_id" value="{{ $key }}">
                             <button type="submit" style="background:none; border:none; color:#0ea5e9; font-size:13px; cursor:pointer;">Xóa</button>
                         </form>
                     </div>
                     
-                    <div style="text-align:right; font-weight:700; font-size:16px; color:#111827; padding-top:20px;">
+                    <div class="cart-item-total" data-key="{{ $key }}" style="text-align:right; font-weight:700; font-size:16px; color:#111827; padding-top:20px;">
                         {{ number_format($itemTotal, 0, ',', '.') }}₫
                     </div>
                 </div>
@@ -131,12 +133,12 @@
                     
                     <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:14px; color:#475569;">
                         <span>Tổng tạm tính</span>
-                        <span style="font-weight:600; color:#111827;">{{ number_format($subtotal ?? 0, 0, ',', '.') }}₫</span>
+                        <span class="cart-subtotal-val" style="font-weight:600; color:#111827;">{{ number_format($subtotal ?? 0, 0, ',', '.') }}₫</span>
                     </div>
                     
                     <div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; color:#475569;">
                         <span>Thành tiền</span>
-                        <span style="font-weight:700; font-size:22px; color:#e11d48;">{{ number_format($subtotal ?? 0, 0, ',', '.') }}₫</span>
+                        <span class="cart-total-val" style="font-weight:700; font-size:22px; color:#e11d48;">{{ number_format($subtotal ?? 0, 0, ',', '.') }}₫</span>
                     </div>
                     
                     <div style="text-align:right; font-size:12px; color:#64748b; margin-bottom:16px;">(Đã bao gồm VAT)</div>
@@ -426,7 +428,86 @@ function changeQty(btn, delta) {
     if (isNaN(val) || val < 1) val = 1;
     if (val > 99) val = 99;
     input.value = val;
-    form.submit();
+    submitQty(input);
+}
+
+function submitQty(input) {
+    const form = input.closest('.cart-qty-form');
+    const key = form.dataset.key;
+    const qty = parseInt(input.value) || 1;
+    const token = form.querySelector('input[name="_token"]')?.value || (window.wkEndpoints?.csrfToken || '');
+
+    fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': token,
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ key: key, qty: qty, quantity: qty })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            // Update item total
+            const itemTotalEl = document.querySelector(`.cart-item-total[data-key="${key}"]`);
+            if (itemTotalEl && data.formatted_item_total) {
+                itemTotalEl.textContent = data.formatted_item_total;
+            }
+            // Update subtotal and total
+            document.querySelectorAll('.cart-subtotal-val').forEach(el => el.textContent = data.formatted_subtotal);
+            document.querySelectorAll('.cart-total-val').forEach(el => el.textContent = data.formatted_subtotal);
+            if (typeof window.wkUpdateCartBadge === 'function') {
+                window.wkUpdateCartBadge();
+            }
+        } else {
+            form.submit();
+        }
+    })
+    .catch(() => {
+        form.submit();
+    });
+}
+
+function removeItem(form, e) {
+    if (e) e.preventDefault();
+    if (!confirm('Xóa sản phẩm này khỏi giỏ hàng?')) return false;
+
+    const key = form.dataset.key;
+    const token = form.querySelector('input[name="_token"]')?.value || (window.wkEndpoints?.csrfToken || '');
+
+    fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': token,
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ key: key, product_id: key })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            if (data.count === 0) {
+                window.location.reload();
+            } else {
+                const row = form.closest('div[style*="display:grid; grid-template-columns: 32px 1fr"]');
+                if (row) row.remove();
+                document.querySelectorAll('.cart-subtotal-val').forEach(el => el.textContent = data.formatted_subtotal || '0₫');
+                document.querySelectorAll('.cart-total-val').forEach(el => el.textContent = data.formatted_subtotal || '0₫');
+                if (typeof window.wkUpdateCartBadge === 'function') {
+                    window.wkUpdateCartBadge();
+                }
+            }
+        } else {
+            form.submit();
+        }
+    })
+    .catch(() => {
+        form.submit();
+    });
+
+    return false;
 }
 
 // Toggle Fundiin Promo Modal

@@ -34,6 +34,7 @@ Route::get('/gio-hang/so-luong', [CartController::class, 'count'])->name('cart.c
 Route::get('/gio-hang/dropdown', [CartController::class, 'dropdown'])->name('cart.dropdown');
 Route::get('/gio-hang/tong', [CartController::class, 'total'])->name('cart.total');
 Route::post('/gio-hang/them', [CartController::class, 'add'])->name('cart.add');
+Route::post('/gio-hang/them-nhieu', [CartController::class, 'addMultiple'])->name('cart.addMultiple');
 Route::post('/gio-hang/them-combo', [CartController::class, 'addCombo'])->name('cart.addCombo');
 Route::post('/gio-hang/xoa', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/gio-hang/cap-nhat', [CartController::class, 'update'])->name('cart.update');

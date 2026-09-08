@@ -94,6 +94,10 @@ class WkcomputerWidgetParityTest extends TestCase
         $this->assertStringContainsString('wk-hero-banner-item', $heroPreview);
         $this->assertStringContainsString('/storage/media/project-wkcomputer/1788832998_banner1-1-min.png.webp', $heroPreview);
         $this->assertStringContainsString('/storage/media/project-wkcomputer/1788832996_baner-1.jpg.webp', $heroPreview);
+        $this->assertStringContainsString('wk-slider-nav', $heroPreview);
+        $this->assertStringContainsString('wk-slider-dots', $heroPreview);
+        $this->assertStringContainsString('initWkHeroSliders', $heroPreview);
+        $this->assertStringContainsString('/storage/media/project-wkcomputer/1788832999_WK-Store-Banner-01-1536x450-min-1.png.webp', $heroPreview);
     }
 
     public function test_wk_admin_widgets_preview_endpoint_does_not_fail_with_csrf_error(): void

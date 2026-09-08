@@ -146,7 +146,7 @@
                     <div style="background:#fff; border-radius:8px; padding:24px;">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
                             <div style="font-weight:700; font-size:16px;">Thông tin đơn hàng</div>
-                            <a href="{{ locale_route('cart.page') }}" style="color:#0ea5e9; font-size:13px; text-decoration:none;">Chỉnh sửa</a>
+                            <a href="{{ route('cart.page') }}" style="color:#0ea5e9; font-size:13px; text-decoration:none;">Chỉnh sửa</a>
                         </div>
                         
                         @if(isset($cart) && count($cart) > 0)
@@ -262,7 +262,7 @@ function selectPayment(element) {
 
 let locationData = [];
 document.addEventListener("DOMContentLoaded", function() {
-    fetch('/data/provinces.json')
+    fetch('{{ asset("data/provinces.json") }}')
         .then(response => response.json())
         .then(data => {
             locationData = data;
@@ -274,7 +274,27 @@ document.addEventListener("DOMContentLoaded", function() {
                 provinceSelect.appendChild(option);
             });
         })
-        .catch(error => console.error('Error loading provinces:', error));
+        .catch(error => {
+            console.error('Error loading provinces:', error);
+            document.getElementById('province')?.removeAttribute('required');
+            document.getElementById('district')?.removeAttribute('required');
+            document.getElementById('ward')?.removeAttribute('required');
+        });
+
+    document.getElementById('checkout-form')?.addEventListener('submit', function() {
+        let pSelect = document.getElementById('province');
+        let dSelect = document.getElementById('district');
+        let wSelect = document.getElementById('ward');
+        if (pSelect && pSelect.selectedIndex > 0) {
+            document.getElementById('province_name').value = pSelect.options[pSelect.selectedIndex].text;
+        }
+        if (dSelect && dSelect.selectedIndex > 0) {
+            document.getElementById('district_name').value = dSelect.options[dSelect.selectedIndex].text;
+        }
+        if (wSelect && wSelect.selectedIndex > 0) {
+            document.getElementById('ward_name').value = wSelect.options[wSelect.selectedIndex].text;
+        }
+    });
 });
 
 function loadDistricts() {

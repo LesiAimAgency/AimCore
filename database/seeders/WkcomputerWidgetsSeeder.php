@@ -85,6 +85,18 @@ class WkcomputerWidgetsSeeder extends Seeder
                 'settings' => [
                     'slides' => $heroSlides,
                     'autoplay_delay' => 4500,
+                    'rb1_image' => '/storage/media/project-wkcomputer/1788832998_banner1-1-min.png.webp',
+                    'rb1_link' => '/wkcomputer/cua-hang',
+                    'rb2_image' => '/storage/media/project-wkcomputer/1788832999_banner2.png.webp',
+                    'rb2_link' => '/wkcomputer/cua-hang',
+                    'b1_image' => '/storage/media/project-wkcomputer/1788832996_baner-1.jpg.webp',
+                    'b1_link' => '/wkcomputer/xay-dung-cau-hinh',
+                    'b2_image' => '/storage/media/project-wkcomputer/1788832997_Baner-2.jpg.webp',
+                    'b2_link' => '/wkcomputer/cua-hang',
+                    'b3_image' => '/storage/media/project-wkcomputer/1788832997_baner-3.jpg.webp',
+                    'b3_link' => '/wkcomputer/cua-hang',
+                    'b4_image' => '/storage/media/project-wkcomputer/1788832998_baner-4.jpg.webp',
+                    'b4_link' => '/wkcomputer/cua-hang',
                 ],
             ],
             [

@@ -54,11 +54,15 @@ class CartController extends Controller
     {
         $request->validate([
             'product_id' => 'required',
-            'qty' => 'integer|min:1',
+            'qty' => 'nullable|integer|min:1',
+            'quantity' => 'nullable|integer|min:1',
         ]);
 
         $product = WkProduct::findOrFail($request->product_id);
-        $qty = (int) ($request->qty ?? 1);
+        $qty = (int) ($request->input('qty') ?: $request->input('quantity', 1));
+        if ($qty < 1) {
+            $qty = 1;
+        }
 
         $cart = session('cart', []);
         $key = (string) $product->id;
@@ -98,7 +102,7 @@ class CartController extends Controller
     public function addCombo(Request $request)
     {
         $mainProductId = $request->input('main_product_id');
-        $qty = (int) ($request->input('qty', 1));
+        $qty = max(1, (int) ($request->input('qty') ?: $request->input('quantity', 1)));
         $combos = $request->input('combos', []);
 
         $mainProduct = WkProduct::findOrFail($mainProductId);
@@ -174,10 +178,69 @@ class CartController extends Controller
         ]);
     }
 
+    public function addMultiple(Request $request)
+    {
+        $items = $request->input('items', []);
+        if (! is_array($items) || empty($items)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không có sản phẩm nào được chọn.',
+            ], 400);
+        }
+
+        $cart = session('cart', []);
+
+        foreach ($items as $item) {
+            $productId = $item['id'] ?? ($item['product_id'] ?? null);
+            if (! $productId) {
+                continue;
+            }
+
+            $product = WkProduct::find($productId);
+            if (! $product) {
+                continue;
+            }
+
+            $qty = max(1, (int) ($item['qty'] ?? ($item['quantity'] ?? 1)));
+            $key = (string) $product->id;
+
+            if (isset($cart[$key])) {
+                $cart[$key]['qty'] += $qty;
+            } else {
+                $cart[$key] = [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => (float) $product->effective_price,
+                    'original_price' => (float) ($product->attributes['price'] ?? $product->effective_price),
+                    'image' => $product->image,
+                    'slug' => $product->slug,
+                    'qty' => $qty,
+                    'sku' => $product->sku,
+                    'is_combo' => false,
+                ];
+            }
+        }
+
+        session(['cart' => $cart]);
+
+        $count = (int) collect($cart)->sum('qty');
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'count' => $count,
+                'message' => 'Đã thêm các linh kiện vào giỏ hàng!',
+                'redirect' => route('cart.page'),
+            ]);
+        }
+
+        return redirect()->route('cart.page')->with('success', 'Đã thêm các linh kiện vào giỏ hàng!');
+    }
+
     public function update(Request $request)
     {
-        $key = (string) ($request->input('key') ?: $request->input('id'));
-        $qty = max(1, (int) $request->input('qty', 1));
+        $key = (string) ($request->input('key') ?: ($request->input('id') ?: $request->input('product_id')));
+        $qty = max(1, (int) ($request->input('qty') ?: $request->input('quantity', 1)));
 
         $cart = session('cart', []);
         if (isset($cart[$key])) {
@@ -188,19 +251,23 @@ class CartController extends Controller
         $subtotal = collect($cart)->sum(fn ($i) => ($i['price'] ?? 0) * ($i['qty'] ?? 1));
         $itemTotal = isset($cart[$key]) ? ($cart[$key]['price'] * $cart[$key]['qty']) : 0;
 
-        return response()->json([
-            'success' => true,
-            'count' => (int) collect($cart)->sum('qty'),
-            'subtotal' => $subtotal,
-            'formatted_subtotal' => number_format($subtotal, 0, ',', '.').'₫',
-            'item_total' => $itemTotal,
-            'formatted_item_total' => number_format($itemTotal, 0, ',', '.').'₫',
-        ]);
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'count' => (int) collect($cart)->sum('qty'),
+                'subtotal' => $subtotal,
+                'formatted_subtotal' => number_format($subtotal, 0, ',', '.').'₫',
+                'item_total' => $itemTotal,
+                'formatted_item_total' => number_format($itemTotal, 0, ',', '.').'₫',
+            ]);
+        }
+
+        return redirect()->route('cart.page')->with('success', 'Đã cập nhật giỏ hàng.');
     }
 
     public function remove(Request $request)
     {
-        $key = (string) ($request->input('key') ?: $request->input('id'));
+        $key = (string) ($request->input('key') ?: ($request->input('id') ?: $request->input('product_id')));
 
         $cart = session('cart', []);
         if (isset($cart[$key])) {
@@ -215,6 +282,7 @@ class CartController extends Controller
                 'success' => true,
                 'count' => (int) collect($cart)->sum('qty'),
                 'subtotal' => $subtotal,
+                'formatted_subtotal' => number_format($subtotal, 0, ',', '.').'₫',
                 'message' => 'Đã xóa sản phẩm khỏi giỏ hàng.',
             ]);
         }

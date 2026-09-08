@@ -68,7 +68,18 @@ class CheckoutController extends Controller
 
         $orderNumber = 'WKC-'.strtoupper(Str::random(8));
 
-        return DB::transaction(function () use ($validated, $fullName, $fullAddress, $subtotal, $shippingFee, $total, $orderNumber, $cart) {
+        $addressData = [
+            'full_address' => $fullAddress,
+            'street' => $validated['street_address'],
+            'ward' => $validated['ward_name'] ?? null,
+            'district' => $validated['district_name'] ?? null,
+            'province' => $validated['province_name'] ?? null,
+        ];
+
+        $projectId = session('current_project_id')
+            ?? (function_exists('current_project') && current_project() ? current_project()->id : 14);
+
+        return DB::transaction(function () use ($validated, $fullName, $addressData, $subtotal, $shippingFee, $total, $orderNumber, $cart, $projectId, $request) {
             $order = WkOrder::create([
                 'order_number' => $orderNumber,
                 'status' => 'pending',
@@ -80,20 +91,23 @@ class CheckoutController extends Controller
                 'customer_name' => $fullName,
                 'customer_email' => $validated['email'] ?? 'customer@wkcomputer.vn',
                 'customer_phone' => $validated['phone'],
-                'shipping_address' => $fullAddress,
+                'billing_address' => $addressData,
+                'shipping_address' => $addressData,
                 'payment_method' => $validated['payment_method'] ?? 'cod',
                 'payment_status' => 'pending',
                 'customer_notes' => $validated['notes'] ?? null,
                 'user_id' => auth()->id(),
+                'project_id' => $projectId,
             ]);
 
             foreach ($cart as $item) {
                 $productId = $item['id'] ?? null;
                 WkOrderItem::create([
                     'order_id' => $order->id,
+                    'project_id' => $projectId,
                     'product_id' => $productId,
-                    'product_name' => $item['name'],
-                    'product_sku' => $item['sku'] ?? null,
+                    'product_name' => $item['name'] ?? 'Sản phẩm',
+                    'product_sku' => ! empty($item['sku']) ? $item['sku'] : ('PROD-'.($productId ?? '0')),
                     'unit_price' => $item['price'] ?? 0,
                     'quantity' => $item['qty'] ?? 1,
                     'total_price' => ($item['price'] ?? 0) * ($item['qty'] ?? 1),
@@ -103,6 +117,14 @@ class CheckoutController extends Controller
             // Clear cart
             session()->forget('cart');
             session()->forget('applied_coupons');
+
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'order_number' => $orderNumber,
+                    'redirect' => route('checkout.success', ['orderNumber' => $orderNumber]),
+                ]);
+            }
 
             return redirect()->route('checkout.success', ['orderNumber' => $orderNumber]);
         });

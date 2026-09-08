@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WkOrderItem extends OrderItem
 {
+    protected $table = 'order_items';
+
     public function order(): BelongsTo
     {
         return $this->belongsTo(WkOrder::class, 'order_id');

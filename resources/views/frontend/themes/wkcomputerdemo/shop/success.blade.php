@@ -30,7 +30,7 @@
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px;">
                     <div><span style="color:#94a3b8;">Người nhận:</span><br><strong>{{ $order->customer_name }}</strong></div>
                     <div><span style="color:#94a3b8;">Điện thoại:</span><br><strong>{{ $order->customer_phone }}</strong></div>
-                    <div style="grid-column:span 2;"><span style="color:#94a3b8;">Địa chỉ:</span><br><strong>{{ $order->shipping_address }}</strong></div>
+                    <div style="grid-column:span 2;"><span style="color:#94a3b8;">Địa chỉ:</span><br><strong>{{ $order->formatted_shipping_address ?: (is_array($order->shipping_address) ? ($order->shipping_address['full_address'] ?? implode(', ', array_filter($order->shipping_address))) : $order->shipping_address) }}</strong></div>
                     <div><span style="color:#94a3b8;">Tổng tiền:</span><br><strong style="color:var(--wk-primary);font-size:16px;">{{ number_format($order->total, 0, ',', '.') }}₫</strong></div>
                     <div><span style="color:#94a3b8;">Thanh toán:</span><br><strong>{{ $order->payment_method === 'cod' ? 'Tiền mặt khi nhận' : ($order->payment_method === 'vietqr' ? 'Chuyển khoản VietQR' : ucfirst($order->payment_method)) }}</strong></div>
                 </div>

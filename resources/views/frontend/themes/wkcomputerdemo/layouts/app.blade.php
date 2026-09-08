@@ -763,6 +763,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+<script>
+window.wkEndpoints = {
+    cartAdd: "{{ route('cart.add') }}",
+    cartCount: "{{ route('cart.count') }}",
+    cartTotal: "{{ route('cart.total') }}",
+    cartDropdown: "{{ route('cart.dropdown') }}",
+    cartUpdate: "{{ route('cart.update') }}",
+    cartRemove: "{{ route('cart.remove') }}",
+    cartPage: "{{ route('cart.page') }}",
+    checkout: "{{ route('checkout.index') }}",
+    searchSuggest: "{{ route('shop.suggest') }}",
+    csrfToken: "{{ csrf_token() }}"
+};
+</script>
 <script src="{{ asset('themes/wkcomputerdemo/js/frontend.js') }}"></script>
 @stack('scripts')
 </body>

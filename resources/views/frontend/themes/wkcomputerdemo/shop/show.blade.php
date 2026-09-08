@@ -1188,7 +1188,7 @@ document.querySelectorAll('.wk-review-like-btn').forEach(btn => {
 
 // Buy now
 function addToCartAndRedirect(productId) {
-    const qty = document.getElementById('qty-' + productId)?.value || 1;
+    const qty = parseInt(document.getElementById('qty-' + productId)?.value) || 1;
     fetch('{{ route('cart.add') }}', {
         method: 'POST',
         headers: {
@@ -1196,7 +1196,7 @@ function addToCartAndRedirect(productId) {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content,
             'Accept': 'application/json',
         },
-        body: JSON.stringify({ product_id: productId, quantity: parseInt(qty) })
+        body: JSON.stringify({ product_id: productId, qty: qty, quantity: qty })
     }).then(() => window.location = '{{ route("checkout.index") }}').catch(() => {
         window.location = '{{ route("checkout.index") }}';
     });
