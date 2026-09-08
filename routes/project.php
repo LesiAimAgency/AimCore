@@ -322,7 +322,7 @@ Route::prefix('{projectCode}/admin')
         Route::delete('widgets/{widget}', [WidgetController::class, 'destroy'])->name('widgets.destroy');
         Route::post('widgets/save-all', [WidgetController::class, 'saveWidgets'])->name('widgets.save-all');
         Route::post('widgets/reorder', [WidgetController::class, 'reorder'])->name('widgets.reorder');
-        Route::post('widgets/preview', [WidgetController::class, 'preview'])->name('widgets.preview');
+        Route::match(['get', 'post'], 'widgets/preview', [WidgetController::class, 'preview'])->name('widgets.preview');
         Route::post('widgets/toggle', [WidgetController::class, 'toggleWidget'])->name('widgets.toggle');
         Route::post('widgets/clear-cache', [WidgetController::class, 'clearCache'])->name('widgets.clear-cache');
         Route::match(['get', 'post'], 'widgets/fields', [WidgetController::class, 'getFields'])->name('widgets.fields');

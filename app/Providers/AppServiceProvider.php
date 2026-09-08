@@ -31,6 +31,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::addLocation(resource_path('views/frontend/themes/viettinmartdemo'));
+        $wkThemePath = resource_path('views/frontend/themes/wkcomputerdemo');
+        if (is_dir($wkThemePath)) {
+            View::addLocation($wkThemePath);
+        }
+        $wkComponents = resource_path('views/frontend/themes/wkcomputerdemo/components');
+        if (is_dir($wkComponents)) {
+            Blade::anonymousComponentPath($wkComponents);
+        }
         if (! app()->runningInConsole()) {
             header('X-Powered-By: VGTCRM');
         }

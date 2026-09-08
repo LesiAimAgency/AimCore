@@ -33,6 +33,11 @@ use App\Widgets\Viettinmart\ViettinmartProductFeaturedWidget;
 use App\Widgets\Viettinmart\ViettinmartProductTabsWidget;
 use App\Widgets\Viettinmart\ViettinmartPromoBannersWidget;
 use App\Widgets\Viettinmart\ViettinmartTopTrendingWidget;
+use App\Widgets\Wkcomputer\WkDealFlashWidget;
+use App\Widgets\Wkcomputer\WkFooterColumnWidget;
+use App\Widgets\Wkcomputer\WkHeroSliderWidget;
+use App\Widgets\Wkcomputer\WkPostsLatestWidget;
+use App\Widgets\Wkcomputer\WkProductSectionWidget;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -97,21 +102,22 @@ class WidgetRegistry implements WidgetRegistryInterface
 
         'vtm_footer_column' => ViettinmartFooterColumnWidget::class,
         'inbetween_footer_column' => ViettinmartFooterColumnWidget::class,
-        'footer_column' => ViettinmartFooterColumnWidget::class,
+        'footer_column' => WkFooterColumnWidget::class,
 
         // WKComputer Widgets
-        'wk_hero_slider' => ViettinmartHeroSliderWidget::class,
-        'hero_slider' => ViettinmartHeroSliderWidget::class,
-        'product_section' => ViettinmartProductFeaturedWidget::class,
-        'wk_product_featured' => ViettinmartProductFeaturedWidget::class,
-        'wk_deal_flash' => ViettinmartDealFlashWidget::class,
-        'wk_product_tabs' => ViettinmartProductTabsWidget::class,
-        'wk_promo_banners' => ViettinmartPromoBannersWidget::class,
-        'wk_posts_latest' => ViettinmartPostsLatestWidget::class,
-        'posts_latest' => ViettinmartPostsLatestWidget::class,
-        'wk_footer_column' => ViettinmartFooterColumnWidget::class,
+        'wk_hero_slider' => WkHeroSliderWidget::class,
+        'hero_slider' => WkHeroSliderWidget::class,
+        'product_section' => WkProductSectionWidget::class,
+        'wk_product_featured' => WkProductSectionWidget::class,
+        'wk_deal_flash' => WkDealFlashWidget::class,
+        'deal_flash' => WkDealFlashWidget::class,
+        'wk_product_tabs' => WkProductSectionWidget::class,
+        'wk_promo_banners' => HTMLWidget::class,
+        'wk_posts_latest' => WkPostsLatestWidget::class,
+        'posts_latest' => WkPostsLatestWidget::class,
+        'wk_footer_column' => WkFooterColumnWidget::class,
         'html_custom' => HTMLWidget::class,
-        'menu' => ViettinmartFooterColumnWidget::class,
+        'menu' => WkFooterColumnWidget::class,
     ];
 
     protected static array $discoveredWidgets = [];
@@ -379,6 +385,13 @@ class WidgetRegistry implements WidgetRegistryInterface
      */
     public static function get(string $type): ?string
     {
+        if ($type === 'footer_column') {
+            $project = function_exists('current_project') ? current_project() : null;
+            if ($project && ($project->code === 'viettinmart' || $project->code === 'viettinmart-eco' || $project->id === 10)) {
+                return ViettinmartFooterColumnWidget::class;
+            }
+        }
+
         // Check manually registered first
         if (isset(self::$widgets[$type])) {
             return self::$widgets[$type];

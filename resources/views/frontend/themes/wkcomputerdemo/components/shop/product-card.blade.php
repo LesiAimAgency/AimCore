@@ -1,5 +1,9 @@
 @props(['product'])
 
+@if(empty($product))
+    @php return; @endphp
+@endif
+
 @php
     $price = (float) ($product->price ?? 0);
     $comparePrice = (float) ($product->compare_price ?? 0);

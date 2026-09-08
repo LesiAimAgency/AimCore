@@ -500,7 +500,7 @@
     'use strict';
 
     const BASE_URL = '{{ $baseUrl }}';
-    const CSRF     = document.querySelector('meta[name="csrf-token"]')?.content || '';
+    const CSRF     = '{{ csrf_token() }}' || document.querySelector('meta[name="csrf-token"]')?.content || '';
 
     // ── SAFE JSON ────────────────────────────────────────────────────────
     // Safely parse JSON — throws descriptive error if server returns HTML
@@ -999,7 +999,7 @@
         fetch(BASE_URL + '/widgets/preview', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' },
-            body: JSON.stringify({ type: drawerWidgetType, settings: settings, variant: 'default' })
+            body: JSON.stringify({ _token: CSRF, type: drawerWidgetType, settings: settings, variant: 'default' })
         })
         .then(safeJson)
         .then(function (data) {
@@ -1312,7 +1312,7 @@
         fetch(BASE_URL + '/widgets/preview', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' },
-            body: JSON.stringify({ type: type, settings: [], variant: 'default' })
+            body: JSON.stringify({ _token: CSRF, type: type, settings: [], variant: 'default' })
         })
         .then(safeJson)
         .then(function (data) {

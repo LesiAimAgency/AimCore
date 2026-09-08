@@ -246,7 +246,19 @@ abstract class BaseWidget
 
         // Fallback to legacy getConfig method
         if (method_exists(static::class, 'getConfig')) {
-            return static::getConfig();
+            try {
+                return static::getConfig();
+            } catch (\Throwable $e) {
+                \Log::warning('Failed to load metadata for '.static::class.': '.$e->getMessage());
+
+                return [
+                    'name' => class_basename(static::class),
+                    'description' => '',
+                    'category' => 'general',
+                    'version' => '1.0.0',
+                    'fields' => [],
+                ];
+            }
         }
 
         throw new \RuntimeException('Widget metadata not found: '.$metadataPath);

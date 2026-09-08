@@ -49,12 +49,16 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleDatabaseErrors::class,
         ]);
 
-        // Exclude media upload routes from CSRF verification
+        // Exclude media upload and widget preview routes from CSRF verification
         $middleware->validateCsrfTokens(except: [
             'admin/media/upload',
             '*/admin/media/upload',
             'api/form-submit',
             '*/api/form-submit',
+            'admin/widgets/preview',
+            '*/admin/widgets/preview',
+            'widgets/preview',
+            '*/widgets/preview',
         ]);
 
         // Chỉ áp dụng TenantMiddleware cho các route không phải admin

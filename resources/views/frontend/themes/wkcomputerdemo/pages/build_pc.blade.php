@@ -159,7 +159,7 @@
             return;
         }
 
-        fetch(`/xay-dung-cau-hinh/api-products?cat=${catId}`)
+        fetch(`{{ route('build_pc.api_products') }}?cat=${catId}`)
             .then(r => r.json())
             .then(res => {
                 if(res.success) {
@@ -240,7 +240,7 @@
         }
         // In real app: send array of product IDs to /cart/add-multiple
         alert('Đã thêm ' + keys.length + ' sản phẩm vào giỏ hàng thành công!');
-        window.location.href = '/gio-hang';
+        window.location.href = '{{ route('cart.page') }}';
     }
 </script>
 @endpush

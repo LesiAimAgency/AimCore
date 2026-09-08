@@ -22,7 +22,7 @@ Route::get('/api/search/suggestions', [ShopController::class, 'searchSuggestions
 
 // ─── BUILD PC ───────────────────────────────────────────────
 Route::get('/xay-dung-cau-hinh', [BuildPcController::class, 'index'])->name('build_pc.index');
-Route::get('/xay-dung-cau-hinh/api-products', [BuildPcController::class, 'getProducts']);
+Route::get('/xay-dung-cau-hinh/api-products', [BuildPcController::class, 'getProducts'])->name('build_pc.api_products');
 
 // ─── BLOG ───────────────────────────────────────────────────
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');

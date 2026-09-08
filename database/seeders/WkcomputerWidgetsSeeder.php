@@ -106,12 +106,12 @@ class WkcomputerWidgetsSeeder extends Seeder
                 'sort_order' => 4,
                 'is_active' => true,
                 'settings' => [
-                    'content' => '<div class="wk-promo-grid grid grid-cols-2 md:grid-cols-4 gap-3 my-4">
+                    'content' => '<div class="wk-container my-4"><div class="wk-promo-grid grid grid-cols-2 md:grid-cols-4 gap-3">
                         <a href="/wkcomputer/cua-hang" class="rounded-xl overflow-hidden shadow-xs hover:shadow-md transition"><img src="/themes/wkcomputerdemo/images/banner/banner1-1-min.png" alt="WK promo 1" class="w-full object-cover"></a>
                         <a href="/wkcomputer/cua-hang" class="rounded-xl overflow-hidden shadow-xs hover:shadow-md transition"><img src="/themes/wkcomputerdemo/images/banner/banner2.png" alt="WK promo 2" class="w-full object-cover"></a>
                         <a href="/wkcomputer/cua-hang" class="rounded-xl overflow-hidden shadow-xs hover:shadow-md transition"><img src="/themes/wkcomputerdemo/images/banner/baner-1.jpg" alt="WK promo 3" class="w-full object-cover"></a>
                         <a href="/wkcomputer/cua-hang" class="rounded-xl overflow-hidden shadow-xs hover:shadow-md transition"><img src="/themes/wkcomputerdemo/images/banner/baner-3.jpg" alt="WK promo 4" class="w-full object-cover"></a>
-                    </div>',
+                    </div></div>',
                 ],
             ],
             [
@@ -150,11 +150,11 @@ class WkcomputerWidgetsSeeder extends Seeder
                 'sort_order' => 7,
                 'is_active' => true,
                 'settings' => [
-                    'content' => '<div class="wk-banner-strip my-6 rounded-2xl overflow-hidden shadow-md">
+                    'content' => '<div class="wk-container my-6"><div class="wk-banner-strip rounded-2xl overflow-hidden shadow-md">
                         <a href="/wkcomputer/xay-dung-cau-hinh">
                             <img src="/themes/wkcomputerdemo/images/banner/WK-Store-Banner-02-scaled.png" alt="Build PC Banner" class="w-full object-cover">
                         </a>
-                    </div>',
+                    </div></div>',
                 ],
             ],
             [

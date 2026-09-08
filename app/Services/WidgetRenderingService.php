@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\Widget;
 use App\Widgets\BaseWidget;
 use App\Widgets\WidgetRegistry;
+use Database\Seeders\WkcomputerWidgetsSeeder;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
@@ -219,6 +220,29 @@ class WidgetRenderingService
             if ($widgets->isEmpty() && $area === 'homepage-main' && $project && ($project->code === 'viettinmart-eco' || $project->code === 'viettinmart')) {
                 try {
                     app(ViettinmartDataSyncService::class)->syncProjectId($projectId ?? 10, $tenantId);
+                    $widgets = Widget::withoutGlobalScope('tenant')
+                        ->where('area', $area)
+                        ->where('is_active', true)
+                        ->where(function ($q) use ($tenantId, $projectId) {
+                            if ($tenantId) {
+                                $q->where('tenant_id', $tenantId);
+                            }
+                            if ($projectId) {
+                                $q->orWhere('project_id', $projectId);
+                            }
+                        })
+                        ->orderBy('sort_order')
+                        ->get();
+                } catch (\Throwable $e) {
+                    // Ignore auto-heal error on render
+                }
+            }
+
+            // Auto-heal fallback for WKComputer if homepage is empty
+            if ($widgets->isEmpty() && $area === 'homepage-main' && $project && ($project->code === 'wkcomputer' || $projectId === 14)) {
+                try {
+                    $seeder = new WkcomputerWidgetsSeeder;
+                    $seeder->run($projectId ?? 14, $tenantId ?? 4);
                     $widgets = Widget::withoutGlobalScope('tenant')
                         ->where('area', $area)
                         ->where('is_active', true)

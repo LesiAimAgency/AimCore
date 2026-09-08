@@ -1189,7 +1189,7 @@ document.querySelectorAll('.wk-review-like-btn').forEach(btn => {
 // Buy now
 function addToCartAndRedirect(productId) {
     const qty = document.getElementById('qty-' + productId)?.value || 1;
-    fetch('/gio-hang/them', {
+    fetch('{{ route('cart.add') }}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

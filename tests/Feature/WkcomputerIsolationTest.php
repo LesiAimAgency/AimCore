@@ -59,6 +59,17 @@ class WkcomputerIsolationTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_wkcomputer_build_pc_api_products_returns_json(): void
+    {
+        $responseRam = $this->get('/wkcomputer/xay-dung-cau-hinh/api-products?cat=ram');
+        $responseRam->assertStatus(200);
+        $responseRam->assertJsonPath('success', true);
+
+        $responseCpu = $this->get('/wkcomputer/xay-dung-cau-hinh/api-products?cat=cpu');
+        $responseCpu->assertStatus(200);
+        $responseCpu->assertJsonPath('success', true);
+    }
+
     public function test_wkcomputer_cart_page_returns_ok(): void
     {
         $response = $this->get('/wkcomputer/gio-hang');
