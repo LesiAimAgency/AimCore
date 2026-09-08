@@ -97,7 +97,7 @@
         <div class="error-code">@yield('code')</div>
         <h1 class="error-title">@yield('title')</h1>
         <p class="error-message">@yield('message')</p>
-        <a href="/" class="btn-home">
+        <a href="{{ route('home') }}" class="btn-home">
             Quay về trang chủ
         </a>
     </div>

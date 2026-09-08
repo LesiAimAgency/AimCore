@@ -16,10 +16,12 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\FormSubmissionController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\WatermarkImageController;
+use App\Http\Controllers\Wkcomputer\CartController;
 use App\Livewire\Admin\CodeWidgetList;
 use App\Livewire\Admin\WidgetEditor;
 use App\Livewire\Admin\WidgetTemplateBuilder;
 use App\Models\User;
+use App\Models\Wkcomputer\WkProduct;
 use App\Services\WidgetPermissionService;
 use App\Widgets\WidgetRegistry;
 use Illuminate\Http\Request;
@@ -64,6 +66,68 @@ Route::prefix('api')->name('api.')->middleware('api')->group(function () {
     Route::get('/relationship-field/search', [RelationshipFieldController::class, 'search'])->name('relationship.search');
     Route::get('/relationship-field/items', [RelationshipFieldController::class, 'getItems'])->name('relationship.items');
     Route::get('/taxonomy-field/list', [TaxonomyFieldController::class, 'list'])->name('taxonomy.list');
+});
+
+// Cart Fallback Routes (Supports root-level calls and dispatches to active project)
+Route::prefix('gio-hang')->group(function () {
+    Route::post('them', function (Request $request) {
+        $productId = $request->input('product_id');
+        $isWk = $productId && WkProduct::where('id', $productId)->exists();
+        if ($isWk || session('current_project_id') == 14 || session('current_project')?->code === 'wkcomputer' || str_contains(request()->header('referer', ''), 'wkcomputer')) {
+            return app(CartController::class)->add($request);
+        }
+
+        return app(App\Http\Controllers\Viettinmart\CartController::class)->add($request);
+    })->name('root.cart.add');
+
+    Route::post('them-nhieu', function (Request $request) {
+        return app(CartController::class)->addMultiple($request);
+    })->name('root.cart.addMultiple');
+
+    Route::post('them-combo', function (Request $request) {
+        return app(CartController::class)->addCombo($request);
+    })->name('root.cart.addCombo');
+
+    Route::get('so-luong', function (Request $request) {
+        if (session('current_project_id') == 14 || session('current_project')?->code === 'wkcomputer' || str_contains(request()->header('referer', ''), 'wkcomputer')) {
+            return app(CartController::class)->count();
+        }
+
+        return app(App\Http\Controllers\Viettinmart\CartController::class)->count();
+    })->name('root.cart.count');
+
+    Route::get('dropdown', function (Request $request) {
+        if (session('current_project_id') == 14 || session('current_project')?->code === 'wkcomputer' || str_contains(request()->header('referer', ''), 'wkcomputer')) {
+            return app(CartController::class)->dropdown();
+        }
+
+        return app(App\Http\Controllers\Viettinmart\CartController::class)->dropdown();
+    })->name('root.cart.dropdown');
+
+    Route::get('tong', function (Request $request) {
+        return app(CartController::class)->total();
+    })->name('root.cart.total');
+
+    Route::post('cap-nhat', function (Request $request) {
+        return app(CartController::class)->update($request);
+    })->name('root.cart.update');
+
+    Route::post('xoa', function (Request $request) {
+        return app(CartController::class)->remove($request);
+    })->name('root.cart.remove');
+
+    Route::post('xoa-het', function (Request $request) {
+        return app(CartController::class)->clear($request);
+    })->name('root.cart.clear');
+
+    Route::get('/', function (Request $request) {
+        if (session('current_project_id') == 14 || session('current_project')?->code === 'wkcomputer' || str_contains(request()->header('referer', ''), 'wkcomputer')) {
+            return redirect('/wkcomputer/gio-hang');
+        }
+        $projectCode = session('current_project')?->code ?? 'viettinmart-eco';
+
+        return redirect("/{$projectCode}/gio-hang");
+    })->name('root.cart.page');
 });
 
 // Include Frontend Routes

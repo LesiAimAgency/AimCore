@@ -252,7 +252,7 @@
             <li><a href="{{ route('shop.index') }}?on_sale=1" style="color:var(--wk-primary);">
                 <span class="wk-nav-badge">HOT</span> Khuyến mãi
             </a></li>
-            <li><a href="#">Build PC</a></li>
+            <li><a href="{{ route('build_pc.index') }}">Build PC</a></li>
             <li><a href="{{ route('blog.index') }}">Tin tức</a></li>
             <li><a href="{{ route('contact.index') }}">Liên hệ</a></li>
         </ul>
@@ -483,12 +483,12 @@
                 <div class="wk-footer-col">
                     <h4>Chính Sách</h4>
                     <ul class="wk-footer-links">
-                        <li><a href="/chinh-sach-thanh-toan"><i class="fas fa-angle-right"></i>Chính sách thanh toán</a></li>
-                        <li><a href="/chinh-sach-van-chuyen"><i class="fas fa-angle-right"></i>Chính sách vận chuyển</a></li>
-                        <li><a href="/chinh-sach-bao-mat-thong-tin"><i class="fas fa-angle-right"></i>Chính sách bảo mật</a></li>
-                        <li><a href="/chinh-sach-kiem-hang"><i class="fas fa-angle-right"></i>Chính sách kiểm hàng</a></li>
-                        <li><a href="/quy-dinh-va-chinh-sach"><i class="fas fa-angle-right"></i>Quy định & Chính sách</a></li>
-                        <li><a href="/thong-tin-ve-gia-san-pham"><i class="fas fa-angle-right"></i>Thông tin về giá</a></li>
+                        <li><a href="{{ route('shop.show', 'chinh-sach-thanh-toan') }}"><i class="fas fa-angle-right"></i>Chính sách thanh toán</a></li>
+                        <li><a href="{{ route('shop.show', 'chinh-sach-van-chuyen') }}"><i class="fas fa-angle-right"></i>Chính sách vận chuyển</a></li>
+                        <li><a href="{{ route('shop.show', 'chinh-sach-bao-mat-thong-tin') }}"><i class="fas fa-angle-right"></i>Chính sách bảo mật</a></li>
+                        <li><a href="{{ route('shop.show', 'chinh-sach-kiem-hang') }}"><i class="fas fa-angle-right"></i>Chính sách kiểm hàng</a></li>
+                        <li><a href="{{ route('shop.show', 'quy-dinh-va-chinh-sach') }}"><i class="fas fa-angle-right"></i>Quy định & Chính sách</a></li>
+                        <li><a href="{{ route('shop.show', 'thong-tin-ve-gia-san-pham') }}"><i class="fas fa-angle-right"></i>Thông tin về giá</a></li>
                     </ul>
                 </div>
 
@@ -496,7 +496,7 @@
                 <div class="wk-footer-col">
                     <h4>Hỗ Trợ</h4>
                     <ul class="wk-footer-links">
-                        <li><a href="/gioi-thieu-cong-ty"><i class="fas fa-angle-right"></i>Giới thiệu công ty</a></li>
+                        <li><a href="{{ route('shop.show', 'gioi-thieu-cong-ty') }}"><i class="fas fa-angle-right"></i>Giới thiệu công ty</a></li>
                         <li><a href="{{ route('order.track') }}"><i class="fas fa-angle-right"></i>Tra cứu đơn hàng</a></li>
                         <li><a href="{{ route('contact.index') }}"><i class="fas fa-angle-right"></i>Gửi yêu cầu hỗ trợ</a></li>
                         <li><a href="{{ route('blog.index') }}"><i class="fas fa-angle-right"></i>Tin tức công nghệ</a></li>
@@ -765,6 +765,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <script>
 window.wkEndpoints = {
+    baseUrl: "{{ url('wkcomputer') }}",
+    projectCode: "wkcomputer",
     cartAdd: "{{ route('cart.add') }}",
     cartCount: "{{ route('cart.count') }}",
     cartTotal: "{{ route('cart.total') }}",

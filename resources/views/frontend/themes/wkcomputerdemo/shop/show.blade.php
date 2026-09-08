@@ -38,6 +38,101 @@
         background: #f1f5f9;
     }
 
+    /* Product Description & Typography */
+    .wk-product-description {
+        font-size: 15px;
+        line-height: 1.8;
+        color: #334155;
+        word-break: break-word;
+    }
+    .wk-product-description h1,
+    .wk-product-description h2,
+    .wk-product-description h3,
+    .wk-product-description h4 {
+        color: #1e293b;
+        font-weight: 700;
+        line-height: 1.4;
+        margin-top: 24px;
+        margin-bottom: 12px;
+    }
+    .wk-product-description h1 { font-size: 22px; }
+    .wk-product-description h2 { font-size: 18px; }
+    .wk-product-description h3 { font-size: 16px; }
+    .wk-product-description h4 { font-size: 15px; }
+    .wk-product-description p {
+        margin-bottom: 16px;
+        line-height: 1.8;
+    }
+    .wk-product-description img {
+        max-width: 100% !important;
+        height: auto !important;
+        border-radius: 8px;
+        display: block;
+        margin: 20px auto;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .wk-product-description a {
+        color: var(--wk-primary, #e11d48) !important;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s;
+    }
+    .wk-product-description a:hover {
+        text-decoration: underline;
+        color: var(--wk-primary-dark, #be123c) !important;
+    }
+    .wk-product-description ul,
+    .wk-product-description ol {
+        margin: 12px 0 16px 20px;
+        padding-left: 12px;
+    }
+    .wk-product-description li {
+        margin-bottom: 6px;
+        line-height: 1.7;
+    }
+    .wk-product-description table,
+    .wk-tab-panel[data-tab="specs"] table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 16px 0 !important;
+        background: #fff !important;
+        border-radius: 8px !important;
+        overflow: hidden !important;
+        border: 1px solid #e2e8f0 !important;
+        font-size: 14px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .wk-product-description th,
+    .wk-product-description td,
+    .wk-tab-panel[data-tab="specs"] th,
+    .wk-tab-panel[data-tab="specs"] td {
+        border: 1px solid #e2e8f0 !important;
+        padding: 10px 16px !important;
+        text-align: left !important;
+        line-height: 1.6 !important;
+        vertical-align: middle !important;
+    }
+    .wk-product-description th,
+    .wk-tab-panel[data-tab="specs"] th {
+        background: #f8fafc !important;
+        font-weight: 700 !important;
+        color: #1e293b !important;
+    }
+    .wk-product-description tr:nth-child(even) td,
+    .wk-tab-panel[data-tab="specs"] tr:nth-child(even) td {
+        background: #f8fafc !important;
+    }
+    .wk-product-description tr:hover td,
+    .wk-tab-panel[data-tab="specs"] tr:hover td {
+        background: #f1f5f9 !important;
+    }
+    .scroll-table {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 16px 0;
+    }
+
     /* Fundiin Promotion Widget styling */
     .fundiin-promotion__panel {
         margin: 20px 0;
@@ -302,6 +397,39 @@
         if (is_array($info)) $specs = $info;
     }
 
+    // Process and sanitize product description, extract specs table if present
+    $cleanDescription = $product->description ?? '';
+    $extractedSpecsTable = null;
+
+    if ($cleanDescription) {
+        // Clean r<br> artifacts
+        $cleanDescription = preg_replace('/(<\/?(?:table|thead|tbody|tfoot|tr|td|th|div|p|h[1-6]|ul|ol|li|blockquote)[^>]*>)\s*r<br\s*\/?>/iu', '$1', $cleanDescription);
+        $cleanDescription = preg_replace('/r<br\s*\/?>\s*(<\/?(?:table|thead|tbody|tfoot|tr|td|th|div|p|h[1-6]|ul|ol|li|blockquote)[^>]*>)/iu', '$1', $cleanDescription);
+        $cleanDescription = preg_replace('/(?:r<br\s*\/?>\s*)+/i', '<br>', $cleanDescription);
+        $cleanDescription = preg_replace('/r<br\s*\/?>/i', '<br>', $cleanDescription);
+        $cleanDescription = str_replace(["\r\n", "\r"], "\n", $cleanDescription);
+
+        // Extract specs table (table with id="tblGeneralAttribute" or table inside .scroll-table)
+        $specsPattern = '/(?:<h[1-6]>\s*<strong>\s*Thông số kỹ thuật:?\s*<\/strong>\s*<\/h[1-6]>|<h[1-6]>\s*Thông số kỹ thuật:?\s*<\/h[1-6]>)?\s*(?:<div class="scroll-table">\s*)?(<table[^>]*id="tblGeneralAttribute"[^>]*>[\s\S]*?<\/table>)(?:\s*<\/div>)?/iu';
+        if (preg_match($specsPattern, $cleanDescription, $m)) {
+            $extractedSpecsTable = $m[1];
+            $cleanDescription = str_replace($m[0], '', $cleanDescription);
+        } elseif (preg_match('/<div class="scroll-table">\s*(<table[^>]*>[\s\S]*?<\/table>)\s*<\/div>/iu', $cleanDescription, $m)) {
+            $extractedSpecsTable = $m[1];
+            $cleanDescription = str_replace($m[0], '', $cleanDescription);
+        }
+
+        // Clean empty tags
+        $cleanDescription = preg_replace('/<div class="scroll-table">\s*<\/div>/iu', '', $cleanDescription);
+        $cleanDescription = preg_replace('/<p[^>]*>\s*(?:&nbsp;|\s|<br\s*\/?>)*<\/p>/iu', '', $cleanDescription);
+        $cleanDescription = preg_replace('/<h[1-6][^>]*>\s*(?:&nbsp;|\s|<br\s*\/?>)*<\/h[1-6]>/iu', '', $cleanDescription);
+
+        // Remove redundant leading repeated title if it exists at the very beginning
+        $cleanDescription = preg_replace('/^\s*<p style="text-align:\s*center;"><strong><span[^>]*>(?:(?!<img)[\s\S])*?<\/span><\/strong><\/p>/iu', '', $cleanDescription);
+        $cleanDescription = preg_replace('/^\s*<h1 style="text-align:\s*center;">[\s\S]*?<\/h1>/iu', '', $cleanDescription);
+        $cleanDescription = trim($cleanDescription);
+    }
+
     // First category
     $firstCat = $product->categories->first();
     $sku = $product->sku ?? 'N/A';
@@ -393,7 +521,7 @@
                     <div class="wk-tabs-wrap">
                         <div class="wk-tabs-nav">
                             <button class="wk-tab-btn active" data-tab="description">Mô tả sản phẩm</button>
-                            @if(count($specs))
+                            @if(count($specs) || $extractedSpecsTable)
                             <button class="wk-tab-btn" data-tab="specs">Thông số kỹ thuật</button>
                             @endif
                             <button class="wk-tab-btn" data-tab="reviews">
@@ -404,16 +532,16 @@
                         {{-- Description Tab --}}
                         <div class="wk-tab-panel active" data-tab="description">
                             <div class="wk-desc-collapse-wrapper" id="desc-wrapper">
-                                @if($product->description)
-                                <div style="font-size:14px;line-height:1.8;color:#334155;" class="wk-product-description">
-                                    {!! $product->description !!}
+                                @if($cleanDescription)
+                                <div class="wk-product-description">
+                                    {!! $cleanDescription !!}
                                 </div>
                                 @else
                                 <p style="color:#94a3b8;text-align:center;padding:40px 0;">Chưa có mô tả chi tiết cho sản phẩm này.</p>
                                 @endif
                                 <div class="wk-desc-fade-overlay"></div>
                             </div>
-                            @if($product->description)
+                            @if($cleanDescription)
                             <div class="wk-desc-toggle-container">
                                 <button type="button" class="wk-btn-desc-toggle" onclick="toggleDescription()">
                                     <span id="desc-toggle-text">Xem tất cả</span>
@@ -424,8 +552,13 @@
                         </div>
 
                         {{-- Specs Tab --}}
-                        @if(count($specs))
+                        @if(count($specs) || $extractedSpecsTable)
                         <div class="wk-tab-panel" data-tab="specs">
+                            @if($extractedSpecsTable)
+                                <div class="scroll-table">
+                                    {!! $extractedSpecsTable !!}
+                                </div>
+                            @elseif(count($specs))
                             <table style="width:100%;border-collapse:collapse;font-size:14px;">
                                 <tbody>
                                     <tr>
@@ -439,6 +572,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            @endif
                         </div>
                         @endif
 

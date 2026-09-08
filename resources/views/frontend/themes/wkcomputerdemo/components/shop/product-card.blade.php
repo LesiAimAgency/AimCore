@@ -5,8 +5,8 @@
 @endif
 
 @php
-    $price = (float) ($product->price ?? 0);
-    $comparePrice = (float) ($product->compare_price ?? 0);
+    $price = (float) ($product->effective_price ?? ($product->sale_price && $product->sale_price < $product->price ? $product->sale_price : $product->price));
+    $comparePrice = (float) ($product->compare_price ?? ($product->sale_price && $product->sale_price < $product->price ? $product->price : 0));
     $hasDiscount = $comparePrice > 0 && $comparePrice > $price;
     $discountPercent = $hasDiscount ? round((($comparePrice - $price) / $comparePrice) * 100) : 0;
 
@@ -16,31 +16,70 @@
         $image = '/media-files/' . $image;
     }
 
-    // Category name
-    $catName = $product->categories->first()?->name ?? '';
+    // Category name: prefer specific child category over generic root
+    $cat = $product->categories->whereNotNull('parent_id')->last() 
+        ?? $product->categories->last() 
+        ?? $product->category;
+    $catName = $cat?->name ?? '';
 
-    // Specs from additional_info (JSON or string)
+    // Specs from additional_info (JSON or string) with smart fallbacks
     $specs = [];
     if (!empty($product->additional_info)) {
         $info = is_string($product->additional_info) ? json_decode($product->additional_info, true) : $product->additional_info;
         if (is_array($info)) {
-            foreach (['CPU', 'RAM', 'SSD', 'VGA', 'Màn hình'] as $key) {
-                if (!empty($info[$key])) $specs[$key] = $info[$key];
+            foreach ($info as $key => $val) {
+                if (!empty($val) && is_string($val) && mb_strlen($val) <= 25) {
+                    $specs[] = $val;
+                }
             }
         }
     }
+    // Fallback: extract specs from short_description list items
+    if (empty($specs) && !empty($product->short_description)) {
+        if (preg_match_all('/<li>(?:<strong>[^<]*:?<\/strong>\s*)?([^<]+)<\/li>/iu', $product->short_description, $matches)) {
+            foreach (array_slice($matches[1], 0, 3) as $specVal) {
+                $clean = trim(html_entity_decode(strip_tags($specVal)));
+                if (!empty($clean) && mb_strlen($clean) <= 25) {
+                    $specs[] = $clean;
+                }
+            }
+        }
+    }
+    // Fallback: extract key tech keywords from product name
+    if (empty($specs) && !empty($product->name)) {
+        $name = $product->name;
+        if (preg_match('/(\bRTX\s*\d{4}(?:\s*Ti|\s*Super)?\b|\bGTX\s*\d{4}\b|\bRX\s*\d{4}(?:\s*XT)?\b|\bCore\s*i[3579][-\s]*\w+\b|\bRyzen\s*[3579][-\s]*\w+\b)/i', $name, $m)) {
+            $specs[] = trim($m[1]);
+        }
+        if (preg_match('/(\b\d+\s*GB\b|\b\d+\s*TB\b|\b\d+G\b)/i', $name, $m)) {
+            if (!in_array(trim($m[1]), $specs)) $specs[] = trim($m[1]);
+        }
+        if (preg_match('/(\bGDDR\d+\b|\bDDR\d+\b|\b\d{4}\s*MHz\b|\bNVMe\b)/i', $name, $m)) {
+            if (!in_array(trim($m[1]), $specs)) $specs[] = trim($m[1]);
+        }
+    }
 
-    // Rating
-    $rating = $product->reviews_avg_rating ?? null;
-    $reviewCount = $product->reviews_count ?? 0;
+    // Rating (database stores rating_average & rating_count)
+    $rating = (float) ($product->reviews_avg_rating ?? $product->rating_average ?? $product->average_rating ?? 0);
+    $reviewCount = (int) ($product->reviews_count ?? $product->rating_count ?? 0);
 
-    // Slug
+    // Slug & URL
     $slug = $product->slug ?? '';
+    $productUrl = !empty($slug) ? (Route::has('shop.show') ? route('shop.show', $slug) : url($slug)) : '#';
+
+    // Warranty & stock status for tooltip
+    $warranty = 'Bảo hành chính hãng';
+    if (!empty($product->description) && preg_match('/Bảo\s*Hành\s*(\d+\s*(?:Tháng|tháng|Năm|năm))/iu', $product->description, $wMatch)) {
+        $warranty = 'Bảo hành ' . $wMatch[1];
+    } elseif (!empty($product->name) && preg_match('/BH\s*(\d+T)/i', $product->name, $wMatch)) {
+        $warranty = 'Bảo hành ' . $wMatch[1];
+    }
+    $inStock = ($product->stock_status ?? 'in_stock') === 'in_stock' && ($product->stock_quantity === null || (int)$product->stock_quantity > 0);
 @endphp
 
 <div class="wk-product-card" onmouseenter="showTooltip(this)" onmousemove="moveTooltip(event, this)" onmouseleave="hideTooltip(this)">
     {{-- Image --}}
-    <a href="{{ url($slug) }}" class="wk-card-img-wrap" style="position:relative; display:block;">
+    <a href="{{ $productUrl }}" class="wk-card-img-wrap" style="position:relative; display:block;">
 
         @if($price >= 1000000)
         <span class="wk-badge wk-badge-installment">Trả góp 0%</span>
@@ -67,7 +106,7 @@
         <div class="wk-card-cat">{{ $catName }}</div>
         @endif
 
-        <a href="{{ url($slug) }}" class="wk-card-name">{{ $product->name }}</a>
+        <a href="{{ $productUrl }}" class="wk-card-name" title="{{ $product->name }}">{{ $product->name }}</a>
 
         {{-- Specs --}}
         @if(count($specs))
@@ -79,7 +118,7 @@
         @endif
 
         {{-- Rating --}}
-        @if($rating)
+        @if($rating > 0)
         <div class="wk-card-rating">
             <span class="wk-stars">
                 @for($i = 1; $i <= 5; $i++)
@@ -94,19 +133,16 @@
         @endif
 
         {{-- Price --}}
-        <div class="wk-card-price-wrap" style="display:flex; flex-direction:column; gap:4px; min-height:60px;">
-            <div style="display:flex; align-items:flex-end; gap:8px; flex-wrap:wrap;">
-                <span class="wk-price-main" style="color:#e11d48; font-weight:700;">{{ number_format($price, 0, ',', '.') }}₫</span>
+        <div class="wk-card-price-wrap">
+            <div style="display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;">
+                <span class="wk-price-main">{{ number_format($price, 0, ',', '.') }}₫</span>
                 @if($hasDiscount)
-                <div style="display:flex; align-items:center; gap:4px; margin-bottom:2px; flex-wrap:wrap;">
-                    <span class="wk-price-old" style="color:#94a3b8; text-decoration:line-through;">{{ number_format($comparePrice, 0, ',', '.') }}₫</span>
-                    @if($discountPercent > 0)
-                    <span style="color:#e11d48; font-size:11px; font-weight:600;">-{{ $discountPercent }}%</span>
-                    @endif
-                </div>
+                <span class="wk-price-old">{{ number_format($comparePrice, 0, ',', '.') }}₫</span>
+                @if($discountPercent > 0)
+                <span class="wk-price-percent">-{{ $discountPercent }}%</span>
+                @endif
                 @endif
             </div>
-            
         </div>
     </div>
 
@@ -127,26 +163,28 @@
         </div>
         <div style="padding:12px; background:#fff; border: 1px solid #e11d48; border-top: none;">
             <table style="width:100%; font-size:13px; line-height:1.6; margin-bottom:12px;">
+                @if($hasDiscount && $comparePrice > $price)
                 <tr>
                     <td style="color:#333; font-weight:600; width:35%; padding-bottom:6px;">Giá niêm yết</td>
                     <td style="padding-bottom:6px;">
-                        <span style="text-decoration:line-through; color:#333; font-weight:600;">{{ number_format($comparePrice, 0, ',', '.') }}đ</span>
-                        @if($hasDiscount && $discountPercent > 0)
+                        <span style="text-decoration:line-through; color:#94a3b8; font-weight:600;">{{ number_format($comparePrice, 0, ',', '.') }}đ</span>
+                        @if($discountPercent > 0)
                         <span style="color:#e11d48; font-weight:700; margin-left:4px;">-{{ $discountPercent }}%</span>
                         @endif
                     </td>
                 </tr>
+                @endif
                 <tr>
                     <td style="color:#333; font-weight:600; padding-bottom:6px;">Giá bán</td>
                     <td style="color:#e11d48; font-weight:700; padding-bottom:6px;">{{ number_format($price, 0, ',', '.') }}đ</td>
                 </tr>
                 <tr>
                     <td style="color:#333; font-weight:600; padding-bottom:6px;">Bảo hành</td>
-                    <td style="color:#e11d48; font-weight:600; padding-bottom:6px;">Bảo hành theo từng linh kiện</td>
+                    <td style="color:#e11d48; font-weight:600; padding-bottom:6px;">{{ $warranty }}</td>
                 </tr>
                 <tr>
                     <td style="color:#333; font-weight:600;">Tình trạng</td>
-                    <td style="color:#2e7d32; font-weight:700;">Còn hàng</td>
+                    <td style="color:{{ $inStock ? '#2e7d32' : '#dc2626' }}; font-weight:700;">{{ $inStock ? 'Còn hàng' : 'Hết hàng' }}</td>
                 </tr>
             </table>
             
