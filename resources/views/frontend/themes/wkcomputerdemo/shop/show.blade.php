@@ -1136,19 +1136,21 @@
         {{-- RELATED PRODUCTS --}}
         @if($relatedProducts->isNotEmpty())
         <section style="margin-top:8px;" id="rec-related-products">
-            <div class="wk-section-header">
-                <h2 class="wk-section-title"><i class="fas fa-cubes"></i> Sản Phẩm Liên Quan</h2>
-            </div>
-            <div class="wk-products-grid" data-recommendation-type="related" data-source="product_detail">
-                @foreach($relatedProducts as $index => $related)
-                <div data-product-id="{{ $related->id }}"
-                     data-position="{{ $index + 1 }}"
-                     data-recommendation-type="related"
-                     data-source="product_detail"
-                     class="rec-product-wrapper">
-                    <x-shop.product-card :product="$related" />
+            <div class="wk-container">
+                <div class="wk-section-header">
+                    <h2 class="wk-section-title"><i class="fas fa-cubes"></i> Sản Phẩm Liên Quan</h2>
                 </div>
-                @endforeach
+                <div class="wk-products-grid" data-recommendation-type="related" data-source="product_detail">
+                    @foreach($relatedProducts as $index => $related)
+                    <div data-product-id="{{ $related->id }}"
+                        data-position="{{ $index + 1 }}"
+                        data-recommendation-type="related"
+                        data-source="product_detail"
+                        class="rec-product-wrapper">
+                        <x-shop.product-card :product="$related" />
+                    </div>
+                    @endforeach
+                </div>
             </div>
         </section>
         @endif
@@ -1156,23 +1158,25 @@
         {{-- ALSO VIEWED --}}
         @if(isset($alsoViewedProducts) && $alsoViewedProducts->isNotEmpty())
         <section style="margin-top:28px;" id="rec-also-viewed">
-            <div class="wk-section-header">
-                <h2 class="wk-section-title"><i class="fas fa-users"></i> Người xem cũng xem</h2>
-            </div>
-            <div class="wk-products-grid" data-recommendation-type="also_viewed" data-source="product_detail">
-                @foreach($alsoViewedProducts as $index => $avProduct)
-                <div data-product-id="{{ $avProduct->id }}"
-                     data-position="{{ $index + 1 }}"
-                     data-recommendation-type="also_viewed"
-                     data-source="product_detail"
-                     class="rec-product-wrapper">
-                    <x-shop.product-card :product="$avProduct" />
+            <div class="wk-container">
+                <div class="wk-section-header">
+                    <h2 class="wk-section-title"><i class="fas fa-users"></i> Người xem cũng xem</h2>
                 </div>
-                @endforeach
+                <div class="wk-products-grid" data-recommendation-type="also_viewed" data-source="product_detail">
+                    @foreach($alsoViewedProducts as $index => $avProduct)
+                    <div data-product-id="{{ $avProduct->id }}"
+                        data-position="{{ $index + 1 }}"
+                        data-recommendation-type="also_viewed"
+                        data-source="product_detail"
+                        class="rec-product-wrapper">
+                        <x-shop.product-card :product="$avProduct" />
+                    </div>
+                    @endforeach
+                </div>
             </div>
         </section>
         @endif
-
+                            
         {{-- RECENTLY VIEWED --}}
         @if(isset($recentlyViewedProducts) && $recentlyViewedProducts->isNotEmpty())
         <section style="margin-top:28px;" id="rec-recently-viewed">

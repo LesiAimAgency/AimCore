@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\DeploymentHistory;
 use App\Models\HostingProfile;
 use App\Models\Project;
 use App\Models\User;
@@ -41,6 +42,10 @@ class CpanelDeploymentAndProjectConfigTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Triển khai', false);
         $response->assertSee('deployment-tab');
+        $response->assertSee('deployConsoleContainer');
+        $response->assertSee('cPanel Deployment Terminal', false);
+        $response->assertSee('btnStartDeploy');
+        $response->assertSee('startLiveDeployment', false);
         $response->assertSee($project->getDeploymentId());
         $response->assertSee('wkcomputer.aimagency.vn');
         $response->assertSee('Kỹ thuật viên Triển khai', false);
@@ -202,7 +207,7 @@ class CpanelDeploymentAndProjectConfigTest extends TestCase
         $response = $this->actingAs($this->superAdmin)
             ->post(route('superadmin.projects.create-cpanel-domain', $project), [
                 'domain' => 'newisolated.aimagency.vn',
-                'document_root' => '/home/testuser/domains/newisolated.aimagency.vn/public',
+                'document_root' => '/home/testuser/newisolated.aimagency.vn',
             ]);
 
         $response->assertRedirect();
@@ -210,6 +215,77 @@ class CpanelDeploymentAndProjectConfigTest extends TestCase
 
         $project->refresh();
         $this->assertEquals('newisolated.aimagency.vn', $project->external_domain);
-        $this->assertEquals('/home/testuser/domains/newisolated.aimagency.vn/public', $project->deployment_config['domain']['document_root']);
+        $this->assertEquals('/home/testuser/newisolated.aimagency.vn', $project->deployment_config['domain']['document_root']);
+    }
+
+    public function test_superadmin_can_fetch_deployment_logs_via_ajax(): void
+    {
+        $project = Project::factory()->create([
+            'name' => 'Logs Test Project',
+            'code' => 'logsproj',
+        ]);
+
+        // When no history exists
+        $response = $this->actingAs($this->superAdmin)
+            ->getJson(route('superadmin.projects.deploy-logs', $project));
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'status' => 'idle',
+            'logs' => [],
+        ]);
+
+        $profile = HostingProfile::create([
+            'name' => 'Test Host',
+            'panel_type' => 'cpanel',
+            'hostname' => 'https://host.test:2083',
+            'port' => 2083,
+            'cpanel_username' => 'testuser',
+            'api_token' => 'TEST_TOKEN',
+            'is_active' => true,
+        ]);
+
+        // When deployment history with logs exists
+        $history = DeploymentHistory::create([
+            'project_id' => $project->id,
+            'hosting_profile_id' => $profile->id,
+            'deployed_by' => $this->superAdmin->id,
+            'status' => 'success',
+            'deployed_url' => 'https://logsproj.aimagency.vn',
+            'started_at' => now()->subMinutes(5),
+            'completed_at' => now(),
+        ]);
+
+        $history->logs()->create([
+            'step' => 'export',
+            'message' => 'Đóng gói mã nguồn hoàn tất.',
+            'level' => 'success',
+            'step_number' => 2,
+            'logged_at' => now(),
+        ]);
+
+        $history->logs()->create([
+            'step' => 'bootstrap',
+            'message' => 'Kích hoạt hệ thống hoàn tất.',
+            'level' => 'success',
+            'step_number' => 5,
+            'logged_at' => now(),
+        ]);
+
+        $responseWithLogs = $this->actingAs($this->superAdmin)
+            ->getJson(route('superadmin.projects.deploy-logs', $project));
+
+        $responseWithLogs->assertStatus(200);
+        $responseWithLogs->assertJsonStructure([
+            'status',
+            'history_id',
+            'logs' => [
+                '*' => ['step', 'step_number', 'level', 'status', 'message', 'time'],
+            ],
+        ]);
+        $this->assertEquals('success', $responseWithLogs->json('status'));
+        $this->assertEquals('https://logsproj.aimagency.vn', $responseWithLogs->json('deployed_url'));
+        $this->assertCount(2, $responseWithLogs->json('logs'));
+        $this->assertEquals('Đóng gói mã nguồn hoàn tất.', $responseWithLogs->json('logs.0.message'));
     }
 }

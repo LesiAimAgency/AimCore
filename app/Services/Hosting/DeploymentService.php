@@ -82,11 +82,14 @@ class DeploymentService
 
             // Step 3.5: Create Addon/Sub Domain & Get Server IP
             $domain = $project->external_domain ?? ($profile->domain ?? 'unknown');
-            $this->log($history, 'create_domain', "Creating domain {$domain} on hosting...", 'info', 3);
+            $cpanelUser = trim($profile->cpanel_username ?: 'fukkatsu');
+            $remoteDir = "/home/{$cpanelUser}/{$domain}";
+
+            $this->log($history, 'create_domain', "Configuring domain {$domain} with document root {$remoteDir}...", 'info', 3);
 
             try {
-                $client->createDomain($domain, ltrim($profile->public_html_path, '/'));
-                $this->log($history, 'create_domain', "Domain {$domain} created successfully.", 'success', 3);
+                $client->createDomain($domain, $remoteDir);
+                $this->log($history, 'create_domain', "Domain {$domain} configured successfully at {$remoteDir}.", 'success', 3);
             } catch (\Exception $e) {
                 $this->log($history, 'create_domain', 'Warning: Could not create domain automatically: '.$e->getMessage(), 'warning', 3);
             }
@@ -108,9 +111,8 @@ class DeploymentService
             $envContent = preg_replace('/APP_URL=.*/', 'APP_URL=https://'.$domain, $envContent);
 
             // Step 5: Upload ZIP to cPanel
-            $this->log($history, 'upload', 'Uploading source code ZIP...', 'info', 4);
+            $this->log($history, 'upload', "Uploading source code ZIP to {$remoteDir}...", 'info', 4);
             $remoteZipName = "deploy_{$history->id}_".time().'.zip';
-            $remoteDir = $profile->public_html_path;
 
             $client->uploadFile($zipPath, $remoteDir, $remoteZipName);
             $this->log($history, 'upload', 'Upload completed. Extracting...', 'info', 4);
@@ -126,7 +128,7 @@ class DeploymentService
 
             // Step 8: Upload and run bootstrap installer script
             $this->log($history, 'bootstrap', 'Running bootstrap installer script...', 'info', 6);
-            $this->runBootstrapScript($client, $profile, $domain, $exportService);
+            $this->runBootstrapScript($client, $profile, $domain, $remoteDir, $exportService);
             $this->log($history, 'bootstrap', 'Bootstrap completed.', 'success', 6);
 
             // Step 9: Mark success
@@ -201,10 +203,10 @@ class DeploymentService
         HostingClientInterface $client,
         HostingProfile $profile,
         string $domain,
+        string $remoteDir,
         ?ProjectExportService $exportService = null
     ): void {
         $exportService = $exportService ?? app(ProjectExportService::class);
-        $remoteDir = $profile->public_html_path;
         $secretToken = Str::random(32);
 
         // Inject one-time token into the installer script

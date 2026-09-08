@@ -65,14 +65,15 @@ class DeploymentDiscoveryService
         $domainDetails = $detailedDomains[$chosenDomain] ?? null;
         $docRoot = $domainDetails['document_root'] ?? '';
 
-        if (empty($docRoot)) {
-            // Default path standard if domain is not yet created on cPanel
-            $docRoot = "{$homeDir}/domains/{$chosenDomain}/public";
-            $deploymentPath = "{$homeDir}/domains/{$chosenDomain}";
+        if (empty($docRoot) || str_contains($docRoot, '/domains/')) {
+            // Standard path convention on host: /home/{user}/{domain}
+            $docRoot = "{$homeDir}/{$chosenDomain}";
+            $deploymentPath = "{$homeDir}/{$chosenDomain}";
         } else {
-            // If document root points to public_html or subfolder
-            $deploymentPath = dirname($docRoot);
-            if ($deploymentPath === $homeDir || empty($deploymentPath)) {
+            // If document root points to a subdirectory ending in /public
+            if (str_ends_with($docRoot, '/public')) {
+                $deploymentPath = dirname($docRoot);
+            } else {
                 $deploymentPath = $docRoot;
             }
         }

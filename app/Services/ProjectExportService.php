@@ -137,11 +137,33 @@ class ProjectExportService
         }
 
         // Copy root-level files
-        $rootFiles = ['artisan', 'composer.json', 'composer.lock', 'package.json', '.env.example', '.gitignore'];
+        $rootFiles = ['artisan', 'composer.json', 'composer.lock', 'package.json', '.env.example', '.gitignore', '.htaccess'];
         foreach ($rootFiles as $file) {
             if (File::exists($basePath.'/'.$file)) {
                 File::copy($basePath.'/'.$file, $exportPath.'/'.$file);
             }
+        }
+
+        // Create root index.php so requests to /home/{user}/{domain}/ work out-of-the-box
+        if (! File::exists($exportPath.'/index.php')) {
+            $rootIndex = <<<'PHP'
+<?php
+
+/**
+ * Laravel - Root Entry Point for Shared Hosting
+ */
+
+$uri = urldecode(
+    parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? ''
+);
+
+if ($uri !== '/' && file_exists(__DIR__.'/public'.$uri)) {
+    return false;
+}
+
+require_once __DIR__.'/public/index.php';
+PHP;
+            File::put($exportPath.'/index.php', $rootIndex);
         }
     }
 

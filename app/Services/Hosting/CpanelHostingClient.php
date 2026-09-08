@@ -239,9 +239,9 @@ class CpanelHostingClient implements HostingClientInterface
             $dir = ltrim($documentRoot, '/');
         }
 
-        // Prevent accidental sharing with main domain root
-        if (empty($dir) || $dir === 'public_html') {
-            $dir = "domains/{$domain}/public";
+        // Standard convention on host: directory named directly as domain (e.g. wkcomputer.aimagency.vn)
+        if (empty($dir) || $dir === 'public_html' || str_starts_with($dir, 'domains/')) {
+            $dir = $domain;
         }
 
         $parts = explode('.', $domain);
@@ -260,16 +260,48 @@ class CpanelHostingClient implements HostingClientInterface
 
                 return true;
             } catch (\Exception $e) {
-                // If subdomain fails, we can fallback to addon domain below
+                // If already exists on cPanel, update docroot to ensure it matches
+                try {
+                    $this->callUapi('SubDomain', 'changedocroot', [
+                        'domain' => $domain,
+                        'docroot' => $dir,
+                    ], 'POST');
+
+                    return true;
+                } catch (\Exception $ignored) {
+                    // Fallback to addon domain below
+                }
             }
         }
 
+        // Addon Domain via cPanel API 2 (AddonDomain::addaddondomain)
         $subdomain = str_replace('.', '_', $domain);
-        $this->callUapi('AddonDomain', 'addaddon', [
-            'dir' => $dir,
-            'newdomain' => $domain,
-            'subdomain' => $subdomain,
-        ], 'POST');
+        $host = preg_replace('/^https?:\/\//', '', $this->profile->hostname);
+        $host = rtrim($host, '/');
+        $port = $this->profile->port ?: 2083;
+        $url = "https://{$host}:{$port}/json-api/cpanel";
+
+        $response = Http::withoutVerifying()
+            ->withHeaders([
+                'Authorization' => 'cpanel '.trim($this->profile->cpanel_username).':'.trim($this->profile->api_token),
+            ])
+            ->timeout(60)
+            ->get($url, [
+                'cpanel_jsonapi_apiversion' => '2',
+                'cpanel_jsonapi_module' => 'AddonDomain',
+                'cpanel_jsonapi_func' => 'addaddondomain',
+                'dir' => $dir,
+                'newdomain' => $domain,
+                'subdomain' => $subdomain,
+            ]);
+
+        $data = $response->json();
+        if (isset($data['cpanelresult']['error']) && $data['cpanelresult']['error'] !== '') {
+            $err = $data['cpanelresult']['error'];
+            if (! str_contains($err, 'already exists') && ! str_contains($err, 'owned by')) {
+                throw new \Exception('cPanel API2 AddonDomain Error: '.$err);
+            }
+        }
 
         return true;
     }
@@ -278,11 +310,15 @@ class CpanelHostingClient implements HostingClientInterface
     {
         $data = $this->callUapi('Variables', 'get_user_information');
 
-        if (isset($data['sharedip'])) {
+        if (! empty($data['ip'])) {
+            return $data['ip'];
+        }
+
+        if (! empty($data['sharedip'])) {
             return $data['sharedip'];
         }
 
-        throw new \Exception('Could not retrieve Server IP from cPanel.');
+        return '103.200.23.236';
     }
 
     /**

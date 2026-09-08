@@ -185,7 +185,7 @@
           <p class="text-amber-800 mt-1">
             &bull; <strong>Hệ quả nếu share:</strong> Nếu bạn để tùy chọn này, tên miền mới sẽ trỏ chung vào mã nguồn chính của <code>fukkatsumedia.com</code> và không thể chạy độc lập!<br>
             &bull; <strong>Đường dẫn Document Root chuẩn:</strong> Điền đường dẫn riêng biệt cho dự án: 
-            <code class="bg-white border border-amber-300 text-slate-800 font-bold px-1.5 py-0.5 rounded font-mono">{{ $deploymentConfig['domain']['document_root'] ?? $deploymentConfig['docroot'] ?? ('/home/fukkatsu/domains/' . ($deploymentConfig['domain']['name'] ?? $project->external_domain ?? 'wkcomputer.aimagency.vn') . '/public') }}</code>
+            <code class="bg-white border border-amber-300 text-slate-800 font-bold px-1.5 py-0.5 rounded font-mono">{{ $deploymentConfig['domain']['document_root'] ?? $deploymentConfig['docroot'] ?? ('/home/fukkatsu/' . ($deploymentConfig['domain']['name'] ?? $project->external_domain ?? 'wkcomputer.aimagency.vn')) }}</code>
           </p>
         </div>
       </div>
@@ -261,14 +261,107 @@
             </button>
           </form>
 
-          <!-- Trigger Deploy Button -->
-          <form method="POST" action="{{ route('superadmin.projects.trigger-deploy', $project) }}" class="inline" onsubmit="return confirm('Kích hoạt Triển khai (Deploy) toàn bộ mã nguồn dự án lên Hosting cPanel?')">
+          <!-- Trigger Deploy Button (Interactive Live Console Stream) -->
+          <form id="formTriggerDeploy" method="POST" action="{{ route('superadmin.projects.trigger-deploy', $project) }}" class="inline">
             @csrf
-            <button type="submit" class="px-3 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-xs transition">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-              Deploy Lên Hosting cPanel
+            <button type="button" id="btnStartDeploy" onclick="startLiveDeployment()" class="px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-xs transition cursor-pointer">
+              <svg id="deployIconNormal" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              <svg id="deployIconSpinner" class="w-3.5 h-3.5 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
+              <span id="deployBtnText">Deploy Lên Hosting cPanel</span>
             </button>
           </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Deployment Console & Real-time Progress Monitor -->
+    <div id="deployConsoleContainer" class="bg-slate-950 rounded-2xl border border-slate-800 shadow-2xl overflow-hidden transition-all duration-300">
+      <!-- Terminal Header -->
+      <div class="px-4 py-3 bg-slate-900/90 border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5">
+          <!-- Terminal window dots -->
+          <div class="flex items-center gap-1.5">
+            <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block shadow-xs"></span>
+            <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block shadow-xs"></span>
+            <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block shadow-xs"></span>
+          </div>
+          <span class="text-xs font-mono font-semibold text-slate-200 flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Console Giám Sát Tiến Trình Triển Khai (cPanel Deployment Terminal)
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2.5">
+          <!-- Status Badge -->
+          <span id="deployStatusBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold bg-slate-800 text-slate-300 border border-slate-700">
+            <span id="deployStatusDot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+            <span id="deployStatusLabel">SẴN SÀNG</span>
+          </span>
+
+          <!-- Deploy Progress Percentage -->
+          <span id="deployProgressPercent" class="text-xs font-mono font-bold text-emerald-400 min-w-[38px] text-right">0%</span>
+
+          <!-- Action Buttons -->
+          <button type="button" onclick="loadLatestDeployLogs()" title="Tải lại log gần nhất từ hệ thống" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[11px] font-mono border border-slate-700 transition flex items-center gap-1 cursor-pointer">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            Reload Log
+          </button>
+          <button type="button" onclick="clearDeployConsole()" title="Xóa log trên màn hình console" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 rounded text-[11px] font-mono border border-slate-700 transition cursor-pointer">
+            Clear
+          </button>
+          <a id="deployLiveUrlBtn" href="https://{{ $deploymentConfig['domain']['name'] ?? $project->external_domain ?? '' }}" target="_blank" class="hidden px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[11px] font-mono font-bold transition items-center gap-1 shadow-xs">
+            <span>Truy Cập Web ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Animated Progress Bar & Steps Tracker -->
+      <div class="px-4 pt-3 pb-2.5 bg-slate-900/50 border-b border-slate-800/60">
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-800/80 rounded-full h-2.5 overflow-hidden p-0.5 border border-slate-700/50">
+          <div id="deployProgressBar" class="bg-gradient-to-r from-indigo-500 via-blue-500 to-emerald-400 h-full rounded-full transition-all duration-500 ease-out" style="width: 0%;"></div>
+        </div>
+
+        <!-- 5-Step Progress Indicators -->
+        <div class="grid grid-cols-5 gap-1.5 pt-2.5 text-[10px] font-mono">
+          <div id="step-pill-1" class="text-center text-slate-500 py-1.5 px-1 rounded bg-slate-900/60 border border-slate-800/60 transition-all">
+            <span class="block font-bold step-title text-slate-400">● 1. Kết Nối</span>
+            <span class="text-[9px] text-slate-500 hidden sm:inline">Verify cPanel</span>
+          </div>
+          <div id="step-pill-2" class="text-center text-slate-500 py-1.5 px-1 rounded bg-slate-900/60 border border-slate-800/60 transition-all">
+            <span class="block font-bold step-title text-slate-400">● 2. Đóng Gói</span>
+            <span class="text-[9px] text-slate-500 hidden sm:inline">Export ZIP & SQL</span>
+          </div>
+          <div id="step-pill-3" class="text-center text-slate-500 py-1.5 px-1 rounded bg-slate-900/60 border border-slate-800/60 transition-all">
+            <span class="block font-bold step-title text-slate-400">● 3. DB & Domain</span>
+            <span class="text-[9px] text-slate-500 hidden sm:inline">MySQL & DocRoot</span>
+          </div>
+          <div id="step-pill-4" class="text-center text-slate-500 py-1.5 px-1 rounded bg-slate-900/60 border border-slate-800/60 transition-all">
+            <span class="block font-bold step-title text-slate-400">● 4. Upload ZIP</span>
+            <span class="text-[9px] text-slate-500 hidden sm:inline">cPanel Fileman</span>
+          </div>
+          <div id="step-pill-5" class="text-center text-slate-500 py-1.5 px-1 rounded bg-slate-900/60 border border-slate-800/60 transition-all">
+            <span class="block font-bold step-title text-slate-400">● 5. Kích Hoạt</span>
+            <span class="text-[9px] text-slate-500 hidden sm:inline">Artisan & Live</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Terminal Output Feed -->
+      <div id="deployConsoleOutput" class="font-mono text-xs text-slate-300 p-4 max-h-72 min-h-[160px] overflow-y-auto space-y-1 select-text scroll-smooth bg-slate-950">
+        <div class="text-slate-500 italic">Console sẵn sàng. Nhấn "Deploy Lên Hosting cPanel" để bắt đầu quá trình triển khai mã nguồn và cơ sở dữ liệu...</div>
+      </div>
+      
+      <!-- Terminal Footer Bar -->
+      <div class="px-4 py-2 bg-slate-900/70 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-400">
+        <div class="flex items-center gap-2">
+          <span id="deployLivePulse" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Target: <code class="text-indigo-400 font-semibold">{{ $deploymentConfig['domain']['name'] ?? $project->external_domain ?? 'wkcomputer.aimagency.vn' }}</code></span>
+          <span class="text-slate-600">|</span>
+          <span>DB: <code class="text-emerald-400 font-semibold">{{ $deploymentConfig['database']['name'] ?? 'fukkatsu_wkcomputer' }}</code></span>
+        </div>
+        <div class="text-slate-500 text-[10px]">
+          Session: <span id="deploySessionId" class="text-slate-400 font-bold">--</span>
         </div>
       </div>
     </div>
@@ -300,7 +393,7 @@
           <button type="button" onclick="copyValue('{{ $deploymentConfig['domain']['document_root'] ?? $deploymentConfig['docroot'] ?? '' }}', 'Đã copy Document Root!')" class="text-slate-400 hover:text-indigo-600 text-[11px]">Copy</button>
         </div>
         <p class="font-mono text-[11px] font-bold text-slate-800 break-all">
-          {{ $deploymentConfig['domain']['document_root'] ?? $deploymentConfig['docroot'] ?? '/home/fukkatsu/domains/wkcomputer/public' }}
+          {{ $deploymentConfig['domain']['document_root'] ?? $deploymentConfig['docroot'] ?? ('/home/fukkatsu/' . ($deploymentConfig['domain']['name'] ?? $project->external_domain ?? 'wkcomputer.aimagency.vn')) }}
         </p>
         <p class="text-[11px] text-emerald-600 font-medium mt-1">✓ Không chia sẻ public_html</p>
       </div>
@@ -476,7 +569,7 @@
             <div>
               <label class="block text-[11px] font-semibold text-slate-700 mb-1">Document Root Tùy chỉnh (Độc lập):</label>
               <input type="text" name="custom_document_root" value="{{ $deploymentConfig['domain']['document_root'] ?? $deploymentConfig['docroot'] ?? '' }}" 
-                     placeholder="/home/fukkatsu/domains/wkcomputer/public" class="w-full border-slate-300 rounded-lg p-2 text-xs font-mono bg-white focus:ring-indigo-500 focus:border-indigo-500">
+                     placeholder="/home/fukkatsu/{{ $deploymentConfig['domain']['name'] ?? $project->external_domain ?? 'wkcomputer.aimagency.vn' }}" class="w-full border-slate-300 rounded-lg p-2 text-xs font-mono bg-white focus:ring-indigo-500 focus:border-indigo-500">
               <p class="text-[11px] text-amber-700 mt-0.5">Lưu ý: Không để trống thành public_html để tránh đụng độ với fukkatsumedia.com.</p>
             </div>
 
@@ -1818,6 +1911,336 @@ php artisan storage:link
 php artisan optimize
 `;
   copyValue(cmds, 'Đã copy lệnh triển khai Artisan!');
+}
+
+// =========================================================================
+// CPANEL LIVE DEPLOYMENT CONSOLE & PROGRESS MONITOR
+// =========================================================================
+let deployPollTimer = null;
+let isDeploying = false;
+let displayedLogCount = 0;
+
+function updateDeployProgress(percent, label, theme = 'info') {
+  const bar = document.getElementById('deployProgressBar');
+  const percentEl = document.getElementById('deployProgressPercent');
+  const badge = document.getElementById('deployStatusBadge');
+  const dot = document.getElementById('deployStatusDot');
+  const labelEl = document.getElementById('deployStatusLabel');
+
+  if (bar) bar.style.width = Math.min(100, Math.max(0, percent)) + '%';
+  if (percentEl) percentEl.textContent = Math.round(percent) + '%';
+
+  if (badge && labelEl && dot) {
+    labelEl.textContent = label;
+    if (theme === 'running') {
+      badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold bg-amber-950/70 text-amber-300 border border-amber-800/80 shadow-xs';
+      dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-ping';
+    } else if (theme === 'success') {
+      badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold bg-emerald-950/70 text-emerald-300 border border-emerald-800/80 shadow-xs';
+      dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+    } else if (theme === 'error') {
+      badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold bg-rose-950/70 text-rose-300 border border-rose-800/80 shadow-xs';
+      dot.className = 'w-2 h-2 rounded-full bg-rose-400';
+    } else {
+      badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold bg-slate-800 text-slate-300 border border-slate-700';
+      dot.className = 'w-2 h-2 rounded-full bg-slate-400';
+    }
+  }
+}
+
+function updateStepPills(currentStepNum) {
+  for (let i = 1; i <= 5; i++) {
+    const pill = document.getElementById(`step-pill-${i}`);
+    if (!pill) continue;
+    const title = pill.querySelector('.step-title');
+
+    if (i < currentStepNum) {
+      // Completed step
+      pill.className = 'text-center text-emerald-300 py-1.5 px-1 rounded bg-emerald-950/40 border border-emerald-800/60 transition-all';
+      if (title) title.className = 'block font-bold step-title text-emerald-400';
+    } else if (i === currentStepNum) {
+      // Active current step
+      pill.className = 'text-center text-indigo-200 py-1.5 px-1 rounded bg-indigo-950/60 border border-indigo-500 shadow-xs ring-1 ring-indigo-400/30 transition-all';
+      if (title) title.className = 'block font-bold step-title text-indigo-300 animate-pulse';
+    } else {
+      // Pending step
+      pill.className = 'text-center text-slate-500 py-1.5 px-1 rounded bg-slate-900/60 border border-slate-800/60 transition-all';
+      if (title) title.className = 'block font-bold step-title text-slate-400';
+    }
+  }
+}
+
+function clearDeployConsole() {
+  const output = document.getElementById('deployConsoleOutput');
+  if (output) {
+    output.innerHTML = '<div class="text-slate-500 italic">Màn hình console đã được dọn sạch.</div>';
+  }
+  displayedLogCount = 0;
+}
+
+function appendConsoleLog(level, message, timeStr = null) {
+  const output = document.getElementById('deployConsoleOutput');
+  if (!output) return;
+
+  const now = new Date();
+  const time = timeStr || (
+    String(now.getHours()).padStart(2, '0') + ':' +
+    String(now.getMinutes()).padStart(2, '0') + ':' +
+    String(now.getSeconds()).padStart(2, '0')
+  );
+
+  let badgeColor = 'text-sky-400';
+  let badgeText = '[INFO]';
+  let msgColor = 'text-slate-300';
+
+  if (level === 'success') {
+    badgeColor = 'text-emerald-400 font-bold';
+    badgeText = '[SUCCESS]';
+    msgColor = 'text-emerald-200';
+  } else if (level === 'error') {
+    badgeColor = 'text-rose-400 font-bold';
+    badgeText = '[ERROR]';
+    msgColor = 'text-rose-200';
+  } else if (level === 'warning') {
+    badgeColor = 'text-amber-400 font-bold';
+    badgeText = '[WARN]';
+    msgColor = 'text-amber-200';
+  }
+
+  const logRow = document.createElement('div');
+  logRow.className = 'flex items-start gap-2 hover:bg-slate-900/60 px-1 py-0.5 rounded transition-colors';
+  logRow.innerHTML = `
+    <span class="text-slate-500 select-none">[${time}]</span>
+    <span class="${badgeColor} select-none">${badgeText}</span>
+    <span class="${msgColor} flex-1 break-words">${escapeHtml(message)}</span>
+  `;
+
+  output.appendChild(logRow);
+  output.scrollTop = output.scrollHeight;
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+async function startLiveDeployment() {
+  if (isDeploying) return;
+
+  if (!confirm('Kích hoạt Triển khai (Deploy) toàn bộ mã nguồn dự án lên Hosting cPanel?')) {
+    return;
+  }
+
+  isDeploying = true;
+  const btn = document.getElementById('btnStartDeploy');
+  const iconNormal = document.getElementById('deployIconNormal');
+  const iconSpinner = document.getElementById('deployIconSpinner');
+  const btnText = document.getElementById('deployBtnText');
+  const output = document.getElementById('deployConsoleOutput');
+  const liveUrlBtn = document.getElementById('deployLiveUrlBtn');
+
+  if (btn) btn.disabled = true;
+  if (iconNormal) iconNormal.classList.add('hidden');
+  if (iconSpinner) iconSpinner.classList.remove('hidden');
+  if (btnText) btnText.textContent = 'Đang triển khai cPanel...';
+  if (liveUrlBtn) liveUrlBtn.classList.add('hidden');
+
+  // Scroll to console
+  const consoleContainer = document.getElementById('deployConsoleContainer');
+  if (consoleContainer) {
+    consoleContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // Reset Console
+  if (output) output.innerHTML = '';
+  displayedLogCount = 0;
+  updateDeployProgress(5, 'ĐANG KHỞI CHẠY...', 'running');
+  updateStepPills(1);
+
+  appendConsoleLog('info', '🚀 Bắt đầu phiên triển khai dự án lên hosting cPanel...');
+  appendConsoleLog('info', 'Đang thiết lập kết nối API cPanel và chuẩn bị snapshot cơ sở dữ liệu...');
+
+  // Start polling
+  if (deployPollTimer) clearInterval(deployPollTimer);
+  deployPollTimer = setInterval(() => {
+    pollDeployLogs();
+  }, 1500);
+
+  try {
+    const response = await fetch("{{ route('superadmin.projects.trigger-deploy', $project) }}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+      }
+    });
+
+    const data = await response.json();
+    if (deployPollTimer) clearInterval(deployPollTimer);
+
+    if (response.ok && data.success) {
+      if (data.logs && Array.isArray(data.logs)) {
+        renderReceivedLogs(data.logs);
+      }
+      
+      updateDeployProgress(100, 'HOÀN TẤT', 'success');
+      updateStepPills(6);
+
+      if (data.history_id) {
+        const sessEl = document.getElementById('deploySessionId');
+        if (sessEl) sessEl.textContent = '#' + data.history_id;
+      }
+
+      appendConsoleLog('success', '🎉 Triển khai thành công! Mã nguồn và Database đã đồng bộ hoàn chỉnh trên cPanel.');
+      if (data.deployed_url) {
+        appendConsoleLog('success', `🌐 URL Website: ${data.deployed_url}`);
+        if (liveUrlBtn) {
+          liveUrlBtn.href = data.deployed_url;
+          liveUrlBtn.classList.remove('hidden');
+          liveUrlBtn.classList.add('inline-flex');
+        }
+      }
+
+      if (typeof showNotification === 'function') {
+        showNotification(data.message || 'Triển khai cPanel hoàn tất thành công!', 'success');
+      }
+    } else {
+      updateDeployProgress(100, 'THẤT BẠI', 'error');
+      const errMsg = data.message || 'Quá trình triển khai gặp sự cố.';
+      appendConsoleLog('error', `❌ Lỗi: ${errMsg}`);
+      if (typeof showNotification === 'function') {
+        showNotification(errMsg, 'error');
+      }
+    }
+  } catch (err) {
+    if (deployPollTimer) clearInterval(deployPollTimer);
+    updateDeployProgress(100, 'THẤT BẠI', 'error');
+    appendConsoleLog('error', `❌ Lỗi kết nối mạng: ${err.message}`);
+  } finally {
+    isDeploying = false;
+    if (btn) btn.disabled = false;
+    if (iconNormal) iconNormal.classList.remove('hidden');
+    if (iconSpinner) iconSpinner.classList.add('hidden');
+    if (btnText) btnText.textContent = 'Deploy Lên Hosting cPanel';
+  }
+}
+
+async function pollDeployLogs() {
+  try {
+    const res = await fetch("{{ route('superadmin.projects.deploy-logs', $project) }}", {
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.history_id) {
+      const sessEl = document.getElementById('deploySessionId');
+      if (sessEl) sessEl.textContent = '#' + data.history_id;
+    }
+    if (data.logs && Array.isArray(data.logs)) {
+      renderReceivedLogs(data.logs);
+      estimateProgressFromLogs(data.logs, data.status);
+    }
+  } catch (e) {
+    // Ignore polling network blips
+  }
+}
+
+function renderReceivedLogs(logs) {
+  if (logs.length <= displayedLogCount) return;
+  for (let i = displayedLogCount; i < logs.length; i++) {
+    const l = logs[i];
+    appendConsoleLog(l.level || l.status || 'info', l.message, l.time);
+  }
+  displayedLogCount = logs.length;
+}
+
+function estimateProgressFromLogs(logs, status) {
+  if (status === 'success') {
+    updateDeployProgress(100, 'HOÀN TẤT', 'success');
+    updateStepPills(6);
+    return;
+  }
+  if (status === 'failed') {
+    updateDeployProgress(100, 'THẤT BẠI', 'error');
+    return;
+  }
+
+  let maxStep = 1;
+  logs.forEach(l => {
+    if (l.step_number && l.step_number > maxStep) {
+      maxStep = l.step_number;
+    }
+  });
+
+  const stepMapping = {
+    1: { percent: 15, label: 'KẾT NỐI CPANEL...', pill: 1 },
+    2: { percent: 35, label: 'ĐÓNG GÓI MÃ NGUỒN...', pill: 2 },
+    3: { percent: 55, label: 'CẤU HÌNH DB & DOMAIN...', pill: 3 },
+    4: { percent: 75, label: 'UPLOAD SOURCE ZIP...', pill: 4 },
+    5: { percent: 90, label: 'GIẢI NÉN & CẤU HÌNH...', pill: 5 },
+    6: { percent: 95, label: 'BOOTSTRAP ARTISAN...', pill: 5 },
+    7: { percent: 100, label: 'HOÀN TẤT', pill: 6 }
+  };
+
+  const info = stepMapping[maxStep] || { percent: Math.min(85, maxStep * 15), label: 'ĐANG XỬ LÝ...', pill: Math.min(5, maxStep) };
+  updateDeployProgress(info.percent, info.label, 'running');
+  updateStepPills(info.pill);
+}
+
+async function loadLatestDeployLogs() {
+  try {
+    const res = await fetch("{{ route('superadmin.projects.deploy-logs', $project) }}", {
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.status === 'idle' || !data.logs || data.logs.length === 0) {
+      return;
+    }
+
+    const output = document.getElementById('deployConsoleOutput');
+    if (output) output.innerHTML = '';
+    displayedLogCount = 0;
+
+    if (data.history_id) {
+      const sessEl = document.getElementById('deploySessionId');
+      if (sessEl) sessEl.textContent = '#' + data.history_id + (data.completed_at ? ` (${data.completed_at})` : '');
+    }
+
+    renderReceivedLogs(data.logs);
+
+    const liveUrlBtn = document.getElementById('deployLiveUrlBtn');
+    if (data.status === 'success') {
+      updateDeployProgress(100, 'HOÀN TẤT', 'success');
+      updateStepPills(6);
+      if (data.deployed_url && liveUrlBtn) {
+        liveUrlBtn.href = data.deployed_url;
+        liveUrlBtn.classList.remove('hidden');
+        liveUrlBtn.classList.add('inline-flex');
+      }
+    } else if (data.status === 'failed') {
+      updateDeployProgress(100, 'THẤT BẠI', 'error');
+      if (data.error_message) {
+        appendConsoleLog('error', `Chi tiết lỗi: ${data.error_message}`);
+      }
+    } else if (data.status === 'running') {
+      estimateProgressFromLogs(data.logs, 'running');
+    }
+  } catch (err) {
+    console.error('Không thể nạp deploy logs:', err);
+  }
+}
+
+// Automatically load latest logs on page load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', loadLatestDeployLogs);
+} else {
+  loadLatestDeployLogs();
 }
 </script>
 

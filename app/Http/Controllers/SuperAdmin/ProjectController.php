@@ -556,9 +556,9 @@ class ProjectController extends Controller implements HasMiddleware
         $cpanelUser = trim($profile->cpanel_username);
         $customDocRoot = trim($request->input('document_root', ''));
 
-        // Ensure NOT sharing public_html with main domain
-        if (empty($customDocRoot) || $customDocRoot === "/home/{$cpanelUser}/public_html" || $customDocRoot === 'public_html') {
-            $customDocRoot = "/home/{$cpanelUser}/domains/{$domain}/public";
+        // Ensure NOT sharing public_html with main domain and following host pattern: /home/{user}/{domain}
+        if (empty($customDocRoot) || $customDocRoot === "/home/{$cpanelUser}/public_html" || $customDocRoot === 'public_html' || str_contains($customDocRoot, '/domains/')) {
+            $customDocRoot = "/home/{$cpanelUser}/{$domain}";
         }
 
         try {
@@ -568,7 +568,7 @@ class ProjectController extends Controller implements HasMiddleware
             // Update project with new domain and unshared document root
             $deploymentConfig = $discoveryService->discoverForProject($project, $profile, $domain);
             $deploymentConfig['domain']['document_root'] = $customDocRoot;
-            $deploymentConfig['domain']['deployment_path'] = dirname($customDocRoot);
+            $deploymentConfig['domain']['deployment_path'] = $customDocRoot;
             $deploymentConfig['docroot'] = $customDocRoot;
 
             $project->update([
@@ -621,7 +621,8 @@ class ProjectController extends Controller implements HasMiddleware
                         return [
                             'step' => $l->step,
                             'step_number' => $l->step_number,
-                            'status' => $l->status,
+                            'level' => $l->level ?? 'info',
+                            'status' => $l->level ?? 'info',
                             'message' => $l->message,
                             'time' => $l->logged_at ? $l->logged_at->format('H:i:s') : now()->format('H:i:s'),
                         ];
@@ -669,7 +670,8 @@ class ProjectController extends Controller implements HasMiddleware
                 return [
                     'step' => $l->step,
                     'step_number' => $l->step_number,
-                    'status' => $l->status,
+                    'level' => $l->level ?? 'info',
+                    'status' => $l->level ?? 'info',
                     'message' => $l->message,
                     'time' => $l->logged_at ? $l->logged_at->format('H:i:s') : now()->format('H:i:s'),
                 ];
