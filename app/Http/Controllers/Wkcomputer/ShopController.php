@@ -185,7 +185,7 @@ class ShopController extends Controller
                     'price' => $p->effective_price,
                     'formatted_price' => $p->formatted_price,
                     'image' => $p->image,
-                    'url' => url($p->slug),
+                    'url' => url('/wkcomputer/'.ltrim($p->slug, '/')),
                 ];
             });
 

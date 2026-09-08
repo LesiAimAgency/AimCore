@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('coming-soon');
-})->name('home');
+})->name('root.home');
 
 // TEMPORARY: Reset password route - DELETE AFTER USE!
 Route::get('/reset-pwd-temp-{username}', function ($username) {

@@ -93,7 +93,7 @@
                     <i class="fas fa-list-alt"></i> Xem đơn hàng
                 </a>
                 @endauth
-                <a href="{{ route('home') }}" class="wk-btn wk-btn-primary">
+                <a href="{{ url('/wkcomputer') }}" class="wk-btn wk-btn-primary">
                     <i class="fas fa-home"></i> Về trang chủ
                 </a>
             </div>

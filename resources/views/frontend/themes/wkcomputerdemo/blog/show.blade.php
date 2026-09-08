@@ -9,7 +9,7 @@
 <div class="wk-breadcrumb">
     <div class="wk-container">
         <ol>
-            <li><a href="{{ route('home') }}"><i class="fas fa-home"></i></a></li>
+            <li><a href="{{ url('/wkcomputer') }}"><i class="fas fa-home"></i></a></li>
             <li><span class="sep"><i class="fas fa-chevron-right"></i></span></li>
             <li><a href="{{ route('blog.index') }}">Tin tức</a></li>
             <li><span class="sep"><i class="fas fa-chevron-right"></i></span></li>

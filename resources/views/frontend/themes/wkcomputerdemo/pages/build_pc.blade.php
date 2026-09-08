@@ -13,7 +13,7 @@
 
 <div class="wk-builder-page">
     <div class="wk-builder-header">
-        <a href="{{ route('home') }}" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+        <a href="{{ url('/wkcomputer') }}" class="back-btn"><i class="fas fa-arrow-left"></i></a>
         <h1>Xây Dựng Cấu Hình</h1>
         <button class="reset-btn" onclick="resetBuilder()"><i class="fas fa-sync-alt"></i> Làm lại</button>
     </div>

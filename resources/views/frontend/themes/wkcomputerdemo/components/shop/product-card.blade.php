@@ -63,9 +63,9 @@
     $rating = (float) ($product->reviews_avg_rating ?? $product->rating_average ?? $product->average_rating ?? 0);
     $reviewCount = (int) ($product->reviews_count ?? $product->rating_count ?? 0);
 
-    // Slug & URL
-    $slug = $product->slug ?? '';
-    $productUrl = !empty($slug) ? (Route::has('shop.show') ? route('shop.show', $slug) : url($slug)) : '#';
+    // Slug & URL (Multisite: always route to /wkcomputer/{slug})
+    $slug = trim($product->slug ?? '', '/');
+    $productUrl = !empty($slug) ? url('/wkcomputer/' . $slug) : '#';
 
     // Warranty & stock status for tooltip
     $warranty = 'Bảo hành chính hãng';
@@ -103,7 +103,7 @@
     {{-- Body --}}
     <div class="wk-card-body">
         @if($catName)
-        <div class="wk-card-cat">{{ $catName }}</div>
+        <a href="{{ $cat?->slug ? url('/wkcomputer/cua-hang?categories[]=' . $cat->slug) : url('/wkcomputer/cua-hang') }}" class="wk-card-cat" style="text-decoration:none; display:inline-block;">{{ $catName }}</a>
         @endif
 
         <a href="{{ $productUrl }}" class="wk-card-name" title="{{ $product->name }}">{{ $product->name }}</a>

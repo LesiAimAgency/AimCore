@@ -169,7 +169,7 @@
     <div class="wk-container" style="display:flex;align-items:center;gap:16px;width:100%;height:100%;">
 
         {{-- Logo --}}
-        <a href="{{ route('home') }}" class="wk-logo" style="display:flex; align-items:center;">
+        <a href="{{ url('/wkcomputer') }}" class="wk-logo" style="display:flex; align-items:center;">
             <img src="https://WKcomputer.vn/wp-content/uploads/2025/10/1-removebg-preview-1-min.png.webp" alt="WKcomputer" style="height:48px; width:auto; max-width:200px; object-fit:contain;">
         </a>
 
@@ -246,7 +246,7 @@
 
         {{-- Quick Nav Links --}}
         <ul class="wk-nav-links">
-            <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Trang chủ</a></li>
+            <li><a href="{{ url('/wkcomputer') }}" class="{{ request()->is('wkcomputer') || request()->routeIs('home') ? 'active' : '' }}">Trang chủ</a></li>
             <li><a href="{{ route('shop.index') }}" class="{{ request()->routeIs('shop.*') ? 'active' : '' }}">Cửa hàng</a></li>
             <li><a href="{{ route('shop.index') }}?is_featured=1">Laptop</a></li>
             <li><a href="{{ route('shop.index') }}?on_sale=1" style="color:var(--wk-primary);">
@@ -357,7 +357,7 @@
 <header class="wk-mobile-header d-lg-none">
     <div class="wk-mobile-header-inner">
         <div class="wk-mobile-header-top">
-            <a href="{{ route('home') }}" class="wk-logo" style="text-decoration:none; display:flex; align-items:center;">
+            <a href="{{ url('/wkcomputer') }}" class="wk-logo" style="text-decoration:none; display:flex; align-items:center;">
                 <img src="https://WKcomputer.vn/wp-content/uploads/2025/10/1-removebg-preview-1-min.png.webp" alt="WKcomputer" style="height:36px; width:auto; max-width:150px; object-fit:contain;">
             </a>
             <div class="wk-mobile-header-icons">
@@ -559,7 +559,7 @@
 ====================================================== --}}
 <nav class="wk-bottom-nav d-lg-none">
     <div class="wk-bottom-nav-inner">
-        <a href="{{ route('home') }}" class="wk-bottom-nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
+        <a href="{{ url('/wkcomputer') }}" class="wk-bottom-nav-item {{ request()->is('wkcomputer') || request()->routeIs('home') ? 'active' : '' }}">
             <i class="fas fa-home"></i>
             <span>Trang chủ</span>
         </a>

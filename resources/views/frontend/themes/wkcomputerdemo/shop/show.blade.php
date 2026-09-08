@@ -464,12 +464,12 @@
 <div class="wk-breadcrumb">
     <div class="wk-container">
         <ol>
-            <li><a href="{{ route('home') }}"><i class="fas fa-home"></i></a></li>
+            <li><a href="{{ url('/wkcomputer') }}"><i class="fas fa-home"></i></a></li>
             <li><span class="sep"><i class="fas fa-chevron-right"></i></span></li>
             <li><a href="{{ route('shop.index') }}">Cửa hàng</a></li>
             @if($firstCat)
             <li><span class="sep"><i class="fas fa-chevron-right"></i></span></li>
-            <li><a href="{{ url($firstCat->slug) }}">{{ $firstCat->name }}</a></li>
+            <li><a href="{{ url('/wkcomputer/' . $firstCat->slug) }}">{{ $firstCat->name }}</a></li>
             @endif
             <li><span class="sep"><i class="fas fa-chevron-right"></i></span></li>
             <li class="active" style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ $product->name }}</li>
