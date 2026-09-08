@@ -187,4 +187,12 @@ class Project extends Model
     {
         return is_array($this->cms_features) && in_array($feature, $this->cms_features);
     }
+
+    /**
+     * Deployment histories for this project
+     */
+    public function deploymentHistories(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\DeploymentHistory::class);
+    }
 }

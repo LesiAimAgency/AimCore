@@ -593,6 +593,13 @@ class ProjectController extends Controller implements HasMiddleware
     {
         $profile = $discoveryService->getActiveHostingProfile();
         if (! $profile) {
+            if (request()->wantsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không tìm thấy cấu hình Hosting cPanel nào đang kích hoạt.',
+                ], 422);
+            }
+
             return back()->with('alert', [
                 'type' => 'error',
                 'message' => 'Không tìm thấy cấu hình Hosting cPanel nào đang kích hoạt.',
@@ -603,16 +610,71 @@ class ProjectController extends Controller implements HasMiddleware
             $history = $deploymentService->deploy($project, $profile, auth()->id() ?? 1);
             $deploymentService->runExistingDeploy($history);
 
+            if (request()->wantsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'history_id' => $history->id,
+                    'status' => $history->status,
+                    'deployed_url' => $history->deployed_url,
+                    'message' => "Quá trình Triển khai dự án lên cPanel (Deploy ID: #{$history->id}) đã được thực thi thành công!",
+                    'logs' => $history->logs()->orderBy('id')->get()->map(function ($l) {
+                        return [
+                            'step' => $l->step,
+                            'step_number' => $l->step_number,
+                            'status' => $l->status,
+                            'message' => $l->message,
+                            'time' => $l->logged_at ? $l->logged_at->format('H:i:s') : now()->format('H:i:s'),
+                        ];
+                    }),
+                ]);
+            }
+
             return back()->with('alert', [
                 'type' => 'success',
                 'message' => "Quá trình Triển khai dự án lên cPanel (Deploy ID: #{$history->id}) đã được thực thi thành công!",
             ])->with('success', 'Triển khai cPanel hoàn tất.');
         } catch (\Throwable $e) {
+            if (request()->wantsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Lỗi trong quá trình Triển khai cPanel: '.$e->getMessage(),
+                ], 500);
+            }
+
             return back()->with('alert', [
                 'type' => 'error',
                 'message' => 'Lỗi trong quá trình Triển khai cPanel: '.$e->getMessage(),
             ]);
         }
+    }
+
+    public function getDeployLogs(Project $project)
+    {
+        $latest = $project->deploymentHistories()->latest()->first();
+        if (! $latest) {
+            return response()->json([
+                'status' => 'idle',
+                'logs' => [],
+            ]);
+        }
+
+        return response()->json([
+            'status' => $latest->status,
+            'history_id' => $latest->id,
+            'started_at' => $latest->started_at?->format('H:i:s d/m/Y'),
+            'completed_at' => $latest->completed_at?->format('H:i:s d/m/Y'),
+            'deployed_url' => $latest->deployed_url,
+            'error_message' => $latest->error_message,
+            'logs' => $latest->logs()->orderBy('id')->get()->map(function ($l) {
+                return [
+                    'step' => $l->step,
+                    'step_number' => $l->step_number,
+                    'status' => $l->status,
+                    'message' => $l->message,
+                    'time' => $l->logged_at ? $l->logged_at->format('H:i:s') : now()->format('H:i:s'),
+                ];
+            }),
+        ]);
     }
 
     public function createWebsite(Request $request, Project $project)

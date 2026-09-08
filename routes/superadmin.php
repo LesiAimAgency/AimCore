@@ -109,6 +109,7 @@ Route::middleware([
     Route::post('projects/{project}/create-cpanel-db', [ProjectController::class, 'createCpanelDatabase'])->name('projects.create-cpanel-db');
     Route::post('projects/{project}/create-cpanel-domain', [ProjectController::class, 'createCpanelDomain'])->name('projects.create-cpanel-domain');
     Route::post('projects/{project}/trigger-deploy', [ProjectController::class, 'triggerDeploy'])->name('projects.trigger-deploy');
+    Route::get('projects/{project}/deploy-logs', [ProjectController::class, 'getDeployLogs'])->name('projects.deploy-logs');
     Route::post('projects/{project}/reset-admin', [ProjectController::class, 'resetAdminAccount'])->name('projects.reset-admin');
     Route::resource('tenants', TenantController::class);
     Route::post('websites/{tenant}/control', [WebsiteController::class, 'control'])->name('websites.control');

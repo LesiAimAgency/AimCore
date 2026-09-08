@@ -271,6 +271,8 @@ class ProjectExportService
             // Shipping
             'shipping_carriers', 'shipping_zones', 'shipping_zone_locations',
             'shipping_rules', 'shipping_rule_conditions', 'shipping_rate_versions',
+            // Project Core & Settings (Single project scoped)
+            'projects', 'project_settings',
         ];
     }
 
@@ -329,7 +331,9 @@ class ProjectExportService
         $query = DB::table($table);
 
         // Scope to project
-        if (in_array('project_id', $columns)) {
+        if ($table === 'projects') {
+            $query->where('id', $project->id);
+        } elseif (in_array('project_id', $columns)) {
             $query->where('project_id', $project->id);
         } elseif (in_array('tenant_id', $columns)) {
             $query->where('tenant_id', $project->id);
