@@ -9,7 +9,7 @@ class Project extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['tenant_id', 'customer_id', 'contract_id', 'name', 'code', 'subdomain', 'remote_url', 'api_token', 'external_domain', 'sync_enabled', 'client_name', 'start_date', 'deadline', 'status', 'total_gold', 'contract_value', 'contract_file', 'technical_requirements', 'features', 'cms_features', 'environment', 'notes', 'admin_id', 'employee_ids', 'created_by', 'project_admin_username', 'project_admin_password', 'project_admin_password_plain', 'password_updated_at', 'password_updated_by', 'approved_at', 'initialized_at', 'department_id', 'service_id', 'current_stage_id', 'dynamic_form_data', 'project_type'];
+    protected $fillable = ['tenant_id', 'customer_id', 'contract_id', 'name', 'code', 'subdomain', 'remote_url', 'api_token', 'external_domain', 'sync_enabled', 'client_name', 'start_date', 'deadline', 'status', 'total_gold', 'contract_value', 'contract_file', 'technical_requirements', 'features', 'cms_features', 'deployment_config', 'deployment_status', 'environment', 'notes', 'admin_id', 'employee_ids', 'created_by', 'project_admin_username', 'project_admin_password', 'project_admin_password_plain', 'password_updated_at', 'password_updated_by', 'approved_at', 'initialized_at', 'department_id', 'service_id', 'current_stage_id', 'dynamic_form_data', 'project_type'];
 
     protected $casts = [
         'start_date' => 'date',
@@ -21,6 +21,7 @@ class Project extends Model
         'password_updated_at' => 'datetime',
         'employee_ids' => 'array',
         'cms_features' => 'array',
+        'deployment_config' => 'array',
         'dynamic_form_data' => 'array',
     ];
 
@@ -118,6 +119,29 @@ class Project extends Model
         return substr(str_shuffle(str_repeat($chars, 12)), 0, 12);
     }
 
+    public function getDecryptedPassword(): ?string
+    {
+        if (empty($this->project_admin_password_plain)) {
+            return null;
+        }
+
+        try {
+            return decrypt($this->project_admin_password_plain);
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    public function getDeploymentId(): string
+    {
+        return 'DEP-'.str_pad((string) $this->id, 6, '0', STR_PAD_LEFT);
+    }
+
+    public function getDomainAttribute(): ?string
+    {
+        return $this->external_domain ?: ($this->subdomain ?: $this->tenant?->domain);
+    }
+
     public function permissions()
     {
         return $this->hasMany(ProjectPermission::class);
@@ -146,24 +170,6 @@ class Project extends Model
     public function hasEmployee($employeeId)
     {
         return $this->employee_ids && in_array($employeeId, $this->employee_ids);
-    }
-
-    /**
-     * Get the decrypted plain password
-     */
-    public function getDecryptedPassword(): ?string
-    {
-        if (! $this->project_admin_password_plain) {
-            return null;
-        }
-
-        try {
-            return decrypt($this->project_admin_password_plain);
-        } catch (\Exception $e) {
-            \Log::error('Failed to decrypt password for project '.$this->id.': '.$e->getMessage());
-
-            return null;
-        }
     }
 
     /**

@@ -11,7 +11,9 @@ use App\Models\Project;
 use App\Models\ProjectPermission;
 use App\Models\ProjectSetting;
 use App\Models\Setting;
+use App\Models\Tenant;
 use App\Models\User;
+use App\Services\Hosting\DeploymentDiscoveryService;
 use App\Services\RemoteProjectService;
 use App\Services\SettingsService;
 use App\Services\ViettinmartDeployService;
@@ -163,6 +165,34 @@ class ProjectController extends Controller implements HasMiddleware
             'project_type' => $request->project_type,
         ]);
 
+        // Auto-map or create Tenant for this project
+        if (! $project->tenant_id) {
+            try {
+                $tenant = Tenant::firstOrCreate(
+                    ['code' => $project->code],
+                    [
+                        'name' => $project->name,
+                        'domain' => $project->external_domain ?: $project->code,
+                        'status' => 'active',
+                    ]
+                );
+                $project->update(['tenant_id' => $tenant->id]);
+            } catch (\Throwable $e) {
+                \Log::warning("Tenant auto-mapping for project {$project->id} failed: ".$e->getMessage());
+            }
+        }
+
+        // Auto-discover cPanel configuration
+        try {
+            $discovery = app(DeploymentDiscoveryService::class)->discoverForProject($project);
+            $project->update([
+                'deployment_config' => $discovery,
+                'deployment_status' => $discovery['status'] ?? 'CONFIGURED',
+            ]);
+        } catch (\Throwable $e) {
+            \Log::warning("Initial cPanel discovery for project {$project->id} skipped: ".$e->getMessage());
+        }
+
         if ($request->project_type === 'website' && $request->has('create_website_now')) {
             $response = $this->createWebsite($request, $project);
             $alert = session()->get('alert') ?? ['type' => 'success', 'message' => 'Tạo dự án và khởi tạo Website Multi-Tenancy thành công!'];
@@ -172,7 +202,7 @@ class ProjectController extends Controller implements HasMiddleware
 
         return redirect()->route('superadmin.projects.index')->with('alert', [
             'type' => 'success',
-            'message' => 'Tạo dự án thành công!',
+            'message' => 'Tạo dự án và cấu hình cPanel thành công!',
         ]);
     }
 
@@ -297,6 +327,138 @@ class ProjectController extends Controller implements HasMiddleware
             'type' => 'success',
             'message' => 'Xóa dự án thành công!',
         ]);
+    }
+
+    public function config(Project $project, DeploymentDiscoveryService $discoveryService)
+    {
+        $project->load(['admin', 'createdBy', 'hostingProfiles', 'latestDeployment']);
+
+        // Auto-discover cPanel if not yet discovered
+        $deploymentConfig = $project->deployment_config;
+        if (empty($deploymentConfig) || empty($deploymentConfig['domain']['name'])) {
+            try {
+                $deploymentConfig = $discoveryService->discoverForProject($project);
+                $project->update([
+                    'deployment_config' => $deploymentConfig,
+                    'deployment_status' => $deploymentConfig['status'] ?? 'CONFIGURED',
+                ]);
+            } catch (\Throwable $e) {
+                \Log::warning("Auto-discover on config view failed for project {$project->id}: ".$e->getMessage());
+            }
+        }
+
+        // Remote stats if remote project
+        $remoteStats = null;
+        if ($project->remote_url) {
+            try {
+                $remoteService = new RemoteProjectService;
+                $remoteStats = $remoteService->getRemoteStats($project->remote_url, $project->code);
+            } catch (\Exception $e) {
+                $remoteStats = ['error' => $e->getMessage()];
+            }
+        }
+
+        // Settings for project
+        $tenantId = $project->tenant_id ?? $project->id;
+        $settings = Setting::where(function ($q) use ($project, $tenantId) {
+            $q->where('project_id', $project->id)
+                ->orWhere('tenant_id', $tenantId);
+        })->pluck('value', 'key')->toArray();
+
+        // System modules
+        $systemModules = collect(config('system_menu', []))->map(function ($module) use ($settings) {
+            return [
+                'key' => $module['permission'] ?? $module['route'] ?? 'module',
+                'title' => $module['title'] ?? 'Module',
+                'description' => $module['description'] ?? '',
+                'permission' => $module['permission'] ?? '',
+                'enabled' => isset($settings[$module['permission'] ?? '']) && $settings[$module['permission']] == '1',
+            ];
+        })->values()->all();
+
+        // Feature packs
+        $featurePacks = FeaturePack::where('is_active', true)->orderBy('group_name')->orderBy('name')->get();
+
+        // Users belonging to this project/tenant
+        $users = User::where(function ($q) use ($project, $tenantId) {
+            $q->where('tenant_id', $tenantId)
+                ->orWhereJsonContains('project_ids', $project->id)
+                ->orWhereJsonContains('project_ids', (string) $project->id);
+        })->get();
+
+        // Hosting profile
+        $hostingProfile = $discoveryService->getActiveHostingProfile();
+
+        // Multi-language settings for this project
+        $rawLanguages = ProjectSetting::get($project->id, 'languages');
+        $projectLanguages = null;
+        if ($rawLanguages) {
+            $projectLanguages = is_string($rawLanguages) ? json_decode($rawLanguages, true) : $rawLanguages;
+        }
+        if (! is_array($projectLanguages) || empty($projectLanguages)) {
+            $projectLanguages = [
+                ['code' => 'vi', 'name' => 'Tiếng Việt', 'is_default' => true, 'is_active' => true],
+                ['code' => 'en', 'name' => 'English', 'is_default' => false, 'is_active' => true],
+            ];
+        }
+        $multilingualEnabled = (bool) ProjectSetting::get($project->id, 'multilingual_enabled', true);
+        $defaultLanguage = ProjectSetting::get($project->id, 'default_language', 'vi');
+        $autoDetectLanguage = (bool) ProjectSetting::get($project->id, 'auto_detect_language', true);
+
+        return view('superadmin.projects.config', compact(
+            'project',
+            'remoteStats',
+            'settings',
+            'systemModules',
+            'featurePacks',
+            'users',
+            'deploymentConfig',
+            'hostingProfile',
+            'projectLanguages',
+            'multilingualEnabled',
+            'defaultLanguage',
+            'autoDetectLanguage'
+        ));
+    }
+
+    public function discoverCpanel(Request $request, Project $project, DeploymentDiscoveryService $discoveryService)
+    {
+        $preferredDomain = $request->input('domain') ?: $project->external_domain;
+        $deploymentConfig = $discoveryService->discoverForProject($project, null, $preferredDomain);
+
+        $project->update([
+            'external_domain' => $deploymentConfig['domain']['name'] ?? $preferredDomain,
+            'deployment_config' => $deploymentConfig,
+            'deployment_status' => $deploymentConfig['status'] ?? 'CONFIGURED',
+        ]);
+
+        return back()->with('alert', [
+            'type' => 'success',
+            'message' => 'Đã tự động quét và đồng bộ cấu hình cPanel từ Server thành công!',
+        ]);
+    }
+
+    public function healthCheck(Project $project, DeploymentDiscoveryService $discoveryService)
+    {
+        $result = $discoveryService->performHealthCheck($project);
+
+        $currentConfig = $project->deployment_config ?? [];
+        $currentConfig['health_check'] = $result;
+        $project->update(['deployment_config' => $currentConfig]);
+
+        if (request()->wantsJson()) {
+            return response()->json($result);
+        }
+
+        $alertType = ($result['status'] ?? '') === 'HEALTHY' ? 'success' : 'warning';
+
+        return back()
+            ->with('health_check_result', $result)
+            ->with('alert', [
+                'type' => $alertType,
+                'message' => 'Kiểm tra tình trạng website: '.($result['message'] ?? ''),
+            ])
+            ->with($alertType, 'Kiểm tra tình trạng website hoàn tất.');
     }
 
     public function createWebsite(Request $request, Project $project)
@@ -806,61 +968,6 @@ class ProjectController extends Controller implements HasMiddleware
         }
     }
 
-    public function config(Project $project)
-    {
-        $systemModules = collect(config('system_menu'))->map(function ($module) {
-            return [
-                'key' => $module['permission'],
-                'title' => $module['title'],
-                'description' => $module['description'],
-            ];
-        });
-
-        $settings = ProjectSetting::where('project_id', $project->id)->pluck('value', 'key')->toArray();
-
-        $remoteStats = null;
-        if ($project->remote_url) {
-            $remoteService = new RemoteProjectService;
-            $result = $remoteService->getRemoteStats($project->remote_url, $project->code);
-            if ($result['success']) {
-                $remoteStats = $result['data']['stats'] ?? null;
-            }
-        }
-
-        // DEMO MODE: Lấy danh sách CMS users từ shared database theo project_ids
-        $users = User::where('role', 'cms')
-            ->get()
-            ->filter(function ($u) use ($project) {
-                $ids = is_array($u->project_ids) ? $u->project_ids : json_decode($u->project_ids ?? '[]', true);
-
-                return in_array($project->id, $ids ?? []);
-            })
-            ->values();
-
-        $featurePacks = FeaturePack::where('is_active', true)->orderBy('group_name')->orderBy('name')->get();
-
-        // Multi-language settings for this project
-        $rawLanguages = ProjectSetting::get($project->id, 'languages');
-        $projectLanguages = null;
-        if ($rawLanguages) {
-            $projectLanguages = is_string($rawLanguages) ? json_decode($rawLanguages, true) : $rawLanguages;
-        }
-        if (! is_array($projectLanguages) || empty($projectLanguages)) {
-            $projectLanguages = [
-                ['code' => 'vi', 'name' => 'Tiếng Việt', 'is_default' => true, 'is_active' => true],
-                ['code' => 'en', 'name' => 'English', 'is_default' => false, 'is_active' => true],
-            ];
-        }
-        $multilingualEnabled = (bool) ProjectSetting::get($project->id, 'multilingual_enabled', true);
-        $defaultLanguage = ProjectSetting::get($project->id, 'default_language', 'vi');
-        $autoDetectLanguage = (bool) ProjectSetting::get($project->id, 'auto_detect_language', true);
-
-        return view('superadmin.projects.config', compact(
-            'project', 'systemModules', 'settings', 'users', 'remoteStats', 'featurePacks',
-            'projectLanguages', 'multilingualEnabled', 'defaultLanguage', 'autoDetectLanguage'
-        ));
-    }
-
     public function resetAdminAccount(Request $request, Project $project)
     {
         $request->validate([
@@ -919,9 +1026,24 @@ class ProjectController extends Controller implements HasMiddleware
         ]);
     }
 
-    public function updateConfig(Request $request, Project $project)
+    public function updateConfig(Request $request, Project $project, DeploymentDiscoveryService $discoveryService)
     {
         try {
+            // Xử lý cấu hình Triển khai & Hosting (cPanel)
+            if ($request->has('deployment_domain')) {
+                $preferredDomain = trim($request->input('deployment_domain'));
+                $deploymentConfig = $discoveryService->discoverForProject($project, null, $preferredDomain);
+                if ($request->filled('custom_document_root')) {
+                    $deploymentConfig['domain']['document_root'] = trim($request->input('custom_document_root'));
+                    $deploymentConfig['domain']['deployment_path'] = dirname(trim($request->input('custom_document_root')));
+                }
+                $project->update([
+                    'external_domain' => $preferredDomain,
+                    'deployment_config' => $deploymentConfig,
+                    'deployment_status' => $deploymentConfig['status'] ?? 'CONFIGURED',
+                ]);
+            }
+
             $allKeys = collect(config('system_menu'))->pluck('permission')->toArray();
 
             ProjectSetting::where('project_id', $project->id)
@@ -1045,7 +1167,7 @@ class ProjectController extends Controller implements HasMiddleware
             return back()->with('alert', [
                 'type' => 'success',
                 'message' => 'Cập nhật và đồng bộ dữ liệu thành công!',
-            ]);
+            ])->with('success', 'Cập nhật cấu hình dự án thành công!');
         } catch (\Exception $e) {
             return back()->with('alert', [
                 'type' => 'error',

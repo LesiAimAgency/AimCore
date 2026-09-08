@@ -2,9 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Category;
 use App\Models\Project;
 use App\Models\Tenant;
 use App\Models\User;
+use App\Models\Wkcomputer\WkProduct;
 use App\Services\ViettinmartDataSyncService;
 use Closure;
 use Illuminate\Http\Request;
@@ -30,6 +32,17 @@ class ProjectSubdomainMiddleware
         }
 
         if (! $project) {
+            if ($projectCode) {
+                $isWkProduct = WkProduct::where('slug', $projectCode)->exists();
+                $isWkCategory = Category::where('slug', $projectCode)->exists();
+                if ($isWkProduct || $isWkCategory) {
+                    $queryString = $request->getQueryString();
+                    $target = '/wkcomputer/'.$projectCode.($queryString ? '?'.$queryString : '');
+
+                    return redirect($target, 301);
+                }
+            }
+
             abort(404, 'Project not found'.($projectCode ? ': '.$projectCode : ''));
         }
 

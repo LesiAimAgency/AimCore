@@ -3,8 +3,20 @@
 @push('head')
 <link rel="stylesheet" href="https://pc.baokim.vn/css/bk.css?v=1.0.0">
 <style>
+    /* Typography & Font-family normalization (Font Awesome explicitly protected) */
+    body, button, input, select, textarea {
+        font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important;
+    }
+    i.fa, i.fas, i.far, i.fab, .fa, .fas, .far, .fab, [class*="fa-"], [class^="fa-"] {
+        font-family: "Font Awesome 6 Free", "Font Awesome 5 Free", FontAwesome !important;
+    }
+    i.fab, .fab, [class*="fa-brands"] {
+        font-family: "Font Awesome 6 Brands", "Font Awesome 5 Brands", FontAwesome !important;
+    }
+
     /* Styling for tables inside short description */
     .wk-short-desc {
+        font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
         font-size: 13px;
         color: #475569;
         line-height: 1.7;
@@ -14,6 +26,14 @@
         border-radius: 8px;
         border-left: 3px solid var(--wk-primary);
         overflow-x: auto;
+    }
+    .wk-short-desc * {
+        font-family: inherit !important;
+    }
+    .wk-short-desc i.fa, .wk-short-desc i.fas {
+        color: #10b981;
+        margin-right: 6px;
+        margin-left: 2px;
     }
     .wk-short-desc table {
         width: 100%;
@@ -40,15 +60,22 @@
 
     /* Product Description & Typography */
     .wk-product-description {
+        font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important;
         font-size: 15px;
         line-height: 1.8;
         color: #334155;
         word-break: break-word;
     }
+    .wk-product-description * {
+        font-family: inherit !important;
+    }
     .wk-product-description h1,
     .wk-product-description h2,
     .wk-product-description h3,
-    .wk-product-description h4 {
+    .wk-product-description h4,
+    .wk-product-description h5,
+    .wk-product-description h6 {
+        font-family: inherit !important;
         color: #1e293b;
         font-weight: 700;
         line-height: 1.4;
@@ -59,9 +86,17 @@
     .wk-product-description h2 { font-size: 18px; }
     .wk-product-description h3 { font-size: 16px; }
     .wk-product-description h4 { font-size: 15px; }
-    .wk-product-description p {
-        margin-bottom: 16px;
+    .wk-product-description p,
+    .wk-product-description .wk-desc-lead {
+        font-family: inherit !important;
+        font-size: 15px;
         line-height: 1.8;
+        color: #334155;
+        margin-bottom: 16px;
+    }
+    .wk-product-description .wk-desc-lead {
+        font-size: 15.5px;
+        color: #1e293b;
     }
     .wk-product-description img {
         max-width: 100% !important;
@@ -137,7 +172,7 @@
     .fundiin-promotion__panel {
         margin: 20px 0;
         text-align: left;
-        font-family: 'Outfit', 'Inter', sans-serif;
+        font-family: inherit;
     }
     .fundiin-promotion__title {
         font-size: 14px;
@@ -427,6 +462,16 @@
         // Remove redundant leading repeated title if it exists at the very beginning
         $cleanDescription = preg_replace('/^\s*<p style="text-align:\s*center;"><strong><span[^>]*>(?:(?!<img)[\s\S])*?<\/span><\/strong><\/p>/iu', '', $cleanDescription);
         $cleanDescription = preg_replace('/^\s*<h1 style="text-align:\s*center;">[\s\S]*?<\/h1>/iu', '', $cleanDescription);
+
+        // Normalize long text inside h2/h3 tags (> 120 chars) into paragraphs to avoid giant bold headings taking over text
+        $cleanDescription = preg_replace_callback('/<h([2-4])([^>]*)>([\s\S]*?)<\/h\1>/iu', function ($matches) {
+            $inner = trim(strip_tags($matches[3]));
+            if (mb_strlen($inner) > 120) {
+                return '<p class="wk-desc-lead">' . $matches[3] . '</p>';
+            }
+            return $matches[0];
+        }, $cleanDescription);
+
         $cleanDescription = trim($cleanDescription);
     }
 
@@ -765,7 +810,7 @@
                                 <span style="color:#71717a;">({{ $reviewCount }} đánh giá)</span>
                             </a>
                             @if($firstCat)
-                            <span>Danh mục: <a href="{{ url($firstCat->slug) }}" style="color:#800000; font-weight:700;">{{ $firstCat->name }}</a></span>
+                            <span>Danh mục: <a href="{{ url('/wkcomputer/' . $firstCat->slug) }}" style="color:#800000; font-weight:700;">{{ $firstCat->name }}</a></span>
                             @endif
                         </div>
                         

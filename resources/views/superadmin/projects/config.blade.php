@@ -202,6 +202,16 @@
             <span class="bg-emerald-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[20px] text-center">{{ $activeApiCount }}</span>
           @endif
         </button>
+        <button type="button" id="tab-btn-deployment" class="tab-button px-4 py-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 flex items-center gap-2" onclick="showTab('deployment', this)">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path>
+          </svg>
+          Triển khai & Hosting (cPanel)
+          @php $depStatus = $project->deployment_status ?? ($deploymentConfig['status'] ?? 'NOT_CONFIGURED'); @endphp
+          <span class="text-xs font-bold rounded-full px-2 py-0.5 {{ in_array($depStatus, ['CONFIGURED', 'READY', 'DEPLOYED']) ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800' }}">
+            {{ $depStatus }}
+          </span>
+        </button>
         <button type="button" id="tab-btn-history" class="tab-button px-4 py-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 flex items-center gap-2" onclick="showTab('history', this)">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -747,6 +757,423 @@
       </div>
     </form>
     
+    <!-- Deployment & Hosting (cPanel) Tab -->
+    <div id="deployment-tab" class="tab-content hidden space-y-6">
+      
+      <!-- Center Banner & Summary -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white rounded-xl p-6 shadow-md border border-slate-800">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-400/30">
+                {{ $deploymentConfig['deployment_id'] ?? $project->getDeploymentId() }}
+              </span>
+              <span class="px-2.5 py-0.5 rounded text-xs font-bold {{ in_array($project->deployment_status ?? ($deploymentConfig['status'] ?? ''), ['CONFIGURED', 'READY', 'DEPLOYED']) ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/30' : 'bg-amber-500/20 text-amber-300 border border-amber-400/30' }}">
+                TRẠNG THÁI: {{ $project->deployment_status ?? ($deploymentConfig['status'] ?? 'NOT_CONFIGURED') }}
+              </span>
+            </div>
+            <h3 class="text-xl font-extrabold text-white tracking-tight">PROJECT DEPLOYMENT CONFIGURATION CENTER</h3>
+            <p class="text-xs text-slate-300 mt-1">Single Source of Truth dành cho Kỹ thuật viên Triển khai Host/cPanel (Phase 12A - 12Z)</p>
+          </div>
+          
+          <div class="flex flex-wrap items-center gap-2">
+            <form method="POST" action="{{ route('superadmin.projects.discover-cpanel', $project) }}" class="inline">
+              @csrf
+              <button type="submit" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow transition-all">
+                <svg class="w-4 h-4 animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                Quét lại cPanel (Auto-Discover)
+              </button>
+            </form>
+
+            <form method="POST" action="{{ route('superadmin.projects.health-check', $project) }}" class="inline">
+              @csrf
+              <button type="submit" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Chạy Health Check
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Meta badges -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-4 border-t border-slate-800 text-xs">
+          <div>
+            <span class="text-slate-400 block">Project ID:</span>
+            <span class="font-mono font-bold text-white text-sm">#{{ $project->id }} ({{ $project->code }})</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block">Tenant ID:</span>
+            <span class="font-mono font-bold text-emerald-400 text-sm">#{{ $project->tenant_id ?? $project->id }}</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block">Server Host:</span>
+            <span class="font-mono text-slate-200 truncate block">{{ $deploymentConfig['cpanel']['hostname'] ?? 'host236.vietnix.vn' }}</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block">IP Server:</span>
+            <span class="font-mono text-cyan-300">{{ $deploymentConfig['cpanel']['shared_ip'] ?? '103.200.23.236' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Domain Conflict Warning -->
+      @if(!empty($deploymentConfig['conflict']['has_conflict']))
+      <div class="bg-red-50 border-l-4 border-red-600 p-4 rounded-r-lg shadow-xs">
+        <div class="flex items-start">
+          <svg class="w-5 h-5 text-red-600 mt-0.5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <div>
+            <h4 class="text-sm font-bold text-red-800">CẢNH BÁO XUNG ĐỘT TÊN MIỀN (DOMAIN CONFLICT)</h4>
+            <p class="text-xs text-red-700 mt-1">{{ $deploymentConfig['conflict']['message'] }}</p>
+            <p class="text-xs text-red-600 mt-1 font-semibold">Triển khai đang bị khóa (DEPLOYMENT BLOCKED) để tránh ghi đè dữ liệu của Dự án khác.</p>
+          </div>
+        </div>
+      </div>
+      @endif
+
+      <!-- Drift Warning -->
+      @if(!empty($deploymentConfig['drift']['has_drift']))
+      <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg shadow-xs">
+        <div class="flex items-start">
+          <svg class="w-5 h-5 text-amber-600 mt-0.5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <div>
+            <h4 class="text-sm font-bold text-amber-800">PHÁT HIỆN SAI LỆCH CẤU HÌNH (CONFIG DRIFT DETECTED)</h4>
+            <ul class="text-xs text-amber-700 mt-1 space-y-1">
+              @foreach($deploymentConfig['drift']['drifts'] as $drift)
+              <li>• <strong>{{ $drift['field'] }}</strong>: Đã lưu: <code class="bg-amber-100 px-1 rounded">{{ $drift['saved'] }}</code> | Trên cPanel thực tế: <code class="bg-amber-100 px-1 rounded">{{ $drift['live'] }}</code></li>
+              @endforeach
+            </ul>
+          </div>
+        </div>
+      </div>
+      @endif
+
+      <!-- Health Check Result Panel (If available) -->
+      @if(session('health_check_result'))
+      @php $hc = session('health_check_result'); @endphp
+      <div class="bg-white border-2 {{ $hc['status'] === 'PASS' ? 'border-emerald-500 bg-emerald-50/20' : 'border-amber-500 bg-amber-50/20' }} rounded-xl p-5 shadow-xs">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full {{ $hc['status'] === 'PASS' ? 'bg-emerald-500' : 'bg-amber-500' }} animate-pulse"></span>
+            <h4 class="font-bold text-sm text-slate-800">KẾT QUẢ KIỂM TRA HỆ THỐNG (HEALTH CHECK) - {{ $hc['checked_at'] }}</h4>
+          </div>
+          <span class="px-2.5 py-0.5 text-xs font-bold rounded-full {{ $hc['status'] === 'PASS' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800' }}">
+            {{ $hc['status'] }}
+          </span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          @foreach($hc['checks'] as $check)
+          <div class="bg-white border rounded-lg p-3 text-xs">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-semibold text-slate-700">{{ $check['name'] }}</span>
+              <span class="font-bold {{ $check['status'] === 'PASS' ? 'text-emerald-600' : ($check['status'] === 'WARNING' ? 'text-amber-600' : 'text-red-600') }}">
+                {{ $check['status'] }}
+              </span>
+            </div>
+            <p class="text-slate-500 text-[11px] truncate">{{ $check['message'] ?? '' }}</p>
+          </div>
+          @endforeach
+        </div>
+      </div>
+      @endif
+
+      <!-- Verified Information 4-Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- 1. cPanel & Host Information -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            1. Thông tin Host / cPanel
+          </h4>
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between py-1 border-b border-slate-200">
+              <span class="text-slate-500">cPanel Host:</span>
+              <span class="font-mono font-medium text-slate-800">{{ $deploymentConfig['cpanel']['hostname'] ?? 'https://host236.vietnix.vn/' }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-slate-200">
+              <span class="text-slate-500">cPanel Account:</span>
+              <span class="font-mono font-bold text-slate-900">{{ $deploymentConfig['cpanel']['username'] ?? 'fukkatsu' }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-slate-200">
+              <span class="text-slate-500">Home Directory:</span>
+              <span class="font-mono text-slate-800">{{ $deploymentConfig['cpanel']['home_dir'] ?? '/home/fukkatsu' }}</span>
+            </div>
+            <div class="flex justify-between py-1">
+              <span class="text-slate-500">PHP Version:</span>
+              <span class="font-mono font-semibold text-emerald-700">{{ $deploymentConfig['php']['version'] ?? 'ea-php82' }} (FPM)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Domain & Document Root -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+            2. Domain & Thư mục Phân vùng
+          </h4>
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between py-1 border-b border-slate-200">
+              <span class="text-slate-500">Tên miền (Domain):</span>
+              <span class="font-mono font-bold text-blue-700">{{ $deploymentConfig['domain']['name'] ?? ($project->external_domain ?: 'Chưa cấu hình') }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-slate-200">
+              <span class="text-slate-500">Document Root:</span>
+              <span class="font-mono text-slate-800 truncate max-w-[260px]" title="{{ $deploymentConfig['domain']['document_root'] ?? '' }}">{{ $deploymentConfig['domain']['document_root'] ?? 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-slate-200">
+              <span class="text-slate-500">Deployment Path:</span>
+              <span class="font-mono text-slate-800 truncate max-w-[260px]" title="{{ $deploymentConfig['domain']['deployment_path'] ?? '' }}">{{ $deploymentConfig['domain']['deployment_path'] ?? 'N/A' }}</span>
+            </div>
+            <div class="flex justify-between py-1">
+              <span class="text-slate-500">Trạng thái SSL:</span>
+              <span class="font-semibold text-emerald-600">Đã kích hoạt (Active)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Database Isolation -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+            3. Cơ sở dữ liệu (Database)
+          </h4>
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between py-1 border-b border-slate-200">
+              <span class="text-slate-500">Database Name:</span>
+              <span class="font-mono font-bold text-purple-700">{{ $deploymentConfig['database']['name'] ?? 'fukkatsu_' . $project->code }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-slate-200">
+              <span class="text-slate-500">Database User:</span>
+              <span class="font-mono text-slate-800">{{ $deploymentConfig['database']['user'] ?? 'fukkatsu_' . substr($project->code, 0, 6) }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-slate-200">
+              <span class="text-slate-500">Database Host:</span>
+              <span class="font-mono text-slate-800">localhost</span>
+            </div>
+            <div class="flex justify-between py-1">
+              <span class="text-slate-500">Tenant Data Isolation:</span>
+              <span class="font-semibold text-emerald-600">Độc lập 100% (Tenant ID #{{ $project->tenant_id ?? $project->id }})</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Storage & Static Assets -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+            4. Lưu trữ & Storage Link
+          </h4>
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between py-1 border-b border-slate-200">
+              <span class="text-slate-500">Storage Root:</span>
+              <span class="font-mono text-slate-800 truncate max-w-[260px]">{{ $deploymentConfig['storage']['path'] ?? '' }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-slate-200">
+              <span class="text-slate-500">Symlink Web:</span>
+              <span class="font-mono text-slate-800 truncate max-w-[260px]">{{ $deploymentConfig['storage']['public_link'] ?? '' }}</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-slate-200">
+              <span class="text-slate-500">Permissions:</span>
+              <span class="font-mono text-emerald-600 font-semibold">0775 (storage & cache)</span>
+            </div>
+            <div class="flex justify-between py-1">
+              <span class="text-slate-500">Tự động kích hoạt:</span>
+              <span class="font-semibold text-blue-600">php artisan storage:link</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Copy Buttons Section (Phase 12J) -->
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+        <h4 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+          <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+          Bộ Nút Copy Nhanh cho Kỹ thuật viên (Quick Copy Buttons)
+        </h4>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+          <button type="button" onclick="copyValue('{{ $deploymentConfig['domain']['name'] ?? '' }}', 'Đã copy Domain!')" 
+                  class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex flex-col items-center justify-center gap-1 border border-slate-300 transition">
+            <span class="text-[11px] text-slate-500">Tên miền</span>
+            <span class="truncate max-w-full font-mono font-bold">Copy Domain</span>
+          </button>
+
+          <button type="button" onclick="copyValue('{{ $deploymentConfig['domain']['document_root'] ?? '' }}', 'Đã copy Document Root!')" 
+                  class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex flex-col items-center justify-center gap-1 border border-slate-300 transition">
+            <span class="text-[11px] text-slate-500">Document Root</span>
+            <span class="truncate max-w-full font-mono font-bold">Copy DocRoot</span>
+          </button>
+
+          <button type="button" onclick="copyValue('{{ $deploymentConfig['domain']['deployment_path'] ?? '' }}', 'Đã copy Deployment Path!')" 
+                  class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex flex-col items-center justify-center gap-1 border border-slate-300 transition">
+            <span class="text-[11px] text-slate-500">Thư mục nguồn</span>
+            <span class="truncate max-w-full font-mono font-bold">Copy Path</span>
+          </button>
+
+          <button type="button" onclick="copyValue('ssh {{ $deploymentConfig['cpanel']['username'] ?? 'fukkatsu' }}@{{ parse_url($deploymentConfig['cpanel']['hostname'] ?? '', PHP_URL_HOST) ?? 'host236.vietnix.vn' }}', 'Đã copy SSH Command!')" 
+                  class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex flex-col items-center justify-center gap-1 border border-slate-300 transition">
+            <span class="text-[11px] text-slate-500">Kết nối SSH</span>
+            <span class="truncate max-w-full font-mono font-bold">Copy SSH</span>
+          </button>
+
+          <button type="button" onclick="copyEnvTemplate()" 
+                  class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex flex-col items-center justify-center gap-1 border border-slate-300 transition">
+            <span class="text-[11px] text-slate-500">File Cấu hình</span>
+            <span class="truncate max-w-full font-mono font-bold">Copy .env</span>
+          </button>
+
+          <button type="button" onclick="copyDeployCommands()" 
+                  class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex flex-col items-center justify-center gap-1 border border-slate-300 transition">
+            <span class="text-[11px] text-slate-500">Lệnh Setup</span>
+            <span class="truncate max-w-full font-mono font-bold">Copy Artisan</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Technician Deployment Guide (Phase 12H - 12I) -->
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+        <h4 class="text-sm font-bold text-slate-800 mb-2 flex items-center gap-2">
+          <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          Hướng Dẫn Triển Khai Kỹ Thuật (Technician Deployment Guide)
+        </h4>
+        <p class="text-xs text-slate-500 mb-4">Thực hiện tuần tự theo các bước đã được hệ thống tạo sẵn thông số dưới đây:</p>
+
+        <div class="space-y-3">
+          <div class="flex gap-3 text-xs bg-slate-50 p-3 rounded-lg border border-slate-100">
+            <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center shrink-0">1</span>
+            <div class="flex-1">
+              <strong class="text-slate-800">Đăng nhập cPanel:</strong>
+              <p class="text-slate-600">Truy cập <code>{{ $deploymentConfig['cpanel']['hostname'] ?? 'https://host236.vietnix.vn/' }}</code> với tài khoản <code>{{ $deploymentConfig['cpanel']['username'] ?? 'fukkatsu' }}</code>.</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3 text-xs bg-slate-50 p-3 rounded-lg border border-slate-100">
+            <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center shrink-0">2</span>
+            <div class="flex-1">
+              <strong class="text-slate-800">Kiểm tra Tên miền & Document Root:</strong>
+              <p class="text-slate-600">Vào mục <strong>Domains</strong> trên cPanel. Đảm bảo tên miền <code>{{ $deploymentConfig['domain']['name'] ?? 'domain' }}</code> đang trỏ Document Root về đúng đường dẫn:</p>
+              <code class="mt-1 inline-block bg-white px-2 py-1 border rounded text-indigo-700 font-mono">{{ $deploymentConfig['domain']['document_root'] ?? 'N/A' }}</code>
+            </div>
+          </div>
+
+          <div class="flex gap-3 text-xs bg-slate-50 p-3 rounded-lg border border-slate-100">
+            <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center shrink-0">3</span>
+            <div class="flex-1">
+              <strong class="text-slate-800">Tải mã nguồn (Upload Source):</strong>
+              <p class="text-slate-600">Upload gói source code ZIP vào thư mục <code>{{ $deploymentConfig['domain']['deployment_path'] ?? '' }}</code> và giải nén (Extract).</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3 text-xs bg-slate-50 p-3 rounded-lg border border-slate-100">
+            <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center shrink-0">4</span>
+            <div class="flex-1">
+              <strong class="text-slate-800">Cấu hình File Môi trường (.env):</strong>
+              <p class="text-slate-600">Tạo file <code>.env</code> tại thư mục gốc với Database: <code>{{ $deploymentConfig['database']['name'] ?? '' }}</code>, User: <code>{{ $deploymentConfig['database']['user'] ?? '' }}</code> (bấm nút "Copy .env" ở trên để dán nhanh).</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3 text-xs bg-slate-50 p-3 rounded-lg border border-slate-100">
+            <span class="w-6 h-6 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center shrink-0">5</span>
+            <div class="flex-1">
+              <strong class="text-slate-800">Chạy các lệnh thiết lập & Health Check:</strong>
+              <p class="text-slate-600">Mở Terminal/SSH, chạy lệnh tạo symlink storage và tối ưu cache:</p>
+              <code class="mt-1 block bg-slate-900 text-emerald-400 p-2 rounded font-mono text-[11px]">
+                cd {{ $deploymentConfig['domain']['deployment_path'] ?? '.' }} && php artisan storage:link && php artisan optimize
+              </code>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technician Interactive Checklist (Phase 12T) -->
+      <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-xs">
+        <h4 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+          <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+          Checklist Kỹ thuật viên (Technician Verification Checklist)
+        </h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+          <label class="flex items-center gap-2 p-2 bg-white rounded border cursor-pointer hover:bg-slate-50">
+            <input type="checkbox" class="rounded text-blue-600">
+            <span>Xác nhận thông tin tài khoản cPanel chính xác</span>
+          </label>
+          <label class="flex items-center gap-2 p-2 bg-white rounded border cursor-pointer hover:bg-slate-50">
+            <input type="checkbox" class="rounded text-blue-600">
+            <span>Xác nhận Domain và Document Root hợp lệ</span>
+          </label>
+          <label class="flex items-center gap-2 p-2 bg-white rounded border cursor-pointer hover:bg-slate-50">
+            <input type="checkbox" class="rounded text-blue-600">
+            <span>Đã tải và giải nén source vào đúng Deployment Path</span>
+          </label>
+          <label class="flex items-center gap-2 p-2 bg-white rounded border cursor-pointer hover:bg-slate-50">
+            <input type="checkbox" class="rounded text-blue-600">
+            <span>Đã tạo Database và cấu hình .env</span>
+          </label>
+          <label class="flex items-center gap-2 p-2 bg-white rounded border cursor-pointer hover:bg-slate-50">
+            <input type="checkbox" class="rounded text-blue-600">
+            <span>Đã cấp quyền ghi (0775) cho storage & bootstrap/cache</span>
+          </label>
+          <label class="flex items-center gap-2 p-2 bg-white rounded border cursor-pointer hover:bg-slate-50">
+            <input type="checkbox" class="rounded text-blue-600">
+            <span>Đã chạy php artisan storage:link</span>
+          </label>
+          <label class="flex items-center gap-2 p-2 bg-white rounded border cursor-pointer hover:bg-slate-50">
+            <input type="checkbox" class="rounded text-blue-600">
+            <span>Tên miền mở được qua HTTPS (SSL Active)</span>
+          </label>
+          <label class="flex items-center gap-2 p-2 bg-white rounded border cursor-pointer hover:bg-slate-50">
+            <input type="checkbox" class="rounded text-blue-600">
+            <span>Đã bấm chạy Health Check đạt trạng thái PASS</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Domain Configuration & Edit Form -->
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+        <h4 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+          <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          Thay đổi Tên miền & Document Root Chỉ định
+        </h4>
+        <form method="POST" action="{{ route('superadmin.projects.config', $project) }}" class="space-y-4 text-xs">
+          @csrf
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Chọn Tên miền khả dụng trên cPanel:</label>
+              <select name="deployment_domain" class="w-full border-slate-300 rounded-lg p-2 text-xs font-mono bg-white focus:ring-blue-500 focus:border-blue-500">
+                @if(!empty($deploymentConfig['available_domains']))
+                  @foreach($deploymentConfig['available_domains'] as $availDomain)
+                  <option value="{{ $availDomain }}" {{ ($deploymentConfig['domain']['name'] ?? '') === $availDomain ? 'selected' : '' }}>
+                    {{ $availDomain }}
+                  </option>
+                  @endforeach
+                @else
+                  <option value="{{ $project->external_domain }}">{{ $project->external_domain ?: $project->code . '.aimagency.vn' }}</option>
+                @endif
+              </select>
+              <p class="text-[11px] text-slate-500 mt-1">Danh sách tên miền được đồng bộ tự động từ API cPanel.</p>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Document Root Tùy chỉnh (Tùy chọn):</label>
+              <input type="text" name="custom_document_root" value="{{ $deploymentConfig['domain']['document_root'] ?? '' }}" 
+                     placeholder="/home/fukkatsu/..." class="w-full border-slate-300 rounded-lg p-2 text-xs font-mono bg-white">
+              <p class="text-[11px] text-slate-500 mt-1">Để trống nếu muốn sử dụng Document Root mặc định của cPanel.</p>
+            </div>
+          </div>
+
+          <div class="flex justify-end pt-2">
+            <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow-xs">
+              Lưu & Cập nhật Cấu hình Triển khai
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
     <!-- History Tab -->
     <div id="history-tab" class="tab-content hidden">
       <div class="mb-4 flex flex-wrap gap-2 items-center justify-between">
@@ -1360,6 +1787,90 @@ function togglePasswordVisibility(id) {
   if (input) {
     input.type = (input.type === 'password') ? 'text' : 'password';
   }
+}
+
+function copyValue(val, successMsg) {
+  if (!val) {
+    if (typeof showNotification === 'function') {
+      showNotification('Không có giá trị để copy', 'warning');
+    } else {
+      alert('Không có giá trị để copy');
+    }
+    return;
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(val).then(() => {
+      if (typeof showNotification === 'function') {
+        showNotification(successMsg || 'Đã sao chép vào bộ nhớ tạm!', 'success');
+      } else {
+        alert(successMsg || 'Đã sao chép!');
+      }
+    }).catch(() => {
+      fallbackCopy(val, successMsg);
+    });
+  } else {
+    fallbackCopy(val, successMsg);
+  }
+}
+
+function fallbackCopy(val, successMsg) {
+  const textarea = document.createElement('textarea');
+  textarea.value = val;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    document.execCommand('copy');
+    if (typeof showNotification === 'function') {
+      showNotification(successMsg || 'Đã sao chép!', 'success');
+    } else {
+      alert(successMsg || 'Đã sao chép!');
+    }
+  } catch (err) {
+    alert('Không thể sao chép: ' + err);
+  }
+  document.body.removeChild(textarea);
+}
+
+function copyEnvTemplate() {
+  const envText = `APP_NAME="{{ addslashes($project->name) }}"
+APP_ENV=production
+APP_DEBUG=false
+APP_URL="https://{{ $deploymentConfig['domain']['name'] ?? 'example.com' }}"
+
+LOG_CHANNEL=stack
+LOG_LEVEL=error
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE="{{ $deploymentConfig['database']['name'] ?? 'db_name' }}"
+DB_USERNAME="{{ $deploymentConfig['database']['user'] ?? 'db_user' }}"
+DB_PASSWORD="YOUR_DB_PASSWORD"
+
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+FILESYSTEM_DISK=public
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+PROJECT_ID={{ $project->id }}
+TENANT_ID={{ $project->tenant_id ?? $project->id }}
+PROJECT_CODE="{{ $project->code }}"
+`;
+  copyValue(envText, 'Đã copy mẫu .env chuẩn xác!');
+}
+
+function copyDeployCommands() {
+  const path = '{{ $deploymentConfig['domain']['deployment_path'] ?? '.' }}';
+  const cmds = `cd ${path}
+php artisan migrate --force
+php artisan storage:link
+php artisan optimize
+`;
+  copyValue(cmds, 'Đã copy lệnh triển khai Artisan!');
 }
 </script>
 

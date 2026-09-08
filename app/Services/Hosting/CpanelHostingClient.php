@@ -269,4 +269,92 @@ class CpanelHostingClient implements HostingClientInterface
 
         throw new \Exception('Could not retrieve Server IP from cPanel.');
     }
+
+    /**
+     * Retrieve cPanel account information (homedir, user, sharedip, etc.)
+     */
+    public function getAccountInfo(): array
+    {
+        try {
+            $data = $this->callUapi('Variables', 'get_user_information');
+
+            return [
+                'user' => $data['user'] ?? $this->profile->cpanel_username,
+                'homedir' => $data['homedir'] ?? ('/home/'.$this->profile->cpanel_username),
+                'sharedip' => $data['sharedip'] ?? null,
+                'status' => 'success',
+            ];
+        } catch (\Throwable $e) {
+            return [
+                'user' => $this->profile->cpanel_username,
+                'homedir' => '/home/'.$this->profile->cpanel_username,
+                'sharedip' => null,
+                'status' => 'fallback',
+                'error' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Retrieve full details of all domains on this cPanel account with document roots
+     */
+    public function getDetailedDomains(): array
+    {
+        try {
+            $data = $this->callUapi('DomainInfo', 'domains_data', ['format' => 'hash']);
+
+            $domains = [];
+
+            // Main domain
+            if (! empty($data['main_domain'])) {
+                $main = $data['main_domain'];
+                $domains[$main['domain']] = [
+                    'domain' => $main['domain'],
+                    'type' => 'main_domain',
+                    'document_root' => $main['documentroot'] ?? '',
+                    'homedir' => $main['homedir'] ?? '',
+                    'ip' => $main['ip'] ?? '',
+                    'php_version' => $main['phpversion'] ?? null,
+                ];
+            }
+
+            // Addon domains
+            if (! empty($data['addon_domains']) && is_array($data['addon_domains'])) {
+                foreach ($data['addon_domains'] as $addon) {
+                    if (is_array($addon) && ! empty($addon['domain'])) {
+                        $domains[$addon['domain']] = [
+                            'domain' => $addon['domain'],
+                            'type' => 'addon_domain',
+                            'document_root' => $addon['documentroot'] ?? '',
+                            'homedir' => $addon['homedir'] ?? '',
+                            'ip' => $addon['ip'] ?? '',
+                            'php_version' => $addon['phpversion'] ?? null,
+                        ];
+                    }
+                }
+            }
+
+            // Subdomains
+            if (! empty($data['sub_domains']) && is_array($data['sub_domains'])) {
+                foreach ($data['sub_domains'] as $sub) {
+                    if (is_array($sub) && ! empty($sub['domain'])) {
+                        $domains[$sub['domain']] = [
+                            'domain' => $sub['domain'],
+                            'type' => 'sub_domain',
+                            'document_root' => $sub['documentroot'] ?? '',
+                            'homedir' => $sub['homedir'] ?? '',
+                            'ip' => $sub['ip'] ?? '',
+                            'php_version' => $sub['phpversion'] ?? null,
+                        ];
+                    }
+                }
+            }
+
+            return $domains;
+        } catch (\Throwable $e) {
+            \Log::warning('cPanel getDetailedDomains failed: '.$e->getMessage());
+
+            return [];
+        }
+    }
 }

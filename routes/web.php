@@ -28,6 +28,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    if (app()->environment('local')) {
+        return redirect('/wkcomputer');
+    }
+
     return view('coming-soon');
 })->name('root.home');
 
