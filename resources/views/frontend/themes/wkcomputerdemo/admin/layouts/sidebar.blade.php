@@ -121,10 +121,13 @@
 <aside id="sidebar" class="wk-sidebar custom-scroll" x-data="{ open: '{{ $inShop ? 'shop' : ($inContent ? 'content' : ($inMedia ? 'appearance' : ($inSettings ? 'settings' : ($inSystem ? 'system' : '')))) }}' }">
     <div class="sb-logo">
         <div class="sb-logo-icon"><i class="fa-solid fa-desktop"></i></div>
-        <div class="sb-logo-text">
+        <div class="sb-logo-text flex-1">
             <p>WKcomputer</p>
             <span>Admin Panel</span>
         </div>
+        <button type="button" onclick="toggleAdminSidebar(false)" class="lg:hidden p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition" title="Đóng menu">
+            <i class="fa-solid fa-xmark text-base"></i>
+        </button>
     </div>
 
     <nav class="flex-1 py-2">

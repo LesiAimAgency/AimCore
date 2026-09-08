@@ -72,18 +72,21 @@
         $hasCustomSidebar = $isVtm || $isWk;
     @endphp
 
-    <div class="min-h-screen flex w-full">
+    <div class="min-h-screen flex w-full relative">
+        <!-- Mobile Sidebar Backdrop -->
+        <div id="sidebar-backdrop" onclick="toggleAdminSidebar(false)" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+
         @if($isVtm)
-            <div class="fixed top-0 left-0 h-screen z-40">
+            <div id="admin-sidebar-wrapper" class="fixed top-0 left-0 h-screen z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out">
                 @include('frontend.themes.viettinmartdemo.admin.layouts.sidebar')
             </div>
         @elseif($isWk)
-            <div class="fixed top-0 left-0 h-screen z-40">
+            <div id="admin-sidebar-wrapper" class="fixed top-0 left-0 h-screen z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out">
                 @include('frontend.themes.wkcomputerdemo.admin.layouts.sidebar')
             </div>
         @else
         <!-- Sidebar -->
-        <div id="sidebar" class="w-72 bg-[#001B4E] shadow-2xl transition-all duration-300 fixed h-screen overflow-y-auto">
+        <div id="sidebar" class="w-72 bg-[#001B4E] shadow-2xl transition-all duration-300 fixed h-screen overflow-y-auto z-50 transform -translate-x-full lg:translate-x-0">
             <!-- Logo -->
             <div class="p-6 border-b border-[#002D80] bg-[#001235]">
                 <div class="flex items-center justify-between">

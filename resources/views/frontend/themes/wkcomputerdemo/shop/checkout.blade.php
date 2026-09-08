@@ -17,30 +17,24 @@
 
         <form id="checkout-form" method="POST" action="{{ route('checkout.store') ?? '#' }}">
             @csrf
-            <div style="display:grid; grid-template-columns:1fr 380px; gap:24px; align-items:start;">
+            <div class="wk-checkout-layout">
                 
                 {{-- Left Column: Form Info --}}
-                <div>
-                    {{-- Tabs --}}
-                    <div style="background:#fff; border-radius:8px 8px 0 0; overflow:hidden;">
-                        <ul style="display:flex; list-style:none; padding:0; margin:0; border-bottom:1px solid #e2e8f0;">
-                            <li style="padding:16px 24px; font-weight:700; color:#e11d48; border-bottom:2px solid #e11d48; cursor:pointer;">Nhận hàng tại nhà</li>
-                            <li style="padding:16px 24px; font-weight:500; color:#64748b; cursor:pointer;">Nhận hàng tại điểm</li>
-                        </ul>
-                    </div>
-
+                <div class="wk-checkout-main-col">
                     {{-- Thông tin nhận hàng --}}
-                    <div style="background:#fff; padding:24px; margin-bottom:16px; border-radius:0 0 8px 8px;">
-                        <div style="font-weight:700; font-size:15px; margin-bottom:20px;">Thông tin nhận hàng</div>
+                    <div style="background:#fff; padding:24px; margin-bottom:16px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+                        <div style="font-weight:700; font-size:16px; color:#1e293b; margin-bottom:20px; display:flex; align-items:center; gap:8px;">
+                            <i class="fas fa-map-marker-alt" style="color:#e11d48;"></i> Thông tin nhận hàng
+                        </div>
                         
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                        <div class="wk-form-row-2col">
                             <input type="text" name="first_name" value="{{ old('first_name') }}" placeholder="Họ *" required style="border:1px solid #e2e8f0; padding:12px; border-radius:4px; width:100%; outline:none; font-size:14px;" onfocus="this.style.borderColor='#e11d48'" onblur="this.style.borderColor='#e2e8f0'">
                             <input type="text" name="last_name" value="{{ old('last_name') }}" placeholder="Tên *" required style="border:1px solid #e2e8f0; padding:12px; border-radius:4px; width:100%; outline:none; font-size:14px;" onfocus="this.style.borderColor='#e11d48'" onblur="this.style.borderColor='#e2e8f0'">
                         </div>
                         <div style="margin-bottom:16px;">
                             <input type="text" name="phone" value="{{ old('phone') }}" placeholder="Số điện thoại *" required style="border:1px solid #e2e8f0; padding:12px; border-radius:4px; width:100%; outline:none; font-size:14px;" onfocus="this.style.borderColor='#e11d48'" onblur="this.style.borderColor='#e2e8f0'">
                         </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:16px;">
+                        <div class="wk-form-row-3col">
                             <select name="province_code" id="province" required style="border:1px solid #e2e8f0; padding:12px; border-radius:4px; width:100%; outline:none; font-size:14px; background:#fff; cursor:pointer;" onchange="loadDistricts()">
                                 <option value="">Tỉnh/Thành phố *</option>
                             </select>
@@ -62,23 +56,23 @@
                     </div>
 
                     {{-- Nhận Mã online, hóa đơn qua email --}}
-                    <div style="background:#fff; padding:24px; margin-bottom:16px; border-radius:8px;">
+                    <div style="background:#fff; padding:24px; margin-bottom:16px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
                         <div style="font-weight:700; font-size:14px; margin-bottom:12px;">Nhận Mã online, hóa đơn qua email</div>
                         <input type="email" name="email" value="{{ old('email') }}" placeholder="Nhập email nhận thông tin *" required style="border:1px solid #e2e8f0; border-radius:4px; padding:12px; width:100%; outline:none; font-size:14px;" onfocus="this.style.borderColor='#e11d48'" onblur="this.style.borderColor='#e2e8f0'">
                     </div>
 
                     {{-- Ghi chú cho đơn hàng --}}
-                    <div style="background:#fff; padding:24px; margin-bottom:16px; border-radius:8px;">
+                    <div style="background:#fff; padding:24px; margin-bottom:16px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
                         <div style="font-weight:700; font-size:14px; margin-bottom:12px;">Ghi chú cho đơn hàng</div>
                         <textarea name="notes" placeholder="Nhập thông tin ghi chú cho nhà bán hàng" style="border:1px solid #e2e8f0; border-radius:4px; padding:12px; width:100%; outline:none; height:100px; resize:none; font-size:14px; font-family:inherit;" onfocus="this.style.borderColor='#e11d48'" onblur="this.style.borderColor='#e2e8f0'">{{ old('notes') }}</textarea>
                     </div>
 
                     {{-- Phương thức thanh toán --}}
-                    <div style="background:#fff; padding:24px; margin-bottom:16px; border-radius:8px;">
+                    <div style="background:#fff; padding:24px; margin-bottom:16px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
                         <div style="font-weight:700; font-size:18px; margin-bottom:4px;">Phương thức thanh toán</div>
-                        <div style="font-size:13px; color:#64748b; margin-bottom:24px;">Thông tin thanh toán của bạn sẽ luôn được bảo mật</div>
+                        <div style="font-size:13px; color:#64748b; margin-bottom:20px;">Thông tin thanh toán của bạn sẽ luôn được bảo mật</div>
                         
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                        <div class="wk-payment-grid">
                             <label class="payment-method-box" style="border:1px solid #e11d48; border-radius:4px; padding:16px; cursor:pointer; position:relative; overflow:hidden;" onclick="selectPayment(this)">
                                 <input type="radio" name="payment_method" value="cod" style="display:none;" checked>
                                 <div style="font-weight:700; font-size:14px; color:#111827;">Thanh toán khi nhận hàng (COD)</div>
@@ -140,7 +134,7 @@
                 </div>
 
                 {{-- Right Column: Summary --}}
-                <div style="display:flex; flex-direction:column; gap:16px; position:sticky; top:20px;">
+                <div class="wk-checkout-summary-col">
                     
                     {{-- Order Info --}}
                     <div style="background:#fff; border-radius:8px; padding:24px;">
@@ -449,7 +443,70 @@ selectPayment = function(element) {
         } else {
             kredivoContainer.style.display = 'none';
         }
-    }
 }
 </script>
+
+<style>
+.wk-checkout-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 24px;
+    align-items: start;
+}
+.wk-checkout-main-col {
+    min-width: 0;
+}
+.wk-checkout-summary-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: sticky;
+    top: 20px;
+}
+.wk-form-row-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.wk-form-row-3col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.wk-payment-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 991px) {
+    .wk-checkout-layout {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    .wk-checkout-summary-col {
+        position: static !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .wk-form-row-3col {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+    .wk-payment-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .wk-form-row-2col {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+}
+</style>
 @endsection
