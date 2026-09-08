@@ -23,6 +23,7 @@ class CpanelHostingClient implements HostingClientInterface
     protected function callUapi(string $module, string $function, array $params = [], string $method = 'GET')
     {
         $host = preg_replace('/^https?:\/\//', '', $this->profile->hostname);
+        $host = preg_replace('/:\d+.*$/', '', $host);
         $host = rtrim($host, '/');
         $port = $this->profile->port ?: 2083;
 
@@ -226,9 +227,23 @@ class CpanelHostingClient implements HostingClientInterface
 
     public function createDomain(string $domain, string $documentRoot): bool
     {
-        // Simple heuristic: if domain has more than 1 dot and is not something like .com.vn, it might be a subdomain.
-        // For precision, we can just fetch the main domain or try Addon first.
-        // But since the user specifically requested subdomain support, let's parse it:
+        $domain = trim($domain);
+        $documentRoot = trim($documentRoot);
+
+        // Normalize document root so it is relative to homedir and does NOT share main public_html
+        $cpanelUser = trim($this->profile->cpanel_username);
+        $homePrefix = "/home/{$cpanelUser}/";
+        if (str_starts_with($documentRoot, $homePrefix)) {
+            $dir = substr($documentRoot, strlen($homePrefix));
+        } else {
+            $dir = ltrim($documentRoot, '/');
+        }
+
+        // Prevent accidental sharing with main domain root
+        if (empty($dir) || $dir === 'public_html') {
+            $dir = "domains/{$domain}/public";
+        }
+
         $parts = explode('.', $domain);
 
         // If it's something like demo1.aimagency.vn
@@ -240,7 +255,7 @@ class CpanelHostingClient implements HostingClientInterface
                 $this->callUapi('SubDomain', 'addsubdomain', [
                     'domain' => $sub,
                     'rootdomain' => $rootdomain,
-                    'dir' => $documentRoot,
+                    'dir' => $dir,
                 ], 'POST');
 
                 return true;
@@ -251,7 +266,7 @@ class CpanelHostingClient implements HostingClientInterface
 
         $subdomain = str_replace('.', '_', $domain);
         $this->callUapi('AddonDomain', 'addaddon', [
-            'dir' => $documentRoot,
+            'dir' => $dir,
             'newdomain' => $domain,
             'subdomain' => $subdomain,
         ], 'POST');

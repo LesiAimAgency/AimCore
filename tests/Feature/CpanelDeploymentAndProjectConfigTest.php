@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\HostingProfile;
 use App\Models\Project;
 use App\Models\User;
 use App\Services\Hosting\DeploymentDiscoveryService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class CpanelDeploymentAndProjectConfigTest extends TestCase
@@ -134,5 +136,80 @@ class CpanelDeploymentAndProjectConfigTest extends TestCase
         $project->refresh();
         $this->assertIsArray($project->deployment_config);
         $this->assertArrayHasKey('health_check', $project->deployment_config);
+    }
+
+    public function test_superadmin_can_call_create_cpanel_database(): void
+    {
+        Http::fake([
+            '*' => Http::response([
+                'status' => 1,
+                'data' => true,
+            ], 200),
+        ]);
+
+        HostingProfile::create([
+            'name' => 'Test cPanel',
+            'panel_type' => 'cpanel',
+            'hostname' => 'https://host.test:2083',
+            'port' => 2083,
+            'cpanel_username' => 'testuser',
+            'api_token' => 'TEST_TOKEN',
+            'is_active' => true,
+        ]);
+
+        $project = Project::factory()->create([
+            'name' => 'Test DB Project',
+            'code' => 'testdbproj',
+        ]);
+
+        $response = $this->actingAs($this->superAdmin)
+            ->post(route('superadmin.projects.create-cpanel-db', $project));
+
+        $response->assertRedirect();
+        $response->assertSessionHas('alert');
+
+        $project->refresh();
+        $this->assertIsArray($project->deployment_config);
+        $this->assertArrayHasKey('database', $project->deployment_config);
+        $this->assertStringContainsString('testdbproj', $project->deployment_config['database']['name']);
+    }
+
+    public function test_superadmin_can_call_create_cpanel_domain_with_unshared_docroot(): void
+    {
+        Http::fake([
+            '*' => Http::response([
+                'status' => 1,
+                'data' => true,
+            ], 200),
+        ]);
+
+        HostingProfile::create([
+            'name' => 'Test cPanel',
+            'panel_type' => 'cpanel',
+            'hostname' => 'https://host.test:2083',
+            'port' => 2083,
+            'cpanel_username' => 'testuser',
+            'api_token' => 'TEST_TOKEN',
+            'is_active' => true,
+        ]);
+
+        $project = Project::factory()->create([
+            'name' => 'Domain Project',
+            'code' => 'domproj',
+            'external_domain' => 'old.aimagency.vn',
+        ]);
+
+        $response = $this->actingAs($this->superAdmin)
+            ->post(route('superadmin.projects.create-cpanel-domain', $project), [
+                'domain' => 'newisolated.aimagency.vn',
+                'document_root' => '/home/testuser/domains/newisolated.aimagency.vn/public',
+            ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('alert');
+
+        $project->refresh();
+        $this->assertEquals('newisolated.aimagency.vn', $project->external_domain);
+        $this->assertEquals('/home/testuser/domains/newisolated.aimagency.vn/public', $project->deployment_config['domain']['document_root']);
     }
 }

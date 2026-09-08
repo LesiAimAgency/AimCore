@@ -14,6 +14,8 @@ use App\Models\Setting;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Services\Hosting\DeploymentDiscoveryService;
+use App\Services\Hosting\DeploymentService;
+use App\Services\Hosting\HostingClientFactory;
 use App\Services\RemoteProjectService;
 use App\Services\SettingsService;
 use App\Services\ViettinmartDeployService;
@@ -459,6 +461,158 @@ class ProjectController extends Controller implements HasMiddleware
                 'message' => 'Kiểm tra tình trạng website: '.($result['message'] ?? ''),
             ])
             ->with($alertType, 'Kiểm tra tình trạng website hoàn tất.');
+    }
+
+    public function createCpanelDatabase(Project $project, DeploymentDiscoveryService $discoveryService)
+    {
+        $profile = $discoveryService->getActiveHostingProfile();
+        if (! $profile) {
+            return back()->with('alert', [
+                'type' => 'error',
+                'message' => 'Không tìm thấy cấu hình Hosting cPanel nào đang kích hoạt.',
+            ]);
+        }
+
+        try {
+            $client = HostingClientFactory::make($profile);
+            $cleanCode = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $project->code));
+            $dbPrefix = $profile->db_prefix ? rtrim($profile->db_prefix, '_').'_' : ($profile->cpanel_username.'_');
+
+            $dbName = substr($dbPrefix.$cleanCode, 0, 64);
+            $dbUser = substr($dbPrefix.substr($cleanCode, 0, 6), 0, 16);
+            $dbPass = 'SecDB_'.Str::random(10).'!Sec';
+
+            // Create DB if not exists
+            try {
+                $client->createDatabase($dbName);
+            } catch (\Throwable $e) {
+                if (! str_contains($e->getMessage(), 'already exists')) {
+                    throw $e;
+                }
+            }
+
+            // Create User if not exists
+            try {
+                $client->createDatabaseUser($dbUser, $dbPass);
+            } catch (\Throwable $e) {
+                if (! str_contains($e->getMessage(), 'already exists')) {
+                    throw $e;
+                }
+            }
+
+            // Grant All Privileges
+            try {
+                $client->grantPrivileges($dbName, $dbUser);
+            } catch (\Throwable $e) {
+                // Ignore if already granted
+            }
+
+            // Update project deployment configuration
+            $deploymentConfig = $project->deployment_config ?? $discoveryService->discoverForProject($project, $profile);
+            $deploymentConfig['database'] = [
+                'name' => $dbName,
+                'user' => $dbUser,
+                'password' => $dbPass,
+                'host' => 'localhost',
+                'prefix' => $dbPrefix,
+            ];
+            $deploymentConfig['env_template'] = str_replace(
+                ['YOUR_DB_PASSWORD', 'db_name', 'db_user'],
+                [$dbPass, $dbName, $dbUser],
+                $deploymentConfig['env_template'] ?? ''
+            );
+            $project->update(['deployment_config' => $deploymentConfig]);
+
+            return back()->with('alert', [
+                'type' => 'success',
+                'message' => "Đã tự động khởi tạo MySQL Database '{$dbName}' & User '{$dbUser}' trên cPanel thành công!",
+            ])->with('success', "Database cPanel đã sẵn sàng: {$dbName}");
+        } catch (\Throwable $e) {
+            return back()->with('alert', [
+                'type' => 'error',
+                'message' => 'Lỗi tạo Database trên cPanel: '.$e->getMessage(),
+            ]);
+        }
+    }
+
+    public function createCpanelDomain(Request $request, Project $project, DeploymentDiscoveryService $discoveryService)
+    {
+        $profile = $discoveryService->getActiveHostingProfile();
+        if (! $profile) {
+            return back()->with('alert', [
+                'type' => 'error',
+                'message' => 'Không tìm thấy cấu hình Hosting cPanel nào đang kích hoạt.',
+            ]);
+        }
+
+        $domain = trim($request->input('domain', $project->external_domain));
+        if (empty($domain)) {
+            return back()->with('alert', [
+                'type' => 'error',
+                'message' => 'Vui lòng nhập tên miền cần tạo trên cPanel.',
+            ]);
+        }
+
+        $cpanelUser = trim($profile->cpanel_username);
+        $customDocRoot = trim($request->input('document_root', ''));
+
+        // Ensure NOT sharing public_html with main domain
+        if (empty($customDocRoot) || $customDocRoot === "/home/{$cpanelUser}/public_html" || $customDocRoot === 'public_html') {
+            $customDocRoot = "/home/{$cpanelUser}/domains/{$domain}/public";
+        }
+
+        try {
+            $client = HostingClientFactory::make($profile);
+            $client->createDomain($domain, $customDocRoot);
+
+            // Update project with new domain and unshared document root
+            $deploymentConfig = $discoveryService->discoverForProject($project, $profile, $domain);
+            $deploymentConfig['domain']['document_root'] = $customDocRoot;
+            $deploymentConfig['domain']['deployment_path'] = dirname($customDocRoot);
+            $deploymentConfig['docroot'] = $customDocRoot;
+
+            $project->update([
+                'external_domain' => $domain,
+                'deployment_config' => $deploymentConfig,
+                'deployment_status' => 'CONFIGURED',
+            ]);
+
+            return back()->with('alert', [
+                'type' => 'success',
+                'message' => "Đã tạo Domain độc lập '{$domain}' (Document Root: '{$customDocRoot}' - Không share public_html) trên cPanel thành công!",
+            ])->with('success', "Domain '{$domain}' đã được tạo trên cPanel!");
+        } catch (\Throwable $e) {
+            return back()->with('alert', [
+                'type' => 'error',
+                'message' => 'Lỗi tạo Domain trên cPanel: '.$e->getMessage(),
+            ]);
+        }
+    }
+
+    public function triggerDeploy(Project $project, DeploymentService $deploymentService, DeploymentDiscoveryService $discoveryService)
+    {
+        $profile = $discoveryService->getActiveHostingProfile();
+        if (! $profile) {
+            return back()->with('alert', [
+                'type' => 'error',
+                'message' => 'Không tìm thấy cấu hình Hosting cPanel nào đang kích hoạt.',
+            ]);
+        }
+
+        try {
+            $history = $deploymentService->deploy($project, $profile, auth()->id() ?? 1);
+            $deploymentService->runExistingDeploy($history);
+
+            return back()->with('alert', [
+                'type' => 'success',
+                'message' => "Quá trình Triển khai dự án lên cPanel (Deploy ID: #{$history->id}) đã được thực thi thành công!",
+            ])->with('success', 'Triển khai cPanel hoàn tất.');
+        } catch (\Throwable $e) {
+            return back()->with('alert', [
+                'type' => 'error',
+                'message' => 'Lỗi trong quá trình Triển khai cPanel: '.$e->getMessage(),
+            ]);
+        }
     }
 
     public function createWebsite(Request $request, Project $project)
