@@ -72,6 +72,12 @@ class DeploymentService
                 if (! str_contains($e->getMessage(), 'already exists')) {
                     throw $e;
                 }
+                // User already exists: update their password to match the newly generated $dbPass
+                try {
+                    $client->setDatabaseUserPassword($dbUser, $dbPass);
+                } catch (\Exception $ignored) {
+                    // Ignore if set_password fails
+                }
             }
             try {
                 $client->grantPrivileges($dbName, $dbUser);
@@ -218,8 +224,12 @@ class DeploymentService
 
         $scriptName = 'deploy_bootstrap_'.time().'.php';
         $client->saveFileContent($remoteDir.'/'.$scriptName, $scriptContent);
+        try {
+            $client->saveFileContent($remoteDir.'/public/'.$scriptName, $scriptContent);
+        } catch (\Exception $ignored) {
+        }
 
-        // Invoke the script via HTTP
+        // Invoke the script via HTTP (first try direct domain, fallback to server IP with Host header)
         $url = "https://{$domain}/{$scriptName}?token={$secretToken}";
 
         try {
@@ -229,13 +239,31 @@ class DeploymentService
 
             if ($response->successful()) {
                 Log::info('Bootstrap output: '.substr($response->body(), 0, 1000));
+                return;
             } else {
-                // The script may have self-destructed before the response was sent;
-                // this is expected on some hosts. Log as warning rather than error.
-                Log::warning("Bootstrap HTTP {$response->status()} — script may have self-destructed before response completed.");
+                Log::warning("Bootstrap HTTP {$response->status()} via domain — will try fallback via server IP.");
             }
         } catch (\Exception $e) {
-            // Connection reset / timeout is expected if the script self-destructed.
+            Log::info("Domain direct invocation issue ({$e->getMessage()}), attempting fallback via server IP...");
+        }
+
+        // Fallback: invoke via Server IP with Host header if domain DNS is not yet resolving
+        try {
+            $serverIp = $client->getServerIp();
+            if ($serverIp && $serverIp !== 'Unknown') {
+                $ipUrl = "http://{$serverIp}/{$scriptName}?token={$secretToken}";
+                $response = Http::withoutVerifying()
+                    ->withHeaders(['Host' => $domain])
+                    ->timeout(180)
+                    ->get($ipUrl);
+
+                if ($response->successful()) {
+                    Log::info('Bootstrap output via server IP: '.substr($response->body(), 0, 1000));
+                } else {
+                    Log::warning("Bootstrap HTTP {$response->status()} via server IP — script may have completed or self-destructed.");
+                }
+            }
+        } catch (\Exception $e) {
             Log::warning('Bootstrap script HTTP call issue (may be normal): '.$e->getMessage());
         }
     }

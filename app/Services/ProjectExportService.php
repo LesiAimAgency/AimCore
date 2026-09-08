@@ -107,13 +107,33 @@ class ProjectExportService
             'storage/framework/cache' => 'storage/framework/cache',
             'storage/framework/sessions' => 'storage/framework/sessions',
             'storage/framework/views' => 'storage/framework/views',
-            'storage/logs' => 'storage/logs',
         ];
+
+        // Determine public exclusions
+        $publicExcludes = [
+            'storage',
+            'Front-end',
+            'viettinmartdemo',
+        ];
+
+        // Only include the project's own theme in public/themes
+        $projectCode = strtolower($project->code);
+        $themesDir = $basePath.'/public/themes';
+        if (File::isDirectory($themesDir)) {
+            foreach (File::directories($themesDir) as $themePath) {
+                $themeName = basename($themePath);
+                // If the theme folder doesn't match the project code or theme, exclude it
+                if (! str_contains(strtolower($themeName), $projectCode)) {
+                    $publicExcludes[] = 'themes/'.$themeName;
+                }
+            }
+        }
 
         foreach ($directories as $source => $dest) {
             $sourcePath = $basePath.'/'.$source;
             if (File::exists($sourcePath)) {
-                $this->robustCopyDirectory($sourcePath, $exportPath.'/'.$dest);
+                $excludes = ($source === 'public') ? $publicExcludes : [];
+                $this->robustCopyDirectory($sourcePath, $exportPath.'/'.$dest, $excludes);
             }
         }
 
@@ -123,11 +143,14 @@ class ProjectExportService
         // Copy /routes but strip superadmin.php and patch project.php
         $this->copyRoutesWithoutSuperAdmin($basePath, $exportPath);
 
-        // Ensure storage dirs exist
+        // Ensure storage dirs exist cleanly with .gitkeep
         $storageDirs = [
             'storage/framework/cache/data',
             'storage/framework/testing',
+            'storage/framework/sessions',
+            'storage/framework/views',
             'storage/app/public',
+            'storage/logs',
         ];
         foreach ($storageDirs as $dir) {
             if (! File::exists($exportPath.'/'.$dir)) {
@@ -167,7 +190,7 @@ PHP;
         }
     }
 
-    private function robustCopyDirectory(string $source, string $dest): void
+    private function robustCopyDirectory(string $source, string $dest, array $excludePatterns = []): void
     {
         if (! is_dir($dest)) {
             @mkdir($dest, 0755, true);
@@ -183,6 +206,17 @@ PHP;
             if ($item->isLink()) {
                 continue; // Skip symlinks to avoid recursion or broken links
             }
+
+            $subPath = str_replace('\\', '/', $iterator->getSubPathname());
+
+            // Check exclusion patterns
+            foreach ($excludePatterns as $pattern) {
+                $pattern = str_replace('\\', '/', $pattern);
+                if ($subPath === $pattern || str_starts_with($subPath, rtrim($pattern, '/').'/')) {
+                    continue 2;
+                }
+            }
+
             $target = $dest.DIRECTORY_SEPARATOR.$iterator->getSubPathname();
             if ($item->isDir()) {
                 if (! is_dir($target)) {
@@ -504,10 +538,11 @@ if (! isset($_GET['token']) || $_GET['token'] !== $token) {
 set_time_limit(300);
 echo '<pre>';
 
-// 1. Load .env to get DB credentials
-$envPath = __DIR__ . '/.env';
+// 1. Locate base directory and .env
+$baseDir = file_exists(__DIR__ . '/../.env') ? dirname(__DIR__) : __DIR__;
+$envPath = $baseDir . '/.env';
 if (! file_exists($envPath)) {
-    die('ERROR: .env file not found.');
+    die('ERROR: .env file not found at ' . $envPath);
 }
 
 $env = [];
@@ -525,10 +560,10 @@ $dbName = $env['DB_DATABASE'] ?? '';
 $dbUser = $env['DB_USERNAME'] ?? '';
 $dbPass = $env['DB_PASSWORD'] ?? '';
 
-echo "Connecting to database {$dbName}...\n";
+echo "Connecting to database {$dbName} on {$dbHost}...\n";
 
 // 2. Import database SQL
-$sqlFile = __DIR__ . '/database/database.sql';
+$sqlFile = $baseDir . '/database/database.sql';
 if (file_exists($sqlFile)) {
     $mysqli = new mysqli($dbHost, $dbUser, $dbPass, $dbName);
     if ($mysqli->connect_error) {
@@ -564,7 +599,7 @@ if (file_exists($sqlFile)) {
 // 3. Run Artisan commands if exec() is available
 if (function_exists('exec')) {
     $php = PHP_BINARY ?: 'php';
-    $artisan = __DIR__ . '/artisan';
+    $artisan = $baseDir . '/artisan';
     if (file_exists($artisan)) {
         $commands = [
             'key:generate --force',

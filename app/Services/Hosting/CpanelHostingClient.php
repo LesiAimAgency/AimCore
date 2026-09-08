@@ -110,6 +110,16 @@ class CpanelHostingClient implements HostingClientInterface
         return true;
     }
 
+    public function setDatabaseUserPassword(string $dbUser, string $password): bool
+    {
+        $this->callUapi('Mysql', 'set_password', [
+            'user' => $dbUser,
+            'password' => $password,
+        ]);
+
+        return true;
+    }
+
     public function grantPrivileges(string $dbName, string $dbUser): bool
     {
         $this->callUapi('Mysql', 'set_privileges_on_database', [
@@ -132,12 +142,13 @@ class CpanelHostingClient implements HostingClientInterface
             ->withHeaders([
                 'Authorization' => 'cpanel '.trim($this->profile->cpanel_username).':'.trim($this->profile->api_token),
             ])
-            ->timeout(300) // Upload can take time
+            ->timeout(1200) // Upload large archives can take time
             ->attach(
-                'file-1', file_get_contents($localPath), $remoteFileName
+                'file-1', fopen($localPath, 'r'), $remoteFileName
             )
             ->post($url, [
                 'dir' => $remoteDir,
+                'overwrite' => 1,
             ]);
 
         if ($response->failed()) {
@@ -164,6 +175,17 @@ class CpanelHostingClient implements HostingClientInterface
 
     public function extractZip(string $remoteFilePath, string $remoteExtractDir): bool
     {
+        $cpanelUser = trim($this->profile->cpanel_username);
+        $homePrefix = "/home/{$cpanelUser}/";
+
+        if (! str_starts_with($remoteFilePath, '/home/')) {
+            $remoteFilePath = $homePrefix.ltrim($remoteFilePath, '/');
+        }
+
+        if (! str_starts_with($remoteExtractDir, '/home/')) {
+            $remoteExtractDir = $homePrefix.ltrim($remoteExtractDir, '/');
+        }
+
         $host = preg_replace('/^https?:\/\//', '', $this->profile->hostname);
         $host = rtrim($host, '/');
         $port = $this->profile->port ?: 2083;
@@ -173,14 +195,15 @@ class CpanelHostingClient implements HostingClientInterface
             ->withHeaders([
                 'Authorization' => 'cpanel '.trim($this->profile->cpanel_username).':'.trim($this->profile->api_token),
             ])
-            ->timeout(300)
+            ->timeout(600)
             ->get($url, [
                 'cpanel_jsonapi_apiversion' => '2',
                 'cpanel_jsonapi_module' => 'Fileman',
                 'cpanel_jsonapi_func' => 'fileop',
                 'op' => 'extract',
                 'sourcefiles' => $remoteFilePath,
-                'destdir' => $remoteExtractDir,
+                'destfiles' => $remoteExtractDir,
+                'doubledecode' => '1',
             ]);
 
         if ($response->failed()) {
@@ -194,8 +217,8 @@ class CpanelHostingClient implements HostingClientInterface
         }
 
         // Also check if there's an error message inside the data array
-        if (isset($data['cpanelresult']['data'][0]['status']) && $data['cpanelresult']['data'][0]['status'] === 0) {
-            $errorMsg = $data['cpanelresult']['data'][0]['statusmsg'] ?? 'Unknown extract error';
+        if (isset($data['cpanelresult']['data'][0]['result']) && $data['cpanelresult']['data'][0]['result'] === 0) {
+            $errorMsg = $data['cpanelresult']['data'][0]['output'] ?? ($data['cpanelresult']['data'][0]['statusmsg'] ?? 'Unknown extract error');
             throw new \Exception('cPanel API2 Extract Error: '.$errorMsg);
         }
 
