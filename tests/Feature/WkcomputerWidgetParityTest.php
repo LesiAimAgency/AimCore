@@ -88,6 +88,12 @@ class WkcomputerWidgetParityTest extends TestCase
             $this->assertStringNotContainsString('Preview Error', $preview, "Widget preview error for {$type}");
             $this->assertStringNotContainsString('widget-error', $preview, "Widget error div for {$type}");
         }
+
+        $heroPreview = WidgetRegistry::getPreview('wk_hero_slider', ['project_id' => $this->wkProject->id]);
+        $this->assertStringNotContainsString('banner-dash-border', $heroPreview);
+        $this->assertStringContainsString('wk-hero-banner-item', $heroPreview);
+        $this->assertStringContainsString('/storage/media/project-wkcomputer/1788832998_banner1-1-min.png.webp', $heroPreview);
+        $this->assertStringContainsString('/storage/media/project-wkcomputer/1788832996_baner-1.jpg.webp', $heroPreview);
     }
 
     public function test_wk_admin_widgets_preview_endpoint_does_not_fail_with_csrf_error(): void
