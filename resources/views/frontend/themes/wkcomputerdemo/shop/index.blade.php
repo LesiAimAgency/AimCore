@@ -222,7 +222,7 @@
 
                 {{-- Pagination --}}
                 <div style="display:flex;justify-content:center;">
-                    {{ $products->withQueryString()->links('vendor.pagination.tailwind') }}
+                    {{ $products->withQueryString()->links('vendor.pagination.theme') }}
                 </div>
                 @else
                 <div style="background:#fff;border-radius:16px;border:1px solid #f1f5f9;padding:60px 20px;text-align:center;">

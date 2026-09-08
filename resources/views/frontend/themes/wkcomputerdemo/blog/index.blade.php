@@ -56,7 +56,7 @@
 
         @if(method_exists($posts, 'links'))
         <div style="display:flex;justify-content:center;">
-            {{ $posts->links('vendor.pagination.tailwind') }}
+            {{ $posts->links('vendor.pagination.theme') }}
         </div>
         @endif
         @else
