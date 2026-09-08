@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Project;
 use App\Models\Wkcomputer\WkOrder;
-use App\Models\Wkcomputer\WkOrderItem;
 use App\Models\Wkcomputer\WkProduct;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
