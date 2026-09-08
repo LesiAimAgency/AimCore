@@ -661,17 +661,77 @@
 
 <div class="wk-bottom-sheet" id="sheet-cart">
     <div class="wk-bottom-sheet-header">
-        Giỏ hàng
+        <span>Giỏ hàng (<span class="wk-cart-count-text">{{ (int) collect(session('cart', []))->sum('qty') }}</span>)</span>
         <button type="button" class="wk-bottom-sheet-close"><i class="fas fa-times"></i></button>
     </div>
-    <div class="wk-bottom-sheet-content">
-        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;">
-            <div style="width:120px;height:120px;background:#f1f5f9;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:24px;">
-                <i class="fas fa-search" style="font-size:48px;color:#cbd5e1;"></i>
+    <div class="wk-bottom-sheet-content" id="sheet-cart-content">
+        @php
+            $sheetCart = session('cart', []);
+            $sheetSubtotal = collect($sheetCart)->sum(fn ($i) => ($i['price'] ?? 0) * ($i['qty'] ?? 1));
+            $hasItems = !empty($sheetCart);
+        @endphp
+
+        <div id="sheet-cart-items-wrap" style="{{ !$hasItems ? 'display:none;' : '' }}">
+            <div id="sheet-cart-list" style="max-height:360px;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:12px;">
+                @foreach($sheetCart as $k => $cItem)
+                @php
+                    $cImg = $cItem['image'] ?? null;
+                    if ($cImg && !str_starts_with($cImg, 'http') && !str_starts_with($cImg, '/')) {
+                        $cImg = '/media-files/' . $cImg;
+                    }
+                    $cPrice = $cItem['price'] ?? 0;
+                    $cQty = $cItem['qty'] ?? 1;
+                @endphp
+                <div class="sheet-cart-item" data-key="{{ $k }}" style="display:flex;gap:12px;align-items:center;padding-bottom:12px;border-bottom:1px solid #f1f5f9;">
+                    <div style="width:58px;height:58px;border-radius:8px;border:1px solid #e2e8f0;overflow:hidden;flex-shrink:0;background:#fff;display:flex;align-items:center;justify-content:center;padding:2px;">
+                        @if($cImg)
+                            <img src="{{ $cImg }}" alt="{{ $cItem['name'] ?? '' }}" style="max-width:100%;max-height:100%;object-fit:contain;">
+                        @else
+                            <i class="fas fa-image" style="color:#cbd5e1;"></i>
+                        @endif
+                    </div>
+                    <div style="flex:1;min-width:0;">
+                        <a href="{{ !empty($cItem['slug']) ? url($cItem['slug']) : '#' }}" style="font-size:13px;font-weight:600;color:#1e293b;text-decoration:none;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.3;margin-bottom:4px;">
+                            {{ $cItem['name'] ?? 'Sản phẩm' }}
+                        </a>
+                        <div style="display:flex;align-items:center;justify-content:space-between;">
+                            <span style="font-size:13px;font-weight:700;color:var(--wk-primary, #e11d48);">
+                                {{ number_format($cPrice, 0, ',', '.') }}₫
+                            </span>
+                            <span style="font-size:12px;color:#64748b;background:#f1f5f9;padding:2px 8px;border-radius:12px;">
+                                SL: {{ $cQty }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
             </div>
-            <p style="color:#64748b;font-size:14px;margin-bottom:24px;">Không có sản phẩm nào trong giỏ hàng</p>
-            <a href="{{ route('cart.page') }}" class="wk-btn" style="background:var(--wk-primary);color:#fff;border-radius:8px;padding:10px 24px;font-weight:600;">
-                Tới trang giỏ hàng
+
+            <div style="padding:16px;background:#f8fafc;border-top:1px solid #e2e8f0;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-size:14px;">
+                    <span style="color:#64748b;font-weight:500;">Tạm tính:</span>
+                    <strong id="sheet-cart-subtotal" style="font-size:16px;color:var(--wk-primary, #e11d48);font-weight:800;">
+                        {{ number_format($sheetSubtotal, 0, ',', '.') }}₫
+                    </strong>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <a href="{{ route('cart.page') }}" class="wk-btn" style="background:#fff;color:#1e293b;border:1.5px solid #cbd5e1;border-radius:8px;padding:10px 14px;font-weight:600;text-align:center;text-decoration:none;font-size:13px;display:block;">
+                        Xem giỏ hàng
+                    </a>
+                    <a href="{{ route('checkout.index') }}" class="wk-btn" style="background:var(--wk-primary, #e11d48);color:#fff;border-radius:8px;padding:10px 14px;font-weight:700;text-align:center;text-decoration:none;font-size:13px;display:block;">
+                        Thanh toán
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="sheet-cart-empty" style="{{ $hasItems ? 'display:none;' : 'display:flex;' }}flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center;">
+            <div style="width:90px;height:90px;background:#f1f5f9;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+                <i class="fas fa-shopping-cart" style="font-size:36px;color:#cbd5e1;"></i>
+            </div>
+            <p style="color:#64748b;font-size:14px;margin-bottom:20px;font-weight:500;">Không có sản phẩm nào trong giỏ hàng</p>
+            <a href="{{ route('shop.index') }}" class="wk-btn" style="background:var(--wk-primary, #e11d48);color:#fff;border-radius:8px;padding:10px 24px;font-weight:600;text-decoration:none;font-size:13px;">
+                Tới trang cửa hàng
             </a>
         </div>
     </div>
@@ -680,27 +740,68 @@
 
 <div class="wk-bottom-sheet" id="sheet-account">
     <div class="wk-bottom-sheet-header">
-        Tài khoản
+        <span>Tài khoản</span>
         <button type="button" class="wk-bottom-sheet-close"><i class="fas fa-times"></i></button>
     </div>
     <div class="wk-bottom-sheet-content">
-        <div class="wk-account-header">
+        <div class="wk-account-header" style="background:var(--wk-secondary, #dc2626);padding:24px 20px;text-align:center;color:#fff;">
             @auth
-            <div style="font-weight:700;font-size:16px;">{{ auth()->user()->name }}</div>
-            <div style="font-size:12px;opacity:.8;">{{ auth()->user()->email }}</div>
+            <div style="font-weight:700;font-size:16px;margin-bottom:4px;">{{ auth()->user()->name }}</div>
+            <div style="font-size:12px;opacity:.85;margin-bottom:12px;">{{ auth()->user()->email }}</div>
+            <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                @csrf
+                <button type="submit" style="background:rgba(255,255,255,.2);color:#fff;border:none;padding:6px 18px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;">Đăng xuất</button>
+            </form>
             @else
-            <a href="{{ route('login') }}" style="display:inline-block;background:#fff;color:var(--wk-secondary);padding:10px 32px;border-radius:8px;font-weight:600;text-decoration:none;">Đăng ký / Đăng nhập</a>
+            <a href="{{ route('login') }}" style="display:inline-block;background:#fff;color:var(--wk-secondary, #dc2626);padding:10px 32px;border-radius:8px;font-weight:700;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.12);">Đăng ký / Đăng nhập</a>
             @endauth
         </div>
-        <div class="wk-account-menu">
-            <a href="{{ route('profile') }}" class="wk-account-menu-item"><i class="fas fa-clipboard-list"></i> Quản lý đơn hàng <i class="fas fa-chevron-right"></i></a>
-            <a href="{{ route('wishlist') }}" class="wk-account-menu-item"><i class="fas fa-heart"></i> Sản phẩm yêu thích <i class="fas fa-chevron-right"></i></a>
-            <a href="{{ route('profile') }}" class="wk-account-menu-item"><i class="fas fa-map-marker-alt"></i> Sổ địa chỉ <i class="fas fa-chevron-right"></i></a>
-            <a href="#" class="wk-account-menu-item"><i class="fas fa-shield-alt"></i> Chính sách và điều khoản <i class="fas fa-chevron-right"></i></a>
-            <a href="#" class="wk-account-menu-item"><i class="fas fa-store"></i> Hệ thống Showroom <i class="fas fa-chevron-right"></i></a>
-            <a href="#" class="wk-account-menu-item"><i class="fas fa-cogs"></i> Xây dựng cấu hình <i class="fas fa-chevron-right"></i></a>
-            <a href="tel:18006865" class="wk-account-menu-item"><i class="fas fa-headset"></i> Chăm sóc khách hàng <strong style="color:var(--wk-secondary);margin-left:4px;">1800 6865</strong></a>
-            <a href="tel:18006867" class="wk-account-menu-item"><i class="fas fa-phone-alt"></i> Gọi mua hàng <strong style="color:var(--wk-secondary);margin-left:4px;">1800 6867</strong></a>
+
+        @php
+            $mobileAccountMenu = \App\Models\Menu::withoutGlobalScopes()
+                ->where(function($q) {
+                    $pid = function_exists('current_project') && current_project() ? current_project()->id : 14;
+                    $q->where('project_id', $pid)->orWhere('location', 'mobile_account')->orWhere('slug', 'mobile-account');
+                })
+                ->where(function($q) {
+                    $q->where('location', 'mobile_account')->orWhere('slug', 'mobile-account');
+                })
+                ->with(['items' => fn($q) => $q->withoutGlobalScopes()->whereNull('parent_id')->orderBy('order')])
+                ->first();
+        @endphp
+
+        <div class="wk-account-menu" style="padding:8px 0;">
+            @if($mobileAccountMenu && $mobileAccountMenu->items->isNotEmpty())
+                @foreach($mobileAccountMenu->items as $mItem)
+                    @php
+                        $itemUrl = $mItem->url;
+                        if (!str_starts_with($itemUrl, 'http') && !str_starts_with($itemUrl, 'tel:') && !str_starts_with($itemUrl, '#') && !str_starts_with($itemUrl, '/')) {
+                            $itemUrl = '/' . $itemUrl;
+                        }
+                    @endphp
+                    <a href="{{ $itemUrl }}" class="wk-account-menu-item" {!! $mItem->target ? 'target="'.$mItem->target.'"' : '' !!} style="display:flex;align-items:center;padding:14px 20px;color:#334155;text-decoration:none;border-bottom:1px solid #f8fafc;font-size:14px;font-weight:500;gap:12px;transition:background .15s;">
+                        @if($mItem->icon)
+                            <i class="{{ $mItem->icon }}" style="width:20px;text-align:center;color:#64748b;font-size:15px;"></i>
+                        @else
+                            <i class="fas fa-chevron-circle-right" style="width:20px;text-align:center;color:#64748b;font-size:15px;"></i>
+                        @endif
+                        <span style="flex:1;">{{ $mItem->title }}</span>
+                        @if($mItem->badge)
+                            <strong style="color:var(--wk-secondary, #dc2626);font-size:13px;font-weight:700;margin-right:4px;">{{ $mItem->badge }}</strong>
+                        @endif
+                        <i class="fas fa-chevron-right" style="font-size:11px;color:#cbd5e1;"></i>
+                    </a>
+                @endforeach
+            @else
+                <a href="{{ route('account.orders') }}" class="wk-account-menu-item" style="display:flex;align-items:center;padding:14px 20px;color:#334155;text-decoration:none;border-bottom:1px solid #f8fafc;font-size:14px;font-weight:500;gap:12px;"><i class="fas fa-clipboard-list" style="width:20px;text-align:center;color:#64748b;"></i> <span style="flex:1;">Quản lý đơn hàng</span> <i class="fas fa-chevron-right" style="font-size:11px;color:#cbd5e1;"></i></a>
+                <a href="{{ route('wishlist') }}" class="wk-account-menu-item" style="display:flex;align-items:center;padding:14px 20px;color:#334155;text-decoration:none;border-bottom:1px solid #f8fafc;font-size:14px;font-weight:500;gap:12px;"><i class="fas fa-heart" style="width:20px;text-align:center;color:#64748b;"></i> <span style="flex:1;">Sản phẩm yêu thích</span> <i class="fas fa-chevron-right" style="font-size:11px;color:#cbd5e1;"></i></a>
+                <a href="{{ route('profile') }}" class="wk-account-menu-item" style="display:flex;align-items:center;padding:14px 20px;color:#334155;text-decoration:none;border-bottom:1px solid #f8fafc;font-size:14px;font-weight:500;gap:12px;"><i class="fas fa-map-marker-alt" style="width:20px;text-align:center;color:#64748b;"></i> <span style="flex:1;">Sổ địa chỉ</span> <i class="fas fa-chevron-right" style="font-size:11px;color:#cbd5e1;"></i></a>
+                <a href="{{ url('/chinh-sach-giao-hang') }}" class="wk-account-menu-item" style="display:flex;align-items:center;padding:14px 20px;color:#334155;text-decoration:none;border-bottom:1px solid #f8fafc;font-size:14px;font-weight:500;gap:12px;"><i class="fas fa-shield-alt" style="width:20px;text-align:center;color:#64748b;"></i> <span style="flex:1;">Chính sách và điều khoản</span> <i class="fas fa-chevron-right" style="font-size:11px;color:#cbd5e1;"></i></a>
+                <a href="{{ route('contact.index') }}" class="wk-account-menu-item" style="display:flex;align-items:center;padding:14px 20px;color:#334155;text-decoration:none;border-bottom:1px solid #f8fafc;font-size:14px;font-weight:500;gap:12px;"><i class="fas fa-store" style="width:20px;text-align:center;color:#64748b;"></i> <span style="flex:1;">Hệ thống Showroom</span> <i class="fas fa-chevron-right" style="font-size:11px;color:#cbd5e1;"></i></a>
+                <a href="{{ route('build_pc.index') }}" class="wk-account-menu-item" style="display:flex;align-items:center;padding:14px 20px;color:var(--wk-primary, #e11d48);text-decoration:none;border-bottom:1px solid #f8fafc;font-size:14px;font-weight:600;gap:12px;"><i class="fas fa-cogs" style="width:20px;text-align:center;"></i> <span style="flex:1;">Xây dựng cấu hình</span> <i class="fas fa-chevron-right" style="font-size:11px;color:#cbd5e1;"></i></a>
+                <a href="tel:18006865" class="wk-account-menu-item" style="display:flex;align-items:center;padding:14px 20px;color:#334155;text-decoration:none;border-bottom:1px solid #f8fafc;font-size:14px;font-weight:500;gap:12px;"><i class="fas fa-headset" style="width:20px;text-align:center;color:#64748b;"></i> <span style="flex:1;">Chăm sóc khách hàng</span> <strong style="color:var(--wk-secondary, #dc2626);font-size:13px;font-weight:700;margin-right:4px;">1800 6865</strong> <i class="fas fa-chevron-right" style="font-size:11px;color:#cbd5e1;"></i></a>
+                <a href="tel:18006867" class="wk-account-menu-item" style="display:flex;align-items:center;padding:14px 20px;color:#334155;text-decoration:none;border-bottom:1px solid #f8fafc;font-size:14px;font-weight:500;gap:12px;"><i class="fas fa-phone-alt" style="width:20px;text-align:center;color:#64748b;"></i> <span style="flex:1;">Gọi mua hàng</span> <strong style="color:var(--wk-secondary, #dc2626);font-size:13px;font-weight:700;margin-right:4px;">1800 6867</strong> <i class="fas fa-chevron-right" style="font-size:11px;color:#cbd5e1;"></i></a>
+            @endif
         </div>
     </div>
 </div>

@@ -74,9 +74,13 @@ Route::post('/review/submit', fn () => response()->json(['success' => true, 'mes
 // ─── CUSTOMER AUTH & ACCOUNT ──────────────────────────────────────────
 Route::get('/khach-hang/dang-nhap', [AuthController::class, 'showLogin'])->name('customer.login');
 Route::post('/khach-hang/dang-nhap', [AuthController::class, 'login']);
+Route::get('/dang-nhap', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/dang-nhap', [AuthController::class, 'login'])->name('login.post');
 Route::get('/khach-hang/dang-ky', [AuthController::class, 'showRegister'])->name('customer.register');
-Route::post('/khach-hang/dang-ky', [AuthController::class, 'register']);
+Route::get('/dang-ky', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/khach-hang/dang-ky', [AuthController::class, 'register'])->name('register.post');
 Route::post('/khach-hang/dang-xuat', [AuthController::class, 'logout'])->name('customer.logout');
+Route::post('/dang-xuat', [AuthController::class, 'logout'])->name('logout');
 
 Route::prefix('tai-khoan')->middleware('auth')->group(function () {
     Route::get('/thong-tin', [AuthController::class, 'profile'])->name('profile');

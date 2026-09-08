@@ -32,15 +32,15 @@
             </div>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 340px; gap:24px; align-items:start;">
+        <div class="wk-cart-layout">
 
             {{-- Cart Items Left Panel --}}
-            <div style="background:#fff; border-radius:8px; padding:16px;">
+            <div class="wk-cart-main-panel">
                 
                 {{-- Table Header --}}
-                <div style="display:grid; grid-template-columns: 32px 1fr 120px 120px 140px; align-items:center; padding-bottom:12px; border-bottom:1px solid #f1f5f9; margin-bottom:12px; font-size:14px; font-weight:700; color:#333;">
+                <div class="wk-cart-table-header">
                     <div style="text-align:center;"><input type="checkbox" checked style="width:16px; height:16px; accent-color:#e11d48; cursor:pointer;"></div>
-                    <div>WKcomputer</div>
+                    <div>Sản phẩm</div>
                     <div style="text-align:center;">Đơn giá</div>
                     <div style="text-align:center;">Số lượng</div>
                     <div style="text-align:right;">Thành tiền</div>
@@ -56,55 +56,61 @@
                     $itemSlug = $item['slug'] ?? null;
                     $itemTotal = ($item['price'] ?? 0) * ($item['qty'] ?? 1);
                 @endphp
-                <div style="display:grid; grid-template-columns: 32px 1fr 120px 120px 140px; align-items:start; padding:16px 0; {{ !$loop->last ? 'border-bottom:1px solid #f1f5f9;' : '' }}">
-                    <div style="text-align:center; padding-top:40px;">
+                <div class="wk-cart-item-row" data-key="{{ $key }}">
+                    <div class="wk-cart-col-check">
                         <input type="checkbox" checked style="width:16px; height:16px; accent-color:#e11d48; cursor:pointer;">
                     </div>
                     
-                    <div style="display:flex; gap:16px;">
-                        <a href="{{ $itemSlug ? url($itemSlug) : '#' }}" style="width:80px; height:80px; border:1px solid #e2e8f0; border-radius:4px; display:flex; align-items:center; justify-content:center; padding:4px; flex-shrink:0; text-decoration:none;">
+                    <div class="wk-cart-col-product">
+                        <a href="{{ $itemSlug ? url($itemSlug) : '#' }}" class="wk-cart-img-box">
                             @if($itemImage)
-                            <img src="{{ $itemImage }}" style="max-width:100%; max-height:100%; object-fit:contain;">
+                            <img src="{{ $itemImage }}" alt="{{ $item['name'] }}">
                             @else
                             <i class="fas fa-image" style="font-size:24px; color:#cbd5e1;"></i>
                             @endif
                         </a>
-                        <div>
-                            <a href="{{ $itemSlug ? url($itemSlug) : '#' }}" style="font-size:14px; font-weight:400; color:#333; text-decoration:none; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:4px; line-height:1.4;">
+                        <div class="wk-cart-info-box">
+                            <a href="{{ $itemSlug ? url($itemSlug) : '#' }}" class="wk-cart-item-name">
                                 {{ $item['name'] }}
                             </a>
-                            <div style="font-size:12px; color:#82869e;">
+                            <div class="wk-cart-item-sku">
                                 SKU: {{ $item['sku'] ?? $key }}<br>
                                 Phân loại: Mặc định
+                            </div>
+                            <div class="wk-cart-mobile-price">
+                                <span class="wk-cart-mobile-unit-price">{{ number_format($item['price'] ?? 0, 0, ',', '.') }}₫</span>
+                                @if(!empty($item['original_price']) && $item['original_price'] > $item['price'])
+                                <span class="wk-cart-mobile-orig-price">{{ number_format($item['original_price'], 0, ',', '.') }}₫</span>
+                                @endif
                             </div>
                         </div>
                     </div>
                     
-                    <div style="text-align:center; padding-top:20px;">
-                        <div style="font-weight:700; font-size:16px; color:#111827;">{{ number_format($item['price'] ?? 0, 0, ',', '.') }}₫</div>
+                    <div class="wk-cart-col-price">
+                        <div style="font-weight:700; font-size:15px; color:#111827;">{{ number_format($item['price'] ?? 0, 0, ',', '.') }}₫</div>
                         @if(!empty($item['original_price']) && $item['original_price'] > $item['price'])
                         <div style="font-size:12px; color:#94a3b8; text-decoration:line-through; margin-top:4px;">{{ number_format($item['original_price'], 0, ',', '.') }}₫</div>
                         @endif
                     </div>
                     
-                    <div style="text-align:center; display:flex; flex-direction:column; align-items:center; padding-top:20px;">
-                        <form method="POST" action="{{ route('cart.update') }}" class="cart-qty-form" data-key="{{ $key }}" style="display:flex; border:1px solid #e2e8f0; border-radius:4px; overflow:hidden;">
+                    <div class="wk-cart-col-qty">
+                        <form method="POST" action="{{ route('cart.update') }}" class="cart-qty-form" data-key="{{ $key }}" style="display:inline-flex; border:1px solid #e2e8f0; border-radius:4px; overflow:hidden; background:#fff;">
                             @csrf
                             <input type="hidden" name="key" value="{{ $key }}">
                             <input type="hidden" name="product_id" value="{{ $key }}">
-                            <button type="button" onclick="changeQty(this, -1)" style="width:30px; height:28px; background:#f8f9fa; border:none; cursor:pointer; color:#64748b; font-size:16px;">-</button>
-                            <input type="number" name="qty" value="{{ $item['qty'] ?? 1 }}" min="1" max="99" onchange="submitQty(this)" style="width:40px; height:28px; text-align:center; border:none; border-left:1px solid #e2e8f0; border-right:1px solid #e2e8f0; font-size:14px; outline:none; -moz-appearance:textfield;">
-                            <button type="button" onclick="changeQty(this, 1)" style="width:30px; height:28px; background:#f8f9fa; border:none; cursor:pointer; color:#64748b; font-size:16px;">+</button>
+                            <button type="button" onclick="changeQty(this, -1)" style="width:28px; height:28px; background:#f8f9fa; border:none; cursor:pointer; color:#64748b; font-size:15px; line-height:1;">-</button>
+                            <input type="number" name="qty" value="{{ $item['qty'] ?? 1 }}" min="1" max="99" onchange="submitQty(this)" style="width:38px; height:28px; text-align:center; border:none; border-left:1px solid #e2e8f0; border-right:1px solid #e2e8f0; font-size:13px; outline:none; -moz-appearance:textfield;">
+                            <button type="button" onclick="changeQty(this, 1)" style="width:28px; height:28px; background:#f8f9fa; border:none; cursor:pointer; color:#64748b; font-size:15px; line-height:1;">+</button>
                         </form>
-                        <form method="POST" action="{{ route('cart.remove') }}" class="cart-remove-form" data-key="{{ $key }}" onsubmit="return removeItem(this, event);" style="margin-top:8px;">
+                        <form method="POST" action="{{ route('cart.remove') }}" class="cart-remove-form" data-key="{{ $key }}" onsubmit="return removeItem(this, event);" style="margin-top:6px;">
                             @csrf
                             <input type="hidden" name="key" value="{{ $key }}">
                             <input type="hidden" name="product_id" value="{{ $key }}">
-                            <button type="submit" style="background:none; border:none; color:#0ea5e9; font-size:13px; cursor:pointer;">Xóa</button>
+                            <button type="submit" style="background:none; border:none; color:#ef4444; font-size:12px; cursor:pointer; padding:0;"><i class="far fa-trash-alt" style="margin-right:2px;"></i> Xóa</button>
                         </form>
                     </div>
                     
-                    <div class="cart-item-total" data-key="{{ $key }}" style="text-align:right; font-weight:700; font-size:16px; color:#111827; padding-top:20px;">
+                    <div class="wk-cart-col-total cart-item-total" data-key="{{ $key }}">
                         {{ number_format($itemTotal, 0, ',', '.') }}₫
                     </div>
                 </div>
@@ -112,7 +118,7 @@
             </div>
 
             {{-- Summary Right Panel --}}
-            <div style="display:flex; flex-direction:column; gap:16px; position:sticky; top:20px;">
+            <div class="wk-cart-summary-col">
                 
                 {{-- Promotions --}}
                 <div style="background:#fff; border-radius:8px; padding:16px;">
@@ -183,6 +189,193 @@
 </div>
 
 <style>
+/* WK Cart Responsive Styles */
+.wk-cart-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+    align-items: start;
+}
+.wk-cart-main-panel {
+    background: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.wk-cart-summary-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: sticky;
+    top: 20px;
+}
+.wk-cart-table-header {
+    display: grid;
+    grid-template-columns: 32px 1fr 120px 120px 140px;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+}
+.wk-cart-item-row {
+    display: grid;
+    grid-template-columns: 32px 1fr 120px 120px 140px;
+    align-items: start;
+    padding: 16px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+.wk-cart-item-row:last-child {
+    border-bottom: none;
+}
+.wk-cart-col-check {
+    text-align: center;
+    padding-top: 30px;
+}
+.wk-cart-col-product {
+    display: flex;
+    gap: 14px;
+    padding-right: 12px;
+}
+.wk-cart-img-box {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    flex-shrink: 0;
+    text-decoration: none;
+    background: #fff;
+}
+.wk-cart-img-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+.wk-cart-info-box {
+    flex: 1;
+    min-width: 0;
+}
+.wk-cart-item-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+    text-decoration: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 4px;
+    line-height: 1.4;
+}
+.wk-cart-item-name:hover {
+    color: #e11d48;
+}
+.wk-cart-item-sku {
+    font-size: 12px;
+    color: #82869e;
+}
+.wk-cart-mobile-price {
+    display: none;
+}
+.wk-cart-col-price {
+    text-align: center;
+    padding-top: 20px;
+}
+.wk-cart-col-qty {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+.wk-cart-col-total {
+    text-align: right;
+    font-weight: 700;
+    font-size: 16px;
+    color: #e11d48;
+    padding-top: 20px;
+}
+
+@media (max-width: 991px) {
+    .wk-cart-layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .wk-cart-summary-col {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .wk-cart-table-header {
+        display: none;
+    }
+    .wk-cart-item-row {
+        display: flex;
+        flex-wrap: wrap;
+        position: relative;
+        padding: 14px 0;
+        gap: 8px;
+    }
+    .wk-cart-col-check {
+        padding-top: 0;
+        margin-right: 4px;
+    }
+    .wk-cart-col-product {
+        flex: 1;
+        min-width: 0;
+        padding-right: 0;
+    }
+    .wk-cart-img-box {
+        width: 64px;
+        height: 64px;
+    }
+    .wk-cart-col-price {
+        display: none;
+    }
+    .wk-cart-mobile-price {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 4px;
+    }
+    .wk-cart-mobile-unit-price {
+        font-weight: 700;
+        font-size: 14px;
+        color: #e11d48;
+    }
+    .wk-cart-mobile-orig-price {
+        font-size: 11px;
+        color: #94a3b8;
+        text-decoration: line-through;
+    }
+    .wk-cart-col-qty {
+        padding-top: 4px;
+        padding-left: 28px;
+        flex-direction: row;
+        gap: 12px;
+        align-items: center;
+        width: auto;
+    }
+    .wk-cart-col-qty form {
+        margin-top: 0 !important;
+    }
+    .wk-cart-col-total {
+        margin-left: auto;
+        padding-top: 4px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #111827;
+        align-self: center;
+    }
+}
+
 /* Remove default number input spinners */
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 

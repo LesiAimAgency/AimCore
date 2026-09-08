@@ -331,6 +331,7 @@
                     <option value="footer">Footer (Menu chân trang)</option>
                     <option value="topbar">Topbar (Menu thanh trên cùng)</option>
                     <option value="mobile">Mobile (Menu di động)</option>
+                    <option value="mobile_account">Mobile Account (Menu tài khoản mobile)</option>
                     <option value="custom">Tùy chỉnh khác</option>
                 </select>
             </div>
@@ -362,7 +363,8 @@
                     <option value="footer" {{ $selectedMenu->location === 'footer' ? 'selected' : '' }}>Footer (Menu chân trang)</option>
                     <option value="topbar" {{ $selectedMenu->location === 'topbar' ? 'selected' : '' }}>Topbar (Menu thanh trên cùng)</option>
                     <option value="mobile" {{ $selectedMenu->location === 'mobile' ? 'selected' : '' }}>Mobile (Menu di động)</option>
-                    <option value="custom" {{ !in_array($selectedMenu->location, ['header', 'footer', 'topbar', 'mobile']) ? 'selected' : '' }}>Tùy chỉnh khác</option>
+                    <option value="mobile_account" {{ $selectedMenu->location === 'mobile_account' ? 'selected' : '' }}>Mobile Account (Menu tài khoản mobile)</option>
+                    <option value="custom" {{ !in_array($selectedMenu->location, ['header', 'footer', 'topbar', 'mobile', 'mobile_account']) ? 'selected' : '' }}>Tùy chỉnh khác</option>
                 </select>
             </div>
             <div class="flex items-center gap-2 pt-1">

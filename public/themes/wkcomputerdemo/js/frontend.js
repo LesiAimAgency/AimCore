@@ -4,19 +4,83 @@ document.addEventListener("DOMContentLoaded", function () {
     const getEndpoint = (key, fallback) => (window.wkEndpoints && window.wkEndpoints[key]) ? window.wkEndpoints[key] : (isWk ? '/wkcomputer' + fallback : fallback);
 
     function p() {
+        refreshSheetCart();
+    }
+
+    function refreshSheetCart() {
+        const dropdownUrl = getEndpoint('cartDropdown', '/gio-hang/dropdown');
         const countUrl = getEndpoint('cartCount', '/gio-hang/so-luong');
-        fetch(countUrl)
+
+        fetch(dropdownUrl)
             .then(e => e.json())
-            .then(e => {
-                const t = e.count !== undefined ? e.count : (typeof e === 'number' ? e : 0);
-                document.querySelectorAll(".wk-cart-count").forEach(n => {
-                    n.textContent = t;
-                    n.style.display = t > 0 ? "flex" : "none";
+            .then(data => {
+                const count = data.count !== undefined ? data.count : 0;
+                document.querySelectorAll(".wk-cart-count, .wk-cart-count-text").forEach(n => {
+                    n.textContent = count;
+                    if (n.classList.contains('wk-cart-count')) {
+                        n.style.display = count > 0 ? "flex" : "none";
+                    }
                 });
+
+                const wrap = document.getElementById('sheet-cart-items-wrap');
+                const empty = document.getElementById('sheet-cart-empty');
+                const list = document.getElementById('sheet-cart-list');
+                const subtotal = document.getElementById('sheet-cart-subtotal');
+
+                if (wrap && empty && list) {
+                    if (data.items && data.items.length > 0) {
+                        wrap.style.display = 'block';
+                        empty.style.display = 'none';
+                        if (subtotal) {
+                            subtotal.textContent = $(data.subtotal || 0) + '₫';
+                        }
+                        const prefix = getBase();
+                        list.innerHTML = data.items.map(item => {
+                            let img = item.image || '';
+                            if (img && !img.startsWith('http') && !img.startsWith('/')) {
+                                img = '/media-files/' + img;
+                            }
+                            const price = $(item.price || 0) + '₫';
+                            const url = item.slug ? (prefix + '/' + item.slug) : '#';
+                            return `
+                                <div class="sheet-cart-item" data-key="${item.id}" style="display:flex;gap:12px;align-items:center;padding-bottom:12px;border-bottom:1px solid #f1f5f9;">
+                                    <div style="width:58px;height:58px;border-radius:8px;border:1px solid #e2e8f0;overflow:hidden;flex-shrink:0;background:#fff;display:flex;align-items:center;justify-content:center;padding:2px;">
+                                        ${img ? `<img src="${img}" alt="" style="max-width:100%;max-height:100%;object-fit:contain;">` : `<i class="fas fa-image" style="color:#cbd5e1;"></i>`}
+                                    </div>
+                                    <div style="flex:1;min-width:0;">
+                                        <a href="${url}" style="font-size:13px;font-weight:600;color:#1e293b;text-decoration:none;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.3;margin-bottom:4px;">
+                                            ${item.name || 'Sản phẩm'}
+                                        </a>
+                                        <div style="display:flex;align-items:center;justify-content:space-between;">
+                                            <span style="font-size:13px;font-weight:700;color:var(--wk-primary, #e11d48);">${price}</span>
+                                            <span style="font-size:12px;color:#64748b;background:#f1f5f9;padding:2px 8px;border-radius:12px;">SL: ${item.qty || 1}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                    } else {
+                        wrap.style.display = 'none';
+                        empty.style.display = 'flex';
+                    }
+                }
             })
-            .catch(() => { });
+            .catch(() => {
+                fetch(countUrl)
+                    .then(e => e.json())
+                    .then(e => {
+                        const t = e.count !== undefined ? e.count : (typeof e === 'number' ? e : 0);
+                        document.querySelectorAll(".wk-cart-count, .wk-cart-count-text").forEach(n => {
+                            n.textContent = t;
+                            if (n.classList.contains('wk-cart-count')) {
+                                n.style.display = t > 0 ? "flex" : "none";
+                            }
+                        });
+                    }).catch(() => {});
+            });
     }
     p();
+    window.refreshSheetCart = refreshSheetCart;
 
     const u = document.querySelector(".wk-cat-trigger"), r = document.querySelector(".wk-cat-panel");
     let S;

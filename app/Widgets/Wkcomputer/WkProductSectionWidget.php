@@ -64,6 +64,20 @@ class WkProductSectionWidget extends BaseWidget
                     'default' => '',
                 ],
                 [
+                    'name' => 'banner_image',
+                    'label' => 'Banner danh mục / khối (Hình ảnh hoặc URL)',
+                    'type' => 'image',
+                    'default' => '',
+                    'help' => 'Chọn hình ảnh hoặc dán URL banner hiển thị ở đầu khối sản phẩm',
+                ],
+                [
+                    'name' => 'banner_link',
+                    'label' => 'Link liên kết của Banner (URL)',
+                    'type' => 'url',
+                    'default' => '',
+                    'help' => 'Đường dẫn khi nhấp vào banner (tùy chọn)',
+                ],
+                [
                     'name' => 'link',
                     'label' => 'Đường dẫn Xem tất cả (tùy chọn)',
                     'type' => 'text',
@@ -153,6 +167,11 @@ class WkProductSectionWidget extends BaseWidget
         }
 
         $icon = $config['icon'] ?? $this->resolveIcon($title, $category?->slug);
+        $bannerImage = $config['banner_image'] ?? null;
+        if (empty($bannerImage) && $category && !empty($category->image)) {
+            $bannerImage = $category->image;
+        }
+        $bannerLink = !empty($config['banner_link']) ? $config['banner_link'] : ($viewAllUrl ?: route('shop.index'));
 
         return view('widgets.wkcomputer.product_section', [
             'widget' => $this,
@@ -163,6 +182,8 @@ class WkProductSectionWidget extends BaseWidget
             'products' => $products,
             'viewAllUrl' => $viewAllUrl ?: route('shop.index'),
             'columns' => $config['columns'] ?? '5',
+            'bannerImage' => $bannerImage,
+            'bannerLink' => $bannerLink,
         ])->render();
     }
 

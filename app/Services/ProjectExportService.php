@@ -269,13 +269,18 @@ PHP;
             File::delete($superAdminRoute);
         }
 
-        // Patch web.php: remove superadmin require
+        // Patch web.php: remove superadmin require & ensure root route redirects to storefront
         $webRoute = $routesDest.'/web.php';
         if (File::exists($webRoute)) {
             $content = File::get($webRoute);
             $content = str_replace(
                 "require __DIR__.'/superadmin.php';",
                 '// SuperAdmin routes removed for standalone deployment',
+                $content
+            );
+            $content = str_replace(
+                "return view('coming-soon');",
+                "return redirect('/wkcomputer');",
                 $content
             );
             File::put($webRoute, $content);
@@ -320,17 +325,19 @@ PHP;
             'products_enhanced', 'product_categories',
             'product_attributes', 'attribute_groups',
             'product_attribute_values', 'product_attribute_value_mappings',
-            'product_variations', 'brands',
+            'product_variations', 'brands', 'product_combos',
             'brand_product', 'product_attribute_product', 'product_category_product',
             'reviews', 'product_reviews',
             'coupons', 'flash_sale_campaigns', 'flash_sale_items',
             // Orders
-            'orders', 'order_items', 'order_status_history',
+            'orders', 'order_items', 'order_status_history', 'order_status_histories',
             // Shipping
             'shipping_carriers', 'shipping_zones', 'shipping_zone_locations',
             'shipping_rules', 'shipping_rule_conditions', 'shipping_rate_versions',
-            // Project Core & Settings (Single project scoped)
-            'projects', 'project_settings',
+            // Project Core, Tenants & Settings (Single project scoped)
+            'projects', 'project_settings', 'tenants',
+            // System Framework
+            'sessions', 'cache', 'cache_locks',
         ];
     }
 
@@ -340,11 +347,8 @@ PHP;
         $sql .= '-- Generated on: '.now()->format('Y-m-d H:i:s')."\n";
         $sql .= "-- NOTE: Includes project data and shared test/template data.\n\n";
         $sql .= "SET FOREIGN_KEY_CHECKS=0;\n";
-        $sql .= "SET SQL_MODE='NO_AUTO_VALUE_ON_ZERO';\n";
-        $sql .= "/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;\n";
-        $sql .= "/*!40101 SET NAMES utf8mb4 */;\n";
-        $sql .= "/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;\n";
-        $sql .= "/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;\n\n";
+        $sql .= "SET UNIQUE_CHECKS=0;\n";
+        $sql .= "SET NAMES utf8mb4;\n\n";
 
         $existingTables = array_map(
             fn ($t) => array_values((array) $t)[0],
@@ -357,11 +361,8 @@ PHP;
             $sql .= $this->exportTableSQL($table, $project);
         }
 
-        $sql .= "SET FOREIGN_KEY_CHECKS=1;\n";
-        $sql .= "/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;\n";
-        $sql .= "/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;\n";
-        $sql .= "/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;\n";
-        $sql .= "/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;\n";
+        $sql .= "\nSET FOREIGN_KEY_CHECKS=1;\n";
+        $sql .= "SET UNIQUE_CHECKS=1;\n";
 
         return $sql;
     }
@@ -398,7 +399,7 @@ PHP;
                     $q->where('tenant_id', $project->tenant_id);
                 }
                 $q->orWhereNull('tenant_id')
-                  ->orWhere('tenant_id', 0);
+                    ->orWhere('tenant_id', 0);
             });
         } elseif (in_array($table, ['roles', 'permissions', 'role_permissions', 'languages', 'fonts', 'term_relationships', 'product_attributes', 'attribute_groups', 'product_reviews', 'coupons', 'flash_sale_campaigns', 'flash_sale_items'])) {
             // Shared system and e-commerce test tables: export all
@@ -423,8 +424,8 @@ PHP;
             // Project data + all shared/default test data (where project_id is null or 0)
             $query->where(function ($q) use ($project) {
                 $q->where('project_id', $project->id)
-                  ->orWhereNull('project_id')
-                  ->orWhere('project_id', 0);
+                    ->orWhereNull('project_id')
+                    ->orWhere('project_id', 0);
             });
         } elseif (in_array('tenant_id', $columns)) {
             $query->where(function ($q) use ($project) {
@@ -432,8 +433,8 @@ PHP;
                     $q->where('tenant_id', $project->tenant_id);
                 }
                 $q->orWhere('tenant_id', $project->id)
-                  ->orWhereNull('tenant_id')
-                  ->orWhere('tenant_id', 0);
+                    ->orWhereNull('tenant_id')
+                    ->orWhere('tenant_id', 0);
             });
         }
 
@@ -608,28 +609,23 @@ if (file_exists($sqlFile)) {
         echo "WARN: Could not connect to MySQL: " . ($mysqli ? $mysqli->connect_error : 'Connection error') . "\n";
     } else {
         $mysqli->set_charset('utf8mb4');
+        mysqli_report(MYSQLI_REPORT_OFF);
 
-    // Chunked import – safer than multi_query on large files
-    $sql       = file_get_contents($sqlFile);
-    $delimiter = ';';
-    $statements = explode($delimiter, $sql);
-
-    $imported = 0;
-    $errors   = 0;
-    foreach ($statements as $statement) {
-        $statement = trim($statement);
-        if (empty($statement) || str_starts_with($statement, '--') || str_starts_with($statement, '/*')) {
-            continue;
-        }
-        if (! $mysqli->query($statement)) {
-            echo "  WARN: " . $mysqli->error . "\n";
-            $errors++;
+        $sql = file_get_contents($sqlFile);
+        if ($mysqli->multi_query($sql)) {
+            $imported = 0;
+            do {
+                $imported++;
+                if ($res = $mysqli->store_result()) {
+                    $res->free();
+                }
+            } while ($mysqli->more_results() && $mysqli->next_result());
+            echo "Database imported: {$imported} query batches executed.\n";
         } else {
-            $imported++;
+            echo "WARN: multi_query failed: " . $mysqli->error . "\n";
         }
+        $mysqli->close();
     }
-    $mysqli->close();
-    echo "Database imported: {$imported} statements, {$errors} warnings.\n";
 } else {
     echo "WARN: database/database.sql not found, skipping DB import.\n";
 }

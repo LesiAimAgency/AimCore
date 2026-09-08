@@ -4,6 +4,24 @@
 
 <section class="wk-section wk-widget-product-section" style="padding:16px 0;">
     <div class="wk-container">
+        @if(!empty($bannerImage))
+            @php
+                $resolvedBanner = $bannerImage;
+                if (!str_starts_with($resolvedBanner, 'http') && !str_starts_with($resolvedBanner, '/')) {
+                    $resolvedBanner = '/media-files/' . $resolvedBanner;
+                }
+            @endphp
+            <div class="wk-section-banner" style="margin-bottom: 16px; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                @if(!empty($bannerLink))
+                    <a href="{{ $bannerLink }}" style="display:block; line-height:0;">
+                        <img src="{{ $resolvedBanner }}" alt="{{ $title ?? 'Banner' }}" style="width:100%; height:auto; max-height:220px; object-fit:cover; border-radius:8px; display:block;">
+                    </a>
+                @else
+                    <img src="{{ $resolvedBanner }}" alt="{{ $title ?? 'Banner' }}" style="width:100%; height:auto; max-height:220px; object-fit:cover; border-radius:8px; display:block;">
+                @endif
+            </div>
+        @endif
+
         <div class="wk-section-header">
             <h2 class="wk-section-title">
                 <i class="{{ $icon ?? 'fas fa-fire' }}"></i>
