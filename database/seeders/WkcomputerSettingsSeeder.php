@@ -13,13 +13,11 @@ class WkcomputerSettingsSeeder extends Seeder
     {
         if (! $projectId) {
             $project = Project::where('code', 'wkcomputer')->first();
-            $projectId = $project ? $project->id : null;
-        }
-
-        if (! $projectId) {
-            $this->command?->error("Project 'wkcomputer' not found.");
-
-            return;
+            if (! $project) {
+                [$project, $tenant] = (new WkcomputerMasterSeeder)->ensureProjectAndTenant($projectId, $tenantId);
+            }
+            $projectId = $project->id;
+            $tenantId = $tenantId ?? $project->tenant_id;
         }
 
         $showrooms = [

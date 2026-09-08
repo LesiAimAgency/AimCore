@@ -14,7 +14,11 @@ class WkcomputerWidgetsSeeder extends Seeder
     {
         if (! $projectId) {
             $project = Project::where('code', 'wkcomputer')->first();
-            $projectId = $project ? $project->id : 14;
+            if (! $project) {
+                [$project, $tenant] = (new WkcomputerMasterSeeder)->ensureProjectAndTenant($projectId, $tenantId);
+            }
+            $projectId = $project->id;
+            $tenantId = $tenantId ?? $project->tenant_id;
         }
         $tenantId = $tenantId ?? $projectId;
 
