@@ -193,6 +193,7 @@
         </button>
         <div x-show="open==='appearance'" x-cloak x-collapse class="sub-menu">
             <a href="{{ locale_route('admin.settings.group', 'appearance') }}" class="sub-item {{ request()->routeIs('*.theme-options.*') || request()->is('*/admin/theme-options') || request()->is('*/admin/settings/group/appearance') ? 'active' : '' }}"><span class="dot"></span> Cấu hình UX</a>
+            <a href="{{ locale_route('admin.settings.group', 'appearance') }}#footer" class="sub-item"><span class="dot"></span> Thanh dịch vụ & Footer</a>
             <a href="{{ locale_route('admin.menus.index') }}" class="sub-item {{ request()->routeIs('*.menus.*') ? 'active' : '' }}"><span class="dot"></span> Menu</a>
             <a href="{{ locale_route('admin.widgets.index') }}" class="sub-item {{ request()->routeIs('*.widgets.*') && !request()->routeIs('*.widget-templates.*') ? 'active' : '' }}"><span class="dot"></span> Widgets</a>
             <a href="{{ locale_route('admin.media.index') }}" class="sub-item {{ request()->routeIs('*.media.*') ? 'active' : '' }}"><span class="dot"></span> Media</a>

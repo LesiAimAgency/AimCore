@@ -989,6 +989,158 @@ html:not(.alpine-loaded):not([data-admin-tab]) .ap-nav-btn[data-tab-target="desi
                                 </div>
                             </div>
                         </div>
+                    {{-- FOOTER & THANH DỊCH VỤ --}}
+                    <div x-show="activeTab === 'footer'" x-cloak class="ap-tab-pane" data-tab="footer"
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 translate-y-2"
+                        x-transition:enter-end="opacity-100 translate-y-0">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h2 class="card-title text-xl font-bold text-slate-800">Cấu hình Thanh Dịch Vụ & Footer</h2>
+                                <p class="text-xs text-slate-500 mt-1">Quản trị thanh cam kết dịch vụ/chính sách và thông tin liên hệ dưới chân trang</p>
+                            </div>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-600 border border-emerald-200">
+                                <i class="fa-solid fa-circle-check text-[10px]"></i> Hiển thị toàn trang
+                            </span>
+                        </div>
+
+                        <div style="display:flex;flex-direction:column;gap:20px;">
+                            {{-- Section: Service Bar Config --}}
+                            <div class="card" style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#fff;">
+                                <div class="card-header" style="background:#f8fafc;padding:14px 20px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;">
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        <div style="width:32px;height:32px;border-radius:8px;background:#eff6ff;color:#2563eb;display:flex;align-items:center;justify-content:center;font-size:14px;">
+                                            <i class="fa-solid fa-shield-halved"></i>
+                                        </div>
+                                        <div>
+                                            <span style="font-weight:700;font-size:14px;color:#1e293b;">Thanh Cam Kết Dịch Vụ (Service Bar)</span>
+                                            <p style="font-size:11px;color:#64748b;margin:0;">Hiển thị phía trên Footer các chính sách: giao hàng, chính hãng, đổi trả, trả góp, bảo hành</p>
+                                        </div>
+                                    </div>
+                                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin:0;">
+                                        <input type="hidden" name="settings[service_bar_enabled]" value="0">
+                                        <input type="checkbox" name="settings[service_bar_enabled]" value="1" {{ ($settingsMap['service_bar_enabled'] ?? '1') == '1' ? 'checked' : '' }} style="width:18px;height:18px;accent-color:#2563eb;">
+                                        <span style="font-size:12px;font-weight:600;color:#334155;">Bật hiển thị</span>
+                                    </label>
+                                </div>
+                                <div class="card-body" style="padding:20px;">
+                                    <div style="display:flex;flex-direction:column;gap:16px;">
+                                        @php
+                                            $defaultServices = [
+                                                1 => [
+                                                    'icon' => 'fa-solid fa-truck-fast',
+                                                    'title' => 'Giao hàng siêu tốc 2h',
+                                                    'desc' => 'Miễn phí vận chuyển đơn từ 500k',
+                                                    'link' => '/cua-hang'
+                                                ],
+                                                2 => [
+                                                    'icon' => 'fa-solid fa-shield-halved',
+                                                    'title' => '100% Chính hãng',
+                                                    'desc' => 'Bảo hành chính hãng 12 - 36 tháng',
+                                                    'link' => '/cua-hang'
+                                                ],
+                                                3 => [
+                                                    'icon' => 'fa-solid fa-arrows-rotate',
+                                                    'title' => 'Lỗi 1 đổi 1 trong 30 ngày',
+                                                    'desc' => 'Thủ tục nhanh gọn, đổi mới ngay',
+                                                    'link' => '/cua-hang'
+                                                ],
+                                                4 => [
+                                                    'icon' => 'fa-solid fa-credit-card',
+                                                    'title' => 'Trả góp 0% linh hoạt',
+                                                    'desc' => 'Qua thẻ tín dụng, Kredivo, Fundiin',
+                                                    'link' => '/dat-hang'
+                                                ],
+                                                5 => [
+                                                    'icon' => 'fa-solid fa-headset',
+                                                    'title' => 'Hỗ trợ kỹ thuật 24/7',
+                                                    'desc' => 'Đội ngũ kỹ thuật viên chuyên nghiệp',
+                                                    'link' => '/lien-he'
+                                                ],
+                                            ];
+                                        @endphp
+
+                                        @for($i = 1; $i <= 5; $i++)
+                                        @php
+                                            $def = $defaultServices[$i];
+                                            $curIcon = $settingsMap["service_item_{$i}_icon"] ?? $def['icon'];
+                                            $curTitle = $settingsMap["service_item_{$i}_title"] ?? $def['title'];
+                                            $curDesc = $settingsMap["service_item_{$i}_desc"] ?? $def['desc'];
+                                            $curLink = $settingsMap["service_item_{$i}_link"] ?? $def['link'];
+                                        @endphp
+                                        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;">
+                                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                                                <span style="font-size:12px;font-weight:700;color:#2563eb;text-transform:uppercase;letter-spacing:0.05em;">
+                                                    <i class="fa-solid fa-hashtag mr-1"></i> Mục Dịch Vụ {{ $i }}
+                                                </span>
+                                                <span style="font-size:11px;color:#94a3b8;">Vị trí cột {{ $i }}</span>
+                                            </div>
+                                            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                                                <div>
+                                                    <label class="form-label text-xs font-semibold text-slate-600 mb-1 block">Icon (FontAwesome hoặc Ảnh)</label>
+                                                    <div style="display:flex;gap:6px;">
+                                                        <input type="text" name="settings[service_item_{{ $i }}_icon]" id="service_item_{{ $i }}_icon" value="{{ $curIcon }}" class="form-input text-xs" placeholder="fa-solid fa-...">
+                                                        <button type="button" onclick="openMediaPicker('service_item_{{ $i }}_icon')" class="btn btn-secondary btn-sm" title="Chọn ảnh"><i class="fa-solid fa-image"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="form-label text-xs font-semibold text-slate-600 mb-1 block">Tiêu đề chính *</label>
+                                                    <input type="text" name="settings[service_item_{{ $i }}_title]" value="{{ $curTitle }}" class="form-input text-xs font-semibold" placeholder="Ví dụ: Giao hàng 2h">
+                                                </div>
+                                                <div>
+                                                    <label class="form-label text-xs font-semibold text-slate-600 mb-1 block">Mô tả phụ</label>
+                                                    <input type="text" name="settings[service_item_{{ $i }}_desc]" value="{{ $curDesc }}" class="form-input text-xs" placeholder="Ví dụ: Miễn phí từ 500k">
+                                                </div>
+                                                <div>
+                                                    <label class="form-label text-xs font-semibold text-slate-600 mb-1 block">Đường dẫn (Link URL)</label>
+                                                    <input type="text" name="settings[service_item_{{ $i }}_link]" value="{{ $curLink }}" class="form-input text-xs" placeholder="Ví dụ: /cua-hang hoặc #">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endfor
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Section: Footer Hotline & Info --}}
+                            <div class="card" style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#fff;">
+                                <div class="card-header" style="background:#f8fafc;padding:14px 20px;border-bottom:1px solid #e2e8f0;">
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        <div style="width:32px;height:32px;border-radius:8px;background:#fef3c7;color:#d97706;display:flex;align-items:center;justify-content:center;font-size:14px;">
+                                            <i class="fa-solid fa-headset"></i>
+                                        </div>
+                                        <div>
+                                            <span style="font-weight:700;font-size:14px;color:#1e293b;">Thông Tin Hotline & Chân Trang (Footer Top)</span>
+                                            <p style="font-size:11px;color:#64748b;margin:0;">Các thông tin liên hệ hiển thị ở thanh đầu tiên của Footer</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="padding:20px;">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label class="form-label text-xs font-semibold text-slate-600 mb-1 block">Hotline tư vấn mua hàng</label>
+                                            <input type="text" name="settings[footer_hotline_sales]" value="{{ $settingsMap['footer_hotline_sales'] ?? '1900 6868 (Miễn phí)' }}" class="form-input text-xs" placeholder="1900 6868">
+                                        </div>
+                                        <div>
+                                            <label class="form-label text-xs font-semibold text-slate-600 mb-1 block">Hotline bảo hành, kỹ thuật</label>
+                                            <input type="text" name="settings[footer_hotline_tech]" value="{{ $settingsMap['footer_hotline_tech'] ?? '1900 8686 (8h30 - 20h30)' }}" class="form-input text-xs" placeholder="1900 8686">
+                                        </div>
+                                        <div>
+                                            <label class="form-label text-xs font-semibold text-slate-600 mb-1 block">Email hỗ trợ & CSKH</label>
+                                            <input type="text" name="settings[footer_email]" value="{{ $settingsMap['footer_email'] ?? 'support@wkcomputer.vn' }}" class="form-input text-xs" placeholder="support@wkcomputer.vn">
+                                        </div>
+                                        <div>
+                                            <label class="form-label text-xs font-semibold text-slate-600 mb-1 block">Giờ mở cửa làm việc</label>
+                                            <input type="text" name="settings[footer_hours]" value="{{ $settingsMap['footer_hours'] ?? '08:30 - 21:30 (Cả Thứ 7, CN & Ngày lễ)' }}" class="form-input text-xs" placeholder="08:30 - 21:30">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="form-label text-xs font-semibold text-slate-600 mb-1 block">Dòng bản quyền chân trang (Copyright)</label>
+                                        <input type="text" name="settings[footer_copyright]" value="{{ $settingsMap['footer_copyright'] ?? '© 2026 WKcomputer.vn - Hệ thống máy tính & linh kiện hàng đầu. All rights reserved.' }}" class="form-input text-xs" placeholder="© 2026 WKcomputer.vn...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

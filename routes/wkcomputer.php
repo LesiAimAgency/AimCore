@@ -51,6 +51,9 @@ Route::get('/dat-hang/thanh-cong/{orderNumber}', [CheckoutController::class, 'su
 Route::get('/order-track', [CheckoutController::class, 'trackOrder'])->name('order.track');
 Route::post('/order-track', [CheckoutController::class, 'trackOrderPost'])->name('order.track.post');
 Route::post('/payment/kredivo/calculate', [CheckoutController::class, 'kredivoCalculate'])->name('kredivo.calculate');
+Route::get('/api/locations/districts/{provinceCode}', [CheckoutController::class, 'getDistricts'])->name('locations.districts');
+Route::get('/api/locations/wards/{districtCode}', [CheckoutController::class, 'getWards'])->name('locations.wards');
+
 
 // ─── CONTACT ────────────────────────────────────────────────
 Route::get('/lien-he', [ContactController::class, 'index'])->name('contact.index');

@@ -209,4 +209,59 @@ class CheckoutController extends Controller
             'message' => 'Kredivo chưa được kích hoạt cho dự án này.',
         ]);
     }
+
+    public function getDistricts($provinceCode)
+    {
+        $file = public_path('data/provinces.json');
+        if (! file_exists($file)) {
+            return response()->json([]);
+        }
+
+        $data = json_decode(file_get_contents($file), true);
+        if (! is_array($data)) {
+            return response()->json([]);
+        }
+
+        foreach ($data as $p) {
+            if ((string) ($p['code'] ?? '') === (string) $provinceCode) {
+                $districts = array_map(fn ($d) => [
+                    'code' => $d['code'],
+                    'name' => $d['name'],
+                ], $p['districts'] ?? []);
+
+                return response()->json($districts);
+            }
+        }
+
+        return response()->json([]);
+    }
+
+    public function getWards($districtCode)
+    {
+        $file = public_path('data/provinces.json');
+        if (! file_exists($file)) {
+            return response()->json([]);
+        }
+
+        $data = json_decode(file_get_contents($file), true);
+        if (! is_array($data)) {
+            return response()->json([]);
+        }
+
+        foreach ($data as $p) {
+            foreach ($p['districts'] ?? [] as $d) {
+                if ((string) ($d['code'] ?? '') === (string) $districtCode) {
+                    $wards = array_map(fn ($w) => [
+                        'code' => $w['code'],
+                        'name' => $w['name'],
+                    ], $d['wards'] ?? []);
+
+                    return response()->json($wards);
+                }
+            }
+        }
+
+        return response()->json([]);
+    }
 }
+

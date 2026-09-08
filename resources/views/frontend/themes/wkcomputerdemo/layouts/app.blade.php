@@ -417,6 +417,206 @@
 </main>
 
 {{-- ===================================================
+     THANH DỊCH VỤ & CAM KẾT (Service Bar)
+====================================================== --}}
+@php
+    $serviceBarEnabled = setting('service_bar_enabled', '1');
+    $serviceItems = [];
+    $defaultServices = [
+        1 => [
+            'icon' => 'fa-solid fa-truck-fast',
+            'title' => 'Giao hàng siêu tốc 2h',
+            'desc' => 'Miễn phí vận chuyển đơn từ 500k',
+            'link' => route('shop.index'),
+        ],
+        2 => [
+            'icon' => 'fa-solid fa-shield-halved',
+            'title' => '100% Chính hãng',
+            'desc' => 'Bảo hành chính hãng 12 - 36 tháng',
+            'link' => route('shop.index'),
+        ],
+        3 => [
+            'icon' => 'fa-solid fa-arrows-rotate',
+            'title' => 'Lỗi 1 đổi 1 trong 30 ngày',
+            'desc' => 'Thủ tục nhanh gọn, đổi mới ngay',
+            'link' => route('shop.index'),
+        ],
+        4 => [
+            'icon' => 'fa-solid fa-credit-card',
+            'title' => 'Trả góp 0% linh hoạt',
+            'desc' => 'Qua thẻ tín dụng, Kredivo, Fundiin',
+            'link' => route('checkout.index'),
+        ],
+        5 => [
+            'icon' => 'fa-solid fa-headset',
+            'title' => 'Hỗ trợ kỹ thuật 24/7',
+            'desc' => 'Đội ngũ kỹ thuật viên chuyên nghiệp',
+            'link' => route('contact.index'),
+        ],
+    ];
+
+    for ($i = 1; $i <= 5; $i++) {
+        $icon = setting("service_item_{$i}_icon", $defaultServices[$i]['icon']);
+        $title = setting("service_item_{$i}_title", $defaultServices[$i]['title']);
+        $desc = setting("service_item_{$i}_desc", $defaultServices[$i]['desc']);
+        $link = setting("service_item_{$i}_link", $defaultServices[$i]['link']);
+
+        if (!empty($title)) {
+            $serviceItems[] = [
+                'icon' => $icon,
+                'title' => $title,
+                'desc' => $desc,
+                'link' => $link ?: '#',
+            ];
+        }
+    }
+@endphp
+
+@if($serviceBarEnabled == '1' && !empty($serviceItems))
+<section class="wk-service-bar" id="wk-service-bar">
+    <div class="wk-container">
+        <div class="wk-service-grid">
+            @foreach($serviceItems as $item)
+            <a href="{{ $item['link'] }}" class="wk-service-item">
+                <div class="wk-service-icon">
+                    @if(str_contains($item['icon'], 'fa-') && !str_contains($item['icon'], '/'))
+                        <i class="{{ $item['icon'] }}"></i>
+                    @elseif(!empty($item['icon']))
+                        <img src="{{ asset($item['icon']) }}" alt="{{ $item['title'] }}">
+                    @else
+                        <i class="fa-solid fa-check"></i>
+                    @endif
+                </div>
+                <div class="wk-service-content">
+                    <h4 class="wk-service-title">{{ $item['title'] }}</h4>
+                    <p class="wk-service-desc">{{ $item['desc'] }}</p>
+                </div>
+            </a>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
+<style>
+/* ─── WK SERVICE BAR (Thanh dịch vụ & Cam kết) ─── */
+.wk-service-bar {
+    background: #ffffff;
+    border-top: 1px solid #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 22px 0;
+    margin-top: 24px;
+}
+.wk-service-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    align-items: stretch;
+}
+.wk-service-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.wk-service-item:hover {
+    background: #ffffff;
+    border-color: #e11d48;
+    box-shadow: 0 8px 20px rgba(225, 29, 72, 0.08);
+    transform: translateY(-2px);
+}
+.wk-service-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #e11d48;
+    font-size: 18px;
+    transition: all 0.25s ease;
+}
+.wk-service-item:hover .wk-service-icon {
+    background: #e11d48;
+    color: #ffffff;
+    border-color: #e11d48;
+    box-shadow: 0 4px 10px rgba(225, 29, 72, 0.25);
+}
+.wk-service-icon img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+.wk-service-content {
+    flex: 1;
+    min-width: 0;
+}
+.wk-service-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 3px 0;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.wk-service-desc {
+    font-size: 11.5px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+@media (max-width: 1200px) {
+    .wk-service-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media (max-width: 768px) {
+    .wk-service-bar {
+        padding: 16px 0;
+        margin-top: 16px;
+    }
+    .wk-service-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .wk-service-item {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+    .wk-service-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 16px;
+    }
+    .wk-service-title {
+        font-size: 12.5px;
+    }
+    .wk-service-desc {
+        font-size: 11px;
+    }
+}
+@media (max-width: 480px) {
+    .wk-service-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+}
+</style>
+
+{{-- ===================================================
      FOOTER
 ====================================================== --}}
 <footer class="wk-footer">
@@ -428,28 +628,28 @@
                     <i class="fas fa-headset"></i>
                     <div>
                         <h5>Hotline tư vấn mua hàng</h5>
-                        <p>1900 xxxx (Miễn phí)</p>
+                        <p>{{ setting('footer_hotline_sales', '1900 6868 (Miễn phí)') }}</p>
                     </div>
                 </div>
                 <div class="wk-footer-hotline-item">
                     <i class="fas fa-tools"></i>
                     <div>
                         <h5>Hotline bảo hành, sửa chữa</h5>
-                        <p>1900 yyyy</p>
+                        <p>{{ setting('footer_hotline_tech', '1900 8686 (8h30 - 20h30)') }}</p>
                     </div>
                 </div>
                 <div class="wk-footer-hotline-item">
                     <i class="fas fa-envelope"></i>
                     <div>
                         <h5>Email hỗ trợ</h5>
-                        <p>support@WKcomputer.vn</p>
+                        <p>{{ setting('footer_email', 'support@wkcomputer.vn') }}</p>
                     </div>
                 </div>
                 <div class="wk-footer-hotline-item">
                     <i class="fas fa-clock"></i>
                     <div>
                         <h5>Giờ làm việc</h5>
-                        <p>08:00 - 21:00 (T2 - T7)</p>
+                        <p>{{ setting('footer_hours', '08:30 - 21:30 (Cả CN & Ngày lễ)') }}</p>
                     </div>
                 </div>
             </div>
@@ -538,9 +738,7 @@
     <div class="wk-container">
         <div class="wk-footer-bottom">
             <div style="color:#6b7280;font-size:12px;">
-                &copy; {{ date('Y') }} WKcomputer. All rights reserved.
-                <span style="margin:0 6px;">|</span>
-                Thiết kế bởi WKTeam
+                {{ setting('footer_copyright', '© ' . date('Y') . ' WKcomputer. All rights reserved. | Thiết kế bởi WKTeam') }}
             </div>
             <div style="display:flex;align-items:center;gap:12px;">
                 <span style="font-size:11px;color:#6b7280;">Phương thức thanh toán:</span>

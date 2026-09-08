@@ -110,8 +110,8 @@
                                 <i class="fas fa-check check-icon" style="display:none; position:absolute; top:4px; right:4px; color:#fff; font-size:10px;"></i>
                             </label>
 
-                            <div style="border:1px solid #e2e8f0; border-radius:4px;">
-                                <label class="payment-method-box" style="display:block; padding:16px; cursor:pointer; position:relative; overflow:hidden;" onclick="selectPayment(this); fetchKredivoOptions()">
+                            <div id="kredivo-wrapper" style="border:1px solid #e2e8f0; border-radius:4px; transition:border-color 0.2s;">
+                                <label class="payment-method-box" style="display:block; padding:16px; cursor:pointer; position:relative; overflow:hidden;" onclick="selectPayment(this)">
                                     <input type="radio" name="payment_method" value="kredivo" style="display:none;">
                                     <div style="font-weight:700; font-size:14px; color:#111827;">Mua trước trả sau Kredivo</div>
                                     <div style="font-size:12px; color:#64748b; margin-top:4px;">Trả góp linh hoạt qua Kredivo</div>
@@ -243,20 +243,40 @@
 
 <script>
 function selectPayment(element) {
-    // Reset all boxes
-    const boxes = document.querySelectorAll('.payment-method-box');
-    boxes.forEach(box => {
+    const radio = element.querySelector('input[type="radio"]');
+    const allBoxes = document.querySelectorAll('.payment-method-box');
+    const kredivoWrapper = document.getElementById('kredivo-wrapper');
+    const kredivoContainer = document.getElementById('kredivo-options-container');
+
+    allBoxes.forEach(box => {
         box.style.borderColor = '#e2e8f0';
-        box.querySelector('.check-mark').style.display = 'none';
-        box.querySelector('.check-icon').style.display = 'none';
-        box.querySelector('input[type="radio"]').checked = false;
+        const mark = box.querySelector('.check-mark');
+        const icon = box.querySelector('.check-icon');
+        if (mark) mark.style.display = 'none';
+        if (icon) icon.style.display = 'none';
+        const r = box.querySelector('input[type="radio"]');
+        if (r) r.checked = false;
     });
-    
-    // Set active box
-    element.style.borderColor = '#e11d48';
-    element.querySelector('.check-mark').style.display = 'block';
-    element.querySelector('.check-icon').style.display = 'block';
-    element.querySelector('input[type="radio"]').checked = true;
+
+    if (kredivoWrapper) {
+        kredivoWrapper.style.borderColor = '#e2e8f0';
+    }
+
+    if (radio) {
+        radio.checked = true;
+        if (radio.value === 'kredivo') {
+            if (kredivoWrapper) kredivoWrapper.style.borderColor = '#e11d48';
+            if (kredivoContainer) kredivoContainer.style.display = 'block';
+            fetchKredivoOptions();
+        } else {
+            element.style.borderColor = '#e11d48';
+            if (kredivoContainer) kredivoContainer.style.display = 'none';
+        }
+        const mark = element.querySelector('.check-mark');
+        const icon = element.querySelector('.check-icon');
+        if (mark) mark.style.display = 'block';
+        if (icon) icon.style.display = 'block';
+    }
 }
 
 let locationData = [];
@@ -283,11 +303,11 @@ async function initLocations() {
                             provinceSelect.appendChild(option);
                         });
                     }
-                    return; // Successfully loaded
+                    return;
                 }
             }
         } catch (err) {
-            console.warn('Could not load provinces from ' + url, err);
+            // Fallback will use API endpoints
         }
     }
 }
@@ -311,10 +331,10 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-function loadDistricts() {
-    let provinceCode = document.getElementById('province').value;
+async function loadDistricts() {
     let provinceSelect = document.getElementById('province');
-    if (provinceSelect.selectedIndex > 0) {
+    let provinceCode = provinceSelect ? provinceSelect.value : '';
+    if (provinceSelect && provinceSelect.selectedIndex > 0) {
         document.getElementById('province_name').value = provinceSelect.options[provinceSelect.selectedIndex].text;
     }
     
@@ -326,11 +346,36 @@ function loadDistricts() {
     document.getElementById('district_name').value = '';
     document.getElementById('ward_name').value = '';
     
-    if(!provinceCode) return;
-    
-    let province = locationData.find(p => p.code == provinceCode);
-    if(province && province.districts) {
-        province.districts.forEach(district => {
+    if (!provinceCode) return;
+
+    // Check cached locationData first
+    let province = locationData.find(p => String(p.code) === String(provinceCode));
+    if (province && Array.isArray(province.districts) && province.districts.length > 0) {
+        populateDistricts(province.districts);
+        return;
+    }
+
+    // Fast AJAX Fallback via dedicated backend API
+    districtSelect.innerHTML = '<option value="">Đang tải quận/huyện...</option>';
+    try {
+        const res = await fetch('{{ url("/wkcomputer/api/locations/districts") }}/' + encodeURIComponent(provinceCode));
+        if (res.ok) {
+            const list = await res.json();
+            populateDistricts(list);
+        } else {
+            districtSelect.innerHTML = '<option value="">Quận/Huyện *</option>';
+        }
+    } catch (e) {
+        console.error('Error fetching districts:', e);
+        districtSelect.innerHTML = '<option value="">Quận/Huyện *</option>';
+    }
+}
+
+function populateDistricts(districts) {
+    let districtSelect = document.getElementById('district');
+    districtSelect.innerHTML = '<option value="">Quận/Huyện *</option>';
+    if (Array.isArray(districts)) {
+        districts.forEach(district => {
             let option = document.createElement('option');
             option.value = district.code;
             option.textContent = district.name;
@@ -339,12 +384,13 @@ function loadDistricts() {
     }
 }
 
-function loadWards() {
-    let provinceCode = document.getElementById('province').value;
-    let districtCode = document.getElementById('district').value;
+async function loadWards() {
+    let provinceSelect = document.getElementById('province');
+    let provinceCode = provinceSelect ? provinceSelect.value : '';
     let districtSelect = document.getElementById('district');
+    let districtCode = districtSelect ? districtSelect.value : '';
     
-    if (districtSelect.selectedIndex > 0) {
+    if (districtSelect && districtSelect.selectedIndex > 0) {
         document.getElementById('district_name').value = districtSelect.options[districtSelect.selectedIndex].text;
     }
     
@@ -352,25 +398,50 @@ function loadWards() {
     wardSelect.innerHTML = '<option value="">Phường/Xã *</option>';
     document.getElementById('ward_name').value = '';
     
-    if(!districtCode) return;
-    
-    let province = locationData.find(p => p.code == provinceCode);
-    if(province && province.districts) {
-        let district = province.districts.find(d => d.code == districtCode);
-        if(district && district.wards) {
-            district.wards.forEach(ward => {
-                let option = document.createElement('option');
-                option.value = ward.code;
-                option.textContent = ward.name;
-                wardSelect.appendChild(option);
-            });
+    if (!districtCode) return;
+
+    // Check cached locationData first
+    let province = locationData.find(p => String(p.code) === String(provinceCode));
+    if (province && Array.isArray(province.districts)) {
+        let district = province.districts.find(d => String(d.code) === String(districtCode));
+        if (district && Array.isArray(district.wards) && district.wards.length > 0) {
+            populateWards(district.wards);
+            return;
         }
+    }
+
+    // Fast AJAX Fallback via dedicated backend API
+    wardSelect.innerHTML = '<option value="">Đang tải phường/xã...</option>';
+    try {
+        const res = await fetch('{{ url("/wkcomputer/api/locations/wards") }}/' + encodeURIComponent(districtCode));
+        if (res.ok) {
+            const list = await res.json();
+            populateWards(list);
+        } else {
+            wardSelect.innerHTML = '<option value="">Phường/Xã *</option>';
+        }
+    } catch (e) {
+        console.error('Error fetching wards:', e);
+        wardSelect.innerHTML = '<option value="">Phường/Xã *</option>';
+    }
+}
+
+function populateWards(wards) {
+    let wardSelect = document.getElementById('ward');
+    wardSelect.innerHTML = '<option value="">Phường/Xã *</option>';
+    if (Array.isArray(wards)) {
+        wards.forEach(ward => {
+            let option = document.createElement('option');
+            option.value = ward.code;
+            option.textContent = ward.name;
+            wardSelect.appendChild(option);
+        });
     }
 }
 
 function updateWardName() {
     let wardSelect = document.getElementById('ward');
-    if (wardSelect.selectedIndex > 0) {
+    if (wardSelect && wardSelect.selectedIndex > 0) {
         document.getElementById('ward_name').value = wardSelect.options[wardSelect.selectedIndex].text;
     }
 }
@@ -378,9 +449,8 @@ function updateWardName() {
 let isKredivoFetched = false;
 function fetchKredivoOptions() {
     let container = document.getElementById('kredivo-options-container');
+    if (!container) return;
     container.style.display = 'block';
-    
-    // Hide all other containers if needed
     
     if (isKredivoFetched) return;
     
@@ -394,11 +464,13 @@ function fetchKredivoOptions() {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('kredivo-options-loading').style.display = 'none';
+        let loading = document.getElementById('kredivo-options-loading');
+        if (loading) loading.style.display = 'none';
         let listContainer = document.getElementById('kredivo-options-list');
+        if (!listContainer) return;
         listContainer.innerHTML = '';
         
-        if(data.success && data.payments && data.payments.length > 0) {
+        if (data.success && data.payments && data.payments.length > 0) {
             data.payments.forEach((payment, index) => {
                 let interestText = payment.interest_rate > 0 ? `(Lãi suất ${payment.interest_rate}%)` : '(Không lãi suất)';
                 let html = `
@@ -411,26 +483,32 @@ function fetchKredivoOptions() {
                     </label>
                 `;
                 listContainer.insertAdjacentHTML('beforeend', html);
-                if(index === 0) {
-                    document.getElementById('kredivo_payment_type').value = payment.id;
+                if (index === 0) {
+                    let typeInput = document.getElementById('kredivo_payment_type');
+                    if (typeInput) typeInput.value = payment.id;
                 }
             });
             isKredivoFetched = true;
         } else {
-            let errorMsg = data.message ? data.message : 'Không thể tải dữ liệu trả góp hoặc giỏ hàng không đủ điều kiện.';
+            let errorMsg = data.message ? data.message : 'Chưa kích hoạt Kredivo cho cửa hàng này.';
             listContainer.innerHTML = '<div style="color:#ef4444; font-size:13px;">' + errorMsg + '</div>';
         }
     })
     .catch(err => {
-        document.getElementById('kredivo-options-loading').style.display = 'none';
-        document.getElementById('kredivo-options-list').innerHTML = '<div style="color:#ef4444; font-size:13px;">Lỗi kết nối khi lấy dữ liệu trả góp.</div>';
+        let loading = document.getElementById('kredivo-options-loading');
+        if (loading) loading.style.display = 'none';
+        let listContainer = document.getElementById('kredivo-options-list');
+        if (listContainer) {
+            listContainer.innerHTML = '<div style="color:#ef4444; font-size:13px;">Lỗi kết nối khi lấy dữ liệu trả góp.</div>';
+        }
     });
 }
 
 function selectKredivoOption(id) {
-    document.getElementById('kredivo_payment_type').value = id;
+    let typeInput = document.getElementById('kredivo_payment_type');
+    if (typeInput) typeInput.value = id;
     let radio = document.querySelector(`input[name="kredivo_option_radio"][value="${id}"]`);
-    if(radio) {
+    if (radio) {
         radio.checked = true;
         updateKredivoStyles();
     }
@@ -439,8 +517,8 @@ function selectKredivoOption(id) {
 function updateKredivoStyles() {
     document.querySelectorAll('input[name="kredivo_option_radio"]').forEach(radio => {
         let label = document.getElementById('kredivo-label-' + radio.value);
-        if(label) {
-            if(radio.checked) {
+        if (label) {
+            if (radio.checked) {
                 label.style.background = '#f8fafc';
                 label.style.borderColor = '#e11d48';
             } else {
@@ -449,20 +527,6 @@ function updateKredivoStyles() {
             }
         }
     });
-}
-
-// Ensure container is hidden if other payment method selected
-const originalSelectPayment = selectPayment;
-selectPayment = function(element) {
-    originalSelectPayment(element);
-    let radio = element.querySelector('input[type="radio"]');
-    let kredivoContainer = document.getElementById('kredivo-options-container');
-    if (kredivoContainer) {
-        if (radio && radio.value === 'kredivo') {
-            kredivoContainer.style.display = 'block';
-        } else {
-            kredivoContainer.style.display = 'none';
-        }
 }
 </script>
 
