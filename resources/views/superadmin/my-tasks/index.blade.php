@@ -37,9 +37,9 @@
             {{-- Filter Assignee (dành cho Admin / PM) --}}
             <template x-if="isAdminOrPm">
                 <select x-model="filterUser" class="w-full sm:w-auto px-2.5 sm:px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#001B4E] outline-none text-xs sm:text-sm bg-white cursor-pointer truncate">
-                    <option value="">Tất cả nhân sự</option>
+                    <option value="">Tất cả nhân sự (Nội bộ)</option>
                     <template x-for="u in users" :key="'user-filter-'+u.id">
-                        <option :value="u.id" x-text="u.name"></option>
+                        <option :value="u.id" x-text="u.name + (u.department ? ' (' + u.department + ')' : '')"></option>
                     </template>
                 </select>
             </template>
@@ -557,12 +557,12 @@
                                 x-model="form.assigned_to"
                                 class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none bg-white"
                             >
-                                <option value="">-- Chọn nhân sự thực hiện --</option>
+                                <option value="">-- Chọn nhân sự thực hiện (Nội bộ) --</option>
                                 <template x-for="u in users" :key="'assign-opt-'+u.id">
-                                    <option :value="u.id" x-text="u.name"></option>
+                                    <option :value="u.id" x-text="u.name + (u.department ? ' (' + u.department + ')' : '')"></option>
                                 </template>
                             </select>
-                            <p class="text-xs text-gray-400 mt-1">Chọn nhân sự thuộc phòng ban (Thiết kế, Thiết kế website, Quản lý dự án) để phân công.</p>
+                            <p class="text-xs text-gray-400 mt-1">Chỉ hiển thị nhân sự thuộc phân loại Nội bộ (Thiết kế, Thiết kế website, Quản lý dự án) để phân công.</p>
                         </div>
                     </template>
 
@@ -722,7 +722,7 @@
                                 class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none bg-white"
                             >
                                 <template x-for="u in users" :key="'edit-assign-'+u.id">
-                                    <option :value="u.id" x-text="u.name" :selected="u.id == editForm.assigned_to"></option>
+                                    <option :value="u.id" x-text="u.name + (u.department ? ' (' + u.department + ')' : '')" :selected="u.id == editForm.assigned_to"></option>
                                 </template>
                             </select>
                         </div>
@@ -905,12 +905,12 @@
                             x-model="reassignUserId"
                             class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 outline-none bg-white font-medium"
                         >
-                            <option value="">-- Chọn nhân sự mới --</option>
+                            <option value="">-- Chọn nhân sự mới (Nội bộ) --</option>
                             <template x-for="u in users" :key="'reassign-u-'+u.id">
-                                <option :value="u.id" x-text="u.name"></option>
+                                <option :value="u.id" x-text="u.name + (u.department ? ' (' + u.department + ')' : '')"></option>
                             </template>
                         </select>
-                        <p class="text-xs text-gray-400 mt-1">Công việc sẽ được tự động kích hoạt lại và chuyển sang hàng chờ của nhân sự mới.</p>
+                        <p class="text-xs text-gray-400 mt-1">Chỉ hiển thị nhân sự nội bộ. Công việc sẽ được tự động kích hoạt lại và chuyển sang hàng chờ của nhân sự mới.</p>
                     </div>
                 </div>
 

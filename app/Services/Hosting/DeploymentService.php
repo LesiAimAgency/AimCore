@@ -239,6 +239,7 @@ class DeploymentService
 
             if ($response->successful()) {
                 Log::info('Bootstrap output: '.substr($response->body(), 0, 1000));
+
                 return;
             } else {
                 Log::warning("Bootstrap HTTP {$response->status()} via domain — will try fallback via server IP.");

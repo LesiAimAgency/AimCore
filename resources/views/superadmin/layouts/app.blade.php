@@ -215,7 +215,7 @@
                 </a>
                 @endif
 
-                @if(auth()->user()->isSuperAdmin() || auth()->user()->role === 'dev' || auth()->user()->hasRole('dev') || auth()->user()->department === 'Thiết kế website' || auth()->user()->isMultiTenancy() || auth()->user()->hasRole('multi_tenancy'))
+                @if(auth()->user()->isSuperAdmin() || auth()->user()->role === 'dev' || auth()->user()->hasRole('dev') || auth()->user()->department === 'Thiết kế website')
                 <div class="px-4 py-2 mt-4 text-[11px] font-bold text-[#8FA3C9] uppercase tracking-wider">Hệ thống</div>
                 <a href="{{ route('superadmin.multi-tenancy.index') }}" class="flex items-center px-4 py-3 mb-2 text-gray-300 hover:bg-[#002D80] rounded-lg {{ request()->routeIs('superadmin.multi-tenancy.*') || request()->routeIs('superadmin.multi-tenancy') ? 'bg-[#002D80]' : '' }}">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

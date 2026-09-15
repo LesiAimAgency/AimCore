@@ -23,13 +23,12 @@ class SuperAdminMiddleware
 
         $user = Auth::guard('web')->user();
 
-        // Cho phép Manager (Quản lý), Employee (Nhân viên) và Multi-Tenancy Control Center truy cập các route superadmin
-        // Quyền hiển thị menu và chức năng sẽ được phân quyền cụ thể trong giao diện và controller.
-        if ($user->isManager() || $user->isEmployee() || $user->isMultiTenancy() || $user->level <= 2) {
+        // Tất cả tài khoản có role nội bộ mới vào được SuperAdmin
+        if ($user->canAccessSuperAdmin()) {
             return $next($request);
         }
 
-        abort(403, 'Bạn không có quyền truy cập SuperAdmin.');
+        abort(403, 'Bạn không có quyền truy cập SuperAdmin. Chỉ tài khoản có vai trò nội bộ mới được phép truy cập.');
     }
 
     /**

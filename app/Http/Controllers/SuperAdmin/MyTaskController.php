@@ -63,10 +63,25 @@ class MyTaskController extends Controller
                 'remaining_gold' => $p->remainingGold(),
             ];
         });
-        $users = User::where('status', true)
-            ->where('email', '!=', 'admin@example.com')
+        $users = User::internal()
+            ->where('status', true)
+            ->with('roles')
             ->orderBy('name')
-            ->get(['id', 'name', 'email', 'role', 'department', 'level', 'gold']);
+            ->get(['id', 'name', 'email', 'role', 'department', 'level', 'gold'])
+            ->map(function ($u) {
+                $roleDisplay = $u->roles->first()?->display_name ?? ucfirst(str_replace('_', ' ', $u->role ?? ''));
+
+                return [
+                    'id' => $u->id,
+                    'name' => $u->name,
+                    'email' => $u->email,
+                    'role' => $u->role,
+                    'role_display' => $roleDisplay,
+                    'department' => $u->department ?: $roleDisplay,
+                    'level' => $u->level,
+                    'gold' => $u->gold,
+                ];
+            });
 
         $pendingCount = count($pendingTasks);
         $completedCount = count($completedTasks);
@@ -243,7 +258,11 @@ class MyTaskController extends Controller
         $user = auth()->user();
         $isAdminOrPm = $this->isUserAdminOrPm($user);
 
-        $assignedTo = ($isAdminOrPm && $request->filled('assigned_to')) ? (int) $request->assigned_to : $user->id;
+        $assignedTo = $user->id;
+        if ($isAdminOrPm && $request->filled('assigned_to')) {
+            $candidate = User::internal()->where('status', true)->find((int) $request->assigned_to);
+            $assignedTo = $candidate ? $candidate->id : $user->id;
+        }
         $priority = $request->input('priority', 'medium');
         // Chỉ cấp Quản lý trở lên hoặc Root mới có quyền gán Gold
         $gold = ($isAdminOrPm && $request->filled('gold')) ? max(0, (int) $request->gold) : 0;
@@ -326,20 +345,23 @@ class MyTaskController extends Controller
             $updateData['priority'] = $validated['priority'];
         }
 
-        // Chỉ Quản lý mới có quyền điều phối nhân sự khác
+        // Chỉ Quản lý mới có quyền điều phối nhân sự khác (phải thuộc khối nội bộ)
         if (isset($validated['assigned_to']) && $isAdminOrPm) {
-            $newAssignedTo = (int) $validated['assigned_to'];
-            $updateData['assigned_to'] = $newAssignedTo;
-            // Nếu thay đổi người được giao hoặc công việc từng bị từ chối, reset trạng thái và ưu tiên lên đầu
-            if ($newAssignedTo !== (int) $taskModel->assigned_to || $taskModel->acceptance_status === 'rejected') {
-                $updateData['acceptance_status'] = ($newAssignedTo === $user->id) ? 'accepted' : 'pending';
-                $updateData['approval_status'] = 'approved';
-                $updateData['position'] = 1;
-                $updateData['rejection_reason'] = null;
+            $candidate = User::internal()->where('status', true)->find((int) $validated['assigned_to']);
+            if ($candidate) {
+                $newAssignedTo = $candidate->id;
+                $updateData['assigned_to'] = $newAssignedTo;
+                // Nếu thay đổi người được giao hoặc công việc từng bị từ chối, reset trạng thái và ưu tiên lên đầu
+                if ($newAssignedTo !== (int) $taskModel->assigned_to || $taskModel->acceptance_status === 'rejected') {
+                    $updateData['acceptance_status'] = ($newAssignedTo === $user->id) ? 'accepted' : 'pending';
+                    $updateData['approval_status'] = 'approved';
+                    $updateData['position'] = 1;
+                    $updateData['rejection_reason'] = null;
 
-                Task::where('user_id', $taskModel->user_id)
-                    ->where('id', '!=', $taskModel->id)
-                    ->increment('position');
+                    Task::where('user_id', $taskModel->user_id)
+                        ->where('id', '!=', $taskModel->id)
+                        ->increment('position');
+                }
             }
         }
 
@@ -488,7 +510,14 @@ class MyTaskController extends Controller
             'assigned_to.exists' => 'Nhân sự không tồn tại.',
         ]);
 
-        $newAssignee = User::findOrFail($validated['assigned_to']);
+        $newAssignee = User::internal()->where('status', true)->find($validated['assigned_to']);
+
+        if (! $newAssignee) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nhân sự tiếp nhận không hợp lệ hoặc không thuộc phân loại nội bộ.',
+            ], 422);
+        }
 
         // Đưa công việc được điều phối lại lên vị trí số 1 (đầu danh sách)
         Task::where('user_id', $taskModel->user_id)

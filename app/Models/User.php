@@ -23,6 +23,35 @@ class User extends Authenticatable
 
     const ROLE_MULTI_TENANCY = 'multi_tenancy';
 
+    const ROLE_SUPER_ADMIN = 'super_admin';
+
+    const ROLE_PROJECT_MANAGER = 'project_manager';
+
+    const ROLE_WEB_DESIGNER = 'web_designer';
+
+    const ROLE_DESIGNER = 'designer';
+
+    const ROLE_EMPLOYEE = 'employee';
+
+    public const INTERNAL_ROLES = [
+        'super_admin',
+        'superadmin',
+        'admin',
+        'project_manager',
+        'manager',
+        'web_designer',
+        'designer',
+        'employee',
+        'dev',
+        'account',
+    ];
+
+    public const MULTI_TENANCY_ROLES = [
+        'multi_tenancy',
+        'multi_tenancy_control_center',
+        'cms',
+    ];
+
     /**
      * Get the database connection for the model.
      */
@@ -244,6 +273,7 @@ class User extends Authenticatable
             || $this->role === 'super_admin'
             || $this->hasRole('superadmin')
             || $this->hasRole('super_admin')
+            || $this->email === 'admin@example.com'
             || $this->isManager();
     }
 
@@ -254,12 +284,19 @@ class User extends Authenticatable
 
     public function isManager(): bool
     {
-        return $this->role === 'manager' || $this->hasRole('manager');
+        return $this->role === 'manager'
+            || $this->role === 'project_manager'
+            || $this->hasRole('manager')
+            || $this->hasRole('project_manager')
+            || (isset($this->level) && $this->level === 1 && ! $this->isMultiTenancy());
     }
 
     public function isEmployee(): bool
     {
-        return $this->role === 'employee' || $this->hasRole('employee');
+        return $this->role === 'employee'
+            || in_array($this->role, ['web_designer', 'designer', 'dev', 'account'])
+            || $this->hasRole(['employee', 'web_designer', 'designer', 'dev', 'account'])
+            || (isset($this->level) && $this->level === 2 && ! $this->isMultiTenancy());
     }
 
     public function isVisitor(): bool
@@ -269,19 +306,67 @@ class User extends Authenticatable
 
     public function isMultiTenancy(): bool
     {
-        return $this->role === self::ROLE_MULTI_TENANCY
-            || $this->role === 'multi_tenancy_control_center'
-            || $this->role === 'cms'
-            || $this->hasRole('multi_tenancy')
-            || $this->hasRole('multi_tenancy_control_center')
-            || $this->hasRole('cms')
+        return in_array($this->role, self::MULTI_TENANCY_ROLES)
+            || $this->hasRole(self::MULTI_TENANCY_ROLES)
             || (! empty($this->tenant_id))
             || (! empty($this->project_ids));
     }
 
+    public function isInternal(): bool
+    {
+        if ($this->isMultiTenancy()) {
+            return false;
+        }
+
+        $nonInternal = array_merge(self::MULTI_TENANCY_ROLES, ['visitor', 'customer', 'user']);
+
+        if (in_array($this->role, $nonInternal) || $this->hasRole($nonInternal)) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function canAccessSuperAdmin(): bool
     {
-        return isset($this->level) && \in_array($this->level, [0, 1, 2]);
+        return $this->isInternal();
+    }
+
+    public function scopeInternal($query)
+    {
+        $nonInternal = array_merge(self::MULTI_TENANCY_ROLES, ['visitor', 'customer', 'user']);
+
+        return $query->where(function ($q) use ($nonInternal) {
+            $q->whereNotIn('role', $nonInternal)
+                ->orWhereNull('role');
+        })
+            ->whereDoesntHave('roles', function ($rq) use ($nonInternal) {
+                $rq->whereIn('name', $nonInternal);
+            })
+            ->whereNull('tenant_id')
+            ->where(function ($sq) {
+                $sq->whereNull('project_ids')
+                    ->orWhere('project_ids', '[]')
+                    ->orWhere('project_ids', 'null')
+                    ->orWhere('project_ids', '""');
+            });
+    }
+
+    public function scopeMultiTenancy($query)
+    {
+        return $query->where(function ($q) {
+            $q->whereIn('role', self::MULTI_TENANCY_ROLES)
+                ->orWhereHas('roles', function ($rq) {
+                    $rq->whereIn('name', self::MULTI_TENANCY_ROLES);
+                })
+                ->orWhereNotNull('tenant_id')
+                ->orWhere(function ($sq) {
+                    $sq->whereNotNull('project_ids')
+                        ->where('project_ids', '!=', '[]')
+                        ->where('project_ids', '!=', 'null')
+                        ->where('project_ids', '!=', '""');
+                });
+        });
     }
 
     public function isAdmin(): bool

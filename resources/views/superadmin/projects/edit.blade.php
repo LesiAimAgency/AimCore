@@ -67,6 +67,20 @@
                             </div>
                         </div>
 
+                        <!-- Cấu hình Multi-Tenancy -->
+                        <div class="p-4 bg-purple-50/70 rounded-xl border border-purple-200 mt-4">
+                            <label class="flex items-start gap-3 cursor-pointer">
+                                <input type="hidden" name="is_multi_tenancy" value="0">
+                                <input type="checkbox" name="is_multi_tenancy" value="1" {{ old('is_multi_tenancy', $project->is_multi_tenancy) ? 'checked' : '' }} class="w-5 h-5 text-purple-600 rounded border-gray-300 focus:ring-purple-500 mt-0.5">
+                                <div>
+                                    <span class="font-bold text-sm text-purple-950 block">Kích hoạt mô hình Multi-Tenancy (CMS Tenant)</span>
+                                    <span class="text-xs text-purple-700 leading-relaxed block mt-0.5">
+                                        Bật tuỳ chọn này nếu dự án cần quản lý trên <strong>Multi-Tenancy Control Center</strong>, có CMS riêng và cấp quyền cho khách hàng / quản trị viên website riêng. Nếu là dự án thông thường của Agency (thiết kế, nội bộ, marketing...), vui lòng bỏ chọn để không hiển thị trên bảng Multi-Tenancy.
+                                    </span>
+                                </div>
+                            </label>
+                        </div>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100 mt-4">
 
 

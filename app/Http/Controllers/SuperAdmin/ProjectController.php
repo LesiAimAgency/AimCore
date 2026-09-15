@@ -130,6 +130,7 @@ class ProjectController extends Controller implements HasMiddleware
             'service_id' => 'nullable|exists:services,id',
             'dynamic_form_data' => 'nullable|array',
             'project_type' => 'required|string|in:design,website',
+            'is_multi_tenancy' => 'nullable|boolean',
         ]);
 
         $contract = $request->contract_id ? Contract::findOrFail($request->contract_id) : null;
@@ -166,10 +167,11 @@ class ProjectController extends Controller implements HasMiddleware
             'service_id' => $request->service_id,
             'dynamic_form_data' => $request->dynamic_form_data,
             'project_type' => $request->project_type,
+            'is_multi_tenancy' => $request->boolean('is_multi_tenancy'),
         ]);
 
-        // Auto-map or create Tenant for this project
-        if (! $project->tenant_id) {
+        // Auto-map or create Tenant ONLY for multi-tenancy projects
+        if ($project->is_multi_tenancy && ! $project->tenant_id) {
             try {
                 $tenant = Tenant::firstOrCreate(
                     ['code' => $project->code],
@@ -279,7 +281,10 @@ class ProjectController extends Controller implements HasMiddleware
             'service_id' => 'nullable|exists:services,id',
             'dynamic_form_data' => 'nullable|array',
             'project_type' => 'required|string|in:design,website',
+            'is_multi_tenancy' => 'nullable|boolean',
         ]);
+
+        $isMultiTenancy = $request->boolean('is_multi_tenancy');
 
         $project->update([
             'name' => $request->name,
@@ -298,7 +303,25 @@ class ProjectController extends Controller implements HasMiddleware
             'department_id' => $request->department_id,
             'service_id' => $request->service_id,
             'dynamic_form_data' => $request->dynamic_form_data,
+            'is_multi_tenancy' => $isMultiTenancy,
         ]);
+
+        if ($isMultiTenancy && ! $project->tenant_id) {
+            try {
+                $tenant = Tenant::firstOrCreate(
+                    ['code' => $project->code],
+                    [
+                        'name' => $project->name,
+                        'domain' => $project->external_domain ?: $project->code,
+                        'database_name' => 'tenant_'.$project->code,
+                        'status' => 'active',
+                    ]
+                );
+                $project->update(['tenant_id' => $tenant->id]);
+            } catch (\Throwable $e) {
+                \Log::warning("Tenant mapping on update for project {$project->id} failed: ".$e->getMessage());
+            }
+        }
 
         return redirect()->route('superadmin.projects.index')->with('alert', [
             'type' => 'success',
@@ -835,7 +858,7 @@ class ProjectController extends Controller implements HasMiddleware
 
             return back()->with('alert', [
                 'type' => 'success',
-                'message' => "🎉 Triển khai mẫu Viettinmart cho '{$project->name}' thành công!\n\n"
+                'message' => "Triển khai mẫu Viettinmart cho '{$project->name}' thành công!\n\n"
                     ."• CMS Username: {$result['admin_username']}\n"
                     ."• CMS Password: {$result['admin_password']}\n"
                     ."• Frontend: {$result['frontend_url']}\n"
@@ -860,7 +883,7 @@ class ProjectController extends Controller implements HasMiddleware
 
             return back()->with('alert', [
                 'type' => 'success',
-                'message' => "🎉 Triển khai mẫu WKComputer cho '{$project->name}' thành công!\n\n"
+                'message' => "Triển khai mẫu WKComputer cho '{$project->name}' thành công!\n\n"
                     ."• CMS Username: {$result['admin_username']}\n"
                     ."• CMS Password: {$result['admin_password']}\n"
                     ."• Frontend: {$result['site_url']}\n"

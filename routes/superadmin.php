@@ -162,6 +162,8 @@ Route::middleware([
         Route::post('/projects/{project}/deploy', [HostingDeployController::class, 'triggerDeployMultiTenancy'])->name('deploy');
         Route::post('/accounts', [DashboardController::class, 'storeMultiTenancyAccount'])->name('accounts.store');
         Route::post('/projects/{project}/account', [DashboardController::class, 'updateProjectAccount'])->name('project-account');
+        Route::post('/projects/{project}/toggle-mode', [DashboardController::class, 'toggleMultiTenancyMode'])->name('projects.toggle-mode');
+        Route::post('/projects/batch-update-modes', [DashboardController::class, 'batchUpdateMultiTenancyModes'])->name('projects.batch-update-modes');
     });
     Route::prefix('hosting')->name('hosting.')->group(function () {
         Route::get('/', [HostingDeployController::class, 'index'])->name('index');

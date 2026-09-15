@@ -38,6 +38,22 @@
           Deploy 1-Click WK
         </button>
       </form>
+      @if($project->is_multi_tenancy)
+        <span class="px-3 py-1 text-xs sm:text-sm font-bold rounded-full bg-purple-100 text-purple-800 border border-purple-200 inline-flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Multi-Tenancy
+        </span>
+      @else
+        <span class="px-3 py-1 text-xs sm:text-sm font-semibold rounded-full bg-gray-100 text-gray-600 border border-gray-200">
+          Dự án tiêu chuẩn
+        </span>
+      @endif
+      <form method="POST" action="{{ route('superadmin.multi-tenancy.projects.toggle-mode', $project) }}" class="inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn thay đổi phân loại dự án này?')">
+        @csrf
+        <button type="submit" class="px-2.5 py-1 text-xs border rounded-lg transition-colors font-medium {{ $project->is_multi_tenancy ? 'border-purple-300 text-purple-700 hover:bg-purple-50' : 'border-gray-300 text-gray-700 hover:bg-gray-100' }}">
+          {{ $project->is_multi_tenancy ? 'Chuyển về Dự án thường' : 'Bật Multi-Tenancy' }}
+        </button>
+      </form>
       <span class="px-3 py-1 text-xs sm:text-sm font-semibold rounded-full 
         {{ $project->status === 'active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
         {{ ucfirst($project->status) }}
@@ -170,7 +186,11 @@
     <!-- CẢNH BÁO CỐT LÕI: KHÔNG CHIA SẺ DOCUMENT ROOT CPANEL -->
     <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-2xs">
       <div class="flex items-start gap-3">
-        <span class="text-2xl mt-0.5">⚠️</span>
+        <span class="mt-0.5 text-amber-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+          </svg>
+        </span>
         <div class="flex-1 text-xs text-amber-950 leading-relaxed">
           <strong class="font-bold text-amber-950 block text-sm mb-1">
             QUY TẮC CỐT LÕI KHI TẠO DOMAIN TRÊN CPANEL (KHÔNG SHARE DOCUMENT ROOT):
@@ -179,7 +199,7 @@
             Khi tạo Domain trên cPanel tại mục <em>cPanel &rarr; Domains &rarr; Create A New Domain</em>, bạn <strong>BẮT BUỘC BỎ CHỌN (UNCHECK)</strong> ô kiểm:
           </p>
           <div class="bg-amber-100/90 border border-amber-300 rounded px-3 py-2 font-mono text-xs text-amber-950 my-1.5 font-bold flex items-center gap-2">
-            <span class="text-rose-600 text-sm">✖ [ ]</span>
+            <span class="text-rose-600 text-sm font-mono">[ ]</span>
             <span>Share document root (/home/fukkatsu/public_html) with “fukkatsumedia.com”.</span>
           </div>
           <p class="text-amber-800 mt-1">
@@ -194,7 +214,11 @@
     @if(!empty($deploymentConfig['conflict']['has_conflict']))
     <div class="bg-rose-50 border-l-4 border-rose-500 p-4 rounded-r-xl shadow-2xs">
       <div class="flex items-center gap-2">
-        <span class="text-xl">🚨</span>
+        <span class="text-rose-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+          </svg>
+        </span>
         <div class="text-xs text-rose-900">
           <strong class="font-bold text-sm block">Xung đột Tên miền phát hiện!</strong>
           Tên miền <code>{{ $deploymentConfig['domain']['name'] ?? '' }}</code> đang được sử dụng bởi dự án khác (ID: {{ $deploymentConfig['conflict']['conflicting_project_id'] ?? 'Unknown' }}). Vui lòng kiểm tra lại.
@@ -206,7 +230,11 @@
     @if(!empty($deploymentConfig['drift']['has_drift']))
     <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-2xs">
       <div class="flex items-center gap-2">
-        <span class="text-xl">⚠️</span>
+        <span class="text-amber-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+          </svg>
+        </span>
         <div class="text-xs text-amber-900">
           <strong class="font-bold text-sm block">Phát hiện Lệch cấu hình giữa Server thực tế & Database (Drift Warning):</strong>
           @foreach($deploymentConfig['drift']['drifts'] ?? [] as $drift)
@@ -222,7 +250,7 @@
     <div class="p-4 rounded-xl border {{ ($hc['status'] ?? '') === 'HEALTHY' ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-amber-50 border-amber-200 text-amber-900' }}">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <span class="text-lg">{{ ($hc['status'] ?? '') === 'HEALTHY' ? '✅' : '⚠️' }}</span>
+          <span class="text-xs font-bold uppercase px-2 py-0.5 rounded {{ ($hc['status'] ?? '') === 'HEALTHY' ? 'bg-emerald-200 text-emerald-800' : 'bg-amber-200 text-amber-800' }}">{{ ($hc['status'] ?? '') === 'HEALTHY' ? 'OK' : 'CẢNH BÁO' }}</span>
           <span class="text-xs font-bold">Kết quả Health Check gần nhất: {{ $hc['message'] ?? 'OK' }}</span>
         </div>
         <span class="text-xs font-mono">HTTP: {{ $hc['http_status'] ?? 200 }} | Độ trễ: {{ $hc['latency_ms'] ?? 0 }}ms</span>
@@ -372,7 +400,9 @@
       <div class="p-4 bg-slate-50/80 rounded-xl border border-slate-200 hover:border-indigo-300 transition-colors">
         <div class="flex items-center justify-between mb-2">
           <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-            <span class="w-5 h-5 rounded bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs">🌐</span>
+            <span class="w-5 h-5 rounded bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+            </span>
             Tên miền xác minh
           </span>
           <button type="button" onclick="copyValue('{{ $deploymentConfig['domain']['name'] ?? $project->external_domain ?? '' }}', 'Đã copy Tên miền!')" class="text-slate-400 hover:text-indigo-600 text-[11px]">Copy</button>
@@ -387,7 +417,9 @@
       <div class="p-4 bg-slate-50/80 rounded-xl border border-slate-200 hover:border-indigo-300 transition-colors">
         <div class="flex items-center justify-between mb-2">
           <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-            <span class="w-5 h-5 rounded bg-amber-100 text-amber-700 flex items-center justify-center text-xs">📁</span>
+            <span class="w-5 h-5 rounded bg-amber-100 text-amber-700 flex items-center justify-center text-xs">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+            </span>
             Document Root (Độc lập)
           </span>
           <button type="button" onclick="copyValue('{{ $deploymentConfig['domain']['document_root'] ?? $deploymentConfig['docroot'] ?? '' }}', 'Đã copy Document Root!')" class="text-slate-400 hover:text-indigo-600 text-[11px]">Copy</button>
@@ -402,7 +434,9 @@
       <div class="p-4 bg-slate-50/80 rounded-xl border border-slate-200 hover:border-indigo-300 transition-colors">
         <div class="flex items-center justify-between mb-2">
           <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-            <span class="w-5 h-5 rounded bg-purple-100 text-purple-700 flex items-center justify-center text-xs">🖥️</span>
+            <span class="w-5 h-5 rounded bg-purple-100 text-purple-700 flex items-center justify-center text-xs">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+            </span>
             Máy chủ cPanel
           </span>
           <button type="button" onclick="copyValue('{{ $deploymentConfig['cpanel']['hostname'] ?? ($hostingProfile->hostname ?? '') }}', 'Đã copy cPanel Host!')" class="text-slate-400 hover:text-indigo-600 text-[11px]">Copy</button>
@@ -417,7 +451,9 @@
       <div class="p-4 bg-slate-50/80 rounded-xl border border-slate-200 hover:border-indigo-300 transition-colors">
         <div class="flex items-center justify-between mb-2">
           <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-            <span class="w-5 h-5 rounded bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs">🗄️</span>
+            <span class="w-5 h-5 rounded bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+            </span>
             Cơ sở dữ liệu MySQL
           </span>
           <button type="button" onclick="copyValue('{{ $deploymentConfig['database']['name'] ?? '' }}', 'Đã copy Tên DB!')" class="text-slate-400 hover:text-indigo-600 text-[11px]">Copy</button>
@@ -432,7 +468,7 @@
     <!-- Quick Copy Toolkit Row -->
     <div class="bg-slate-50 border border-slate-200/90 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2.5">
       <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-        <span>📋</span> Quick Copy Toolkit:
+        Quick Copy Toolkit:
       </span>
       <div class="flex items-center flex-wrap gap-2">
         <button type="button" onclick="copyEnvTemplate()" class="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded text-xs font-medium shadow-2xs">
@@ -767,20 +803,9 @@
                   </div>
 
                   <div id="language-rows-container" class="space-y-2">
-                    @php
-                      $flags = [
-                        'vi' => '🇻🇳',
-                        'en' => '🇬🇧',
-                        'zh' => '🇨🇳',
-                        'ja' => '🇯🇵',
-                        'ko' => '🇰🇷',
-                        'fr' => '🇫🇷',
-                        'de' => '🇩🇪',
-                      ];
-                    @endphp
                     @foreach(($projectLanguages ?? []) as $idx => $lang)
                     <div class="flex items-center gap-3 p-2 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100/80 transition" id="lang-row-{{ $idx }}">
-                      <span class="text-base">{{ $flags[$lang['code']] ?? '🌐' }}</span>
+                      <span class="w-7 h-5 rounded bg-gray-200 text-gray-700 font-mono font-bold text-[10px] flex items-center justify-center uppercase">{{ $lang['code'] }}</span>
                       
                       <div class="w-20">
                         <input type="text" name="languages[{{ $idx }}][code]" value="{{ $lang['code'] }}" class="w-full text-xs font-mono border-gray-300 rounded px-2 py-1 uppercase text-center font-bold bg-white" placeholder="CODE" readonly>
@@ -966,7 +991,9 @@
                 Thiết lập tập trung API keys cho các nguồn rải rác từ SuperAdmin. Khi lưu, cấu hình sẽ được lưu vào hệ thống và tự động sẵn sàng cho các chức năng AI, Cổng thanh toán, Đơn vị vận chuyển và Webhook của website con.
               </p>
             </div>
-            <span class="text-2xl">⚡</span>
+            <span class="text-amber-400">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </span>
           </div>
         </div>
 
@@ -999,7 +1026,9 @@
             @if($project->remote_url)
             <div class="mt-3 p-3 bg-indigo-50/70 border border-indigo-100 rounded-lg flex items-center justify-between">
               <div class="flex items-center gap-2">
-                <span class="text-sm">🔄</span>
+                <span class="text-indigo-600">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                </span>
                 <span class="text-xs font-semibold text-indigo-900">Bắn cấu hình tức thì qua Bridge:</span>
                 <span class="text-xs text-indigo-700 font-mono">{{ $project->remote_url }}/api/bridge</span>
               </div>
@@ -1782,7 +1811,7 @@ function addCustomLanguageRow() {
   row.className = 'flex items-center gap-3 p-2 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100/80 transition animate-fadeIn';
   row.id = `lang-row-${customLangIdx}`;
   row.innerHTML = `
-    <span class="text-base">🌐</span>
+    <span class="w-7 h-5 rounded bg-gray-200 text-gray-700 font-mono font-bold text-[10px] flex items-center justify-center uppercase">LANG</span>
     <div class="w-20">
       <input type="text" name="languages[${customLangIdx}][code]" class="w-full text-xs font-mono border-gray-300 rounded px-2 py-1 uppercase text-center font-bold bg-white" placeholder="CODE" required onchange="this.value = this.value.toLowerCase().trim(); updateDefaultSelectOption(this.value);">
     </div>
@@ -2061,7 +2090,7 @@ async function startLiveDeployment() {
   updateDeployProgress(5, 'ĐANG KHỞI CHẠY...', 'running');
   updateStepPills(1);
 
-  appendConsoleLog('info', '🚀 Bắt đầu phiên triển khai dự án lên hosting cPanel...');
+  appendConsoleLog('info', 'Bắt đầu phiên triển khai dự án lên hosting cPanel...');
   appendConsoleLog('info', 'Đang thiết lập kết nối API cPanel và chuẩn bị snapshot cơ sở dữ liệu...');
 
   // Start polling
@@ -2096,9 +2125,9 @@ async function startLiveDeployment() {
         if (sessEl) sessEl.textContent = '#' + data.history_id;
       }
 
-      appendConsoleLog('success', '🎉 Triển khai thành công! Mã nguồn và Database đã đồng bộ hoàn chỉnh trên cPanel.');
+      appendConsoleLog('success', 'Triển khai thành công! Mã nguồn và Database đã đồng bộ hoàn chỉnh trên cPanel.');
       if (data.deployed_url) {
-        appendConsoleLog('success', `🌐 URL Website: ${data.deployed_url}`);
+        appendConsoleLog('success', `URL Website: ${data.deployed_url}`);
         if (liveUrlBtn) {
           liveUrlBtn.href = data.deployed_url;
           liveUrlBtn.classList.remove('hidden');
@@ -2112,7 +2141,7 @@ async function startLiveDeployment() {
     } else {
       updateDeployProgress(100, 'THẤT BẠI', 'error');
       const errMsg = data.message || 'Quá trình triển khai gặp sự cố.';
-      appendConsoleLog('error', `❌ Lỗi: ${errMsg}`);
+      appendConsoleLog('error', `Lỗi: ${errMsg}`);
       if (typeof showNotification === 'function') {
         showNotification(errMsg, 'error');
       }
@@ -2120,7 +2149,7 @@ async function startLiveDeployment() {
   } catch (err) {
     if (deployPollTimer) clearInterval(deployPollTimer);
     updateDeployProgress(100, 'THẤT BẠI', 'error');
-    appendConsoleLog('error', `❌ Lỗi kết nối mạng: ${err.message}`);
+    appendConsoleLog('error', `Lỗi kết nối mạng: ${err.message}`);
   } finally {
     isDeploying = false;
     if (btn) btn.disabled = false;

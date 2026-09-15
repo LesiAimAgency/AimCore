@@ -77,19 +77,26 @@
       <h3 class="text-lg font-semibold text-gray-900">Tất cả Projects / Tenants</h3>
       <p class="text-xs text-gray-500">Quản lý CMS, triển khai và tài khoản quản trị Multi-Tenancy</p>
     </div>
-    <div class="flex items-center gap-3 w-full sm:w-auto">
-      <input type="text" id="searchProjects" placeholder="Tìm kiếm project..." class="px-4 py-2 border rounded-lg text-sm w-full sm:w-64 focus:ring-2 focus:ring-blue-500">
-      <button type="button" onclick="openCreateAccountModal()" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg text-sm font-semibold flex items-center gap-2 shadow-sm whitespace-nowrap transition-all">
+    <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+      <input type="text" id="searchProjects" placeholder="Tìm kiếm project..." class="px-3.5 py-2 border rounded-lg text-sm w-full sm:w-56 focus:ring-2 focus:ring-blue-500">
+      <button type="button" onclick="openManageProjectsModal()" class="px-3.5 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 rounded-lg text-sm font-semibold flex items-center gap-1.5 shadow-xs whitespace-nowrap transition-all" title="Bật/tắt chế độ Multi-Tenancy cho các dự án trên hệ thống">
+        <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        </svg>
+        <span>Phân loại Multi-Tenancy ({{ $projects->count() }}/{{ $allProjects->count() }})</span>
+      </button>
+      <button type="button" onclick="openCreateAccountModal()" class="px-3.5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg text-sm font-semibold flex items-center gap-1.5 shadow-xs whitespace-nowrap transition-all">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
         </svg>
-        + Cấp tài khoản Multi-Tenancy
+        <span>+ Cấp tài khoản</span>
       </button>
     </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="projectsGrid">
-    @foreach($projects as $project)
+    @forelse($projects as $project)
     <div class="border rounded-lg p-6 hover:shadow-lg transition-all duration-200 project-card bg-white flex flex-col justify-between" data-name="{{ strtolower($project->name) }}" data-code="{{ strtolower($project->code) }}">
       <div>
         <div class="flex items-start justify-between mb-3">
@@ -159,8 +166,10 @@
             Vào CMS
           </a>
           <button onclick="showDeployModal({{ $project->id }}, '{{ $project->code }}', '{{ $project->external_domain ?? '' }}')" 
-            class="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors" title="Deploy Lên Server">
-            🚀
+            class="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center" title="Deploy Lên Server">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
           </button>
           <button onclick="exportWebsite('{{ $project->code }}')" 
             class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors" title="Xuất Website">
@@ -181,10 +190,30 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
             </svg>
           </a>
+          <form method="POST" action="{{ route('superadmin.multi-tenancy.projects.toggle-mode', $project) }}" onsubmit="return confirm('Bạn có chắc muốn chuyển dự án &quot;{{ addslashes($project->name) }}&quot; về dạng dự án thông thường?\nDự án này sẽ được gỡ khỏi Multi-Tenancy Control Center.')">
+            @csrf
+            <input type="hidden" name="is_multi_tenancy" value="0">
+            <button type="submit" class="px-2.5 py-2 text-rose-600 hover:text-rose-800 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors" title="Gỡ dự án khỏi Multi-Tenancy Control Center (Chuyển về dự án thường)">
+              <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              <span>Gỡ MT</span>
+            </button>
+          </form>
         </div>
       </div>
     </div>
-    @endforeach
+    @empty
+    <div class="col-span-full text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+      <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+      </div>
+      <h4 class="text-base font-bold text-gray-800 mb-1">Chưa có dự án nào được gắn vào Multi-Tenancy</h4>
+      <p class="text-sm text-gray-500 mb-4 max-w-md mx-auto">Các dự án của bạn hiện đang ở phân loại dự án thông thường. Bạn có thể chọn đưa các dự án website cần quản lý theo mô hình Multi-Tenancy Control Center lên đây.</p>
+      <button type="button" onclick="openManageProjectsModal()" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg text-sm font-semibold inline-flex items-center gap-2 shadow-xs transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <span>Phân loại dự án vào Multi-Tenancy</span>
+      </button>
+    </div>
+    @endforelse
   </div>
 </div>
 
@@ -222,7 +251,7 @@
 <!-- Deploy Modal -->
 <div id="deployModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
   <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-    <h3 class="text-xl font-bold mb-4">🚀 Deploy Project <span id="deployProjectCode" class="text-blue-600"></span></h3>
+    <h3 class="text-xl font-bold mb-4">Deploy Project <span id="deployProjectCode" class="text-blue-600"></span></h3>
     <form id="deployForm" method="POST" action="">
       @csrf
       <input type="hidden" name="project_id" id="deployProjectId">
@@ -302,7 +331,7 @@
       <div class="mb-4">
         <div class="flex items-center justify-between mb-1">
           <label class="block text-xs font-medium text-gray-700">Mật khẩu truy cập <span class="text-red-500">*</span></label>
-          <button type="button" onclick="generateRandomPassword()" class="text-xs text-purple-600 hover:text-purple-800 font-medium">🎲 Tạo ngẫu nhiên</button>
+          <button type="button" onclick="generateRandomPassword()" class="text-xs text-purple-600 hover:text-purple-800 font-medium">Tạo ngẫu nhiên</button>
         </div>
         <div class="relative">
           <input type="text" name="password" id="accountPassword" placeholder="Tối thiểu 6 ký tự" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-purple-500" required>
@@ -330,7 +359,104 @@
   </div>
 </div>
 
+<!-- Modal: Quản lý phân loại danh sách dự án Multi-Tenancy -->
+<div id="manageProjectsModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center hidden">
+  <div class="bg-white rounded-2xl p-6 max-w-3xl w-full mx-4 max-h-[90vh] flex flex-col shadow-2xl">
+    <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+      <div>
+        <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+          <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+          </svg>
+          <span>Quản lý phân loại dự án Multi-Tenancy</span>
+        </h3>
+        <p class="text-xs text-gray-500 mt-0.5">Tích chọn các dự án cần đưa vào Multi-Tenancy Control Center. Bỏ chọn đối với các dự án làm dự án thông thường của Agency.</p>
+      </div>
+      <button type="button" onclick="closeManageProjectsModal()" class="text-gray-400 hover:text-gray-600 transition-colors p-1">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="my-4">
+      <input type="text" id="filterModalProjects" placeholder="Tìm kiếm theo tên hoặc mã dự án..." class="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none">
+    </div>
+
+    <form method="POST" action="{{ route('superadmin.multi-tenancy.projects.batch-update-modes') }}" class="flex-1 flex flex-col overflow-hidden">
+      @csrf
+      <div class="flex-1 overflow-y-auto border border-gray-200 rounded-xl divide-y divide-gray-100 mb-4">
+        @forelse($allProjects as $p)
+        <div class="p-3.5 flex items-center justify-between hover:bg-gray-50 transition-colors modal-project-row" data-search="{{ strtolower($p->name . ' ' . $p->code) }}">
+          <label class="flex items-center gap-3 cursor-pointer flex-1 mr-4">
+            <input type="checkbox" name="multi_tenancy_project_ids[]" value="{{ $p->id }}" {{ $p->is_multi_tenancy ? 'checked' : '' }} class="w-4 h-4 text-purple-600 rounded border-gray-300 focus:ring-purple-500">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-sm text-gray-900">{{ $p->name }}</span>
+                <span class="font-mono text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-600 font-semibold">{{ $p->code }}</span>
+              </div>
+              <p class="text-xs text-gray-500 mt-0.5">
+                Loại: <span class="capitalize">{{ $p->project_type ?? 'N/A' }}</span> | Khách hàng: {{ $p->client_name ?? 'N/A' }}
+              </p>
+            </div>
+          </label>
+
+          <div class="flex items-center gap-2">
+            @if($p->is_multi_tenancy)
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-200">
+                Multi-Tenancy
+              </span>
+            @else
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200">
+                Dự án thường
+              </span>
+            @endif
+          </div>
+        </div>
+        @empty
+        <div class="p-8 text-center text-gray-500 text-sm">
+          Chưa có dự án nào trong hệ thống.
+        </div>
+        @endforelse
+      </div>
+
+      <div class="flex justify-between items-center pt-3 border-t border-gray-100">
+        <span class="text-xs text-gray-500">Tổng cộng: <strong>{{ $allProjects->count() }}</strong> dự án trên toàn hệ thống</span>
+        <div class="flex gap-2">
+          <button type="button" onclick="closeManageProjectsModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm transition-colors font-medium">
+            Hủy
+          </button>
+          <button type="submit" class="px-5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg text-sm font-semibold shadow-xs transition-all">
+            Lưu thay đổi phân loại
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
+function openManageProjectsModal() {
+  document.getElementById('manageProjectsModal').classList.remove('hidden');
+  document.getElementById('filterModalProjects').value = '';
+  document.querySelectorAll('.modal-project-row').forEach(row => row.style.display = 'flex');
+}
+
+function closeManageProjectsModal() {
+  document.getElementById('manageProjectsModal').classList.add('hidden');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const filterInput = document.getElementById('filterModalProjects');
+  if (filterInput) {
+    filterInput.addEventListener('input', function(e) {
+      const search = e.target.value.toLowerCase();
+      document.querySelectorAll('.modal-project-row').forEach(row => {
+        const text = row.dataset.search || '';
+        row.style.display = text.includes(search) ? 'flex' : 'none';
+      });
+    });
+  }
+});
+
 function openCreateAccountModal() {
   document.getElementById('accountModal').classList.remove('hidden');
   document.getElementById('accountProjectId').value = '';
@@ -457,7 +583,7 @@ function showProgressModal(projectCode) {
       '<div class="flex justify-between mb-1"><span>Dung lượng:</span><span class="font-medium text-orange-600">~150MB</span></div>' +
       '<div class="flex justify-between"><span>Thời gian:</span><span class="font-medium text-orange-600">~2 phút</span></div>' +
     '</div>' +
-    '<button onclick="closeExportModal()" class="mt-4 w-full px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors" disabled id="closeBtn">⏳ Đang xử lý...</button>' +
+    '<button onclick="closeExportModal()" class="mt-4 w-full px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors" disabled id="closeBtn">Đang xử lý...</button>' +
   '</div>';
   document.body.appendChild(modal);
 }

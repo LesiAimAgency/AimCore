@@ -109,6 +109,46 @@ class MyTaskTest extends TestCase
             ->assertViewIs('superadmin.my-tasks.index');
     }
 
+    public function test_my_tasks_index_provides_all_internal_users_to_dispatch_dropdown(): void
+    {
+        $admin = $this->superAdmin();
+        $pm = $this->pmUser();
+        $designer = $this->designerUser();
+        $web = $this->webDevUser();
+
+        // Custom dynamic internal role
+        $tester = User::factory()->create([
+            'role' => 'tester',
+            'department' => 'Kiểm thử',
+            'status' => true,
+        ]);
+
+        // Multi-tenancy user (must NOT appear)
+        $mtUser = User::factory()->create([
+            'role' => 'multi_tenancy',
+            'status' => true,
+        ]);
+
+        // Visitor user (must NOT appear)
+        $visitor = User::factory()->create([
+            'role' => 'visitor',
+            'status' => true,
+        ]);
+
+        $response = $this->actingAs($admin)
+            ->get(route('superadmin.my-tasks.index'))
+            ->assertOk();
+
+        $viewUsers = collect($response->viewData('users'));
+        $this->assertTrue($viewUsers->contains('id', $admin->id));
+        $this->assertTrue($viewUsers->contains('id', $pm->id));
+        $this->assertTrue($viewUsers->contains('id', $designer->id));
+        $this->assertTrue($viewUsers->contains('id', $web->id));
+        $this->assertTrue($viewUsers->contains('id', $tester->id));
+        $this->assertFalse($viewUsers->contains('id', $mtUser->id));
+        $this->assertFalse($viewUsers->contains('id', $visitor->id));
+    }
+
     public function test_store_creates_task_with_assignment_and_priority(): void
     {
         $pm = $this->pmUser();
@@ -552,5 +592,32 @@ class MyTaskTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString('text/event-stream', $response->headers->get('Content-Type'));
+    }
+
+    public function test_reassign_rejects_non_internal_assignee(): void
+    {
+        $pm = $this->pmUser();
+        $designer = $this->designerUser();
+        $project = $this->project();
+
+        $task = $this->pendingTask($pm, $project, [
+            'assigned_to' => $designer->id,
+        ]);
+
+        $mtUser = User::factory()->create([
+            'role' => 'multi_tenancy',
+            'project_ids' => [$project->id],
+        ]);
+
+        // PM không thể điều phối cho tài khoản ngoài (multi_tenancy)
+        $this->actingAs($pm)
+            ->patchJson(route('superadmin.my-tasks.reassign', $task->id), [
+                'assigned_to' => $mtUser->id,
+            ])
+            ->assertStatus(422)
+            ->assertJson([
+                'success' => false,
+                'message' => 'Nhân sự tiếp nhận không hợp lệ hoặc không thuộc phân loại nội bộ.',
+            ]);
     }
 }

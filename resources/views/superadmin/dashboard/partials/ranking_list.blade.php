@@ -6,22 +6,22 @@
                     $bgClass = 'bg-yellow-50 border-yellow-300';
                     $circleClass = 'bg-gradient-to-r from-yellow-300 to-yellow-500 text-white shadow-md';
                     $textClass = 'text-yellow-900 font-bold text-lg';
-                    $medalIcon = '🥇';
+                    $medalBadge = 'Top 1';
                 } elseif($index == 1) {
                     $bgClass = 'bg-slate-50 border-slate-300';
                     $circleClass = 'bg-gradient-to-r from-slate-300 to-slate-500 text-white shadow-md';
                     $textClass = 'text-slate-900 font-bold text-lg';
-                    $medalIcon = '🥈';
+                    $medalBadge = 'Top 2';
                 } elseif($index == 2) {
                     $bgClass = 'bg-orange-50 border-orange-300';
                     $circleClass = 'bg-gradient-to-r from-orange-300 to-orange-500 text-white shadow-md';
                     $textClass = 'text-orange-900 font-bold text-lg';
-                    $medalIcon = '🥉';
+                    $medalBadge = 'Top 3';
                 } else {
                     $bgClass = 'bg-white border-gray-100';
                     $circleClass = 'bg-gray-100 text-gray-500';
                     $textClass = 'text-gray-700 font-medium';
-                    $medalIcon = '';
+                    $medalBadge = '';
                 }
             @endphp
             <div class="p-3 rounded-xl border flex justify-between items-center {{ $bgClass }} transition-transform hover:scale-[1.02]">
@@ -32,8 +32,8 @@
                     <div>
                         <p class="flex items-center {{ $textClass }}">
                             {{ $emp['name'] }}
-                            @if($medalIcon)
-                                <span class="ml-2 text-2xl drop-shadow-md" title="Top {{ $index + 1 }}">{{ $medalIcon }}</span>
+                            @if($medalBadge)
+                                <span class="ml-2 text-xs font-bold px-2 py-0.5 rounded-full {{ $index == 0 ? 'bg-yellow-200 text-yellow-900' : ($index == 1 ? 'bg-slate-200 text-slate-900' : 'bg-orange-200 text-orange-900') }}">{{ $medalBadge }}</span>
                             @endif
                         </p>
                     </div>

@@ -36,26 +36,10 @@ class UserController extends Controller
     {
         $type = $request->get('type', 'all'); // 'all', 'internal', 'multi_tenancy'
 
-        // Multi-tenancy filter closure
-        $multiTenancyFilter = function ($q) {
-            $q->where('role', 'multi_tenancy')
-                ->orWhere('role', 'cms')
-                ->orWhereHas('roles', function ($rq) {
-                    $rq->whereIn('name', ['multi_tenancy', 'multi_tenancy_control_center', 'cms']);
-                })
-                ->orWhereNotNull('tenant_id')
-                ->orWhere(function ($sq) {
-                    $sq->whereNotNull('project_ids')
-                        ->where('project_ids', '!=', '[]')
-                        ->where('project_ids', '!=', 'null')
-                        ->where('project_ids', '!=', '""');
-                });
-        };
-
         // Tab counts
         $totalCount = User::count();
-        $multiTenancyCount = User::where($multiTenancyFilter)->count();
-        $internalCount = User::whereNot($multiTenancyFilter)->count();
+        $multiTenancyCount = User::multiTenancy()->count();
+        $internalCount = User::internal()->count();
 
         $query = User::with(['roles', 'tenant', 'activityLogs' => function ($q) {
             $q->latest()->limit(5);
@@ -63,9 +47,9 @@ class UserController extends Controller
 
         // Filter by tab type
         if ($type === 'multi_tenancy') {
-            $query->where($multiTenancyFilter);
+            $query->multiTenancy();
         } elseif ($type === 'internal') {
-            $query->whereNot($multiTenancyFilter);
+            $query->internal();
         }
 
         // Search functionality

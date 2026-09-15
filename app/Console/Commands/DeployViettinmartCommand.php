@@ -79,7 +79,7 @@ class DeployViettinmartCommand extends Command
             return self::FAILURE;
         }
 
-        $this->info("🚀 Bắt đầu triển khai mẫu Viettinmart cho dự án: {$project->name} ({$project->code}, ID: {$project->id})...");
+        $this->info("Bắt đầu triển khai mẫu Viettinmart cho dự án: {$project->name} ({$project->code}, ID: {$project->id})...");
 
         // Auto-migrate to guarantee all tables exist (non-destructive)
         try {
@@ -94,7 +94,7 @@ class DeployViettinmartCommand extends Command
 
             $this->newLine();
             $this->info('==================================================');
-            $this->info('🎉 TRIỂN KHAI VIETTINMART (VTM) THÀNH CÔNG!');
+            $this->info('TRIỂN KHAI VIETTINMART (VTM) THÀNH CÔNG!');
             $this->info('==================================================');
             $this->line("• Tên dự án:        <comment>{$result['project']->name}</comment>");
             $this->line("• Mã dự án (Code):  <comment>{$result['project']->code}</comment>");
@@ -108,7 +108,7 @@ class DeployViettinmartCommand extends Command
 
             return self::SUCCESS;
         } catch (\Throwable $e) {
-            $this->error("❌ Lỗi trong quá trình triển khai VTM: {$e->getMessage()}");
+            $this->error("Lỗi trong quá trình triển khai VTM: {$e->getMessage()}");
             $this->error($e->getTraceAsString());
 
             return self::FAILURE;

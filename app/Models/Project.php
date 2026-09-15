@@ -4,14 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Project extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['tenant_id', 'customer_id', 'contract_id', 'name', 'code', 'subdomain', 'remote_url', 'api_token', 'external_domain', 'sync_enabled', 'client_name', 'start_date', 'deadline', 'status', 'total_gold', 'contract_value', 'contract_file', 'technical_requirements', 'features', 'cms_features', 'deployment_config', 'deployment_status', 'environment', 'notes', 'admin_id', 'employee_ids', 'created_by', 'project_admin_username', 'project_admin_password', 'project_admin_password_plain', 'password_updated_at', 'password_updated_by', 'approved_at', 'initialized_at', 'department_id', 'service_id', 'current_stage_id', 'dynamic_form_data', 'project_type'];
+    protected $fillable = ['tenant_id', 'customer_id', 'contract_id', 'name', 'code', 'subdomain', 'remote_url', 'api_token', 'external_domain', 'sync_enabled', 'client_name', 'start_date', 'deadline', 'status', 'total_gold', 'contract_value', 'contract_file', 'technical_requirements', 'features', 'cms_features', 'deployment_config', 'deployment_status', 'environment', 'notes', 'admin_id', 'employee_ids', 'created_by', 'project_admin_username', 'project_admin_password', 'project_admin_password_plain', 'password_updated_at', 'password_updated_by', 'approved_at', 'initialized_at', 'department_id', 'service_id', 'current_stage_id', 'dynamic_form_data', 'project_type', 'is_multi_tenancy'];
 
     protected $casts = [
+        'is_multi_tenancy' => 'boolean',
         'start_date' => 'date',
         'deadline' => 'date',
         'contract_value' => 'decimal:2',
@@ -95,6 +97,24 @@ class Project extends Model
     public function remainingGold(): int
     {
         return max(0, (int) ($this->total_gold ?? 1000) - $this->allocatedGold());
+    }
+
+    public function isMultiTenancy(): bool
+    {
+        return (bool) $this->is_multi_tenancy;
+    }
+
+    public function scopeMultiTenancy($query)
+    {
+        return $query->where('is_multi_tenancy', true);
+    }
+
+    public function scopeStandard($query)
+    {
+        return $query->where(function ($q) {
+            $q->where('is_multi_tenancy', false)
+                ->orWhereNull('is_multi_tenancy');
+        });
     }
 
     public function passwordUpdatedBy()
@@ -191,8 +211,8 @@ class Project extends Model
     /**
      * Deployment histories for this project
      */
-    public function deploymentHistories(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function deploymentHistories(): HasMany
     {
-        return $this->hasMany(\App\Models\DeploymentHistory::class);
+        return $this->hasMany(DeploymentHistory::class);
     }
 }

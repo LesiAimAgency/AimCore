@@ -250,7 +250,7 @@ class DashboardController extends Controller
         try {
             $user = auth()->user();
 
-            $query = Project::with(['admin', 'tenant'])->latest();
+            $query = Project::multiTenancy()->with(['admin', 'tenant'])->latest();
 
             // Lọc dự án theo user (Super Admin hoặc admin@example.com sẽ thấy toàn bộ dự án)
             if ($user && ! $user->isSuperAdmin() && $user->email !== 'admin@example.com') {
@@ -277,6 +277,9 @@ class DashboardController extends Controller
             $projects = $query->get();
             $projectIds = $projects->pluck('id')->toArray();
 
+            // Lấy toàn bộ danh sách dự án để cho phép quản trị viên xem và bật/tắt chế độ Multi-Tenancy
+            $allProjects = Project::with(['admin', 'tenant'])->orderBy('name')->get();
+
             // Lọc activities theo danh sách projects của user (Super Admin thấy toàn bộ)
             $todayActivitiesQuery = ActivityLog::whereDate('created_at', today());
             $recentActivitiesQuery = ActivityLog::with(['user', 'project'])->latest()->take(10);
@@ -293,6 +296,7 @@ class DashboardController extends Controller
 
             return view('superadmin.dashboard.multi-tenancy', compact(
                 'projects',
+                'allProjects',
                 'todayActivities',
                 'recentActivities',
                 'hostingProfiles'
@@ -303,6 +307,7 @@ class DashboardController extends Controller
 
             // Fallback data nếu có lỗi
             $projects = collect();
+            $allProjects = collect();
             $todayActivities = 0;
             $recentActivities = collect();
             $hostingProfiles = collect();
@@ -443,5 +448,90 @@ class DashboardController extends Controller
         $request->merge(['project_id' => $project->id]);
 
         return $this->storeMultiTenancyAccount($request);
+    }
+
+    /**
+     * Chuyển đổi trạng thái Multi-Tenancy của một dự án (Bật hoặc Tắt).
+     */
+    public function toggleMultiTenancyMode(Request $request, Project $project)
+    {
+        $isMultiTenancy = $request->has('is_multi_tenancy')
+            ? $request->boolean('is_multi_tenancy')
+            : ! $project->is_multi_tenancy;
+
+        $project->update([
+            'is_multi_tenancy' => $isMultiTenancy,
+        ]);
+
+        // Nếu bật Multi-Tenancy và dự án chưa có tenant_id, tự động tạo / map tenant
+        if ($isMultiTenancy && ! $project->tenant_id) {
+            try {
+                $tenant = Tenant::firstOrCreate(
+                    ['code' => $project->code],
+                    [
+                        'name' => $project->name,
+                        'domain' => $project->external_domain ?: $project->code,
+                        'database_name' => 'tenant_'.$project->code,
+                        'status' => 'active',
+                    ]
+                );
+                $project->update(['tenant_id' => $tenant->id]);
+            } catch (\Throwable $e) {
+                \Log::warning('Tenant mapping in toggleMultiTenancyMode failed: '.$e->getMessage());
+            }
+        }
+
+        $statusText = $isMultiTenancy ? 'Dự án Multi-Tenancy (CMS Tenant)' : 'Dự án thông thường';
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => "Đã chuyển dự án \"{$project->name}\" thành {$statusText} thành công!",
+                'is_multi_tenancy' => $isMultiTenancy,
+            ]);
+        }
+
+        return back()->with('alert', [
+            'type' => 'success',
+            'message' => "Đã chuyển dự án \"{$project->name}\" thành {$statusText} thành công!",
+        ]);
+    }
+
+    /**
+     * Cập nhật hàng loạt (Batch Update) các dự án thuộc mô hình Multi-Tenancy.
+     */
+    public function batchUpdateMultiTenancyModes(Request $request)
+    {
+        $selectedIds = array_map('intval', (array) $request->input('multi_tenancy_project_ids', []));
+
+        // Kích hoạt Multi-Tenancy cho các dự án được chọn
+        Project::whereIn('id', $selectedIds)->update(['is_multi_tenancy' => true]);
+
+        // Tự động map tenant cho các dự án vừa bật nếu chưa có
+        $newlyEnabled = Project::whereIn('id', $selectedIds)->whereNull('tenant_id')->get();
+        foreach ($newlyEnabled as $p) {
+            try {
+                $tenant = Tenant::firstOrCreate(
+                    ['code' => $p->code],
+                    [
+                        'name' => $p->name,
+                        'domain' => $p->external_domain ?: $p->code,
+                        'database_name' => 'tenant_'.$p->code,
+                        'status' => 'active',
+                    ]
+                );
+                $p->update(['tenant_id' => $tenant->id]);
+            } catch (\Throwable $e) {
+                \Log::warning("Batch tenant mapping for project {$p->id} failed: ".$e->getMessage());
+            }
+        }
+
+        // Chuyển các dự án không được chọn về dạng dự án thông thường
+        Project::whereNotIn('id', $selectedIds)->update(['is_multi_tenancy' => false]);
+
+        return back()->with('alert', [
+            'type' => 'success',
+            'message' => 'Đã cập nhật danh sách phân loại dự án Multi-Tenancy thành công!',
+        ]);
     }
 }

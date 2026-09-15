@@ -17,7 +17,7 @@
 
         <a href="{{ request()->fullUrlWithQuery(['type' => 'internal', 'page' => 1]) }}" 
            class="px-4 py-2 rounded-md text-sm font-semibold transition-colors flex items-center gap-2 {{ ($type ?? 'all') === 'internal' ? 'bg-blue-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
-            <span>🏢 Nhân sự & Quản trị nội bộ</span>
+            <span>Nhân sự & Quản trị nội bộ</span>
             <span class="px-2 py-0.5 text-xs rounded-full {{ ($type ?? 'all') === 'internal' ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-700' }}">
                 {{ $internalCount ?? 0 }}
             </span>
@@ -25,7 +25,7 @@
 
         <a href="{{ request()->fullUrlWithQuery(['type' => 'multi_tenancy', 'page' => 1]) }}" 
            class="px-4 py-2 rounded-md text-sm font-semibold transition-colors flex items-center gap-2 {{ ($type ?? 'all') === 'multi_tenancy' ? 'bg-purple-600 text-white shadow-xs' : 'text-purple-700 hover:bg-purple-50' }}">
-            <span>🚀 Tài khoản Multi-Tenancy</span>
+            <span>Tài khoản Multi-Tenancy</span>
             <span class="px-2 py-0.5 text-xs rounded-full {{ ($type ?? 'all') === 'multi_tenancy' ? 'bg-purple-700 text-white' : 'bg-purple-100 text-purple-800' }}">
                 {{ $multiTenancyCount ?? 0 }}
             </span>
@@ -67,7 +67,7 @@
                 @if(request()->routeIs('superadmin.*'))
                     <a href="{{ route('superadmin.multi-tenancy.index') }}" 
                        class="px-3 py-2 bg-purple-50 text-purple-700 border border-purple-200 rounded-lg text-sm hover:bg-purple-100 flex items-center gap-1 font-medium whitespace-nowrap">
-                        <span>🚀</span> Quản lý Multi-Tenancy
+                        Quản lý Multi-Tenancy
                     </a>
                 @endif
                 <a href="{{ request()->routeIs('superadmin.*') ? route('superadmin.users.create') : route('project.admin.users.create', ['projectCode' => request()->route('projectCode')]) }}" 
@@ -139,7 +139,6 @@
                                             @foreach($userProjectIds as $pid)
                                                 @if(isset($projects[$pid]))
                                                     <div class="font-medium text-purple-700 text-xs flex items-center gap-1">
-                                                        <span>🌐</span>
                                                         <span>{{ $projects[$pid]->name }}</span>
                                                         <span class="text-gray-400 font-mono">({{ $projects[$pid]->code }})</span>
                                                     </div>
@@ -148,7 +147,7 @@
                                         </div>
                                     @elseif($user->tenant)
                                         <div class="font-medium text-purple-700 text-xs flex items-center gap-1">
-                                            <span>🌐 Tenant:</span>
+                                            <span class="text-gray-500">Tenant:</span>
                                             <span>{{ $user->tenant->name }}</span>
                                             <span class="text-gray-400 font-mono">({{ $user->tenant->code }})</span>
                                         </div>
@@ -163,7 +162,7 @@
                                 <div class="flex flex-wrap gap-1">
                                     @if($isMulti)
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-200">
-                                            🚀 Multi-Tenancy Control Center
+                                            Multi-Tenancy Control Center
                                         </span>
                                     @endif
                                     @foreach($user->roles as $role)

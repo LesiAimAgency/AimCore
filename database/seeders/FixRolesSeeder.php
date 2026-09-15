@@ -13,11 +13,19 @@ class FixRolesSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Delete all non-standard roles
-        $standardRoleNames = ['manager', 'employee', 'visitor'];
-        Role::whereNotIn('name', $standardRoleNames)->delete();
-
-        // 2. Create standard roles if they don't exist
+        // 1. Ensure all standard core roles exist
+        $standardRoleNames = [
+            'super_admin',
+            'project_manager',
+            'web_designer',
+            'designer',
+            'manager',
+            'employee',
+            'account',
+            'dev',
+            'multi_tenancy',
+            'visitor',
+        ];
         $managerRole = Role::firstOrCreate(['name' => 'manager'], ['display_name' => 'Quản lý', 'description' => 'Quản lý toàn bộ hệ thống']);
         $employeeRole = Role::firstOrCreate(['name' => 'employee'], ['display_name' => 'Nhân viên', 'description' => 'Nhân viên công ty (Thấy danh sách NV và Việc của tôi)']);
         $visitorRole = Role::firstOrCreate(['name' => 'visitor'], ['display_name' => 'Khách', 'description' => 'Khách truy cập']);

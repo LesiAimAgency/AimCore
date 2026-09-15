@@ -54,7 +54,6 @@ Route::post('/payment/kredivo/calculate', [CheckoutController::class, 'kredivoCa
 Route::get('/api/locations/districts/{provinceCode}', [CheckoutController::class, 'getDistricts'])->name('locations.districts');
 Route::get('/api/locations/wards/{districtCode}', [CheckoutController::class, 'getWards'])->name('locations.wards');
 
-
 // ─── CONTACT ────────────────────────────────────────────────
 Route::get('/lien-he', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/lien-he', [ContactController::class, 'send'])->name('contact.send');
