@@ -62,17 +62,36 @@
                         </div>
 
                         <!-- Cấu hình Multi-Tenancy -->
-                        <div class="p-4 bg-purple-50/70 rounded-xl border border-purple-200 mt-4">
-                            <label class="flex items-start gap-3 cursor-pointer">
-                                <input type="hidden" name="is_multi_tenancy" value="0">
-                                <input type="checkbox" name="is_multi_tenancy" value="1" {{ old('is_multi_tenancy', false) ? 'checked' : '' }} class="w-5 h-5 text-purple-600 rounded border-gray-300 focus:ring-purple-500 mt-0.5">
-                                <div>
-                                    <span class="font-bold text-sm text-purple-950 block">Kích hoạt mô hình Multi-Tenancy (CMS Tenant)</span>
-                                    <span class="text-xs text-purple-700 leading-relaxed block mt-0.5">
-                                        Bật tuỳ chọn này nếu dự án cần quản lý trên <strong>Multi-Tenancy Control Center</strong>, có CMS riêng và cấp quyền cho khách hàng / quản trị viên website riêng. Để trống nếu là dự án thông thường của Agency.
-                                    </span>
-                                </div>
-                            </label>
+                        @php
+                            $isMtActive = (bool) old('is_multi_tenancy', false);
+                        @endphp
+                        <div id="multi_tenancy_card" class="p-4 sm:p-5 rounded-xl border transition-all duration-200 mt-4 {{ $isMtActive ? 'bg-gradient-to-r from-purple-50 via-indigo-50/40 to-purple-50 border-purple-300 ring-2 ring-purple-100 shadow-xs' : 'bg-gray-50/80 border-gray-200' }}">
+                            <div class="flex items-start justify-between gap-4">
+                                <label for="is_multi_tenancy_toggle" class="flex items-start gap-3.5 cursor-pointer flex-1 select-none">
+                                    <div class="pt-0.5">
+                                        <input type="hidden" name="is_multi_tenancy" value="0">
+                                        <input type="checkbox" name="is_multi_tenancy" id="is_multi_tenancy_toggle" value="1" 
+                                            {{ $isMtActive ? 'checked' : '' }} 
+                                            class="w-5 h-5 text-purple-600 rounded border-gray-300 focus:ring-purple-500 cursor-pointer"
+                                            onchange="handleMultiTenancyToggle(this)">
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2.5 flex-wrap">
+                                            <span class="font-bold text-sm sm:text-base text-gray-900">Kích hoạt mô hình Multi-Tenancy (CMS Tenant)</span>
+                                            
+                                            <!-- Dynamic Badge -->
+                                            <span id="mt_status_badge" class="px-2.5 py-0.5 text-xs font-bold rounded-full border inline-flex items-center gap-1.5 transition-all {{ $isMtActive ? 'bg-purple-100 text-purple-800 border-purple-200' : 'bg-gray-200 text-gray-600 border-gray-300' }}">
+                                                <svg id="mt_badge_check" class="w-3.5 h-3.5 {{ $isMtActive ? 'text-purple-600 inline' : 'hidden' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                                <span id="mt_badge_dot" class="w-1.5 h-1.5 rounded-full {{ $isMtActive ? 'hidden' : 'bg-gray-400 inline-block' }}"></span>
+                                                <span id="mt_badge_text">{{ $isMtActive ? 'Đang kích hoạt Multi-Tenancy' : 'Chưa kích hoạt (Dự án thường)' }}</span>
+                                            </span>
+                                        </div>
+                                        <p id="mt_helper_text" class="text-xs leading-relaxed mt-1.5 transition-colors {{ $isMtActive ? 'text-purple-800 font-medium' : 'text-gray-500' }}">
+                                            {{ $isMtActive ? '✓ Dự án này sẽ được phân loại là Multi-Tenancy và hiển thị trên Multi-Tenancy Control Center với CMS riêng.' : 'Bật tuỳ chọn này nếu dự án cần quản lý trên Multi-Tenancy Control Center, có CMS riêng và cấp quyền cho khách hàng / quản trị viên website riêng. Để trống nếu là dự án thông thường của Agency.' }}
+                                        </p>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100 mt-4">

@@ -68,17 +68,43 @@
                         </div>
 
                         <!-- Cấu hình Multi-Tenancy -->
-                        <div class="p-4 bg-purple-50/70 rounded-xl border border-purple-200 mt-4">
-                            <label class="flex items-start gap-3 cursor-pointer">
-                                <input type="hidden" name="is_multi_tenancy" value="0">
-                                <input type="checkbox" name="is_multi_tenancy" value="1" {{ old('is_multi_tenancy', $project->is_multi_tenancy) ? 'checked' : '' }} class="w-5 h-5 text-purple-600 rounded border-gray-300 focus:ring-purple-500 mt-0.5">
-                                <div>
-                                    <span class="font-bold text-sm text-purple-950 block">Kích hoạt mô hình Multi-Tenancy (CMS Tenant)</span>
-                                    <span class="text-xs text-purple-700 leading-relaxed block mt-0.5">
-                                        Bật tuỳ chọn này nếu dự án cần quản lý trên <strong>Multi-Tenancy Control Center</strong>, có CMS riêng và cấp quyền cho khách hàng / quản trị viên website riêng. Nếu là dự án thông thường của Agency (thiết kế, nội bộ, marketing...), vui lòng bỏ chọn để không hiển thị trên bảng Multi-Tenancy.
-                                    </span>
-                                </div>
-                            </label>
+                        @php
+                            $isMtActive = (bool) old('is_multi_tenancy', $project->is_multi_tenancy);
+                        @endphp
+                        <div id="multi_tenancy_card" class="p-4 sm:p-5 rounded-xl border transition-all duration-200 mt-4 {{ $isMtActive ? 'bg-gradient-to-r from-purple-50 via-indigo-50/40 to-purple-50 border-purple-300 ring-2 ring-purple-100 shadow-xs' : 'bg-gray-50/80 border-gray-200' }}">
+                            <div class="flex items-start justify-between gap-4">
+                                <label for="is_multi_tenancy_toggle" class="flex items-start gap-3.5 cursor-pointer flex-1 select-none">
+                                    <div class="pt-0.5">
+                                        <input type="hidden" name="is_multi_tenancy" value="0">
+                                        <input type="checkbox" name="is_multi_tenancy" id="is_multi_tenancy_toggle" value="1" 
+                                            {{ $isMtActive ? 'checked' : '' }} 
+                                            class="w-5 h-5 text-purple-600 rounded border-gray-300 focus:ring-purple-500 cursor-pointer"
+                                            onchange="handleMultiTenancyToggle(this)">
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2.5 flex-wrap">
+                                            <span class="font-bold text-sm sm:text-base text-gray-900">Kích hoạt mô hình Multi-Tenancy (CMS Tenant)</span>
+                                            
+                                            <!-- Dynamic Badge -->
+                                            <span id="mt_status_badge" class="px-2.5 py-0.5 text-xs font-bold rounded-full border inline-flex items-center gap-1.5 transition-all {{ $isMtActive ? 'bg-purple-100 text-purple-800 border-purple-200' : 'bg-gray-200 text-gray-600 border-gray-300' }}">
+                                                <svg id="mt_badge_check" class="w-3.5 h-3.5 {{ $isMtActive ? 'text-purple-600 inline' : 'hidden' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                                <span id="mt_badge_dot" class="w-1.5 h-1.5 rounded-full {{ $isMtActive ? 'hidden' : 'bg-gray-400 inline-block' }}"></span>
+                                                <span id="mt_badge_text">{{ $isMtActive ? 'Đang kích hoạt Multi-Tenancy' : 'Chưa kích hoạt (Dự án thường)' }}</span>
+                                            </span>
+                                        </div>
+                                        <p id="mt_helper_text" class="text-xs leading-relaxed mt-1.5 transition-colors {{ $isMtActive ? 'text-purple-800 font-medium' : 'text-gray-500' }}">
+                                            {{ $isMtActive ? '✓ Dự án này đang được phân loại là Multi-Tenancy và hiển thị trên Multi-Tenancy Control Center với CMS riêng.' : 'Bật tuỳ chọn này nếu dự án cần quản lý trên Multi-Tenancy Control Center, có CMS riêng và cấp quyền cho khách hàng / quản trị viên website riêng. Nếu là dự án thông thường của Agency (thiết kế, nội bộ, marketing...), vui lòng bỏ chọn để không hiển thị trên bảng Multi-Tenancy.' }}
+                                        </p>
+                                    </div>
+                                </label>
+
+                                @if($project->is_multi_tenancy)
+                                    <a href="{{ route('superadmin.multi-tenancy.index') }}" target="_blank" class="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-purple-700 bg-white hover:bg-purple-100 border border-purple-200 px-3 py-1.5 rounded-lg shadow-2xs transition-colors shrink-0" title="Đi tới màn hình điều hành Multi-Tenancy">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                                        <span>Xem trên MT Hub</span>
+                                    </a>
+                                @endif
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100 mt-4">
@@ -418,5 +444,34 @@
             }
         }
     });
+
+    function handleMultiTenancyToggle(checkbox) {
+        const card = document.getElementById('multi_tenancy_card');
+        const badge = document.getElementById('mt_status_badge');
+        const badgeCheck = document.getElementById('mt_badge_check');
+        const badgeDot = document.getElementById('mt_badge_dot');
+        const badgeText = document.getElementById('mt_badge_text');
+        const helperText = document.getElementById('mt_helper_text');
+
+        if (checkbox.checked) {
+            card.className = 'p-4 sm:p-5 rounded-xl border transition-all duration-200 mt-4 bg-gradient-to-r from-purple-50 via-indigo-50/40 to-purple-50 border-purple-300 ring-2 ring-purple-100 shadow-xs';
+            badge.className = 'px-2.5 py-0.5 text-xs font-bold rounded-full border inline-flex items-center gap-1.5 transition-all bg-purple-100 text-purple-800 border-purple-200';
+            badgeCheck.classList.remove('hidden');
+            badgeCheck.classList.add('inline');
+            badgeDot.classList.add('hidden');
+            badgeText.textContent = 'Đang kích hoạt Multi-Tenancy';
+            helperText.className = 'text-xs leading-relaxed mt-1.5 transition-colors text-purple-800 font-medium';
+            helperText.textContent = '✓ Dự án này đang được phân loại là Multi-Tenancy và hiển thị trên Multi-Tenancy Control Center với CMS riêng.';
+        } else {
+            card.className = 'p-4 sm:p-5 rounded-xl border transition-all duration-200 mt-4 bg-gray-50/80 border-gray-200';
+            badge.className = 'px-2.5 py-0.5 text-xs font-medium rounded-full border inline-flex items-center gap-1.5 transition-all bg-gray-200 text-gray-600 border-gray-300';
+            badgeCheck.classList.add('hidden');
+            badgeCheck.classList.remove('inline');
+            badgeDot.classList.remove('hidden');
+            badgeText.textContent = 'Chưa kích hoạt (Dự án thường)';
+            helperText.className = 'text-xs leading-relaxed mt-1.5 transition-colors text-gray-500';
+            helperText.textContent = 'Bật tuỳ chọn này nếu dự án cần quản lý trên Multi-Tenancy Control Center, có CMS riêng và cấp quyền cho khách hàng / quản trị viên website riêng. Nếu là dự án thông thường của Agency (thiết kế, nội bộ, marketing...), vui lòng bỏ chọn để không hiển thị trên bảng Multi-Tenancy.';
+        }
+    }
 </script>
 @endsection
