@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\ProjectSetting;
 use App\Models\User;
 use App\Models\VisitorLog;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -18,21 +19,17 @@ use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(): RedirectResponse
     {
-        $data = $this->getDashboardData(null);
-
-        return view('cms.dashboard.index', $data);
+        return redirect()->route('superadmin.dashboard');
     }
 
     /**
-     * Super admin dashboard route.
+     * Super admin dashboard route: Redirect directly to superadmin dashboard.
      */
-    public function superAdminDashboard(): View
+    public function superAdminDashboard(): RedirectResponse
     {
-        $data = $this->getDashboardData(null);
-
-        return view('cms.dashboard.index', $data);
+        return redirect()->route('superadmin.dashboard');
     }
 
     public function projectDashboard(Request $request)

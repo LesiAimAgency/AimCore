@@ -70,4 +70,11 @@ class GoogleFontsEndpointTest extends TestCase
         $fonts = $response->json();
         $this->assertNotEmpty($fonts);
     }
+
+    public function test_admin_url_redirects_to_superadmin_dashboard(): void
+    {
+        $response = $this->actingAs($this->admin)->get('/admin');
+
+        $response->assertRedirect(route('superadmin.dashboard'));
+    }
 }

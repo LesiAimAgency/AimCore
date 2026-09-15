@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\SuperAdmin;
 
+use App\Models\Department;
 use App\Models\Project;
 use App\Models\Role;
 use App\Models\Tenant;
@@ -336,5 +337,24 @@ class MultiTenancyControlCenterTest extends TestCase
         $this->assertTrue($projectA->is_multi_tenancy);
         $this->assertFalse($projectB->is_multi_tenancy); // Đã bị gỡ khỏi multi-tenancy
         $this->assertTrue($projectC->is_multi_tenancy);
+    }
+
+    public function test_can_update_project_with_null_customer(): void
+    {
+        $department = Department::firstOrCreate(['id' => 1], ['name' => 'Design', 'code' => 'design', 'status' => 'active']);
+
+        $response = $this->actingAs($this->superAdmin)
+            ->put(route('superadmin.projects.update', $this->project), [
+                'name' => 'Updated Project Name',
+                'customer_id' => '',
+                'subdomain' => 'localhost/TEST01',
+                'project_type' => 'design',
+                'department_id' => $department->id,
+            ]);
+
+        $response->assertRedirect();
+        $this->project->refresh();
+        $this->assertNull($this->project->customer_id);
+        $this->assertEquals('Updated Project Name', $this->project->name);
     }
 }

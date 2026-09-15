@@ -85,9 +85,9 @@
 
 
                             <div>
-                                <x-form.label value="Khách hàng" required="true" />
-                                <select name="customer_id" id="customer_id_select" required class="w-full rounded-lg border-gray-300 focus:border-[#001B4E] focus:ring focus:ring-[#001B4E] focus:ring-opacity-50 border px-4 py-2">
-                                    <option value="">-- Chọn khách hàng --</option>
+                                <x-form.label value="Khách hàng" />
+                                <select name="customer_id" id="customer_id_select" class="w-full rounded-lg border-gray-300 focus:border-[#001B4E] focus:ring focus:ring-[#001B4E] focus:ring-opacity-50 border px-4 py-2">
+                                    <option value="">-- Không chọn / Chưa có khách hàng --</option>
                                     @foreach($customers as $customer)
                                         <option value="{{ $customer->id }}" {{ old('customer_id', $project->customer_id) == $customer->id ? 'selected' : '' }}>
                                             {{ $customer->name }} {{ $customer->phone ? ' - ' . $customer->phone : '' }}

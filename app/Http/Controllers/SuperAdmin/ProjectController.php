@@ -143,13 +143,17 @@ class ProjectController extends Controller implements HasMiddleware
         $baseUrl = config('app.url');
         $subdomain = rtrim($baseUrl, '/').'/'.ltrim($request->code, '/');
 
+        $customerId = $request->filled('customer_id') ? $request->customer_id : ($contract?->customer_id);
+        $customer = $customerId ? Customer::find($customerId) : null;
+        $clientName = $customer?->name ?? ($contract?->client_name ?? null);
+
         $project = Project::create([
             'contract_id' => $request->contract_id,
-            'customer_id' => $request->customer_id ?? $contract?->customer_id,
+            'customer_id' => $customerId,
             'name' => $request->name,
             'code' => $request->code,
             'subdomain' => $subdomain,
-            'client_name' => $contract?->client_name ?? 'TBD',
+            'client_name' => $clientName,
             'contract_value' => $request->filled('contract_value') ? $request->contract_value : ($contract?->contract_value ?? 0),
             'total_gold' => $request->filled('total_gold') ? max(0, (int) $request->total_gold) : 0,
             'start_date' => $request->start_date ?? ($contract?->start_date ?? now()),
@@ -286,25 +290,36 @@ class ProjectController extends Controller implements HasMiddleware
 
         $isMultiTenancy = $request->boolean('is_multi_tenancy');
 
-        $project->update([
+        $customerId = $request->filled('customer_id') ? $request->customer_id : null;
+        $customer = $customerId ? Customer::find($customerId) : null;
+
+        $updateData = [
             'name' => $request->name,
-            'customer_id' => $request->customer_id,
+            'customer_id' => $customerId,
             'subdomain' => $request->subdomain,
             'total_gold' => $request->filled('total_gold') ? max(0, (int) $request->total_gold) : (int) ($project->total_gold ?? 0),
-            'notes' => $request->notes,
-            'start_date' => $request->start_date,
-            'deadline' => $request->deadline,
-            'status' => $request->status,
-            'contract_value' => $request->contract_value,
-            'technical_requirements' => $request->technical_requirements,
-            'features' => $request->features,
-            'cms_features' => $request->cms_features ?? [],
-            'environment' => $request->environment,
+            'notes' => $request->notes ?? $project->notes,
+            'start_date' => $request->start_date ?? $project->start_date,
+            'deadline' => $request->deadline ?? $project->deadline,
+            'status' => $request->status ?? $project->status ?? 'pending',
+            'contract_value' => $request->contract_value ?? $project->contract_value,
+            'technical_requirements' => $request->technical_requirements ?? $project->technical_requirements,
+            'features' => $request->features ?? $project->features,
+            'cms_features' => $request->cms_features ?? ($project->cms_features ?? []),
+            'environment' => $request->environment ?? $project->environment,
             'department_id' => $request->department_id,
-            'service_id' => $request->service_id,
-            'dynamic_form_data' => $request->dynamic_form_data,
+            'service_id' => $request->service_id ?? $project->service_id,
+            'dynamic_form_data' => $request->dynamic_form_data ?? $project->dynamic_form_data,
             'is_multi_tenancy' => $isMultiTenancy,
-        ]);
+        ];
+
+        if ($customer) {
+            $updateData['client_name'] = $customer->name;
+        } elseif ($request->has('customer_id') && empty($customerId) && ! $project->contract_id) {
+            $updateData['client_name'] = null;
+        }
+
+        $project->update($updateData);
 
         if ($isMultiTenancy && ! $project->tenant_id) {
             try {
