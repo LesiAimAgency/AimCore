@@ -436,5 +436,34 @@
             }
         }
     });
+
+    function handleMultiTenancyToggle(checkbox) {
+        const card = document.getElementById('multi_tenancy_card');
+        const badge = document.getElementById('mt_status_badge');
+        const badgeCheck = document.getElementById('mt_badge_check');
+        const badgeDot = document.getElementById('mt_badge_dot');
+        const badgeText = document.getElementById('mt_badge_text');
+        const helperText = document.getElementById('mt_helper_text');
+
+        if (checkbox.checked) {
+            card.className = 'p-4 sm:p-5 rounded-xl border transition-all duration-200 mt-4 bg-gradient-to-r from-purple-50 via-indigo-50/40 to-purple-50 border-purple-300 ring-2 ring-purple-100 shadow-xs';
+            badge.className = 'px-2.5 py-0.5 text-xs font-bold rounded-full border inline-flex items-center gap-1.5 transition-all bg-purple-100 text-purple-800 border-purple-200';
+            badgeCheck.classList.remove('hidden');
+            badgeCheck.classList.add('inline');
+            badgeDot.classList.add('hidden');
+            badgeText.textContent = 'Đang kích hoạt Multi-Tenancy';
+            helperText.className = 'text-xs leading-relaxed mt-1.5 transition-colors text-purple-800 font-medium';
+            helperText.textContent = '✓ Dự án này sẽ được phân loại là Multi-Tenancy và hiển thị trên Multi-Tenancy Control Center với CMS riêng.';
+        } else {
+            card.className = 'p-4 sm:p-5 rounded-xl border transition-all duration-200 mt-4 bg-gray-50/80 border-gray-200';
+            badge.className = 'px-2.5 py-0.5 text-xs font-medium rounded-full border inline-flex items-center gap-1.5 transition-all bg-gray-200 text-gray-600 border-gray-300';
+            badgeCheck.classList.add('hidden');
+            badgeCheck.classList.remove('inline');
+            badgeDot.classList.remove('hidden');
+            badgeText.textContent = 'Chưa kích hoạt (Dự án thường)';
+            helperText.className = 'text-xs leading-relaxed mt-1.5 transition-colors text-gray-500';
+            helperText.textContent = 'Bật tuỳ chọn này nếu dự án cần quản lý trên Multi-Tenancy Control Center, có CMS riêng và cấp quyền cho khách hàng / quản trị viên website riêng. Để trống nếu là dự án thông thường của Agency.';
+        }
+    }
 </script>
 @endsection
