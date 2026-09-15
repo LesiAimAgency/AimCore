@@ -21,6 +21,8 @@ class User extends Authenticatable
 
     const ROLE_WEB_ADMIN = 'web_admin';
 
+    const ROLE_MULTI_TENANCY = 'multi_tenancy';
+
     /**
      * Get the database connection for the model.
      */
@@ -263,6 +265,18 @@ class User extends Authenticatable
     public function isVisitor(): bool
     {
         return $this->role === 'visitor' || $this->hasRole('visitor');
+    }
+
+    public function isMultiTenancy(): bool
+    {
+        return $this->role === self::ROLE_MULTI_TENANCY
+            || $this->role === 'multi_tenancy_control_center'
+            || $this->role === 'cms'
+            || $this->hasRole('multi_tenancy')
+            || $this->hasRole('multi_tenancy_control_center')
+            || $this->hasRole('cms')
+            || (! empty($this->tenant_id))
+            || (! empty($this->project_ids));
     }
 
     public function canAccessSuperAdmin(): bool

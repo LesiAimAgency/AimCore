@@ -156,10 +156,12 @@ Route::middleware([
     Route::get('projects/{project}/export-viewer', [ProjectController::class, 'exportViewer'])->name('projects.export-viewer');
     Route::delete('projects/{project}/delete-logs', [ProjectController::class, 'deleteLogs'])->name('projects.delete-logs');
 
-    // Hosting Deployment
+    // Multi-Tenancy Control Center
     Route::prefix('multi-tenancy')->name('multi-tenancy.')->group(function () {
         Route::get('/', [DashboardController::class, 'multiTenancy'])->name('index');
         Route::post('/projects/{project}/deploy', [HostingDeployController::class, 'triggerDeployMultiTenancy'])->name('deploy');
+        Route::post('/accounts', [DashboardController::class, 'storeMultiTenancyAccount'])->name('accounts.store');
+        Route::post('/projects/{project}/account', [DashboardController::class, 'updateProjectAccount'])->name('project-account');
     });
     Route::prefix('hosting')->name('hosting.')->group(function () {
         Route::get('/', [HostingDeployController::class, 'index'])->name('index');

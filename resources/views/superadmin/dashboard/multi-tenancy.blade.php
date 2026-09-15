@@ -72,70 +72,116 @@
 
 <!-- Projects Grid -->
 <div class="bg-white rounded-lg shadow-sm p-6">
-  <div class="flex justify-between items-center mb-6">
-    <h3 class="text-lg font-semibold">Tất cả Projects</h3>
-    <input type="text" id="searchProjects" placeholder="Tìm kiếm project..." class="px-4 py-2 border rounded-lg">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <div>
+      <h3 class="text-lg font-semibold text-gray-900">Tất cả Projects / Tenants</h3>
+      <p class="text-xs text-gray-500">Quản lý CMS, triển khai và tài khoản quản trị Multi-Tenancy</p>
+    </div>
+    <div class="flex items-center gap-3 w-full sm:w-auto">
+      <input type="text" id="searchProjects" placeholder="Tìm kiếm project..." class="px-4 py-2 border rounded-lg text-sm w-full sm:w-64 focus:ring-2 focus:ring-blue-500">
+      <button type="button" onclick="openCreateAccountModal()" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg text-sm font-semibold flex items-center gap-2 shadow-sm whitespace-nowrap transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+        </svg>
+        + Cấp tài khoản Multi-Tenancy
+      </button>
+    </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="projectsGrid">
     @foreach($projects as $project)
-    <div class="border rounded-lg p-6 hover:shadow-lg transition-all duration-200 project-card" data-name="{{ strtolower($project->name) }}" data-code="{{ strtolower($project->code) }}">
-      <div class="flex items-start justify-between mb-4">
-        <div class="flex-1">
-          <h4 class="font-bold text-lg mb-1">{{ $project->name }}</h4>
-          <p class="text-sm text-gray-600">{{ $project->code }}</p>
+    <div class="border rounded-lg p-6 hover:shadow-lg transition-all duration-200 project-card bg-white flex flex-col justify-between" data-name="{{ strtolower($project->name) }}" data-code="{{ strtolower($project->code) }}">
+      <div>
+        <div class="flex items-start justify-between mb-3">
+          <div class="flex-1 mr-2">
+            <h4 class="font-bold text-lg mb-0.5 text-gray-900">{{ $project->name }}</h4>
+            <p class="text-xs font-mono text-blue-600 font-semibold">{{ $project->code }}</p>
+          </div>
+          <span class="px-2.5 py-1 text-xs font-semibold rounded-full 
+            {{ $project->status === 'active' ? 'bg-green-100 text-green-800' : '' }}
+            {{ $project->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : '' }}
+            {{ $project->status === 'assigned' ? 'bg-blue-100 text-blue-800' : '' }}">
+            {{ ucfirst($project->status) }}
+          </span>
         </div>
-        <span class="px-3 py-1 text-xs font-semibold rounded-full 
-          {{ $project->status === 'active' ? 'bg-green-100 text-green-800' : '' }}
-          {{ $project->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : '' }}
-          {{ $project->status === 'assigned' ? 'bg-blue-100 text-blue-800' : '' }}">
-          {{ ucfirst($project->status) }}
-        </span>
+
+        <div class="space-y-1.5 mb-4 text-xs text-gray-600">
+          <div class="flex items-center">
+            <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            Khách hàng: <span class="font-medium text-gray-800 ml-1">{{ $project->client_name ?? 'N/A' }}</span>
+          </div>
+          <div class="flex items-center">
+            <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+            </svg>
+            Domain: <span class="font-mono text-gray-700 ml-1">{{ $project->external_domain ?: ($project->subdomain ?: 'Chưa cấu hình') }}</span>
+          </div>
+          <div class="flex items-center">
+            <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            Hạn: <span class="font-medium text-gray-800 ml-1">{{ $project->deadline?->format('d/m/Y') ?? 'N/A' }}</span>
+          </div>
+        </div>
+
+        <!-- Multi-Tenancy Account Box -->
+        <div class="bg-purple-50/60 border border-purple-100 rounded-lg p-3 mb-4 flex items-center justify-between text-xs">
+          <div class="truncate mr-2">
+            <span class="text-purple-700 font-semibold block text-[11px] uppercase tracking-wider">Tài khoản Multi-Tenancy:</span>
+            @if($project->admin || $project->project_admin_username)
+              <div class="font-medium text-gray-900 flex items-center gap-1.5 mt-0.5">
+                <span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>
+                <span class="font-mono font-bold">{{ $project->project_admin_username ?? $project->admin->username }}</span>
+                <span class="text-gray-500 font-normal">({{ $project->admin->email ?? strtolower($project->code).'@project.local' }})</span>
+              </div>
+            @else
+              <span class="text-amber-600 font-medium italic mt-0.5 block">Chưa cấp tài khoản quản lý</span>
+            @endif
+          </div>
+          <button type="button" 
+            onclick="openProjectAccountModal({{ $project->id }}, '{{ addslashes($project->name) }}', '{{ $project->code }}', '{{ $project->project_admin_username ?? ($project->admin->username ?? '') }}', '{{ $project->admin->email ?? strtolower($project->code).'@project.local' }}', '{{ $project->getDecryptedPassword() ?? '' }}')"
+            class="px-2.5 py-1.5 bg-white hover:bg-purple-100 text-purple-700 border border-purple-200 rounded text-xs font-semibold shadow-xs flex items-center gap-1 whitespace-nowrap transition-colors"
+            title="Cấp hoặc cập nhật tài khoản quản lý cho website này">
+            <svg class="w-3.5 h-3.5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+            </svg>
+            Tài khoản
+          </button>
+        </div>
       </div>
 
-      <div class="space-y-2 mb-4 text-sm">
-        <div class="flex items-center text-gray-600">
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-          </svg>
-          {{ $project->client_name ?? 'N/A' }}
+      <div>
+        <div class="flex gap-2 mb-2.5">
+          <a href="{{ route('project.admin.dashboard', $project->code) }}" 
+            class="flex-1 px-3 py-2 bg-blue-600 text-white text-center rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+            Vào CMS
+          </a>
+          <button onclick="showDeployModal({{ $project->id }}, '{{ $project->code }}', '{{ $project->external_domain ?? '' }}')" 
+            class="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors" title="Deploy Lên Server">
+            🚀
+          </button>
+          <button onclick="exportWebsite('{{ $project->code }}')" 
+            class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors" title="Xuất Website">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </button>
         </div>
-        <div class="flex items-center text-gray-600">
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-          </svg>
-          {{ $project->deadline?->format('d/m/Y') ?? 'N/A' }}
+        <div class="flex gap-2">
+          <a href="{{ route('superadmin.projects.config', $project) }}" 
+            class="flex-1 px-3 py-2 bg-gray-100 text-gray-700 text-center rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium">
+            Cấu hình
+          </a>
+          <a href="{{ route('superadmin.projects.show', $project) }}" 
+            class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors" title="Xem chi tiết">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+          </a>
         </div>
-      </div>
-
-      <div class="flex gap-2 mb-3">
-        <a href="{{ route('project.admin.dashboard', $project->code) }}" 
-          class="flex-1 px-3 py-2 bg-blue-600 text-white text-center rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
-          Vào CMS
-        </a>
-        <button onclick="showDeployModal({{ $project->id }}, '{{ $project->code }}', '{{ $project->external_domain ?? '' }}')" 
-          class="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors" title="Deploy Lên Server">
-          🚀
-        </button>
-        <button onclick="exportWebsite('{{ $project->code }}')" 
-          class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors" title="Xuất Website">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-          </svg>
-        </button>
-      </div>
-      <div class="flex gap-2">
-        <a href="{{ route('superadmin.projects.config', $project) }}" 
-          class="flex-1 px-3 py-2 bg-blue-600 text-white text-center rounded-lg hover:bg-blue-700 transition-colors text-sm">
-          Cấu hình
-        </a>
-        <a href="{{ route('superadmin.projects.show', $project) }}" 
-          class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-          </svg>
-        </a>
       </div>
     </div>
     @endforeach
@@ -208,7 +254,136 @@
   </div>
 </div>
 
+<!-- Multi-Tenancy Account Modal -->
+<div id="accountModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-xl shadow-2xl p-6 max-w-lg w-full">
+    <div class="flex items-center justify-between border-b pb-3 mb-4">
+      <div class="flex items-center gap-2">
+        
+        <div>
+          <h3 class="text-lg font-bold text-gray-900">Cấp tài khoản Multi-Tenancy Control Center</h3>
+          <p class="text-xs text-gray-500">Tài khoản có quyền quản trị website/tenant độc lập</p>
+        </div>
+      </div>
+      <button type="button" onclick="closeAccountModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+    </div>
+
+    <form id="accountForm" method="POST" action="{{ route('superadmin.multi-tenancy.accounts.store') }}">
+      @csrf
+      
+      <div class="mb-4">
+        <label class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">Chọn Dự án / Website <span class="text-red-500">*</span></label>
+        <select name="project_id" id="accountProjectId" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500" required onchange="onProjectSelectChange(this)">
+          <option value="">-- Chọn dự án --</option>
+          @foreach($projects as $proj)
+            <option value="{{ $proj->id }}" data-code="{{ $proj->code }}" data-name="{{ $proj->name }}" data-username="{{ $proj->project_admin_username ?? $proj->code }}">
+              {{ $proj->name }} ({{ $proj->code }})
+            </option>
+          @endforeach
+        </select>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1">Tên hiển thị <span class="text-red-500">*</span></label>
+          <input type="text" name="name" id="accountName" placeholder="Admin Tên Dự Án" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1">Username <span class="text-red-500">*</span></label>
+          <input type="text" name="username" id="accountUsername" placeholder="ten_du_an" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-purple-500" required>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="block text-xs font-medium text-gray-700 mb-1">Email quản trị <span class="text-red-500">*</span></label>
+        <input type="email" name="email" id="accountEmail" placeholder="admin@domain.com" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500" required>
+      </div>
+
+      <div class="mb-4">
+        <div class="flex items-center justify-between mb-1">
+          <label class="block text-xs font-medium text-gray-700">Mật khẩu truy cập <span class="text-red-500">*</span></label>
+          <button type="button" onclick="generateRandomPassword()" class="text-xs text-purple-600 hover:text-purple-800 font-medium">🎲 Tạo ngẫu nhiên</button>
+        </div>
+        <div class="relative">
+          <input type="text" name="password" id="accountPassword" placeholder="Tối thiểu 6 ký tự" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-purple-500" required>
+        </div>
+      </div>
+
+      <div class="bg-purple-50 border border-purple-100 rounded-lg p-3 mb-5">
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-purple-600 text-white">
+            Vai trò: Multi-Tenancy Control Center
+          </span>
+        </div>
+        <p class="text-[11px] text-purple-800 mt-1.5 leading-relaxed">
+          Tài khoản này được cấp quyền vào <strong>Multi-Tenancy Control Center</strong> và CMS riêng của website đã chọn, quản trị dữ liệu độc lập mà không cần quyền SuperAdmin hệ thống.
+        </p>
+      </div>
+
+      <div class="flex justify-end gap-2">
+        <button type="button" onclick="closeAccountModal()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors">Đóng</button>
+        <button type="submit" class="px-5 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg text-sm font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-sm">
+          Lưu & Cấp tài khoản
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
+function openCreateAccountModal() {
+  document.getElementById('accountModal').classList.remove('hidden');
+  document.getElementById('accountProjectId').value = '';
+  document.getElementById('accountName').value = '';
+  document.getElementById('accountUsername').value = '';
+  document.getElementById('accountEmail').value = '';
+  generateRandomPassword();
+}
+
+function openProjectAccountModal(projectId, projectName, projectCode, existingUsername, existingEmail, existingPassword) {
+  document.getElementById('accountModal').classList.remove('hidden');
+  document.getElementById('accountProjectId').value = projectId;
+  document.getElementById('accountName').value = 'Admin ' + projectName;
+  document.getElementById('accountUsername').value = existingUsername || projectCode.toLowerCase();
+  document.getElementById('accountEmail').value = existingEmail || (projectCode.toLowerCase() + '@project.local');
+  if (existingPassword) {
+    document.getElementById('accountPassword').value = existingPassword;
+  } else {
+    generateRandomPassword();
+  }
+}
+
+function closeAccountModal() {
+  document.getElementById('accountModal').classList.add('hidden');
+}
+
+function onProjectSelectChange(selectEl) {
+  const selectedOpt = selectEl.options[selectEl.selectedIndex];
+  if (selectedOpt && selectedOpt.value) {
+    const code = selectedOpt.dataset.code || '';
+    const name = selectedOpt.dataset.name || '';
+    const username = selectedOpt.dataset.username || code.toLowerCase();
+    
+    if (!document.getElementById('accountName').value) {
+      document.getElementById('accountName').value = 'Admin ' + name;
+    }
+    if (!document.getElementById('accountUsername').value) {
+      document.getElementById('accountUsername').value = username;
+    }
+    if (!document.getElementById('accountEmail').value) {
+      document.getElementById('accountEmail').value = code.toLowerCase() + '@project.local';
+    }
+  }
+}
+
+function generateRandomPassword() {
+  const chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%';
+  let password = '';
+  for (let i = 0; i < 10; i++) {
+    password += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  document.getElementById('accountPassword').value = password;
+}
 function showDeployModal(projectId, projectCode, existingDomain) {
   document.getElementById('deployModal').classList.remove('hidden');
   document.getElementById('deployProjectCode').textContent = projectCode;

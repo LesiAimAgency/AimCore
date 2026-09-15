@@ -70,6 +70,24 @@
                             </div>
                             @error('roles') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                         </div>
+
+                        <div class="md:col-span-2 mt-2 pt-2 border-t border-gray-200">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Gán Dự án / Website quản lý <span class="text-xs text-purple-600 font-normal">(Dành cho Multi-Tenancy Control Center)</span>
+                            </label>
+                            @php
+                                $assignedProjectIds = old('project_ids', is_array($user->project_ids) ? $user->project_ids : json_decode($user->project_ids ?? '[]', true) ?? []);
+                            @endphp
+                            <select name="project_ids[]" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+                                <option value="">-- Không gán / Chọn dự án --</option>
+                                @foreach($projects ?? [] as $proj)
+                                    <option value="{{ $proj->id }}" {{ in_array($proj->id, $assignedProjectIds) ? 'selected' : '' }}>
+                                        {{ $proj->name }} ({{ $proj->code }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">Tài khoản Multi-Tenancy sẽ được liên kết và chỉ quản lý website/dự án này.</p>
+                        </div>
                         <div class="md:col-span-2">
                             <label class="flex items-center gap-2 cursor-pointer">
                                 <input type="checkbox" name="status" value="1" {{ old('status', $user->status) == '1' ? 'checked' : '' }}

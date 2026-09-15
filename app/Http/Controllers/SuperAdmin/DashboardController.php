@@ -9,8 +9,10 @@ use App\Models\Customer;
 use App\Models\HostingProfile;
 use App\Models\Post;
 use App\Models\Project;
+use App\Models\Role;
 use App\Models\Setting;
 use App\Models\Task;
+use App\Models\Tenant;
 use App\Models\User;
 use App\Services\PerformanceService;
 use Illuminate\Http\Request;
@@ -248,7 +250,7 @@ class DashboardController extends Controller
         try {
             $user = auth()->user();
 
-            $query = Project::with(['admin'])->latest();
+            $query = Project::with(['admin', 'tenant'])->latest();
 
             // Lọc dự án theo user (Super Admin hoặc admin@example.com sẽ thấy toàn bộ dự án)
             if ($user && ! $user->isSuperAdmin() && $user->email !== 'admin@example.com') {
@@ -259,6 +261,10 @@ class DashboardController extends Controller
 
                     if (! empty($user->project_ids)) {
                         $q->orWhereIn('id', $user->project_ids);
+                    }
+
+                    if (! empty($user->tenant_id)) {
+                        $q->orWhere('tenant_id', $user->tenant_id);
                     }
 
                     $taskProjectIds = Task::where('dev_id', $user->id)->distinct()->pluck('project_id')->toArray();
@@ -330,5 +336,112 @@ class DashboardController extends Controller
         Setting::set('target_revenue_'.$monthKey, $request->target_revenue, 'dashboard_targets');
 
         return back()->with('success', 'Cập nhật mục tiêu chung thành công!');
+    }
+
+    /**
+     * Tạo hoặc cấp tài khoản quản lý Multi-Tenancy Control Center cho dự án/website.
+     */
+    public function storeMultiTenancyAccount(Request $request)
+    {
+        $request->validate([
+            'project_id' => 'required|exists:projects,id',
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:100',
+            'email' => 'required|email|max:255',
+            'password' => 'required|string|min:6',
+        ]);
+
+        $project = Project::findOrFail($request->project_id);
+
+        $roleModel = Role::firstOrCreate(
+            ['name' => 'multi_tenancy'],
+            [
+                'display_name' => 'Multi-Tenancy Control Center',
+                'description' => 'Quản trị và điều hành các website / tenant trong hệ thống Multi-Tenancy Control Center',
+                'level' => 2,
+            ]
+        );
+
+        // Đảm bảo dự án có tenant tương ứng
+        if (! $project->tenant_id) {
+            try {
+                $tenant = Tenant::firstOrCreate(
+                    ['code' => $project->code],
+                    [
+                        'name' => $project->name,
+                        'domain' => $project->external_domain ?: $project->code,
+                        'database_name' => 'tenant_'.$project->code,
+                        'status' => 'active',
+                    ]
+                );
+                $project->update(['tenant_id' => $tenant->id]);
+            } catch (\Throwable $e) {
+                \Log::warning('Tenant auto-mapping in storeMultiTenancyAccount failed: '.$e->getMessage());
+            }
+        }
+
+        $user = User::where('email', $request->email)
+            ->orWhere('username', $request->username)
+            ->first();
+
+        $projectIds = [$project->id];
+
+        if ($user) {
+            $existingProjectIds = is_array($user->project_ids) ? $user->project_ids : json_decode($user->project_ids ?? '[]', true) ?? [];
+            if (! in_array($project->id, $existingProjectIds)) {
+                $existingProjectIds[] = $project->id;
+            }
+
+            $user->update([
+                'name' => $request->name,
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => $request->password,
+                'role' => 'multi_tenancy',
+                'level' => 2,
+                'tenant_id' => $project->tenant_id ?? $user->tenant_id,
+                'project_ids' => array_values(array_unique($existingProjectIds)),
+                'status' => true,
+            ]);
+        } else {
+            $user = User::create([
+                'name' => $request->name,
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => $request->password,
+                'role' => 'multi_tenancy',
+                'level' => 2,
+                'tenant_id' => $project->tenant_id,
+                'project_ids' => $projectIds,
+                'email_verified_at' => now(),
+                'status' => true,
+            ]);
+        }
+
+        $user->roles()->syncWithoutDetaching([$roleModel->id]);
+
+        $project->update([
+            'admin_id' => $user->id,
+            'project_admin_username' => $request->username,
+            'project_admin_password' => bcrypt($request->password),
+            'project_admin_password_plain' => encrypt($request->password),
+            'password_updated_at' => now(),
+            'password_updated_by' => auth()->id(),
+        ]);
+
+        return back()->with('alert', [
+            'type' => 'success',
+            'message' => "Đã cấp tài khoản quản lý Multi-Tenancy Control Center thành công cho dự án {$project->name}! Tài khoản: {$request->username} | Mật khẩu: {$request->password}",
+        ]);
+    }
+
+    /**
+     * Cập nhật / reset tài khoản quản lý của dự án từ route trực tiếp.
+     */
+    public function updateProjectAccount(Request $request, Project $project)
+    {
+        $request->merge(['project_id' => $project->id]);
+
+        return $this->storeMultiTenancyAccount($request);
     }
 }

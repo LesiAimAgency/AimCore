@@ -23,9 +23,9 @@ class SuperAdminMiddleware
 
         $user = Auth::guard('web')->user();
 
-        // Cho phép Manager (Quản lý) và Employee (Nhân viên) truy cập các route superadmin
+        // Cho phép Manager (Quản lý), Employee (Nhân viên) và Multi-Tenancy Control Center truy cập các route superadmin
         // Quyền hiển thị menu và chức năng sẽ được phân quyền cụ thể trong giao diện và controller.
-        if ($user->isManager() || $user->isEmployee() || $user->level <= 2) {
+        if ($user->isManager() || $user->isEmployee() || $user->isMultiTenancy() || $user->level <= 2) {
             return $next($request);
         }
 

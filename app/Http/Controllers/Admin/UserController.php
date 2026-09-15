@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\Department;
+use App\Models\Project;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -33,9 +34,39 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::with(['roles', 'activityLogs' => function ($q) {
+        $type = $request->get('type', 'all'); // 'all', 'internal', 'multi_tenancy'
+
+        // Multi-tenancy filter closure
+        $multiTenancyFilter = function ($q) {
+            $q->where('role', 'multi_tenancy')
+                ->orWhere('role', 'cms')
+                ->orWhereHas('roles', function ($rq) {
+                    $rq->whereIn('name', ['multi_tenancy', 'multi_tenancy_control_center', 'cms']);
+                })
+                ->orWhereNotNull('tenant_id')
+                ->orWhere(function ($sq) {
+                    $sq->whereNotNull('project_ids')
+                        ->where('project_ids', '!=', '[]')
+                        ->where('project_ids', '!=', 'null')
+                        ->where('project_ids', '!=', '""');
+                });
+        };
+
+        // Tab counts
+        $totalCount = User::count();
+        $multiTenancyCount = User::where($multiTenancyFilter)->count();
+        $internalCount = User::whereNot($multiTenancyFilter)->count();
+
+        $query = User::with(['roles', 'tenant', 'activityLogs' => function ($q) {
             $q->latest()->limit(5);
         }]);
+
+        // Filter by tab type
+        if ($type === 'multi_tenancy') {
+            $query->where($multiTenancyFilter);
+        } elseif ($type === 'internal') {
+            $query->whereNot($multiTenancyFilter);
+        }
 
         // Search functionality
         if ($request->filled('search')) {
@@ -49,8 +80,12 @@ class UserController extends Controller
 
         // Filter by role
         if ($request->filled('role')) {
-            $query->whereHas('roles', function ($q) use ($request) {
-                $q->where('name', $request->role);
+            $roleParam = $request->role;
+            $query->where(function ($q) use ($roleParam) {
+                $q->where('role', $roleParam)
+                    ->orWhereHas('roles', function ($rq) use ($roleParam) {
+                        $rq->where('name', $roleParam);
+                    });
             });
         }
 
@@ -59,10 +94,19 @@ class UserController extends Controller
             $query->where('status', $request->status === 'active');
         }
 
-        $users = $query->paginate(15);
+        $users = $query->latest()->paginate(15)->withQueryString();
         $roles = Role::where('name', '!=', 'visitor')->get();
+        $projects = Project::select('id', 'name', 'code')->get()->keyBy('id');
 
-        return view('cms.users.index', compact('users', 'roles'));
+        return view('cms.users.index', compact(
+            'users',
+            'roles',
+            'type',
+            'totalCount',
+            'internalCount',
+            'multiTenancyCount',
+            'projects'
+        ));
     }
 
     /**
@@ -79,8 +123,9 @@ class UserController extends Controller
                     });
             })->get();
         $departments = Department::where('status', 'active')->pluck('name');
+        $projects = Project::select('id', 'name', 'code')->orderBy('name')->get();
 
-        return view('cms.users.create', compact('roles', 'managers', 'departments'));
+        return view('cms.users.create', compact('roles', 'managers', 'departments', 'projects'));
     }
 
     /**
@@ -116,6 +161,8 @@ class UserController extends Controller
             'ward_code' => 'nullable|string|max:50',
             'street_address' => 'nullable|string|max:500',
             'full_address' => 'nullable|string|max:1000',
+            'project_ids' => 'nullable|array',
+            'project_ids.*' => 'exists:projects,id',
         ]);
 
         // Handle avatar upload
@@ -130,6 +177,14 @@ class UserController extends Controller
             $validated['address'] = $request->full_address;
         }
 
+        if ($request->filled('project_ids')) {
+            $validated['project_ids'] = array_values(array_map('intval', (array) $request->project_ids));
+            $firstProj = Project::find($validated['project_ids'][0] ?? null);
+            if ($firstProj && $firstProj->tenant_id) {
+                $validated['tenant_id'] = $firstProj->tenant_id;
+            }
+        }
+
         $user = User::create($validated);
 
         // Assign roles
@@ -137,7 +192,10 @@ class UserController extends Controller
             $user->roles()->sync($validated['roles']);
             $firstRole = Role::find($validated['roles'][0]);
             if ($firstRole) {
-                $user->update(['role' => $firstRole->name]);
+                $user->update([
+                    'role' => $firstRole->name,
+                    'level' => ($firstRole->name === 'multi_tenancy' ? 2 : ($firstRole->level ?? 2)),
+                ]);
             }
         }
 
@@ -188,9 +246,10 @@ class UserController extends Controller
                     });
             })->get();
         $departments = Department::where('status', 'active')->pluck('name');
+        $projects = Project::select('id', 'name', 'code')->orderBy('name')->get();
         $user->load('roles');
 
-        return view('cms.users.edit', compact('user', 'roles', 'managers', 'departments'));
+        return view('cms.users.edit', compact('user', 'roles', 'managers', 'departments', 'projects'));
     }
 
     /**
@@ -227,6 +286,8 @@ class UserController extends Controller
             'ward_code' => 'nullable|string|max:50',
             'street_address' => 'nullable|string|max:500',
             'full_address' => 'nullable|string|max:1000',
+            'project_ids' => 'nullable|array',
+            'project_ids.*' => 'exists:projects,id',
         ]);
 
         // Handle avatar upload
@@ -247,6 +308,18 @@ class UserController extends Controller
             $validated['address'] = $request->full_address;
         }
 
+        if ($request->has('project_ids')) {
+            $validated['project_ids'] = $request->filled('project_ids')
+                ? array_values(array_map('intval', (array) $request->project_ids))
+                : null;
+            if (! empty($validated['project_ids'])) {
+                $firstProj = Project::find($validated['project_ids'][0] ?? null);
+                if ($firstProj && $firstProj->tenant_id) {
+                    $validated['tenant_id'] = $firstProj->tenant_id;
+                }
+            }
+        }
+
         $user->update($validated);
 
         // Update roles
@@ -255,7 +328,10 @@ class UserController extends Controller
             if (count($validated['roles']) > 0) {
                 $firstRole = Role::find($validated['roles'][0]);
                 if ($firstRole) {
-                    $user->update(['role' => $firstRole->name]);
+                    $user->update([
+                        'role' => $firstRole->name,
+                        'level' => ($firstRole->name === 'multi_tenancy' ? 2 : ($firstRole->level ?? $user->level)),
+                    ]);
                 }
             }
         }

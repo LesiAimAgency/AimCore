@@ -10,6 +10,7 @@ use App\Models\FeaturePack;
 use App\Models\Project;
 use App\Models\ProjectPermission;
 use App\Models\ProjectSetting;
+use App\Models\Role;
 use App\Models\Setting;
 use App\Models\Tenant;
 use App\Models\User;
@@ -728,24 +729,55 @@ class ProjectController extends Controller implements HasMiddleware
             $username = $project->code;
             $email = strtolower($project->code).'@project.local';
 
-            // Create CMS admin user in shared database (without tenant_id)
-            \DB::table('users')->updateOrInsert(
+            $roleModel = Role::firstOrCreate(
+                ['name' => 'multi_tenancy'],
                 [
-                    'username' => $username,
-                ],
-                [
-                    'name' => 'CMS Admin - '.$project->code,
-                    'email' => $email,
-                    'password' => bcrypt($password),
-                    'role' => 'cms',
+                    'display_name' => 'Multi-Tenancy Control Center',
+                    'description' => 'Quản trị và điều hành các website / tenant trong hệ thống Multi-Tenancy Control Center',
                     'level' => 2,
-                    'tenant_id' => null, // No tenant in demo mode
-                    'project_ids' => json_encode([$project->id]), // Use project_ids for project scoping
-                    'email_verified_at' => now(),
-                    'created_at' => now(),
-                    'updated_at' => now(),
                 ]
             );
+
+            // Create or update Multi-Tenancy Control Center admin user
+            $adminUser = User::where('username', $username)->first();
+            if ($adminUser) {
+                $existingIds = is_array($adminUser->project_ids) ? $adminUser->project_ids : json_decode($adminUser->project_ids ?? '[]', true) ?? [];
+                if (! in_array($project->id, $existingIds)) {
+                    $existingIds[] = $project->id;
+                }
+                $adminUser->update([
+                    'name' => 'CMS Admin - '.$project->code,
+                    'email' => $email,
+                    'password' => $password,
+                    'role' => 'multi_tenancy',
+                    'level' => 2,
+                    'tenant_id' => $project->tenant_id ?? $adminUser->tenant_id,
+                    'project_ids' => array_values(array_unique($existingIds)),
+                    'status' => true,
+                ]);
+            } else {
+                $adminUser = User::create([
+                    'name' => 'CMS Admin - '.$project->code,
+                    'username' => $username,
+                    'email' => $email,
+                    'password' => $password,
+                    'role' => 'multi_tenancy',
+                    'level' => 2,
+                    'tenant_id' => $project->tenant_id,
+                    'project_ids' => [$project->id],
+                    'email_verified_at' => now(),
+                    'status' => true,
+                ]);
+            }
+
+            $adminUser->roles()->syncWithoutDetaching([$roleModel->id]);
+
+            $project->update([
+                'admin_id' => $adminUser->id,
+                'project_admin_username' => $username,
+                'project_admin_password' => bcrypt($password),
+                'project_admin_password_plain' => encrypt($password),
+            ]);
 
             // Create default permissions from settings (without database switching)
             try {
@@ -1198,39 +1230,78 @@ class ProjectController extends Controller implements HasMiddleware
         $username = $request->username;
         $email = $request->email;
 
-        // Tìm user CMS hiện tại của project trong shared database
-        $user = User::where('role', 'cms')
-            ->get()
-            ->first(function ($u) use ($project) {
-                $ids = is_array($u->project_ids) ? $u->project_ids : json_decode($u->project_ids ?? '[]', true);
+        $roleModel = Role::firstOrCreate(
+            ['name' => 'multi_tenancy'],
+            [
+                'display_name' => 'Multi-Tenancy Control Center',
+                'description' => 'Quản trị và điều hành các website / tenant trong hệ thống Multi-Tenancy Control Center',
+                'level' => 2,
+            ]
+        );
 
-                return in_array($project->id, $ids ?? []);
-            });
+        // Tìm user quản lý hiện tại của project
+        $user = null;
+        if ($project->admin_id) {
+            $user = User::find($project->admin_id);
+        }
+
+        if (! $user) {
+            $user = User::where(function ($q) {
+                $q->where('role', 'multi_tenancy')
+                    ->orWhere('role', 'cms')
+                    ->orWhereHas('roles', fn ($rq) => $rq->whereIn('name', ['multi_tenancy', 'cms']));
+            })
+                ->get()
+                ->first(function ($u) use ($project) {
+                    $ids = is_array($u->project_ids) ? $u->project_ids : json_decode($u->project_ids ?? '[]', true);
+
+                    return in_array($project->id, $ids ?? []);
+                });
+        }
+
+        if (! $user) {
+            $user = User::where('username', $username)->orWhere('email', $email)->first();
+        }
 
         if ($user) {
+            $existingIds = is_array($user->project_ids) ? $user->project_ids : json_decode($user->project_ids ?? '[]', true) ?? [];
+            if (! in_array($project->id, $existingIds)) {
+                $existingIds[] = $project->id;
+            }
+
             // UPDATE user hiện tại
             $user->update([
                 'name' => 'Admin '.$project->name,
                 'username' => $username,
                 'email' => $email,
                 'password' => $password,
+                'role' => 'multi_tenancy',
+                'level' => 2,
+                'tenant_id' => $project->tenant_id ?? $user->tenant_id,
+                'project_ids' => array_values(array_unique($existingIds)),
+                'status' => true,
             ]);
         } else {
             // Chưa có user → CREATE mới
-            User::create([
+            $user = User::create([
                 'name' => 'Admin '.$project->name,
                 'username' => $username,
                 'email' => $email,
                 'password' => $password,
-                'role' => 'cms',
+                'role' => 'multi_tenancy',
                 'level' => 2,
+                'tenant_id' => $project->tenant_id,
                 'project_ids' => [$project->id],
                 'email_verified_at' => now(),
+                'status' => true,
             ]);
         }
 
+        $user->roles()->syncWithoutDetaching([$roleModel->id]);
+
         // Cập nhật thông tin credentials trên project
         $project->update([
+            'admin_id' => $user->id,
             'project_admin_username' => $username,
             'project_admin_password' => bcrypt($password),
             'project_admin_password_plain' => encrypt($password),
@@ -1240,7 +1311,7 @@ class ProjectController extends Controller implements HasMiddleware
 
         return back()->with('alert', [
             'type' => 'success',
-            'message' => 'Đã cập nhật tài khoản CMS thành công! Username: '.$username.' | Password: '.$password,
+            'message' => 'Đã cập nhật tài khoản Multi-Tenancy Control Center thành công! Username: '.$username.' | Password: '.$password,
         ]);
     }
 
