@@ -40,4 +40,8 @@ return [
         'allowed_ips' => env('AGENCY_ALLOWED_IPS', '127.0.0.1'),
     ],
 
+    'google' => [
+        'fonts_api_key' => env('GOOGLE_FONTS_API_KEY'),
+    ],
+
 ];

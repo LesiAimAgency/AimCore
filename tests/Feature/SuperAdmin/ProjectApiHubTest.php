@@ -62,7 +62,7 @@ class ProjectApiHubTest extends TestCase
         $payload = [
             'api' => [
                 'openai_key' => 'sk-test-secret-openai-key-aaa',
-                'gemini_key' => 'AIzaSy-test-gemini-key',
+                'gemini_key' => 'mock-gemini-key-12345',
                 'ai_default_model' => 'gpt-4o-mini',
                 'vietqr_bank_id' => 'MB',
                 'vietqr_account_no' => '0988776655',

@@ -4,6 +4,7 @@
 // All CMS functionality moved to project-specific routes: /{projectCode}/admin/*
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\FontController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\ShippingEngineController;
 use App\Http\Controllers\SuperAdmin\ProjectController;
@@ -17,6 +18,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     // Project Management (Super Admin only)
     Route::resource('projects', ProjectController::class);
+
+    // Google Fonts Proxy API
+    Route::get('fonts/google', [FontController::class, 'getGoogleFonts'])->name('fonts.google');
 
     // Global System Settings
     Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');

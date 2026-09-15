@@ -377,6 +377,7 @@ Route::prefix('{projectCode}/admin')
         });
 
         // Fonts Management
+        Route::get('fonts/google', [FontController::class, 'getGoogleFonts'])->name('fonts.google');
         Route::post('fonts/store', [FontController::class, 'store'])->name('fonts.store');
         Route::post('fonts/toggle', [FontController::class, 'toggle'])->name('fonts.toggle');
         Route::post('fonts/default', [FontController::class, 'setDefault'])->name('fonts.default');

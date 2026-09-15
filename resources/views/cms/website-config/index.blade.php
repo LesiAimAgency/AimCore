@@ -814,10 +814,11 @@
     window._googleFontsMap = {};
     var fontSearchInputs = document.querySelectorAll('input.google-font-search');
     if (fontSearchInputs.length > 0) {
-      fetch('https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyCcxWi-8NnKnbxyh3VEer0-h0uvAld8MpI&sort=popularity')
+      var fontsEndpoint = '{{ request()->route("projectCode") ? route("project.admin.fonts.google", ["projectCode" => request()->route("projectCode")], false) : (Route::has("admin.fonts.google") ? route("admin.fonts.google", [], false) : "/admin/fonts/google") }}';
+      fetch(fontsEndpoint)
         .then(function(res) { return res.json(); })
         .then(function(data) {
-          var fonts = data.items || [];
+          var fonts = Array.isArray(data) ? data : (data.items || []);
           // Build a global map: family -> { family, variants, category, ... }
           fonts.forEach(function(f) {
             window._googleFontsMap[f.family] = f;
