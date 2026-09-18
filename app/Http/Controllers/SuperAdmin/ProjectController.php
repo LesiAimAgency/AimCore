@@ -99,8 +99,10 @@ class ProjectController extends Controller implements HasMiddleware
         }])->where('status', 'active')->get();
 
         $customers = Customer::orderBy('name')->get();
+        $nextProjectNumber = Project::getNextProjectNumber();
+        $suggestedCode = Project::generateProjectCode(null, $nextProjectNumber);
 
-        return view('superadmin.projects.create', compact('contracts', 'employees', 'devs', 'featurePacks', 'departments', 'customers'));
+        return view('superadmin.projects.create', compact('contracts', 'employees', 'devs', 'featurePacks', 'departments', 'customers', 'nextProjectNumber', 'suggestedCode'));
     }
 
     public function store(Request $request)
@@ -249,8 +251,13 @@ class ProjectController extends Controller implements HasMiddleware
         }])->where('status', 'active')->get();
 
         $customers = Customer::orderBy('name')->get();
+        $projectNumber = Project::getProjectNumberFor($project);
+        $suggestedCode = Project::generateProjectCode(
+            $project->customer?->name ?? $project->client_name ?? $project->name,
+            $projectNumber
+        );
 
-        return view('superadmin.projects.edit', compact('project', 'contracts', 'employees', 'devs', 'featurePacks', 'departments', 'customers'));
+        return view('superadmin.projects.edit', compact('project', 'contracts', 'employees', 'devs', 'featurePacks', 'departments', 'customers', 'projectNumber', 'suggestedCode'));
     }
 
     public function update(Request $request, Project $project)
@@ -269,6 +276,7 @@ class ProjectController extends Controller implements HasMiddleware
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'code' => 'required|string|max:255|unique:projects,code,'.$project->id,
             'customer_id' => 'nullable|exists:customers,id',
             'subdomain' => 'required|string|max:255',
             'total_gold' => 'nullable|integer|min:0',
@@ -295,6 +303,7 @@ class ProjectController extends Controller implements HasMiddleware
 
         $updateData = [
             'name' => $request->name,
+            'code' => $request->code,
             'customer_id' => $customerId,
             'subdomain' => $request->subdomain,
             'total_gold' => $request->filled('total_gold') ? max(0, (int) $request->total_gold) : (int) ($project->total_gold ?? 0),
@@ -319,7 +328,22 @@ class ProjectController extends Controller implements HasMiddleware
             $updateData['client_name'] = null;
         }
 
+        $oldCode = $project->code;
         $project->update($updateData);
+
+        // Synchronize tenant code if project code changed
+        if ($oldCode !== $project->code && $project->tenant) {
+            try {
+                if (! Tenant::where('code', $project->code)->where('id', '!=', $project->tenant_id)->exists()) {
+                    $project->tenant->update([
+                        'code' => $project->code,
+                        'name' => $project->name,
+                    ]);
+                }
+            } catch (\Throwable $e) {
+                \Log::warning("Tenant code sync for project {$project->id} failed: ".$e->getMessage());
+            }
+        }
 
         if ($isMultiTenancy && ! $project->tenant_id) {
             try {

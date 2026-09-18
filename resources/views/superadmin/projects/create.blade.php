@@ -44,11 +44,21 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <x-form.label value="Mã Dự án" required="true" />
-                                <x-form.input name="code" :value="old('code')" placeholder="VD: PRJ001" required="true" />
+                                <div class="flex gap-2">
+                                    <x-form.input name="code" id="project_code_input" :value="old('code', $suggestedCode ?? '')" placeholder="VD: DA001-CONGTY" required="true" class="flex-1 font-mono font-medium" />
+                                    <button type="button" id="btn_generate_code" class="px-3 py-2 text-xs font-semibold text-[#001B4E] bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors whitespace-nowrap cursor-pointer flex items-center gap-1 shrink-0" title="Tạo mã chuẩn theo khách hàng">
+                                        <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                        <span>Tạo mã chuẩn</span>
+                                    </button>
+                                </div>
+                                <p class="text-[11px] text-gray-500 mt-1">Quy chuẩn: <strong>DA + 3 số (001 &rarr; 999, &ge;1000) + Tên công ty / khách hàng</strong> (VD: DA001-LE-SI)</p>
+                                @error('code')
+                                    <x-form.error :message="$message" />
+                                @enderror
                             </div>
                             <div>
                                 <x-form.label value="Tên Dự án" required="true" />
-                                <x-form.input name="name" :value="old('name')" required="true" />
+                                <x-form.input name="name" id="project_name_input" :value="old('name')" required="true" />
                             </div>
                         </div>
 
@@ -285,12 +295,55 @@
         
         const contractSelect = document.getElementById('contract_id_select');
         const customerSelect = document.getElementById('customer_id_select');
+        const projectCodeInput = document.getElementById('project_code_input');
+        const projectNameInput = document.getElementById('project_name_input');
+        const btnGenerateCode = document.getElementById('btn_generate_code');
+        const nextProjectNum = {{ (int) ($nextProjectNumber ?? 1) }};
+
+        function formatStandardCode(rawName, num) {
+            const padded = String(num).padStart(3, '0');
+            let clean = '';
+            if (rawName) {
+                let namePart = rawName.split(' - ')[0] || rawName;
+                clean = namePart
+                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                    .replace(/[^a-zA-Z0-9\s-]/g, '')
+                    .trim()
+                    .replace(/\s+/g, '-')
+                    .toUpperCase();
+            }
+            return clean ? `DA${padded}-${clean}` : `DA${padded}`;
+        }
+
+        function getSelectedCustomerName() {
+            if (!customerSelect || customerSelect.selectedIndex <= 0) return '';
+            const selectedText = customerSelect.options[customerSelect.selectedIndex].textContent || '';
+            return selectedText.trim();
+        }
+
+        if (btnGenerateCode) {
+            btnGenerateCode.addEventListener('click', function() {
+                const custName = getSelectedCustomerName() || (projectNameInput ? projectNameInput.value : '');
+                projectCodeInput.value = formatStandardCode(custName, nextProjectNum);
+            });
+        }
+
+        if (customerSelect) {
+            customerSelect.addEventListener('change', function() {
+                const custName = getSelectedCustomerName();
+                if (!projectCodeInput.value || /^DA\d+$/i.test(projectCodeInput.value) || /^DA\d+-.*$/i.test(projectCodeInput.value)) {
+                    projectCodeInput.value = formatStandardCode(custName, nextProjectNum);
+                }
+            });
+        }
+
         if (contractSelect && customerSelect) {
             contractSelect.addEventListener('change', function() {
                 const selectedOption = this.options[this.selectedIndex];
                 const customerId = selectedOption.getAttribute('data-customer-id');
                 if (customerId) {
                     customerSelect.value = customerId;
+                    customerSelect.dispatchEvent(new Event('change'));
                 }
             });
         }

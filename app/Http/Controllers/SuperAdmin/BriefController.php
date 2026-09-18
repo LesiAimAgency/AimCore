@@ -90,8 +90,7 @@ class BriefController extends Controller
             // Check if project exists
             $exists = Project::where('name', clone $brief->title)->first();
             if (! $exists) {
-                // Generate a dummy code
-                $code = strtoupper(substr(preg_replace('/[^a-zA-Z0-9]/', '', $brief->client_name), 0, 5)).rand(100, 999);
+                $code = Project::generateProjectCode($brief->client_name);
                 Project::create([
                     'name' => $brief->title,
                     'code' => $code,

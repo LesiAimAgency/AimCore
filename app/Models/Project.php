@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Project extends Model
 {
@@ -137,6 +138,59 @@ class Project extends Model
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
 
         return substr(str_shuffle(str_repeat($chars, 12)), 0, 12);
+    }
+
+    /**
+     * Lấy số thứ tự tiếp theo cho mã dự án chuẩn DA...
+     */
+    public static function getNextProjectNumber(?int $excludeId = null): int
+    {
+        $query = static::query();
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+        $codes = $query->pluck('code');
+        $maxNum = 0;
+        foreach ($codes as $code) {
+            if (preg_match('/^DA(\d+)/i', $code, $matches)) {
+                $num = (int) $matches[1];
+                if ($num > $maxNum) {
+                    $maxNum = $num;
+                }
+            }
+        }
+
+        return $maxNum + 1;
+    }
+
+    /**
+     * Lấy số thứ tự hiện tại của một dự án (nếu đã có mã DA) hoặc số tiếp theo
+     */
+    public static function getProjectNumberFor(Project $project): int
+    {
+        if (! empty($project->code) && preg_match('/^DA(\d+)/i', $project->code, $matches)) {
+            return (int) $matches[1];
+        }
+
+        return static::getNextProjectNumber($project->id);
+    }
+
+    /**
+     * Sinh mã dự án chuẩn theo quy ước:
+     * DA + (001 -> 999, >=1000) + tên công ty / tên khách hàng
+     * Ví dụ: DA001-CONG-TY-A, DA001-LE-SI
+     */
+    public static function generateProjectCode(?string $clientOrCompanyName = null, ?int $projectNumber = null): string
+    {
+        $num = $projectNumber ?? static::getNextProjectNumber();
+        $paddedNum = str_pad((string) $num, 3, '0', STR_PAD_LEFT);
+
+        $cleanName = '';
+        if (! empty($clientOrCompanyName)) {
+            $cleanName = strtoupper(Str::slug($clientOrCompanyName, '-'));
+        }
+
+        return $cleanName ? "DA{$paddedNum}-{$cleanName}" : "DA{$paddedNum}";
     }
 
     public function getDecryptedPassword(): ?string
