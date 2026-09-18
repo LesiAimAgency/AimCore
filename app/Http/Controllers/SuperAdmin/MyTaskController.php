@@ -282,7 +282,7 @@ class MyTaskController extends Controller
             'gold' => $gold,
             'gold_awarded' => false,
             'deadline' => $request->deadline,
-            'start_date' => $request->start_date ?? today(),
+            'start_date' => $request->start_date ?? ($request->deadline && $request->deadline < today()->toDateString() ? $request->deadline : today()),
             'status' => 'todo',
             'priority' => $priority,
             'approval_status' => $approvalStatus,
