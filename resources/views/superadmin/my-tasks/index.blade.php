@@ -588,9 +588,9 @@
                                 id="create_deadline"
                                 type="text"
                                 x-model="form.deadline"
-                                placeholder="Chọn deadline (tương lai)..."
+                                placeholder="Chọn deadline..."
                                 class="w-full rounded-lg border px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none bg-white cursor-pointer"
-                                :class="formErrors.deadline ? 'border-red-400 bg-red-50/20' : 'border-gray-300' border px-4 py-2"
+                                :class="formErrors.deadline ? 'border-red-400 bg-red-50/20' : 'border-gray-300'"
                             >
                             <template x-if="formErrors.deadline">
                                 <p class="mt-1 text-xs text-red-600" x-text="formErrors.deadline"></p>
@@ -736,7 +736,7 @@
                             id="edit_deadline"
                             type="text"
                             x-model="editForm.deadline"
-                            placeholder="Chọn deadline mới (tương lai)..."
+                            placeholder="Chọn deadline mới..."
                             required
                             class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none bg-white cursor-pointer"
                         >
@@ -1467,16 +1467,14 @@ document.addEventListener('alpine:init', () => {
                 altInput: true,
                 altFormat: 'd/m/Y',
                 locale: 'vn',
-               
                 defaultDate: this.form.start_date || todayStr,
                 prevArrow: '❮',
                 nextArrow: '❯',
                 onChange: (selectedDates, dateStr) => {
                     this.form.start_date = dateStr;
                     if (this.createDeadlinePicker) {
-                        const minDeadline = dateStr || 'today';
-                        this.createDeadlinePicker.set('minDate', minDeadline);
-                        if (this.form.deadline && this.form.deadline < dateStr) {
+                        this.createDeadlinePicker.set('minDate', dateStr || null);
+                        if (this.form.deadline && dateStr && this.form.deadline < dateStr) {
                             this.form.deadline = dateStr;
                             this.createDeadlinePicker.setDate(dateStr, true);
                         }
@@ -1489,12 +1487,17 @@ document.addEventListener('alpine:init', () => {
                 altInput: true,
                 altFormat: 'd/m/Y',
                 locale: 'vn',
-            
                 defaultDate: this.form.deadline || null,
                 prevArrow: '❮',
                 nextArrow: '❯',
                 onChange: (selectedDates, dateStr) => {
                     this.form.deadline = dateStr;
+                    if (dateStr && this.form.start_date && this.form.start_date > dateStr) {
+                        this.form.start_date = dateStr;
+                        if (this.createStartPicker) {
+                            this.createStartPicker.setDate(dateStr, true);
+                        }
+                    }
                 }
             });
         },
@@ -1513,7 +1516,6 @@ document.addEventListener('alpine:init', () => {
                 altInput: true,
                 altFormat: 'd/m/Y',
                 locale: 'vn',
-             
                 defaultDate: currentDeadline || null,
                 prevArrow: '❮',
                 nextArrow: '❯',

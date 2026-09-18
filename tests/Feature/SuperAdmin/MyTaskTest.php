@@ -545,22 +545,23 @@ class MyTaskTest extends TestCase
             ->assertForbidden();
     }
 
-    public function test_store_rejects_past_dates(): void
+    public function test_store_allows_past_dates_but_rejects_deadline_before_start_date(): void
     {
         $pm = $this->pmUser();
         $project = $this->project();
 
-        // 1. Deadline trong quá khứ -> 422
+        // 1. Cho phép tạo task với start_date và deadline trong quá khứ -> 200
         $this->actingAs($pm)
             ->postJson(route('superadmin.my-tasks.store'), [
                 'title' => 'Task với deadline quá khứ',
                 'project_id' => $project->id,
+                'start_date' => today()->subDays(5)->toDateString(),
                 'deadline' => today()->subDays(1)->toDateString(),
             ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['deadline']);
+            ->assertOk()
+            ->assertJsonPath('success', true);
 
-        // 2. Start date trong quá khứ -> 422
+        // 2. Cho phép start_date quá khứ và deadline tương lai -> 200
         $this->actingAs($pm)
             ->postJson(route('superadmin.my-tasks.store'), [
                 'title' => 'Task với start_date quá khứ',
@@ -568,8 +569,8 @@ class MyTaskTest extends TestCase
                 'start_date' => today()->subDays(2)->toDateString(),
                 'deadline' => today()->addDays(2)->toDateString(),
             ])
-            ->assertStatus(422)
-            ->assertJsonValidationErrors(['start_date']);
+            ->assertOk()
+            ->assertJsonPath('success', true);
 
         // 3. Deadline trước start_date -> 422
         $this->actingAs($pm)
