@@ -1467,7 +1467,7 @@ document.addEventListener('alpine:init', () => {
                 altInput: true,
                 altFormat: 'd/m/Y',
                 locale: 'vn',
-                // minDate: 'today',
+               
                 defaultDate: this.form.start_date || todayStr,
                 prevArrow: '❮',
                 nextArrow: '❯',
@@ -1489,7 +1489,7 @@ document.addEventListener('alpine:init', () => {
                 altInput: true,
                 altFormat: 'd/m/Y',
                 locale: 'vn',
-                minDate: this.form.start_date || 'today',
+            
                 defaultDate: this.form.deadline || null,
                 prevArrow: '❮',
                 nextArrow: '❯',
@@ -1513,7 +1513,7 @@ document.addEventListener('alpine:init', () => {
                 altInput: true,
                 altFormat: 'd/m/Y',
                 locale: 'vn',
-                minDate: 'today',
+             
                 defaultDate: currentDeadline || null,
                 prevArrow: '❮',
                 nextArrow: '❯',
