@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     if (app()->environment('local')) {
-        return redirect('/wkcomputer');
+        return redirect('/superadmin');
     }
 
     return view('coming-soon');
