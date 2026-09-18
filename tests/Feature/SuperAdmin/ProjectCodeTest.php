@@ -81,8 +81,7 @@ class ProjectCodeTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('name="code"', false);
         $response->assertSee('id="project_code_input"', false);
-        $response->assertSee('id="btn_generate_code"', false);
-        $response->assertSee('Tạo mã chuẩn');
+        $response->assertSee('Quy chuẩn:', false);
     }
 
     public function test_edit_project_view_contains_editable_code_input(): void
@@ -99,8 +98,7 @@ class ProjectCodeTest extends TestCase
         $response->assertSee('name="code"', false);
         $response->assertSee('id="project_code_input"', false);
         $response->assertSee('value="HD001"', false);
-        $response->assertSee('id="btn_generate_code"', false);
-        $response->assertSee('Tạo mã chuẩn');
+        $response->assertSee('Quy chuẩn:', false);
     }
 
     public function test_update_project_code_saves_successfully(): void

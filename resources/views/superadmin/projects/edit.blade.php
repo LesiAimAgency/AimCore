@@ -47,13 +47,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <x-form.label value="Mã Dự án" required="true" />
-                                <div class="flex gap-2">
-                                    <x-form.input name="code" id="project_code_input" :value="old('code', $project->code)" placeholder="VD: DA001-CONGTY" required="true" class="flex-1 font-mono font-medium" />
-                                    <button type="button" id="btn_generate_code" class="px-3 py-2 text-xs font-semibold text-[#001B4E] bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors whitespace-nowrap cursor-pointer flex items-center gap-1 shrink-0" title="Tạo mã chuẩn theo quy định">
-                                        <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                                        <span>Tạo mã chuẩn</span>
-                                    </button>
-                                </div>
+                                <x-form.input name="code" id="project_code_input" :value="old('code', $project->code)" placeholder="VD: DA001-CONGTY" required="true" class="font-mono font-medium" />
                                 <p class="text-[11px] text-gray-500 mt-1">Quy chuẩn: <strong>DA + 3 số (001 &rarr; 999, &ge;1000) + Tên công ty / khách hàng</strong> (VD: DA001-LE-SI)</p>
                                 @error('code')
                                     <x-form.error :message="$message" />
