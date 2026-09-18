@@ -1467,7 +1467,7 @@ document.addEventListener('alpine:init', () => {
                 altInput: true,
                 altFormat: 'd/m/Y',
                 locale: 'vn',
-                minDate: 'today',
+                // minDate: 'today',
                 defaultDate: this.form.start_date || todayStr,
                 prevArrow: '❮',
                 nextArrow: '❯',
