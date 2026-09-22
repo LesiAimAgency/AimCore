@@ -470,7 +470,7 @@
                             x-model="form.title"
                             placeholder="VD: Thiết kế giao diện trang chủ, Fix lỗi thanh toán..."
                             class="w-full rounded-lg border px-4 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none"
-                            :class="formErrors.title ? 'border-red-400 bg-red-50/20' : 'border-gray-300' border px-4 py-2"
+                            :class="formErrors.title ? 'border-red-400 bg-red-50/20' : 'border-gray-300'"
                         >
                         <template x-if="formErrors.title">
                             <p class="mt-1 text-xs text-red-600" x-text="formErrors.title"></p>
@@ -498,7 +498,7 @@
                         <select
                             x-model="form.project_id"
                             class="w-full rounded-lg border px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none bg-white"
-                            :class="formErrors.project_id ? 'border-red-400' : 'border-gray-300' border px-4 py-2"
+                            :class="formErrors.project_id ? 'border-red-400' : 'border-gray-300'"
                         >
                             <option value="">-- Chọn dự án --</option>
                             <template x-for="project in projects" :key="'modal-proj-'+project.id">
@@ -569,26 +569,34 @@
                     {{-- Dates Row --}}
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">
+                            <label for="create_start_date" class="block text-sm font-semibold text-gray-700 mb-1">
                                 Ngày bắt đầu
                             </label>
                             <input
                                 id="create_start_date"
-                                type="text"
+                                type="date"
                                 x-model="form.start_date"
-                                placeholder="Chọn ngày bắt đầu..."
+                                :max="form.deadline || ''"
+                                @click="$el.showPicker && $el.showPicker()"
+                                @change="if (form.deadline && form.start_date && form.deadline < form.start_date) form.deadline = form.start_date"
                                 class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none bg-white cursor-pointer"
                             >
+                            <template x-if="formErrors.start_date">
+                                <p class="mt-1 text-xs text-red-600" x-text="formErrors.start_date"></p>
+                            </template>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">
+                            <label for="create_deadline" class="block text-sm font-semibold text-gray-700 mb-1">
                                 Deadline <span class="text-red-500">*</span>
                             </label>
                             <input
                                 id="create_deadline"
-                                type="text"
+                                type="date"
                                 x-model="form.deadline"
-                                placeholder="Chọn deadline..."
+                                :min="form.start_date || ''"
+                                @click="$el.showPicker && $el.showPicker()"
+                                @change="if (form.start_date && form.deadline && form.deadline < form.start_date) form.start_date = form.deadline"
+                                required
                                 class="w-full rounded-lg border px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none bg-white cursor-pointer"
                                 :class="formErrors.deadline ? 'border-red-400 bg-red-50/20' : 'border-gray-300'"
                             >
@@ -729,14 +737,14 @@
                     </template>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">
+                        <label for="edit_deadline" class="block text-sm font-semibold text-gray-700 mb-1">
                             Deadline <span class="text-red-500">*</span>
                         </label>
                         <input
                             id="edit_deadline"
-                            type="text"
+                            type="date"
                             x-model="editForm.deadline"
-                            placeholder="Chọn deadline mới..."
+                            @click="$el.showPicker && $el.showPicker()"
                             required
                             class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[#001B4E] focus:ring-2 focus:ring-[#001B4E]/20 outline-none bg-white cursor-pointer"
                         >
@@ -973,7 +981,7 @@
 
                 <h3 class="text-lg font-bold text-gray-900 mb-2">Xác nhận xóa công việc?</h3>
                 <p class="text-sm text-gray-500 mb-6">
-                    Công việc <span class="font-semibold text-gray-900" x-text="'\"' + (taskToDelete?.title || '') + '\"'"></span> sẽ bị xóa vĩnh viễn khỏi danh sách.
+                    Công việc <span class="font-semibold text-gray-900" x-text="'“' + (taskToDelete?.title || '') + '”'"></span> sẽ bị xóa vĩnh viễn khỏi danh sách.
                 </p>
 
                 <div class="flex gap-3 justify-center">
@@ -1264,32 +1272,12 @@
     .task-ghost * {
         visibility: hidden !important;
     }
-    
-    /* Fix Flatpickr SVGs becoming huge due to Tailwind CSS reset */
-    .flatpickr-calendar svg {
-        width: 14px !important;
-        height: 14px !important;
-        display: inline-block !important;
-    }
-
-    /* Flatpickr Disabled Days styling */
-    .flatpickr-day.flatpickr-disabled,
-    .flatpickr-day.flatpickr-disabled:hover {
-        color: #cbd5e1 !important;
-        background: transparent !important;
-        cursor: not-allowed !important;
-        opacity: 0.4 !important;
-        text-decoration: line-through;
-    }
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 @endpush
 
 @push('scripts')
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
 <script>
 document.addEventListener('alpine:init', () => {
     Alpine.data('myTasksApp', () => ({
@@ -1383,7 +1371,9 @@ document.addEventListener('alpine:init', () => {
 
         init() {
             this.$nextTick(() => {
-                this.initSortable();
+                if (typeof Sortable !== 'undefined') {
+                    this.initSortable();
+                }
             });
 
             // Kích hoạt cơ chế Realtime tức thì qua Server-Sent Events (SSE) - 0ms delay, không tốn tài nguyên
@@ -1447,82 +1437,11 @@ document.addEventListener('alpine:init', () => {
         },
 
         initCreatePickers() {
-            const startEl = document.getElementById('create_start_date');
-            const deadlineEl = document.getElementById('create_deadline');
-            if (!startEl || !deadlineEl) return;
-
-            if (this.createStartPicker) {
-                this.createStartPicker.destroy();
-                this.createStartPicker = null;
-            }
-            if (this.createDeadlinePicker) {
-                this.createDeadlinePicker.destroy();
-                this.createDeadlinePicker = null;
-            }
-
-            const todayStr = this.getTodayDateString();
-
-            this.createStartPicker = flatpickr(startEl, {
-                dateFormat: 'Y-m-d',
-                altInput: true,
-                altFormat: 'd/m/Y',
-                locale: 'vn',
-                defaultDate: this.form.start_date || todayStr,
-                prevArrow: '❮',
-                nextArrow: '❯',
-                onChange: (selectedDates, dateStr) => {
-                    this.form.start_date = dateStr;
-                    if (this.createDeadlinePicker) {
-                        this.createDeadlinePicker.set('minDate', dateStr || null);
-                        if (this.form.deadline && dateStr && this.form.deadline < dateStr) {
-                            this.form.deadline = dateStr;
-                            this.createDeadlinePicker.setDate(dateStr, true);
-                        }
-                    }
-                }
-            });
-
-            this.createDeadlinePicker = flatpickr(deadlineEl, {
-                dateFormat: 'Y-m-d',
-                altInput: true,
-                altFormat: 'd/m/Y',
-                locale: 'vn',
-                defaultDate: this.form.deadline || null,
-                prevArrow: '❮',
-                nextArrow: '❯',
-                onChange: (selectedDates, dateStr) => {
-                    this.form.deadline = dateStr;
-                    if (dateStr && this.form.start_date && this.form.start_date > dateStr) {
-                        this.form.start_date = dateStr;
-                        if (this.createStartPicker) {
-                            this.createStartPicker.setDate(dateStr, true);
-                        }
-                    }
-                }
-            });
+            // Native date inputs are used with full reactivity and click support
         },
 
         initEditPicker(currentDeadline) {
-            const editEl = document.getElementById('edit_deadline');
-            if (!editEl) return;
-
-            if (this.editDeadlinePicker) {
-                this.editDeadlinePicker.destroy();
-                this.editDeadlinePicker = null;
-            }
-
-            this.editDeadlinePicker = flatpickr(editEl, {
-                dateFormat: 'Y-m-d',
-                altInput: true,
-                altFormat: 'd/m/Y',
-                locale: 'vn',
-                defaultDate: currentDeadline || null,
-                prevArrow: '❮',
-                nextArrow: '❯',
-                onChange: (selectedDates, dateStr) => {
-                    this.editForm.deadline = dateStr;
-                }
-            });
+            // Native date inputs are used with full reactivity and click support
         },
 
         openCalendarModal() {
@@ -1836,9 +1755,6 @@ document.addEventListener('alpine:init', () => {
             };
             this.formErrors = {};
             this.showModal = true;
-            this.$nextTick(() => {
-                this.initCreatePickers();
-            });
         },
 
         closeModal() {
@@ -1856,9 +1772,6 @@ document.addEventListener('alpine:init', () => {
                 deadline: task.deadline_raw || ''
             };
             this.showEditModal = true;
-            this.$nextTick(() => {
-                this.initEditPicker(task.deadline_raw);
-            });
         },
 
         closeEditModal() {
@@ -2277,6 +2190,7 @@ document.addEventListener('alpine:init', () => {
         initSortable() {
             const grid = document.getElementById('tasks-grid');
             if (!grid) return;
+            if (typeof Sortable === 'undefined') return;
 
             new Sortable(grid, {
                 animation: 350,

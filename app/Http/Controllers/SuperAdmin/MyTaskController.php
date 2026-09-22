@@ -842,6 +842,7 @@ class MyTaskController extends Controller
             'gold' => (int) ($t->gold ?? 0),
             'gold_awarded' => (bool) $t->gold_awarded,
             'start_date' => $t->start_date?->format('d/m/Y'),
+            'start_date_raw' => $t->start_date?->toDateString(),
             'deadline' => $t->deadline?->format('d/m'),
             'deadline_full' => $t->deadline?->format('d/m/Y'),
             'deadline_raw' => $t->deadline?->toDateString(),
