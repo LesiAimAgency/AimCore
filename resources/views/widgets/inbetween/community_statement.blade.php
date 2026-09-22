@@ -27,7 +27,7 @@
 
         <!-- Center Column (Main Statement & CTAs) -->
         <div class="lg:col-span-4 flex flex-col items-center text-center my-4 lg:my-6 z-20">
-          <div class="flex flex-col gap-14 lg:gap-[6rem]">
+          <div class="flex flex-col gap-14 lg:gap-[6rem] xl:gap-[110px] 2xl:gap-[140px]">
             <h2 id="sec2-title-top" class="text-xl sm:text-3xl lg:text-[40px] font-bold uppercase tracking-tight text-white m-0 leading-tight">
               {!! str_replace('COMMUNITY', '<span class="text-brandOrange">COMMUNITY</span>', $settings['title_top']) !!}
             </h2>

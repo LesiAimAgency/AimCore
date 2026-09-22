@@ -259,10 +259,11 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (centerLogo) {
-        gsap.set(centerLogo, { xPercent: -50, yPercent: -50 });
-        // Shrink the original logo to fit the next section without fading it out
-        // Also add a slight y offset to position it perfectly in the gap between the two text titles
-        commTL.to(centerLogo, { y: -80, scale: 340 / 548, duration: 0.4, ease: "power2.inOut" }, 0.7);
+        wallTL.to(centerLogo, {
+          scale: 1.05,
+          duration: 0.8,
+          ease: "power2.inOut"
+        }, 0);
       }
     }
 
