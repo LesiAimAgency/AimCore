@@ -71,12 +71,18 @@ class ProjectLoginController extends Controller
                     return true;
                 }
 
-                // Fallback for legacy users without tenant_id
+                // Fallback for CMS / legacy users scoped by project_ids
                 $projectIds = is_array($u->project_ids) ? $u->project_ids : json_decode($u->project_ids ?? '[]', true);
                 if (is_array($projectIds) && (in_array($project->id, $projectIds) || in_array($projectTenantId, $projectIds))) {
-                    if (empty($u->tenant_id) && $projectTenantId) {
-                        $u->tenant_id = $projectTenantId;
-                        $u->saveQuietly();
+                    if (empty($u->tenant_id) && $project->is_multi_tenancy && $project->tenant_id) {
+                        try {
+                            if (\App\Models\Tenant::where('id', $project->tenant_id)->exists()) {
+                                $u->tenant_id = $project->tenant_id;
+                                $u->saveQuietly();
+                            }
+                        } catch (\Throwable $e) {
+                            \Log::warning("Could not sync tenant_id on user {$u->id}: ".$e->getMessage());
+                        }
                     }
 
                     return true;

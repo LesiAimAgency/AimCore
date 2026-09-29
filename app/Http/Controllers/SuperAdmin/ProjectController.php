@@ -791,16 +791,20 @@ class ProjectController extends Controller implements HasMiddleware
             $username = $project->code;
             $email = strtolower($project->code).'@project.local';
 
+            $isMultiTenancy = (bool) ($project->is_multi_tenancy && $project->tenant_id && Tenant::where('id', $project->tenant_id)->exists());
+            $roleName = $isMultiTenancy ? 'multi_tenancy' : 'cms';
             $roleModel = Role::firstOrCreate(
-                ['name' => 'multi_tenancy'],
+                ['name' => $roleName],
                 [
-                    'display_name' => 'Multi-Tenancy Control Center',
-                    'description' => 'Quản trị và điều hành các website / tenant trong hệ thống Multi-Tenancy Control Center',
+                    'display_name' => $isMultiTenancy ? 'Multi-Tenancy Control Center' : 'CMS Website Admin',
+                    'description' => $isMultiTenancy ? 'Quản trị và điều hành các website / tenant trong hệ thống Multi-Tenancy Control Center' : 'Quản trị nội dung website CMS',
                     'level' => 2,
                 ]
             );
 
-            // Create or update Multi-Tenancy Control Center admin user
+            $targetTenantId = $isMultiTenancy ? $project->tenant_id : null;
+
+            // Create or update admin user (CMS vs Tenant)
             $adminUser = User::where('username', $username)->first();
             if ($adminUser) {
                 $existingIds = is_array($adminUser->project_ids) ? $adminUser->project_ids : json_decode($adminUser->project_ids ?? '[]', true) ?? [];
@@ -811,9 +815,9 @@ class ProjectController extends Controller implements HasMiddleware
                     'name' => 'CMS Admin - '.$project->code,
                     'email' => $email,
                     'password' => $password,
-                    'role' => 'multi_tenancy',
+                    'role' => $roleName,
                     'level' => 2,
-                    'tenant_id' => $project->tenant_id ?? $adminUser->tenant_id,
+                    'tenant_id' => $targetTenantId,
                     'project_ids' => array_values(array_unique($existingIds)),
                     'status' => true,
                 ]);
@@ -823,9 +827,9 @@ class ProjectController extends Controller implements HasMiddleware
                     'username' => $username,
                     'email' => $email,
                     'password' => $password,
-                    'role' => 'multi_tenancy',
+                    'role' => $roleName,
                     'level' => 2,
-                    'tenant_id' => $project->tenant_id,
+                    'tenant_id' => $targetTenantId,
                     'project_ids' => [$project->id],
                     'email_verified_at' => now(),
                     'status' => true,
@@ -1292,14 +1296,18 @@ class ProjectController extends Controller implements HasMiddleware
         $username = $request->username;
         $email = $request->email;
 
+        $isMultiTenancy = (bool) ($project->is_multi_tenancy && $project->tenant_id && Tenant::where('id', $project->tenant_id)->exists());
+        $roleName = $isMultiTenancy ? 'multi_tenancy' : 'cms';
         $roleModel = Role::firstOrCreate(
-            ['name' => 'multi_tenancy'],
+            ['name' => $roleName],
             [
-                'display_name' => 'Multi-Tenancy Control Center',
-                'description' => 'Quản trị và điều hành các website / tenant trong hệ thống Multi-Tenancy Control Center',
+                'display_name' => $isMultiTenancy ? 'Multi-Tenancy Control Center' : 'CMS Website Admin',
+                'description' => $isMultiTenancy ? 'Quản trị và điều hành các website / tenant trong hệ thống Multi-Tenancy Control Center' : 'Quản trị nội dung website CMS',
                 'level' => 2,
             ]
         );
+
+        $targetTenantId = $isMultiTenancy ? $project->tenant_id : null;
 
         // Tìm user quản lý hiện tại của project
         $user = null;
@@ -1337,9 +1345,9 @@ class ProjectController extends Controller implements HasMiddleware
                 'username' => $username,
                 'email' => $email,
                 'password' => $password,
-                'role' => 'multi_tenancy',
+                'role' => $roleName,
                 'level' => 2,
-                'tenant_id' => $project->tenant_id ?? $user->tenant_id,
+                'tenant_id' => $targetTenantId,
                 'project_ids' => array_values(array_unique($existingIds)),
                 'status' => true,
             ]);
@@ -1350,9 +1358,9 @@ class ProjectController extends Controller implements HasMiddleware
                 'username' => $username,
                 'email' => $email,
                 'password' => $password,
-                'role' => 'multi_tenancy',
+                'role' => $roleName,
                 'level' => 2,
-                'tenant_id' => $project->tenant_id,
+                'tenant_id' => $targetTenantId,
                 'project_ids' => [$project->id],
                 'email_verified_at' => now(),
                 'status' => true,

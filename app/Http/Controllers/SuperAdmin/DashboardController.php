@@ -358,17 +358,8 @@ class DashboardController extends Controller
 
         $project = Project::findOrFail($request->project_id);
 
-        $roleModel = Role::firstOrCreate(
-            ['name' => 'multi_tenancy'],
-            [
-                'display_name' => 'Multi-Tenancy Control Center',
-                'description' => 'Quản trị và điều hành các website / tenant trong hệ thống Multi-Tenancy Control Center',
-                'level' => 2,
-            ]
-        );
-
-        // Đảm bảo dự án có tenant tương ứng
-        if (! $project->tenant_id) {
+        $isMultiTenancy = (bool) ($project->is_multi_tenancy);
+        if ($isMultiTenancy && ! $project->tenant_id) {
             try {
                 $tenant = Tenant::firstOrCreate(
                     ['code' => $project->code],
@@ -384,6 +375,21 @@ class DashboardController extends Controller
                 \Log::warning('Tenant auto-mapping in storeMultiTenancyAccount failed: '.$e->getMessage());
             }
         }
+
+        $validTenantId = null;
+        if ($isMultiTenancy && $project->tenant_id && Tenant::where('id', $project->tenant_id)->exists()) {
+            $validTenantId = $project->tenant_id;
+        }
+
+        $roleName = $isMultiTenancy ? 'multi_tenancy' : 'cms';
+        $roleModel = Role::firstOrCreate(
+            ['name' => $roleName],
+            [
+                'display_name' => $isMultiTenancy ? 'Multi-Tenancy Control Center' : 'CMS Website Admin',
+                'description' => $isMultiTenancy ? 'Quản trị và điều hành các website / tenant trong hệ thống Multi-Tenancy Control Center' : 'Quản trị nội dung website CMS',
+                'level' => 2,
+            ]
+        );
 
         $user = User::where('email', $request->email)
             ->orWhere('username', $request->username)
@@ -402,9 +408,9 @@ class DashboardController extends Controller
                 'username' => $request->username,
                 'email' => $request->email,
                 'password' => $request->password,
-                'role' => 'multi_tenancy',
+                'role' => $roleName,
                 'level' => 2,
-                'tenant_id' => $project->tenant_id ?? $user->tenant_id,
+                'tenant_id' => $validTenantId,
                 'project_ids' => array_values(array_unique($existingProjectIds)),
                 'status' => true,
             ]);
@@ -414,9 +420,9 @@ class DashboardController extends Controller
                 'username' => $request->username,
                 'email' => $request->email,
                 'password' => $request->password,
-                'role' => 'multi_tenancy',
+                'role' => $roleName,
                 'level' => 2,
-                'tenant_id' => $project->tenant_id,
+                'tenant_id' => $validTenantId,
                 'project_ids' => $projectIds,
                 'email_verified_at' => now(),
                 'status' => true,
