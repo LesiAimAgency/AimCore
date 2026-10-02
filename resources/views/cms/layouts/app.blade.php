@@ -71,7 +71,13 @@
             || request()->is('wkcomputer/*')
             || request()->is('wkcomputer*');
 
-        $hasCustomSidebar = $isVtm || $isWk;
+        $isEhenho = ($projectCode === 'ehenho')
+            || (is_string($projectCode) && str_contains($projectCode, 'ehenho'))
+            || ($projectTheme === 'ehenho')
+            || request()->is('ehenho/*')
+            || request()->is('ehenho*');
+
+        $hasCustomSidebar = $isVtm || $isWk || $isEhenho;
     @endphp
 
     <div class="min-h-screen flex w-full">
@@ -82,6 +88,10 @@
         @elseif($isWk)
             <div class="fixed top-0 left-0 h-screen z-40">
                 @include('frontend.themes.wkcomputerdemo.admin.layouts.sidebar')
+            </div>
+        @elseif($isEhenho)
+            <div class="fixed top-0 left-0 h-screen z-40">
+                @include('themes.ehenho.admin.layouts.sidebar')
             </div>
         @else
         <!-- Sidebar -->

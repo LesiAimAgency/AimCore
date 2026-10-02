@@ -161,6 +161,16 @@ Route::prefix('{projectCode}/admin')
 
         Route::get('/', [DashboardController::class, 'projectDashboard'])->name('dashboard');
 
+        // eHenho Dedicated Management Routes (Hồ sơ hẹn hò & Tương tác)
+        Route::prefix('ehenho')->name('ehenho.')->group(function () {
+            Route::get('profiles', [App\Http\Controllers\Admin\Ehenho\AdminProfileController::class, 'index'])->name('profiles.index');
+            Route::get('profiles/{id}/edit', [App\Http\Controllers\Admin\Ehenho\AdminProfileController::class, 'edit'])->name('profiles.edit');
+            Route::put('profiles/{id}', [App\Http\Controllers\Admin\Ehenho\AdminProfileController::class, 'update'])->name('profiles.update');
+            Route::post('profiles/{id}/toggle-status', [App\Http\Controllers\Admin\Ehenho\AdminProfileController::class, 'toggleStatus'])->name('profiles.toggle-status');
+            Route::delete('profiles/{id}', [App\Http\Controllers\Admin\Ehenho\AdminProfileController::class, 'destroy'])->name('profiles.destroy');
+            Route::get('interactions', [App\Http\Controllers\Admin\Ehenho\AdminProfileController::class, 'interactions'])->name('interactions.index');
+        });
+
         // Products Management
         Route::post('products/sync-widgets', [ProductController::class, 'syncWidgets'])->name('products.sync-widgets');
         Route::post('products/bulk-edit', [ProductController::class, 'bulkEdit'])->name('products.bulk-edit');

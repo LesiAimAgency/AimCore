@@ -55,6 +55,15 @@ class DashboardController extends Controller
             return view('frontend.themes.wkcomputerdemo.admin.dashboard', $data);
         }
 
+        $isEhenho = ($project && ($project->code === 'ehenho' || ($project->features['theme'] ?? null) === 'ehenho'))
+            || ($request->route('projectCode') === 'ehenho');
+
+        if ($isEhenho && view()->exists('themes.ehenho.admin.dashboard')) {
+            $ehenhoData = $this->getEhenhoDashboardData($project);
+
+            return view('themes.ehenho.admin.dashboard', array_merge($data, $ehenhoData));
+        }
+
         return view('cms.dashboard.index', $data);
     }
 
@@ -559,4 +568,34 @@ class DashboardController extends Controller
             'pending_orders' => (clone $orderQuery)->where('status', 'pending')->count(),
         ]);
     }
+
+    private function getEhenhoDashboardData(?Project $project = null): array
+    {
+        $totalProfiles = \App\Models\Ehenho\Profile::count();
+        $maleProfiles = \App\Models\Ehenho\Profile::where('gender', 'male')->count();
+        $femaleProfiles = \App\Models\Ehenho\Profile::where('gender', 'female')->count();
+        $newProfilesWeek = \App\Models\Ehenho\Profile::where('created_at', '>=', now()->subDays(7))->count();
+        $recentProfiles = \App\Models\Ehenho\Profile::latest()->take(6)->get();
+
+        $totalPages = \App\Models\Post::withoutGlobalScopes()->where('post_type', 'page')->count();
+        $totalPosts = \App\Models\Post::withoutGlobalScopes()->where('post_type', 'post')->count();
+        $recentPages = \App\Models\Post::withoutGlobalScopes()->where('post_type', 'page')->latest()->take(5)->get();
+
+        $totalConversations = \App\Models\Ehenho\Conversation::count();
+        $totalMessages = \App\Models\Ehenho\Message::count();
+
+        return [
+            'totalProfiles' => $totalProfiles,
+            'maleProfiles' => $maleProfiles,
+            'femaleProfiles' => $femaleProfiles,
+            'newProfilesWeek' => $newProfilesWeek,
+            'recentProfiles' => $recentProfiles,
+            'totalPages' => $totalPages,
+            'totalPosts' => $totalPosts,
+            'recentPages' => $recentPages,
+            'totalConversations' => $totalConversations,
+            'totalMessages' => $totalMessages,
+        ];
+    }
 }
+
