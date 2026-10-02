@@ -32,22 +32,22 @@ class SyncEhenhoToHostCommand extends Command
         $this->info('Starting Ehenho Host Database Synchronization...');
 
         $sqlPath = base_path((string) $this->option('sql'));
-        if (! File::exists($sqlPath)) {
-            $this->error("SQL file not found at: {$sqlPath}");
+        if (File::exists($sqlPath)) {
+            $this->info("Reading SQL delta file: {$sqlPath}");
+            $sql = File::get($sqlPath);
 
-            return self::FAILURE;
-        }
-
-        $this->info("Reading SQL delta file: {$sqlPath}");
-        $sql = File::get($sqlPath);
-
-        try {
-            DB::unprepared($sql);
-            $this->info('✔ Successfully synchronized Ehenho tables, provinces, project and migrations into active database!');
-        } catch (\Throwable $e) {
-            $this->error('Failed to execute sync SQL: '.$e->getMessage());
-
-            return self::FAILURE;
+            try {
+                DB::unprepared($sql);
+                $this->info('✔ Successfully synchronized Ehenho tables, provinces, project and migrations via SQL!');
+            } catch (\Throwable $e) {
+                $this->warn('SQL execution notice: '.$e->getMessage().'. Falling back to Laravel migrations...');
+                $this->call('migrate', ['--force' => true]);
+                $this->call('db:seed', ['--class' => 'EhenhoMasterSeeder', '--force' => true]);
+            }
+        } else {
+            $this->info('SQL file not present on host. Running native idempotent migrations and seeder...');
+            $this->call('migrate', ['--force' => true]);
+            $this->call('db:seed', ['--class' => 'EhenhoMasterSeeder', '--force' => true]);
         }
 
         // Verify tables
