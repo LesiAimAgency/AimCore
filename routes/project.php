@@ -31,6 +31,7 @@ use App\Http\Controllers\Frontend\PostController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Middleware\CheckCmsRole;
 use App\Http\Middleware\ProjectSubdomainMiddleware;
+use App\Http\Middleware\ResolveProjectContext;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\SetProjectDatabase;
 use App\Http\Middleware\WkcomputerMiddleware;
@@ -51,6 +52,23 @@ Route::prefix('wkcomputer')
         SetProjectDatabase::class,
     ])
     ->group(base_path('routes/wkcomputer.php'));
+
+// ============================================
+// EHENHO DEDICATED FRONTEND (100% ISOLATED & MULTI-DATABASE)
+// ============================================
+Route::prefix('ehenho')
+    ->name('ehenho.')
+    ->middleware([
+        ResolveProjectContext::class,
+    ])
+    ->group(base_path('routes/ehenho.php'));
+
+Route::domain('ehenho.local')
+    ->name('ehenho.domain.')
+    ->middleware([
+        ResolveProjectContext::class,
+    ])
+    ->group(base_path('routes/ehenho.php'));
 
 Route::prefix('{projectCode}')
     ->name('project.')

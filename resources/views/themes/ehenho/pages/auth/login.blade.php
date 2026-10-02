@@ -1,0 +1,62 @@
+@extends('themes.ehenho.layouts.auth')
+
+@section('title', 'Đăng nhập - eHenho.com')
+
+@section('auth_content')
+<div class="panel panel-default" style="box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 6px;">
+  <div class="panel-body" style="padding: 30px;">
+    <h3 class="text-success text-center" style="font-weight: bold; margin-top: 5px; margin-bottom: 25px;">
+      Đăng Nhập Tài Khoản
+    </h3>
+
+    <form action="{{ route('ehenho.login.submit') }}" method="POST" id="login_form">
+      @csrf
+
+      <div class="form-group">
+        <label for="id_login" class="text-muted">Địa chỉ Email</label>
+        <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+          <input type="email" name="email" id="id_login" class="form-control" placeholder="Địa chỉ email" value="{{ old('email') }}" required autofocus>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="id_password" class="text-muted">Mật khẩu</label>
+        <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+          <input type="password" name="password" id="id_password" class="form-control c-password-dd" placeholder="Mật khẩu" required>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top: 10px; margin-bottom: 15px;">
+        <div class="col-xs-6">
+          <div class="checkbox" style="margin: 0;">
+            <label>
+              <input type="checkbox" name="remember" id="id_remember" {{ old('remember') ? 'checked' : '' }}>
+              Duy trì đăng nhập
+            </label>
+          </div>
+        </div>
+        <div class="col-xs-6 text-right">
+          <a href="{{ route('ehenho.password.request') }}" id="id_forgot_link" style="color: #008BC7;">
+            Quên mật khẩu?
+          </a>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-lg" style="background-color: #008BC7; border-color: #0077aa; font-weight: bold;">
+        <i class="fa fa-sign-in"></i> Đăng nhập
+      </button>
+
+      <hr style="margin: 25px 0 20px 0;">
+
+      <div class="text-center">
+        <span class="text-muted">Chưa có tài khoản eHenho?</span><br>
+        <a href="{{ route('ehenho.register') }}" class="btn btn-success btn-sc-cus" style="margin-top: 10px; font-weight: bold;">
+          <i class="fa fa-user-plus"></i> Tạo hồ sơ hẹn hò mới
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+@endsection
