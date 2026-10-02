@@ -21,10 +21,14 @@ class EhenhoMasterSeeder extends Seeder
     {
         $this->command->info('=== BẮT ĐẦU SEEDER DỰ ÁN EHENHO ===');
 
-        // 1. Ensure Tenant (search by domain or code to avoid duplicate unique key)
-        $tenant = Tenant::where('domain', 'ehenho.local')
-            ->orWhere('code', 'ehenho')
-            ->first();
+        // 1. Ensure Tenant (search by code 'ehenho' first to avoid duplicate key)
+        $tenant = Tenant::where('code', 'ehenho')->first();
+        if (! $tenant) {
+            $tenant = Tenant::where('domain', 'ehenho.local')->first();
+            if ($tenant) {
+                $tenant->code = 'ehenho';
+            }
+        }
 
         $activeDbName = config('database.connections.'.config('database.default').'.database', 'core');
 
@@ -41,17 +45,21 @@ class EhenhoMasterSeeder extends Seeder
                 'status' => 'active',
             ]);
         } else {
-            $tenant->code = 'ehenho';
             $tenant->name = 'eHenho Dating & Social Network';
             $tenant->database_name = $activeDbName;
             $tenant->save();
         }
         $this->command->info("1. Tenant ID: {$tenant->id} ({$tenant->name})");
 
-        // 2. Ensure Project (search by code or external domain)
-        $project = Project::where('code', 'ehenho')
-            ->orWhere('external_domain', 'ehenho.local')
-            ->first();
+        // 2. Ensure Project (search by code 'ehenho' first to avoid duplicate key 'projects_code_unique')
+        $project = Project::where('code', 'ehenho')->first();
+
+        if (! $project) {
+            $project = Project::where('external_domain', 'ehenho.local')->first();
+            if ($project) {
+                $project->code = 'ehenho';
+            }
+        }
 
         if (! $project) {
             $project = Project::create([
@@ -66,11 +74,15 @@ class EhenhoMasterSeeder extends Seeder
                 'total_gold' => 1000,
             ]);
         } else {
-            $project->code = 'ehenho';
             $project->name = 'eHenho Dating & Social Network';
             $project->tenant_id = $tenant->id;
             $project->status = 'active';
             $project->save();
+
+            // Clear conflicting external_domain on other projects if any
+            Project::where('id', '!=', $project->id)
+                ->where('external_domain', 'ehenho.local')
+                ->update(['external_domain' => null]);
         }
 
         // 3. Ensure / Sync CMS Admin User
