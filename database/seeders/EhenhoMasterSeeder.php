@@ -20,10 +20,14 @@ class EhenhoMasterSeeder extends Seeder
     {
         $this->command->info('=== BẮT ĐẦU SEEDER DỰ ÁN EHENHO ===');
 
-        // 1. Ensure Tenant
-        $tenant = Tenant::firstOrCreate(
-            ['code' => 'ehenho'],
-            [
+        // 1. Ensure Tenant (search by domain or code to avoid duplicate unique key)
+        $tenant = Tenant::where('domain', 'ehenho.local')
+            ->orWhere('code', 'ehenho')
+            ->first();
+
+        if (! $tenant) {
+            $tenant = Tenant::create([
+                'code' => 'ehenho',
                 'name' => 'eHenho Dating & Social Network',
                 'domain' => 'ehenho.local',
                 'database_name' => 'core',
@@ -32,14 +36,22 @@ class EhenhoMasterSeeder extends Seeder
                     'language' => 'vi',
                 ],
                 'status' => 'active',
-            ]
-        );
+            ]);
+        } else {
+            $tenant->code = 'ehenho';
+            $tenant->name = 'eHenho Dating & Social Network';
+            $tenant->save();
+        }
         $this->command->info("1. Tenant ID: {$tenant->id} ({$tenant->name})");
 
-        // 2. Ensure Project
-        $project = Project::firstOrCreate(
-            ['code' => 'ehenho'],
-            [
+        // 2. Ensure Project (search by code or external domain)
+        $project = Project::where('code', 'ehenho')
+            ->orWhere('external_domain', 'ehenho.local')
+            ->first();
+
+        if (! $project) {
+            $project = Project::create([
+                'code' => 'ehenho',
                 'name' => 'eHenho Dating & Social Network',
                 'subdomain' => 'http://127.0.0.1:8000/ehenho',
                 'external_domain' => 'ehenho.local',
@@ -48,8 +60,8 @@ class EhenhoMasterSeeder extends Seeder
                 'project_type' => 'website',
                 'is_multi_tenancy' => true,
                 'total_gold' => 1000,
-            ]
-        );
+            ]);
+        }
 
         // 3. Ensure / Sync CMS Admin User
         $cmsUsername = 'cms_ehenho';
