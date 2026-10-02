@@ -46,6 +46,7 @@ abstract class EhenhoBaseModel extends Model
 
     public function usesProjectScope(): bool
     {
-        return ! in_array($this->getTable(), ['ehenho_provinces']);
+        return in_array('project_id', $this->getFillable())
+            && ! in_array($this->getTable(), ['provinces', 'ehenho_provinces']);
     }
 }

@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             InbetweenHomepageMainSeeder::class,
             ViettinmartMasterSeeder::class,
             WkcomputerMasterSeeder::class,
+            EhenhoMasterSeeder::class,
         ]);
 
         Schema::enableForeignKeyConstraints();

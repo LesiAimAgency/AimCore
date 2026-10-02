@@ -24,7 +24,7 @@
       Cập nhật email mới
     </h4>
 
-    <form action="{{ route('ehenho.account.settings_update') }}" method="POST">
+    <form action="{{ route('ehenho.account.email_update') }}" method="POST">
       @csrf
       @method('PUT')
 

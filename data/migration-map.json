@@ -1,0 +1,1667 @@
+{
+    "0001_01_01_000000_create_users_table.php": {
+        "file": "0001_01_01_000000_create_users_table.php",
+        "migration_name": "0001_01_01_000000_create_users_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "users"
+        ]
+    },
+    "0001_01_01_000001_create_cache_table.php": {
+        "file": "0001_01_01_000001_create_cache_table.php",
+        "migration_name": "0001_01_01_000001_create_cache_table",
+        "scope": "SYSTEM",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "cache",
+            "cache_locks",
+            "sessions"
+        ]
+    },
+    "0001_01_01_000002_create_jobs_table.php": {
+        "file": "0001_01_01_000002_create_jobs_table.php",
+        "migration_name": "0001_01_01_000002_create_jobs_table",
+        "scope": "SYSTEM",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "jobs",
+            "job_batches",
+            "failed_jobs"
+        ]
+    },
+    "0001_01_01_000003_create_sessions_table.php": {
+        "file": "0001_01_01_000003_create_sessions_table.php",
+        "migration_name": "0001_01_01_000003_create_sessions_table",
+        "scope": "SYSTEM",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "sessions"
+        ]
+    },
+    "2025_01_15_100001_create_core_system_tables.php": {
+        "file": "2025_01_15_100001_create_core_system_tables.php",
+        "migration_name": "2025_01_15_100001_create_core_system_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 20,
+        "impacted_tables": [
+            "brands",
+            "product_categories",
+            "attribute_groups",
+            "product_attributes",
+            "product_attribute_values",
+            "products_enhanced",
+            "product_variations",
+            "product_attribute_product",
+            "product_reviews"
+        ]
+    },
+    "2025_01_15_100002_create_content_management_tables.php": {
+        "file": "2025_01_15_100002_create_content_management_tables.php",
+        "migration_name": "2025_01_15_100002_create_content_management_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "tags",
+            "posts",
+            "post_tag",
+            "faqs",
+            "pages",
+            "page_sections"
+        ]
+    },
+    "2025_01_15_100003_create_order_management_tables.php": {
+        "file": "2025_01_15_100003_create_order_management_tables.php",
+        "migration_name": "2025_01_15_100003_create_order_management_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "orders",
+            "order_items",
+            "order_status_histories"
+        ]
+    },
+    "2025_01_15_100004_create_media_management_tables.php": {
+        "file": "2025_01_15_100004_create_media_management_tables.php",
+        "migration_name": "2025_01_15_100004_create_media_management_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "media_folders",
+            "media_files",
+            "media_collections",
+            "media_collection_items"
+        ]
+    },
+    "2025_01_15_100005_create_marketing_feedback_tables.php": {
+        "file": "2025_01_15_100005_create_marketing_feedback_tables.php",
+        "migration_name": "2025_01_15_100005_create_marketing_feedback_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "newsletter_subscribers",
+            "contact_forms",
+            "feedbacks",
+            "feedback_responses",
+            "banners"
+        ]
+    },
+    "2025_01_15_100006_create_system_management_tables.php": {
+        "file": "2025_01_15_100006_create_system_management_tables.php",
+        "migration_name": "2025_01_15_100006_create_system_management_tables",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "roles",
+            "user_roles",
+            "activity_logs",
+            "settings",
+            "menus",
+            "widgets",
+            "system_backups",
+            "system_logs"
+        ]
+    },
+    "2025_01_21_000000_create_visitor_logs_table.php": {
+        "file": "2025_01_21_000000_create_visitor_logs_table.php",
+        "migration_name": "2025_01_21_000000_create_visitor_logs_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "visitor_logs"
+        ]
+    },
+    "2025_01_21_000001_create_roles_table.php": {
+        "file": "2025_01_21_000001_create_roles_table.php",
+        "migration_name": "2025_01_21_000001_create_roles_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "roles",
+            "user_roles"
+        ]
+    },
+    "2025_01_22_000000_create_product_attribute_value_mappings_table.php": {
+        "file": "2025_01_22_000000_create_product_attribute_value_mappings_table.php",
+        "migration_name": "2025_01_22_000000_create_product_attribute_value_mappings_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "product_attribute_value_mappings"
+        ]
+    },
+    "2025_01_22_000001_add_tenant_id_to_cms_tables.php": {
+        "file": "2025_01_22_000001_add_tenant_id_to_cms_tables.php",
+        "migration_name": "2025_01_22_000001_add_tenant_id_to_cms_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": []
+    },
+    "2025_01_22_000001_create_form_submissions_table.php": {
+        "file": "2025_01_22_000001_create_form_submissions_table.php",
+        "migration_name": "2025_01_22_000001_create_form_submissions_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 29,
+        "impacted_tables": [
+            "form_submissions"
+        ]
+    },
+    "2025_01_25_000001_add_project_id_to_all_tables.php": {
+        "file": "2025_01_25_000001_add_project_id_to_all_tables.php",
+        "migration_name": "2025_01_25_000001_add_project_id_to_all_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": []
+    },
+    "2025_01_25_000001_merge_posts_and_pages_tables.php": {
+        "file": "2025_01_25_000001_merge_posts_and_pages_tables.php",
+        "migration_name": "2025_01_25_000001_merge_posts_and_pages_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "posts_unified",
+            "posts_old",
+            "pages_old"
+        ]
+    },
+    "2025_01_25_100000_add_tenant_support_to_all_tables.php": {
+        "file": "2025_01_25_100000_add_tenant_support_to_all_tables.php",
+        "migration_name": "2025_01_25_100000_add_tenant_support_to_all_tables",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "tenants",
+            "users"
+        ]
+    },
+    "2025_11_22_123503_add_seo_fields_to_products_enhanced_table.php": {
+        "file": "2025_11_22_123503_add_seo_fields_to_products_enhanced_table.php",
+        "migration_name": "2025_11_22_123503_add_seo_fields_to_products_enhanced_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "products_enhanced"
+        ]
+    },
+    "2025_11_22_132609_create_fonts_table.php": {
+        "file": "2025_11_22_132609_create_fonts_table.php",
+        "migration_name": "2025_11_22_132609_create_fonts_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "fonts"
+        ]
+    },
+    "2025_11_22_133048_create_settings_table.php": {
+        "file": "2025_11_22_133048_create_settings_table.php",
+        "migration_name": "2025_11_22_133048_create_settings_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "settings"
+        ]
+    },
+    "2025_11_23_131341_create_employees_and_contracts_tables.php": {
+        "file": "2025_11_23_131341_create_employees_and_contracts_tables.php",
+        "migration_name": "2025_11_23_131341_create_employees_and_contracts_tables",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "employees",
+            "contracts"
+        ]
+    },
+    "2025_11_23_132525_create_projects_system_tables.php": {
+        "file": "2025_11_23_132525_create_projects_system_tables.php",
+        "migration_name": "2025_11_23_132525_create_projects_system_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "projects_system_tables"
+        ]
+    },
+    "2025_11_23_132600_create_project_management_system_tables.php": {
+        "file": "2025_11_23_132600_create_project_management_system_tables.php",
+        "migration_name": "2025_11_23_132600_create_project_management_system_tables",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "employees",
+            "projects",
+            "project_members",
+            "tasks"
+        ]
+    },
+    "2025_11_23_133203_remove_salary_from_contracts_table.php": {
+        "file": "2025_11_23_133203_remove_salary_from_contracts_table.php",
+        "migration_name": "2025_11_23_133203_remove_salary_from_contracts_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "contracts"
+        ]
+    },
+    "2025_11_23_133452_add_user_and_manager_to_employees_table.php": {
+        "file": "2025_11_23_133452_add_user_and_manager_to_employees_table.php",
+        "migration_name": "2025_11_23_133452_add_user_and_manager_to_employees_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "employees"
+        ]
+    },
+    "2025_11_23_134956_update_projects_for_approval_workflow.php": {
+        "file": "2025_11_23_134956_update_projects_for_approval_workflow.php",
+        "migration_name": "2025_11_23_134956_update_projects_for_approval_workflow",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "projects"
+        ]
+    },
+    "2025_11_23_135934_add_account_fields_to_contracts_table.php": {
+        "file": "2025_11_23_135934_add_account_fields_to_contracts_table.php",
+        "migration_name": "2025_11_23_135934_add_account_fields_to_contracts_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "contracts"
+        ]
+    },
+    "2025_11_23_140540_remove_website_id_from_contracts_table.php": {
+        "file": "2025_11_23_140540_remove_website_id_from_contracts_table.php",
+        "migration_name": "2025_11_23_140540_remove_website_id_from_contracts_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "contracts"
+        ]
+    },
+    "2025_11_23_140638_make_dates_nullable_in_contracts_table.php": {
+        "file": "2025_11_23_140638_make_dates_nullable_in_contracts_table.php",
+        "migration_name": "2025_11_23_140638_make_dates_nullable_in_contracts_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "contracts"
+        ]
+    },
+    "2025_11_23_162937_create_projects_table_simple.php": {
+        "file": "2025_11_23_162937_create_projects_table_simple.php",
+        "migration_name": "2025_11_23_162937_create_projects_table_simple",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "projects"
+        ]
+    },
+    "2025_11_23_173619_fix_contracts_table_remove_website_id.php": {
+        "file": "2025_11_23_173619_fix_contracts_table_remove_website_id.php",
+        "migration_name": "2025_11_23_173619_fix_contracts_table_remove_website_id",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "contracts"
+        ]
+    },
+    "2025_11_23_174316_make_fields_nullable_for_quick_deployment.php": {
+        "file": "2025_11_23_174316_make_fields_nullable_for_quick_deployment.php",
+        "migration_name": "2025_11_23_174316_make_fields_nullable_for_quick_deployment",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "contracts",
+            "projects"
+        ]
+    },
+    "2025_11_23_175103_create_project_settings_table.php": {
+        "file": "2025_11_23_175103_create_project_settings_table.php",
+        "migration_name": "2025_11_23_175103_create_project_settings_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "project_settings"
+        ]
+    },
+    "2025_11_23_180203_add_username_to_users_table.php": {
+        "file": "2025_11_23_180203_add_username_to_users_table.php",
+        "migration_name": "2025_11_23_180203_add_username_to_users_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "users"
+        ]
+    },
+    "2025_11_23_182254_create_activity_logs_table.php": {
+        "file": "2025_11_23_182254_create_activity_logs_table.php",
+        "migration_name": "2025_11_23_182254_create_activity_logs_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "activity_logs"
+        ]
+    },
+    "2025_11_23_191659_create_project_tickets_table.php": {
+        "file": "2025_11_23_191659_create_project_tickets_table.php",
+        "migration_name": "2025_11_23_191659_create_project_tickets_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "project_tickets"
+        ]
+    },
+    "2025_11_23_192327_add_role_and_department_fields.php": {
+        "file": "2025_11_23_192327_add_role_and_department_fields.php",
+        "migration_name": "2025_11_23_192327_add_role_and_department_fields",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": {
+            "0": "employees",
+            "2": "users",
+            "3": "project_tickets"
+        }
+    },
+    "2025_11_23_192607_add_employee_ids_to_projects_table.php": {
+        "file": "2025_11_23_192607_add_employee_ids_to_projects_table.php",
+        "migration_name": "2025_11_23_192607_add_employee_ids_to_projects_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "projects"
+        ]
+    },
+    "2025_11_23_193051_add_role_to_employees_table.php": {
+        "file": "2025_11_23_193051_add_role_to_employees_table.php",
+        "migration_name": "2025_11_23_193051_add_role_to_employees_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "employees"
+        ]
+    },
+    "2025_11_24_000001_add_level_to_users_table.php": {
+        "file": "2025_11_24_000001_add_level_to_users_table.php",
+        "migration_name": "2025_11_24_000001_add_level_to_users_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "users"
+        ]
+    },
+    "2025_11_24_000002_create_project_permissions_table.php": {
+        "file": "2025_11_24_000002_create_project_permissions_table.php",
+        "migration_name": "2025_11_24_000002_create_project_permissions_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "project_permissions"
+        ]
+    },
+    "2025_11_25_182316_update_settings_table_for_page_builder.php": {
+        "file": "2025_11_25_182316_update_settings_table_for_page_builder.php",
+        "migration_name": "2025_11_25_182316_update_settings_table_for_page_builder",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "settings"
+        ]
+    },
+    "2025_11_25_182330_create_branches_table.php": {
+        "file": "2025_11_25_182330_create_branches_table.php",
+        "migration_name": "2025_11_25_182330_create_branches_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "branches"
+        ]
+    },
+    "2025_11_25_183221_create_menus_and_menu_items_tables.php": {
+        "file": "2025_11_25_183221_create_menus_and_menu_items_tables.php",
+        "migration_name": "2025_11_25_183221_create_menus_and_menu_items_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "menus",
+            "menu_items"
+        ]
+    },
+    "2025_11_25_183433_create_widgets_table.php": {
+        "file": "2025_11_25_183433_create_widgets_table.php",
+        "migration_name": "2025_11_25_183433_create_widgets_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "widgets"
+        ]
+    },
+    "2025_11_25_184801_add_tenant_id_to_widgets_table.php": {
+        "file": "2025_11_25_184801_add_tenant_id_to_widgets_table.php",
+        "migration_name": "2025_11_25_184801_add_tenant_id_to_widgets_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "widgets"
+        ]
+    },
+    "2025_11_26_000001_create_widget_templates_table.php": {
+        "file": "2025_11_26_000001_create_widget_templates_table.php",
+        "migration_name": "2025_11_26_000001_create_widget_templates_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "widget_templates"
+        ]
+    },
+    "2025_11_26_033324_update_superadmin_level.php": {
+        "file": "2025_11_26_033324_update_superadmin_level.php",
+        "migration_name": "2025_11_26_033324_update_superadmin_level",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": []
+    },
+    "2025_11_26_091838_create_product_category_product_table.php": {
+        "file": "2025_11_26_091838_create_product_category_product_table.php",
+        "migration_name": "2025_11_26_091838_create_product_category_product_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "product_category_product"
+        ]
+    },
+    "2025_11_26_101314_add_role_to_employees_table.php": {
+        "file": "2025_11_26_101314_add_role_to_employees_table.php",
+        "migration_name": "2025_11_26_101314_add_role_to_employees_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "employees"
+        ]
+    },
+    "2025_11_26_102851_add_department_manager_to_employees_table.php": {
+        "file": "2025_11_26_102851_add_department_manager_to_employees_table.php",
+        "migration_name": "2025_11_26_102851_add_department_manager_to_employees_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "employees"
+        ]
+    },
+    "2025_11_26_103747_add_department_role_to_employees_table.php": {
+        "file": "2025_11_26_103747_add_department_role_to_employees_table.php",
+        "migration_name": "2025_11_26_103747_add_department_role_to_employees_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "employees"
+        ]
+    },
+    "2025_11_27_072211_add_slug_to_menus_table.php": {
+        "file": "2025_11_27_072211_add_slug_to_menus_table.php",
+        "migration_name": "2025_11_27_072211_add_slug_to_menus_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "menus"
+        ]
+    },
+    "2025_11_27_100000_add_location_and_active_to_menus_table.php": {
+        "file": "2025_11_27_100000_add_location_and_active_to_menus_table.php",
+        "migration_name": "2025_11_27_100000_add_location_and_active_to_menus_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "menus",
+            "menu_items"
+        ]
+    },
+    "2025_11_27_100001_remove_items_column_from_menus_table.php": {
+        "file": "2025_11_27_100001_remove_items_column_from_menus_table.php",
+        "migration_name": "2025_11_27_100001_remove_items_column_from_menus_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "menus"
+        ]
+    },
+    "2025_11_28_035048_add_project_id_to_tables.php": {
+        "file": "2025_11_28_035048_add_project_id_to_tables.php",
+        "migration_name": "2025_11_28_035048_add_project_id_to_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": []
+    },
+    "2025_11_28_035529_add_cms_features_to_projects_table.php": {
+        "file": "2025_11_28_035529_add_cms_features_to_projects_table.php",
+        "migration_name": "2025_11_28_035529_add_cms_features_to_projects_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "projects"
+        ]
+    },
+    "2025_11_29_033035_create_website_configs_table.php": {
+        "file": "2025_11_29_033035_create_website_configs_table.php",
+        "migration_name": "2025_11_29_033035_create_website_configs_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "website_configs"
+        ]
+    },
+    "2025_11_30_000001_add_project_id_to_products_enhanced.php": {
+        "file": "2025_11_30_000001_add_project_id_to_products_enhanced.php",
+        "migration_name": "2025_11_30_000001_add_project_id_to_products_enhanced",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "products_enhanced"
+        ]
+    },
+    "2025_11_30_000002_add_project_id_to_multisite_tables.php": {
+        "file": "2025_11_30_000002_add_project_id_to_multisite_tables.php",
+        "migration_name": "2025_11_30_000002_add_project_id_to_multisite_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": []
+    },
+    "2025_12_16_000001_fix_settings_table_schema.php": {
+        "file": "2025_12_16_000001_fix_settings_table_schema.php",
+        "migration_name": "2025_12_16_000001_fix_settings_table_schema",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "settings"
+        ]
+    },
+    "2025_12_16_000002_add_api_token_to_projects_table.php": {
+        "file": "2025_12_16_000002_add_api_token_to_projects_table.php",
+        "migration_name": "2025_12_16_000002_add_api_token_to_projects_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "projects"
+        ]
+    },
+    "2025_12_17_000001_create_translations_table.php": {
+        "file": "2025_12_17_000001_create_translations_table.php",
+        "migration_name": "2025_12_17_000001_create_translations_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "translations"
+        ]
+    },
+    "2025_12_18_021334_create_permissions_table.php": {
+        "file": "2025_12_18_021334_create_permissions_table.php",
+        "migration_name": "2025_12_18_021334_create_permissions_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "permissions"
+        ]
+    },
+    "2025_12_18_021640_add_enhanced_fields_to_users_table.php": {
+        "file": "2025_12_18_021640_add_enhanced_fields_to_users_table.php",
+        "migration_name": "2025_12_18_021640_add_enhanced_fields_to_users_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "users"
+        ]
+    },
+    "2025_12_18_021724_create_permissions_and_pivot_tables.php": {
+        "file": "2025_12_18_021724_create_permissions_and_pivot_tables.php",
+        "migration_name": "2025_12_18_021724_create_permissions_and_pivot_tables",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "permissions",
+            "role_permissions",
+            "user_permissions",
+            "roles"
+        ]
+    },
+    "2025_12_18_023252_fix_roles_table_structure.php": {
+        "file": "2025_12_18_023252_fix_roles_table_structure.php",
+        "migration_name": "2025_12_18_023252_fix_roles_table_structure",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "roles"
+        ]
+    },
+    "2025_12_18_091831_create_languages_table.php": {
+        "file": "2025_12_18_091831_create_languages_table.php",
+        "migration_name": "2025_12_18_091831_create_languages_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "languages"
+        ]
+    },
+    "2025_12_18_091912_add_language_id_to_products_enhanced_table.php": {
+        "file": "2025_12_18_091912_add_language_id_to_products_enhanced_table.php",
+        "migration_name": "2025_12_18_091912_add_language_id_to_products_enhanced_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "products_enhanced"
+        ]
+    },
+    "2025_12_19_015840_create_product_category_pivot_table.php": {
+        "file": "2025_12_19_015840_create_product_category_pivot_table.php",
+        "migration_name": "2025_12_19_015840_create_product_category_pivot_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "product_category_pivot"
+        ]
+    },
+    "2025_12_19_015901_create_product_brand_pivot_table.php": {
+        "file": "2025_12_19_015901_create_product_brand_pivot_table.php",
+        "migration_name": "2025_12_19_015901_create_product_brand_pivot_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "product_brand_pivot"
+        ]
+    },
+    "2025_12_19_032517_add_language_id_to_project_products_table.php": {
+        "file": "2025_12_19_032517_add_language_id_to_project_products_table.php",
+        "migration_name": "2025_12_19_032517_add_language_id_to_project_products_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "products_enhanced"
+        ]
+    },
+    "2025_12_19_035319_create_product_category_product_table.php": {
+        "file": "2025_12_19_035319_create_product_category_product_table.php",
+        "migration_name": "2025_12_19_035319_create_product_category_product_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "product_category_product"
+        ]
+    },
+    "2025_12_19_075916_fix_settings_unique_constraint.php": {
+        "file": "2025_12_19_075916_fix_settings_unique_constraint.php",
+        "migration_name": "2025_12_19_075916_fix_settings_unique_constraint",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "settings"
+        ]
+    },
+    "2025_12_19_080616_remove_tenant_foreign_key_from_settings_table.php": {
+        "file": "2025_12_19_080616_remove_tenant_foreign_key_from_settings_table.php",
+        "migration_name": "2025_12_19_080616_remove_tenant_foreign_key_from_settings_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "settings"
+        ]
+    },
+    "2025_12_19_082115_make_description_nullable_in_products_enhanced_table.php": {
+        "file": "2025_12_19_082115_make_description_nullable_in_products_enhanced_table.php",
+        "migration_name": "2025_12_19_082115_make_description_nullable_in_products_enhanced_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "products_enhanced"
+        ]
+    },
+    "2025_12_20_033813_add_unique_constraints_to_product_attribute_values_table.php": {
+        "file": "2025_12_20_033813_add_unique_constraints_to_product_attribute_values_table.php",
+        "migration_name": "2025_12_20_033813_add_unique_constraints_to_product_attribute_values_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "product_attribute_values"
+        ]
+    },
+    "2025_12_20_042720_add_meta_fields_to_brands_table.php": {
+        "file": "2025_12_20_042720_add_meta_fields_to_brands_table.php",
+        "migration_name": "2025_12_20_042720_add_meta_fields_to_brands_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "brands"
+        ]
+    },
+    "2025_12_22_030510_add_image_gallery_to_product_variations_table.php": {
+        "file": "2025_12_22_030510_add_image_gallery_to_product_variations_table.php",
+        "migration_name": "2025_12_22_030510_add_image_gallery_to_product_variations_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "product_variations"
+        ]
+    },
+    "2025_12_23_090018_add_password_fields_to_projects_table.php": {
+        "file": "2025_12_23_090018_add_password_fields_to_projects_table.php",
+        "migration_name": "2025_12_23_090018_add_password_fields_to_projects_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "projects"
+        ]
+    },
+    "2025_12_23_090101_create_project_password_audits_table.php": {
+        "file": "2025_12_23_090101_create_project_password_audits_table.php",
+        "migration_name": "2025_12_23_090101_create_project_password_audits_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "project_password_audits"
+        ]
+    },
+    "2025_12_25_110000_add_variant_and_metadata_to_widgets_table.php": {
+        "file": "2025_12_25_110000_add_variant_and_metadata_to_widgets_table.php",
+        "migration_name": "2025_12_25_110000_add_variant_and_metadata_to_widgets_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "widgets"
+        ]
+    },
+    "2025_12_25_150000_remove_tenant_foreign_key_from_widgets.php": {
+        "file": "2025_12_25_150000_remove_tenant_foreign_key_from_widgets.php",
+        "migration_name": "2025_12_25_150000_remove_tenant_foreign_key_from_widgets",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "widgets"
+        ]
+    },
+    "2025_12_25_160000_fix_product_category_product_table.php": {
+        "file": "2025_12_25_160000_fix_product_category_product_table.php",
+        "migration_name": "2025_12_25_160000_fix_product_category_product_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": []
+    },
+    "2025_12_25_161000_create_brand_product_table.php": {
+        "file": "2025_12_25_161000_create_brand_product_table.php",
+        "migration_name": "2025_12_25_161000_create_brand_product_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": []
+    },
+    "2025_12_25_170000_add_badge_fields_to_products_enhanced_table.php": {
+        "file": "2025_12_25_170000_add_badge_fields_to_products_enhanced_table.php",
+        "migration_name": "2025_12_25_170000_add_badge_fields_to_products_enhanced_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": []
+    },
+    "2025_12_27_072025_add_template_code_to_widget_templates.php": {
+        "file": "2025_12_27_072025_add_template_code_to_widget_templates.php",
+        "migration_name": "2025_12_27_072025_add_template_code_to_widget_templates",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "widget_templates"
+        ]
+    },
+    "2025_12_29_000001_create_archive_templates_table.php": {
+        "file": "2025_12_29_000001_create_archive_templates_table.php",
+        "migration_name": "2025_12_29_000001_create_archive_templates_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 1,
+        "impacted_tables": [
+            "archive_templates"
+        ]
+    },
+    "2026_08_03_084032_add_sync_fields_to_projects_table.php": {
+        "file": "2026_08_03_084032_add_sync_fields_to_projects_table.php",
+        "migration_name": "2026_08_03_084032_add_sync_fields_to_projects_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 2,
+        "impacted_tables": [
+            "projects"
+        ]
+    },
+    "2026_08_03_085258_create_positions_table.php": {
+        "file": "2026_08_03_085258_create_positions_table.php",
+        "migration_name": "2026_08_03_085258_create_positions_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 3,
+        "impacted_tables": [
+            "positions"
+        ]
+    },
+    "2026_08_03_090124_add_value_to_contracts_table.php": {
+        "file": "2026_08_03_090124_add_value_to_contracts_table.php",
+        "migration_name": "2026_08_03_090124_add_value_to_contracts_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 4,
+        "impacted_tables": [
+            "contracts"
+        ]
+    },
+    "2026_08_04_022536_refactor_database_to_unified_posts.php": {
+        "file": "2026_08_04_022536_refactor_database_to_unified_posts.php",
+        "migration_name": "2026_08_04_022536_refactor_database_to_unified_posts",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 5,
+        "impacted_tables": [
+            "posts",
+            "taxonomies",
+            "term_relationships"
+        ]
+    },
+    "2026_08_04_022853_cleanup_database_phase_2.php": {
+        "file": "2026_08_04_022853_cleanup_database_phase_2.php",
+        "migration_name": "2026_08_04_022853_cleanup_database_phase_2",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 6,
+        "impacted_tables": []
+    },
+    "2026_08_04_023156_cleanup_database_phase_3.php": {
+        "file": "2026_08_04_023156_cleanup_database_phase_3.php",
+        "migration_name": "2026_08_04_023156_cleanup_database_phase_3",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 7,
+        "impacted_tables": []
+    },
+    "2026_08_04_023739_cleanup_database_widgets_phase_4.php": {
+        "file": "2026_08_04_023739_cleanup_database_widgets_phase_4.php",
+        "migration_name": "2026_08_04_023739_cleanup_database_widgets_phase_4",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 8,
+        "impacted_tables": []
+    },
+    "2026_08_04_030540_change_post_type_in_posts_table.php": {
+        "file": "2026_08_04_030540_change_post_type_in_posts_table.php",
+        "migration_name": "2026_08_04_030540_change_post_type_in_posts_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 9,
+        "impacted_tables": [
+            "posts"
+        ]
+    },
+    "2026_08_04_072143_create_briefs_table.php": {
+        "file": "2026_08_04_072143_create_briefs_table.php",
+        "migration_name": "2026_08_04_072143_create_briefs_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 10,
+        "impacted_tables": [
+            "briefs"
+        ]
+    },
+    "2026_08_04_072144_create_tasks_table.php": {
+        "file": "2026_08_04_072144_create_tasks_table.php",
+        "migration_name": "2026_08_04_072144_create_tasks_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 10,
+        "impacted_tables": [
+            "tasks"
+        ]
+    },
+    "2026_08_04_074731_fix_activity_logs_schema.php": {
+        "file": "2026_08_04_074731_fix_activity_logs_schema.php",
+        "migration_name": "2026_08_04_074731_fix_activity_logs_schema",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 11,
+        "impacted_tables": [
+            "activity_logs"
+        ]
+    },
+    "2026_08_04_084040_create_contracts_table.php": {
+        "file": "2026_08_04_084040_create_contracts_table.php",
+        "migration_name": "2026_08_04_084040_create_contracts_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 12,
+        "impacted_tables": [
+            "contracts"
+        ]
+    },
+    "2026_08_04_091037_fix_projects_foreign_keys_to_users.php": {
+        "file": "2026_08_04_091037_fix_projects_foreign_keys_to_users.php",
+        "migration_name": "2026_08_04_091037_fix_projects_foreign_keys_to_users",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 13,
+        "impacted_tables": [
+            "projects"
+        ]
+    },
+    "2026_08_05_061206_create_feature_packs_table.php": {
+        "file": "2026_08_05_061206_create_feature_packs_table.php",
+        "migration_name": "2026_08_05_061206_create_feature_packs_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 14,
+        "impacted_tables": [
+            "feature_packs"
+        ]
+    },
+    "2026_08_05_065929_change_description_type_in_contracts_table.php": {
+        "file": "2026_08_05_065929_change_description_type_in_contracts_table.php",
+        "migration_name": "2026_08_05_065929_change_description_type_in_contracts_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 15,
+        "impacted_tables": [
+            "contracts"
+        ]
+    },
+    "2026_08_05_071957_add_requirements_to_contracts_table.php": {
+        "file": "2026_08_05_071957_add_requirements_to_contracts_table.php",
+        "migration_name": "2026_08_05_071957_add_requirements_to_contracts_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 16,
+        "impacted_tables": [
+            "contracts"
+        ]
+    },
+    "2026_08_05_072643_add_client_resources_to_contracts_table.php": {
+        "file": "2026_08_05_072643_add_client_resources_to_contracts_table.php",
+        "migration_name": "2026_08_05_072643_add_client_resources_to_contracts_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 17,
+        "impacted_tables": [
+            "contracts"
+        ]
+    },
+    "2026_08_05_082908_create_project_tickets_table.php": {
+        "file": "2026_08_05_082908_create_project_tickets_table.php",
+        "migration_name": "2026_08_05_082908_create_project_tickets_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 18,
+        "impacted_tables": [
+            "project_tickets"
+        ]
+    },
+    "2026_08_05_082918_create_project_ticket_replies_table.php": {
+        "file": "2026_08_05_082918_create_project_ticket_replies_table.php",
+        "migration_name": "2026_08_05_082918_create_project_ticket_replies_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 18,
+        "impacted_tables": [
+            "project_ticket_replies"
+        ]
+    },
+    "2026_08_07_075826_create_widgets_and_templates_tables.php": {
+        "file": "2026_08_07_075826_create_widgets_and_templates_tables.php",
+        "migration_name": "2026_08_07_075826_create_widgets_and_templates_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 19,
+        "impacted_tables": [
+            "widget_templates",
+            "widgets"
+        ]
+    },
+    "2026_08_07_085645_restore_menus_and_menu_items_tables.php": {
+        "file": "2026_08_07_085645_restore_menus_and_menu_items_tables.php",
+        "migration_name": "2026_08_07_085645_restore_menus_and_menu_items_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 21,
+        "impacted_tables": [
+            "menus",
+            "menu_items"
+        ]
+    },
+    "2026_08_07_085941_add_tenant_id_to_product_categories_table.php": {
+        "file": "2026_08_07_085941_add_tenant_id_to_product_categories_table.php",
+        "migration_name": "2026_08_07_085941_add_tenant_id_to_product_categories_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 22,
+        "impacted_tables": [
+            "product_categories"
+        ]
+    },
+    "2026_08_07_091644_add_tenant_id_to_menu_items_table.php": {
+        "file": "2026_08_07_091644_add_tenant_id_to_menu_items_table.php",
+        "migration_name": "2026_08_07_091644_add_tenant_id_to_menu_items_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 23,
+        "impacted_tables": [
+            "menu_items"
+        ]
+    },
+    "2026_08_10_071500_add_tenant_and_project_ids_to_ecommerce_tables.php": {
+        "file": "2026_08_10_071500_add_tenant_and_project_ids_to_ecommerce_tables.php",
+        "migration_name": "2026_08_10_071500_add_tenant_and_project_ids_to_ecommerce_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 24,
+        "impacted_tables": [
+            "orders",
+            "order_items",
+            "order_status_histories",
+            "product_attribute_value_mappings"
+        ]
+    },
+    "2026_08_11_090555_add_deleted_at_to_products_enhanced_table.php": {
+        "file": "2026_08_11_090555_add_deleted_at_to_products_enhanced_table.php",
+        "migration_name": "2026_08_11_090555_add_deleted_at_to_products_enhanced_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 25,
+        "impacted_tables": [
+            "products_enhanced"
+        ]
+    },
+    "2026_08_11_090758_add_deleted_at_to_all_content_tables.php": {
+        "file": "2026_08_11_090758_add_deleted_at_to_all_content_tables.php",
+        "migration_name": "2026_08_11_090758_add_deleted_at_to_all_content_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 26,
+        "impacted_tables": []
+    },
+    "2026_08_11_091021_add_deleted_at_to_taxonomies_table.php": {
+        "file": "2026_08_11_091021_add_deleted_at_to_taxonomies_table.php",
+        "migration_name": "2026_08_11_091021_add_deleted_at_to_taxonomies_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 27,
+        "impacted_tables": [
+            "taxonomies"
+        ]
+    },
+    "2026_08_12_024904_create_reviews_table.php": {
+        "file": "2026_08_12_024904_create_reviews_table.php",
+        "migration_name": "2026_08_12_024904_create_reviews_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 28,
+        "impacted_tables": [
+            "reviews"
+        ]
+    },
+    "2026_08_12_030521_add_post_id_and_email_to_reviews_table.php": {
+        "file": "2026_08_12_030521_add_post_id_and_email_to_reviews_table.php",
+        "migration_name": "2026_08_12_030521_add_post_id_and_email_to_reviews_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 30,
+        "impacted_tables": [
+            "reviews"
+        ]
+    },
+    "2026_08_12_035457_create_shipping_engine_tables.php": {
+        "file": "2026_08_12_035457_create_shipping_engine_tables.php",
+        "migration_name": "2026_08_12_035457_create_shipping_engine_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 31,
+        "impacted_tables": [
+            "shipping_carriers",
+            "shipping_rate_versions",
+            "shipping_zones",
+            "shipping_zone_locations",
+            "shipping_rules",
+            "shipping_rule_conditions"
+        ]
+    },
+    "2026_08_12_042234_add_project_id_to_form_submissions_table.php": {
+        "file": "2026_08_12_042234_add_project_id_to_form_submissions_table.php",
+        "migration_name": "2026_08_12_042234_add_project_id_to_form_submissions_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 32,
+        "impacted_tables": [
+            "form_submissions"
+        ]
+    },
+    "2026_08_14_041624_restore_page_sections_table.php": {
+        "file": "2026_08_14_041624_restore_page_sections_table.php",
+        "migration_name": "2026_08_14_041624_restore_page_sections_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 33,
+        "impacted_tables": [
+            "page_sections"
+        ]
+    },
+    "2026_08_14_094427_add_my_tasks_fields_to_tasks_table.php": {
+        "file": "2026_08_14_094427_add_my_tasks_fields_to_tasks_table.php",
+        "migration_name": "2026_08_14_094427_add_my_tasks_fields_to_tasks_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 34,
+        "impacted_tables": [
+            "tasks"
+        ]
+    },
+    "2026_08_14_130020_change_text_columns_to_longtext_in_contracts_table.php": {
+        "file": "2026_08_14_130020_change_text_columns_to_longtext_in_contracts_table.php",
+        "migration_name": "2026_08_14_130020_change_text_columns_to_longtext_in_contracts_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 35,
+        "impacted_tables": [
+            "contracts"
+        ]
+    },
+    "2026_08_17_000001_enhance_my_tasks_and_user_roles.php": {
+        "file": "2026_08_17_000001_enhance_my_tasks_and_user_roles.php",
+        "migration_name": "2026_08_17_000001_enhance_my_tasks_and_user_roles",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 36,
+        "impacted_tables": [
+            "users",
+            "tasks"
+        ]
+    },
+    "2026_08_17_000002_add_gold_to_users_projects_tasks_tables.php": {
+        "file": "2026_08_17_000002_add_gold_to_users_projects_tasks_tables.php",
+        "migration_name": "2026_08_17_000002_add_gold_to_users_projects_tasks_tables",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 37,
+        "impacted_tables": [
+            "users",
+            "projects",
+            "tasks"
+        ]
+    },
+    "2026_08_18_023156_create_departments_table.php": {
+        "file": "2026_08_18_023156_create_departments_table.php",
+        "migration_name": "2026_08_18_023156_create_departments_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 38,
+        "impacted_tables": [
+            "departments"
+        ]
+    },
+    "2026_08_18_023156_create_services_table.php": {
+        "file": "2026_08_18_023156_create_services_table.php",
+        "migration_name": "2026_08_18_023156_create_services_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 38,
+        "impacted_tables": [
+            "services"
+        ]
+    },
+    "2026_08_18_023157_create_service_stages_table.php": {
+        "file": "2026_08_18_023157_create_service_stages_table.php",
+        "migration_name": "2026_08_18_023157_create_service_stages_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 39,
+        "impacted_tables": [
+            "service_stages"
+        ]
+    },
+    "2026_08_18_023158_create_project_stages_table.php": {
+        "file": "2026_08_18_023158_create_project_stages_table.php",
+        "migration_name": "2026_08_18_023158_create_project_stages_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 40,
+        "impacted_tables": [
+            "project_stages"
+        ]
+    },
+    "2026_08_18_023158_update_projects_table_add_new_fields.php": {
+        "file": "2026_08_18_023158_update_projects_table_add_new_fields.php",
+        "migration_name": "2026_08_18_023158_update_projects_table_add_new_fields",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 40,
+        "impacted_tables": [
+            "projects"
+        ]
+    },
+    "2026_08_18_034015_add_client_details_to_contracts_table.php": {
+        "file": "2026_08_18_034015_add_client_details_to_contracts_table.php",
+        "migration_name": "2026_08_18_034015_add_client_details_to_contracts_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 41,
+        "impacted_tables": [
+            "contracts"
+        ]
+    },
+    "2026_08_18_043435_add_hr_fields_to_users_table.php": {
+        "file": "2026_08_18_043435_add_hr_fields_to_users_table.php",
+        "migration_name": "2026_08_18_043435_add_hr_fields_to_users_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 42,
+        "impacted_tables": [
+            "users"
+        ]
+    },
+    "2026_08_18_062140_add_address_components_to_users_table.php": {
+        "file": "2026_08_18_062140_add_address_components_to_users_table.php",
+        "migration_name": "2026_08_18_062140_add_address_components_to_users_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 43,
+        "impacted_tables": [
+            "users"
+        ]
+    },
+    "2026_08_18_065032_add_dynamic_fields_to_widgets_table.php": {
+        "file": "2026_08_18_065032_add_dynamic_fields_to_widgets_table.php",
+        "migration_name": "2026_08_18_065032_add_dynamic_fields_to_widgets_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 44,
+        "impacted_tables": [
+            "widgets"
+        ]
+    },
+    "2026_08_18_072927_make_contract_id_nullable_in_projects_table.php": {
+        "file": "2026_08_18_072927_make_contract_id_nullable_in_projects_table.php",
+        "migration_name": "2026_08_18_072927_make_contract_id_nullable_in_projects_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 45,
+        "impacted_tables": [
+            "projects"
+        ]
+    },
+    "2026_08_18_074439_add_project_type_to_projects_table.php": {
+        "file": "2026_08_18_074439_add_project_type_to_projects_table.php",
+        "migration_name": "2026_08_18_074439_add_project_type_to_projects_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 46,
+        "impacted_tables": [
+            "projects"
+        ]
+    },
+    "2026_08_19_083753_create_hosting_profiles_table.php": {
+        "file": "2026_08_19_083753_create_hosting_profiles_table.php",
+        "migration_name": "2026_08_19_083753_create_hosting_profiles_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 47,
+        "impacted_tables": [
+            "hosting_profiles"
+        ]
+    },
+    "2026_08_19_083758_create_deployment_history_table.php": {
+        "file": "2026_08_19_083758_create_deployment_history_table.php",
+        "migration_name": "2026_08_19_083758_create_deployment_history_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 48,
+        "impacted_tables": [
+            "deployment_history"
+        ]
+    },
+    "2026_08_19_083803_create_deployment_logs_table.php": {
+        "file": "2026_08_19_083803_create_deployment_logs_table.php",
+        "migration_name": "2026_08_19_083803_create_deployment_logs_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 49,
+        "impacted_tables": [
+            "deployment_logs"
+        ]
+    },
+    "2026_08_19_090415_make_project_domain_nullable_on_hosting_profiles.php": {
+        "file": "2026_08_19_090415_make_project_domain_nullable_on_hosting_profiles.php",
+        "migration_name": "2026_08_19_090415_make_project_domain_nullable_on_hosting_profiles",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 50,
+        "impacted_tables": [
+            "hosting_profiles"
+        ]
+    },
+    "2026_08_24_022102_create_customers_table.php": {
+        "file": "2026_08_24_022102_create_customers_table.php",
+        "migration_name": "2026_08_24_022102_create_customers_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 51,
+        "impacted_tables": [
+            "customers"
+        ]
+    },
+    "2026_08_24_022103_add_customer_id_to_projects_and_contracts.php": {
+        "file": "2026_08_24_022103_add_customer_id_to_projects_and_contracts.php",
+        "migration_name": "2026_08_24_022103_add_customer_id_to_projects_and_contracts",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 52,
+        "impacted_tables": [
+            "projects",
+            "contracts"
+        ]
+    },
+    "2026_08_25_014628_add_id_card_fields_to_customers_table.php": {
+        "file": "2026_08_25_014628_add_id_card_fields_to_customers_table.php",
+        "migration_name": "2026_08_25_014628_add_id_card_fields_to_customers_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 53,
+        "impacted_tables": [
+            "customers"
+        ]
+    },
+    "2026_08_25_015558_add_representative_phone_to_customers_table.php": {
+        "file": "2026_08_25_015558_add_representative_phone_to_customers_table.php",
+        "migration_name": "2026_08_25_015558_add_representative_phone_to_customers_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 53,
+        "impacted_tables": [
+            "customers"
+        ]
+    },
+    "2026_08_26_043633_add_project_id_to_widgets_table.php": {
+        "file": "2026_08_26_043633_add_project_id_to_widgets_table.php",
+        "migration_name": "2026_08_26_043633_add_project_id_to_widgets_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 54,
+        "impacted_tables": [
+            "widgets"
+        ]
+    },
+    "2026_08_27_081501_add_server_ip_to_deployment_history_table.php": {
+        "file": "2026_08_27_081501_add_server_ip_to_deployment_history_table.php",
+        "migration_name": "2026_08_27_081501_add_server_ip_to_deployment_history_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 55,
+        "impacted_tables": [
+            "deployment_history"
+        ]
+    },
+    "2026_09_04_000001_create_legacy_vtm_tables.php": {
+        "file": "2026_09_04_000001_create_legacy_vtm_tables.php",
+        "migration_name": "2026_09_04_000001_create_legacy_vtm_tables",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 56,
+        "impacted_tables": {
+            "0": "coupons",
+            "1": "flash_sale_campaigns",
+            "2": "flash_sale_items",
+            "3": "agents",
+            "4": "user_addresses",
+            "5": "form_templates",
+            "6": "modal_forms",
+            "7": "form_submissions",
+            "9": "product_categories",
+            "10": "posts",
+            "11": "products_enhanced",
+            "12": "product_reviews"
+        }
+    },
+    "2026_09_04_000002_create_product_category_product_table.php": {
+        "file": "2026_09_04_000002_create_product_category_product_table.php",
+        "migration_name": "2026_09_04_000002_create_product_category_product_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 57,
+        "impacted_tables": [
+            "product_category_product"
+        ]
+    },
+    "2026_09_06_000001_add_user_id_to_orders_table.php": {
+        "file": "2026_09_06_000001_add_user_id_to_orders_table.php",
+        "migration_name": "2026_09_06_000001_add_user_id_to_orders_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 58,
+        "impacted_tables": [
+            "orders"
+        ]
+    },
+    "2026_09_06_000002_create_product_combos_table.php": {
+        "file": "2026_09_06_000002_create_product_combos_table.php",
+        "migration_name": "2026_09_06_000002_create_product_combos_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 64,
+        "impacted_tables": [
+            "product_combos"
+        ]
+    },
+    "2026_09_06_031349_modify_menus_slug_unique_index.php": {
+        "file": "2026_09_06_031349_modify_menus_slug_unique_index.php",
+        "migration_name": "2026_09_06_031349_modify_menus_slug_unique_index",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 59,
+        "impacted_tables": [
+            "menus"
+        ]
+    },
+    "2026_09_06_033349_modify_taxonomies_and_posts_slug_unique_index.php": {
+        "file": "2026_09_06_033349_modify_taxonomies_and_posts_slug_unique_index.php",
+        "migration_name": "2026_09_06_033349_modify_taxonomies_and_posts_slug_unique_index",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 60,
+        "impacted_tables": [
+            "taxonomies",
+            "posts"
+        ]
+    },
+    "2026_09_06_033800_modify_ecommerce_slug_unique_indexes.php": {
+        "file": "2026_09_06_033800_modify_ecommerce_slug_unique_indexes.php",
+        "migration_name": "2026_09_06_033800_modify_ecommerce_slug_unique_indexes",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 61,
+        "impacted_tables": [
+            "brands",
+            "product_categories",
+            "coupons"
+        ]
+    },
+    "2026_09_06_041500_modify_products_enhanced_slug_unique_index.php": {
+        "file": "2026_09_06_041500_modify_products_enhanced_slug_unique_index.php",
+        "migration_name": "2026_09_06_041500_modify_products_enhanced_slug_unique_index",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 62,
+        "impacted_tables": [
+            "products_enhanced"
+        ]
+    },
+    "2026_09_06_043000_add_icon_image_badge_to_menu_items_table.php": {
+        "file": "2026_09_06_043000_add_icon_image_badge_to_menu_items_table.php",
+        "migration_name": "2026_09_06_043000_add_icon_image_badge_to_menu_items_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 63,
+        "impacted_tables": [
+            "menu_items"
+        ]
+    },
+    "2026_09_07_000001_add_tenant_id_to_projects_table.php": {
+        "file": "2026_09_07_000001_add_tenant_id_to_projects_table.php",
+        "migration_name": "2026_09_07_000001_add_tenant_id_to_projects_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 65,
+        "impacted_tables": [
+            "projects"
+        ]
+    },
+    "2026_09_07_000002_cleanup_and_isolate_multisite_data.php": {
+        "file": "2026_09_07_000002_cleanup_and_isolate_multisite_data.php",
+        "migration_name": "2026_09_07_000002_cleanup_and_isolate_multisite_data",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 66,
+        "impacted_tables": []
+    },
+    "2026_09_08_043948_add_deployment_config_to_projects_table.php": {
+        "file": "2026_09_08_043948_add_deployment_config_to_projects_table.php",
+        "migration_name": "2026_09_08_043948_add_deployment_config_to_projects_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 67,
+        "impacted_tables": [
+            "projects"
+        ]
+    },
+    "2026_09_15_000001_add_multi_tenancy_role_to_roles_table.php": {
+        "file": "2026_09_15_000001_add_multi_tenancy_role_to_roles_table.php",
+        "migration_name": "2026_09_15_000001_add_multi_tenancy_role_to_roles_table",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 68,
+        "impacted_tables": []
+    },
+    "2026_09_15_062131_add_is_multi_tenancy_to_projects_table.php": {
+        "file": "2026_09_15_062131_add_is_multi_tenancy_to_projects_table.php",
+        "migration_name": "2026_09_15_062131_add_is_multi_tenancy_to_projects_table",
+        "scope": "CENTRAL",
+        "ran": true,
+        "batch": 69,
+        "impacted_tables": [
+            "projects"
+        ]
+    },
+    "2026_10_02_000001_create_ehenho_theme_tables.php": {
+        "file": "2026_10_02_000001_create_ehenho_theme_tables.php",
+        "migration_name": "2026_10_02_000001_create_ehenho_theme_tables",
+        "scope": "PROJECT",
+        "ran": true,
+        "batch": 70,
+        "impacted_tables": [
+            "ehenho_provinces",
+            "ehenho_profiles",
+            "ehenho_conversations",
+            "ehenho_messages",
+            "ehenho_social_connections"
+        ]
+    }
+}

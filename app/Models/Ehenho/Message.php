@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Message extends EhenhoBaseModel
 {
-    protected $table = 'ehenho_messages';
+    protected $table = 'messages';
 
     protected $fillable = [
         'project_id',

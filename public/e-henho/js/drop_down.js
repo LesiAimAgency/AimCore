@@ -7,7 +7,7 @@
 
 (function($) {
     var API_BASE = "https://provinces.open-api.vn/api";
-    var LOCAL_FALLBACK = "js/vietnam_provinces.json";
+    var LOCAL_FALLBACK = "/themes/ehenho/js/vietnam_provinces.json";
     var provincesData = null; // Cache for provinces and districts
 
     // Mapping of common slugs to provider province codes

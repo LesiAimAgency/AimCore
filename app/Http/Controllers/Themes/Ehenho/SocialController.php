@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Themes\Ehenho;
 use App\Http\Controllers\Controller;
 use App\Models\Ehenho\Profile;
 use App\Models\Ehenho\SocialConnection;
+use App\Models\Project;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -73,7 +74,7 @@ class SocialController extends Controller
     public function toggle(Request $request): JsonResponse|RedirectResponse
     {
         $validated = $request->validate([
-            'profile_id' => 'required|exists:ehenho_profiles,id',
+            'profile_id' => 'required|exists:profiles,id',
             'type' => 'required|in:like,bookmark,block,contact',
         ]);
 
@@ -89,16 +90,27 @@ class SocialController extends Controller
         if ($existing) {
             $existing->delete();
             $status = 'removed';
-            $msg = 'Đã hủy '.$type;
+            $msg = match ($type) {
+                'like' => 'Đã bỏ thích hồ sơ.',
+                'bookmark' => 'Đã bỏ lưu hồ sơ khỏi danh sách quan tâm.',
+                'block' => 'Đã bỏ chặn hồ sơ này thành công.',
+                default => 'Đã hủy '.$type,
+            };
         } else {
             SocialConnection::create([
+                'project_id' => $this->getCurrentProjectId(),
                 'user_id' => $userId,
                 'target_profile_id' => $profileId,
                 'relation_type' => $type,
                 'created_at' => now(),
             ]);
             $status = 'added';
-            $msg = 'Đã thêm vào '.$type;
+            $msg = match ($type) {
+                'like' => 'Đã thích hồ sơ này!',
+                'bookmark' => 'Đã lưu hồ sơ vào danh sách quan tâm!',
+                'block' => 'Đã chặn hồ sơ này thành công. Người này sẽ không thể liên lạc với bạn.',
+                default => 'Đã thêm vào '.$type,
+            };
         }
 
         if ($request->wantsJson()) {
@@ -106,5 +118,20 @@ class SocialController extends Controller
         }
 
         return back()->with('success', $msg);
+    }
+
+    private function getCurrentProjectId(): int
+    {
+        if (app()->bound('current_project_id')) {
+            return (int) app('current_project_id');
+        }
+
+        if (session()->has('current_project_id')) {
+            return (int) session('current_project_id');
+        }
+
+        $project = Project::where('code', 'ehenho')->first();
+
+        return $project ? $project->id : 16;
     }
 }

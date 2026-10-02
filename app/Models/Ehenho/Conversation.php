@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Conversation extends EhenhoBaseModel
 {
-    protected $table = 'ehenho_conversations';
+    protected $table = 'conversations';
 
     protected $fillable = [
         'project_id',

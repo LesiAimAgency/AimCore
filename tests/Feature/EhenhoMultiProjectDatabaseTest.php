@@ -114,7 +114,7 @@ class EhenhoMultiProjectDatabaseTest extends TestCase
             'status' => 'active',
         ]);
 
-        $this->assertDatabaseHas('ehenho_profiles', [
+        $this->assertDatabaseHas('profiles', [
             'id' => $profile->id,
             'display_name' => 'Test Isolated User',
         ]);

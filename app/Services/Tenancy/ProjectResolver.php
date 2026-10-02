@@ -14,29 +14,16 @@ class ProjectResolver
      */
     public function resolve(Request $request): ?Project
     {
-        $host = $request->getHost();
-
-        // 1. Resolve by Domain or External Domain (e.g. ehenho.local, ehenho.vn, wkcomputer.aimagency.vn)
-        $project = Project::where('external_domain', $host)
-            ->orWhere('subdomain', 'like', "%://{$host}%")
-            ->orWhere('subdomain', $host)
-            ->first();
-
-        if ($project) {
-            return $project;
-        }
-
-        // 2. Resolve by Subdomain prefix (e.g. ehenho.domain.com -> 'ehenho')
-        $subdomainParts = explode('.', $host);
-        if (count($subdomainParts) > 2) {
-            $subdomain = $subdomainParts[0];
-            $project = Project::where('code', $subdomain)->first();
+        // 1. Resolve by first URI path segment (e.g. /ehenho, /wkcomputer, /viettinmart-eco)
+        $firstSegment = $request->segment(1);
+        if ($firstSegment && ! in_array($firstSegment, ['superadmin', 'admin', 'api', 'build', 'vendor', 'livewire', 'flux', 'storage'])) {
+            $project = Project::where('code', $firstSegment)->first();
             if ($project) {
                 return $project;
             }
         }
 
-        // 3. Resolve by Route Parameter {projectCode}
+        // 2. Resolve by Route Parameter {projectCode}
         $projectCode = $request->route('projectCode');
         if ($projectCode && ! str_contains($projectCode, '{') && ! str_contains($projectCode, '}')) {
             $project = Project::where('code', $projectCode)->first();
@@ -45,10 +32,30 @@ class ProjectResolver
             }
         }
 
-        // 4. Resolve by first URI path segment (e.g. /ehenho/..., /wkcomputer/...)
-        $firstSegment = $request->segment(1);
-        if ($firstSegment && ! in_array($firstSegment, ['superadmin', 'admin', 'api', 'build', 'vendor', 'livewire', 'flux', 'storage'])) {
-            $project = Project::where('code', $firstSegment)->first();
+        $host = $request->getHost();
+
+        // 3. Resolve by Domain or External Domain (excluding localhost wildcard)
+        if (! in_array($host, ['127.0.0.1', 'localhost'])) {
+            $project = Project::where('external_domain', $host)
+                ->orWhere('subdomain', 'like', "%://{$host}%")
+                ->orWhere('subdomain', $host)
+                ->first();
+
+            if ($project) {
+                return $project;
+            }
+
+            // 4. Resolve by Subdomain prefix (e.g. ehenho.domain.com -> 'ehenho')
+            $subdomainParts = explode('.', $host);
+            if (count($subdomainParts) > 2) {
+                $subdomain = $subdomainParts[0];
+                $project = Project::where('code', $subdomain)->first();
+                if ($project) {
+                    return $project;
+                }
+            }
+        } else {
+            $project = Project::where('external_domain', $host)->first();
             if ($project) {
                 return $project;
             }

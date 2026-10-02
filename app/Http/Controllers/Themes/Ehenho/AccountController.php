@@ -37,22 +37,21 @@ class AccountController extends Controller
         return back()->with('success', 'Đổi mật khẩu thành công!');
     }
 
-    public function settings(): View
-    {
-        $user = auth()->user();
-
-        return view('themes.ehenho.pages.account.settings', compact('user'));
-    }
-
-    public function updateSettings(Request $request): RedirectResponse
-    {
-        return back()->with('success', 'Đã lưu thiết lập tài khoản thành công!');
-    }
-
     public function emails(): View
     {
         $user = auth()->user();
 
         return view('themes.ehenho.pages.account.emails', compact('user'));
+    }
+
+    public function updateEmail(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'email' => 'required|email|unique:users,email,'.auth()->id(),
+        ]);
+
+        auth()->user()->update(['email' => $validated['email']]);
+
+        return back()->with('success', 'Cập nhật địa chỉ email thành công!');
     }
 }

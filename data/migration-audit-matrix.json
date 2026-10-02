@@ -1,0 +1,1469 @@
+[
+    {
+        "migration": "0001_01_01_000000_create_users_table",
+        "table": "users",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "0001_01_01_000001_create_cache_table",
+        "table": "cache, cache_locks, sessions",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "0001_01_01_000002_create_jobs_table",
+        "table": "jobs, job_batches, failed_jobs",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "0001_01_01_000003_create_sessions_table",
+        "table": "sessions",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_01_15_100001_create_core_system_tables",
+        "table": "brands, product_categories, attribute_groups, product_attributes, product_attribute_values, products_enhanced, product_variations, product_attribute_product, product_reviews",
+        "exists_in_db": "Yes",
+        "batch": 20,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_01_15_100002_create_content_management_tables",
+        "table": "tags, posts, post_tag, faqs, pages, page_sections",
+        "exists_in_db": "Partial (posts, page_sections) / Missing (tags, post_tag, faqs, pages)",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_01_15_100003_create_order_management_tables",
+        "table": "orders, order_items, order_status_histories",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_01_15_100004_create_media_management_tables",
+        "table": "media_folders, media_files, media_collections, media_collection_items",
+        "exists_in_db": "Partial () / Missing (media_folders, media_files, media_collections, media_collection_items)",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_01_15_100005_create_marketing_feedback_tables",
+        "table": "newsletter_subscribers, contact_forms, feedbacks, feedback_responses, banners",
+        "exists_in_db": "Partial () / Missing (newsletter_subscribers, contact_forms, feedbacks, feedback_responses, banners)",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_01_15_100006_create_system_management_tables",
+        "table": "roles, user_roles, activity_logs, settings, menus, widgets, system_backups, system_logs",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_01_21_000000_create_visitor_logs_table",
+        "table": "visitor_logs",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_01_21_000001_create_roles_table",
+        "table": "roles, user_roles",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_01_22_000000_create_product_attribute_value_mappings_table",
+        "table": "product_attribute_value_mappings",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_01_22_000001_add_tenant_id_to_cms_tables",
+        "table": "N/A",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_01_22_000001_create_form_submissions_table",
+        "table": "form_submissions",
+        "exists_in_db": "Yes",
+        "batch": 29,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_01_25_000001_add_project_id_to_all_tables",
+        "table": "N/A",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_01_25_000001_merge_posts_and_pages_tables",
+        "table": "posts_unified, posts_old, pages_old",
+        "exists_in_db": "Partial () / Missing (posts_unified, posts_old, pages_old)",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_01_25_100000_add_tenant_support_to_all_tables",
+        "table": "tenants, users",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_22_123503_add_seo_fields_to_products_enhanced_table",
+        "table": "products_enhanced",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_22_132609_create_fonts_table",
+        "table": "fonts",
+        "exists_in_db": "Partial () / Missing (fonts)",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_22_133048_create_settings_table",
+        "table": "settings",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "Has project_settings",
+        "action": "STANDARDIZED"
+    },
+    {
+        "migration": "2025_11_23_131341_create_employees_and_contracts_tables",
+        "table": "employees, contracts",
+        "exists_in_db": "Partial (contracts) / Missing (employees)",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_132525_create_projects_system_tables",
+        "table": "projects_system_tables",
+        "exists_in_db": "Partial () / Missing (projects_system_tables)",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_132600_create_project_management_system_tables",
+        "table": "projects, project_members, tasks, employees",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_133203_remove_salary_from_contracts_table",
+        "table": "contracts",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_133452_add_user_and_manager_to_employees_table",
+        "table": "employees",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_134956_update_projects_for_approval_workflow",
+        "table": "projects",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_135934_add_account_fields_to_contracts_table",
+        "table": "contracts",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_140540_remove_website_id_from_contracts_table",
+        "table": "contracts",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_140638_make_dates_nullable_in_contracts_table",
+        "table": "contracts",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_162937_create_projects_table_simple",
+        "table": "projects",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_173619_fix_contracts_table_remove_website_id",
+        "table": "contracts",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_174316_make_fields_nullable_for_quick_deployment",
+        "table": "contracts, projects",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_175103_create_project_settings_table",
+        "table": "project_settings",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_180203_add_username_to_users_table",
+        "table": "users",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_182254_create_activity_logs_table",
+        "table": "activity_logs",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_191659_create_project_tickets_table",
+        "table": "project_tickets",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_192327_add_role_and_department_fields",
+        "table": "employees, users, project_tickets",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_192607_add_employee_ids_to_projects_table",
+        "table": "projects",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_23_193051_add_role_to_employees_table",
+        "table": "employees",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_24_000001_add_level_to_users_table",
+        "table": "users",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_24_000002_create_project_permissions_table",
+        "table": "project_permissions",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_25_182316_update_settings_table_for_page_builder",
+        "table": "settings",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_25_182330_create_branches_table",
+        "table": "branches",
+        "exists_in_db": "Partial () / Missing (branches)",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_25_183221_create_menus_and_menu_items_tables",
+        "table": "menus, menu_items",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_25_183433_create_widgets_table",
+        "table": "widgets",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_25_184801_add_tenant_id_to_widgets_table",
+        "table": "widgets",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_26_000001_create_widget_templates_table",
+        "table": "widget_templates",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_26_033324_update_superadmin_level",
+        "table": "N/A",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_26_091838_create_product_category_product_table",
+        "table": "product_category_product",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_26_101314_add_role_to_employees_table",
+        "table": "employees",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_26_102851_add_department_manager_to_employees_table",
+        "table": "employees",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_26_103747_add_department_role_to_employees_table",
+        "table": "employees",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_27_072211_add_slug_to_menus_table",
+        "table": "menus",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_27_100000_add_location_and_active_to_menus_table",
+        "table": "menus, menu_items",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_27_100001_remove_items_column_from_menus_table",
+        "table": "menus",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_28_035048_add_project_id_to_tables",
+        "table": "N/A",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_28_035529_add_cms_features_to_projects_table",
+        "table": "projects",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_29_033035_create_website_configs_table",
+        "table": "website_configs",
+        "exists_in_db": "Partial () / Missing (website_configs)",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_30_000001_add_project_id_to_products_enhanced",
+        "table": "products_enhanced",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_11_30_000002_add_project_id_to_multisite_tables",
+        "table": "N/A",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_16_000001_fix_settings_table_schema",
+        "table": "settings",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_16_000002_add_api_token_to_projects_table",
+        "table": "projects",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_17_000001_create_translations_table",
+        "table": "translations",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_18_021334_create_permissions_table",
+        "table": "permissions",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_18_021640_add_enhanced_fields_to_users_table",
+        "table": "users",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_18_021724_create_permissions_and_pivot_tables",
+        "table": "permissions, role_permissions, user_permissions, roles",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_18_023252_fix_roles_table_structure",
+        "table": "roles",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_18_091831_create_languages_table",
+        "table": "languages",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_18_091912_add_language_id_to_products_enhanced_table",
+        "table": "products_enhanced",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_19_015840_create_product_category_pivot_table",
+        "table": "product_category_pivot",
+        "exists_in_db": "Partial () / Missing (product_category_pivot)",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_19_015901_create_product_brand_pivot_table",
+        "table": "product_brand_pivot",
+        "exists_in_db": "Partial () / Missing (product_brand_pivot)",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_19_032517_add_language_id_to_project_products_table",
+        "table": "products_enhanced",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_19_035319_create_product_category_product_table",
+        "table": "product_category_product",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_19_075916_fix_settings_unique_constraint",
+        "table": "settings",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_19_080616_remove_tenant_foreign_key_from_settings_table",
+        "table": "settings",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_19_082115_make_description_nullable_in_products_enhanced_table",
+        "table": "products_enhanced",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_20_033813_add_unique_constraints_to_product_attribute_values_table",
+        "table": "product_attribute_values",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_20_042720_add_meta_fields_to_brands_table",
+        "table": "brands",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_22_030510_add_image_gallery_to_product_variations_table",
+        "table": "product_variations",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_23_090018_add_password_fields_to_projects_table",
+        "table": "projects",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_23_090101_create_project_password_audits_table",
+        "table": "project_password_audits",
+        "exists_in_db": "Partial () / Missing (project_password_audits)",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_25_110000_add_variant_and_metadata_to_widgets_table",
+        "table": "widgets",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_25_150000_remove_tenant_foreign_key_from_widgets",
+        "table": "widgets",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_25_160000_fix_product_category_product_table",
+        "table": "N/A",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_25_161000_create_brand_product_table",
+        "table": "N/A",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_25_170000_add_badge_fields_to_products_enhanced_table",
+        "table": "N/A",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_27_072025_add_template_code_to_widget_templates",
+        "table": "widget_templates",
+        "exists_in_db": "Yes",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2025_12_29_000001_create_archive_templates_table",
+        "table": "archive_templates",
+        "exists_in_db": "Partial () / Missing (archive_templates)",
+        "batch": 1,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_03_084032_add_sync_fields_to_projects_table",
+        "table": "projects",
+        "exists_in_db": "Yes",
+        "batch": 2,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_03_085258_create_positions_table",
+        "table": "positions",
+        "exists_in_db": "Partial () / Missing (positions)",
+        "batch": 3,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_03_090124_add_value_to_contracts_table",
+        "table": "contracts",
+        "exists_in_db": "Yes",
+        "batch": 4,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_04_022536_refactor_database_to_unified_posts",
+        "table": "taxonomies, term_relationships, posts",
+        "exists_in_db": "Yes",
+        "batch": 5,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_04_022853_cleanup_database_phase_2",
+        "table": "N/A",
+        "exists_in_db": "Yes",
+        "batch": 6,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_04_023156_cleanup_database_phase_3",
+        "table": "N/A",
+        "exists_in_db": "Yes",
+        "batch": 7,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_04_023739_cleanup_database_widgets_phase_4",
+        "table": "N/A",
+        "exists_in_db": "Yes",
+        "batch": 8,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_04_030540_change_post_type_in_posts_table",
+        "table": "posts",
+        "exists_in_db": "Yes",
+        "batch": 9,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_04_072143_create_briefs_table",
+        "table": "briefs",
+        "exists_in_db": "Yes",
+        "batch": 10,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_04_072144_create_tasks_table",
+        "table": "tasks",
+        "exists_in_db": "Yes",
+        "batch": 10,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_04_074731_fix_activity_logs_schema",
+        "table": "activity_logs",
+        "exists_in_db": "Yes",
+        "batch": 11,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_04_084040_create_contracts_table",
+        "table": "contracts",
+        "exists_in_db": "Yes",
+        "batch": 12,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_04_091037_fix_projects_foreign_keys_to_users",
+        "table": "projects",
+        "exists_in_db": "Yes",
+        "batch": 13,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_05_061206_create_feature_packs_table",
+        "table": "feature_packs",
+        "exists_in_db": "Yes",
+        "batch": 14,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_05_065929_change_description_type_in_contracts_table",
+        "table": "contracts",
+        "exists_in_db": "Yes",
+        "batch": 15,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_05_071957_add_requirements_to_contracts_table",
+        "table": "contracts",
+        "exists_in_db": "Yes",
+        "batch": 16,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_05_072643_add_client_resources_to_contracts_table",
+        "table": "contracts",
+        "exists_in_db": "Yes",
+        "batch": 17,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_05_082908_create_project_tickets_table",
+        "table": "project_tickets",
+        "exists_in_db": "Yes",
+        "batch": 18,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_05_082918_create_project_ticket_replies_table",
+        "table": "project_ticket_replies",
+        "exists_in_db": "Yes",
+        "batch": 18,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_07_075826_create_widgets_and_templates_tables",
+        "table": "widget_templates, widgets",
+        "exists_in_db": "Yes",
+        "batch": 19,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_07_085645_restore_menus_and_menu_items_tables",
+        "table": "menus, menu_items",
+        "exists_in_db": "Yes",
+        "batch": 21,
+        "ran": "Yes",
+        "duplicate": "Redundant restore",
+        "action": "STANDARDIZED"
+    },
+    {
+        "migration": "2026_08_07_085941_add_tenant_id_to_product_categories_table",
+        "table": "product_categories",
+        "exists_in_db": "Yes",
+        "batch": 22,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_07_091644_add_tenant_id_to_menu_items_table",
+        "table": "menu_items",
+        "exists_in_db": "Yes",
+        "batch": 23,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_10_071500_add_tenant_and_project_ids_to_ecommerce_tables",
+        "table": "orders, order_items, order_status_histories, product_attribute_value_mappings",
+        "exists_in_db": "Yes",
+        "batch": 24,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_11_090555_add_deleted_at_to_products_enhanced_table",
+        "table": "products_enhanced",
+        "exists_in_db": "Yes",
+        "batch": 25,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_11_090758_add_deleted_at_to_all_content_tables",
+        "table": "N/A",
+        "exists_in_db": "Yes",
+        "batch": 26,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_11_091021_add_deleted_at_to_taxonomies_table",
+        "table": "taxonomies",
+        "exists_in_db": "Yes",
+        "batch": 27,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_12_024904_create_reviews_table",
+        "table": "reviews",
+        "exists_in_db": "Yes",
+        "batch": 28,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_12_030521_add_post_id_and_email_to_reviews_table",
+        "table": "reviews",
+        "exists_in_db": "Yes",
+        "batch": 30,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_12_035457_create_shipping_engine_tables",
+        "table": "shipping_carriers, shipping_rate_versions, shipping_zones, shipping_zone_locations, shipping_rules, shipping_rule_conditions",
+        "exists_in_db": "Yes",
+        "batch": 31,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_12_042234_add_project_id_to_form_submissions_table",
+        "table": "form_submissions",
+        "exists_in_db": "Yes",
+        "batch": 32,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_14_041624_restore_page_sections_table",
+        "table": "page_sections",
+        "exists_in_db": "Yes",
+        "batch": 33,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_14_094427_add_my_tasks_fields_to_tasks_table",
+        "table": "tasks",
+        "exists_in_db": "Yes",
+        "batch": 34,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_14_130020_change_text_columns_to_longtext_in_contracts_table",
+        "table": "contracts",
+        "exists_in_db": "Yes",
+        "batch": 35,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_17_000001_enhance_my_tasks_and_user_roles",
+        "table": "users, tasks",
+        "exists_in_db": "Yes",
+        "batch": 36,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_17_000002_add_gold_to_users_projects_tasks_tables",
+        "table": "users, projects, tasks",
+        "exists_in_db": "Yes",
+        "batch": 37,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_18_023156_create_departments_table",
+        "table": "departments",
+        "exists_in_db": "Yes",
+        "batch": 38,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_18_023156_create_services_table",
+        "table": "services",
+        "exists_in_db": "Yes",
+        "batch": 38,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_18_023157_create_service_stages_table",
+        "table": "service_stages",
+        "exists_in_db": "Yes",
+        "batch": 39,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_18_023158_create_project_stages_table",
+        "table": "project_stages",
+        "exists_in_db": "Yes",
+        "batch": 40,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_18_023158_update_projects_table_add_new_fields",
+        "table": "projects",
+        "exists_in_db": "Yes",
+        "batch": 40,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_18_034015_add_client_details_to_contracts_table",
+        "table": "contracts",
+        "exists_in_db": "Yes",
+        "batch": 41,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_18_043435_add_hr_fields_to_users_table",
+        "table": "users",
+        "exists_in_db": "Yes",
+        "batch": 42,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_18_062140_add_address_components_to_users_table",
+        "table": "users",
+        "exists_in_db": "Yes",
+        "batch": 43,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_18_065032_add_dynamic_fields_to_widgets_table",
+        "table": "widgets",
+        "exists_in_db": "Yes",
+        "batch": 44,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_18_072927_make_contract_id_nullable_in_projects_table",
+        "table": "projects",
+        "exists_in_db": "Yes",
+        "batch": 45,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_18_074439_add_project_type_to_projects_table",
+        "table": "projects",
+        "exists_in_db": "Yes",
+        "batch": 46,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_19_083753_create_hosting_profiles_table",
+        "table": "hosting_profiles",
+        "exists_in_db": "Yes",
+        "batch": 47,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_19_083758_create_deployment_history_table",
+        "table": "deployment_history",
+        "exists_in_db": "Yes",
+        "batch": 48,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_19_083803_create_deployment_logs_table",
+        "table": "deployment_logs",
+        "exists_in_db": "Yes",
+        "batch": 49,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_19_090415_make_project_domain_nullable_on_hosting_profiles",
+        "table": "hosting_profiles",
+        "exists_in_db": "Yes",
+        "batch": 50,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_24_022102_create_customers_table",
+        "table": "customers",
+        "exists_in_db": "Yes",
+        "batch": 51,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_24_022103_add_customer_id_to_projects_and_contracts",
+        "table": "projects, contracts",
+        "exists_in_db": "Yes",
+        "batch": 52,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_25_014628_add_id_card_fields_to_customers_table",
+        "table": "customers",
+        "exists_in_db": "Yes",
+        "batch": 53,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_25_015558_add_representative_phone_to_customers_table",
+        "table": "customers",
+        "exists_in_db": "Yes",
+        "batch": 53,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_26_043633_add_project_id_to_widgets_table",
+        "table": "widgets",
+        "exists_in_db": "Yes",
+        "batch": 54,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_08_27_081501_add_server_ip_to_deployment_history_table",
+        "table": "deployment_history",
+        "exists_in_db": "Yes",
+        "batch": 55,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_09_04_000001_create_legacy_vtm_tables",
+        "table": "coupons, flash_sale_campaigns, flash_sale_items, agents, user_addresses, form_templates, modal_forms, form_submissions, product_categories, posts, products_enhanced, product_reviews",
+        "exists_in_db": "Yes",
+        "batch": 56,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_09_04_000002_create_product_category_product_table",
+        "table": "product_category_product",
+        "exists_in_db": "Yes",
+        "batch": 57,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_09_06_000001_add_user_id_to_orders_table",
+        "table": "orders",
+        "exists_in_db": "Yes",
+        "batch": 58,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_09_06_000002_create_product_combos_table",
+        "table": "product_combos",
+        "exists_in_db": "Yes",
+        "batch": 64,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_09_06_031349_modify_menus_slug_unique_index",
+        "table": "menus",
+        "exists_in_db": "Yes",
+        "batch": 59,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_09_06_033349_modify_taxonomies_and_posts_slug_unique_index",
+        "table": "taxonomies, posts",
+        "exists_in_db": "Yes",
+        "batch": 60,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_09_06_033800_modify_ecommerce_slug_unique_indexes",
+        "table": "brands, product_categories, coupons",
+        "exists_in_db": "Yes",
+        "batch": 61,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_09_06_041500_modify_products_enhanced_slug_unique_index",
+        "table": "products_enhanced",
+        "exists_in_db": "Yes",
+        "batch": 62,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_09_06_043000_add_icon_image_badge_to_menu_items_table",
+        "table": "menu_items",
+        "exists_in_db": "Yes",
+        "batch": 63,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_09_07_000001_add_tenant_id_to_projects_table",
+        "table": "projects",
+        "exists_in_db": "Yes",
+        "batch": 65,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_09_07_000002_cleanup_and_isolate_multisite_data",
+        "table": "N/A",
+        "exists_in_db": "Yes",
+        "batch": 66,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_09_08_043948_add_deployment_config_to_projects_table",
+        "table": "projects",
+        "exists_in_db": "Yes",
+        "batch": 67,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_09_15_000001_add_multi_tenancy_role_to_roles_table",
+        "table": "N/A",
+        "exists_in_db": "Yes",
+        "batch": 68,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_09_15_062131_add_is_multi_tenancy_to_projects_table",
+        "table": "projects",
+        "exists_in_db": "Yes",
+        "batch": 69,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_10_02_000001_create_ehenho_theme_tables",
+        "table": "ehenho_provinces, ehenho_profiles, ehenho_conversations, ehenho_messages, ehenho_social_connections",
+        "exists_in_db": "Partial () / Missing (ehenho_provinces, ehenho_profiles, ehenho_conversations, ehenho_messages, ehenho_social_connections)",
+        "batch": 70,
+        "ran": "Yes",
+        "duplicate": "Renamed in 000002",
+        "action": "STANDARDIZED"
+    },
+    {
+        "migration": "2026_10_02_000002_standardize_ehenho_table_names",
+        "table": "N/A",
+        "exists_in_db": "Yes",
+        "batch": 71,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    },
+    {
+        "migration": "2026_10_02_000003_add_ui_fields_to_profiles_table",
+        "table": "profiles",
+        "exists_in_db": "Yes",
+        "batch": 72,
+        "ran": "Yes",
+        "duplicate": "No",
+        "action": "KEEP"
+    }
+]

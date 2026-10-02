@@ -11,6 +11,7 @@ use App\Http\Middleware\LogVisitor;
 use App\Http\Middleware\PanelSessionMiddleware;
 use App\Http\Middleware\ProjectMiddleware;
 use App\Http\Middleware\ProjectSession;
+use App\Http\Middleware\ResolveProjectContext;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\SuperAdminMiddleware;
 use App\Http\Middleware\TenantMiddleware;
@@ -88,6 +89,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'widget.bypass' => BypassWidgetPermission::class,
             'api.token' => VerifyApiToken::class,
             'agency.verify' => VerifyAgencyRequest::class,
+            'project.resolve' => ResolveProjectContext::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

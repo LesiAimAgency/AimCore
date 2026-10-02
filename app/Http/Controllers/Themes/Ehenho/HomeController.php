@@ -33,6 +33,24 @@ class HomeController extends Controller
 
         $provinces = Province::orderBy('name')->get();
 
-        return view('themes.ehenho.pages.home', compact('featuredProfiles', 'newestProfiles', 'provinces'));
+        $recentFemaleProfiles = Profile::where('status', 'active')
+            ->where('gender', 'female')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $recentMaleProfiles = Profile::where('status', 'active')
+            ->where('gender', 'male')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return view('themes.ehenho.pages.home', compact(
+            'featuredProfiles',
+            'newestProfiles',
+            'provinces',
+            'recentFemaleProfiles',
+            'recentMaleProfiles'
+        ));
     }
 }

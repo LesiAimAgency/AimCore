@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SocialConnection extends EhenhoBaseModel
 {
-    protected $table = 'ehenho_social_connections';
+    protected $table = 'social_connections';
 
     public $timestamps = false;
 

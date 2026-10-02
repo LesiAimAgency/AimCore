@@ -115,6 +115,7 @@ protected function isAccessible(User $user, ?string $path = null): bool
 
 - Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
 - Run the minimum number of tests needed to ensure code quality and speed. Use `php artisan test --compact` with a specific filename or filter.
+- Test Cleanup: Sau khi chạy test xong và kiểm tra hoàn tất, hãy xóa toàn bộ các file test/script test đã tạo hoặc phục vụ đợt test đó để giữ source code luôn nhẹ gọn và sạch sẽ.
 
 === laravel/core rules ===
 
@@ -392,7 +393,7 @@ $delete = fn(Product $product) => $product->delete();
 - Every time a test has been updated, run that singular test.
 - When the tests relating to your feature are passing, ask the user if they would like to also run the entire test suite to make sure everything is still passing.
 - Tests should test all of the happy paths, failure paths, and weird paths.
-- You must not remove any tests or test files from the tests directory without approval. These are not temporary or helper files; these are core to the application.
+- Test Cleanup: Khi chạy test xong và kiểm tra hoàn tất, hãy xóa toàn bộ các file test/script test đã tạo hoặc sử dụng để source code luôn nhẹ gọn, không để lưu trữ file test thừa trong repository.
 
 ### Running Tests
 - Run the minimal number of tests, using an appropriate filter, before finalizing.

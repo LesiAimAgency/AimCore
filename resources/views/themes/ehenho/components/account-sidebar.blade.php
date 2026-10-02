@@ -3,20 +3,20 @@
     <i class="fa fa-user-circle"></i> Quản Lý Tài Khoản
   </div>
   <div class="list-group">
-    <a href="{{ route('ehenho.account.my_profile') }}" class="list-group-item {{ request()->routeIs('*.my_profile') ? 'active' : '' }}">
-      <i class="fa fa-user fa-fw"></i> Hồ sơ của tôi
-    </a>
-    <a href="{{ route('ehenho.account.profile_edit') }}" class="list-group-item {{ request()->routeIs('*.profile_edit') ? 'active' : '' }}">
+    <a href="{{ route('ehenho.account.profile_edit') }}" class="list-group-item {{ request()->routeIs('*.profile_edit') || request()->routeIs('*.my_profile') ? 'active' : '' }}">
       <i class="fa fa-edit fa-fw"></i> Chỉnh sửa hồ sơ
     </a>
     <a href="{{ route('ehenho.account.avatar_upload') }}" class="list-group-item {{ request()->routeIs('*.avatar_upload') ? 'active' : '' }}">
       <i class="fa fa-camera fa-fw"></i> Đổi ảnh đại diện
     </a>
-    <a href="{{ route('ehenho.messages.inbox') }}" class="list-group-item {{ request()->routeIs('*.messages.inbox') || request()->routeIs('*.messages.show') ? 'active' : '' }}">
-      <i class="fa fa-inbox fa-fw"></i> Hộp thư đến
-    </a>
-    <a href="{{ route('ehenho.messages.sent') }}" class="list-group-item {{ request()->routeIs('*.messages.sent') ? 'active' : '' }}">
-      <i class="fa fa-paper-plane fa-fw"></i> Thư đã gửi
+    <a href="{{ route('ehenho.messages.inbox') }}" class="list-group-item {{ request()->routeIs('*.messages.*') ? 'active' : '' }}" style="display: flex; justify-content: space-between; align-items: center;">
+      <span><i class="fa fa-comments fa-fw"></i> Tin nhắn</span>
+      @php
+        $unreadMessagesCount = \App\Models\Ehenho\Message::where('recipient_id', auth()->id())->where('is_read', false)->count();
+      @endphp
+      @if($unreadMessagesCount > 0)
+        <span class="badge" style="background-color: #ef4444; font-weight: bold; font-size: 11px;">{{ $unreadMessagesCount }}</span>
+      @endif
     </a>
     <a href="{{ route('ehenho.social.contacts') }}" class="list-group-item {{ request()->routeIs('*.social.contacts') ? 'active' : '' }}">
       <i class="fa fa-address-book fa-fw"></i> Danh bạ kết nối
@@ -36,8 +36,10 @@
     <a href="{{ route('ehenho.account.password') }}" class="list-group-item {{ request()->routeIs('*.account.password') ? 'active' : '' }}">
       <i class="fa fa-key fa-fw"></i> Đổi mật khẩu
     </a>
-    <a href="{{ route('ehenho.account.settings') }}" class="list-group-item {{ request()->routeIs('*.account.settings') ? 'active' : '' }}">
-      <i class="fa fa-cog fa-fw"></i> Thiết lập tài khoản
-    </a>
+    @if(auth()->check() && (in_array(auth()->user()->role, ['cms', 'admin', 'dev']) || (isset(auth()->user()->level) && auth()->user()->level <= 1)))
+      <a href="{{ url('/ehenho/admin') }}" class="list-group-item text-danger" style="font-weight: bold; background-color: #fff5f5;">
+        <i class="fa fa-cogs fa-fw" style="color: #dc2626;"></i> Trang Quản Trị CMS
+      </a>
+    @endif
   </div>
 </div>

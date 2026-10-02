@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Themes\Ehenho;
 use App\Http\Controllers\Controller;
 use App\Models\Ehenho\Profile;
 use App\Models\Ehenho\Province;
+use App\Models\Ehenho\SocialConnection;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -27,7 +28,29 @@ class ProfileController extends Controller
             ->take(6)
             ->get();
 
-        return view('themes.ehenho.pages.profile.detail', compact('profile', 'relatedProfiles'));
+        $userId = auth()->id();
+        $isBookmarked = false;
+        $isLiked = false;
+        $isBlocked = false;
+
+        if ($userId) {
+            $connections = SocialConnection::where('user_id', $userId)
+                ->where('target_profile_id', $profile->id)
+                ->pluck('relation_type')
+                ->toArray();
+
+            $isBookmarked = in_array('bookmark', $connections, true);
+            $isLiked = in_array('like', $connections, true);
+            $isBlocked = in_array('block', $connections, true);
+        }
+
+        return view('themes.ehenho.pages.profile.detail', compact(
+            'profile',
+            'relatedProfiles',
+            'isBookmarked',
+            'isLiked',
+            'isBlocked'
+        ));
     }
 
     public function myProfile(): View
@@ -70,7 +93,7 @@ class ProfileController extends Controller
             'display_name' => 'required|string|max:150',
             'gender' => 'required|in:male,female,other',
             'age' => 'required|integer|min:18|max:90',
-            'province_id' => 'nullable|exists:ehenho_provinces,id',
+            'province_id' => 'nullable|exists:provinces,id',
             'marital_status' => 'nullable|string|max:100',
             'occupation' => 'nullable|string|max:150',
             'height' => 'nullable|string|max:50',

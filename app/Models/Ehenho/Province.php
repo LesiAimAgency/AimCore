@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Province extends EhenhoBaseModel
 {
-    protected $table = 'ehenho_provinces';
+    protected $table = 'provinces';
 
     protected $fillable = [
         'code',

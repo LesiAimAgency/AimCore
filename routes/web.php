@@ -359,3 +359,16 @@ if (app()->environment(['local', 'testing'])) {
 }
 
 Route::get('/agency/magic-login/{user}', [MagicLoginController::class, 'login'])->name('agency.magic_login')->middleware('signed');
+
+// eHenho root SEO redirect fallbacks
+Route::get('/tim-{any}', function ($any) {
+    return redirect('/ehenho/tim-'.$any);
+})->where('any', '.*');
+
+Route::get('/my-profile.html', function () {
+    return redirect('/ehenho/tai-khoan');
+});
+
+Route::get('/my-profile', function () {
+    return redirect('/ehenho/tai-khoan');
+});

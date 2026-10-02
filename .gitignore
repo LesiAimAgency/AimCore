@@ -14,6 +14,7 @@
 /public/images
 /public/gallery
 /public/upload
+/public/e-henho
 # Environment & Credentials
 .env
 .env.backup
@@ -62,6 +63,19 @@ scratch/
 scratch_*.php
 refactor_widgets.php
 read_docx.py
+
+# ==============================================================================
+# Database Dumps & SQL Files
+# ==============================================================================
+*.sql
+*.sql.gz
+*.sqlite
+
+# ==============================================================================
+# Markdown Files & Documentation
+# ==============================================================================
+*.md
+**/*.md
 
 # ==============================================================================
 # Archives & Heavy Binary Files

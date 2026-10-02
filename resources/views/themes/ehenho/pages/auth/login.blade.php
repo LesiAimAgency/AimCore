@@ -9,6 +9,28 @@
       Đăng Nhập Tài Khoản
     </h3>
 
+    @auth
+      <div class="alert alert-info text-center" style="margin-bottom: 20px; border-radius: 6px; background-color: #f0f7fd; border-color: #d0e3f7; color: #2e5d69;">
+        <p style="margin-bottom: 10px; font-size: 14px;">
+          <i class="fa fa-info-circle"></i> Bạn hiện đang đăng nhập với tài khoản: <strong style="color: #008BC7;">{{ auth()->user()->name ?: auth()->user()->email }}</strong>
+        </p>
+        <div style="display: flex; gap: 8px; justify-content: center; align-items: center; margin-bottom: 8px;">
+          <a href="{{ route('ehenho.account.my_profile') }}" class="btn btn-sm btn-primary" style="background-color: #008BC7; border-color: #0077aa; font-weight: bold;">
+            <i class="fa fa-user"></i> Vào Hồ Sơ Của Tôi
+          </a>
+          <form action="{{ route('ehenho.logout') }}" method="POST" style="display: inline; margin: 0;">
+            @csrf
+            <button type="submit" class="btn btn-sm btn-default" style="color: #c71616; font-weight: bold;">
+              <i class="fa fa-sign-out"></i> Đăng Xuất Tài Khoản Này
+            </button>
+          </form>
+        </div>
+        <p class="text-muted" style="margin: 0; font-size: 12px;">
+          Hoặc bạn có thể nhập tài khoản khác bên dưới để chuyển phiên đăng nhập.
+        </p>
+      </div>
+    @endauth
+
     <form action="{{ route('ehenho.login.submit') }}" method="POST" id="login_form">
       @csrf
 

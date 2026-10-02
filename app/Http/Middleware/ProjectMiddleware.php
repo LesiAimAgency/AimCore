@@ -11,7 +11,7 @@ class ProjectMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (! auth()->check()) {
-            return redirect()->route('login');
+            return redirect(Authenticate::resolveLoginUrl($request));
         }
 
         $projectCode = $request->route('projectCode');

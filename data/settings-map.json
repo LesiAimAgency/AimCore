@@ -1,0 +1,75 @@
+{
+    "architecture": "HIERARCHICAL_SETTINGS",
+    "layers": {
+        "SYSTEM_CONFIG": {
+            "scope": "Platform wide environment configurations",
+            "storage": ".env & config\/*.php",
+            "examples": [
+                "APP_KEY",
+                "DB_CONNECTION",
+                "MULTISITE_ENABLED",
+                "SESSION_DRIVER"
+            ]
+        },
+        "PROJECT_REGISTRY_CONFIG": {
+            "scope": "Central routing, domains, database connection credentials",
+            "storage": "Central DB -> `projects.deployment_config` (JSON) & `tenants.settings` (JSON)",
+            "examples": [
+                "database.name",
+                "database.user",
+                "theme",
+                "features"
+            ]
+        },
+        "PROJECT_SETTINGS": {
+            "scope": "Business & site-specific settings for each isolated project",
+            "storage": "Project DB -> `settings` table (key-value + JSON payload + type + group)",
+            "examples": [
+                "site_name",
+                "logo",
+                "favicon",
+                "contact_email",
+                "seo_meta",
+                "payment_gateways",
+                "shipping_defaults"
+            ]
+        },
+        "THEME_OPTIONS": {
+            "scope": "Visual styling, layout options, color palettes",
+            "storage": "Project DB -> `settings` table (group = \"theme_options\") or `theme_options` table",
+            "examples": [
+                "primary_color",
+                "header_style",
+                "footer_layout",
+                "banner_slider"
+            ]
+        },
+        "USER_PREFERENCES": {
+            "scope": "Individual account preferences and notification toggles",
+            "storage": "Project DB -> `users.settings` or `profiles.settings`",
+            "examples": [
+                "notify_new_message",
+                "notify_likes",
+                "visibility"
+            ]
+        }
+    },
+    "settings_table_structure": {
+        "table": "settings",
+        "columns": [
+            "id",
+            "key",
+            "value",
+            "payload",
+            "type",
+            "group",
+            "locked",
+            "description",
+            "created_at",
+            "updated_at"
+        ],
+        "notes": "In isolated Project DB, tenant_id and project_id are redundant because the database itself is the isolation boundary."
+    },
+    "active_settings_count": 1122,
+    "central_project_settings_count": 640
+}

@@ -14,7 +14,7 @@
       <ul class="nav navbar-nav navbar-right pull-right no-collapse">
         @auth
           <li>
-            <a class="signup-btn" href="{{ route('ehenho.account.my_profile') }}">
+            <a class="signup-btn" href="{{ route('ehenho.account.profile_edit') }}">
               <i class="fa fa-user" aria-hidden="true"></i> {{ auth()->user()->name ?: auth()->user()->email }}
             </a>
           </li>
@@ -57,9 +57,13 @@
           </a>
         </li>
         @auth
-          <li>
-            <a href="{{ route('ehenho.account.my_profile') }}"><i class="fa fa-user"></i> Hồ sơ của tôi</a>
-          </li>
+          @if(in_array(auth()->user()->role, ['cms', 'admin', 'dev']) || (isset(auth()->user()->level) && auth()->user()->level <= 1))
+            <li>
+              <a href="{{ url('/ehenho/admin') }}" style="color:#d9534f; font-weight:bold;">
+                <i class="fa fa-dashboard"></i> CMS Quản trị
+              </a>
+            </li>
+          @endif
           <li>
             <a href="{{ route('ehenho.account.profile_edit') }}"><i class="fa fa-edit"></i> Chỉnh sửa hồ sơ</a>
           </li>
@@ -117,18 +121,38 @@
             </a>
           </li>
           <li role="presentation">
-            <a class="navlink1" href="{{ route('ehenho.search.by_age') }}">
-              <i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm bạn theo tuổi
-            </a>
-          </li>
-          <li role="presentation">
-            <a class="navlink1" href="{{ route('ehenho.search.index', ['marital_status' => 'doc_than']) }}">
-              <i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Hẹn hò kết bạn
-            </a>
-          </li>
-          <li role="presentation">
             <a class="navlink1" href="{{ route('ehenho.search.index', ['looking_for' => 'ket_hon']) }}">
+              <i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm người kết hôn
+            </a>
+          </li>
+          <li role="presentation">
+            <a class="navlink1" href="{{ route('ehenho.search.index', ['looking_for' => 'nguoi_yeu']) }}">
+              <i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm người yêu
+            </a>
+          </li>
+          <li role="presentation">
+            <a class="navlink1" href="{{ route('ehenho.search.index', ['gender' => 'female']) }}">
+              <i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm bạn gái
+            </a>
+          </li>
+          <li role="presentation">
+            <a class="navlink1" href="{{ route('ehenho.search.index', ['gender' => 'male']) }}">
+              <i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm bạn trai
+            </a>
+          </li>
+          <li role="presentation">
+            <a class="navlink1" href="{{ route('ehenho.search.index', ['looking_for' => 'ban_doi']) }}">
               <i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm bạn đời
+            </a>
+          </li>
+          <li role="presentation">
+            <a class="navlink1" href="{{ route('ehenho.search.index', ['looking_for' => 'tam_su']) }}">
+              <i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm bạn tâm sự
+            </a>
+          </li>
+          <li role="presentation">
+            <a class="navlink1" href="{{ route('ehenho.search.index', ['looking_for' => 'ban_be']) }}">
+              <i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm bạn bè mới
             </a>
           </li>
         </ul>

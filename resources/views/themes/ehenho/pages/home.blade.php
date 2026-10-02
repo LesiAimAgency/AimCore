@@ -1,10 +1,12 @@
 @extends('themes.ehenho.layouts.frontend')
 
-@section('title', 'eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách')
+@section('title', 'eHenho.com - Hẹn hò Online & Tìm bạn Bốn phương')
+@section('meta_description', 'eHenho.com là trang web hẹn hò online, tìm bạn, kết bạn theo sở thích & tính cách giúp bạn nhanh chóng tìm được một nửa yêu thương của mình.')
 
 @section('frontend_content')
-<div class="container cont-sb-loc" style="margin-top: 15px; margin-bottom: 15px;">
-  <a class="b-button" href="{{ route('ehenho.search.index') }}">
+<!-- Circular Marker Filter Buttons (100% Matching index.html) -->
+<div class="container cont-sb-loc">
+  <a class="b-button" href="{{ route('ehenho.search.by_location') }}">
     <span class="glyphicon glyphicon-map-marker"></span> Tìm bạn bốn phương theo Tỉnh Thành
   </a>
   <a class="b-button" href="{{ route('ehenho.search.index', ['looking_for' => 'ket_hon']) }}">
@@ -24,54 +26,47 @@
   </a>
 </div>
 
-<div class="container" style="background-color:#FFF; padding-top:0px; padding-bottom:40px;">
+<div class="container" style="background-color:#FFF; padding-top:0px; padding-bottom:64px;">
   <!-- Hero Carousel Component -->
-  @include('themes.ehenho.components.hero-carousel')
-
-  <!-- Search Filter Component -->
-  <div style="margin-top: 25px;">
-    @include('themes.ehenho.components.search-filter')
+  <div class="row">
+    @include('themes.ehenho.components.hero-carousel')
   </div>
 
-  <!-- Featured / New Members Section -->
-  <div class="row" style="margin-top: 30px;">
-    <div class="col-sm-12">
-      <h3 style="border-bottom: 2px solid #e74c3c; padding-bottom: 8px; color: #2c3e50; font-size: 1.4em; font-weight: bold;">
-        <i class="fa fa-users" style="color: #e74c3c;"></i> Thành Viên Mới Tham Gia
-      </h3>
-    </div>
-  </div>
-
-  <div class="row" style="margin-top: 15px;">
-    @forelse($newestProfiles as $profile)
-      <div class="col-md-6 col-sm-12">
+  <div class="row" style="margin-top: 20px;">
+    <!-- Main Left Column: Profiles List (100% Matching index.html) -->
+    <div class="col-sm-8 col-sm-offset-0">
+      @forelse($newestProfiles as $profile)
         @include('themes.ehenho.components.profile-card', ['profile' => $profile])
-      </div>
-    @empty
-      <div class="col-sm-12 text-center" style="padding: 40px 0; color: #888;">
-        <i class="fa fa-user-plus fa-3x" style="color: #ccc; margin-bottom: 10px;"></i>
-        <p style="font-size: 1.1em;">Chưa có hồ sơ thành viên nào được đăng ký.</p>
-        <a href="{{ route('ehenho.register') }}" class="btn btn-danger">Tạo hồ sơ đầu tiên ngay!</a>
-      </div>
-    @endforelse
-  </div>
+      @empty
+        <div class="col-sm-12 text-center" style="padding: 40px 0; color: #888;">
+          <i class="fa fa-user-plus fa-3x" style="color: #ccc; margin-bottom: 10px;"></i>
+          <p style="font-size: 1.1em;">Chưa có hồ sơ thành viên nào được đăng ký.</p>
+          <a href="{{ route('ehenho.register') }}" class="btn btn-danger">Tạo hồ sơ đầu tiên ngay!</a>
+        </div>
+      @endforelse
 
-  <!-- Introduction & Safe Dating Notice -->
-  <div class="row" style="margin-top: 40px; background-color: #fcfcfc; border: 1px solid #eee; border-radius: 6px; padding: 25px 15px;">
-    <div class="col-md-8">
-      <h4 style="font-weight: bold; color: #2e5d69;">
-        <i class="fa fa-heart" style="color: #e74c3c;"></i> Hẹn hò Online &amp; Tìm bạn bốn phương tại eHenho.com
-      </h4>
-      <p style="color: #555; line-height: 1.7em;">
-        eHenho.com là nền tảng kết bạn, tìm người yêu và tìm bạn đời nghiêm túc hàng đầu, hoàn toàn 100% miễn phí. Với hệ thống phân loại theo tỉnh thành, độ tuổi và sở thích tính cách, chúng tôi giúp bạn nhanh chóng tìm thấy một nửa phù hợp với mình một cách chủ động, an toàn và bảo mật thông tin.
-      </p>
+      <!-- See More Button (Exact index.html) -->
+      <div style="text-align:center; width:100%; margin-top: 15px; margin-bottom: 25px;">
+        <a class="btn btn-primary btn-pm-sft-cus btn-lg" href="{{ route('ehenho.search.index') }}">
+          <i aria-hidden="true" class="fa fa-arrow-right"></i> XEM THÊM THÀNH VIÊN
+        </a>
+      </div>
     </div>
-    <div class="col-md-4 text-center" style="border-left: 1px solid #eee; padding-top: 15px;">
-      <h4 class="text-info" style="font-weight: bold;">100% Miễn Phí</h4>
-      <p class="text-muted">Không thu phí duy trì hay gửi tin nhắn.</p>
-      <a href="{{ route('ehenho.register') }}" class="btn btn-success btn-lg">
-        <i class="fa fa-check"></i> Đăng Ký Miễn Phí
-      </a>
+
+    <!-- Right Sidebar Column (100% Matching index.html) -->
+    <div class="col-sm-4">
+      <h4 class="text-success" style="font-weight: bold; margin-top: 5px;">
+        eHenho - Hẹn hò Online theo Sở thích &amp; Tính cách
+      </h4>
+      <h4 class="text-info" style="font-weight: bold;">
+        100% Miễn Phí
+      </h4>
+
+      <!-- Recently Registered Widget (Nữ / Nam Tabs) -->
+      @include('themes.ehenho.components.recently-registered', [
+        'recentFemaleProfiles' => $recentFemaleProfiles,
+        'recentMaleProfiles' => $recentMaleProfiles
+      ])
     </div>
   </div>
 </div>
