@@ -1,0 +1,222 @@
+[
+    {
+        "source_html": "blocked-profiles.html",
+        "page_type": "social",
+        "template": "social-profile-list",
+        "laravel_uri": "/blocked-profiles",
+        "http_method": "GET",
+        "controller_action": "SocialController@blocked",
+        "target_blade": "themes.ehenho.pages.blocked-profiles",
+        "models": "UserBlock, Profile"
+    },
+    {
+        "source_html": "bookmarked-profiles.html",
+        "page_type": "social",
+        "template": "social-profile-list",
+        "laravel_uri": "/bookmarked-profiles",
+        "http_method": "GET",
+        "controller_action": "SocialController@bookmarks",
+        "target_blade": "themes.ehenho.pages.bookmarked-profiles",
+        "models": "UserBookmark, Profile"
+    },
+    {
+        "source_html": "contactbook-profiles.html",
+        "page_type": "social",
+        "template": "social-profile-list",
+        "laravel_uri": "/contactbook-profiles",
+        "http_method": "GET",
+        "controller_action": "SocialController@contacts",
+        "target_blade": "themes.ehenho.pages.contactbook-profiles",
+        "models": "UserContact, Profile"
+    },
+    {
+        "source_html": "email-manager.html",
+        "page_type": "account",
+        "template": "account-email-manager",
+        "laravel_uri": "/email-manager",
+        "http_method": "GET",
+        "controller_action": "AccountController@emails",
+        "target_blade": "themes.ehenho.pages.email-manager",
+        "models": "UserEmail, User"
+    },
+    {
+        "source_html": "gioi-thieu.html",
+        "page_type": "static-content",
+        "template": "page-content",
+        "laravel_uri": "/gioi-thieu",
+        "http_method": "GET",
+        "controller_action": "PageController@show",
+        "target_blade": "themes.ehenho.pages.gioi-thieu",
+        "models": "Page"
+    },
+    {
+        "source_html": "inbox.html",
+        "page_type": "messaging",
+        "template": "messages-inbox",
+        "laravel_uri": "/inbox",
+        "http_method": "GET",
+        "controller_action": "MessageController@inbox",
+        "target_blade": "themes.ehenho.pages.inbox",
+        "models": "Message, Conversation, User"
+    },
+    {
+        "source_html": "index.html",
+        "page_type": "homepage",
+        "template": "theme-landing",
+        "laravel_uri": "/",
+        "http_method": "GET",
+        "controller_action": "HomeController@index",
+        "target_blade": "themes.ehenho.pages.index",
+        "models": "Profile, Post, Setting"
+    },
+    {
+        "source_html": "liked-profiles.html",
+        "page_type": "social",
+        "template": "social-profile-list",
+        "laravel_uri": "/liked-profiles",
+        "http_method": "GET",
+        "controller_action": "SocialController@likes",
+        "target_blade": "themes.ehenho.pages.liked-profiles",
+        "models": "UserLike, Profile"
+    },
+    {
+        "source_html": "login.html",
+        "page_type": "auth",
+        "template": "auth-login",
+        "laravel_uri": "/login",
+        "http_method": "GET",
+        "controller_action": "AuthController@showLoginForm",
+        "target_blade": "themes.ehenho.pages.login",
+        "models": "User"
+    },
+    {
+        "source_html": "logout.html",
+        "page_type": "auth",
+        "template": "auth-logout",
+        "laravel_uri": "/logout",
+        "http_method": "POST",
+        "controller_action": "AuthController@logout",
+        "target_blade": "themes.ehenho.pages.logout",
+        "models": "User"
+    },
+    {
+        "source_html": "message-view.html",
+        "page_type": "messaging",
+        "template": "messages-thread-view",
+        "laravel_uri": "/message-view",
+        "http_method": "GET",
+        "controller_action": "MessageController@show",
+        "target_blade": "themes.ehenho.pages.message-view",
+        "models": "Message, Conversation, User"
+    },
+    {
+        "source_html": "my-profile.html",
+        "page_type": "profile",
+        "template": "profile-my-view",
+        "laravel_uri": "/my-profile",
+        "http_method": "GET",
+        "controller_action": "ProfileController@myProfile",
+        "target_blade": "themes.ehenho.pages.my-profile",
+        "models": "Profile, User"
+    },
+    {
+        "source_html": "password-change.html",
+        "page_type": "account",
+        "template": "account-password-change",
+        "laravel_uri": "/password-change",
+        "http_method": "GET",
+        "controller_action": "AccountController@changePassword",
+        "target_blade": "themes.ehenho.pages.password-change",
+        "models": "User"
+    },
+    {
+        "source_html": "password-reset.html",
+        "page_type": "auth",
+        "template": "auth-password-reset",
+        "laravel_uri": "/password-reset",
+        "http_method": "GET",
+        "controller_action": "ForgotPasswordController@showLinkRequestForm",
+        "target_blade": "themes.ehenho.pages.password-reset",
+        "models": "User"
+    },
+    {
+        "source_html": "profile-detail.html",
+        "page_type": "profile",
+        "template": "profile-detail",
+        "laravel_uri": "/profile-detail",
+        "http_method": "GET",
+        "controller_action": "ProfileController@show",
+        "target_blade": "themes.ehenho.pages.profile-detail",
+        "models": "Profile, User, Media"
+    },
+    {
+        "source_html": "profile-edit.html",
+        "page_type": "profile",
+        "template": "profile-edit",
+        "laravel_uri": "/profile-edit",
+        "http_method": "GET",
+        "controller_action": "ProfileController@edit",
+        "target_blade": "themes.ehenho.pages.profile-edit",
+        "models": "Profile, User"
+    },
+    {
+        "source_html": "profile-options.html",
+        "page_type": "account",
+        "template": "account-settings",
+        "laravel_uri": "/profile-options",
+        "http_method": "GET",
+        "controller_action": "AccountController@settings",
+        "target_blade": "themes.ehenho.pages.profile-options",
+        "models": "UserSetting, User"
+    },
+    {
+        "source_html": "sent.html",
+        "page_type": "messaging",
+        "template": "messages-sent",
+        "laravel_uri": "/sent",
+        "http_method": "GET",
+        "controller_action": "MessageController@sent",
+        "target_blade": "themes.ehenho.pages.sent",
+        "models": "Message, Conversation, User"
+    },
+    {
+        "source_html": "signup.html",
+        "page_type": "auth",
+        "template": "auth-register",
+        "laravel_uri": "/signup",
+        "http_method": "GET",
+        "controller_action": "AuthController@showRegisterForm",
+        "target_blade": "themes.ehenho.pages.signup",
+        "models": "User, Profile"
+    },
+    {
+        "source_html": "tim-ban-bon-phuong-theo-tuoi.html",
+        "page_type": "search",
+        "template": "search-directory",
+        "laravel_uri": "/tim-ban-bon-phuong-theo-tuoi",
+        "http_method": "GET",
+        "controller_action": "SearchController@byAge",
+        "target_blade": "themes.ehenho.pages.tim-ban-bon-phuong-theo-tuoi",
+        "models": "Profile, Province"
+    },
+    {
+        "source_html": "tim-ban-bon-phuong.html",
+        "page_type": "search",
+        "template": "search-directory",
+        "laravel_uri": "/tim-ban-bon-phuong",
+        "http_method": "GET",
+        "controller_action": "SearchController@index",
+        "target_blade": "themes.ehenho.pages.tim-ban-bon-phuong",
+        "models": "Profile, Province"
+    },
+    {
+        "source_html": "upload-profile-pic.html",
+        "page_type": "profile",
+        "template": "profile-avatar-upload",
+        "laravel_uri": "/upload-profile-pic",
+        "http_method": "GET",
+        "controller_action": "ProfileController@avatarUpload",
+        "target_blade": "themes.ehenho.pages.upload-profile-pic",
+        "models": "Profile, Media"
+    }
+]

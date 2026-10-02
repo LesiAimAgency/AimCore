@@ -1,0 +1,396 @@
+{
+    "theme": "ehenho",
+    "base_source_dir": "public/e-henho",
+    "target_blade_root": "resources/views/themes/ehenho",
+    "pages": [
+        {
+            "source_file": "public/e-henho/blocked-profiles.html",
+            "page_type": "social",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/social/blocked_profiles.blade.php",
+            "layout": "layouts.account",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel"
+            ],
+            "forms_count": 1,
+            "interactive_count": 2,
+            "target_route": "GET /social/blocked",
+            "controller": "SocialController@blocked",
+            "models": "UserBlock, Profile"
+        },
+        {
+            "source_file": "public/e-henho/bookmarked-profiles.html",
+            "page_type": "social",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/social/bookmarked_profiles.blade.php",
+            "layout": "layouts.account",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel"
+            ],
+            "forms_count": 1,
+            "interactive_count": 2,
+            "target_route": "GET /social/bookmarks",
+            "controller": "SocialController@bookmarks",
+            "models": "UserBookmark, Profile"
+        },
+        {
+            "source_file": "public/e-henho/contactbook-profiles.html",
+            "page_type": "social",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/social/contactbook_profiles.blade.php",
+            "layout": "layouts.account",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel"
+            ],
+            "forms_count": 1,
+            "interactive_count": 2,
+            "target_route": "GET /social/contacts",
+            "controller": "SocialController@contacts",
+            "models": "UserContact, Profile"
+        },
+        {
+            "source_file": "public/e-henho/email-manager.html",
+            "page_type": "account",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/account/email_manager.blade.php",
+            "layout": "layouts.account",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel"
+            ],
+            "forms_count": 3,
+            "interactive_count": 2,
+            "target_route": "GET /account/emails",
+            "controller": "AccountController@emails",
+            "models": "UserEmail, User"
+        },
+        {
+            "source_file": "public/e-henho/gioi-thieu.html",
+            "page_type": "static-content",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/gioi_thieu.blade.php",
+            "layout": "layouts.frontend",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel",
+                "password-toggle-widget"
+            ],
+            "forms_count": 1,
+            "interactive_count": 2,
+            "target_route": "GET /gioi-thieu",
+            "controller": "PageController@show",
+            "models": "Page"
+        },
+        {
+            "source_file": "public/e-henho/inbox.html",
+            "page_type": "messaging",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/messages/inbox.blade.php",
+            "layout": "layouts.account",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel",
+                "pagination-controls",
+                "message-row-item"
+            ],
+            "forms_count": 1,
+            "interactive_count": 2,
+            "target_route": "GET /messages/inbox",
+            "controller": "MessageController@inbox",
+            "models": "Message, Conversation, User"
+        },
+        {
+            "source_file": "public/e-henho/index.html",
+            "page_type": "homepage",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/index.blade.php",
+            "layout": "layouts.frontend",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel",
+                "password-toggle-widget"
+            ],
+            "forms_count": 1,
+            "interactive_count": 2,
+            "target_route": "GET /",
+            "controller": "HomeController@index",
+            "models": "Profile, Post, Setting"
+        },
+        {
+            "source_file": "public/e-henho/liked-profiles.html",
+            "page_type": "social",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/social/liked_profiles.blade.php",
+            "layout": "layouts.account",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel"
+            ],
+            "forms_count": 1,
+            "interactive_count": 2,
+            "target_route": "GET /social/likes",
+            "controller": "SocialController@likes",
+            "models": "UserLike, Profile"
+        },
+        {
+            "source_file": "public/e-henho/login.html",
+            "page_type": "auth",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/auth/login.blade.php",
+            "layout": "layouts.auth",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel",
+                "password-toggle-widget"
+            ],
+            "forms_count": 1,
+            "interactive_count": 1,
+            "target_route": "GET /login",
+            "controller": "AuthController@showLoginForm",
+            "models": "User"
+        },
+        {
+            "source_file": "public/e-henho/logout.html",
+            "page_type": "auth",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/auth/logout.blade.php",
+            "layout": "layouts.auth",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel"
+            ],
+            "forms_count": 2,
+            "interactive_count": 2,
+            "target_route": "POST /logout",
+            "controller": "AuthController@logout",
+            "models": "User"
+        },
+        {
+            "source_file": "public/e-henho/message-view.html",
+            "page_type": "messaging",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/messages/message_view.blade.php",
+            "layout": "layouts.account",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel",
+                "pagination-controls",
+                "message-row-item"
+            ],
+            "forms_count": 2,
+            "interactive_count": 2,
+            "target_route": "GET /messages/{conversationId}",
+            "controller": "MessageController@show",
+            "models": "Message, Conversation, User"
+        },
+        {
+            "source_file": "public/e-henho/my-profile.html",
+            "page_type": "profile",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/profile/my_profile.blade.php",
+            "layout": "layouts.account",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel"
+            ],
+            "forms_count": 1,
+            "interactive_count": 2,
+            "target_route": "GET /account/profile",
+            "controller": "ProfileController@myProfile",
+            "models": "Profile, User"
+        },
+        {
+            "source_file": "public/e-henho/password-change.html",
+            "page_type": "account",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/account/password_change.blade.php",
+            "layout": "layouts.account",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel",
+                "password-toggle-widget"
+            ],
+            "forms_count": 2,
+            "interactive_count": 2,
+            "target_route": "GET /account/password",
+            "controller": "AccountController@changePassword",
+            "models": "User"
+        },
+        {
+            "source_file": "public/e-henho/password-reset.html",
+            "page_type": "auth",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/auth/password_reset.blade.php",
+            "layout": "layouts.auth",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel",
+                "password-toggle-widget"
+            ],
+            "forms_count": 2,
+            "interactive_count": 2,
+            "target_route": "GET /password/reset",
+            "controller": "ForgotPasswordController@showLinkRequestForm",
+            "models": "User"
+        },
+        {
+            "source_file": "public/e-henho/profile-detail.html",
+            "page_type": "profile",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/profile/profile_detail.blade.php",
+            "layout": "layouts.frontend",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel",
+                "password-toggle-widget"
+            ],
+            "forms_count": 1,
+            "interactive_count": 2,
+            "target_route": "GET /profile/{id}",
+            "controller": "ProfileController@show",
+            "models": "Profile, User, Media"
+        },
+        {
+            "source_file": "public/e-henho/profile-edit.html",
+            "page_type": "profile",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/profile/profile_edit.blade.php",
+            "layout": "layouts.account",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel"
+            ],
+            "forms_count": 2,
+            "interactive_count": 2,
+            "target_route": "GET /account/profile/edit",
+            "controller": "ProfileController@edit",
+            "models": "Profile, User"
+        },
+        {
+            "source_file": "public/e-henho/profile-options.html",
+            "page_type": "account",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/account/profile_options.blade.php",
+            "layout": "layouts.account",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel"
+            ],
+            "forms_count": 2,
+            "interactive_count": 2,
+            "target_route": "GET /account/settings",
+            "controller": "AccountController@settings",
+            "models": "UserSetting, User"
+        },
+        {
+            "source_file": "public/e-henho/sent.html",
+            "page_type": "messaging",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/messages/sent.blade.php",
+            "layout": "layouts.account",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel",
+                "pagination-controls"
+            ],
+            "forms_count": 1,
+            "interactive_count": 2,
+            "target_route": "GET /messages/sent",
+            "controller": "MessageController@sent",
+            "models": "Message, Conversation, User"
+        },
+        {
+            "source_file": "public/e-henho/signup.html",
+            "page_type": "auth",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/auth/signup.blade.php",
+            "layout": "layouts.auth",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel",
+                "password-toggle-widget"
+            ],
+            "forms_count": 2,
+            "interactive_count": 2,
+            "target_route": "GET /register",
+            "controller": "AuthController@showRegisterForm",
+            "models": "User, Profile"
+        },
+        {
+            "source_file": "public/e-henho/tim-ban-bon-phuong-theo-tuoi.html",
+            "page_type": "search",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/search/tim_ban_bon_phuong_theo_tuoi.blade.php",
+            "layout": "layouts.frontend",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel",
+                "password-toggle-widget"
+            ],
+            "forms_count": 1,
+            "interactive_count": 2,
+            "target_route": "GET /search/age/{range?}",
+            "controller": "SearchController@byAge",
+            "models": "Profile, Province"
+        },
+        {
+            "source_file": "public/e-henho/tim-ban-bon-phuong.html",
+            "page_type": "search",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/search/tim_ban_bon_phuong.blade.php",
+            "layout": "layouts.frontend",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel",
+                "pagination-controls",
+                "password-toggle-widget"
+            ],
+            "forms_count": 1,
+            "interactive_count": 2,
+            "target_route": "GET /search",
+            "controller": "SearchController@index",
+            "models": "Profile, Province"
+        },
+        {
+            "source_file": "public/e-henho/upload-profile-pic.html",
+            "page_type": "profile",
+            "theme_candidate": "ehenho",
+            "target_blade": "resources/views/themes/ehenho/pages/profile/upload_profile_pic.blade.php",
+            "layout": "layouts.account",
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "hero-carousel"
+            ],
+            "forms_count": 2,
+            "interactive_count": 2,
+            "target_route": "GET /account/avatar",
+            "controller": "ProfileController@avatarUpload",
+            "models": "Profile, Media"
+        }
+    ]
+}

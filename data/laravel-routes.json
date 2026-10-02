@@ -1,0 +1,1730 @@
+{
+    "web.php": {
+        "file": "web.php",
+        "lines": 362,
+        "route_declarations_count": 92,
+        "routes": [
+            {
+                "method": "GET",
+                "uri": "/"
+            },
+            {
+                "method": "GET",
+                "uri": "/reset-pwd-temp-{username}"
+            },
+            {
+                "method": "GET",
+                "uri": "/media/{path}"
+            },
+            {
+                "method": "POST",
+                "uri": "/bridge"
+            },
+            {
+                "method": "POST",
+                "uri": "/newsletter/subscribe"
+            },
+            {
+                "method": "GET",
+                "uri": "/reviews/config"
+            },
+            {
+                "method": "POST",
+                "uri": "/reviews"
+            },
+            {
+                "method": "POST",
+                "uri": "/form-submit"
+            },
+            {
+                "method": "GET",
+                "uri": "provinces"
+            },
+            {
+                "method": "GET",
+                "uri": "districts/{provinceCode}"
+            },
+            {
+                "method": "GET",
+                "uri": "wards/{districtCode}"
+            },
+            {
+                "method": "GET",
+                "uri": "/relationship-field/search"
+            },
+            {
+                "method": "GET",
+                "uri": "/relationship-field/items"
+            },
+            {
+                "method": "GET",
+                "uri": "/taxonomy-field/list"
+            },
+            {
+                "method": "POST",
+                "uri": "them"
+            },
+            {
+                "method": "POST",
+                "uri": "them-nhieu"
+            },
+            {
+                "method": "POST",
+                "uri": "them-combo"
+            },
+            {
+                "method": "GET",
+                "uri": "so-luong"
+            },
+            {
+                "method": "GET",
+                "uri": "dropdown"
+            },
+            {
+                "method": "GET",
+                "uri": "tong"
+            },
+            {
+                "method": "POST",
+                "uri": "cap-nhat"
+            },
+            {
+                "method": "POST",
+                "uri": "xoa"
+            },
+            {
+                "method": "POST",
+                "uri": "xoa-het"
+            },
+            {
+                "method": "GET",
+                "uri": "/"
+            },
+            {
+                "method": "GET",
+                "uri": "widget-templates"
+            },
+            {
+                "method": "GET",
+                "uri": "widget-templates/create"
+            },
+            {
+                "method": "GET",
+                "uri": "widget-templates/export-all"
+            },
+            {
+                "method": "GET",
+                "uri": "widget-templates/{id}/export"
+            },
+            {
+                "method": "POST",
+                "uri": "widget-templates/import"
+            },
+            {
+                "method": "GET",
+                "uri": "widget-templates/{id}/edit"
+            },
+            {
+                "method": "DELETE",
+                "uri": "widget-templates/{id}"
+            },
+            {
+                "method": "POST",
+                "uri": "widget-templates/{type}/preview"
+            },
+            {
+                "method": "GET",
+                "uri": "widgets/create"
+            },
+            {
+                "method": "GET",
+                "uri": "widgets/{id}/edit-livewire"
+            },
+            {
+                "method": "GET",
+                "uri": "code-widgets"
+            },
+            {
+                "method": "GET",
+                "uri": "code-widgets/export-all"
+            },
+            {
+                "method": "GET",
+                "uri": "code-widgets/{codeType}/edit"
+            },
+            {
+                "method": "GET",
+                "uri": "code-widgets/{type}/export"
+            },
+            {
+                "method": "GET",
+                "uri": "widgets"
+            },
+            {
+                "method": "POST",
+                "uri": "widgets"
+            },
+            {
+                "method": "POST",
+                "uri": "widgets/save-all"
+            },
+            {
+                "method": "POST",
+                "uri": "widgets/clear"
+            },
+            {
+                "method": "DELETE",
+                "uri": "widgets/{widget}"
+            },
+            {
+                "method": "POST",
+                "uri": "widgets/clear-cache"
+            },
+            {
+                "method": "GET",
+                "uri": "widgets/discover"
+            },
+            {
+                "method": "POST",
+                "uri": "widgets/toggle"
+            },
+            {
+                "method": "GET",
+                "uri": "widgets/permissions"
+            },
+            {
+                "method": "GET",
+                "uri": "widgets/export"
+            },
+            {
+                "method": "POST",
+                "uri": "widgets/import"
+            },
+            {
+                "method": "POST",
+                "uri": "widgets/backup"
+            },
+            {
+                "method": "GET",
+                "uri": "widgets/backups"
+            },
+            {
+                "method": "GET",
+                "uri": "widgets/debug-permission"
+            },
+            {
+                "method": "GET",
+                "uri": "widgets/test-access"
+            },
+            {
+                "method": "GET",
+                "uri": "widgets/dev-access"
+            },
+            {
+                "method": "GET",
+                "uri": "widgets/debug/permissions"
+            },
+            {
+                "method": "POST",
+                "uri": "widgets/debug/grant-access"
+            },
+            {
+                "method": "GET",
+                "uri": "/"
+            },
+            {
+                "method": "GET",
+                "uri": "pages/{page}/edit"
+            },
+            {
+                "method": "POST",
+                "uri": "pages/{page}/sections"
+            },
+            {
+                "method": "PUT",
+                "uri": "sections/{section}"
+            },
+            {
+                "method": "DELETE",
+                "uri": "sections/{section}"
+            },
+            {
+                "method": "POST",
+                "uri": "pages/{page}/sections/reorder"
+            },
+            {
+                "method": "POST",
+                "uri": "sections/{section}/move-up"
+            },
+            {
+                "method": "POST",
+                "uri": "sections/{section}/move-down"
+            },
+            {
+                "method": "GET",
+                "uri": "pages/{page}/preview"
+            },
+            {
+                "method": "POST",
+                "uri": "sections/preview"
+            },
+            {
+                "method": "POST",
+                "uri": "sections/{section}/duplicate"
+            },
+            {
+                "method": "GET",
+                "uri": "theme-options"
+            },
+            {
+                "method": "PUT",
+                "uri": "theme-options"
+            },
+            {
+                "method": "GET",
+                "uri": "media/list"
+            },
+            {
+                "method": "POST",
+                "uri": "media/upload"
+            },
+            {
+                "method": "POST",
+                "uri": "media/folder"
+            },
+            {
+                "method": "DELETE",
+                "uri": "media/folder"
+            },
+            {
+                "method": "POST",
+                "uri": "media/move"
+            },
+            {
+                "method": "DELETE",
+                "uri": "media/{id}"
+            },
+            {
+                "method": "GET",
+                "uri": "debug/auth"
+            },
+            {
+                "method": "GET",
+                "uri": "/public/{any}"
+            },
+            {
+                "method": "GET",
+                "uri": "/san-pham/{slug}"
+            },
+            {
+                "method": "GET",
+                "uri": "/san-pham"
+            },
+            {
+                "method": "GET",
+                "uri": "/robots.txt"
+            },
+            {
+                "method": "GET",
+                "uri": "/sitemap.xml"
+            },
+            {
+                "method": "GET",
+                "uri": "/sitemap-pages.xml"
+            },
+            {
+                "method": "GET",
+                "uri": "/sitemap-products.xml"
+            },
+            {
+                "method": "GET",
+                "uri": "/sitemap-categories.xml"
+            },
+            {
+                "method": "GET",
+                "uri": "/sitemap-brands.xml"
+            },
+            {
+                "method": "GET",
+                "uri": "/lang/{locale}"
+            },
+            {
+                "method": "GET",
+                "uri": "/test-lang"
+            },
+            {
+                "method": "GET",
+                "uri": "/login"
+            },
+            {
+                "method": "POST",
+                "uri": "/login"
+            },
+            {
+                "method": "POST",
+                "uri": "/logout"
+            },
+            {
+                "method": "PUT",
+                "uri": "/user/password"
+            },
+            {
+                "method": "GET",
+                "uri": "/agency/magic-login/{user}"
+            }
+        ]
+    },
+    "project.php": {
+        "file": "project.php",
+        "lines": 430,
+        "route_declarations_count": 160,
+        "routes": [
+            {
+                "method": "GET",
+                "uri": "/demo-layout/{type}"
+            },
+            {
+                "method": "GET",
+                "uri": "/"
+            },
+            {
+                "method": "GET",
+                "uri": "/products"
+            },
+            {
+                "method": "GET",
+                "uri": "/product/{slug}"
+            },
+            {
+                "method": "GET",
+                "uri": "/blog"
+            },
+            {
+                "method": "GET",
+                "uri": "/blog/{slug}"
+            },
+            {
+                "method": "GET",
+                "uri": "/contact"
+            },
+            {
+                "method": "POST",
+                "uri": "/contact"
+            },
+            {
+                "method": "GET",
+                "uri": "/{slug}"
+            },
+            {
+                "method": "GET",
+                "uri": "/{projectCode}/san-pham/{slug}"
+            },
+            {
+                "method": "GET",
+                "uri": "/{projectCode}/san-pham"
+            },
+            {
+                "method": "GET",
+                "uri": "/{projectCode}/{slug}"
+            },
+            {
+                "method": "GET",
+                "uri": "login"
+            },
+            {
+                "method": "POST",
+                "uri": "login"
+            },
+            {
+                "method": "POST",
+                "uri": "logout"
+            },
+            {
+                "method": "GET",
+                "uri": "/{projectCode}/css/custom.css"
+            },
+            {
+                "method": "GET",
+                "uri": "/{projectCode}/js/custom.js"
+            },
+            {
+                "method": "GET",
+                "uri": "/"
+            },
+            {
+                "method": "POST",
+                "uri": "products/sync-widgets"
+            },
+            {
+                "method": "POST",
+                "uri": "products/bulk-edit"
+            },
+            {
+                "method": "POST",
+                "uri": "products/bulk-update"
+            },
+            {
+                "method": "POST",
+                "uri": "products/toggle-badge"
+            },
+            {
+                "method": "PATCH",
+                "uri": "products/{product}/restore"
+            },
+            {
+                "method": "DELETE",
+                "uri": "products/{product}/force-delete"
+            },
+            {
+                "method": "PATCH",
+                "uri": "brands/{brand}/restore"
+            },
+            {
+                "method": "DELETE",
+                "uri": "brands/{brand}/force-delete"
+            },
+            {
+                "method": "PATCH",
+                "uri": "categories/{category}/restore"
+            },
+            {
+                "method": "DELETE",
+                "uri": "categories/{category}/force-delete"
+            },
+            {
+                "method": "GET",
+                "uri": "categories/{category}/subcategories"
+            },
+            {
+                "method": "PATCH",
+                "uri": "posts/{post}/restore"
+            },
+            {
+                "method": "DELETE",
+                "uri": "posts/{post}/force-delete"
+            },
+            {
+                "method": "GET",
+                "uri": "posts/create"
+            },
+            {
+                "method": "PATCH",
+                "uri": "pages/{post}/restore"
+            },
+            {
+                "method": "DELETE",
+                "uri": "pages/{post}/force-delete"
+            },
+            {
+                "method": "GET",
+                "uri": "pages"
+            },
+            {
+                "method": "GET",
+                "uri": "pages/create"
+            },
+            {
+                "method": "GET",
+                "uri": "pages/{post}"
+            },
+            {
+                "method": "GET",
+                "uri": "pages/{post}/edit"
+            },
+            {
+                "method": "PUT",
+                "uri": "pages/{post}"
+            },
+            {
+                "method": "DELETE",
+                "uri": "pages/{post}"
+            },
+            {
+                "method": "GET",
+                "uri": "{$uri}/create"
+            },
+            {
+                "method": "GET",
+                "uri": "{$uri}/{post}"
+            },
+            {
+                "method": "GET",
+                "uri": "{$uri}/{post}/edit"
+            },
+            {
+                "method": "PUT",
+                "uri": "{$uri}/{post}"
+            },
+            {
+                "method": "DELETE",
+                "uri": "{$uri}/{post}"
+            },
+            {
+                "method": "GET",
+                "uri": "attributes/groups"
+            },
+            {
+                "method": "GET",
+                "uri": "attributes/groups/create"
+            },
+            {
+                "method": "POST",
+                "uri": "attributes/groups"
+            },
+            {
+                "method": "GET",
+                "uri": "attributes/groups/{group}/edit"
+            },
+            {
+                "method": "PUT",
+                "uri": "attributes/groups/{group}"
+            },
+            {
+                "method": "DELETE",
+                "uri": "attributes/groups/{group}"
+            },
+            {
+                "method": "GET",
+                "uri": "attributes/{attribute}/values"
+            },
+            {
+                "method": "GET",
+                "uri": "attributes/{attribute}/values/create"
+            },
+            {
+                "method": "POST",
+                "uri": "attributes/{attribute}/values"
+            },
+            {
+                "method": "GET",
+                "uri": "attributes/{attribute}/values/{value}/edit"
+            },
+            {
+                "method": "PUT",
+                "uri": "attributes/{attribute}/values/{value}"
+            },
+            {
+                "method": "DELETE",
+                "uri": "attributes/{attribute}/values/{value}"
+            },
+            {
+                "method": "GET",
+                "uri": "orders/reports"
+            },
+            {
+                "method": "GET",
+                "uri": "orders/{order}/print"
+            },
+            {
+                "method": "POST",
+                "uri": "orders/{order}/status"
+            },
+            {
+                "method": "GET",
+                "uri": "/"
+            },
+            {
+                "method": "GET",
+                "uri": "/calculator"
+            },
+            {
+                "method": "POST",
+                "uri": "/calculate"
+            },
+            {
+                "method": "GET",
+                "uri": "media/list"
+            },
+            {
+                "method": "POST",
+                "uri": "media/upload"
+            },
+            {
+                "method": "POST",
+                "uri": "media/bulk-delete"
+            },
+            {
+                "method": "POST",
+                "uri": "media/folder"
+            },
+            {
+                "method": "DELETE",
+                "uri": "media/folder"
+            },
+            {
+                "method": "POST",
+                "uri": "media/move"
+            },
+            {
+                "method": "DELETE",
+                "uri": "media/{id}"
+            },
+            {
+                "method": "GET",
+                "uri": "settings"
+            },
+            {
+                "method": "POST",
+                "uri": "settings"
+            },
+            {
+                "method": "POST",
+                "uri": "ai/test"
+            },
+            {
+                "method": "POST",
+                "uri": "ai/generate"
+            },
+            {
+                "method": "POST",
+                "uri": "ai/list-models"
+            },
+            {
+                "method": "GET",
+                "uri": "debug/session"
+            },
+            {
+                "method": "GET",
+                "uri": "debug/csrf"
+            },
+            {
+                "method": "GET",
+                "uri": "widget-templates/debug"
+            },
+            {
+                "method": "GET",
+                "uri": "widget-templates/test"
+            },
+            {
+                "method": "GET",
+                "uri": "widget-templates"
+            },
+            {
+                "method": "GET",
+                "uri": "widget-templates/export-all"
+            },
+            {
+                "method": "GET",
+                "uri": "widget-templates/{id}/ export"
+            },
+            {
+                "method": "POST",
+                "uri": "widget-templates/import"
+            },
+            {
+                "method": "GET",
+                "uri": "widget-templates/create"
+            },
+            {
+                "method": "GET",
+                "uri": "widget-templates/{id}/edit"
+            },
+            {
+                "method": "DELETE",
+                "uri": "widget-templates/{id}"
+            },
+            {
+                "method": "POST",
+                "uri": "widget-templates/{type}/preview"
+            },
+            {
+                "method": "GET",
+                "uri": "code-widgets"
+            },
+            {
+                "method": "GET",
+                "uri": "code-widgets/export-all"
+            },
+            {
+                "method": "GET",
+                "uri": "code-widgets/{codeType}/edit"
+            },
+            {
+                "method": "GET",
+                "uri": "code-widgets/{type}/export"
+            },
+            {
+                "method": "GET",
+                "uri": "widgets"
+            },
+            {
+                "method": "GET",
+                "uri": "widgets/create"
+            },
+            {
+                "method": "POST",
+                "uri": "widgets"
+            },
+            {
+                "method": "GET",
+                "uri": "widgets/{id}/edit"
+            },
+            {
+                "method": "PUT",
+                "uri": "widgets/{widget}"
+            },
+            {
+                "method": "DELETE",
+                "uri": "widgets/{widget}"
+            },
+            {
+                "method": "POST",
+                "uri": "widgets/save-all"
+            },
+            {
+                "method": "POST",
+                "uri": "widgets/reorder"
+            },
+            {
+                "method": "POST",
+                "uri": "widgets/toggle"
+            },
+            {
+                "method": "POST",
+                "uri": "widgets/clear-cache"
+            },
+            {
+                "method": "POST",
+                "uri": "menus/{menu}/items"
+            },
+            {
+                "method": "PUT",
+                "uri": "menus/items/{item}"
+            },
+            {
+                "method": "DELETE",
+                "uri": "menus/items/{item}"
+            },
+            {
+                "method": "POST",
+                "uri": "menus/{menu}/update-tree"
+            },
+            {
+                "method": "GET",
+                "uri": "website-config"
+            },
+            {
+                "method": "POST",
+                "uri": "website-config/save"
+            },
+            {
+                "method": "GET",
+                "uri": "website-config/preview"
+            },
+            {
+                "method": "GET",
+                "uri": "theme-options"
+            },
+            {
+                "method": "PUT",
+                "uri": "theme-options"
+            },
+            {
+                "method": "GET",
+                "uri": "theme/dynamic-css"
+            },
+            {
+                "method": "POST",
+                "uri": "widgets/clear-cache"
+            },
+            {
+                "method": "GET",
+                "uri": "appearance"
+            },
+            {
+                "method": "GET",
+                "uri": "group/{group}"
+            },
+            {
+                "method": "POST",
+                "uri": "scan-translations"
+            },
+            {
+                "method": "GET",
+                "uri": "contact"
+            },
+            {
+                "method": "GET",
+                "uri": "notifications"
+            },
+            {
+                "method": "GET",
+                "uri": "fonts"
+            },
+            {
+                "method": "GET",
+                "uri": "logs"
+            },
+            {
+                "method": "GET",
+                "uri": "analytics"
+            },
+            {
+                "method": "GET",
+                "uri": "watermark"
+            },
+            {
+                "method": "GET",
+                "uri": "toc"
+            },
+            {
+                "method": "GET",
+                "uri": "social"
+            },
+            {
+                "method": "GET",
+                "uri": "payment"
+            },
+            {
+                "method": "GET",
+                "uri": "shipping"
+            },
+            {
+                "method": "POST",
+                "uri": "shipping/calculate"
+            },
+            {
+                "method": "GET",
+                "uri": "ai"
+            },
+            {
+                "method": "GET",
+                "uri": "reviews"
+            },
+            {
+                "method": "GET",
+                "uri": "languages"
+            },
+            {
+                "method": "GET",
+                "uri": "forms"
+            },
+            {
+                "method": "GET",
+                "uri": "contact-buttons"
+            },
+            {
+                "method": "GET",
+                "uri": "redirects"
+            },
+            {
+                "method": "GET",
+                "uri": "seo"
+            },
+            {
+                "method": "GET",
+                "uri": "popups"
+            },
+            {
+                "method": "GET",
+                "uri": "permissions"
+            },
+            {
+                "method": "GET",
+                "uri": "fake-notifications"
+            },
+            {
+                "method": "GET",
+                "uri": "fonts/google"
+            },
+            {
+                "method": "POST",
+                "uri": "fonts/store"
+            },
+            {
+                "method": "POST",
+                "uri": "fonts/toggle"
+            },
+            {
+                "method": "POST",
+                "uri": "fonts/default"
+            },
+            {
+                "method": "DELETE",
+                "uri": "fonts/destroy"
+            },
+            {
+                "method": "GET",
+                "uri": "reviews/fake"
+            },
+            {
+                "method": "GET",
+                "uri": "reviews"
+            },
+            {
+                "method": "GET",
+                "uri": "reviews/create"
+            },
+            {
+                "method": "POST",
+                "uri": "reviews"
+            },
+            {
+                "method": "GET",
+                "uri": "reviews/{review}/edit"
+            },
+            {
+                "method": "PUT",
+                "uri": "reviews/{review}"
+            },
+            {
+                "method": "DELETE",
+                "uri": "reviews/{review}"
+            },
+            {
+                "method": "PATCH",
+                "uri": "reviews/{review}/status"
+            },
+            {
+                "method": "POST",
+                "uri": "reviews/reorder"
+            },
+            {
+                "method": "GET",
+                "uri": "form-submissions"
+            },
+            {
+                "method": "GET",
+                "uri": "form-submissions/{submission}"
+            },
+            {
+                "method": "PATCH",
+                "uri": "form-submissions/{submission}/status"
+            },
+            {
+                "method": "DELETE",
+                "uri": "form-submissions/{submission}"
+            },
+            {
+                "method": "GET",
+                "uri": "relationship-field/search"
+            },
+            {
+                "method": "GET",
+                "uri": "relationship-field/items"
+            },
+            {
+                "method": "GET",
+                "uri": "taxonomy-field/list"
+            },
+            {
+                "method": "GET",
+                "uri": "relationship-field/search"
+            },
+            {
+                "method": "GET",
+                "uri": "relationship-field/items"
+            },
+            {
+                "method": "GET",
+                "uri": "taxonomy-field/list"
+            }
+        ]
+    },
+    "backend.php": {
+        "file": "backend.php",
+        "lines": 75,
+        "route_declarations_count": 37,
+        "routes": [
+            {
+                "method": "GET",
+                "uri": "/"
+            },
+            {
+                "method": "GET",
+                "uri": "fonts/google"
+            },
+            {
+                "method": "GET",
+                "uri": "settings"
+            },
+            {
+                "method": "POST",
+                "uri": "settings"
+            },
+            {
+                "method": "GET",
+                "uri": "appearance"
+            },
+            {
+                "method": "GET",
+                "uri": "group/{group}"
+            },
+            {
+                "method": "POST",
+                "uri": "scan-translations"
+            },
+            {
+                "method": "GET",
+                "uri": "contact"
+            },
+            {
+                "method": "GET",
+                "uri": "notifications"
+            },
+            {
+                "method": "GET",
+                "uri": "fonts"
+            },
+            {
+                "method": "GET",
+                "uri": "logs"
+            },
+            {
+                "method": "GET",
+                "uri": "analytics"
+            },
+            {
+                "method": "GET",
+                "uri": "watermark"
+            },
+            {
+                "method": "GET",
+                "uri": "toc"
+            },
+            {
+                "method": "GET",
+                "uri": "social"
+            },
+            {
+                "method": "GET",
+                "uri": "payment"
+            },
+            {
+                "method": "GET",
+                "uri": "shipping"
+            },
+            {
+                "method": "POST",
+                "uri": "shipping/calculate"
+            },
+            {
+                "method": "GET",
+                "uri": "ai"
+            },
+            {
+                "method": "GET",
+                "uri": "reviews"
+            },
+            {
+                "method": "GET",
+                "uri": "languages"
+            },
+            {
+                "method": "GET",
+                "uri": "forms"
+            },
+            {
+                "method": "GET",
+                "uri": "contact-buttons"
+            },
+            {
+                "method": "GET",
+                "uri": "redirects"
+            },
+            {
+                "method": "GET",
+                "uri": "seo"
+            },
+            {
+                "method": "GET",
+                "uri": "popups"
+            },
+            {
+                "method": "GET",
+                "uri": "permissions"
+            },
+            {
+                "method": "GET",
+                "uri": "fake-notifications"
+            },
+            {
+                "method": "GET",
+                "uri": "media/list"
+            },
+            {
+                "method": "POST",
+                "uri": "media/upload"
+            },
+            {
+                "method": "POST",
+                "uri": "media/folder"
+            },
+            {
+                "method": "DELETE",
+                "uri": "media/folder"
+            },
+            {
+                "method": "POST",
+                "uri": "media/move"
+            },
+            {
+                "method": "DELETE",
+                "uri": "media/{id}"
+            },
+            {
+                "method": "GET",
+                "uri": "logs"
+            },
+            {
+                "method": "GET",
+                "uri": "backups"
+            },
+            {
+                "method": "POST",
+                "uri": "backups/create"
+            }
+        ]
+    },
+    "wkcomputer.php": {
+        "file": "wkcomputer.php",
+        "lines": 104,
+        "route_declarations_count": 61,
+        "routes": [
+            {
+                "method": "GET",
+                "uri": "/"
+            },
+            {
+                "method": "GET",
+                "uri": "/cua-hang"
+            },
+            {
+                "method": "GET",
+                "uri": "/search-suggest"
+            },
+            {
+                "method": "GET",
+                "uri": "/api/search/suggestions"
+            },
+            {
+                "method": "GET",
+                "uri": "/xay-dung-cau-hinh"
+            },
+            {
+                "method": "GET",
+                "uri": "/xay-dung-cau-hinh/api-products"
+            },
+            {
+                "method": "GET",
+                "uri": "/blog"
+            },
+            {
+                "method": "GET",
+                "uri": "/tin-tuc"
+            },
+            {
+                "method": "GET",
+                "uri": "/gio-hang"
+            },
+            {
+                "method": "GET",
+                "uri": "/gio-hang/so-luong"
+            },
+            {
+                "method": "GET",
+                "uri": "/gio-hang/dropdown"
+            },
+            {
+                "method": "GET",
+                "uri": "/gio-hang/tong"
+            },
+            {
+                "method": "POST",
+                "uri": "/gio-hang/them"
+            },
+            {
+                "method": "POST",
+                "uri": "/gio-hang/them-nhieu"
+            },
+            {
+                "method": "POST",
+                "uri": "/gio-hang/them-combo"
+            },
+            {
+                "method": "POST",
+                "uri": "/gio-hang/xoa"
+            },
+            {
+                "method": "POST",
+                "uri": "/gio-hang/cap-nhat"
+            },
+            {
+                "method": "POST",
+                "uri": "/gio-hang/xoa-het"
+            },
+            {
+                "method": "POST",
+                "uri": "/gio-hang/apply-coupon"
+            },
+            {
+                "method": "POST",
+                "uri": "/gio-hang/remove-coupon"
+            },
+            {
+                "method": "GET",
+                "uri": "/dat-hang"
+            },
+            {
+                "method": "GET",
+                "uri": "/thanh-toan"
+            },
+            {
+                "method": "POST",
+                "uri": "/dat-hang"
+            },
+            {
+                "method": "POST",
+                "uri": "/thanh-toan"
+            },
+            {
+                "method": "GET",
+                "uri": "/dat-hang/thanh-cong/{orderNumber}"
+            },
+            {
+                "method": "GET",
+                "uri": "/order-track"
+            },
+            {
+                "method": "POST",
+                "uri": "/order-track"
+            },
+            {
+                "method": "POST",
+                "uri": "/payment/kredivo/calculate"
+            },
+            {
+                "method": "GET",
+                "uri": "/api/locations/districts/{provinceCode}"
+            },
+            {
+                "method": "GET",
+                "uri": "/api/locations/wards/{districtCode}"
+            },
+            {
+                "method": "GET",
+                "uri": "/lien-he"
+            },
+            {
+                "method": "POST",
+                "uri": "/lien-he"
+            },
+            {
+                "method": "GET",
+                "uri": "/wishlist"
+            },
+            {
+                "method": "POST",
+                "uri": "/wishlist/add"
+            },
+            {
+                "method": "POST",
+                "uri": "/wishlist/remove"
+            },
+            {
+                "method": "GET",
+                "uri": "/wishlist/ids"
+            },
+            {
+                "method": "GET",
+                "uri": "/so-sanh"
+            },
+            {
+                "method": "GET",
+                "uri": "/so-sanh-sp"
+            },
+            {
+                "method": "POST",
+                "uri": "/compare/add"
+            },
+            {
+                "method": "POST",
+                "uri": "/compare/remove"
+            },
+            {
+                "method": "GET",
+                "uri": "/compare/data"
+            },
+            {
+                "method": "GET",
+                "uri": "/quick-view/{id}"
+            },
+            {
+                "method": "POST",
+                "uri": "/newsletter/subscribe"
+            },
+            {
+                "method": "POST",
+                "uri": "/review/submit"
+            },
+            {
+                "method": "GET",
+                "uri": "/khach-hang/dang-nhap"
+            },
+            {
+                "method": "POST",
+                "uri": "/khach-hang/dang-nhap"
+            },
+            {
+                "method": "GET",
+                "uri": "/dang-nhap"
+            },
+            {
+                "method": "POST",
+                "uri": "/dang-nhap"
+            },
+            {
+                "method": "GET",
+                "uri": "/khach-hang/dang-ky"
+            },
+            {
+                "method": "GET",
+                "uri": "/dang-ky"
+            },
+            {
+                "method": "POST",
+                "uri": "/khach-hang/dang-ky"
+            },
+            {
+                "method": "POST",
+                "uri": "/khach-hang/dang-xuat"
+            },
+            {
+                "method": "POST",
+                "uri": "/dang-xuat"
+            },
+            {
+                "method": "GET",
+                "uri": "/thong-tin"
+            },
+            {
+                "method": "PUT",
+                "uri": "/thong-tin"
+            },
+            {
+                "method": "GET",
+                "uri": "/don-hang"
+            },
+            {
+                "method": "GET",
+                "uri": "/don-hang/{order}"
+            },
+            {
+                "method": "GET",
+                "uri": "/don-hang/{order}/ajax"
+            },
+            {
+                "method": "GET",
+                "uri": "/san-pham/{slug}"
+            },
+            {
+                "method": "GET",
+                "uri": "/bai-viet/{slug}"
+            },
+            {
+                "method": "GET",
+                "uri": "{slug}"
+            }
+        ]
+    },
+    "viettinmart.php": {
+        "file": "viettinmart.php",
+        "lines": 97,
+        "route_declarations_count": 57,
+        "routes": [
+            {
+                "method": "GET",
+                "uri": "/"
+            },
+            {
+                "method": "GET",
+                "uri": "/sitemap"
+            },
+            {
+                "method": "GET",
+                "uri": "/sitemap.xml"
+            },
+            {
+                "method": "GET",
+                "uri": "/cua-hang"
+            },
+            {
+                "method": "GET",
+                "uri": "/danh-muc/{slug}"
+            },
+            {
+                "method": "GET",
+                "uri": "/cua-hang/{slug}"
+            },
+            {
+                "method": "GET",
+                "uri": "/san-pham/{slug}"
+            },
+            {
+                "method": "GET",
+                "uri": "/san-pham"
+            },
+            {
+                "method": "GET",
+                "uri": "/search-suggest"
+            },
+            {
+                "method": "GET",
+                "uri": "/blog"
+            },
+            {
+                "method": "GET",
+                "uri": "/blog/{slug}"
+            },
+            {
+                "method": "GET",
+                "uri": "/gio-hang"
+            },
+            {
+                "method": "GET",
+                "uri": "/cart"
+            },
+            {
+                "method": "GET",
+                "uri": "/gio-hang/so-luong"
+            },
+            {
+                "method": "GET",
+                "uri": "/gio-hang/dropdown"
+            },
+            {
+                "method": "GET",
+                "uri": "/gio-hang/tong"
+            },
+            {
+                "method": "GET",
+                "uri": "/dat-hang"
+            },
+            {
+                "method": "GET",
+                "uri": "/checkout"
+            },
+            {
+                "method": "GET",
+                "uri": "/thanh-toan"
+            },
+            {
+                "method": "POST",
+                "uri": "/dat-hang"
+            },
+            {
+                "method": "POST",
+                "uri": "/checkout"
+            },
+            {
+                "method": "POST",
+                "uri": "/thanh-toan"
+            },
+            {
+                "method": "GET",
+                "uri": "/dat-hang/thanh-cong/{orderNumber}"
+            },
+            {
+                "method": "GET",
+                "uri": "/checkout/thanh-cong/{orderNumber}"
+            },
+            {
+                "method": "GET",
+                "uri": "/thanh-toan/thanh-cong/{orderNumber}"
+            },
+            {
+                "method": "GET",
+                "uri": "/lien-he"
+            },
+            {
+                "method": "GET",
+                "uri": "/order-track"
+            },
+            {
+                "method": "POST",
+                "uri": "/order-track"
+            },
+            {
+                "method": "GET",
+                "uri": "/wishlist"
+            },
+            {
+                "method": "GET",
+                "uri": "/wishlist/ids"
+            },
+            {
+                "method": "POST",
+                "uri": "/wishlist/add"
+            },
+            {
+                "method": "POST",
+                "uri": "/wishlist/remove"
+            },
+            {
+                "method": "GET",
+                "uri": "/compare/data"
+            },
+            {
+                "method": "GET",
+                "uri": "/so-sanh"
+            },
+            {
+                "method": "GET",
+                "uri": "/so-sanh-sp"
+            },
+            {
+                "method": "GET",
+                "uri": "/compare"
+            },
+            {
+                "method": "POST",
+                "uri": "/compare/add"
+            },
+            {
+                "method": "POST",
+                "uri": "/compare/remove"
+            },
+            {
+                "method": "GET",
+                "uri": "/quick-view/{id}"
+            },
+            {
+                "method": "POST",
+                "uri": "/gio-hang/them"
+            },
+            {
+                "method": "POST",
+                "uri": "/gio-hang/xoa"
+            },
+            {
+                "method": "POST",
+                "uri": "/gio-hang/cap-nhat"
+            },
+            {
+                "method": "POST",
+                "uri": "/gio-hang/xoa-het"
+            },
+            {
+                "method": "POST",
+                "uri": "/gio-hang/apply-coupon"
+            },
+            {
+                "method": "POST",
+                "uri": "/gio-hang/remove-coupon"
+            },
+            {
+                "method": "POST",
+                "uri": "/lien-he"
+            },
+            {
+                "method": "POST",
+                "uri": "/newsletter/subscribe"
+            },
+            {
+                "method": "POST",
+                "uri": "/review/submit"
+            },
+            {
+                "method": "GET",
+                "uri": "/login"
+            },
+            {
+                "method": "POST",
+                "uri": "/login"
+            },
+            {
+                "method": "GET",
+                "uri": "/register"
+            },
+            {
+                "method": "POST",
+                "uri": "/register"
+            },
+            {
+                "method": "GET",
+                "uri": "/profile"
+            },
+            {
+                "method": "POST",
+                "uri": "/profile"
+            },
+            {
+                "method": "POST",
+                "uri": "/logout"
+            },
+            {
+                "method": "GET",
+                "uri": "/password/reset"
+            },
+            {
+                "method": "GET",
+                "uri": "{slug}"
+            }
+        ]
+    },
+    "api.php": {
+        "file": "api.php",
+        "lines": 32,
+        "route_declarations_count": 13,
+        "routes": [
+            {
+                "method": "POST",
+                "uri": "/sync/widgets"
+            },
+            {
+                "method": "POST",
+                "uri": "/sync/settings"
+            },
+            {
+                "method": "POST",
+                "uri": "/agency/auth"
+            },
+            {
+                "method": "POST",
+                "uri": "/widgets/sync"
+            },
+            {
+                "method": "GET",
+                "uri": "/widgets/render/{code}"
+            },
+            {
+                "method": "GET",
+                "uri": "/products"
+            },
+            {
+                "method": "GET",
+                "uri": "/products/{slug}"
+            },
+            {
+                "method": "GET",
+                "uri": "/categories"
+            },
+            {
+                "method": "GET",
+                "uri": "/cart"
+            },
+            {
+                "method": "POST",
+                "uri": "/cart/add"
+            },
+            {
+                "method": "POST",
+                "uri": "/cart/update"
+            },
+            {
+                "method": "POST",
+                "uri": "/cart/remove"
+            },
+            {
+                "method": "POST",
+                "uri": "/checkout"
+            }
+        ]
+    },
+    "console.php": {
+        "file": "console.php",
+        "lines": 9,
+        "route_declarations_count": 0,
+        "routes": []
+    }
+}

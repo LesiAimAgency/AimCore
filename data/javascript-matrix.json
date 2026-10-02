@@ -1,0 +1,202 @@
+{
+    "scripts": [
+        {
+            "script": "1st_f_fc.js",
+            "size_bytes": 276,
+            "pages_count": 1,
+            "pages": [
+                "signup.html"
+            ],
+            "has_ajax": false,
+            "has_dom_ready": false,
+            "is_json_data": false,
+            "summary": "First input auto-focus triggers"
+        },
+        {
+            "script": "1st_f_fc_pe.js",
+            "size_bytes": 269,
+            "pages_count": 1,
+            "pages": [
+                "profile-edit.html"
+            ],
+            "has_ajax": false,
+            "has_dom_ready": false,
+            "is_json_data": false,
+            "summary": "First input auto-focus triggers"
+        },
+        {
+            "script": "1st_f_fc_upp.js",
+            "size_bytes": 272,
+            "pages_count": 1,
+            "pages": [
+                "upload-profile-pic.html"
+            ],
+            "has_ajax": false,
+            "has_dom_ready": false,
+            "is_json_data": false,
+            "summary": "First input auto-focus triggers"
+        },
+        {
+            "script": "auth-session.js",
+            "size_bytes": 8205,
+            "pages_count": 22,
+            "pages": [
+                "blocked-profiles.html",
+                "bookmarked-profiles.html",
+                "contactbook-profiles.html",
+                "email-manager.html",
+                "gioi-thieu.html",
+                "inbox.html",
+                "index.html",
+                "liked-profiles.html",
+                "login.html",
+                "logout.html",
+                "message-view.html",
+                "my-profile.html",
+                "password-change.html",
+                "password-reset.html",
+                "profile-detail.html",
+                "profile-edit.html",
+                "profile-options.html",
+                "sent.html",
+                "signup.html",
+                "tim-ban-bon-phuong-theo-tuoi.html",
+                "tim-ban-bon-phuong.html",
+                "upload-profile-pic.html"
+            ],
+            "has_ajax": false,
+            "has_dom_ready": true,
+            "is_json_data": false,
+            "summary": "Client-side authentication session state tracker and UI sync"
+        },
+        {
+            "script": "change_pw_validate.js",
+            "size_bytes": 1816,
+            "pages_count": 1,
+            "pages": [
+                "password-change.html"
+            ],
+            "has_ajax": false,
+            "has_dom_ready": true,
+            "is_json_data": false,
+            "summary": "Password reset and change confirmation validator"
+        },
+        {
+            "script": "django.csrf.js",
+            "size_bytes": 1043,
+            "pages_count": 22,
+            "pages": [
+                "blocked-profiles.html",
+                "bookmarked-profiles.html",
+                "contactbook-profiles.html",
+                "email-manager.html",
+                "gioi-thieu.html",
+                "inbox.html",
+                "index.html",
+                "liked-profiles.html",
+                "login.html",
+                "logout.html",
+                "message-view.html",
+                "my-profile.html",
+                "password-change.html",
+                "password-reset.html",
+                "profile-detail.html",
+                "profile-edit.html",
+                "profile-options.html",
+                "sent.html",
+                "signup.html",
+                "tim-ban-bon-phuong-theo-tuoi.html",
+                "tim-ban-bon-phuong.html",
+                "upload-profile-pic.html"
+            ],
+            "has_ajax": true,
+            "has_dom_ready": true,
+            "is_json_data": false,
+            "summary": "Legacy CSRF cookie extractor (to be replaced with Laravel @csrf / X-CSRF-TOKEN)"
+        },
+        {
+            "script": "drop_down.js",
+            "size_bytes": 8698,
+            "pages_count": 2,
+            "pages": [
+                "profile-edit.html",
+                "signup.html"
+            ],
+            "has_ajax": true,
+            "has_dom_ready": true,
+            "is_json_data": false,
+            "summary": "Cascading dropdown selector for provinces and districts"
+        },
+        {
+            "script": "email_check.js",
+            "size_bytes": 1762,
+            "pages_count": 1,
+            "pages": [
+                "signup.html"
+            ],
+            "has_ajax": false,
+            "has_dom_ready": true,
+            "is_json_data": false,
+            "summary": "Email format check and typo suggestion helper"
+        },
+        {
+            "script": "fc_sc.js",
+            "size_bytes": 6312,
+            "pages_count": 1,
+            "pages": [
+                "signup.html"
+            ],
+            "has_ajax": false,
+            "has_dom_ready": true,
+            "is_json_data": false,
+            "summary": "Form control script for search and profile edit forms"
+        },
+        {
+            "script": "fc_sc_pe.js",
+            "size_bytes": 4760,
+            "pages_count": 2,
+            "pages": [
+                "profile-edit.html",
+                "upload-profile-pic.html"
+            ],
+            "has_ajax": false,
+            "has_dom_ready": true,
+            "is_json_data": false,
+            "summary": "Form control script for search and profile edit forms"
+        },
+        {
+            "script": "lg_vld.js",
+            "size_bytes": 1516,
+            "pages_count": 1,
+            "pages": [
+                "login.html"
+            ],
+            "has_ajax": false,
+            "has_dom_ready": true,
+            "is_json_data": false,
+            "summary": "Login form validator"
+        },
+        {
+            "script": "mailcheck.js",
+            "size_bytes": 8913,
+            "pages_count": 1,
+            "pages": [
+                "signup.html"
+            ],
+            "has_ajax": false,
+            "has_dom_ready": false,
+            "is_json_data": false,
+            "summary": "Third-party mailcheck library for email typo suggestions"
+        },
+        {
+            "script": "vietnam_provinces.json",
+            "size_bytes": 105490,
+            "pages_count": 0,
+            "pages": [],
+            "has_ajax": false,
+            "has_dom_ready": false,
+            "is_json_data": true,
+            "summary": "Administrative province and district dataset for location filters"
+        }
+    ]
+}

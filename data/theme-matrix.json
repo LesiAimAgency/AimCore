@@ -1,0 +1,82 @@
+{
+    "themes": [
+        {
+            "theme_id": "ehenho",
+            "name": "eHenho Dating Theme",
+            "source_path": "public/e-henho",
+            "blade_views_path": "resources/views/themes/ehenho",
+            "public_assets_path": "public/themes/ehenho",
+            "framework": "Bootstrap 3.3.6 (isolated) + Custom Base8 CSS",
+            "layouts": [
+                "layouts/app.blade.php",
+                "layouts/auth.blade.php",
+                "layouts/account.blade.php"
+            ],
+            "pages": [
+                "blocked-profiles.html",
+                "bookmarked-profiles.html",
+                "contactbook-profiles.html",
+                "email-manager.html",
+                "gioi-thieu.html",
+                "inbox.html",
+                "index.html",
+                "liked-profiles.html",
+                "login.html",
+                "logout.html",
+                "message-view.html",
+                "my-profile.html",
+                "password-change.html",
+                "password-reset.html",
+                "profile-detail.html",
+                "profile-edit.html",
+                "profile-options.html",
+                "sent.html",
+                "signup.html",
+                "tim-ban-bon-phuong-theo-tuoi.html",
+                "tim-ban-bon-phuong.html",
+                "upload-profile-pic.html"
+            ],
+            "components": [
+                "header-navbar",
+                "footer-main",
+                "account-sidebar-menu",
+                "profile-card",
+                "message-row-item",
+                "search-filter-box",
+                "hero-carousel",
+                "password-toggle-widget",
+                "pagination-controls",
+                "modal-dialog"
+            ],
+            "assets": {
+                "css": [
+                    "base8.css",
+                    "carousel.css",
+                    "normalize.css"
+                ],
+                "js": [
+                    "auth-session.js",
+                    "drop_down.js",
+                    "fc_sc.js",
+                    "mailcheck.js",
+                    "vietnam_provinces.json"
+                ],
+                "images_count": 469
+            }
+        },
+        {
+            "theme_id": "viettinmartdemo",
+            "name": "Viettinmart Theme",
+            "blade_views_path": "resources/views/frontend/themes/viettinmartdemo",
+            "public_assets_path": "public/theme",
+            "framework": "Tailwind / Custom"
+        },
+        {
+            "theme_id": "wkcomputerdemo",
+            "name": "WKComputer Dark Theme",
+            "blade_views_path": "resources/views/frontend/themes/wkcomputerdemo",
+            "public_assets_path": "public/themes/wkcomputerdemo",
+            "framework": "Custom Dark CSS / Vanilla JS"
+        }
+    ]
+}

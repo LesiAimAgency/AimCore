@@ -1,0 +1,45 @@
+{
+    "framework": {
+        "name": "Laravel",
+        "version": "v12.64.0",
+        "php_version": "8.2.14",
+        "php_version_constraint": "^8.2"
+    },
+    "ecosystem_packages": {
+        "laravel/framework": "v12.64.0",
+        "laravel/fortify": "v1.37.3",
+        "livewire/livewire": "v4.3.5",
+        "livewire/flux": "v2.15.0",
+        "livewire/volt": "v1.11.1",
+        "spatie/laravel-permission": "6.25.0",
+        "spatie/laravel-medialibrary": "11.23.3",
+        "spatie/laravel-translatable": "6.11.4",
+        "unisharp/laravel-filemanager": "v2.15.0",
+        "kalnoy/nestedset": "v6.0.6",
+        "phpunit/phpunit": "11.5.3"
+    },
+    "frontend_stack": {
+        "npm_dependencies": {
+            "@tailwindcss/vite": "^4.1.11",
+            "autoprefixer": "^10.4.20",
+            "axios": "^1.7.4",
+            "concurrently": "^9.0.1",
+            "laravel-vite-plugin": "^2.0",
+            "tailwindcss": "^4.0.7",
+            "vite": "^7.0.4"
+        },
+        "tailwind_version": "^4.0.7",
+        "vite_version": "^7.0.4",
+        "livewire": true,
+        "volt": true,
+        "fluxui_free": true
+    },
+    "server_environment": {
+        "os": "WINNT",
+        "web_server": "MAMP Apache / PHP CLI",
+        "database_default": "mysql",
+        "session_driver": "database",
+        "queue_driver": "database",
+        "cache_driver": "database"
+    }
+}

@@ -1,0 +1,1286 @@
+{
+    "activity_logs": {
+        "columns_count": 16,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "user_id",
+            "action",
+            "model",
+            "model_type",
+            "model_id",
+            "description",
+            "properties",
+            "old_values"
+        ]
+    },
+    "agents": {
+        "columns_count": 17,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "tenant_id",
+            "name",
+            "code",
+            "phone",
+            "email",
+            "address",
+            "contact_person",
+            "region"
+        ]
+    },
+    "attribute_groups": {
+        "columns_count": 10,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "project_id",
+            "name",
+            "slug",
+            "description",
+            "sort_order",
+            "is_active",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "brand_product": {
+        "columns_count": 5,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "product_id",
+            "brand_id",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "brands": {
+        "columns_count": 11,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "project_id",
+            "name",
+            "slug",
+            "description",
+            "logo",
+            "is_active",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "briefs": {
+        "columns_count": 10,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "title",
+            "client_name",
+            "requirements",
+            "budget",
+            "deadline",
+            "status",
+            "account_id",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "cache": {
+        "columns_count": 3,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "key",
+        "sample_columns": [
+            "key",
+            "value",
+            "expiration"
+        ]
+    },
+    "cache_locks": {
+        "columns_count": 3,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "key",
+        "sample_columns": [
+            "key",
+            "owner",
+            "expiration"
+        ]
+    },
+    "contracts": {
+        "columns_count": 27,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "title",
+            "client_name",
+            "service_type",
+            "start_date",
+            "end_date",
+            "domain_name",
+            "domain_purchase_date",
+            "hosting_provider",
+            "hosting_start_date"
+        ]
+    },
+    "coupons": {
+        "columns_count": 17,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "tenant_id",
+            "code",
+            "name",
+            "type",
+            "value",
+            "min_order_value",
+            "max_discount_value",
+            "start_date"
+        ]
+    },
+    "customers": {
+        "columns_count": 14,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "type",
+            "name",
+            "email",
+            "phone",
+            "tax_code",
+            "address",
+            "id_card_details",
+            "representative_name",
+            "representative_phone"
+        ]
+    },
+    "departments": {
+        "columns_count": 8,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "name",
+            "code",
+            "description",
+            "manager_id",
+            "status",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "deployment_history": {
+        "columns_count": 14,
+        "has_project_id": true,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "hosting_profile_id",
+            "deployed_by",
+            "status",
+            "source_hash",
+            "started_at",
+            "completed_at",
+            "deployed_url",
+            "server_ip"
+        ]
+    },
+    "deployment_logs": {
+        "columns_count": 8,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "deployment_history_id",
+            "step",
+            "message",
+            "level",
+            "step_number",
+            "context",
+            "logged_at"
+        ]
+    },
+    "failed_jobs": {
+        "columns_count": 7,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "uuid",
+            "connection",
+            "queue",
+            "payload",
+            "exception",
+            "failed_at"
+        ]
+    },
+    "feature_packs": {
+        "columns_count": 8,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "name",
+            "code",
+            "group_name",
+            "description",
+            "is_active",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "flash_sale_campaigns": {
+        "columns_count": 11,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "tenant_id",
+            "name",
+            "description",
+            "starts_at",
+            "ends_at",
+            "status",
+            "apply_to_all",
+            "created_at"
+        ]
+    },
+    "flash_sale_items": {
+        "columns_count": 10,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "campaign_id",
+            "product_id",
+            "category_id",
+            "discount_type",
+            "discount_value",
+            "sale_limit",
+            "sold_count",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "form_submissions": {
+        "columns_count": 15,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "project_id",
+            "form_name",
+            "data",
+            "ip_address",
+            "user_agent",
+            "status",
+            "admin_note",
+            "created_at"
+        ]
+    },
+    "form_templates": {
+        "columns_count": 9,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "tenant_id",
+            "name",
+            "description",
+            "fields",
+            "is_active",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "hosting_profiles": {
+        "columns_count": 20,
+        "has_project_id": true,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "name",
+            "panel_type",
+            "hostname",
+            "port",
+            "cpanel_username",
+            "api_token",
+            "domain",
+            "public_html_path"
+        ]
+    },
+    "job_batches": {
+        "columns_count": 10,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "name",
+            "total_jobs",
+            "pending_jobs",
+            "failed_jobs",
+            "failed_job_ids",
+            "options",
+            "cancelled_at",
+            "created_at",
+            "finished_at"
+        ]
+    },
+    "jobs": {
+        "columns_count": 7,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "queue",
+            "payload",
+            "attempts",
+            "reserved_at",
+            "available_at",
+            "created_at"
+        ]
+    },
+    "languages": {
+        "columns_count": 10,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "name",
+            "code",
+            "locale",
+            "flag",
+            "is_default",
+            "is_active",
+            "sort_order",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "menu_items": {
+        "columns_count": 19,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "menu_id",
+            "title",
+            "url",
+            "target",
+            "icon",
+            "image",
+            "badge",
+            "badge_color",
+            "linkable_type"
+        ]
+    },
+    "menus": {
+        "columns_count": 9,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "name",
+            "slug",
+            "location",
+            "is_active",
+            "tenant_id",
+            "project_id",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "migrations": {
+        "columns_count": 3,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "migration",
+            "batch"
+        ]
+    },
+    "modal_forms": {
+        "columns_count": 15,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "tenant_id",
+            "name",
+            "title",
+            "description",
+            "form_template_id",
+            "config",
+            "is_active",
+            "trigger_type"
+        ]
+    },
+    "order_items": {
+        "columns_count": 14,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "project_id",
+            "order_id",
+            "product_id",
+            "product_variation_id",
+            "product_name",
+            "product_sku",
+            "product_attributes",
+            "unit_price"
+        ]
+    },
+    "order_status_histories": {
+        "columns_count": 10,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "project_id",
+            "order_id",
+            "from_status",
+            "to_status",
+            "notes",
+            "user_id",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "orders": {
+        "columns_count": 24,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "project_id",
+            "user_id",
+            "order_number",
+            "status",
+            "subtotal",
+            "tax_amount",
+            "shipping_amount",
+            "discount_amount"
+        ]
+    },
+    "page_sections": {
+        "columns_count": 8,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "page_id",
+            "type",
+            "settings",
+            "order",
+            "is_active",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "permissions": {
+        "columns_count": 7,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "name",
+            "display_name",
+            "description",
+            "group",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "posts": {
+        "columns_count": 21,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "tenant_id",
+            "title",
+            "slug",
+            "excerpt",
+            "content",
+            "featured_image",
+            "post_type",
+            "template"
+        ]
+    },
+    "product_attribute_product": {
+        "columns_count": 6,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "product_id",
+            "product_attribute_id",
+            "product_attribute_value_id",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "product_attribute_value_mappings": {
+        "columns_count": 8,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "project_id",
+            "product_id",
+            "product_attribute_id",
+            "product_attribute_value_id",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "product_attribute_values": {
+        "columns_count": 11,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "project_id",
+            "product_attribute_id",
+            "value",
+            "slug",
+            "display_value",
+            "color_code",
+            "sort_order",
+            "created_at"
+        ]
+    },
+    "product_attributes": {
+        "columns_count": 12,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "project_id",
+            "attribute_group_id",
+            "name",
+            "slug",
+            "type",
+            "is_filterable",
+            "is_required",
+            "sort_order"
+        ]
+    },
+    "product_categories": {
+        "columns_count": 17,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "project_id",
+            "name",
+            "slug",
+            "description",
+            "image",
+            "parent_id",
+            "level",
+            "path"
+        ]
+    },
+    "product_category_product": {
+        "columns_count": 5,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "product_id",
+            "product_category_id",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "product_combos": {
+        "columns_count": 12,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "tenant_id",
+            "product_id",
+            "combo_product_id",
+            "variant_id",
+            "combo_price",
+            "discount_amount",
+            "sort_order",
+            "is_active"
+        ]
+    },
+    "product_reviews": {
+        "columns_count": 12,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "project_id",
+            "product_id",
+            "reviewer_name",
+            "reviewer_email",
+            "rating",
+            "comment",
+            "status",
+            "is_verified"
+        ]
+    },
+    "product_variations": {
+        "columns_count": 12,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "project_id",
+            "product_id",
+            "sku",
+            "price",
+            "sale_price",
+            "stock_quantity",
+            "attributes",
+            "is_active"
+        ]
+    },
+    "products_enhanced": {
+        "columns_count": 33,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "project_id",
+            "name",
+            "slug",
+            "short_description",
+            "description",
+            "sku",
+            "price",
+            "sale_price"
+        ]
+    },
+    "project_members": {
+        "columns_count": 6,
+        "has_project_id": true,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "employee_id",
+            "role",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "project_permissions": {
+        "columns_count": 9,
+        "has_project_id": true,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "module",
+            "can_view",
+            "can_create",
+            "can_edit",
+            "can_delete",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "project_settings": {
+        "columns_count": 6,
+        "has_project_id": true,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "key",
+            "value",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "project_stages": {
+        "columns_count": 10,
+        "has_project_id": true,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "service_stage_id",
+            "name",
+            "code",
+            "order",
+            "status",
+            "completed_at",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "project_ticket_replies": {
+        "columns_count": 6,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_ticket_id",
+            "user_id",
+            "content",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "project_tickets": {
+        "columns_count": 9,
+        "has_project_id": true,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "creator_id",
+            "title",
+            "description",
+            "status",
+            "last_reply_at",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "projects": {
+        "columns_count": 42,
+        "has_project_id": false,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "contract_id",
+            "name",
+            "project_type",
+            "is_multi_tenancy",
+            "code",
+            "subdomain",
+            "external_domain",
+            "sync_enabled"
+        ]
+    },
+    "reviews": {
+        "columns_count": 16,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "tenant_id",
+            "post_id",
+            "reviewer_name",
+            "reviewer_email",
+            "reviewer_avatar",
+            "reviewer_title",
+            "content",
+            "rating"
+        ]
+    },
+    "role_permissions": {
+        "columns_count": 5,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "role_id",
+            "permission_id",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "roles": {
+        "columns_count": 9,
+        "has_project_id": false,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "name",
+            "display_name",
+            "description",
+            "is_default",
+            "level",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "service_stages": {
+        "columns_count": 8,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "service_id",
+            "name",
+            "code",
+            "order",
+            "status",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "services": {
+        "columns_count": 9,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "department_id",
+            "name",
+            "code",
+            "description",
+            "form_schema",
+            "status",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "sessions": {
+        "columns_count": 6,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "user_id",
+            "ip_address",
+            "user_agent",
+            "payload",
+            "last_activity"
+        ]
+    },
+    "settings": {
+        "columns_count": 12,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "project_id",
+            "key",
+            "payload",
+            "value",
+            "type",
+            "group",
+            "locked",
+            "description"
+        ]
+    },
+    "shipping_carriers": {
+        "columns_count": 8,
+        "has_project_id": true,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "name",
+            "code",
+            "type",
+            "status",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "shipping_rate_versions": {
+        "columns_count": 8,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "shipping_carrier_id",
+            "version_name",
+            "start_date",
+            "end_date",
+            "is_active",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "shipping_rule_conditions": {
+        "columns_count": 9,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "shipping_rule_id",
+            "condition_type",
+            "operator",
+            "value_1",
+            "value_2",
+            "zone_id",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "shipping_rules": {
+        "columns_count": 10,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "shipping_rate_version_id",
+            "name",
+            "priority",
+            "action_type",
+            "fee",
+            "is_surcharge",
+            "status",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "shipping_zone_locations": {
+        "columns_count": 7,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "shipping_zone_id",
+            "province_code",
+            "district_code",
+            "ward_code",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "shipping_zones": {
+        "columns_count": 6,
+        "has_project_id": true,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "name",
+            "status",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "system_backups": {
+        "columns_count": 10,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "name",
+            "type",
+            "path",
+            "disk",
+            "size",
+            "status",
+            "error_message",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "system_logs": {
+        "columns_count": 7,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "level",
+            "channel",
+            "message",
+            "context",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "tasks": {
+        "columns_count": 21,
+        "has_project_id": true,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "user_id",
+            "assigned_to",
+            "project_id",
+            "title",
+            "description",
+            "dev_id",
+            "status",
+            "priority",
+            "gold"
+        ]
+    },
+    "taxonomies": {
+        "columns_count": 14,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "project_id",
+            "tenant_id",
+            "name",
+            "slug",
+            "taxonomy",
+            "description",
+            "parent_id",
+            "order",
+            "status"
+        ]
+    },
+    "tenants": {
+        "columns_count": 9,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "name",
+            "code",
+            "domain",
+            "database_name",
+            "settings",
+            "status",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "term_relationships": {
+        "columns_count": 3,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "object_id",
+        "sample_columns": [
+            "object_id",
+            "term_taxonomy_id",
+            "order"
+        ]
+    },
+    "translations": {
+        "columns_count": 8,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "translatable_type",
+            "translatable_id",
+            "locale",
+            "field",
+            "value",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "user_addresses": {
+        "columns_count": 14,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "user_id",
+            "receiver_name",
+            "receiver_phone",
+            "province_code",
+            "ward_code",
+            "province_name",
+            "district_name",
+            "ward_name",
+            "address_detail"
+        ]
+    },
+    "user_permissions": {
+        "columns_count": 5,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "user_id",
+            "permission_id",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "user_roles": {
+        "columns_count": 5,
+        "has_project_id": false,
+        "has_tenant_id": false,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "user_id",
+            "role_id",
+            "created_at",
+            "updated_at"
+        ]
+    },
+    "users": {
+        "columns_count": 39,
+        "has_project_id": false,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "name",
+            "username",
+            "email",
+            "gold",
+            "email_verified_at",
+            "password",
+            "avatar",
+            "phone",
+            "address"
+        ]
+    },
+    "visitor_logs": {
+        "columns_count": 8,
+        "has_project_id": false,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "ip_address",
+            "user_agent",
+            "url",
+            "method",
+            "user_id",
+            "visited_at"
+        ]
+    },
+    "widget_templates": {
+        "columns_count": 15,
+        "has_project_id": false,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "tenant_id",
+            "name",
+            "type",
+            "category",
+            "description",
+            "icon",
+            "preview_image",
+            "config_schema",
+            "default_settings"
+        ]
+    },
+    "widgets": {
+        "columns_count": 17,
+        "has_project_id": true,
+        "has_tenant_id": true,
+        "primary_key": "id",
+        "sample_columns": [
+            "id",
+            "widget_code",
+            "tenant_id",
+            "project_id",
+            "name",
+            "type",
+            "area",
+            "settings",
+            "rules",
+            "data"
+        ]
+    }
+}

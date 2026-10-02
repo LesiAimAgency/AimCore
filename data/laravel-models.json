@@ -1,0 +1,2408 @@
+[
+    {
+        "model": "ActivityLog",
+        "table": "activitylogs",
+        "is_project_scoped": true,
+        "fillable_count": 9,
+        "fillable": [
+            "user_id",
+            "project_id",
+            "action",
+            "model",
+            "model_id",
+            "description",
+            "properties",
+            "ip_address",
+            "user_agent"
+        ],
+        "relationships": [
+            {
+                "method": "user",
+                "type": "belongsTo",
+                "related": "User"
+            },
+            {
+                "method": "project",
+                "type": "belongsTo",
+                "related": "Project"
+            }
+        ]
+    },
+    {
+        "model": "Agent",
+        "table": "agents",
+        "is_project_scoped": false,
+        "fillable_count": 12,
+        "fillable": [
+            "name",
+            "code",
+            "phone",
+            "email",
+            "address",
+            "contact_person",
+            "region",
+            "type",
+            "commission_rate",
+            "is_active",
+            "notes",
+            "user_id"
+        ],
+        "relationships": [
+            {
+                "method": "user",
+                "type": "belongsTo",
+                "related": "User"
+            },
+            {
+                "method": "products",
+                "type": "belongsToMany",
+                "related": "Product"
+            },
+            {
+                "method": "orders",
+                "type": "hasMany",
+                "related": "Order"
+            }
+        ]
+    },
+    {
+        "model": "ArchiveTemplate",
+        "table": "archivetemplates",
+        "is_project_scoped": false,
+        "fillable_count": 11,
+        "fillable": [
+            "tenant_id",
+            "name",
+            "type",
+            "slug",
+            "description",
+            "template_code",
+            "template_css",
+            "template_js",
+            "config",
+            "is_default",
+            "is_active"
+        ],
+        "relationships": []
+    },
+    {
+        "model": "AttributeGroup",
+        "table": "attributegroups",
+        "is_project_scoped": false,
+        "fillable_count": 5,
+        "fillable": [
+            "name",
+            "slug",
+            "description",
+            "sort_order",
+            "is_active"
+        ],
+        "relationships": [
+            {
+                "method": "attributes",
+                "type": "hasMany",
+                "related": "ProductAttribute"
+            }
+        ]
+    },
+    {
+        "model": "Branch",
+        "table": "branchs",
+        "is_project_scoped": false,
+        "fillable_count": 4,
+        "fillable": [
+            "tenant_id",
+            "name",
+            "address",
+            "map_embed"
+        ],
+        "relationships": []
+    },
+    {
+        "model": "Brand",
+        "table": "brands",
+        "is_project_scoped": true,
+        "fillable_count": 6,
+        "fillable": [
+            "name",
+            "slug",
+            "description",
+            "logo",
+            "is_active",
+            "tenant_id"
+        ],
+        "relationships": [
+            {
+                "method": "products",
+                "type": "hasMany",
+                "related": "Product"
+            }
+        ]
+    },
+    {
+        "model": "Brief",
+        "table": "briefs",
+        "is_project_scoped": false,
+        "fillable_count": 7,
+        "fillable": [
+            "title",
+            "client_name",
+            "requirements",
+            "budget",
+            "deadline",
+            "status",
+            "account_id"
+        ],
+        "relationships": [
+            {
+                "method": "account",
+                "type": "belongsTo",
+                "related": "User"
+            }
+        ]
+    },
+    {
+        "model": "Category",
+        "table": "product_categories",
+        "is_project_scoped": false,
+        "fillable_count": 0,
+        "fillable": [],
+        "relationships": []
+    },
+    {
+        "model": "Contract",
+        "table": "contracts",
+        "is_project_scoped": false,
+        "fillable_count": 25,
+        "fillable": [
+            "customer_id",
+            "title",
+            "client_name",
+            "service_type",
+            "start_date",
+            "end_date",
+            "domain_name",
+            "domain_purchase_date",
+            "hosting_provider",
+            "hosting_start_date",
+            "contract_value",
+            "attachments",
+            "status",
+            "description",
+            "technical_requirements",
+            "features",
+            "attachments",
+            "has_client_resources",
+            "client_resource_details",
+            "contract_code",
+            "representative_name",
+            "representative_title",
+            "client_address",
+            "tax_code",
+            "client_phone"
+        ],
+        "relationships": [
+            {
+                "method": "customer",
+                "type": "belongsTo",
+                "related": "Customer"
+            },
+            {
+                "method": "projects",
+                "type": "hasMany",
+                "related": "Project"
+            }
+        ]
+    },
+    {
+        "model": "Coupon",
+        "table": "coupons",
+        "is_project_scoped": false,
+        "fillable_count": 12,
+        "fillable": [
+            "code",
+            "name",
+            "type",
+            "value",
+            "min_order_value",
+            "max_discount_value",
+            "start_date",
+            "end_date",
+            "usage_limit",
+            "usage_limit_per_user",
+            "usage_count",
+            "is_active"
+        ],
+        "relationships": []
+    },
+    {
+        "model": "Customer",
+        "table": "customers",
+        "is_project_scoped": false,
+        "fillable_count": 11,
+        "fillable": [
+            "type",
+            "name",
+            "email",
+            "phone",
+            "tax_code",
+            "address",
+            "id_card_details",
+            "representative_name",
+            "representative_phone",
+            "representative_title",
+            "note"
+        ],
+        "relationships": [
+            {
+                "method": "projects",
+                "type": "hasMany",
+                "related": "Project"
+            },
+            {
+                "method": "contracts",
+                "type": "hasMany",
+                "related": "Contract"
+            }
+        ]
+    },
+    {
+        "model": "Department",
+        "table": "departments",
+        "is_project_scoped": false,
+        "fillable_count": 5,
+        "fillable": [
+            "name",
+            "code",
+            "description",
+            "manager_id",
+            "status"
+        ],
+        "relationships": [
+            {
+                "method": "manager",
+                "type": "belongsTo",
+                "related": "User"
+            },
+            {
+                "method": "services",
+                "type": "hasMany",
+                "related": "Service"
+            }
+        ]
+    },
+    {
+        "model": "DeploymentHistory",
+        "table": "deployment_history",
+        "is_project_scoped": false,
+        "fillable_count": 0,
+        "fillable": [],
+        "relationships": [
+            {
+                "method": "project",
+                "type": "belongsTo",
+                "related": "Project"
+            },
+            {
+                "method": "hostingProfile",
+                "type": "belongsTo",
+                "related": "HostingProfile"
+            },
+            {
+                "method": "deployedBy",
+                "type": "belongsTo",
+                "related": "User"
+            },
+            {
+                "method": "logs",
+                "type": "hasMany",
+                "related": "DeploymentLog"
+            }
+        ]
+    },
+    {
+        "model": "DeploymentLog",
+        "table": "deploymentlogs",
+        "is_project_scoped": false,
+        "fillable_count": 0,
+        "fillable": [],
+        "relationships": [
+            {
+                "method": "deploymentHistory",
+                "type": "belongsTo",
+                "related": "DeploymentHistory"
+            }
+        ]
+    },
+    {
+        "model": "Employee",
+        "table": "employees",
+        "is_project_scoped": true,
+        "fillable_count": 13,
+        "fillable": [
+            "user_id",
+            "code",
+            "name",
+            "email",
+            "phone",
+            "position",
+            "role",
+            "department",
+            "superadmin_role",
+            "is_department_manager",
+            "department_role",
+            "manager_id",
+            "is_active"
+        ],
+        "relationships": [
+            {
+                "method": "user",
+                "type": "belongsTo",
+                "related": "User"
+            },
+            {
+                "method": "manager",
+                "type": "belongsTo",
+                "related": "Employee"
+            },
+            {
+                "method": "subordinates",
+                "type": "hasMany",
+                "related": "Employee"
+            },
+            {
+                "method": "contracts",
+                "type": "hasMany",
+                "related": "Contract"
+            },
+            {
+                "method": "projects",
+                "type": "belongsToMany",
+                "related": "Project"
+            },
+            {
+                "method": "departmentSubordinates",
+                "type": "hasMany",
+                "related": "Employee"
+            }
+        ]
+    },
+    {
+        "model": "FeaturePack",
+        "table": "featurepacks",
+        "is_project_scoped": false,
+        "fillable_count": 5,
+        "fillable": [
+            "name",
+            "code",
+            "group_name",
+            "description",
+            "is_active"
+        ],
+        "relationships": []
+    },
+    {
+        "model": "FlashSaleCampaign",
+        "table": "flashsalecampaigns",
+        "is_project_scoped": false,
+        "fillable_count": 6,
+        "fillable": [
+            "name",
+            "description",
+            "starts_at",
+            "ends_at",
+            "status",
+            "apply_to_all"
+        ],
+        "relationships": [
+            {
+                "method": "items",
+                "type": "hasMany",
+                "related": "FlashSaleItem"
+            },
+            {
+                "method": "productItems",
+                "type": "hasMany",
+                "related": "FlashSaleItem"
+            },
+            {
+                "method": "categoryItems",
+                "type": "hasMany",
+                "related": "FlashSaleItem"
+            }
+        ]
+    },
+    {
+        "model": "FlashSaleItem",
+        "table": "flashsaleitems",
+        "is_project_scoped": false,
+        "fillable_count": 7,
+        "fillable": [
+            "campaign_id",
+            "product_id",
+            "category_id",
+            "discount_type",
+            "discount_value",
+            "sale_limit",
+            "sold_count"
+        ],
+        "relationships": [
+            {
+                "method": "campaign",
+                "type": "belongsTo",
+                "related": "FlashSaleCampaign"
+            },
+            {
+                "method": "product",
+                "type": "belongsTo",
+                "related": "Product"
+            },
+            {
+                "method": "category",
+                "type": "belongsTo",
+                "related": "Category"
+            }
+        ]
+    },
+    {
+        "model": "Font",
+        "table": "fonts",
+        "is_project_scoped": true,
+        "fillable_count": 8,
+        "fillable": [
+            "name",
+            "type",
+            "weights",
+            "load_string",
+            "file_path",
+            "is_active",
+            "is_default",
+            "tenant_id"
+        ],
+        "relationships": []
+    },
+    {
+        "model": "FormSubmission",
+        "table": "formsubmissions",
+        "is_project_scoped": true,
+        "fillable_count": 16,
+        "fillable": [
+            "project_id",
+            "tenant_id",
+            "form_name",
+            "form_template_id",
+            "modal_form_id",
+            "data",
+            "ip_address",
+            "user_agent",
+            "status",
+            "admin_note",
+            "source",
+            "modal",
+            "widget",
+            "page",
+            "contact",
+            "submitted_at"
+        ],
+        "relationships": [
+            {
+                "method": "formTemplate",
+                "type": "belongsTo",
+                "related": "FormTemplate"
+            },
+            {
+                "method": "modalForm",
+                "type": "belongsTo",
+                "related": "ModalForm"
+            }
+        ]
+    },
+    {
+        "model": "FormTemplate",
+        "table": "formtemplates",
+        "is_project_scoped": true,
+        "fillable_count": 6,
+        "fillable": [
+            "project_id",
+            "tenant_id",
+            "name",
+            "description",
+            "fields",
+            "is_active"
+        ],
+        "relationships": [
+            {
+                "method": "modalForms",
+                "type": "hasMany",
+                "related": "ModalForm"
+            },
+            {
+                "method": "submissions",
+                "type": "hasMany",
+                "related": "FormSubmission"
+            }
+        ]
+    },
+    {
+        "model": "HostingProfile",
+        "table": "hostingprofiles",
+        "is_project_scoped": false,
+        "fillable_count": 0,
+        "fillable": [],
+        "relationships": [
+            {
+                "method": "project",
+                "type": "belongsTo",
+                "related": "Project"
+            },
+            {
+                "method": "deployments",
+                "type": "hasMany",
+                "related": "DeploymentHistory"
+            }
+        ]
+    },
+    {
+        "model": "Language",
+        "table": "languages",
+        "is_project_scoped": false,
+        "fillable_count": 7,
+        "fillable": [
+            "name",
+            "code",
+            "locale",
+            "flag",
+            "is_default",
+            "is_active",
+            "sort_order"
+        ],
+        "relationships": []
+    },
+    {
+        "model": "Menu",
+        "table": "menus",
+        "is_project_scoped": true,
+        "fillable_count": 6,
+        "fillable": [
+            "project_id",
+            "tenant_id",
+            "name",
+            "slug",
+            "location",
+            "is_active"
+        ],
+        "relationships": [
+            {
+                "method": "items",
+                "type": "hasMany",
+                "related": "MenuItem"
+            },
+            {
+                "method": "allItems",
+                "type": "hasMany",
+                "related": "MenuItem"
+            }
+        ]
+    },
+    {
+        "model": "MenuItem",
+        "table": "menuitems",
+        "is_project_scoped": true,
+        "fillable_count": 14,
+        "fillable": [
+            "menu_id",
+            "parent_id",
+            "title",
+            "url",
+            "target",
+            "icon",
+            "image",
+            "badge",
+            "badge_color",
+            "linkable_type",
+            "linkable_id",
+            "order",
+            "tenant_id",
+            "project_id"
+        ],
+        "relationships": [
+            {
+                "method": "menu",
+                "type": "belongsTo",
+                "related": "Menu"
+            },
+            {
+                "method": "children",
+                "type": "hasMany",
+                "related": "MenuItem"
+            },
+            {
+                "method": "parent",
+                "type": "belongsTo",
+                "related": "MenuItem"
+            }
+        ]
+    },
+    {
+        "model": "ModalForm",
+        "table": "modalforms",
+        "is_project_scoped": true,
+        "fillable_count": 12,
+        "fillable": [
+            "project_id",
+            "tenant_id",
+            "name",
+            "title",
+            "description",
+            "form_template_id",
+            "config",
+            "is_active",
+            "trigger_type",
+            "trigger_delay",
+            "trigger_scroll",
+            "show_frequency"
+        ],
+        "relationships": [
+            {
+                "method": "formTemplate",
+                "type": "belongsTo",
+                "related": "FormTemplate"
+            },
+            {
+                "method": "submissions",
+                "type": "hasMany",
+                "related": "FormSubmission"
+            }
+        ]
+    },
+    {
+        "model": "Order",
+        "table": "orders",
+        "is_project_scoped": true,
+        "fillable_count": 29,
+        "fillable": [
+            "order_number",
+            "status",
+            "subtotal",
+            "tax_amount",
+            "shipping_amount",
+            "discount_amount",
+            "total_amount",
+            "currency",
+            "customer_name",
+            "customer_email",
+            "customer_phone",
+            "billing_address",
+            "shipping_address",
+            "payment_method",
+            "payment_status",
+            "paid_at",
+            "customer_notes",
+            "internal_notes",
+            "tenant_id",
+            "project_id",
+            "user_id",
+            "total",
+            "shipping_fee",
+            "discount",
+            "customer_note",
+            "coupon_code",
+            "shipping_province",
+            "shipping_district",
+            "shipping_ward"
+        ],
+        "relationships": [
+            {
+                "method": "items",
+                "type": "hasMany",
+                "related": "OrderItem"
+            },
+            {
+                "method": "statusHistories",
+                "type": "hasMany",
+                "related": "OrderStatusHistory"
+            },
+            {
+                "method": "user",
+                "type": "belongsTo",
+                "related": "User"
+            },
+            {
+                "method": "agent",
+                "type": "belongsTo",
+                "related": "Agent"
+            }
+        ]
+    },
+    {
+        "model": "OrderItem",
+        "table": "orderitems",
+        "is_project_scoped": true,
+        "fillable_count": 17,
+        "fillable": [
+            "order_id",
+            "product_id",
+            "product_variation_id",
+            "product_name",
+            "product_sku",
+            "product_attributes",
+            "unit_price",
+            "quantity",
+            "total_price",
+            "tenant_id",
+            "project_id",
+            "price",
+            "total",
+            "sku",
+            "variant_id",
+            "variant_label",
+            "image"
+        ],
+        "relationships": [
+            {
+                "method": "order",
+                "type": "belongsTo",
+                "related": "Order"
+            },
+            {
+                "method": "product",
+                "type": "belongsTo",
+                "related": "Product"
+            }
+        ]
+    },
+    {
+        "model": "OrderReport",
+        "table": "order_reports",
+        "is_project_scoped": false,
+        "fillable_count": 7,
+        "fillable": [
+            "order_id",
+            "total_sales",
+            "total_orders",
+            "average_order_value",
+            "total_customers",
+            "report_date",
+            "report_type"
+        ],
+        "relationships": [
+            {
+                "method": "order",
+                "type": "belongsTo",
+                "related": "Order"
+            }
+        ]
+    },
+    {
+        "model": "OrderStatusHistory",
+        "table": "orderstatushistorys",
+        "is_project_scoped": true,
+        "fillable_count": 5,
+        "fillable": [
+            "order_id",
+            "from_status",
+            "to_status",
+            "notes",
+            "user_id"
+        ],
+        "relationships": [
+            {
+                "method": "order",
+                "type": "belongsTo",
+                "related": "Order"
+            },
+            {
+                "method": "user",
+                "type": "belongsTo",
+                "related": "User"
+            }
+        ]
+    },
+    {
+        "model": "Page",
+        "table": "posts",
+        "is_project_scoped": false,
+        "fillable_count": 15,
+        "fillable": [
+            "title",
+            "slug",
+            "content",
+            "excerpt",
+            "featured_image",
+            "post_type",
+            "custom_css",
+            "template",
+            "status",
+            "meta_title",
+            "meta_description",
+            "seo_data",
+            "views",
+            "published_at",
+            "author_id"
+        ],
+        "relationships": [
+            {
+                "method": "sections",
+                "type": "hasMany",
+                "related": "PageSection"
+            },
+            {
+                "method": "activeSections",
+                "type": "hasMany",
+                "related": "PageSection"
+            }
+        ]
+    },
+    {
+        "model": "PageSection",
+        "table": "pagesections",
+        "is_project_scoped": false,
+        "fillable_count": 5,
+        "fillable": [
+            "page_id",
+            "type",
+            "settings",
+            "order",
+            "is_active"
+        ],
+        "relationships": [
+            {
+                "method": "page",
+                "type": "belongsTo",
+                "related": "Page"
+            }
+        ]
+    },
+    {
+        "model": "Permission",
+        "table": "permissions",
+        "is_project_scoped": false,
+        "fillable_count": 4,
+        "fillable": [
+            "name",
+            "display_name",
+            "description",
+            "group"
+        ],
+        "relationships": [
+            {
+                "method": "roles",
+                "type": "belongsToMany",
+                "related": "Role"
+            },
+            {
+                "method": "users",
+                "type": "belongsToMany",
+                "related": "User"
+            }
+        ]
+    },
+    {
+        "model": "Post",
+        "table": "posts",
+        "is_project_scoped": true,
+        "fillable_count": 18,
+        "fillable": [
+            "project_id",
+            "title",
+            "slug",
+            "excerpt",
+            "content",
+            "featured_image",
+            "post_type",
+            "template",
+            "status",
+            "meta_title",
+            "meta_description",
+            "seo_data",
+            "views",
+            "published_at",
+            "author_id",
+            "tenant_id",
+            "language",
+            "meta_data"
+        ],
+        "relationships": [
+            {
+                "method": "category",
+                "type": "belongsToMany",
+                "related": "Taxonomy"
+            },
+            {
+                "method": "author",
+                "type": "belongsTo",
+                "related": "User"
+            },
+            {
+                "method": "taxonomies",
+                "type": "belongsToMany",
+                "related": "Taxonomy"
+            },
+            {
+                "method": "sections",
+                "type": "hasMany",
+                "related": "PageSection"
+            },
+            {
+                "method": "reviews",
+                "type": "hasMany",
+                "related": "Review"
+            },
+            {
+                "method": "tags",
+                "type": "belongsToMany",
+                "related": "Taxonomy"
+            }
+        ]
+    },
+    {
+        "model": "Product",
+        "table": "products_enhanced",
+        "is_project_scoped": true,
+        "fillable_count": 33,
+        "fillable": [
+            "project_id",
+            "tenant_id",
+            "name",
+            "slug",
+            "short_description",
+            "description",
+            "sku",
+            "price",
+            "sale_price",
+            "has_price",
+            "stock_quantity",
+            "manage_stock",
+            "stock_status",
+            "featured_image",
+            "gallery",
+            "weight",
+            "dimensions",
+            "product_category_id",
+            "brand_id",
+            "status",
+            "is_featured",
+            "badges",
+            "meta_title",
+            "meta_description",
+            "schema_type",
+            "canonical_url",
+            "noindex",
+            "settings",
+            "views",
+            "rating_average",
+            "rating_count",
+            "product_type",
+            "language"
+        ],
+        "relationships": [
+            {
+                "method": "category",
+                "type": "belongsTo",
+                "related": "ProductCategory"
+            },
+            {
+                "method": "categories",
+                "type": "belongsToMany",
+                "related": "ProductCategory"
+            },
+            {
+                "method": "brand",
+                "type": "belongsTo",
+                "related": "Brand"
+            },
+            {
+                "method": "brands",
+                "type": "belongsToMany",
+                "related": "Brand"
+            },
+            {
+                "method": "attributeMappings",
+                "type": "hasMany",
+                "related": "ProductAttributeValueMapping"
+            },
+            {
+                "method": "attributes",
+                "type": "belongsToMany",
+                "related": "ProductAttribute"
+            },
+            {
+                "method": "attributeValues",
+                "type": "belongsToMany",
+                "related": "ProductAttributeValue"
+            },
+            {
+                "method": "reviews",
+                "type": "hasMany",
+                "related": "ProductReview"
+            },
+            {
+                "method": "variations",
+                "type": "hasMany",
+                "related": "ProductVariation"
+            }
+        ]
+    },
+    {
+        "model": "ProductAttribute",
+        "table": "productattributes",
+        "is_project_scoped": true,
+        "fillable_count": 8,
+        "fillable": [
+            "attribute_group_id",
+            "name",
+            "slug",
+            "type",
+            "is_filterable",
+            "is_required",
+            "sort_order",
+            "tenant_id"
+        ],
+        "relationships": [
+            {
+                "method": "group",
+                "type": "belongsTo",
+                "related": "AttributeGroup"
+            },
+            {
+                "method": "values",
+                "type": "hasMany",
+                "related": "ProductAttributeValue"
+            },
+            {
+                "method": "products",
+                "type": "belongsToMany",
+                "related": "Product"
+            }
+        ]
+    },
+    {
+        "model": "ProductAttributeValue",
+        "table": "productattributevalues",
+        "is_project_scoped": false,
+        "fillable_count": 6,
+        "fillable": [
+            "product_attribute_id",
+            "value",
+            "slug",
+            "display_value",
+            "color_code",
+            "sort_order"
+        ],
+        "relationships": [
+            {
+                "method": "attribute",
+                "type": "belongsTo",
+                "related": "ProductAttribute"
+            },
+            {
+                "method": "products",
+                "type": "belongsToMany",
+                "related": "Product"
+            }
+        ]
+    },
+    {
+        "model": "ProductAttributeValueMapping",
+        "table": "product_attribute_value_mappings",
+        "is_project_scoped": false,
+        "fillable_count": 3,
+        "fillable": [
+            "product_id",
+            "product_attribute_id",
+            "product_attribute_value_id"
+        ],
+        "relationships": [
+            {
+                "method": "product",
+                "type": "belongsTo",
+                "related": "Product"
+            },
+            {
+                "method": "attribute",
+                "type": "belongsTo",
+                "related": "ProductAttribute"
+            },
+            {
+                "method": "attributeValue",
+                "type": "belongsTo",
+                "related": "ProductAttributeValue"
+            }
+        ]
+    },
+    {
+        "model": "ProductCategory",
+        "table": "product_categories",
+        "is_project_scoped": true,
+        "fillable_count": 13,
+        "fillable": [
+            "project_id",
+            "tenant_id",
+            "name",
+            "slug",
+            "description",
+            "image",
+            "parent_id",
+            "level",
+            "path",
+            "sort_order",
+            "is_active",
+            "meta_title",
+            "meta_description"
+        ],
+        "relationships": [
+            {
+                "method": "parent",
+                "type": "belongsTo",
+                "related": "ProductCategory"
+            },
+            {
+                "method": "children",
+                "type": "hasMany",
+                "related": "ProductCategory"
+            },
+            {
+                "method": "products",
+                "type": "hasMany",
+                "related": "Product"
+            }
+        ]
+    },
+    {
+        "model": "ProductCombo",
+        "table": "product_combos",
+        "is_project_scoped": true,
+        "fillable_count": 9,
+        "fillable": [
+            "project_id",
+            "tenant_id",
+            "product_id",
+            "combo_product_id",
+            "variant_id",
+            "combo_price",
+            "discount_amount",
+            "sort_order",
+            "is_active"
+        ],
+        "relationships": [
+            {
+                "method": "product",
+                "type": "belongsTo",
+                "related": "Product"
+            },
+            {
+                "method": "comboProduct",
+                "type": "belongsTo",
+                "related": "Product"
+            },
+            {
+                "method": "variant",
+                "type": "belongsTo",
+                "related": "ProductVariation"
+            }
+        ]
+    },
+    {
+        "model": "ProductReview",
+        "table": "productreviews",
+        "is_project_scoped": true,
+        "fillable_count": 9,
+        "fillable": [
+            "product_id",
+            "reviewer_name",
+            "reviewer_email",
+            "rating",
+            "comment",
+            "status",
+            "is_verified",
+            "tenant_id",
+            "project_id"
+        ],
+        "relationships": [
+            {
+                "method": "product",
+                "type": "belongsTo",
+                "related": "Product"
+            }
+        ]
+    },
+    {
+        "model": "ProductVariant",
+        "table": "productvariants",
+        "is_project_scoped": false,
+        "fillable_count": 0,
+        "fillable": [],
+        "relationships": []
+    },
+    {
+        "model": "ProductVariation",
+        "table": "productvariations",
+        "is_project_scoped": false,
+        "fillable_count": 9,
+        "fillable": [
+            "product_id",
+            "sku",
+            "price",
+            "sale_price",
+            "stock_quantity",
+            "attributes",
+            "is_active",
+            "image",
+            "gallery"
+        ],
+        "relationships": [
+            {
+                "method": "product",
+                "type": "belongsTo",
+                "related": "ProjectProduct"
+            }
+        ]
+    },
+    {
+        "model": "Project",
+        "table": "projects",
+        "is_project_scoped": false,
+        "fillable_count": 40,
+        "fillable": [
+            "tenant_id",
+            "customer_id",
+            "contract_id",
+            "name",
+            "code",
+            "subdomain",
+            "remote_url",
+            "api_token",
+            "external_domain",
+            "sync_enabled",
+            "client_name",
+            "start_date",
+            "deadline",
+            "status",
+            "total_gold",
+            "contract_value",
+            "contract_file",
+            "technical_requirements",
+            "features",
+            "cms_features",
+            "deployment_config",
+            "deployment_status",
+            "environment",
+            "notes",
+            "admin_id",
+            "employee_ids",
+            "created_by",
+            "project_admin_username",
+            "project_admin_password",
+            "project_admin_password_plain",
+            "password_updated_at",
+            "password_updated_by",
+            "approved_at",
+            "initialized_at",
+            "department_id",
+            "service_id",
+            "current_stage_id",
+            "dynamic_form_data",
+            "project_type",
+            "is_multi_tenancy"
+        ],
+        "relationships": [
+            {
+                "method": "tenant",
+                "type": "belongsTo",
+                "related": "Tenant"
+            },
+            {
+                "method": "customer",
+                "type": "belongsTo",
+                "related": "Customer"
+            },
+            {
+                "method": "contract",
+                "type": "belongsTo",
+                "related": "Contract"
+            },
+            {
+                "method": "admin",
+                "type": "belongsTo",
+                "related": "User"
+            },
+            {
+                "method": "createdBy",
+                "type": "belongsTo",
+                "related": "User"
+            },
+            {
+                "method": "tasks",
+                "type": "hasMany",
+                "related": "Task"
+            },
+            {
+                "method": "department",
+                "type": "belongsTo",
+                "related": "Department"
+            },
+            {
+                "method": "service",
+                "type": "belongsTo",
+                "related": "Service"
+            },
+            {
+                "method": "currentStage",
+                "type": "belongsTo",
+                "related": "ProjectStage"
+            },
+            {
+                "method": "stages",
+                "type": "hasMany",
+                "related": "ProjectStage"
+            },
+            {
+                "method": "hostingProfiles",
+                "type": "hasMany",
+                "related": "HostingProfile"
+            },
+            {
+                "method": "latestDeployment",
+                "type": "hasOne",
+                "related": "DeploymentHistory"
+            },
+            {
+                "method": "passwordUpdatedBy",
+                "type": "belongsTo",
+                "related": "User"
+            },
+            {
+                "method": "passwordAudits",
+                "type": "hasMany",
+                "related": "ProjectPasswordAudit"
+            },
+            {
+                "method": "permissions",
+                "type": "hasMany",
+                "related": "ProjectPermission"
+            },
+            {
+                "method": "deploymentHistories",
+                "type": "hasMany",
+                "related": "DeploymentHistory"
+            }
+        ]
+    },
+    {
+        "model": "ProjectBrand",
+        "table": "brands",
+        "is_project_scoped": true,
+        "fillable_count": 9,
+        "fillable": [
+            "name",
+            "slug",
+            "description",
+            "logo",
+            "is_active",
+            "meta_title",
+            "meta_description",
+            "project_id",
+            "tenant_id"
+        ],
+        "relationships": [
+            {
+                "method": "products",
+                "type": "hasMany",
+                "related": "ProjectProduct"
+            }
+        ]
+    },
+    {
+        "model": "ProjectPasswordAudit",
+        "table": "projectpasswordaudits",
+        "is_project_scoped": true,
+        "fillable_count": 6,
+        "fillable": [
+            "project_id",
+            "user_id",
+            "action",
+            "ip_address",
+            "user_agent",
+            "performed_at"
+        ],
+        "relationships": [
+            {
+                "method": "project",
+                "type": "belongsTo",
+                "related": "Project"
+            },
+            {
+                "method": "user",
+                "type": "belongsTo",
+                "related": "User"
+            }
+        ]
+    },
+    {
+        "model": "ProjectPermission",
+        "table": "permissions",
+        "is_project_scoped": false,
+        "fillable_count": 4,
+        "fillable": [
+            "name",
+            "display_name",
+            "description",
+            "group"
+        ],
+        "relationships": [
+            {
+                "method": "roles",
+                "type": "belongsToMany",
+                "related": "ProjectRole"
+            },
+            {
+                "method": "users",
+                "type": "belongsToMany",
+                "related": "ProjectUser"
+            }
+        ]
+    },
+    {
+        "model": "ProjectProduct",
+        "table": "products_enhanced",
+        "is_project_scoped": true,
+        "fillable_count": 36,
+        "fillable": [
+            "tenant_id",
+            "project_id",
+            "name",
+            "slug",
+            "description",
+            "short_description",
+            "sku",
+            "price",
+            "sale_price",
+            "stock_quantity",
+            "manage_stock",
+            "stock_status",
+            "weight",
+            "dimensions",
+            "product_category_id",
+            "brand_id",
+            "status",
+            "is_featured",
+            "is_favorite",
+            "is_bestseller",
+            "gallery",
+            "meta_title",
+            "meta_description",
+            "has_price",
+            "featured_image",
+            "badges",
+            "focus_keyword",
+            "schema_type",
+            "canonical_url",
+            "noindex",
+            "settings",
+            "views",
+            "rating_average",
+            "rating_count",
+            "product_type",
+            "language_id"
+        ],
+        "relationships": [
+            {
+                "method": "category",
+                "type": "belongsTo",
+                "related": "ProjectProductCategory"
+            },
+            {
+                "method": "categories",
+                "type": "belongsToMany",
+                "related": "ProjectProductCategory"
+            },
+            {
+                "method": "brand",
+                "type": "belongsTo",
+                "related": "ProjectBrand"
+            },
+            {
+                "method": "brands",
+                "type": "belongsToMany",
+                "related": "ProjectBrand"
+            },
+            {
+                "method": "language",
+                "type": "belongsTo",
+                "related": "Language"
+            },
+            {
+                "method": "attributeMappings",
+                "type": "hasMany",
+                "related": "ProjectProductAttributeValueMapping"
+            },
+            {
+                "method": "attributes",
+                "type": "belongsToMany",
+                "related": "ProductAttribute"
+            },
+            {
+                "method": "attributeValues",
+                "type": "belongsToMany",
+                "related": "ProductAttributeValue"
+            },
+            {
+                "method": "variations",
+                "type": "hasMany",
+                "related": "ProductVariation"
+            }
+        ]
+    },
+    {
+        "model": "ProjectProductAttributeValueMapping",
+        "table": "product_attribute_value_mappings",
+        "is_project_scoped": false,
+        "fillable_count": 3,
+        "fillable": [
+            "product_id",
+            "product_attribute_id",
+            "product_attribute_value_id"
+        ],
+        "relationships": [
+            {
+                "method": "product",
+                "type": "belongsTo",
+                "related": "ProjectProduct"
+            },
+            {
+                "method": "attribute",
+                "type": "belongsTo",
+                "related": "ProductAttribute"
+            },
+            {
+                "method": "attributeValue",
+                "type": "belongsTo",
+                "related": "ProductAttributeValue"
+            }
+        ]
+    },
+    {
+        "model": "ProjectProductCategory",
+        "table": "product_categories",
+        "is_project_scoped": true,
+        "fillable_count": 13,
+        "fillable": [
+            "tenant_id",
+            "project_id",
+            "name",
+            "slug",
+            "description",
+            "image",
+            "parent_id",
+            "level",
+            "path",
+            "sort_order",
+            "is_active",
+            "meta_title",
+            "meta_description"
+        ],
+        "relationships": [
+            {
+                "method": "parent",
+                "type": "belongsTo",
+                "related": "ProjectProductCategory"
+            },
+            {
+                "method": "children",
+                "type": "hasMany",
+                "related": "ProjectProductCategory"
+            },
+            {
+                "method": "products",
+                "type": "hasMany",
+                "related": "ProjectProduct"
+            }
+        ]
+    },
+    {
+        "model": "ProjectRole",
+        "table": "roles",
+        "is_project_scoped": false,
+        "fillable_count": 6,
+        "fillable": [
+            "name",
+            "display_name",
+            "description",
+            "is_default",
+            "level",
+            "permissions"
+        ],
+        "relationships": [
+            {
+                "method": "users",
+                "type": "belongsToMany",
+                "related": "ProjectUser"
+            },
+            {
+                "method": "permissions",
+                "type": "belongsToMany",
+                "related": "ProjectPermission"
+            }
+        ]
+    },
+    {
+        "model": "ProjectSetting",
+        "table": "projectsettings",
+        "is_project_scoped": true,
+        "fillable_count": 3,
+        "fillable": [
+            "project_id",
+            "key",
+            "value"
+        ],
+        "relationships": [
+            {
+                "method": "project",
+                "type": "belongsTo",
+                "related": "Project"
+            }
+        ]
+    },
+    {
+        "model": "ProjectSettingModel",
+        "table": "settings",
+        "is_project_scoped": true,
+        "fillable_count": 9,
+        "fillable": [
+            "tenant_id",
+            "key",
+            "payload",
+            "value",
+            "group",
+            "locked",
+            "project_id",
+            "type",
+            "description"
+        ],
+        "relationships": []
+    },
+    {
+        "model": "ProjectStage",
+        "table": "projectstages",
+        "is_project_scoped": true,
+        "fillable_count": 7,
+        "fillable": [
+            "project_id",
+            "service_stage_id",
+            "name",
+            "code",
+            "order",
+            "status",
+            "completed_at"
+        ],
+        "relationships": [
+            {
+                "method": "project",
+                "type": "belongsTo",
+                "related": "Project"
+            },
+            {
+                "method": "serviceStage",
+                "type": "belongsTo",
+                "related": "ServiceStage"
+            }
+        ]
+    },
+    {
+        "model": "ProjectTicket",
+        "table": "projecttickets",
+        "is_project_scoped": true,
+        "fillable_count": 6,
+        "fillable": [
+            "project_id",
+            "creator_id",
+            "title",
+            "description",
+            "status",
+            "last_reply_at"
+        ],
+        "relationships": [
+            {
+                "method": "project",
+                "type": "belongsTo",
+                "related": "Project"
+            },
+            {
+                "method": "creator",
+                "type": "belongsTo",
+                "related": "User"
+            },
+            {
+                "method": "replies",
+                "type": "hasMany",
+                "related": "ProjectTicketReply"
+            }
+        ]
+    },
+    {
+        "model": "ProjectTicketReply",
+        "table": "projectticketreplys",
+        "is_project_scoped": false,
+        "fillable_count": 3,
+        "fillable": [
+            "project_ticket_id",
+            "user_id",
+            "content"
+        ],
+        "relationships": [
+            {
+                "method": "ticket",
+                "type": "belongsTo",
+                "related": "ProjectTicket"
+            },
+            {
+                "method": "user",
+                "type": "belongsTo",
+                "related": "User"
+            }
+        ]
+    },
+    {
+        "model": "ProjectUser",
+        "table": "users",
+        "is_project_scoped": true,
+        "fillable_count": 8,
+        "fillable": [
+            "name",
+            "username",
+            "email",
+            "password",
+            "role",
+            "level",
+            "project_ids",
+            "tenant_id"
+        ],
+        "relationships": [
+            {
+                "method": "roles",
+                "type": "belongsToMany",
+                "related": "ProjectRole"
+            },
+            {
+                "method": "permissions",
+                "type": "belongsToMany",
+                "related": "ProjectPermission"
+            }
+        ]
+    },
+    {
+        "model": "Review",
+        "table": "reviews",
+        "is_project_scoped": true,
+        "fillable_count": 12,
+        "fillable": [
+            "project_id",
+            "tenant_id",
+            "post_id",
+            "reviewer_name",
+            "reviewer_email",
+            "reviewer_avatar",
+            "reviewer_title",
+            "content",
+            "rating",
+            "image",
+            "status",
+            "sort_order"
+        ],
+        "relationships": [
+            {
+                "method": "post",
+                "type": "belongsTo",
+                "related": "Post"
+            }
+        ]
+    },
+    {
+        "model": "Role",
+        "table": "roles",
+        "is_project_scoped": false,
+        "fillable_count": 5,
+        "fillable": [
+            "name",
+            "display_name",
+            "description",
+            "is_default",
+            "level"
+        ],
+        "relationships": [
+            {
+                "method": "users",
+                "type": "belongsToMany",
+                "related": "User"
+            },
+            {
+                "method": "permissions",
+                "type": "belongsToMany",
+                "related": "Permission"
+            }
+        ]
+    },
+    {
+        "model": "Service",
+        "table": "services",
+        "is_project_scoped": false,
+        "fillable_count": 6,
+        "fillable": [
+            "department_id",
+            "name",
+            "code",
+            "description",
+            "form_schema",
+            "status"
+        ],
+        "relationships": [
+            {
+                "method": "department",
+                "type": "belongsTo",
+                "related": "Department"
+            },
+            {
+                "method": "stages",
+                "type": "hasMany",
+                "related": "ServiceStage"
+            }
+        ]
+    },
+    {
+        "model": "ServiceStage",
+        "table": "servicestages",
+        "is_project_scoped": false,
+        "fillable_count": 5,
+        "fillable": [
+            "service_id",
+            "name",
+            "code",
+            "order",
+            "status"
+        ],
+        "relationships": [
+            {
+                "method": "service",
+                "type": "belongsTo",
+                "related": "Service"
+            }
+        ]
+    },
+    {
+        "model": "Setting",
+        "table": "settings",
+        "is_project_scoped": true,
+        "fillable_count": 9,
+        "fillable": [
+            "key",
+            "payload",
+            "value",
+            "type",
+            "group",
+            "locked",
+            "project_id",
+            "tenant_id",
+            "description"
+        ],
+        "relationships": []
+    },
+    {
+        "model": "ShippingCarrier",
+        "table": "shippingcarriers",
+        "is_project_scoped": true,
+        "fillable_count": 5,
+        "fillable": [
+            "project_id",
+            "name",
+            "code",
+            "type",
+            "status"
+        ],
+        "relationships": [
+            {
+                "method": "project",
+                "type": "belongsTo",
+                "related": "Project"
+            },
+            {
+                "method": "rateVersions",
+                "type": "hasMany",
+                "related": "ShippingRateVersion"
+            },
+            {
+                "method": "activeRateVersion",
+                "type": "hasOne",
+                "related": "ShippingRateVersion"
+            }
+        ]
+    },
+    {
+        "model": "ShippingRateVersion",
+        "table": "shippingrateversions",
+        "is_project_scoped": false,
+        "fillable_count": 5,
+        "fillable": [
+            "shipping_carrier_id",
+            "version_name",
+            "start_date",
+            "end_date",
+            "is_active"
+        ],
+        "relationships": [
+            {
+                "method": "carrier",
+                "type": "belongsTo",
+                "related": "ShippingCarrier"
+            },
+            {
+                "method": "rules",
+                "type": "hasMany",
+                "related": "ShippingRule"
+            }
+        ]
+    },
+    {
+        "model": "ShippingRule",
+        "table": "shippingrules",
+        "is_project_scoped": false,
+        "fillable_count": 7,
+        "fillable": [
+            "shipping_rate_version_id",
+            "name",
+            "priority",
+            "action_type",
+            "fee",
+            "is_surcharge",
+            "status"
+        ],
+        "relationships": [
+            {
+                "method": "rateVersion",
+                "type": "belongsTo",
+                "related": "ShippingRateVersion"
+            },
+            {
+                "method": "conditions",
+                "type": "hasMany",
+                "related": "ShippingRuleCondition"
+            }
+        ]
+    },
+    {
+        "model": "ShippingRuleCondition",
+        "table": "shippingruleconditions",
+        "is_project_scoped": false,
+        "fillable_count": 6,
+        "fillable": [
+            "shipping_rule_id",
+            "condition_type",
+            "operator",
+            "value_1",
+            "value_2",
+            "zone_id"
+        ],
+        "relationships": [
+            {
+                "method": "rule",
+                "type": "belongsTo",
+                "related": "ShippingRule"
+            },
+            {
+                "method": "zone",
+                "type": "belongsTo",
+                "related": "ShippingZone"
+            }
+        ]
+    },
+    {
+        "model": "ShippingZone",
+        "table": "shippingzones",
+        "is_project_scoped": true,
+        "fillable_count": 3,
+        "fillable": [
+            "project_id",
+            "name",
+            "status"
+        ],
+        "relationships": [
+            {
+                "method": "project",
+                "type": "belongsTo",
+                "related": "Project"
+            },
+            {
+                "method": "locations",
+                "type": "hasMany",
+                "related": "ShippingZoneLocation"
+            }
+        ]
+    },
+    {
+        "model": "ShippingZoneLocation",
+        "table": "shippingzonelocations",
+        "is_project_scoped": false,
+        "fillable_count": 4,
+        "fillable": [
+            "shipping_zone_id",
+            "province_code",
+            "district_code",
+            "ward_code"
+        ],
+        "relationships": [
+            {
+                "method": "zone",
+                "type": "belongsTo",
+                "related": "ShippingZone"
+            }
+        ]
+    },
+    {
+        "model": "Shortcode",
+        "table": "shortcodes",
+        "is_project_scoped": false,
+        "fillable_count": 0,
+        "fillable": [],
+        "relationships": []
+    },
+    {
+        "model": "Tag",
+        "table": "tags",
+        "is_project_scoped": true,
+        "fillable_count": 4,
+        "fillable": [
+            "name",
+            "slug",
+            "color",
+            "tenant_id"
+        ],
+        "relationships": [
+            {
+                "method": "posts",
+                "type": "belongsToMany",
+                "related": "Post"
+            }
+        ]
+    },
+    {
+        "model": "Task",
+        "table": "tasks",
+        "is_project_scoped": true,
+        "fillable_count": 18,
+        "fillable": [
+            "user_id",
+            "assigned_to",
+            "project_id",
+            "title",
+            "description",
+            "dev_id",
+            "status",
+            "priority",
+            "gold",
+            "gold_awarded",
+            "approval_status",
+            "acceptance_status",
+            "rejection_reason",
+            "result_notes",
+            "deadline",
+            "start_date",
+            "position",
+            "completed_at"
+        ],
+        "relationships": [
+            {
+                "method": "project",
+                "type": "belongsTo",
+                "related": "Project"
+            },
+            {
+                "method": "owner",
+                "type": "belongsTo",
+                "related": "User"
+            },
+            {
+                "method": "creator",
+                "type": "belongsTo",
+                "related": "User"
+            },
+            {
+                "method": "assignedUser",
+                "type": "belongsTo",
+                "related": "User"
+            },
+            {
+                "method": "dev",
+                "type": "belongsTo",
+                "related": "User"
+            }
+        ]
+    },
+    {
+        "model": "Taxonomy",
+        "table": "taxonomys",
+        "is_project_scoped": true,
+        "fillable_count": 10,
+        "fillable": [
+            "project_id",
+            "tenant_id",
+            "name",
+            "slug",
+            "taxonomy",
+            "description",
+            "parent_id",
+            "order",
+            "status",
+            "meta_data"
+        ],
+        "relationships": [
+            {
+                "method": "parent",
+                "type": "belongsTo",
+                "related": "Taxonomy"
+            },
+            {
+                "method": "children",
+                "type": "hasMany",
+                "related": "Taxonomy"
+            },
+            {
+                "method": "posts",
+                "type": "belongsToMany",
+                "related": "Post"
+            }
+        ]
+    },
+    {
+        "model": "Tenant",
+        "table": "tenants",
+        "is_project_scoped": false,
+        "fillable_count": 6,
+        "fillable": [
+            "name",
+            "code",
+            "domain",
+            "database_name",
+            "settings",
+            "status"
+        ],
+        "relationships": [
+            {
+                "method": "users",
+                "type": "hasMany",
+                "related": "User"
+            },
+            {
+                "method": "posts",
+                "type": "hasMany",
+                "related": "Post"
+            },
+            {
+                "method": "projects",
+                "type": "hasMany",
+                "related": "Project"
+            }
+        ]
+    },
+    {
+        "model": "Translation",
+        "table": "translations",
+        "is_project_scoped": false,
+        "fillable_count": 5,
+        "fillable": [
+            "translatable_type",
+            "translatable_id",
+            "locale",
+            "field",
+            "value"
+        ],
+        "relationships": []
+    },
+    {
+        "model": "User",
+        "table": "users",
+        "is_project_scoped": true,
+        "fillable_count": 31,
+        "fillable": [
+            "name",
+            "username",
+            "email",
+            "password",
+            "avatar",
+            "phone",
+            "address",
+            "status",
+            "role",
+            "department",
+            "gold",
+            "level",
+            "project_ids",
+            "tenant_id",
+            "last_login_at",
+            "preferences",
+            "employee_code",
+            "dob",
+            "identity_card",
+            "identity_date",
+            "identity_place",
+            "joining_date",
+            "contract_type",
+            "base_salary",
+            "manager_id",
+            "bank_account",
+            "bank_name",
+            "province_code",
+            "district_code",
+            "ward_code",
+            "street_address"
+        ],
+        "relationships": [
+            {
+                "method": "roles",
+                "type": "belongsToMany",
+                "related": "Role"
+            },
+            {
+                "method": "permissions",
+                "type": "belongsToMany",
+                "related": "Permission"
+            },
+            {
+                "method": "activityLogs",
+                "type": "hasMany",
+                "related": "ActivityLog"
+            },
+            {
+                "method": "briefs",
+                "type": "hasMany",
+                "related": "Brief"
+            },
+            {
+                "method": "tasks",
+                "type": "hasMany",
+                "related": "Task"
+            },
+            {
+                "method": "orders",
+                "type": "hasMany",
+                "related": "Order"
+            },
+            {
+                "method": "addresses",
+                "type": "hasMany",
+                "related": "UserAddress"
+            },
+            {
+                "method": "manager",
+                "type": "belongsTo",
+                "related": "User"
+            },
+            {
+                "method": "subordinates",
+                "type": "hasMany",
+                "related": "User"
+            },
+            {
+                "method": "agent",
+                "type": "hasOne",
+                "related": "Agent"
+            }
+        ]
+    },
+    {
+        "model": "UserAddress",
+        "table": "useraddresss",
+        "is_project_scoped": false,
+        "fillable_count": 12,
+        "fillable": [
+            "user_id",
+            "receiver_name",
+            "receiver_phone",
+            "province_code",
+            "district_code",
+            "ward_code",
+            "province_name",
+            "district_name",
+            "ward_name",
+            "address_detail",
+            "full_address",
+            "is_default"
+        ],
+        "relationships": [
+            {
+                "method": "user",
+                "type": "belongsTo",
+                "related": "User"
+            }
+        ]
+    },
+    {
+        "model": "VisitorLog",
+        "table": "visitorlogs",
+        "is_project_scoped": false,
+        "fillable_count": 6,
+        "fillable": [
+            "ip_address",
+            "user_agent",
+            "url",
+            "method",
+            "user_id",
+            "visited_at"
+        ],
+        "relationships": []
+    },
+    {
+        "model": "Widget",
+        "table": "widgets",
+        "is_project_scoped": true,
+        "fillable_count": 14,
+        "fillable": [
+            "project_id",
+            "name",
+            "type",
+            "area",
+            "settings",
+            "sort_order",
+            "is_active",
+            "variant",
+            "metadata",
+            "tenant_id",
+            "widget_code",
+            "rules",
+            "data",
+            "is_lazy_loaded"
+        ],
+        "relationships": [
+            {
+                "method": "project",
+                "type": "belongsTo",
+                "related": "Project"
+            }
+        ]
+    },
+    {
+        "model": "WidgetTemplate",
+        "table": "widgettemplates",
+        "is_project_scoped": false,
+        "fillable_count": 12,
+        "fillable": [
+            "tenant_id",
+            "name",
+            "type",
+            "category",
+            "description",
+            "icon",
+            "preview_image",
+            "config_schema",
+            "default_settings",
+            "is_active",
+            "is_premium",
+            "sort_order"
+        ],
+        "relationships": [
+            {
+                "method": "widgets",
+                "type": "hasMany",
+                "related": "Widget"
+            }
+        ]
+    }
+]

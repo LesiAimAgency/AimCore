@@ -1,0 +1,15 @@
+{
+    "static_tracking_scripts": {
+        "google_tag_manager": "Removed from cloned HTML to prevent analytics pollution",
+        "facebook_sdk": "Removed from cloned HTML to prevent external tracking",
+        "github_buttons": "Removed from cloned HTML"
+    },
+    "duplicate_static_assets": {
+        "duplicate_images_count": 1,
+        "unreferenced_images_count": 374
+    },
+    "legacy_django_csrf": {
+        "file": "public/e-henho/js/django.csrf.js",
+        "reason": "Django-specific CSRF cookie reader; must be replaced with Laravel CSRF tokens in Blade forms."
+    }
+}

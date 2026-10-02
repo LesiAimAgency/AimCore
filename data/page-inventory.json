@@ -1,0 +1,4189 @@
+[
+    {
+        "file": "blocked-profiles.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/blocked-profiles",
+        "page_type": "social",
+        "template": "social-profile-list",
+        "layout": "layouts.account",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 2,
+            "images": [
+                "images/ehenho_logo.png"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "logout.html",
+                "method": "POST",
+                "id": "exit-form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 17710,
+        "fingerprint": "3ae5a5722692a4e73e26b981cbf48f65",
+        "laravel_mapping": {
+            "route": "GET /social/blocked",
+            "controller": "SocialController@blocked",
+            "model": "UserBlock, Profile",
+            "blade_view": "themes.ehenho.blocked_profiles"
+        }
+    },
+    {
+        "file": "bookmarked-profiles.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/bookmarked-profiles",
+        "page_type": "social",
+        "template": "social-profile-list",
+        "layout": "layouts.account",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 2,
+            "images": [
+                "images/ehenho_logo.png"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "logout.html",
+                "method": "POST",
+                "id": "exit-form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 17736,
+        "fingerprint": "5c8969890f5cf601f9b1e042bf54c487",
+        "laravel_mapping": {
+            "route": "GET /social/bookmarks",
+            "controller": "SocialController@bookmarks",
+            "model": "UserBookmark, Profile",
+            "blade_view": "themes.ehenho.bookmarked_profiles"
+        }
+    },
+    {
+        "file": "contactbook-profiles.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/contactbook-profiles",
+        "page_type": "social",
+        "template": "social-profile-list",
+        "layout": "layouts.account",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 2,
+            "images": [
+                "images/ehenho_logo.png"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "logout.html",
+                "method": "POST",
+                "id": "exit-form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 16994,
+        "fingerprint": "6e0358e03edd0765f85f2d62051922ac",
+        "laravel_mapping": {
+            "route": "GET /social/contacts",
+            "controller": "SocialController@contacts",
+            "model": "UserContact, Profile",
+            "blade_view": "themes.ehenho.contactbook_profiles"
+        }
+    },
+    {
+        "file": "email-manager.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/email-manager",
+        "page_type": "account",
+        "template": "account-email-manager",
+        "layout": "layouts.account",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 2,
+            "images": [
+                "images/ehenho_logo.png"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "logout.html",
+                "method": "POST",
+                "id": "exit-form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            },
+            {
+                "action": "email-manager.html",
+                "method": "POST",
+                "id": "",
+                "class": "email_list",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "radio",
+                        "name": "email",
+                        "id": "email_radio_1",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            },
+            {
+                "action": "email-manager.html",
+                "method": "POST",
+                "id": "",
+                "class": "add_email",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "email",
+                        "name": "email",
+                        "id": "id_email",
+                        "placeholder": "Địa chỉ email",
+                        "required": true
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 18156,
+        "fingerprint": "cef11d72c73bfa3f6f839442d5a4c21c",
+        "laravel_mapping": {
+            "route": "GET /account/emails",
+            "controller": "AccountController@emails",
+            "model": "UserEmail, User",
+            "blade_view": "themes.ehenho.email_manager"
+        }
+    },
+    {
+        "file": "gioi-thieu.html",
+        "title": "Điều khoản sử dụng - eHenho.com",
+        "url": "/gioi-thieu",
+        "page_type": "static-content",
+        "template": "page-content",
+        "layout": "layouts.frontend",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel",
+            "password-toggle-widget"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 1,
+            "images": [
+                "images/ehenho_logo.png"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "login.html",
+                "method": "POST",
+                "id": "login_form",
+                "class": "login",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "text",
+                        "name": "login",
+                        "id": "id_login",
+                        "placeholder": "Địa chỉ email",
+                        "required": false
+                    },
+                    {
+                        "type": "password",
+                        "name": "password",
+                        "id": "id_password",
+                        "placeholder": "Mật khẩu",
+                        "required": false
+                    },
+                    {
+                        "type": "checkbox",
+                        "name": "remember",
+                        "id": "id_remember",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 23419,
+        "fingerprint": "ac6c19001e6842be138800c65e925435",
+        "laravel_mapping": {
+            "route": "GET /gioi-thieu",
+            "controller": "PageController@show",
+            "model": "Page",
+            "blade_view": "themes.ehenho.gioi_thieu"
+        }
+    },
+    {
+        "file": "inbox.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/inbox",
+        "page_type": "messaging",
+        "template": "messages-inbox",
+        "layout": "layouts.account",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel",
+            "pagination-controls",
+            "message-row-item"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 30,
+            "images": [
+                "images/ehenho_logo.png",
+                "images/477887_pl.jpg",
+                "images/363597_pl.jpg",
+                "images/278867_pl.jpg",
+                "images/487648_pl.jpg",
+                "images/88115_pl.jpg",
+                "images/396958_pl.jpg",
+                "images/338741_pl.jpeg",
+                "images/121142_pl.JPG",
+                "images/1_pl.png",
+                "images/312389_pl.jpeg",
+                "images/61402_pl.jpg",
+                "images/349632_pl.jpg",
+                "images/65348_pl.jpeg",
+                "images/426586_pl.jpeg",
+                "images/427496_pl.png",
+                "images/166501_pl.jpg",
+                "images/447699_pl.jpg",
+                "images/230353_pl.jpg"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "logout.html",
+                "method": "POST",
+                "id": "exit-form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 32919,
+        "fingerprint": "1a921bc8ef1f0ff32a42f6e26a3e0571",
+        "laravel_mapping": {
+            "route": "GET /messages/inbox",
+            "controller": "MessageController@inbox",
+            "model": "Message, Conversation, User",
+            "blade_view": "themes.ehenho.inbox"
+        }
+    },
+    {
+        "file": "index.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/",
+        "page_type": "homepage",
+        "template": "theme-landing",
+        "layout": "layouts.frontend",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel",
+            "password-toggle-widget"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "images/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 5,
+            "images": [
+                "images/ehenho_logo.png",
+                "images/486975_pl.jpg",
+                "images/251850_pl.jpg",
+                "images/480871_pl.jpg",
+                "images/87396_pl.jpg"
+            ]
+        },
+        "css_files": [
+            "images/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "login.html",
+                "method": "POST",
+                "id": "login_form",
+                "class": "login",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "text",
+                        "name": "login",
+                        "id": "id_login",
+                        "placeholder": "Địa chỉ email",
+                        "required": false
+                    },
+                    {
+                        "type": "password",
+                        "name": "password",
+                        "id": "id_password",
+                        "placeholder": "Mật khẩu",
+                        "required": false
+                    },
+                    {
+                        "type": "checkbox",
+                        "name": "remember",
+                        "id": "id_remember",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 34060,
+        "fingerprint": "8fb522a7c1c7d2a671ddecd3ba5e7c4c",
+        "laravel_mapping": {
+            "route": "GET /",
+            "controller": "HomeController@index",
+            "model": "Profile, Post, Setting",
+            "blade_view": "themes.ehenho.index"
+        }
+    },
+    {
+        "file": "liked-profiles.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/liked-profiles",
+        "page_type": "social",
+        "template": "social-profile-list",
+        "layout": "layouts.account",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 2,
+            "images": [
+                "images/ehenho_logo.png"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "logout.html",
+                "method": "POST",
+                "id": "exit-form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 16880,
+        "fingerprint": "a4454e2b36281414f8f6a3d68da8d9ad",
+        "laravel_mapping": {
+            "route": "GET /social/likes",
+            "controller": "SocialController@likes",
+            "model": "UserLike, Profile",
+            "blade_view": "themes.ehenho.liked_profiles"
+        }
+    },
+    {
+        "file": "login.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/login",
+        "page_type": "auth",
+        "template": "auth-login",
+        "layout": "layouts.auth",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel",
+            "password-toggle-widget"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/lg_vld.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 1,
+            "images": [
+                "images/ehenho_logo.png"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js",
+            "js/lg_vld.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "login.html",
+                "method": "POST",
+                "id": "login_form",
+                "class": "login",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "email",
+                        "name": "login",
+                        "id": "id_login",
+                        "placeholder": "Địa chỉ email",
+                        "required": true
+                    },
+                    {
+                        "type": "password",
+                        "name": "password",
+                        "id": "id_password",
+                        "placeholder": "Mật khẩu",
+                        "required": true
+                    },
+                    {
+                        "type": "checkbox",
+                        "name": "remember",
+                        "id": "id_remember",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js"
+        ],
+        "size_bytes": 18159,
+        "fingerprint": "42184a2706334373ab23816afe407b6e",
+        "laravel_mapping": {
+            "route": "GET /login",
+            "controller": "AuthController@showLoginForm",
+            "model": "User",
+            "blade_view": "themes.ehenho.login"
+        }
+    },
+    {
+        "file": "logout.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/logout",
+        "page_type": "auth",
+        "template": "auth-logout",
+        "layout": "layouts.auth",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 2,
+            "images": [
+                "images/ehenho_logo.png"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "logout.html",
+                "method": "POST",
+                "id": "exit-form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            },
+            {
+                "action": "logout.html",
+                "method": "POST",
+                "id": "",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 16776,
+        "fingerprint": "287840930757bbcd1915b1fe9e1bf28a",
+        "laravel_mapping": {
+            "route": "POST /logout",
+            "controller": "AuthController@logout",
+            "model": "User",
+            "blade_view": "themes.ehenho.logout"
+        }
+    },
+    {
+        "file": "message-view.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/message-view",
+        "page_type": "messaging",
+        "template": "messages-thread-view",
+        "layout": "layouts.account",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel",
+            "pagination-controls",
+            "message-row-item"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 3,
+            "images": [
+                "images/ehenho_logo.png",
+                "images/1_pl.png"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "logout.html",
+                "method": "POST",
+                "id": "exit-form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            },
+            {
+                "action": "message-view.html",
+                "method": "POST",
+                "id": "compose_form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "textarea",
+                        "name": "body",
+                        "id": "id_body",
+                        "required": true
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 27219,
+        "fingerprint": "efa9b07ae3a7f99e11889d7f4da16a48",
+        "laravel_mapping": {
+            "route": "GET /messages/{conversationId}",
+            "controller": "MessageController@show",
+            "model": "Message, Conversation, User",
+            "blade_view": "themes.ehenho.message_view"
+        }
+    },
+    {
+        "file": "my-profile.html",
+        "title": "Bạn Nữ le si Ở góa 37 tuổi Tìm người để kết hôn ở An Phú Đông, Hồ Chí Minh - eHenho.com",
+        "url": "/my-profile",
+        "page_type": "profile",
+        "template": "profile-my-view",
+        "layout": "layouts.account",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 34,
+            "images": [
+                "images/ehenho_logo.png",
+                "images/481226_pl.jpeg",
+                "images/491203_pl.JPG",
+                "images/461876_pl.jpg",
+                "images/332249_pl.jpg",
+                "images/446758_pl.jpg",
+                "images/478206_pl.jpg",
+                "images/140073_pl.jpeg",
+                "images/370598_pl.jpeg",
+                "images/92047_pl.jpeg",
+                "images/df_picture.png",
+                "images/47576_pl.jpeg",
+                "images/413961_pl.jpeg",
+                "images/354105_pl.jpg",
+                "images/257575_pl.jpg",
+                "images/475987_pl.jpeg",
+                "images/292201_pl.jpg",
+                "images/487941_pl.png",
+                "images/245616_pl.jpeg",
+                "images/490309_pl.jpeg",
+                "images/488308_pl.png",
+                "images/471985_pl.png",
+                "images/417793_pl.jpeg"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "logout.html",
+                "method": "POST",
+                "id": "exit-form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 45977,
+        "fingerprint": "222aacc5e41004fec21f72eccb837f76",
+        "laravel_mapping": {
+            "route": "GET /account/profile",
+            "controller": "ProfileController@myProfile",
+            "model": "Profile, User",
+            "blade_view": "themes.ehenho.my_profile"
+        }
+    },
+    {
+        "file": "password-change.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/password-change",
+        "page_type": "account",
+        "template": "account-password-change",
+        "layout": "layouts.account",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel",
+            "password-toggle-widget"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/change_pw_validate.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 2,
+            "images": [
+                "images/ehenho_logo.png"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js",
+            "js/change_pw_validate.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "logout.html",
+                "method": "POST",
+                "id": "exit-form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            },
+            {
+                "action": "password-change.html",
+                "method": "POST",
+                "id": "change_pw_form",
+                "class": "password_change",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "password",
+                        "name": "oldpassword",
+                        "id": "id_oldpassword",
+                        "placeholder": "Mật khẩu hiện tại",
+                        "required": true
+                    },
+                    {
+                        "type": "password",
+                        "name": "password1",
+                        "id": "id_password1",
+                        "placeholder": "Mật khẩu mới",
+                        "required": true
+                    },
+                    {
+                        "type": "password",
+                        "name": "password2",
+                        "id": "id_password2",
+                        "placeholder": "Mật khẩu mới (nhắc lại)",
+                        "required": true
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js"
+        ],
+        "size_bytes": 20789,
+        "fingerprint": "b637065f231f33daf17500311931943d",
+        "laravel_mapping": {
+            "route": "GET /account/password",
+            "controller": "AccountController@changePassword",
+            "model": "User",
+            "blade_view": "themes.ehenho.password_change"
+        }
+    },
+    {
+        "file": "password-reset.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/password-reset",
+        "page_type": "auth",
+        "template": "auth-password-reset",
+        "layout": "layouts.auth",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel",
+            "password-toggle-widget"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 1,
+            "images": [
+                "images/ehenho_logo.png"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "login.html",
+                "method": "POST",
+                "id": "login_form",
+                "class": "login",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "text",
+                        "name": "login",
+                        "id": "id_login",
+                        "placeholder": "Địa chỉ email",
+                        "required": false
+                    },
+                    {
+                        "type": "password",
+                        "name": "password",
+                        "id": "id_password",
+                        "placeholder": "Mật khẩu",
+                        "required": false
+                    },
+                    {
+                        "type": "checkbox",
+                        "name": "remember",
+                        "id": "id_remember",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            },
+            {
+                "action": "password-reset.html",
+                "method": "POST",
+                "id": "",
+                "class": "password_reset",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "email",
+                        "name": "email",
+                        "id": "id_email",
+                        "placeholder": "Địa chỉ email",
+                        "required": true
+                    },
+                    {
+                        "type": "submit",
+                        "name": "",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 18851,
+        "fingerprint": "236b33be7ecef92588f9b0c0248d0841",
+        "laravel_mapping": {
+            "route": "GET /password/reset",
+            "controller": "ForgotPasswordController@showLinkRequestForm",
+            "model": "User",
+            "blade_view": "themes.ehenho.password_reset"
+        }
+    },
+    {
+        "file": "profile-detail.html",
+        "title": "Bạn Nam Võ thanh hải Độc thân 43 tuổi Tìm người yêu lâu dài ở Bạc Liêu, Cà Mau - eHenho.com",
+        "url": "/profile-detail",
+        "page_type": "profile",
+        "template": "profile-detail",
+        "layout": "layouts.frontend",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel",
+            "password-toggle-widget"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 33,
+            "images": [
+                "images/ehenho_logo.png",
+                "images/408951_pl.jpg",
+                "images/485283_pl.jpeg",
+                "images/490459_pl.png",
+                "images/265861_pl.jpg",
+                "images/409633_pl.jpg",
+                "images/480456_pl.jpg",
+                "images/463736_pl.jpg",
+                "images/249754_pl.jpg",
+                "images/1716_pl.jpg",
+                "images/486975_pv.jpg",
+                "images/484052_pl.jpeg",
+                "images/414593_pl.jpg",
+                "images/29072_pl.jpg",
+                "images/484409_pl.png",
+                "images/169510_pl.jpeg",
+                "images/298108_pl.jpg",
+                "images/316604_pl.jpg",
+                "images/292008_pl.jpg",
+                "images/481345_pl.jpg",
+                "images/477407_pl.jpg",
+                "images/448896_pl.jpg",
+                "images/476094_pl.jpg"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "login.html",
+                "method": "POST",
+                "id": "login_form",
+                "class": "login",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "text",
+                        "name": "login",
+                        "id": "id_login",
+                        "placeholder": "Địa chỉ email",
+                        "required": false
+                    },
+                    {
+                        "type": "password",
+                        "name": "password",
+                        "id": "id_password",
+                        "placeholder": "Mật khẩu",
+                        "required": false
+                    },
+                    {
+                        "type": "checkbox",
+                        "name": "remember",
+                        "id": "id_remember",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 41679,
+        "fingerprint": "f4ce85456217a315cc263b95a67c0554",
+        "laravel_mapping": {
+            "route": "GET /profile/{id}",
+            "controller": "ProfileController@show",
+            "model": "Profile, User, Media",
+            "blade_view": "themes.ehenho.profile_detail"
+        }
+    },
+    {
+        "file": "profile-edit.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/profile-edit",
+        "page_type": "profile",
+        "template": "profile-edit",
+        "layout": "layouts.account",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/drop_down.js",
+                    "is_external": false
+                },
+                {
+                    "src": "https://cdn.jsdelivr.net/jquery.validation/1.11.1/jquery.validate.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://cdn.jsdelivr.net/jquery.validation/1.11.1/additional-methods.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://cdn.jsdelivr.net/jquery.scrollto/2.1.2/jquery.scrollTo.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/1st_f_fc_pe.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/fc_sc_pe.js",
+                    "is_external": false
+                },
+                {
+                    "src": "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-filestyle/1.2.1/bootstrap-filestyle.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 3,
+            "images": [
+                "images/ehenho_logo.png",
+                "images/loader.gif"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/drop_down.js",
+            "https://cdn.jsdelivr.net/jquery.validation/1.11.1/jquery.validate.js",
+            "https://cdn.jsdelivr.net/jquery.validation/1.11.1/additional-methods.js",
+            "https://cdn.jsdelivr.net/jquery.scrollto/2.1.2/jquery.scrollTo.min.js",
+            "js/1st_f_fc_pe.js",
+            "js/fc_sc_pe.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-filestyle/1.2.1/bootstrap-filestyle.min.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "logout.html",
+                "method": "POST",
+                "id": "exit-form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            },
+            {
+                "action": "profile-edit.html",
+                "method": "POST",
+                "id": "pe_form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "text",
+                        "name": "",
+                        "id": "disabledInput",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "text",
+                        "name": "name",
+                        "id": "id_name",
+                        "placeholder": "Tên",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "name": "picture",
+                        "id": "id_picture",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "text",
+                        "name": "headline",
+                        "id": "id_headline",
+                        "placeholder": "Vd: \"Em mộc mạc\" \"Tìm anh à?\"...",
+                        "required": true
+                    },
+                    {
+                        "type": "hidden",
+                        "name": "setfc_flag",
+                        "id": "id_setfc_flag",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "submit",
+                        "name": "",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "dob_day",
+                        "id": "id_dob_day",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "dob_month",
+                        "id": "id_dob_month",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "dob_year",
+                        "id": "id_dob_year",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "gender",
+                        "id": "id_gender",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "name": "marital_status",
+                        "id": "id_marital_status",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "name": "look_for",
+                        "id": "id_look_for",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "name": "height",
+                        "id": "id_height",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "name": "weight",
+                        "id": "id_weight",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "name": "education",
+                        "id": "id_education",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "name": "province",
+                        "id": "id_province",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "name": "district",
+                        "id": "id_district",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "appearance2_0",
+                        "id": "id_appearance2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "interest2_0",
+                        "id": "id_interest2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "personality2_0",
+                        "id": "id_personality2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "way_of_life",
+                        "id": "id_way_of_life",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "most_valued",
+                        "id": "id_most_valued",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "occupation2_0",
+                        "id": "id_occupation2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "religion2_0",
+                        "id": "id_religion2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "smoking2_0",
+                        "id": "id_smoking2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "drinking2_0",
+                        "id": "id_drinking2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "children2_0",
+                        "id": "id_children2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "textarea",
+                        "name": "i_am",
+                        "id": "id_i_am",
+                        "required": true
+                    },
+                    {
+                        "type": "textarea",
+                        "name": "my_match",
+                        "id": "id_my_match",
+                        "required": true
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "https://cdn.jsdelivr.net/jquery.validation/1.11.1/jquery.validate.js",
+            "https://cdn.jsdelivr.net/jquery.validation/1.11.1/additional-methods.js",
+            "https://cdn.jsdelivr.net/jquery.scrollto/2.1.2/jquery.scrollTo.min.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-filestyle/1.2.1/bootstrap-filestyle.min.js"
+        ],
+        "size_bytes": 232902,
+        "fingerprint": "97c88d1e3df3815eadd469c23c979e53",
+        "laravel_mapping": {
+            "route": "GET /account/profile/edit",
+            "controller": "ProfileController@edit",
+            "model": "Profile, User",
+            "blade_view": "themes.ehenho.profile_edit"
+        }
+    },
+    {
+        "file": "profile-options.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/profile-options",
+        "page_type": "account",
+        "template": "account-settings",
+        "layout": "layouts.account",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 2,
+            "images": [
+                "images/ehenho_logo.png"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "logout.html",
+                "method": "POST",
+                "id": "exit-form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            },
+            {
+                "action": "profile-options.html",
+                "method": "POST",
+                "id": "po_form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "radio",
+                        "name": "dating_must_have_profile_pic",
+                        "id": "id_dating_must_have_profile_pic_0",
+                        "placeholder": "",
+                        "required": true
+                    },
+                    {
+                        "type": "radio",
+                        "name": "dating_must_have_profile_pic",
+                        "id": "id_dating_must_have_profile_pic_1",
+                        "placeholder": "",
+                        "required": true
+                    },
+                    {
+                        "type": "checkbox",
+                        "name": "women_first",
+                        "id": "id_women_first",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "dating_min_age",
+                        "id": "id_dating_min_age",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "name": "dating_max_age",
+                        "id": "id_dating_max_age",
+                        "required": true
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 25201,
+        "fingerprint": "a42ca45b7d72eedc4fe45e657123af91",
+        "laravel_mapping": {
+            "route": "GET /account/settings",
+            "controller": "AccountController@settings",
+            "model": "UserSetting, User",
+            "blade_view": "themes.ehenho.profile_options"
+        }
+    },
+    {
+        "file": "sent.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/sent",
+        "page_type": "messaging",
+        "template": "messages-sent",
+        "layout": "layouts.account",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel",
+            "pagination-controls"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 29,
+            "images": [
+                "images/ehenho_logo.png",
+                "images/394461_pl.jpeg",
+                "images/436747_pl.jpg",
+                "images/312383_pl.jpg",
+                "images/471214_pl.jpeg",
+                "images/6722_pl.jpg",
+                "images/393208_pl.jpeg",
+                "images/224360_pl.jpg",
+                "images/68091_pl.jpg",
+                "images/486815_pl.jpeg",
+                "images/153091_pl.jpg",
+                "images/453604_pl.jpg",
+                "images/488880_pl.jpg",
+                "images/124145_pl.jpg",
+                "images/425300_pl.jpg",
+                "images/388701_pl.jpeg",
+                "images/490382_pl.png",
+                "images/481155_pl.jpg"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "logout.html",
+                "method": "POST",
+                "id": "exit-form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 29618,
+        "fingerprint": "2a908f087ea2da860b38e08faa29c491",
+        "laravel_mapping": {
+            "route": "GET /messages/sent",
+            "controller": "MessageController@sent",
+            "model": "Message, Conversation, User",
+            "blade_view": "themes.ehenho.sent"
+        }
+    },
+    {
+        "file": "signup.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/signup",
+        "page_type": "auth",
+        "template": "auth-register",
+        "layout": "layouts.auth",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel",
+            "password-toggle-widget"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=6LcnxAweAAAAABPaCUTeNxnhpJM_TXf_Z8yLImL_&lang=vi",
+                    "is_external": true
+                },
+                {
+                    "src": "js/drop_down.js",
+                    "is_external": false
+                },
+                {
+                    "src": "https://cdn.jsdelivr.net/jquery.validation/1.11.1/jquery.validate.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://cdn.jsdelivr.net/jquery.validation/1.11.1/additional-methods.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://cdn.jsdelivr.net/jquery.scrollto/2.1.2/jquery.scrollTo.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/1st_f_fc.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/fc_sc.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/mailcheck.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/email_check.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 1,
+            "images": [
+                "images/ehenho_logo.png"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=6LcnxAweAAAAABPaCUTeNxnhpJM_TXf_Z8yLImL_&lang=vi",
+            "js/drop_down.js",
+            "https://cdn.jsdelivr.net/jquery.validation/1.11.1/jquery.validate.js",
+            "https://cdn.jsdelivr.net/jquery.validation/1.11.1/additional-methods.js",
+            "https://cdn.jsdelivr.net/jquery.scrollto/2.1.2/jquery.scrollTo.min.js",
+            "js/1st_f_fc.js",
+            "js/fc_sc.js",
+            "js/mailcheck.js",
+            "js/email_check.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "login.html",
+                "method": "POST",
+                "id": "login_form",
+                "class": "login",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "text",
+                        "name": "login",
+                        "id": "id_login",
+                        "placeholder": "Địa chỉ email",
+                        "required": false
+                    },
+                    {
+                        "type": "password",
+                        "name": "password",
+                        "id": "id_password",
+                        "placeholder": "Mật khẩu",
+                        "required": false
+                    },
+                    {
+                        "type": "checkbox",
+                        "name": "remember",
+                        "id": "id_remember",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            },
+            {
+                "action": "signup.html",
+                "method": "POST",
+                "id": "signup_form",
+                "class": "signup",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "text",
+                        "name": "email",
+                        "id": "id_email",
+                        "placeholder": "Địa chỉ email",
+                        "required": true
+                    },
+                    {
+                        "type": "password",
+                        "name": "password",
+                        "id": "id_password",
+                        "placeholder": "Mật khẩu",
+                        "required": true
+                    },
+                    {
+                        "type": "text",
+                        "name": "name",
+                        "id": "id_name",
+                        "placeholder": "Tên",
+                        "required": true
+                    },
+                    {
+                        "type": "text",
+                        "name": "headline",
+                        "id": "id_headline",
+                        "placeholder": "Vd: 'Em mộc mạc' 'Anh chân thành' 'Em chung tình'...",
+                        "required": true
+                    },
+                    {
+                        "type": "hidden",
+                        "name": "setfc_flag",
+                        "id": "id_setfc_flag",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "hidden",
+                        "name": "g-recaptcha-response",
+                        "id": "g-recaptcha-response",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "dob_day",
+                        "id": "id_dob_day",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "dob_month",
+                        "id": "id_dob_month",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "dob_year",
+                        "id": "id_dob_year",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "gender",
+                        "id": "id_gender",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "name": "marital_status",
+                        "id": "id_marital_status",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "name": "look_for",
+                        "id": "id_look_for",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "name": "height",
+                        "id": "id_height",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "name": "weight",
+                        "id": "id_weight",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "name": "education",
+                        "id": "id_education",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "name": "province",
+                        "id": "id_province",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "name": "district",
+                        "id": "id_district",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "ward",
+                        "id": "id_ward",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "appearance2_0",
+                        "id": "id_appearance2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "interest2_0",
+                        "id": "id_interest2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "personality2_0",
+                        "id": "id_personality2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "way_of_life",
+                        "id": "id_way_of_life",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "most_valued",
+                        "id": "id_most_valued",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "occupation2_0",
+                        "id": "id_occupation2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "religion2_0",
+                        "id": "id_religion2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "smoking2_0",
+                        "id": "id_smoking2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "drinking2_0",
+                        "id": "id_drinking2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "select",
+                        "name": "children2_0",
+                        "id": "id_children2_0",
+                        "required": false
+                    },
+                    {
+                        "type": "textarea",
+                        "name": "i_am",
+                        "id": "id_i_am",
+                        "required": true
+                    },
+                    {
+                        "type": "textarea",
+                        "name": "my_match",
+                        "id": "id_my_match",
+                        "required": true
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=6LcnxAweAAAAABPaCUTeNxnhpJM_TXf_Z8yLImL_&lang=vi",
+            "https://cdn.jsdelivr.net/jquery.validation/1.11.1/jquery.validate.js",
+            "https://cdn.jsdelivr.net/jquery.validation/1.11.1/additional-methods.js",
+            "https://cdn.jsdelivr.net/jquery.scrollto/2.1.2/jquery.scrollTo.min.js"
+        ],
+        "size_bytes": 82681,
+        "fingerprint": "9c0baad0967ec8f3c34d8ddc8d6694be",
+        "laravel_mapping": {
+            "route": "GET /register",
+            "controller": "AuthController@showRegisterForm",
+            "model": "User, Profile",
+            "blade_view": "themes.ehenho.signup"
+        }
+    },
+    {
+        "file": "tim-ban-bon-phuong-theo-tuoi.html",
+        "title": "Tìm Bạn Bốn Phương, Tìm Người Yêu theo Tuổi 10/2026 (Có Hình, SĐT & 100% Miễn Phí) - eHenho.com",
+        "url": "/tim-ban-bon-phuong-theo-tuoi",
+        "page_type": "search",
+        "template": "search-directory",
+        "layout": "layouts.frontend",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel",
+            "password-toggle-widget"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 1,
+            "images": [
+                "images/ehenho_logo.png"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "login.html",
+                "method": "POST",
+                "id": "login_form",
+                "class": "login",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "text",
+                        "name": "login",
+                        "id": "id_login",
+                        "placeholder": "Địa chỉ email",
+                        "required": false
+                    },
+                    {
+                        "type": "password",
+                        "name": "password",
+                        "id": "id_password",
+                        "placeholder": "Mật khẩu",
+                        "required": false
+                    },
+                    {
+                        "type": "checkbox",
+                        "name": "remember",
+                        "id": "id_remember",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 26613,
+        "fingerprint": "96339daed353029f16ad46715e57d4e1",
+        "laravel_mapping": {
+            "route": "GET /search/age/{range?}",
+            "controller": "SearchController@byAge",
+            "model": "Profile, Province",
+            "blade_view": "themes.ehenho.tim_ban_bon_phuong_theo_tuoi"
+        }
+    },
+    {
+        "file": "tim-ban-bon-phuong.html",
+        "title": "Tìm Bạn Bốn Phương, Hẹn Hò, Kết Bạn Lâm Đồng 10/2026 (Có Hình) - eHenho.com",
+        "url": "/tim-ban-bon-phuong",
+        "page_type": "search",
+        "template": "search-directory",
+        "layout": "layouts.frontend",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel",
+            "pagination-controls",
+            "password-toggle-widget"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 21,
+            "images": [
+                "images/ehenho_logo.png",
+                "images/487168_pl.jpeg",
+                "images/df_picture.png",
+                "images/386347_pl.jpg",
+                "images/459168_pl.png",
+                "images/185258_pl.jpg",
+                "images/479760_pl.jpg",
+                "images/485345_pl.jpg",
+                "images/374856_pl.png",
+                "images/420387_pl.jpeg",
+                "images/421749_pl.jpg",
+                "images/154699_pl.jpeg"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "login.html",
+                "method": "POST",
+                "id": "login_form",
+                "class": "login",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "text",
+                        "name": "login",
+                        "id": "id_login",
+                        "placeholder": "Địa chỉ email",
+                        "required": false
+                    },
+                    {
+                        "type": "password",
+                        "name": "password",
+                        "id": "id_password",
+                        "placeholder": "Mật khẩu",
+                        "required": false
+                    },
+                    {
+                        "type": "checkbox",
+                        "name": "remember",
+                        "id": "id_remember",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        ],
+        "size_bytes": 69432,
+        "fingerprint": "d64a22e4652e319541b8f1925c0956f5",
+        "laravel_mapping": {
+            "route": "GET /search",
+            "controller": "SearchController@index",
+            "model": "Profile, Province",
+            "blade_view": "themes.ehenho.tim_ban_bon_phuong"
+        }
+    },
+    {
+        "file": "upload-profile-pic.html",
+        "title": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+        "url": "/upload-profile-pic",
+        "page_type": "profile",
+        "template": "profile-avatar-upload",
+        "layout": "layouts.account",
+        "components": [
+            "header-navbar",
+            "footer-main",
+            "hero-carousel"
+        ],
+        "assets": {
+            "css": [
+                {
+                    "rel": "icon",
+                    "href": "/static/img/favicon.png",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+                    "is_external": true
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/normalize.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/base8.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "css/carousel.css",
+                    "is_external": false
+                },
+                {
+                    "rel": "stylesheet",
+                    "href": "https://fonts.googleapis.com/icon?family=Material+Icons",
+                    "is_external": true
+                }
+            ],
+            "js": [
+                {
+                    "src": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/django.csrf.js",
+                    "is_external": false
+                },
+                {
+                    "src": "https://cdn.jsdelivr.net/jquery.validation/1.11.1/jquery.validate.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://cdn.jsdelivr.net/jquery.validation/1.11.1/additional-methods.js",
+                    "is_external": true
+                },
+                {
+                    "src": "https://cdn.jsdelivr.net/jquery.scrollto/2.1.2/jquery.scrollTo.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/1st_f_fc_upp.js",
+                    "is_external": false
+                },
+                {
+                    "src": "js/fc_sc_pe.js",
+                    "is_external": false
+                },
+                {
+                    "src": "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-filestyle/1.2.1/bootstrap-filestyle.min.js",
+                    "is_external": true
+                },
+                {
+                    "src": "js/auth-session.js",
+                    "is_external": false
+                }
+            ],
+            "images_count": 2,
+            "images": [
+                "images/ehenho_logo.png"
+            ]
+        },
+        "css_files": [
+            "/static/img/favicon.png",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "css/normalize.css",
+            "css/base8.css",
+            "css/carousel.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons"
+        ],
+        "js_files": [
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "js/django.csrf.js",
+            "https://cdn.jsdelivr.net/jquery.validation/1.11.1/jquery.validate.js",
+            "https://cdn.jsdelivr.net/jquery.validation/1.11.1/additional-methods.js",
+            "https://cdn.jsdelivr.net/jquery.scrollto/2.1.2/jquery.scrollTo.min.js",
+            "js/1st_f_fc_upp.js",
+            "js/fc_sc_pe.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-filestyle/1.2.1/bootstrap-filestyle.min.js",
+            "js/auth-session.js"
+        ],
+        "forms": [
+            {
+                "action": "logout.html",
+                "method": "POST",
+                "id": "exit-form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            },
+            {
+                "action": "upload-profile-pic.html",
+                "method": "POST",
+                "id": "pe_form",
+                "class": "",
+                "inputs": [
+                    {
+                        "type": "hidden",
+                        "name": "csrfmiddlewaretoken",
+                        "id": "",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "file",
+                        "name": "picture",
+                        "id": "id_picture",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "submit",
+                        "name": "",
+                        "id": "save-btn",
+                        "placeholder": "",
+                        "required": false
+                    },
+                    {
+                        "type": "hidden",
+                        "name": "setfc_flag",
+                        "id": "id_setfc_flag",
+                        "placeholder": "",
+                        "required": false
+                    }
+                ]
+            }
+        ],
+        "interactive_elements": [
+            {
+                "tag": "button",
+                "type": "collapse",
+                "target": "#navbar",
+                "id": "",
+                "class": "navbar-toggle collapsed"
+            },
+            {
+                "tag": "a",
+                "type": "dropdown",
+                "target": "#",
+                "id": "",
+                "class": "dropdown-toggle"
+            }
+        ],
+        "external_dependencies": [
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+            "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/icon?family=Material+Icons",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js",
+            "https://code.jquery.com/ui/1.11.4/jquery-ui.min.js",
+            "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+            "https://cdn.jsdelivr.net/jquery.validation/1.11.1/jquery.validate.js",
+            "https://cdn.jsdelivr.net/jquery.validation/1.11.1/additional-methods.js",
+            "https://cdn.jsdelivr.net/jquery.scrollto/2.1.2/jquery.scrollTo.min.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-filestyle/1.2.1/bootstrap-filestyle.min.js"
+        ],
+        "size_bytes": 20814,
+        "fingerprint": "85e58db0cbe5e7f8d23768679bf0fc91",
+        "laravel_mapping": {
+            "route": "GET /account/avatar",
+            "controller": "ProfileController@avatarUpload",
+            "model": "Profile, Media",
+            "blade_view": "themes.ehenho.upload_profile_pic"
+        }
+    }
+]

@@ -1,0 +1,34 @@
+{
+    "architecture": "Single Laravel Core with Multi-Project & Multi-Database dynamic routing",
+    "projects": [
+        {
+            "project_code": "viettinmart-eco",
+            "name": "Viettinmart Grocery Ecommerce",
+            "theme": "viettinmartdemo",
+            "database_strategy": "central_shared_scoped",
+            "database_connection": "mysql",
+            "status": "active",
+            "domain": "viettinmart.local"
+        },
+        {
+            "project_code": "wkcomputer",
+            "name": "WKComputer Gaming & PC Builder",
+            "theme": "wkcomputerdemo",
+            "database_strategy": "central_shared_scoped",
+            "database_connection": "mysql",
+            "status": "active",
+            "domain": "wkcomputer.local"
+        },
+        {
+            "project_code": "ehenho",
+            "name": "eHenho Dating & Social Network",
+            "theme": "ehenho",
+            "database_strategy": "isolated_project_database",
+            "database_connection": "project_ehenho",
+            "database_name": "core_ehenho",
+            "status": "candidate",
+            "domain": "ehenho.local",
+            "pages_count": 22
+        }
+    ]
+}

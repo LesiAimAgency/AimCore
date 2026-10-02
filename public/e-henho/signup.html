@@ -1,0 +1,2949 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<title>
+   eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích &amp; Tính cách
+  </title>
+<meta content="Hẹn hò, Kết bạn, Tìm bạn bốn phương, Tìm bạn gái, Tìm bạn trai, Tìm người yêu, Tìm bạn, Tìm bạn tâm sự, Tìm bạn đời, Tìm một nửa, Tìm bạn trăm năm, Tìm người để kết hôn" name="keywords"/>
+<meta content="eHenho.com là trang web hẹn hò online, tìm bạn, kết bạn theo sở thích và tính cách giúp bạn nhanh chóng tìm được một nửa yêu thương của mình." name="description"/>
+<meta content="eHenho.com, hi@ehenho.com" name="author"/>
+<meta content="eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích &amp; Tính cách" property="og:title"/>
+<meta content="eHenho.com là trang web hẹn hò online, tìm bạn, kết bạn theo sở thích và tính cách giúp bạn nhanh chóng tìm được một nửa yêu thương của mình." property="og:description"/>
+<meta content="Website" property="og:type"/>
+<link href="/static/img/favicon.png" rel="icon"/>
+<!-- Latest compiled and minified CSS -->
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet"/>
+<!-- Optional theme -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous"> -->
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="css/normalize.css" rel="stylesheet"/>
+<link href="css/base8.css" rel="stylesheet"/>
+<link href="css/carousel.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+</style>
+</head>
+<body>
+<!-- Static navbar -->
+<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
+<div class="container" style="paddingg-left:9px !important; paddingg-right:9px !important">
+<div class="navbar-header">
+<button aria-controls="navbar" aria-expanded="false" class="navbar-toggle collapsed" data-target="#navbar" data-toggle="collapse" type="button">
+<span class="sr-only">
+       Toggle navigation
+      </span>
+<span class="icon-bar">
+</span>
+<span class="icon-bar">
+</span>
+<span class="icon-bar">
+</span>
+</button>
+<a class="navbar-brand" href="/">
+<img class="brand_img" src="images/ehenho_logo.png"/>
+</a>
+<ul class="nav navbar-nav navbar-rightt pull-right no-collapse">
+<li>
+<span class="hidden-xs">
+</span>
+<!-- 
+        <a href="/accounts/login/" class="login-btn"><div class="visible-xs"><span class="hidden-xs"><i class="fa fa-sign-in" aria-hidden="true"></i></span> Đăng nhập</div></a>
+         -->
+</li>
+<li>
+</li>
+<li>
+<a class="hidden-xs" href="tim-ban-bon-phuong-theo-tuoi.html">
+<i aria-hidden="true" class="fa fa-search" style="font-size:1.2em;">
+</i>
+<span class="hidden-sm">
+         Tìm kiếm
+        </span>
+</a>
+</li>
+<li>
+<a class="hidden-xs" href="gioi-thieu.html">
+<i aria-hidden="true" class="fa fa-question-circle" style="font-size:1.2em;">
+</i>
+<span class="hidden-sm">
+         Trợ giúp
+        </span>
+</a>
+</li>
+</ul>
+</div>
+<div class="navbar-collapse collapse bs-navbar-collapse" id="navbar">
+<ul class="nav navbar-nav navbar-right">
+<li>
+<a class="visible-xs-block" href="tim-ban-bon-phuong-theo-tuoi.html">
+<i aria-hidden="true" class="fa fa-search" style="font-size:1.2em;">
+</i>
+        Tìm kiếm
+       </a>
+</li>
+<li>
+<a class="visible-xs-block" href="gioi-thieu.html">
+<i aria-hidden="true" class="fa fa-question-circle" style="font-size:1.2em;">
+</i>
+        Trợ giúp
+       </a>
+</li>
+<li class="dropdown">
+<a aria-expanded="false" class="dropdown-toggle" data-toggle="dropdown" href="#">
+<i aria-hidden="true" class="fa fa-sign-in" style="font-size:1em;">
+</i>
+        Đăng nhập
+        <b class="caret">
+</b>
+</a>
+<ul class="dropdown-menu login-dropdown">
+<li class="dropdown-header">
+         Đăng nhập vào ehenho.com
+        </li>
+<li>
+<div class="col-xs-12">
+<form action="login.html" class="login" id="login_form" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="klJD2gK3z1ccRrIyzNa5VDFkWnNJ5xaIVmXfmtgWCWt1WZnRb5z4NWccfCXfAUV3"/>
+<!--  <label for='loginUser'>Username</label> -->
+<input class="form-control" id="id_login" maxlength="120" name="login" placeholder="Địa chỉ email" style="margin-bottom:2.5px;font-family:Verdana,Helvetica,Arial,sans-serif" type="text"/>
+<!--  <label for='loginPass'>Password</label> -->
+<!-- <label for="id_password"></label> -->
+<input class="form-control c-password-dd" id="id_password" maxlength="120" name="password" placeholder="Mật khẩu" style="margin-bottom:5px;font-family:Verdana,Helvetica,Arial,sans-serif" type="password"/>
+<a href="password-reset.html" id="id_forgot_link">
+            Quên?
+           </a>
+<div class="pull-right">
+<a id="id_show_hide">
+<span id="mask-pw-dd" style="cursor:pointer;cursor:hand">
+<i aria-hidden="true" class="fa fa-eye" id="mask-pw-i-dd">
+</i>
+              Hiện
+             </span>
+</a>
+</div>
+<div class="checkbox" id="id_chb_remember">
+<label>
+<input id="id_remember" name="remember" type="checkbox"/>
+             Duy trì đăng nhập
+            </label>
+</div>
+<button class="btn btn-block btn-sc-cus btn-success" data-loading-text="Loading..." id="submitbtn" type="submit">
+            Đăng nhập
+           </button>
+</form>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<!--/.nav-collapse -->
+</div>
+</header>
+<header class="navlinkbar2" id="overview">
+<div class="container">
+<!-- <div class="row" style="margin-top:3px"> -->
+<div class="row">
+<div class="col-sm-12 navlink1-left">
+<ul class="nav nav-pills">
+<!-- #429fb8 -->
+<li role="presentation">
+<a class="navlink1" href="tim-ban-bon-phuong.html">
+<i aria-hidden="true" class="fa fa-arrow-circle-right">
+</i>
+         Tìm bạn bốn phương
+        </a>
+</li>
+<li role="presentation">
+<a class="navlink1" href="/tim-nguoi-de-ket-hon/">
+<i aria-hidden="true" class="fa fa-arrow-circle-right">
+</i>
+         Tìm người kết hôn
+        </a>
+</li>
+<li role="presentation">
+<a class="navlink1" href="/tim-nguoi-yeu/">
+<i aria-hidden="true" class="fa fa-arrow-circle-right">
+</i>
+         Tìm người yêu
+        </a>
+</li>
+<li role="presentation">
+<a class="navlink1" href="/tim-ban-gai/">
+<i aria-hidden="true" class="fa fa-arrow-circle-right">
+</i>
+         Tìm bạn gái
+        </a>
+</li>
+<li role="presentation">
+<a class="navlink1" href="/tim-ban-trai/">
+<i aria-hidden="true" class="fa fa-arrow-circle-right">
+</i>
+         Tìm bạn trai
+        </a>
+</li>
+<li role="presentation">
+<a class="navlink1" href="/tim-ban-doi/">
+<i aria-hidden="true" class="fa fa-arrow-circle-right">
+</i>
+         Tìm bạn đời
+        </a>
+</li>
+<li role="presentation">
+<a class="navlink1" href="/tim-ban-tam-su/">
+<i aria-hidden="true" class="fa fa-arrow-circle-right">
+</i>
+         Tìm bạn tâm sự
+        </a>
+</li>
+<li role="presentation">
+<a class="navlink1" href="/tim-ban-be-moi/">
+<i aria-hidden="true" class="fa fa-arrow-circle-right">
+</i>
+         Tìm bạn bè mới
+        </a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</header>
+<header class="text-center" style="background-color: #FCF8E3; color:#8A6D3B; padding-top:6px; padding-bottom:6px">
+<div class="container">
+<div class="row">
+<div class="col-sm-12">
+<span style="font-size:1.0em" title="Lưu ý">
+<i aria-hidden="true" class="fa fa-info-circle">
+</i>
+       eHenho.com 100% Miễn Phí!
+      </span>
+</div>
+</div>
+</div>
+</header>
+<style rel="stylesheet">
+   .login-btnn{line-height:40px !important;background-color:black !important;color:white;outline:1px solid white;box-sizing:border-box;border-radius:5px;line-height:40px !important;padding:6px}
+  </style>
+<!-- 
+<header class="text-center visible-xs" style="background-color: #FCF8E3; color:#8A6D3B; padding-top:6px; padding-bottom:6px">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">          
+        <a href="/accounts/login/" class="btn login-btnn"><span class="visible-xs"><span class="hidden-xs"><i class="fa fa-sign-in" style="font-size:1em;" aria-hidden="true"></i></span> Đăng Nhập</span></a>
+      </div>
+    </div>
+  </div>
+</header>
+ -->
+<div class="container">
+</div>
+<noscript>
+<style type="text/css">
+    .container {display:none;}
+   </style>
+<div class="noscriptmsg">
+    Vui lòng enable javascript để có thể sử dụng trang web eHenho.com!
+   </div>
+</noscript>
+<div class="container" style="background-color:#FFF; padding-top:0px; padding-bottom:64px">
+<!-- <div class='container' style="padding-top:20px; background-color:#FFF"> -->
+<style>
+    .grecaptcha-badge {
+         opacity:0; !important;
+    }
+   </style>
+<script>
+    function onloadCallback() {
+// Global grecaptcha
+grecaptcha.ready(function() {
+    document.getElementById('signup_form').addEventListener("submit", function(event) {
+        event.preventDefault();
+        grecaptcha.execute('6LcnxAweAAAAABPaCUTeNxnhpJM_TXf_Z8yLImL_', {action:"/accounts/signup/"}).then(function(token) {
+        document.getElementById('g-recaptcha-response').value = token;
+        document.getElementById('signup_form').submit();
+        });
+    }, false);
+});
+}
+   </script>
+<div class="row">
+<!-- <div class='col-lg-6 col-lg-offset-3'> -->
+<!-- <div class='col-sm-10 col-sm-offset-1'> -->
+<!-- <div class="container" style="border:1px solid red"> -->
+<div class="container">
+<div class="row">
+<div class="col-sm-6 col-sm-offset-3 text-center">
+<h3 class="text-success" style="font-weight:bold">
+        Đăng Ký Hồ Sơ Mới
+       </h3>
+<p style="font-size:1.0em">
+        Tạo một hồ sơ mới để đối tượng hẹn hò có thể tìm thấy bạn và để bạn chủ động nhận &amp; gửi tin nhắn đến họ trên eHenho. Đã có hồ sơ trên eHenho rồi?
+        <a href="login.html">
+         Đăng nhập ở đây
+        </a>
+        .
+       </p>
+</div>
+</div>
+<form accept-charset="utf-8" action="signup.html" class="signup" id="signup_form" method="post" name="form">
+<input name="csrfmiddlewaretoken" type="hidden" value="klJD2gK3z1ccRrIyzNa5VDFkWnNJ5xaIVmXfmtgWCWt1WZnRb5z4NWccfCXfAUV3"/>
+<div class="row">
+<div class="col-sm-6 col-sm-offset-3">
+<p>
+</p>
+</div>
+</div>
+<!-- 8 col -->
+<div class="col-sm-8 col-sm-offset-2" style="background-color:#FAFCFF; padding:26px 10px 20px 10px; margin-top:-14px; border:1px solid #ADCEFF; border-radius: 18px">
+<h4>
+        TÀI KHOẢN ĐĂNG NHẬP
+       </h4>
+<div class="row">
+<div class="fieldWrapper">
+<!--<div class="col-sm-4 text-right ptop-six">
+        <label for="id_email">Email:</label>
+        <label for="id_email">Email</label>
+    </div> -->
+<div class="col-xs-3 col-xs-offset-0 col-md-4 col-md-offset-0 text-right labtext_p">
+<div class="labtext labtext_c">
+<b>
+            Địa chỉ email
+           </b>
+</div>
+</div>
+<div class="col-xs-9 col-md-5">
+<input class="required pl-text textinput textInput form-control" id="id_email" maxlength="120" name="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$" placeholder="Địa chỉ email" required="" style="height:32px;" title="Địa chỉ email của bạn" type="text"/>
+</div>
+<div class="col-xs-9 col-xs-offset-3 col-md-3 col-md-offset-0 ptop-six">
+<span class="pr_htext">
+           (Không hiển thị trên hồ sơ.)
+          </span>
+</div>
+<div class="col-xs-9 col-xs-offset-3 col-md-8 col-md-offset-4 ptop-six">
+<span class="pr_htext text-left">
+           Bạn chưa có địa chỉ email? Hãy vào
+           <a href="https://www.gmail.com">
+            Google Gmail
+           </a>
+           để tạo địa chỉ email cho bạn.
+          </span>
+</div>
+<div class="col-xs-9 col-xs-offset-3 col-md-5 col-md-offset-4">
+<style>
+           #email_hint {
+                color: #B94A48;
+                display: none;
+                /*font-size: 0.9em;*/
+                margin: 10px 0 10px;
+            }
+            .domain {
+                color: #08c;
+                font-weight: bold;
+                text-decoration: underline;
+            }
+          </style>
+<p>
+<div id="email_hint">
+</div>
+</p>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="fieldWrapper">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Mật khẩu
+           </b>
+</span>
+</div>
+<div class="col-xs-9 col-md-5">
+<input class="required pl-text textinput textInput form-control" id="id_password" maxlength="128" name="password" placeholder="Mật khẩu" required="" style="height:32px;" title="Mật khẩu mới" type="password"/>
+</div>
+<div class="col-xs-9 col-xs-offset-3 col-md-3 col-md-offset-0 ptop-six">
+<a style="text-decoration:none">
+<span id="mask-pw" style="cursor:pointer;cursor:hand">
+<i aria-hidden="true" class="fa fa-eye" id="mask-pw-i">
+</i>
+            Hiện
+           </span>
+</a>
+</div>
+</div>
+</div>
+<hr/>
+<h4>
+        THÔNG TIN CƠ BẢN
+       </h4>
+<div class="row mtop-ten">
+<div class="fieldWrapper">
+<!-- <div class="col-sm-2 text-right ptop-six">
+        <label for="id_name">Tên</label>
+    </div> -->
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Tên
+           </b>
+</span>
+</div>
+<div class="col-xs-9 col-md-5">
+<input class="required pl-text textinput textInput form-control" id="id_name" maxlength="120" minlength="2" name="name" placeholder="Tên" required="" style="height:32px;" title="Tên của bạn" type="text"/>
+</div>
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Ngày sinh
+           </b>
+</span>
+</div>
+<div class="col-xs-9 col-md-5">
+<div style="display:table; width:100%;">
+<div style="width:26% !important; display:table-cell; border 1px solid blue">
+<select class="customselectdatewidget form-control" id="id_dob_day" name="dob_day" style="width: 100%; display:inline-block; font-size:90%; height:32px" width="100%">
+<option value="1">
+              1
+             </option>
+<option value="2">
+              2
+             </option>
+<option value="3">
+              3
+             </option>
+<option value="4">
+              4
+             </option>
+<option value="5">
+              5
+             </option>
+<option value="6">
+              6
+             </option>
+<option value="7">
+              7
+             </option>
+<option value="8">
+              8
+             </option>
+<option value="9">
+              9
+             </option>
+<option value="10">
+              10
+             </option>
+<option value="11">
+              11
+             </option>
+<option value="12">
+              12
+             </option>
+<option value="13">
+              13
+             </option>
+<option value="14">
+              14
+             </option>
+<option value="15">
+              15
+             </option>
+<option value="16">
+              16
+             </option>
+<option value="17">
+              17
+             </option>
+<option value="18">
+              18
+             </option>
+<option value="19">
+              19
+             </option>
+<option value="20">
+              20
+             </option>
+<option value="21">
+              21
+             </option>
+<option value="22">
+              22
+             </option>
+<option value="23">
+              23
+             </option>
+<option value="24">
+              24
+             </option>
+<option value="25">
+              25
+             </option>
+<option value="26">
+              26
+             </option>
+<option value="27">
+              27
+             </option>
+<option value="28">
+              28
+             </option>
+<option value="29">
+              29
+             </option>
+<option selected="selected" value="30">
+              30
+             </option>
+<option value="31">
+              31
+             </option>
+</select>
+</div>
+<div style="width:41% !important; display:table-cell; border 1px solid green">
+<select class="customselectdatewidget form-control" id="id_dob_month" name="dob_month" style="width: 100%; display:inline-block; font-size:90%; height:32px" width="100%">
+<option value="1">
+              Tháng 1
+             </option>
+<option value="2">
+              Tháng 2
+             </option>
+<option value="3">
+              Tháng 3
+             </option>
+<option value="4">
+              Tháng 4
+             </option>
+<option value="5">
+              Tháng 5
+             </option>
+<option value="6">
+              Tháng 6
+             </option>
+<option value="7">
+              Tháng 7
+             </option>
+<option value="8">
+              Tháng 8
+             </option>
+<option selected="selected" value="9">
+              Tháng 9
+             </option>
+<option value="10">
+              Tháng 10
+             </option>
+<option value="11">
+              Tháng 11
+             </option>
+<option value="12">
+              Tháng 12
+             </option>
+</select>
+</div>
+<div style="width:32% !important; display:table-cell; border 1px solid red">
+<select class="customselectdatewidget form-control" id="id_dob_year" name="dob_year" style="width: 100%; display:inline-block; font-size:90%; height:32px" width="100%">
+<option value="1957">
+              1957
+             </option>
+<option value="1958">
+              1958
+             </option>
+<option value="1959">
+              1959
+             </option>
+<option value="1960">
+              1960
+             </option>
+<option value="1961">
+              1961
+             </option>
+<option value="1962">
+              1962
+             </option>
+<option value="1963">
+              1963
+             </option>
+<option value="1964">
+              1964
+             </option>
+<option value="1965">
+              1965
+             </option>
+<option value="1966">
+              1966
+             </option>
+<option value="1967">
+              1967
+             </option>
+<option value="1968">
+              1968
+             </option>
+<option value="1969">
+              1969
+             </option>
+<option value="1970">
+              1970
+             </option>
+<option value="1971">
+              1971
+             </option>
+<option value="1972">
+              1972
+             </option>
+<option value="1973">
+              1973
+             </option>
+<option value="1974">
+              1974
+             </option>
+<option value="1975">
+              1975
+             </option>
+<option value="1976">
+              1976
+             </option>
+<option value="1977">
+              1977
+             </option>
+<option value="1978">
+              1978
+             </option>
+<option value="1979">
+              1979
+             </option>
+<option value="1980">
+              1980
+             </option>
+<option value="1981">
+              1981
+             </option>
+<option value="1982">
+              1982
+             </option>
+<option value="1983">
+              1983
+             </option>
+<option value="1984">
+              1984
+             </option>
+<option value="1985">
+              1985
+             </option>
+<option value="1986">
+              1986
+             </option>
+<option value="1987">
+              1987
+             </option>
+<option value="1988">
+              1988
+             </option>
+<option value="1989">
+              1989
+             </option>
+<option value="1990">
+              1990
+             </option>
+<option value="1991">
+              1991
+             </option>
+<option value="1992">
+              1992
+             </option>
+<option value="1993">
+              1993
+             </option>
+<option value="1994">
+              1994
+             </option>
+<option value="1995">
+              1995
+             </option>
+<option value="1996">
+              1996
+             </option>
+<option value="1997">
+              1997
+             </option>
+<option value="1998">
+              1998
+             </option>
+<option value="1999">
+              1999
+             </option>
+<option value="2000">
+              2000
+             </option>
+<option value="2001">
+              2001
+             </option>
+<option value="2002">
+              2002
+             </option>
+<option value="2003">
+              2003
+             </option>
+<option selected="selected" value="2004">
+              2004
+             </option>
+<option value="2005">
+              2005
+             </option>
+<option value="2006">
+              2006
+             </option>
+<option value="2007">
+              2007
+             </option>
+<option value="2008">
+              2008
+             </option>
+</select>
+</div>
+</div>
+</div>
+<div class="col-xs-9 col-xs-offset-3 col-md-3 col-md-offset-0 ptop-six">
+<span class="pr_htext">
+           (Không hiển thị trên hồ sơ, để tính tuổi.)
+          </span>
+</div>
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Tôi là
+           </b>
+</span>
+</div>
+<div class="col-xs-4 col-md-3">
+<select class="pl-text select form-control" id="id_gender" name="gender" required="" style="height:32px;">
+<option selected="selected" value="male">
+            Nam tìm nữ
+           </option>
+<option value="female">
+            Nữ tìm nam
+           </option>
+</select>
+</div>
+<!--<div class="col-sm-6 ptop-six">
+        <div style='color:gray'>
+        
+        </div>
+    </div> -->
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Hôn nhân
+           </b>
+</span>
+</div>
+<div class="col-xs-6 col-sm-5 col-md-4 col-lg-4">
+<select class="pl-text select form-control" id="id_marital_status" name="marital_status" required="" style="height:32px;">
+<option selected="selected" value="single">
+            Độc thân
+           </option>
+<option value="divorced">
+            Ly dị
+           </option>
+<option value="widowed">
+            Ở góa
+           </option>
+<option value="in-relationship">
+            Đang có người yêu
+           </option>
+</select>
+</div>
+<!-- <div class="col-xs-3 col-md-4 ptop-six">
+        <div style='color:gray'>
+        
+        </div>
+    </div> -->
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Mục tiêu
+           </b>
+</span>
+</div>
+<div class="col-xs-7 col-sm-6 col-md-5 col-lg-4">
+<select class="pl-text select form-control" id="id_look_for" name="look_for" required="" style="height:32px;">
+<option value="marriage">
+            Tìm người để kết hôn
+           </option>
+<option selected="selected" value="long-term-love">
+            Tìm người yêu lâu dài
+           </option>
+<option value="short-term-love">
+            Tìm người yêu ngắn hạn
+           </option>
+<option value="chat-or-intimate-friends">
+            Tìm bạn tâm sự
+           </option>
+<option value="new-friends">
+            Tìm bạn bè mới
+           </option>
+<option value="life-mate">
+            Tìm bạn đời
+           </option>
+</select>
+</div>
+<!-- <div class="col-sm-3 ptop-six">
+        <div style='color:gray'>
+        
+        </div>
+    </div> -->
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<!-- <label style="font-size:1em"><b>Chiều cao</b></label> -->
+<span class="labtext">
+<b>
+            Chiều cao
+           </b>
+</span>
+</div>
+<div class="col-xs-3 col-md-2">
+<select class="select form-control" id="id_height" name="height" required="" style="height:32px;font-size:90%">
+<option value="130">
+            130
+           </option>
+<option value="131">
+            131
+           </option>
+<option value="132">
+            132
+           </option>
+<option value="133">
+            133
+           </option>
+<option value="134">
+            134
+           </option>
+<option value="135">
+            135
+           </option>
+<option value="136">
+            136
+           </option>
+<option value="137">
+            137
+           </option>
+<option value="138">
+            138
+           </option>
+<option value="139">
+            139
+           </option>
+<option value="140">
+            140
+           </option>
+<option value="141">
+            141
+           </option>
+<option value="142">
+            142
+           </option>
+<option value="143">
+            143
+           </option>
+<option value="144">
+            144
+           </option>
+<option value="145">
+            145
+           </option>
+<option value="146">
+            146
+           </option>
+<option value="147">
+            147
+           </option>
+<option value="148">
+            148
+           </option>
+<option value="149">
+            149
+           </option>
+<option value="150">
+            150
+           </option>
+<option value="151">
+            151
+           </option>
+<option value="152">
+            152
+           </option>
+<option value="153">
+            153
+           </option>
+<option value="154">
+            154
+           </option>
+<option value="155">
+            155
+           </option>
+<option value="156">
+            156
+           </option>
+<option value="157">
+            157
+           </option>
+<option value="158">
+            158
+           </option>
+<option value="159">
+            159
+           </option>
+<option value="160">
+            160
+           </option>
+<option value="161">
+            161
+           </option>
+<option value="162">
+            162
+           </option>
+<option value="163">
+            163
+           </option>
+<option value="164">
+            164
+           </option>
+<option value="165">
+            165
+           </option>
+<option value="166">
+            166
+           </option>
+<option value="167">
+            167
+           </option>
+<option value="168">
+            168
+           </option>
+<option value="169">
+            169
+           </option>
+<option selected="selected" value="170">
+            170
+           </option>
+<option value="171">
+            171
+           </option>
+<option value="172">
+            172
+           </option>
+<option value="173">
+            173
+           </option>
+<option value="174">
+            174
+           </option>
+<option value="175">
+            175
+           </option>
+<option value="176">
+            176
+           </option>
+<option value="177">
+            177
+           </option>
+<option value="178">
+            178
+           </option>
+<option value="179">
+            179
+           </option>
+<option value="180">
+            180
+           </option>
+<option value="181">
+            181
+           </option>
+<option value="182">
+            182
+           </option>
+<option value="183">
+            183
+           </option>
+<option value="184">
+            184
+           </option>
+<option value="185">
+            185
+           </option>
+<option value="186">
+            186
+           </option>
+<option value="187">
+            187
+           </option>
+<option value="188">
+            188
+           </option>
+<option value="189">
+            189
+           </option>
+<option value="190">
+            190
+           </option>
+<option value="191">
+            191
+           </option>
+<option value="192">
+            192
+           </option>
+<option value="193">
+            193
+           </option>
+<option value="194">
+            194
+           </option>
+<option value="195">
+            195
+           </option>
+<option value="196">
+            196
+           </option>
+<option value="197">
+            197
+           </option>
+<option value="198">
+            198
+           </option>
+<option value="199">
+            199
+           </option>
+</select>
+</div>
+<div class="col-xs-6 col-md-6 ptop-six">
+<div style="color:gray">
+<small>
+<i>
+             (cm)
+            </i>
+</small>
+</div>
+</div>
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Cân nặng
+           </b>
+</span>
+</div>
+<div class="col-xs-3 col-md-2">
+<select class="select form-control" id="id_weight" name="weight" required="" style="height:32px;font-size:90%">
+<option value="30">
+            30
+           </option>
+<option value="31">
+            31
+           </option>
+<option value="32">
+            32
+           </option>
+<option value="33">
+            33
+           </option>
+<option value="34">
+            34
+           </option>
+<option value="35">
+            35
+           </option>
+<option value="36">
+            36
+           </option>
+<option value="37">
+            37
+           </option>
+<option value="38">
+            38
+           </option>
+<option value="39">
+            39
+           </option>
+<option value="40">
+            40
+           </option>
+<option value="41">
+            41
+           </option>
+<option value="42">
+            42
+           </option>
+<option value="43">
+            43
+           </option>
+<option value="44">
+            44
+           </option>
+<option value="45">
+            45
+           </option>
+<option value="46">
+            46
+           </option>
+<option value="47">
+            47
+           </option>
+<option value="48">
+            48
+           </option>
+<option value="49">
+            49
+           </option>
+<option selected="selected" value="50">
+            50
+           </option>
+<option value="51">
+            51
+           </option>
+<option value="52">
+            52
+           </option>
+<option value="53">
+            53
+           </option>
+<option value="54">
+            54
+           </option>
+<option value="55">
+            55
+           </option>
+<option value="56">
+            56
+           </option>
+<option value="57">
+            57
+           </option>
+<option value="58">
+            58
+           </option>
+<option value="59">
+            59
+           </option>
+<option value="60">
+            60
+           </option>
+<option value="61">
+            61
+           </option>
+<option value="62">
+            62
+           </option>
+<option value="63">
+            63
+           </option>
+<option value="64">
+            64
+           </option>
+<option value="65">
+            65
+           </option>
+<option value="66">
+            66
+           </option>
+<option value="67">
+            67
+           </option>
+<option value="68">
+            68
+           </option>
+<option value="69">
+            69
+           </option>
+<option value="70">
+            70
+           </option>
+<option value="71">
+            71
+           </option>
+<option value="72">
+            72
+           </option>
+<option value="73">
+            73
+           </option>
+<option value="74">
+            74
+           </option>
+<option value="75">
+            75
+           </option>
+<option value="76">
+            76
+           </option>
+<option value="77">
+            77
+           </option>
+<option value="78">
+            78
+           </option>
+<option value="79">
+            79
+           </option>
+<option value="80">
+            80
+           </option>
+<option value="81">
+            81
+           </option>
+<option value="82">
+            82
+           </option>
+<option value="83">
+            83
+           </option>
+<option value="84">
+            84
+           </option>
+<option value="85">
+            85
+           </option>
+<option value="86">
+            86
+           </option>
+<option value="87">
+            87
+           </option>
+<option value="88">
+            88
+           </option>
+<option value="89">
+            89
+           </option>
+<option value="90">
+            90
+           </option>
+<option value="91">
+            91
+           </option>
+<option value="92">
+            92
+           </option>
+<option value="93">
+            93
+           </option>
+<option value="94">
+            94
+           </option>
+<option value="95">
+            95
+           </option>
+<option value="96">
+            96
+           </option>
+<option value="97">
+            97
+           </option>
+<option value="98">
+            98
+           </option>
+<option value="99">
+            99
+           </option>
+<option value="100">
+            100
+           </option>
+<option value="101">
+            101
+           </option>
+<option value="102">
+            102
+           </option>
+<option value="103">
+            103
+           </option>
+<option value="104">
+            104
+           </option>
+<option value="105">
+            105
+           </option>
+<option value="106">
+            106
+           </option>
+<option value="107">
+            107
+           </option>
+<option value="108">
+            108
+           </option>
+<option value="109">
+            109
+           </option>
+<option value="110">
+            110
+           </option>
+<option value="111">
+            111
+           </option>
+<option value="112">
+            112
+           </option>
+<option value="113">
+            113
+           </option>
+<option value="114">
+            114
+           </option>
+<option value="115">
+            115
+           </option>
+<option value="116">
+            116
+           </option>
+<option value="117">
+            117
+           </option>
+<option value="118">
+            118
+           </option>
+<option value="119">
+            119
+           </option>
+<option value="120">
+            120
+           </option>
+<option value="121">
+            121
+           </option>
+<option value="122">
+            122
+           </option>
+<option value="123">
+            123
+           </option>
+<option value="124">
+            124
+           </option>
+<option value="125">
+            125
+           </option>
+<option value="126">
+            126
+           </option>
+<option value="127">
+            127
+           </option>
+<option value="128">
+            128
+           </option>
+<option value="129">
+            129
+           </option>
+<option value="130">
+            130
+           </option>
+<option value="131">
+            131
+           </option>
+<option value="132">
+            132
+           </option>
+<option value="133">
+            133
+           </option>
+<option value="134">
+            134
+           </option>
+<option value="135">
+            135
+           </option>
+<option value="136">
+            136
+           </option>
+<option value="137">
+            137
+           </option>
+<option value="138">
+            138
+           </option>
+<option value="139">
+            139
+           </option>
+<option value="140">
+            140
+           </option>
+<option value="141">
+            141
+           </option>
+<option value="142">
+            142
+           </option>
+<option value="143">
+            143
+           </option>
+<option value="144">
+            144
+           </option>
+<option value="145">
+            145
+           </option>
+<option value="146">
+            146
+           </option>
+<option value="147">
+            147
+           </option>
+<option value="148">
+            148
+           </option>
+<option value="149">
+            149
+           </option>
+<option value="150">
+            150
+           </option>
+<option value="151">
+            151
+           </option>
+<option value="152">
+            152
+           </option>
+<option value="153">
+            153
+           </option>
+<option value="154">
+            154
+           </option>
+<option value="155">
+            155
+           </option>
+<option value="156">
+            156
+           </option>
+<option value="157">
+            157
+           </option>
+<option value="158">
+            158
+           </option>
+<option value="159">
+            159
+           </option>
+<option value="160">
+            160
+           </option>
+<option value="161">
+            161
+           </option>
+<option value="162">
+            162
+           </option>
+<option value="163">
+            163
+           </option>
+<option value="164">
+            164
+           </option>
+<option value="165">
+            165
+           </option>
+<option value="166">
+            166
+           </option>
+<option value="167">
+            167
+           </option>
+<option value="168">
+            168
+           </option>
+<option value="169">
+            169
+           </option>
+<option value="170">
+            170
+           </option>
+<option value="171">
+            171
+           </option>
+<option value="172">
+            172
+           </option>
+<option value="173">
+            173
+           </option>
+<option value="174">
+            174
+           </option>
+<option value="175">
+            175
+           </option>
+<option value="176">
+            176
+           </option>
+<option value="177">
+            177
+           </option>
+<option value="178">
+            178
+           </option>
+<option value="179">
+            179
+           </option>
+<option value="180">
+            180
+           </option>
+<option value="181">
+            181
+           </option>
+<option value="182">
+            182
+           </option>
+<option value="183">
+            183
+           </option>
+<option value="184">
+            184
+           </option>
+<option value="185">
+            185
+           </option>
+<option value="186">
+            186
+           </option>
+<option value="187">
+            187
+           </option>
+<option value="188">
+            188
+           </option>
+<option value="189">
+            189
+           </option>
+<option value="190">
+            190
+           </option>
+<option value="191">
+            191
+           </option>
+<option value="192">
+            192
+           </option>
+<option value="193">
+            193
+           </option>
+<option value="194">
+            194
+           </option>
+<option value="195">
+            195
+           </option>
+<option value="196">
+            196
+           </option>
+<option value="197">
+            197
+           </option>
+<option value="198">
+            198
+           </option>
+<option value="199">
+            199
+           </option>
+</select>
+</div>
+<div class="col-xs-6 col-md-6 ptop-six">
+<div style="color:gray">
+<small>
+<i>
+             (kg)
+            </i>
+</small>
+</div>
+</div>
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Học vấn
+           </b>
+</span>
+</div>
+<div class="col-xs-6 col-sm-5 col-md-4 col-lg-4">
+<select class="pl-text select form-control" id="id_education" name="education" required="" style="height:32px;">
+<option value="GRA">
+            Phổ thông
+           </option>
+<option value="VCA">
+            Trung cấp
+           </option>
+<option selected="selected" value="ASO">
+            Cao đẳng
+           </option>
+<option value="BAC">
+            Đại học
+           </option>
+<option value="MAS">
+            Cao học
+           </option>
+<option value="AMA">
+            Trên cao học
+           </option>
+</select>
+</div>
+<!-- <div class="col-sm-5 ptop-six">
+        <div style='color:gray'>
+        
+        </div>
+    </div> -->
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Nơi ở
+           </b>
+</span>
+</div>
+<div class="col-xs-6 col-sm-5 col-md-4 col-lg-4">
+<!-- Tỉnh / Thành phố (Provider: https://provinces.open-api.vn/) -->
+<select class="pl-text select form-control" id="id_province" name="province" required="" style="height:32px;">
+<option selected="selected" value="ho-chi-minh">Hồ Chí Minh</option>
+<option value="ha-noi">Hà Nội</option>
+<option value="da-nang">Đà Nẵng</option>
+<option value="hai-phong">Hải Phòng</option>
+<option value="can-tho">Cần Thơ</option>
+<option value="an-giang">An Giang</option>
+<option value="ba-ria-vung-tau">Bà Rịa - Vũng Tàu</option>
+<option value="bac-giang">Bắc Giang</option>
+<option value="bac-kan">Bắc Kạn</option>
+<option value="bac-lieu">Bạc Liêu</option>
+<option value="bac-ninh">Bắc Ninh</option>
+<option value="ben-tre">Bến Tre</option>
+<option value="binh-dinh">Bình Định</option>
+<option value="binh-duong">Bình Dương</option>
+<option value="binh-phuoc">Bình Phước</option>
+<option value="binh-thuan">Bình Thuận</option>
+<option value="ca-mau">Cà Mau</option>
+<option value="cao-bang">Cao Bằng</option>
+<option value="dak-lak">Đắk Lắk</option>
+<option value="dak-nong">Đắk Nông</option>
+<option value="dien-bien">Điện Biên</option>
+<option value="dong-nai">Đồng Nai</option>
+<option value="dong-thap">Đồng Tháp</option>
+<option value="gia-lai">Gia Lai</option>
+<option value="ha-giang">Hà Giang</option>
+<option value="ha-nam">Hà Nam</option>
+<option value="ha-tinh">Hà Tĩnh</option>
+<option value="hai-duong">Hải Dương</option>
+<option value="hau-giang">Hậu Giang</option>
+<option value="hoa-binh">Hòa Bình</option>
+<option value="hung-yen">Hưng Yên</option>
+<option value="khanh-hoa">Khánh Hòa</option>
+<option value="kien-giang">Kiên Giang</option>
+<option value="kon-tum">Kon Tum</option>
+<option value="lai-chau">Lai Châu</option>
+<option value="lam-dong">Lâm Đồng</option>
+<option value="lang-son">Lạng Sơn</option>
+<option value="lao-cai">Lào Cai</option>
+<option value="long-an">Long An</option>
+<option value="nam-dinh">Nam Định</option>
+<option value="nghe-an">Nghệ An</option>
+<option value="ninh-binh">Ninh Bình</option>
+<option value="ninh-thuan">Ninh Thuận</option>
+<option value="phu-tho">Phú Thọ</option>
+<option value="phu-yen">Phú Yên</option>
+<option value="quang-binh">Quảng Bình</option>
+<option value="quang-nam">Quảng Nam</option>
+<option value="quang-ngai">Quảng Ngãi</option>
+<option value="quang-ninh">Quảng Ninh</option>
+<option value="quang-tri">Quảng Trị</option>
+<option value="soc-trang">Sóc Trăng</option>
+<option value="son-la">Sơn La</option>
+<option value="tay-ninh">Tây Ninh</option>
+<option value="thai-binh">Thái Bình</option>
+<option value="thai-nguyen">Thái Nguyên</option>
+<option value="thanh-hoa">Thanh Hóa</option>
+<option value="hue">Thừa Thiên Huế</option>
+<option value="tien-giang">Tiền Giang</option>
+<option value="tra-vinh">Trà Vinh</option>
+<option value="tuyen-quang">Tuyên Quang</option>
+<option value="vinh-long">Vĩnh Long</option>
+<option value="vinh-phuc">Vĩnh Phúc</option>
+<option value="yen-bai">Yên Bái</option>
+<option disabled="disabled">-----------------</option>
+<option value="united-states">Mỹ</option>
+<option value="canada">Canada</option>
+<option value="australia">Úc</option>
+<option value="germany">Đức</option>
+<option value="england">Anh</option>
+<option value="france">Pháp</option>
+<option value="finland">Phần Lan</option>
+<option value="japan">Nhật</option>
+<option value="south-korea">Hàn Quốc</option>
+</select>
+<!-- Quận / Huyện / Thị xã -->
+<div style="display:table; width:100%; margin-top:6px;">
+<select class="pl-text select form-control" id="id_district" name="district" style="height:32px;">
+<option value="">-- Đang nạp danh sách Quận / Huyện... --</option>
+</select>
+<span id="loading_district_drop_down" style="display:none; color:#2e5d69; font-size:12px; margin-top:4px;">
+<i class="fa fa-spinner fa-spin"></i> Đang tải quận/huyện...
+           </span>
+</div>
+<!-- Phường / Xã / Thị trấn (Provider API v2) -->
+<div style="display:table; width:100%; margin-top:6px;">
+<select class="pl-text select form-control" id="id_ward" name="ward" style="height:32px; display:none;">
+<option value="">-- Chọn Phường / Xã / Thị trấn --</option>
+</select>
+<span id="loading_ward_drop_down" style="display:none; color:#2e5d69; font-size:12px; margin-top:4px;">
+<i class="fa fa-spinner fa-spin"></i> Đang tải phường/xã...
+           </span>
+</div>
+</div>
+<div class="col-xs-9 col-xs-offset-3 col-md-3 col-md-offset-0 ptop-six">
+<span class="pr_htext" id="vietnam_notice">
+           (Nếu bạn ở ngoài Việt Nam thì vui lòng chọn Mỹ, Canada, Úc...)
+          </span>
+<span class="pr_htext" id="foreign_notice" style="display:none; color:#3F7E8F;">
+<i class="fa fa-globe"></i> Quốc gia ngoài Việt Nam
+          </span>
+</div>
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right labtext_p">
+<div class="labtext labtext_c">
+<b>
+            Tiêu đề hồ sơ
+           </b>
+</div>
+</div>
+<div class="col-xs-9 col-sm-9 col-md-7 col-lg-6">
+<input class="required pl-text textinput textInput form-control" id="id_headline" maxlength="120" minlength="2" name="headline" placeholder="Vd: 'Em mộc mạc' 'Anh chân thành' 'Em chung tình'..." required="" style="height:32px;" title="Tiêu đề hồ sơ của bạn" type="text"/>
+</div>
+<!-- <div class="col-sm-3 ptop-six">
+        <div style='color:gray'>
+        <small><i>Tiêu đề hồ sơ nói ngắn gọn nhất về bạn, nói lên điều bạn đang mong tìm, điều đặc biệt nhất riêng ở bạn, điều quan trọng nhất đối với bạn, hay điều bạn muốn gây chú ý.</i></small>
+        </div>       
+    </div>         -->
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Về tôi
+           </b>
+</span>
+</div>
+<div class="col-xs-9 col-sm-9 col-md-7 col-lg-6">
+<textarea class="pl-text textarea form-control" cols="80" id="id_i_am" name="i_am" placeholder="Giới thiệu thêm về bạn như cuộc sống, ước mơ, hay bất cứ điều gì riêng có ở bạn. Ghi số điện thoại liên lạc Zalo Facebook của bạn (nếu muốn)." required="" rows="8">
+
+</textarea>
+</div>
+<!--     <div class="col-xs-9 col-xs-offset-3 col-md-1 col-md-offset-0 ptop-six">
+        <span class="pr_htext">
+        
+        </span>       
+    </div> -->
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Tìm người
+           </b>
+</span>
+</div>
+<div class="col-xs-9 col-sm-9 col-md-7 col-lg-6">
+<textarea class="pl-text textarea form-control" cols="80" id="id_my_match" name="my_match" placeholder="Bạn tìm người như thế nào?" required="" rows="8">
+
+</textarea>
+</div>
+<!--     <div class="col-xs-9 col-xs-offset-3 col-md-1 col-md-offset-0 ptop-six">
+        <span class="pr_htext">
+        
+        </span>
+    </div> -->
+</div>
+</div>
+<hr/>
+<h4>
+        THÔNG TIN CHI TIẾT HƠN
+       </h4>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Dáng người
+           </b>
+</span>
+</div>
+<div class="col-xs-9 col-sm-9 col-md-7 col-lg-6">
+<select class="pl-text select form-control" id="id_appearance2_0" name="appearance2_0" placeholder="Chọn dáng người" style="height:32px;">
+<option value="0">
+            -Chọn một Dáng người-
+           </option>
+<option value="1">
+            Cân đối
+           </option>
+<option value="2">
+            Cao lớn
+           </option>
+<option value="3">
+            Mảnh mai
+           </option>
+<option value="4">
+            Mũm mỉm
+           </option>
+<option value="5">
+            Nhỏ nhắn
+           </option>
+<option value="6">
+            Tầm thước
+           </option>
+<option value="7">
+            Thấp đậm
+           </option>
+<option value="8">
+            Vạm vỡ
+           </option>
+</select>
+</div>
+<!-- <div class="col-sm-3 ptop-six">
+        <div style='color:gray'>
+        
+        </div>
+    </div> -->
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Sở thích
+           </b>
+</span>
+</div>
+<div class="col-xs-9 col-sm-9 col-md-7 col-lg-6">
+<select class="pl-text select form-control" id="id_interest2_0" name="interest2_0" placeholder="Chọn 1 sở thích chính" style="height:32px;">
+<option value="0">
+            -Chọn một Sở thích chính-
+           </option>
+<option value="1">
+            Ẩm thực (tín đồ ẩm thực)
+           </option>
+<option value="2">
+            Chăm sóc gia đình
+           </option>
+<option value="3">
+            Chơi môn thể thao ngoài trời (đá bóng, tennis, chạy bộ...)
+           </option>
+<option value="4">
+            Chơi môn thể thao trong nhà (aerobic, bóng bàn, thể dục...)
+           </option>
+<option value="5">
+            Công nghệ (hi-tech)
+           </option>
+<option value="6">
+            Công việc &amp; sự nghiệp
+           </option>
+<option value="7">
+            Dã ngoại (picnic)
+           </option>
+<option value="8">
+            Đọc sách nhiều
+           </option>
+<option value="9">
+            Du lịch
+           </option>
+<option value="10">
+            Gym
+           </option>
+<option value="11">
+            Hoạt động từ thiện, thiện nguyện
+           </option>
+<option value="12">
+            Học hành &amp; phát triển bản thân
+           </option>
+<option value="13">
+            Nấu ăn
+           </option>
+<option value="14">
+            Nghệ thuật
+           </option>
+<option value="15">
+            Nữ công gia chánh
+           </option>
+<option value="16">
+            Nuôi thú cưng
+           </option>
+<option value="17">
+            Phượt
+           </option>
+<option value="18">
+            Thích nơi yên tĩnh
+           </option>
+<option value="19">
+            Thích tụ tập bạn bè
+           </option>
+<option value="20">
+            Thiên nhiên cây cỏ
+           </option>
+<option value="21">
+            Thiền
+           </option>
+<option value="22">
+            Thời trang (tín đồ thời trang)
+           </option>
+<option value="23">
+            Văn học
+           </option>
+<option value="24">
+            Văn nghệ
+           </option>
+<option value="25">
+            Xem phim nhiều
+           </option>
+<option value="26">
+            Yoga
+           </option>
+<option value="27">
+            Sở thích khác
+           </option>
+</select>
+</div>
+<!-- <div class="col-sm-3 ptop-six">
+        <div style='color:gray'>
+        
+        </div>
+    </div> -->
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Tính cách
+           </b>
+</span>
+</div>
+<div class="col-xs-9 col-sm-9 col-md-7 col-lg-6">
+<select class="pl-text select form-control" id="id_personality2_0" name="personality2_0" placeholder="Chọn 1 tính cách chính" style="height:32px;">
+<option value="0">
+            -Chọn một Tính cách chính-
+           </option>
+<option value="1">
+            Chân thành
+           </option>
+<option value="2">
+            Chung thủy
+           </option>
+<option value="3">
+            Dễ gần
+           </option>
+<option value="4">
+            Dịu dàng
+           </option>
+<option value="5">
+            Điềm đạm
+           </option>
+<option value="6">
+            Đơn giản
+           </option>
+<option value="7">
+            Hiền
+           </option>
+<option value="8">
+            Khéo léo
+           </option>
+<option value="9">
+            Khó đoán
+           </option>
+<option value="10">
+            Kín đáo
+           </option>
+<option value="11">
+            Lạnh lùng
+           </option>
+<option value="12">
+            Mạnh mẽ
+           </option>
+<option value="13">
+            Mơ mộng
+           </option>
+<option value="14">
+            Ngọt ngào
+           </option>
+<option value="15">
+            Nhân hậu
+           </option>
+<option value="16">
+            Phức tạp
+           </option>
+<option value="17">
+            Rụt rè
+           </option>
+<option value="18">
+            Sôi nổi
+           </option>
+<option value="19">
+            Tham vọng
+           </option>
+<option value="20">
+            Thật thà
+           </option>
+<option value="21">
+            Thực tế
+           </option>
+<option value="22">
+            Trầm tính
+           </option>
+<option value="23">
+            Vui vẻ
+           </option>
+</select>
+</div>
+<!-- <div class="col-sm-3 ptop-six">
+        <div style='color:gray'>
+        
+        </div>
+    </div> -->
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Lối sống
+           </b>
+</span>
+</div>
+<div class="col-xs-9 col-sm-9 col-md-7 col-lg-6">
+<select class="pl-text select form-control" id="id_way_of_life" name="way_of_life" placeholder="Lối sống của bạn?" style="height:32px;">
+<option value="0">
+            -Chọn một Lối sống chính-
+           </option>
+<option value="1">
+            An nhàn
+           </option>
+<option value="2">
+            Bình dân
+           </option>
+<option value="3">
+            Chan hòa tình yêu thương
+           </option>
+<option value="4">
+            Chơi thể thao thường xuyên
+           </option>
+<option value="5">
+            Có đạo
+           </option>
+<option value="8">
+            Đa văn hóa
+           </option>
+<option value="9">
+            Đi công tác xa thường xuyên
+           </option>
+<option value="10">
+            Đi du lịch thường xuyên
+           </option>
+<option value="11">
+            Điều độ/ Mực thước
+           </option>
+<option value="12">
+            Độc lập/ Không phụ thuộc vào ai
+           </option>
+<option value="13">
+            Gần gũi chan hòa với thiên nhiên
+           </option>
+<option value="14">
+            Giản dị
+           </option>
+<option value="17">
+            Há miệng chờ sung rụng
+           </option>
+<option value="19">
+            Hai lúa
+           </option>
+<option value="20">
+            Hay phiêu lưu mạo hiểm
+           </option>
+<option value="21">
+            Hiện đại
+           </option>
+<option value="22">
+            Khép kín
+           </option>
+<option value="24">
+            Không cố định nghề nghiệp
+           </option>
+<option value="25">
+            Không theo khuôn khổ
+           </option>
+<option value="26">
+            Lạc quan yêu đời
+           </option>
+<option value="27">
+            Làm việc đầu tắt mặt tối
+           </option>
+<option value="28">
+            Lãng mạn thi vị
+           </option>
+<option value="29">
+            Lành mạnh
+           </option>
+<option value="30">
+            Lập dị
+           </option>
+<option value="32">
+            Luôn nỗ lực vươn lên
+           </option>
+<option value="34">
+            Năng động
+           </option>
+<option value="36">
+            Người ăn thuần chay/ Ăn chay trường
+           </option>
+<option value="39">
+            Phức tạp
+           </option>
+<option value="40">
+            Quẩn quanh trong nhà
+           </option>
+<option value="43">
+            Sống có khát vọng &amp; hoài bão
+           </option>
+<option value="44">
+            Sống lý trí
+           </option>
+<option value="46">
+            Sống tình cảm
+           </option>
+<option value="47">
+            Sống tự do/ Muốn làm gì thì làm
+           </option>
+<option value="48">
+            Sống về đêm
+           </option>
+<option value="53">
+            Thụ hưởng những gì đang có/ Hưởng thụ
+           </option>
+<option value="54">
+            Thực tế
+           </option>
+<option value="58">
+            Trí thức
+           </option>
+<option value="60">
+            Truyền thống
+           </option>
+<option value="61">
+            Tự lập/ Tự thân
+           </option>
+</select>
+</div>
+<!-- <div class="col-sm-3 ptop-six">
+        <div style='color:gray'>
+        
+        </div>
+    </div> -->
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right labtext_p">
+<div class="labtext labtext_c">
+<b>
+            Qúy giá nhất
+           </b>
+</div>
+</div>
+<div class="col-xs-9 col-sm-9 col-md-7 col-lg-6">
+<select class="pl-text select form-control" id="id_most_valued" name="most_valued" placeholder="Thứ gì là qúy giá nhất đối với bạn?" style="height:32px;">
+<option value="0">
+            -Chọn cái Qúy giá nhất đối với bạn-
+           </option>
+<option value="2">
+            Bạn đời
+           </option>
+<option value="3">
+            Bản thân mình
+           </option>
+<option value="4">
+            Cha mẹ
+           </option>
+<option value="5">
+            Con cái
+           </option>
+<option value="35">
+            Công danh &amp; sự nghiệp
+           </option>
+<option value="6">
+            Của cải vật chất
+           </option>
+<option value="7">
+            Danh dự &amp; uy tín
+           </option>
+<option value="8">
+            Danh vọng &amp; địa vị
+           </option>
+<option value="9">
+            Đạo đức
+           </option>
+<option value="11">
+            Đức hạnh
+           </option>
+<option value="12">
+            Gia đình
+           </option>
+<option value="13">
+            Gia đình &amp; người thân
+           </option>
+<option value="14">
+            Hạnh phúc
+           </option>
+<option value="17">
+            Lao động chân chính
+           </option>
+<option value="18">
+            Lẽ sống
+           </option>
+<option value="19">
+            Lòng chung thủy
+           </option>
+<option value="20">
+            Lòng nhân hậu
+           </option>
+<option value="28">
+            Người yêu
+           </option>
+<option value="29">
+            Niềm tin &amp; ý chí
+           </option>
+<option value="30">
+            Niềm vui mỗi ngày
+           </option>
+<option value="34">
+            Sự bình yên
+           </option>
+<option value="37">
+            Sức khỏe
+           </option>
+<option value="40">
+            Thời gian
+           </option>
+<option value="43">
+            Tình cảm &amp; tình yêu
+           </option>
+<option value="45">
+            Tình yêu thương
+           </option>
+<option value="46">
+            Trải nghiệm sống
+           </option>
+<option value="47">
+            Tri kỷ/ Bạn tâm giao
+           </option>
+</select>
+</div>
+<div class="col-xs-9 col-sm-9 col-md-7 col-lg-6">
+</div>
+<!-- <div class="col-sm-4 ptop-six">
+        <div class="pr_htext" style='color:gray'>
+        
+        </div>
+    </div> -->
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Nghề nghiệp
+           </b>
+</span>
+</div>
+<div class="col-xs-9 col-sm-9 col-md-7 col-lg-6">
+<select class="pl-text select form-control" id="id_occupation2_0" name="occupation2_0" placeholder="Chọn 1 nghề nghiệp chính" style="height:32px;">
+<option value="0">
+            -Chọn một Lĩnh vực nghề nghiệp-
+           </option>
+<option value="1">
+            Buôn bán-thương mại
+           </option>
+<option value="2">
+            Chủ doanh nghiệp
+           </option>
+<option value="3">
+            Công nhân (kỹ thuật, giản đơn...)
+           </option>
+<option value="4">
+            Công nhân viên chức
+           </option>
+<option value="5">
+            Dạy học (giáo viên, giảng viên...)
+           </option>
+<option value="6">
+            Du lịch-nhà hàng-khách sạn
+           </option>
+<option value="7">
+            IT (lập trình, mạng, đồ họa...)
+           </option>
+<option value="8">
+            Kế toán
+           </option>
+<option value="9">
+            Kỹ sư
+           </option>
+<option value="10">
+            Làm đẹp (làm tóc, nail, spa...)
+           </option>
+<option value="11">
+            Lao động tự do
+           </option>
+<option value="12">
+            Marketing-bán hàng
+           </option>
+<option value="13">
+            May mặc-sản xuất hàng thời trang
+           </option>
+<option value="14">
+            Môi giới (bất động sản, bảo hiểm...)
+           </option>
+<option value="15">
+            Mỹ thuật-kiến trúc
+           </option>
+<option value="16">
+            Nghệ sĩ
+           </option>
+<option value="17">
+            Nhân viên văn phòng
+           </option>
+<option value="18">
+            Nội trợ
+           </option>
+<option value="19">
+            Sinh viên
+           </option>
+<option value="20">
+            Tài chính-ngân hàng
+           </option>
+<option value="21">
+            Thiết kế-tạo mẫu
+           </option>
+<option value="22">
+            Vận chuyển (lái xe, shipper...)
+           </option>
+<option value="23">
+            Vận động viên
+           </option>
+<option value="24">
+            Xây dựng
+           </option>
+<option value="25">
+            Y-dược (bác sĩ, dược sĩ, điều dưỡng...)
+           </option>
+<option value="26">
+            Nghề nghiệp khác
+           </option>
+</select>
+</div>
+<!-- <div class="col-sm-3 ptop-six">
+        <div style='color:gray'>
+        
+        </div>
+    </div> -->
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Tôn giáo
+           </b>
+</span>
+</div>
+<div class="col-xs-9 col-sm-9 col-md-7 col-lg-6">
+<select class="pl-text select form-control" id="id_religion2_0" name="religion2_0" placeholder="Chọn" style="height:32px;">
+<option value="0">
+            -Chọn một-
+           </option>
+<option value="1">
+            Không có Đạo
+           </option>
+<option value="2">
+            Đạo Cơ Đốc giáo
+           </option>
+<option value="3">
+            Đạo Phật
+           </option>
+<option value="4">
+            Đạo Thiên Chúa
+           </option>
+<option value="5">
+            Đạo Tin lành
+           </option>
+<option value="6">
+            Đạo khác
+           </option>
+</select>
+</div>
+<!-- <div class="col-sm-3 ptop-six">
+        <div style='color:gray'>
+        
+        </div>
+    </div> -->
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Hút thuốc
+           </b>
+</span>
+</div>
+<div class="col-xs-9 col-sm-9 col-md-7 col-lg-6">
+<select class="pl-text select form-control" id="id_smoking2_0" name="smoking2_0" placeholder="Chọn" style="height:32px;">
+<option value="0">
+            -Chọn một-
+           </option>
+<option value="1">
+            Không hút thuốc
+           </option>
+<option value="2">
+            Chỉ hút xã giao
+           </option>
+<option value="3">
+            Hút thuốc ít
+           </option>
+<option value="4">
+            Hút thuốc nhiều
+           </option>
+<option value="5">
+            Hút thuốc rất nhiều
+           </option>
+</select>
+</div>
+<!-- <div class="col-sm-3 ptop-six">
+        <div style='color:gray'>
+        
+        </div>
+    </div> -->
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Uống rượu bia
+           </b>
+</span>
+</div>
+<div class="col-xs-9 col-sm-9 col-md-7 col-lg-6">
+<select class="pl-text select form-control" id="id_drinking2_0" name="drinking2_0" placeholder="Chọn" style="height:32px;">
+<option value="0">
+            -Chọn một-
+           </option>
+<option value="1">
+            Không uống rượu bia
+           </option>
+<option value="2">
+            Chỉ uống xã giao
+           </option>
+<option value="3">
+            Uống ít thôi
+           </option>
+<option value="4">
+            Uống nhiều
+           </option>
+<option value="5">
+            Uống rất nhiều
+           </option>
+</select>
+</div>
+<!-- <div class="col-sm-3 ptop-six">
+        <div style='color:gray'>
+        
+        </div>
+    </div> -->
+</div>
+</div>
+<div class="row mtop-ten">
+<div class="fieldWrapper form-group">
+<div class="col-xs-3 col-md-4 text-right ptop-six">
+<span class="labtext">
+<b>
+            Con cái
+           </b>
+</span>
+</div>
+<div class="col-xs-9 col-sm-9 col-md-7 col-lg-6">
+<select class="pl-text select form-control" id="id_children2_0" name="children2_0" placeholder="Chọn" style="height:32px;">
+<option value="0">
+            -Chọn một-
+           </option>
+<option value="1">
+            Chưa có
+           </option>
+<option value="2">
+            Đã có &amp; Đang sống cùng
+           </option>
+<option value="3">
+            Đã có &amp; Không sống cùng
+           </option>
+</select>
+</div>
+<!-- <div class="col-sm-3 ptop-six">
+        <div style='color:gray'>
+        
+        </div>
+    </div> -->
+</div>
+</div>
+<div class="row">
+<div class="fieldWrapper form-group">
+<input id="id_setfc_flag" maxlength="3" name="setfc_flag" type="hidden" value="off"/>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-7 col-md-offset-4 col-lg-6 col-lg-offset-4">
+<!-- reCAPTCHA input -->
+<input id="g-recaptcha-response" name="g-recaptcha-response" type="hidden"/>
+<button class="btn btn-lg btn-block btn-success btn-sc-cus" id="id_submit" name="btnsubmit" type="submit" value="Đăng ký">
+          Đăng ký!
+         </button>
+</div>
+</div>
+<!-- 8 col -->
+</div>
+</form>
+</div>
+<!-- container -->
+<!-- </div> -->
+</div>
+<!-- row -->
+</div>
+<footer>
+<div class="container footer-cont">
+<div style="line-height:2.4em">
+<p>
+<a class="t-button" href="/tim-ban-bon-phuong-co-hinh/">
+       Tìm bạn bốn phương có hình
+      </a>
+<a class="t-button" href="/tim-ban-bon-phuong-co-hinh/nu/">
+       Tìm bạn bốn phương có hình (nữ)
+      </a>
+<a class="t-button" href="/tim-ban-bon-phuong-co-hinh/nam/">
+       Tìm bạn bốn phương có hình (nam)
+      </a>
+</p>
+<p>
+<a class="t-button" href="/tim-ban-bon-phuong-viet-nam/">
+       Tìm bạn bốn phương Việt Nam
+      </a>
+<a class="t-button" href="/tim-ban-bon-phuong-nuoc-ngoai/">
+       Tìm bạn bốn phương nước ngoài
+      </a>
+<a class="t-button" href="/tim-ban-bon-phuong-viet-kieu/">
+       Tìm bạn bốn phương Việt kiều
+      </a>
+<a class="t-button" href="/tim-ban-bon-phuong-viet-kieu-my/">
+       Tìm bạn bốn phương Việt kiều Mỹ
+      </a>
+<a class="t-button" href="/tim-ban-bon-phuong-o-my/">
+       Tìm bạn bốn phương ở Mỹ
+      </a>
+<a class="t-button" href="/tim-ban-bon-phuong-o-uc/">
+       Tìm bạn bốn phương ở Úc
+      </a>
+<a class="t-button" href="/tim-ban-bon-phuong-o-canada/">
+       Tìm bạn bốn phương ở Canada
+      </a>
+<a class="t-button" href="/tim-ban-bon-phuong-o-duc/">
+       Tìm bạn bốn phương ở Đức
+      </a>
+</p>
+<hr/>
+<p>
+<a class="g-button" href="/tim-ban-doc-than/">
+       Tìm bạn độc thân
+      </a>
+<a class="g-button" href="/tim-ban-trai-doc-than/">
+       Tìm bạn trai độc thân
+      </a>
+<a class="g-button" href="/tim-ban-gai-doc-than/">
+       Tìm bạn gái độc thân
+      </a>
+<a class="g-button" href="/tim-ban-ly-di/">
+       Tìm bạn ly dị
+      </a>
+<a class="g-button" href="/tim-ban-trai-ly-di/">
+       Tìm bạn trai ly dị
+      </a>
+<a class="g-button" href="/tim-ban-gai-ly-di/">
+       Tìm bạn gái ly dị
+      </a>
+<a class="g-button" href="/tim-ban-o-goa/">
+       Tìm bạn ở góa
+      </a>
+<a class="g-button" href="/tim-ban-trai-o-goa/">
+       Tìm bạn trai ở góa
+      </a>
+<a class="g-button" href="/tim-ban-gai-o-goa/">
+       Tìm bạn gái ở góa
+      </a>
+</p>
+<hr/>
+<p>
+<a class="t-button" href="/tim-ban-gai-ket-hon/">
+       Tìm bạn gái kết hôn
+      </a>
+<a class="t-button" href="/tim-ban-trai-ket-hon/">
+       Tìm bạn trai kết hôn
+      </a>
+<a class="t-button" href="/tim-nguoi-yeu-lau-dai/">
+       Tìm người yêu lâu dài
+      </a>
+<a class="t-button" href="/tim-nguoi-yeu-ngan-han/">
+       Tìm người yêu ngắn hạn
+      </a>
+</p>
+<p>
+<a class="t-button" href="/tim-chong/">
+       Tìm chồng
+      </a>
+<a class="t-button" href="/tim-vo/">
+       Tìm vợ
+      </a>
+<a class="t-button" href="/tim-mot-nua/">
+       Tìm một nửa
+      </a>
+<a class="t-button" href="/tim-ban-tram-nam/">
+       Tìm bạn trăm năm
+      </a>
+</p>
+<p>
+<a class="t-button" href="/tim-ban-gai-tam-su/">
+       Tìm bạn gái tâm sự
+      </a>
+<a class="t-button" href="/tim-ban-trai-tam-su/">
+       Tìm bạn trai tâm sự
+      </a>
+<a class="t-button" href="/tim-ban-gai-lam-quen/">
+       Tìm bạn gái làm quen
+      </a>
+<a class="t-button" href="/tim-ban-trai-lam-quen/">
+       Tìm bạn trai làm quen
+      </a>
+<a class="t-button" href="/tim-ban-chat/">
+       Tìm bạn chat
+      </a>
+</p>
+<hr/>
+<p>
+<a class="c-button" href="/tim-ban-bon-phuong/ho-chi-minh/">
+       Tìm bạn HCM
+      </a>
+<a class="c-button" href="/tim-ban-bon-phuong/ha-noi/">
+       Tìm bạn Hà Nội
+      </a>
+<a class="c-button" href="/tim-ban-bon-phuong/hai-phong/">
+       Tìm bạn Hải Phòng
+      </a>
+<a class="c-button" href="/tim-ban-bon-phuong/hue/">
+       Tìm bạn Huế
+      </a>
+<a class="c-button" href="/tim-ban-bon-phuong/da-nang/">
+       Tìm bạn Đà Nẵng
+      </a>
+<a class="c-button" href="/tim-ban-bon-phuong/can-tho/">
+       Tìm bạn Cần Thơ
+      </a>
+<a class="c-button" href="/tim-ban-bon-phuong/khanh-hoa/">
+       Tìm bạn Khánh Hòa
+      </a>
+<a class="c-button" href="/tim-ban-bon-phuong/lam-dong/">
+       Tìm bạn Lâm Đồng
+      </a>
+<a class="c-button" href="/tim-ban-bon-phuong/dong-nai/">
+       Tìm bạn Đồng Nai
+      </a>
+<br/>
+</p>
+<p>
+<a class="c-button" href="/tim-ban-bon-phuong-theo-noi-o/">
+<i aria-hidden="true" class="fa fa-arrow-right">
+</i>
+       Tìm bạn bốn phương theo Nơi Ở
+      </a>
+</p>
+</div>
+<br/>
+<br/>
+<hr/>
+<div style="font-size:1.0em">
+<a class="navlink-b" href="gioi-thieu.html">
+      Giới thiệu
+     </a>
+<a class="navlink-b" href="gioi-thieu.html">
+      Trợ giúp
+     </a>
+<a class="navlink-b" href="/dieu-khoan-su-dung/">
+      Điều khoản sử dụng
+     </a>
+<a class="navlink-b" href="/chinh-sach-rieng-tu/">
+      Chính sách riêng tư
+     </a>
+</div>
+</div>
+<div class="container footer-cont">
+
+<a href="http://www.twitter.com/ehenho">
+<i class="fa fa-br fa-twitter">
+</i>
+</a>
+</div>
+<div class="container footer-cont">
+<span class="footer-note">
+     eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích &amp; Tính cách. Hoàn toàn miễn phí.
+    </span>
+<br/>
+<span class="footer-note">
+     Email: hi@ehenho.com
+    </span>
+<br/>
+</div>
+</footer>
+<!-- JQuery JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript">
+</script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" type="text/javascript">
+</script>
+<!-- Latest compiled and minified JavaScript -->
+<script crossorigin="anonymous" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
+</script>
+<script src="js/django.csrf.js">
+</script>
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&amp;render=6LcnxAweAAAAABPaCUTeNxnhpJM_TXf_Z8yLImL_&amp;lang=vi">
+</script>
+<!-- Drop Down JS -->
+<script src="js/drop_down.js" type="text/javascript">
+</script>
+<!-- Preload Images -->
+<script language="JavaScript">
+   pic1 = new Image(16, 16); 
+pic1.src="/static/img/loader.gif";
+  </script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.11.1/jquery.validate.js" type="text/javascript">
+</script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.11.1/additional-methods.js" type="text/javascript">
+</script>
+<script src="https://cdn.jsdelivr.net/jquery.scrollto/2.1.2/jquery.scrollTo.min.js">
+</script>
+<!-- Focus on first field upon form url initial load -->
+<script src="js/1st_f_fc.js" type="text/javascript">
+</script>
+<!-- Focus and Scroll to the first erroneous input field JS -->
+<script src="js/fc_sc.js" type="text/javascript">
+</script>
+<!-- Suggest correct email domain -->
+<script src="js/mailcheck.js" type="text/javascript">
+</script>
+<script src="js/email_check.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+   // Month is 1 based
+    var select_year_obj=document.getElementById("id_dob_year");
+    var select_month_obj=document.getElementById("id_dob_month");
+    var select_day_obj=document.getElementById("id_dob_day");
+
+    var current_month = parseInt("10");
+    var current_day = parseInt("2");
+
+    $('.customselectdatewidget > option').each(function(){
+        $(this).addClass($(this).attr('value'));
+    });
+
+    function daysInMonth(month, year) {
+        return new Date(year, month, 0).getDate();
+    };
+
+    $("#id_dob_year").change(function() {    
+        if (select_year_obj.options[select_year_obj.selectedIndex].value ==  "2008") {
+            if (parseInt(select_month_obj.options[select_month_obj.selectedIndex].value) > current_month) {
+                select_month_obj.selectedIndex = current_month - 1;
+            };
+            if (parseInt(select_day_obj.options[select_day_obj.selectedIndex].value) > current_day) {
+                select_day_obj.selectedIndex = current_day - 1;
+            };
+
+            for (var i=select_month_obj.length-1; i>=0; i--){
+                if (parseInt(select_month_obj.options[i].value) > current_month) {
+                    j = i + 1;
+                    $('#id_dob_month > option.'+j).hide();
+                };
+            };
+            for (var i=select_day_obj.length-1; i>=0; i--){
+                if (parseInt(select_day_obj.options[i].value) > current_day ) {
+                    j = i + 1;
+                    $('#id_dob_day > option.'+j).hide();
+                };
+            };
+        } else {
+            for (var i=select_month_obj.length-1; i>=0; i--){
+                j = i + 1;
+                $('#id_dob_month > option.'+j).show();
+            };
+            for (var i=select_day_obj.length-1; i>=0; i--){
+                j = i + 1;
+                $('#id_dob_day > option.'+j).show();
+            };
+
+            var days = daysInMonth(parseInt(select_month_obj.options[select_month_obj.selectedIndex].value), parseInt(select_year_obj.options[select_year_obj.selectedIndex].value));
+
+            if (parseInt(select_day_obj.options[select_day_obj.selectedIndex].value) > days) {
+                select_day_obj.selectedIndex = days - 1;
+            };
+
+            if (days == 28) {
+                $('.31').hide();
+                $('.30').hide();
+                $('.29').hide();
+            } else if (days == 29) {
+                $('.31').hide();
+                $('.30').hide();
+                //$('.29').show();            
+            } else if (days == 30) {
+                $('.31').hide();
+                //$('.30').show();
+                //$('.29').show();            
+            } else if (days == 31) {
+                //$('.31').show();
+                //$('.30').show();
+                //$('.29').show();            
+            }
+        };
+    });
+
+    $("#id_dob_month").change(function() {    
+        if ((select_year_obj.options[select_year_obj.selectedIndex].value ==  "2008") && (select_month_obj.options[select_month_obj.selectedIndex].value ==  "10")) {
+            if (parseInt(select_day_obj.options[select_day_obj.selectedIndex].value) > current_day) {
+                select_day_obj.selectedIndex = current_day - 1;
+            };
+
+            for (var i=select_day_obj.length-1; i>=0; i--){
+                if (parseInt(select_day_obj.options[i].value) > current_day ) {
+                    j = i + 1;
+                    $('#id_dob_day > option.'+j).hide();
+                };
+            };            
+        } else {
+            for (var i=select_day_obj.length-1; i>=0; i--){
+                j = i + 1;
+                $('#id_dob_day > option.'+j).show();
+            };
+
+            var days = daysInMonth(parseInt(select_month_obj.options[select_month_obj.selectedIndex].value), parseInt(select_year_obj.options[select_year_obj.selectedIndex].value));
+
+            if (parseInt(select_day_obj.options[select_day_obj.selectedIndex].value) > days) {
+                select_day_obj.selectedIndex = days - 1;
+            };
+
+            if (days == 28) {
+                $('.31').hide();
+                $('.30').hide();
+                $('.29').hide();
+            } else if (days == 29) {
+                $('.31').hide();
+                $('.30').hide();
+                //$('.29').show();            
+            } else if (days == 30) {
+                $('.31').hide();
+                //$('.30').show();
+                //$('.29').show();            
+            } else if (days == 31) {
+                //$('.31').show();
+                //$('.30').show();
+                //$('.29').show();            
+            };
+        };
+    });
+  </script>
+<!-- Preload glyphicon -->
+<span class="glyphicon glyphicon-exclamation-sign" style="display:none">
+</span>
+<span class="glyphicon glyphicon-info-sign" style="display:none">
+</span>
+<script>
+   $(document).ready(function(){
+
+		$("span#mask-pw-dd").click(function(event){
+		  // event.preventDefault()
+		  c_class = $("i#mask-pw-i-dd").attr("class");
+		  if (c_class == "fa fa-eye-slash") {
+		    $("span#mask-pw-dd").html('&nbsp;<i id="mask-pw-i-dd" class="fa fa-eye" aria-hidden="true"></i>&nbsp;Hiện');
+		    $("input.c-password-dd").attr("type", "password");
+		  } else {
+		    $("span#mask-pw-dd").html('&nbsp;<i id="mask-pw-i-dd" class="fa fa-eye-slash" aria-hidden="true"></i>&nbsp;Che');
+		    $("input.c-password-dd").attr("type", "text");
+		  }
+		})		
+
+$("span#mask-pw").click(function(event){
+  // event.preventDefault()
+  console.log("mask-pw clicked");
+  c_class = $("i#mask-pw-i").attr("class");
+  if (c_class == "fa fa-eye-slash") {
+    // n_c_class= "fa fa-eye";
+    // $("i#mask-pw-i").attr("class", "fa fa-eye");
+    $("span#mask-pw").html('&nbsp;<i id="mask-pw-i" class="fa fa-eye" aria-hidden="true"></i>&nbsp;Hiện');
+    $("input#id_password").attr("type", "password");
+  } else {
+    // n_c_class = "fa fa-eye-slash";
+    // $("i#mask-pw-i").attr("class", "fa fa-eye-slash");
+    $("span#mask-pw").html('&nbsp;<i id="mask-pw-i" class="fa fa-eye-slash" aria-hidden="true"></i>&nbsp;Che');
+    $("input#id_password").attr("type", "text");
+  }
+})
+
+})
+  </script>
+<script src="js/auth-session.js"></script></body>
+</html>

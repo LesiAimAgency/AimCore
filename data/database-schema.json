@@ -1,0 +1,3631 @@
+{
+    "users": {
+        "migration": "0001_01_01_000000_create_users_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "username"
+            },
+            {
+                "type": "string",
+                "name": "email"
+            },
+            {
+                "type": "timestamp",
+                "name": "email_verified_at"
+            },
+            {
+                "type": "string",
+                "name": "password"
+            },
+            {
+                "type": "string",
+                "name": "role"
+            },
+            {
+                "type": "tinyInteger",
+                "name": "level"
+            },
+            {
+                "type": "json",
+                "name": "project_ids"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "text",
+                "name": "two_factor_secret"
+            },
+            {
+                "type": "text",
+                "name": "two_factor_recovery_codes"
+            },
+            {
+                "type": "timestamp",
+                "name": "two_factor_confirmed_at"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": true
+    },
+    "cache": {
+        "migration": "0001_01_01_000001_create_cache_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "key"
+            },
+            {
+                "type": "mediumText",
+                "name": "value"
+            },
+            {
+                "type": "integer",
+                "name": "expiration"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "cache_locks": {
+        "migration": "0001_01_01_000001_create_cache_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "key"
+            },
+            {
+                "type": "string",
+                "name": "owner"
+            },
+            {
+                "type": "integer",
+                "name": "expiration"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "sessions": {
+        "migration": "0001_01_01_000003_create_sessions_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "id"
+            },
+            {
+                "type": "foreignId",
+                "name": "user_id"
+            },
+            {
+                "type": "string",
+                "name": "ip_address"
+            },
+            {
+                "type": "text",
+                "name": "user_agent"
+            },
+            {
+                "type": "longText",
+                "name": "payload"
+            },
+            {
+                "type": "integer",
+                "name": "last_activity"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "jobs": {
+        "migration": "0001_01_01_000002_create_jobs_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "queue"
+            },
+            {
+                "type": "longText",
+                "name": "payload"
+            },
+            {
+                "type": "unsignedTinyInteger",
+                "name": "attempts"
+            },
+            {
+                "type": "unsignedInteger",
+                "name": "reserved_at"
+            },
+            {
+                "type": "unsignedInteger",
+                "name": "available_at"
+            },
+            {
+                "type": "unsignedInteger",
+                "name": "created_at"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "job_batches": {
+        "migration": "0001_01_01_000002_create_jobs_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "integer",
+                "name": "total_jobs"
+            },
+            {
+                "type": "integer",
+                "name": "pending_jobs"
+            },
+            {
+                "type": "integer",
+                "name": "failed_jobs"
+            },
+            {
+                "type": "longText",
+                "name": "failed_job_ids"
+            },
+            {
+                "type": "mediumText",
+                "name": "options"
+            },
+            {
+                "type": "integer",
+                "name": "cancelled_at"
+            },
+            {
+                "type": "integer",
+                "name": "created_at"
+            },
+            {
+                "type": "integer",
+                "name": "finished_at"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "failed_jobs": {
+        "migration": "0001_01_01_000002_create_jobs_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "uuid"
+            },
+            {
+                "type": "text",
+                "name": "connection"
+            },
+            {
+                "type": "text",
+                "name": "queue"
+            },
+            {
+                "type": "longText",
+                "name": "payload"
+            },
+            {
+                "type": "longText",
+                "name": "exception"
+            },
+            {
+                "type": "timestamp",
+                "name": "failed_at"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "brands": {
+        "migration": "2025_01_15_100001_create_core_system_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "string",
+                "name": "logo"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "product_categories": {
+        "migration": "2026_09_04_000001_create_legacy_vtm_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "parent_id"
+            },
+            {
+                "type": "integer",
+                "name": "level"
+            },
+            {
+                "type": "string",
+                "name": "path"
+            },
+            {
+                "type": "integer",
+                "name": "sort_order"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            },
+            {
+                "type": "string",
+                "name": "image"
+            },
+            {
+                "type": "string",
+                "name": "meta_title"
+            },
+            {
+                "type": "text",
+                "name": "meta_description"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "attribute_groups": {
+        "migration": "2025_01_15_100001_create_core_system_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "integer",
+                "name": "sort_order"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "product_attributes": {
+        "migration": "2025_01_15_100001_create_core_system_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "attribute_group_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "enum",
+                "name": "type"
+            },
+            {
+                "type": "boolean",
+                "name": "is_filterable"
+            },
+            {
+                "type": "boolean",
+                "name": "is_required"
+            },
+            {
+                "type": "integer",
+                "name": "sort_order"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "product_attribute_values": {
+        "migration": "2025_01_15_100001_create_core_system_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "product_attribute_id"
+            },
+            {
+                "type": "string",
+                "name": "value"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "string",
+                "name": "display_value"
+            },
+            {
+                "type": "string",
+                "name": "color_code"
+            },
+            {
+                "type": "integer",
+                "name": "sort_order"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "products_enhanced": {
+        "migration": "2026_09_04_000001_create_legacy_vtm_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "string",
+                "name": "sku"
+            },
+            {
+                "type": "decimal",
+                "name": "price"
+            },
+            {
+                "type": "decimal",
+                "name": "regular_price"
+            },
+            {
+                "type": "decimal",
+                "name": "sale_price"
+            },
+            {
+                "type": "string",
+                "name": "status"
+            },
+            {
+                "type": "integer",
+                "name": "stock_quantity"
+            },
+            {
+                "type": "boolean",
+                "name": "is_in_stock"
+            },
+            {
+                "type": "boolean",
+                "name": "is_featured"
+            },
+            {
+                "type": "boolean",
+                "name": "is_favorite"
+            },
+            {
+                "type": "boolean",
+                "name": "is_bestseller"
+            },
+            {
+                "type": "string",
+                "name": "thumbnail"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "product_variations": {
+        "migration": "2025_01_15_100001_create_core_system_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "product_id"
+            },
+            {
+                "type": "string",
+                "name": "sku"
+            },
+            {
+                "type": "decimal",
+                "name": "price"
+            },
+            {
+                "type": "decimal",
+                "name": "sale_price"
+            },
+            {
+                "type": "integer",
+                "name": "stock_quantity"
+            },
+            {
+                "type": "json",
+                "name": "attributes"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "product_attribute_product": {
+        "migration": "2025_01_15_100001_create_core_system_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "product_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "product_attribute_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "product_attribute_value_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "product_reviews": {
+        "migration": "2026_09_04_000001_create_legacy_vtm_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "product_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "user_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "string",
+                "name": "reviewer_name"
+            },
+            {
+                "type": "string",
+                "name": "reviewer_email"
+            },
+            {
+                "type": "integer",
+                "name": "rating"
+            },
+            {
+                "type": "text",
+                "name": "comment"
+            },
+            {
+                "type": "string",
+                "name": "status"
+            },
+            {
+                "type": "boolean",
+                "name": "is_verified"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "tags": {
+        "migration": "2025_01_15_100002_create_content_management_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "string",
+                "name": "color"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "posts": {
+        "migration": "2026_09_04_000001_create_legacy_vtm_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "string",
+                "name": "title"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "string",
+                "name": "post_type"
+            },
+            {
+                "type": "longText",
+                "name": "content"
+            },
+            {
+                "type": "string",
+                "name": "status"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "post_tag": {
+        "migration": "2025_01_15_100002_create_content_management_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "post_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "tag_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "faqs": {
+        "migration": "2025_01_15_100002_create_content_management_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "question"
+            },
+            {
+                "type": "text",
+                "name": "answer"
+            },
+            {
+                "type": "integer",
+                "name": "sort_order"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "pages": {
+        "migration": "2025_01_15_100002_create_content_management_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "title"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "longText",
+                "name": "content"
+            },
+            {
+                "type": "string",
+                "name": "template"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            },
+            {
+                "type": "string",
+                "name": "meta_title"
+            },
+            {
+                "type": "text",
+                "name": "meta_description"
+            },
+            {
+                "type": "json",
+                "name": "seo_data"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "page_sections": {
+        "migration": "2026_08_14_041624_restore_page_sections_table.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "page_id"
+            },
+            {
+                "type": "string",
+                "name": "type"
+            },
+            {
+                "type": "json",
+                "name": "settings"
+            },
+            {
+                "type": "integer",
+                "name": "order"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            },
+            {
+                "type": "foreign",
+                "name": "page_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "orders": {
+        "migration": "2026_08_10_071500_add_tenant_and_project_ids_to_ecommerce_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "string",
+                "name": "order_number"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            },
+            {
+                "type": "decimal",
+                "name": "subtotal"
+            },
+            {
+                "type": "decimal",
+                "name": "tax_amount"
+            },
+            {
+                "type": "decimal",
+                "name": "shipping_amount"
+            },
+            {
+                "type": "decimal",
+                "name": "discount_amount"
+            },
+            {
+                "type": "decimal",
+                "name": "total_amount"
+            },
+            {
+                "type": "string",
+                "name": "currency"
+            },
+            {
+                "type": "string",
+                "name": "customer_name"
+            },
+            {
+                "type": "string",
+                "name": "customer_email"
+            },
+            {
+                "type": "string",
+                "name": "customer_phone"
+            },
+            {
+                "type": "json",
+                "name": "billing_address"
+            },
+            {
+                "type": "json",
+                "name": "shipping_address"
+            },
+            {
+                "type": "string",
+                "name": "payment_method"
+            },
+            {
+                "type": "enum",
+                "name": "payment_status"
+            },
+            {
+                "type": "timestamp",
+                "name": "paid_at"
+            },
+            {
+                "type": "text",
+                "name": "customer_notes"
+            },
+            {
+                "type": "text",
+                "name": "internal_notes"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "order_items": {
+        "migration": "2026_08_10_071500_add_tenant_and_project_ids_to_ecommerce_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "order_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "product_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "product_variation_id"
+            },
+            {
+                "type": "string",
+                "name": "product_name"
+            },
+            {
+                "type": "string",
+                "name": "product_sku"
+            },
+            {
+                "type": "json",
+                "name": "product_attributes"
+            },
+            {
+                "type": "decimal",
+                "name": "unit_price"
+            },
+            {
+                "type": "integer",
+                "name": "quantity"
+            },
+            {
+                "type": "decimal",
+                "name": "total_price"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "order_status_histories": {
+        "migration": "2026_08_10_071500_add_tenant_and_project_ids_to_ecommerce_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "order_id"
+            },
+            {
+                "type": "string",
+                "name": "from_status"
+            },
+            {
+                "type": "string",
+                "name": "to_status"
+            },
+            {
+                "type": "text",
+                "name": "notes"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "user_id"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "media_folders": {
+        "migration": "2025_01_15_100004_create_media_management_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "parent_id"
+            },
+            {
+                "type": "string",
+                "name": "path"
+            },
+            {
+                "type": "foreign",
+                "name": "parent_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "media_files": {
+        "migration": "2025_01_15_100004_create_media_management_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "file_name"
+            },
+            {
+                "type": "string",
+                "name": "mime_type"
+            },
+            {
+                "type": "string",
+                "name": "disk"
+            },
+            {
+                "type": "string",
+                "name": "path"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "size"
+            },
+            {
+                "type": "json",
+                "name": "metadata"
+            },
+            {
+                "type": "foreignId",
+                "name": "folder_id"
+            },
+            {
+                "type": "string",
+                "name": "alt_text"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "media_collections": {
+        "migration": "2025_01_15_100004_create_media_management_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "media_collection_items": {
+        "migration": "2025_01_15_100004_create_media_management_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "collection_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "media_file_id"
+            },
+            {
+                "type": "integer",
+                "name": "sort_order"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "newsletter_subscribers": {
+        "migration": "2025_01_15_100005_create_marketing_feedback_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "email"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            },
+            {
+                "type": "timestamp",
+                "name": "subscribed_at"
+            },
+            {
+                "type": "timestamp",
+                "name": "unsubscribed_at"
+            },
+            {
+                "type": "string",
+                "name": "subscription_token"
+            },
+            {
+                "type": "json",
+                "name": "metadata"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "contact_forms": {
+        "migration": "2025_01_15_100005_create_marketing_feedback_tables.php",
+        "columns": [
+            {
+                "type": "enum",
+                "name": "type"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "email"
+            },
+            {
+                "type": "string",
+                "name": "phone"
+            },
+            {
+                "type": "string",
+                "name": "company"
+            },
+            {
+                "type": "string",
+                "name": "subject"
+            },
+            {
+                "type": "text",
+                "name": "message"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            },
+            {
+                "type": "foreignId",
+                "name": "assigned_to"
+            },
+            {
+                "type": "text",
+                "name": "internal_notes"
+            },
+            {
+                "type": "json",
+                "name": "metadata"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "feedbacks": {
+        "migration": "2025_01_15_100005_create_marketing_feedback_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "email"
+            },
+            {
+                "type": "enum",
+                "name": "type"
+            },
+            {
+                "type": "string",
+                "name": "subject"
+            },
+            {
+                "type": "text",
+                "name": "message"
+            },
+            {
+                "type": "integer",
+                "name": "rating"
+            },
+            {
+                "type": "enum",
+                "name": "priority"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            },
+            {
+                "type": "string",
+                "name": "ticket_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "assigned_to"
+            },
+            {
+                "type": "text",
+                "name": "internal_notes"
+            },
+            {
+                "type": "json",
+                "name": "attachments"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "feedback_responses": {
+        "migration": "2025_01_15_100005_create_marketing_feedback_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "feedback_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "user_id"
+            },
+            {
+                "type": "text",
+                "name": "message"
+            },
+            {
+                "type": "boolean",
+                "name": "is_internal"
+            },
+            {
+                "type": "json",
+                "name": "attachments"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "banners": {
+        "migration": "2025_01_15_100005_create_marketing_feedback_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "title"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "string",
+                "name": "image"
+            },
+            {
+                "type": "string",
+                "name": "link_url"
+            },
+            {
+                "type": "string",
+                "name": "link_text"
+            },
+            {
+                "type": "enum",
+                "name": "position"
+            },
+            {
+                "type": "integer",
+                "name": "sort_order"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            },
+            {
+                "type": "timestamp",
+                "name": "starts_at"
+            },
+            {
+                "type": "timestamp",
+                "name": "ends_at"
+            },
+            {
+                "type": "integer",
+                "name": "clicks"
+            },
+            {
+                "type": "integer",
+                "name": "views"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "roles": {
+        "migration": "2025_01_21_000001_create_roles_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "display_name"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "user_roles": {
+        "migration": "2025_01_21_000001_create_roles_table.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "user_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "role_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "activity_logs": {
+        "migration": "2025_11_23_182254_create_activity_logs_table.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "user_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "project_id"
+            },
+            {
+                "type": "string",
+                "name": "action"
+            },
+            {
+                "type": "string",
+                "name": "model"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "model_id"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "json",
+                "name": "properties"
+            },
+            {
+                "type": "string",
+                "name": "ip_address"
+            },
+            {
+                "type": "string",
+                "name": "user_agent"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": false
+    },
+    "settings": {
+        "migration": "2025_11_22_133048_create_settings_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "key"
+            },
+            {
+                "type": "text",
+                "name": "value"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "menus": {
+        "migration": "2026_08_07_085645_restore_menus_and_menu_items_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "string",
+                "name": "location"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "widgets": {
+        "migration": "2026_08_07_075826_create_widgets_and_templates_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "type"
+            },
+            {
+                "type": "string",
+                "name": "area"
+            },
+            {
+                "type": "json",
+                "name": "settings"
+            },
+            {
+                "type": "integer",
+                "name": "sort_order"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            },
+            {
+                "type": "string",
+                "name": "variant"
+            },
+            {
+                "type": "json",
+                "name": "meta_data"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "system_backups": {
+        "migration": "2025_01_15_100006_create_system_management_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "type"
+            },
+            {
+                "type": "string",
+                "name": "path"
+            },
+            {
+                "type": "string",
+                "name": "disk"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "size"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            },
+            {
+                "type": "text",
+                "name": "error_message"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "system_logs": {
+        "migration": "2025_01_15_100006_create_system_management_tables.php",
+        "columns": [
+            {
+                "type": "enum",
+                "name": "level"
+            },
+            {
+                "type": "string",
+                "name": "channel"
+            },
+            {
+                "type": "text",
+                "name": "message"
+            },
+            {
+                "type": "json",
+                "name": "context"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "visitor_logs": {
+        "migration": "2025_01_21_000000_create_visitor_logs_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "ip_address"
+            },
+            {
+                "type": "string",
+                "name": "user_agent"
+            },
+            {
+                "type": "string",
+                "name": "url"
+            },
+            {
+                "type": "string",
+                "name": "method"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "user_id"
+            },
+            {
+                "type": "timestamp",
+                "name": "visited_at"
+            },
+            {
+                "type": "index",
+                "name": "visited_at"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "product_attribute_value_mappings": {
+        "migration": "2026_08_10_071500_add_tenant_and_project_ids_to_ecommerce_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "product_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "product_attribute_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "product_attribute_value_id"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "form_submissions": {
+        "migration": "2026_09_04_000001_create_legacy_vtm_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "string",
+                "name": "form_name"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "form_template_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "modal_form_id"
+            },
+            {
+                "type": "json",
+                "name": "data"
+            },
+            {
+                "type": "string",
+                "name": "source"
+            },
+            {
+                "type": "string",
+                "name": "ip_address"
+            },
+            {
+                "type": "text",
+                "name": "user_agent"
+            },
+            {
+                "type": "string",
+                "name": "status"
+            },
+            {
+                "type": "text",
+                "name": "admin_note"
+            },
+            {
+                "type": "timestamp",
+                "name": "submitted_at"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "posts_unified": {
+        "migration": "2025_01_25_000001_merge_posts_and_pages_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "title"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "text",
+                "name": "excerpt"
+            },
+            {
+                "type": "longText",
+                "name": "content"
+            },
+            {
+                "type": "string",
+                "name": "featured_image"
+            },
+            {
+                "type": "enum",
+                "name": "post_type"
+            },
+            {
+                "type": "string",
+                "name": "template"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            },
+            {
+                "type": "string",
+                "name": "meta_title"
+            },
+            {
+                "type": "text",
+                "name": "meta_description"
+            },
+            {
+                "type": "json",
+                "name": "seo_data"
+            },
+            {
+                "type": "integer",
+                "name": "views"
+            },
+            {
+                "type": "timestamp",
+                "name": "published_at"
+            },
+            {
+                "type": "foreignId",
+                "name": "author_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "posts_old": {
+        "migration": "2025_01_25_000001_merge_posts_and_pages_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "title"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "text",
+                "name": "excerpt"
+            },
+            {
+                "type": "longText",
+                "name": "content"
+            },
+            {
+                "type": "string",
+                "name": "featured_image"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            },
+            {
+                "type": "string",
+                "name": "meta_title"
+            },
+            {
+                "type": "text",
+                "name": "meta_description"
+            },
+            {
+                "type": "json",
+                "name": "seo_data"
+            },
+            {
+                "type": "integer",
+                "name": "views"
+            },
+            {
+                "type": "timestamp",
+                "name": "published_at"
+            },
+            {
+                "type": "foreignId",
+                "name": "author_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "pages_old": {
+        "migration": "2025_01_25_000001_merge_posts_and_pages_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "title"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "longText",
+                "name": "content"
+            },
+            {
+                "type": "string",
+                "name": "template"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            },
+            {
+                "type": "string",
+                "name": "meta_title"
+            },
+            {
+                "type": "text",
+                "name": "meta_description"
+            },
+            {
+                "type": "json",
+                "name": "seo_data"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "tenants": {
+        "migration": "2025_01_25_100000_add_tenant_support_to_all_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "code"
+            },
+            {
+                "type": "string",
+                "name": "domain"
+            },
+            {
+                "type": "string",
+                "name": "database_name"
+            },
+            {
+                "type": "json",
+                "name": "settings"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "fonts": {
+        "migration": "2025_11_22_132609_create_fonts_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "enum",
+                "name": "type"
+            },
+            {
+                "type": "json",
+                "name": "weights"
+            },
+            {
+                "type": "string",
+                "name": "load_string"
+            },
+            {
+                "type": "string",
+                "name": "file_path"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            },
+            {
+                "type": "boolean",
+                "name": "is_default"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "employees": {
+        "migration": "2025_11_23_131341_create_employees_and_contracts_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "code"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "email"
+            },
+            {
+                "type": "string",
+                "name": "phone"
+            },
+            {
+                "type": "string",
+                "name": "position"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "contracts": {
+        "migration": "2026_08_04_084040_create_contracts_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "title"
+            },
+            {
+                "type": "string",
+                "name": "client_name"
+            },
+            {
+                "type": "string",
+                "name": "service_type"
+            },
+            {
+                "type": "date",
+                "name": "start_date"
+            },
+            {
+                "type": "date",
+                "name": "end_date"
+            },
+            {
+                "type": "string",
+                "name": "domain_name"
+            },
+            {
+                "type": "date",
+                "name": "domain_purchase_date"
+            },
+            {
+                "type": "string",
+                "name": "hosting_provider"
+            },
+            {
+                "type": "date",
+                "name": "hosting_start_date"
+            },
+            {
+                "type": "decimal",
+                "name": "contract_value"
+            },
+            {
+                "type": "json",
+                "name": "attachments"
+            },
+            {
+                "type": "string",
+                "name": "status"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "projects_system_tables": {
+        "migration": "2025_11_23_132525_create_projects_system_tables.php",
+        "columns": [],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "projects": {
+        "migration": "2025_11_23_162937_create_projects_table_simple.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "contract_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "code"
+            },
+            {
+                "type": "string",
+                "name": "subdomain"
+            },
+            {
+                "type": "string",
+                "name": "project_admin_username"
+            },
+            {
+                "type": "string",
+                "name": "project_admin_password"
+            },
+            {
+                "type": "string",
+                "name": "client_name"
+            },
+            {
+                "type": "date",
+                "name": "start_date"
+            },
+            {
+                "type": "date",
+                "name": "deadline"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            },
+            {
+                "type": "decimal",
+                "name": "contract_value"
+            },
+            {
+                "type": "string",
+                "name": "contract_file"
+            },
+            {
+                "type": "text",
+                "name": "technical_requirements"
+            },
+            {
+                "type": "text",
+                "name": "features"
+            },
+            {
+                "type": "string",
+                "name": "environment"
+            },
+            {
+                "type": "text",
+                "name": "notes"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "admin_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "created_by"
+            },
+            {
+                "type": "timestamp",
+                "name": "approved_at"
+            },
+            {
+                "type": "timestamp",
+                "name": "initialized_at"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "project_members": {
+        "migration": "2025_11_23_132600_create_project_management_system_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "project_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "employee_id"
+            },
+            {
+                "type": "enum",
+                "name": "role"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": false
+    },
+    "tasks": {
+        "migration": "2026_08_04_072144_create_tasks_table.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "project_id"
+            },
+            {
+                "type": "string",
+                "name": "title"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "foreignId",
+                "name": "dev_id"
+            },
+            {
+                "type": "string",
+                "name": "status"
+            },
+            {
+                "type": "text",
+                "name": "result_notes"
+            },
+            {
+                "type": "date",
+                "name": "deadline"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": false
+    },
+    "project_settings": {
+        "migration": "2025_11_23_175103_create_project_settings_table.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "project_id"
+            },
+            {
+                "type": "string",
+                "name": "key"
+            },
+            {
+                "type": "text",
+                "name": "value"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": false
+    },
+    "project_tickets": {
+        "migration": "2026_08_05_082908_create_project_tickets_table.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "project_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "creator_id"
+            },
+            {
+                "type": "string",
+                "name": "title"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            },
+            {
+                "type": "timestamp",
+                "name": "last_reply_at"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": false
+    },
+    "project_permissions": {
+        "migration": "2025_11_24_000002_create_project_permissions_table.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "project_id"
+            },
+            {
+                "type": "string",
+                "name": "module"
+            },
+            {
+                "type": "boolean",
+                "name": "can_view"
+            },
+            {
+                "type": "boolean",
+                "name": "can_create"
+            },
+            {
+                "type": "boolean",
+                "name": "can_edit"
+            },
+            {
+                "type": "boolean",
+                "name": "can_delete"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": false
+    },
+    "branches": {
+        "migration": "2025_11_25_182330_create_branches_table.php",
+        "columns": [
+            {
+                "type": "json",
+                "name": "name"
+            },
+            {
+                "type": "text",
+                "name": "address"
+            },
+            {
+                "type": "text",
+                "name": "map_embed"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "menu_items": {
+        "migration": "2026_08_07_085645_restore_menus_and_menu_items_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "menu_id"
+            },
+            {
+                "type": "string",
+                "name": "title"
+            },
+            {
+                "type": "string",
+                "name": "url"
+            },
+            {
+                "type": "string",
+                "name": "target"
+            },
+            {
+                "type": "nullableMorphs",
+                "name": "linkable"
+            },
+            {
+                "type": "integer",
+                "name": "order"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "widget_templates": {
+        "migration": "2026_08_07_075826_create_widgets_and_templates_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "type"
+            },
+            {
+                "type": "string",
+                "name": "category"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "string",
+                "name": "icon"
+            },
+            {
+                "type": "string",
+                "name": "preview_image"
+            },
+            {
+                "type": "json",
+                "name": "config_schema"
+            },
+            {
+                "type": "json",
+                "name": "default_settings"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            },
+            {
+                "type": "boolean",
+                "name": "is_premium"
+            },
+            {
+                "type": "integer",
+                "name": "sort_order"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": true
+    },
+    "product_category_product": {
+        "migration": "2026_09_04_000002_create_product_category_product_table.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "product_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "product_category_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "website_configs": {
+        "migration": "2025_11_29_033035_create_website_configs_table.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "string",
+                "name": "section"
+            },
+            {
+                "type": "string",
+                "name": "key"
+            },
+            {
+                "type": "longText",
+                "name": "value"
+            },
+            {
+                "type": "string",
+                "name": "type"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": false
+    },
+    "translations": {
+        "migration": "2025_12_17_000001_create_translations_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "translatable_type"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "translatable_id"
+            },
+            {
+                "type": "string",
+                "name": "locale"
+            },
+            {
+                "type": "string",
+                "name": "field"
+            },
+            {
+                "type": "longText",
+                "name": "value"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "permissions": {
+        "migration": "2025_12_18_021724_create_permissions_and_pivot_tables.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "display_name"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "string",
+                "name": "group"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "role_permissions": {
+        "migration": "2025_12_18_021724_create_permissions_and_pivot_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "role_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "permission_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "user_permissions": {
+        "migration": "2025_12_18_021724_create_permissions_and_pivot_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "user_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "permission_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "languages": {
+        "migration": "2025_12_18_091831_create_languages_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "code"
+            },
+            {
+                "type": "string",
+                "name": "locale"
+            },
+            {
+                "type": "string",
+                "name": "flag"
+            },
+            {
+                "type": "boolean",
+                "name": "is_default"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            },
+            {
+                "type": "integer",
+                "name": "sort_order"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "product_category_pivot": {
+        "migration": "2025_12_19_015840_create_product_category_pivot_table.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "product_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "category_id"
+            },
+            {
+                "type": "foreign",
+                "name": "product_id"
+            },
+            {
+                "type": "foreign",
+                "name": "category_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "product_brand_pivot": {
+        "migration": "2025_12_19_015901_create_product_brand_pivot_table.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "product_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "brand_id"
+            },
+            {
+                "type": "foreign",
+                "name": "product_id"
+            },
+            {
+                "type": "foreign",
+                "name": "brand_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "project_password_audits": {
+        "migration": "2025_12_23_090101_create_project_password_audits_table.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "user_id"
+            },
+            {
+                "type": "string",
+                "name": "action"
+            },
+            {
+                "type": "string",
+                "name": "ip_address"
+            },
+            {
+                "type": "text",
+                "name": "user_agent"
+            },
+            {
+                "type": "timestamp",
+                "name": "performed_at"
+            },
+            {
+                "type": "foreign",
+                "name": "project_id"
+            },
+            {
+                "type": "foreign",
+                "name": "user_id"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": false
+    },
+    "archive_templates": {
+        "migration": "2025_12_29_000001_create_archive_templates_table.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "type"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "longText",
+                "name": "template_code"
+            },
+            {
+                "type": "longText",
+                "name": "template_css"
+            },
+            {
+                "type": "longText",
+                "name": "template_js"
+            },
+            {
+                "type": "json",
+                "name": "config"
+            },
+            {
+                "type": "boolean",
+                "name": "is_default"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            },
+            {
+                "type": "index",
+                "name": "tenant_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": true
+    },
+    "positions": {
+        "migration": "2026_08_03_085258_create_positions_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "code"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "taxonomies": {
+        "migration": "2026_08_04_022536_refactor_database_to_unified_posts.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "slug"
+            },
+            {
+                "type": "string",
+                "name": "taxonomy"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "parent_id"
+            },
+            {
+                "type": "integer",
+                "name": "order"
+            },
+            {
+                "type": "string",
+                "name": "status"
+            },
+            {
+                "type": "json",
+                "name": "meta_data"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "term_relationships": {
+        "migration": "2026_08_04_022536_refactor_database_to_unified_posts.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "object_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "term_taxonomy_id"
+            },
+            {
+                "type": "integer",
+                "name": "order"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "briefs": {
+        "migration": "2026_08_04_072143_create_briefs_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "title"
+            },
+            {
+                "type": "string",
+                "name": "client_name"
+            },
+            {
+                "type": "text",
+                "name": "requirements"
+            },
+            {
+                "type": "decimal",
+                "name": "budget"
+            },
+            {
+                "type": "date",
+                "name": "deadline"
+            },
+            {
+                "type": "string",
+                "name": "status"
+            },
+            {
+                "type": "foreignId",
+                "name": "account_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "feature_packs": {
+        "migration": "2026_08_05_061206_create_feature_packs_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "code"
+            },
+            {
+                "type": "string",
+                "name": "group_name"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "project_ticket_replies": {
+        "migration": "2026_08_05_082918_create_project_ticket_replies_table.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "project_ticket_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "user_id"
+            },
+            {
+                "type": "text",
+                "name": "content"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "reviews": {
+        "migration": "2026_08_12_024904_create_reviews_table.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "string",
+                "name": "reviewer_name"
+            },
+            {
+                "type": "string",
+                "name": "reviewer_avatar"
+            },
+            {
+                "type": "string",
+                "name": "reviewer_title"
+            },
+            {
+                "type": "text",
+                "name": "content"
+            },
+            {
+                "type": "unsignedTinyInteger",
+                "name": "rating"
+            },
+            {
+                "type": "string",
+                "name": "image"
+            },
+            {
+                "type": "string",
+                "name": "status"
+            },
+            {
+                "type": "unsignedInteger",
+                "name": "sort_order"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "shipping_carriers": {
+        "migration": "2026_08_12_035457_create_shipping_engine_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "project_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "code"
+            },
+            {
+                "type": "enum",
+                "name": "type"
+            },
+            {
+                "type": "boolean",
+                "name": "status"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": false
+    },
+    "shipping_rate_versions": {
+        "migration": "2026_08_12_035457_create_shipping_engine_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "shipping_carrier_id"
+            },
+            {
+                "type": "string",
+                "name": "version_name"
+            },
+            {
+                "type": "date",
+                "name": "start_date"
+            },
+            {
+                "type": "date",
+                "name": "end_date"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "shipping_zones": {
+        "migration": "2026_08_12_035457_create_shipping_engine_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "project_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "boolean",
+                "name": "status"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": false
+    },
+    "shipping_zone_locations": {
+        "migration": "2026_08_12_035457_create_shipping_engine_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "shipping_zone_id"
+            },
+            {
+                "type": "string",
+                "name": "province_code"
+            },
+            {
+                "type": "string",
+                "name": "district_code"
+            },
+            {
+                "type": "string",
+                "name": "ward_code"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "shipping_rules": {
+        "migration": "2026_08_12_035457_create_shipping_engine_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "shipping_rate_version_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "integer",
+                "name": "priority"
+            },
+            {
+                "type": "enum",
+                "name": "action_type"
+            },
+            {
+                "type": "decimal",
+                "name": "fee"
+            },
+            {
+                "type": "boolean",
+                "name": "is_surcharge"
+            },
+            {
+                "type": "boolean",
+                "name": "status"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "shipping_rule_conditions": {
+        "migration": "2026_08_12_035457_create_shipping_engine_tables.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "shipping_rule_id"
+            },
+            {
+                "type": "enum",
+                "name": "condition_type"
+            },
+            {
+                "type": "enum",
+                "name": "operator"
+            },
+            {
+                "type": "decimal",
+                "name": "value_1"
+            },
+            {
+                "type": "decimal",
+                "name": "value_2"
+            },
+            {
+                "type": "foreignId",
+                "name": "zone_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "departments": {
+        "migration": "2026_08_18_023156_create_departments_table.php",
+        "columns": [
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "code"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "manager_id"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "services": {
+        "migration": "2026_08_18_023156_create_services_table.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "department_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "code"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "json",
+                "name": "form_schema"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "service_stages": {
+        "migration": "2026_08_18_023157_create_service_stages_table.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "service_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "code"
+            },
+            {
+                "type": "integer",
+                "name": "order"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "project_stages": {
+        "migration": "2026_08_18_023158_create_project_stages_table.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "project_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "service_stage_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "code"
+            },
+            {
+                "type": "integer",
+                "name": "order"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            },
+            {
+                "type": "timestamp",
+                "name": "completed_at"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": false
+    },
+    "hosting_profiles": {
+        "migration": "2026_08_19_083753_create_hosting_profiles_table.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "project_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "enum",
+                "name": "panel_type"
+            },
+            {
+                "type": "string",
+                "name": "hostname"
+            },
+            {
+                "type": "unsignedInteger",
+                "name": "port"
+            },
+            {
+                "type": "string",
+                "name": "cpanel_username"
+            },
+            {
+                "type": "text",
+                "name": "api_token"
+            },
+            {
+                "type": "string",
+                "name": "domain"
+            },
+            {
+                "type": "string",
+                "name": "public_html_path"
+            },
+            {
+                "type": "string",
+                "name": "db_prefix"
+            },
+            {
+                "type": "string",
+                "name": "ftp_host"
+            },
+            {
+                "type": "unsignedInteger",
+                "name": "ftp_port"
+            },
+            {
+                "type": "string",
+                "name": "ftp_username"
+            },
+            {
+                "type": "text",
+                "name": "ftp_password"
+            },
+            {
+                "type": "boolean",
+                "name": "ftp_passive"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            },
+            {
+                "type": "text",
+                "name": "notes"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": false
+    },
+    "deployment_history": {
+        "migration": "2026_08_19_083758_create_deployment_history_table.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "project_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "hosting_profile_id"
+            },
+            {
+                "type": "foreignId",
+                "name": "deployed_by"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            },
+            {
+                "type": "string",
+                "name": "source_hash"
+            },
+            {
+                "type": "timestamp",
+                "name": "started_at"
+            },
+            {
+                "type": "timestamp",
+                "name": "completed_at"
+            },
+            {
+                "type": "string",
+                "name": "deployed_url"
+            },
+            {
+                "type": "text",
+                "name": "error_message"
+            },
+            {
+                "type": "text",
+                "name": "notes"
+            },
+            {
+                "type": "index",
+                "name": "hosting_profile_id"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": false
+    },
+    "deployment_logs": {
+        "migration": "2026_08_19_083803_create_deployment_logs_table.php",
+        "columns": [
+            {
+                "type": "foreignId",
+                "name": "deployment_history_id"
+            },
+            {
+                "type": "string",
+                "name": "step"
+            },
+            {
+                "type": "text",
+                "name": "message"
+            },
+            {
+                "type": "enum",
+                "name": "level"
+            },
+            {
+                "type": "unsignedSmallInteger",
+                "name": "step_number"
+            },
+            {
+                "type": "json",
+                "name": "context"
+            },
+            {
+                "type": "timestamp",
+                "name": "logged_at"
+            },
+            {
+                "type": "index",
+                "name": "deployment_history_id"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "customers": {
+        "migration": "2026_08_24_022102_create_customers_table.php",
+        "columns": [
+            {
+                "type": "enum",
+                "name": "type"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "email"
+            },
+            {
+                "type": "string",
+                "name": "phone"
+            },
+            {
+                "type": "string",
+                "name": "tax_code"
+            },
+            {
+                "type": "string",
+                "name": "address"
+            },
+            {
+                "type": "string",
+                "name": "representative_name"
+            },
+            {
+                "type": "string",
+                "name": "representative_title"
+            },
+            {
+                "type": "text",
+                "name": "note"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "coupons": {
+        "migration": "2026_09_04_000001_create_legacy_vtm_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "string",
+                "name": "code"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "enum",
+                "name": "type"
+            },
+            {
+                "type": "decimal",
+                "name": "value"
+            },
+            {
+                "type": "decimal",
+                "name": "min_order_value"
+            },
+            {
+                "type": "decimal",
+                "name": "max_discount_value"
+            },
+            {
+                "type": "dateTime",
+                "name": "start_date"
+            },
+            {
+                "type": "dateTime",
+                "name": "end_date"
+            },
+            {
+                "type": "integer",
+                "name": "usage_limit"
+            },
+            {
+                "type": "integer",
+                "name": "usage_limit_per_user"
+            },
+            {
+                "type": "integer",
+                "name": "usage_count"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "flash_sale_campaigns": {
+        "migration": "2026_09_04_000001_create_legacy_vtm_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "dateTime",
+                "name": "starts_at"
+            },
+            {
+                "type": "dateTime",
+                "name": "ends_at"
+            },
+            {
+                "type": "enum",
+                "name": "status"
+            },
+            {
+                "type": "boolean",
+                "name": "apply_to_all"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "flash_sale_items": {
+        "migration": "2026_09_04_000001_create_legacy_vtm_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "campaign_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "product_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "category_id"
+            },
+            {
+                "type": "enum",
+                "name": "discount_type"
+            },
+            {
+                "type": "decimal",
+                "name": "discount_value"
+            },
+            {
+                "type": "integer",
+                "name": "sale_limit"
+            },
+            {
+                "type": "integer",
+                "name": "sold_count"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "agents": {
+        "migration": "2026_09_04_000001_create_legacy_vtm_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "code"
+            },
+            {
+                "type": "string",
+                "name": "phone"
+            },
+            {
+                "type": "string",
+                "name": "email"
+            },
+            {
+                "type": "text",
+                "name": "address"
+            },
+            {
+                "type": "string",
+                "name": "contact_person"
+            },
+            {
+                "type": "string",
+                "name": "region"
+            },
+            {
+                "type": "enum",
+                "name": "type"
+            },
+            {
+                "type": "decimal",
+                "name": "commission_rate"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            },
+            {
+                "type": "text",
+                "name": "notes"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "user_id"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "user_addresses": {
+        "migration": "2026_09_04_000001_create_legacy_vtm_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "user_id"
+            },
+            {
+                "type": "string",
+                "name": "receiver_name"
+            },
+            {
+                "type": "string",
+                "name": "receiver_phone"
+            },
+            {
+                "type": "string",
+                "name": "province_code"
+            },
+            {
+                "type": "string",
+                "name": "ward_code"
+            },
+            {
+                "type": "string",
+                "name": "province_name"
+            },
+            {
+                "type": "string",
+                "name": "district_name"
+            },
+            {
+                "type": "string",
+                "name": "ward_name"
+            },
+            {
+                "type": "string",
+                "name": "address_detail"
+            },
+            {
+                "type": "string",
+                "name": "full_address"
+            },
+            {
+                "type": "boolean",
+                "name": "is_default"
+            }
+        ],
+        "has_project_id": false,
+        "has_tenant_id": false
+    },
+    "form_templates": {
+        "migration": "2026_09_04_000001_create_legacy_vtm_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "json",
+                "name": "fields"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "modal_forms": {
+        "migration": "2026_09_04_000001_create_legacy_vtm_tables.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "string",
+                "name": "name"
+            },
+            {
+                "type": "string",
+                "name": "title"
+            },
+            {
+                "type": "text",
+                "name": "description"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "form_template_id"
+            },
+            {
+                "type": "json",
+                "name": "config"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            },
+            {
+                "type": "enum",
+                "name": "trigger_type"
+            },
+            {
+                "type": "integer",
+                "name": "trigger_delay"
+            },
+            {
+                "type": "integer",
+                "name": "trigger_scroll"
+            },
+            {
+                "type": "enum",
+                "name": "show_frequency"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    },
+    "product_combos": {
+        "migration": "2026_09_06_000002_create_product_combos_table.php",
+        "columns": [
+            {
+                "type": "unsignedBigInteger",
+                "name": "project_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "tenant_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "product_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "combo_product_id"
+            },
+            {
+                "type": "unsignedBigInteger",
+                "name": "variant_id"
+            },
+            {
+                "type": "decimal",
+                "name": "combo_price"
+            },
+            {
+                "type": "decimal",
+                "name": "discount_amount"
+            },
+            {
+                "type": "integer",
+                "name": "sort_order"
+            },
+            {
+                "type": "boolean",
+                "name": "is_active"
+            }
+        ],
+        "has_project_id": true,
+        "has_tenant_id": true
+    }
+}

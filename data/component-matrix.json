@@ -1,0 +1,252 @@
+{
+    "components": [
+        {
+            "name": "header-navbar",
+            "type": "theme-specific",
+            "blade": "themes/ehenho/components/header.blade.php",
+            "pages_count": 22,
+            "pages": [
+                "blocked-profiles.html",
+                "bookmarked-profiles.html",
+                "contactbook-profiles.html",
+                "email-manager.html",
+                "gioi-thieu.html",
+                "inbox.html",
+                "index.html",
+                "liked-profiles.html",
+                "login.html",
+                "logout.html",
+                "message-view.html",
+                "my-profile.html",
+                "password-change.html",
+                "password-reset.html",
+                "profile-detail.html",
+                "profile-edit.html",
+                "profile-options.html",
+                "sent.html",
+                "signup.html",
+                "tim-ban-bon-phuong-theo-tuoi.html",
+                "tim-ban-bon-phuong.html",
+                "upload-profile-pic.html"
+            ],
+            "dependencies": [
+                "bootstrap.css",
+                "base8.css",
+                "jquery.js",
+                "bootstrap.js",
+                "auth-session.js"
+            ],
+            "dynamic_slots": [
+                "auth_user",
+                "unread_messages_count",
+                "logo_url"
+            ]
+        },
+        {
+            "name": "footer-main",
+            "type": "theme-specific",
+            "blade": "themes/ehenho/components/footer.blade.php",
+            "pages_count": 22,
+            "pages": [
+                "blocked-profiles.html",
+                "bookmarked-profiles.html",
+                "contactbook-profiles.html",
+                "email-manager.html",
+                "gioi-thieu.html",
+                "inbox.html",
+                "index.html",
+                "liked-profiles.html",
+                "login.html",
+                "logout.html",
+                "message-view.html",
+                "my-profile.html",
+                "password-change.html",
+                "password-reset.html",
+                "profile-detail.html",
+                "profile-edit.html",
+                "profile-options.html",
+                "sent.html",
+                "signup.html",
+                "tim-ban-bon-phuong-theo-tuoi.html",
+                "tim-ban-bon-phuong.html",
+                "upload-profile-pic.html"
+            ],
+            "dependencies": [
+                "font-awesome",
+                "base8.css"
+            ],
+            "dynamic_slots": [
+                "site_name",
+                "contact_email",
+                "social_links",
+                "copyright_year"
+            ]
+        },
+        {
+            "name": "account-sidebar-menu",
+            "type": "theme-specific",
+            "blade": "themes/ehenho/components/account-sidebar.blade.php",
+            "pages_count": 0,
+            "pages": [],
+            "dependencies": [
+                "base8.css"
+            ],
+            "dynamic_slots": [
+                "active_menu",
+                "profile_completion_percentage",
+                "unread_inbox_count"
+            ]
+        },
+        {
+            "name": "profile-card",
+            "type": "theme-specific",
+            "blade": "themes/ehenho/components/profile-card.blade.php",
+            "pages_count": 0,
+            "pages": [],
+            "dependencies": [
+                "base8.css"
+            ],
+            "dynamic_slots": [
+                "profile.id",
+                "profile.name",
+                "profile.age",
+                "profile.location",
+                "profile.avatar_url",
+                "profile.bio"
+            ]
+        },
+        {
+            "name": "message-row-item",
+            "type": "theme-specific",
+            "blade": "themes/ehenho/components/message-row.blade.php",
+            "pages_count": 2,
+            "pages": [
+                "inbox.html",
+                "message-view.html"
+            ],
+            "dependencies": [
+                "base8.css"
+            ],
+            "dynamic_slots": [
+                "message.sender",
+                "message.subject",
+                "message.created_at",
+                "message.is_read"
+            ]
+        },
+        {
+            "name": "search-filter-box",
+            "type": "theme-specific",
+            "blade": "themes/ehenho/components/search-filter.blade.php",
+            "pages_count": 0,
+            "pages": [],
+            "dependencies": [
+                "drop_down.js",
+                "vietnam_provinces.json"
+            ],
+            "dynamic_slots": [
+                "gender_options",
+                "age_min",
+                "age_max",
+                "province_options"
+            ]
+        },
+        {
+            "name": "hero-carousel",
+            "type": "theme-specific",
+            "blade": "themes/ehenho/components/hero-carousel.blade.php",
+            "pages_count": 22,
+            "pages": [
+                "blocked-profiles.html",
+                "bookmarked-profiles.html",
+                "contactbook-profiles.html",
+                "email-manager.html",
+                "gioi-thieu.html",
+                "inbox.html",
+                "index.html",
+                "liked-profiles.html",
+                "login.html",
+                "logout.html",
+                "message-view.html",
+                "my-profile.html",
+                "password-change.html",
+                "password-reset.html",
+                "profile-detail.html",
+                "profile-edit.html",
+                "profile-options.html",
+                "sent.html",
+                "signup.html",
+                "tim-ban-bon-phuong-theo-tuoi.html",
+                "tim-ban-bon-phuong.html",
+                "upload-profile-pic.html"
+            ],
+            "dependencies": [
+                "carousel.css",
+                "bootstrap.js"
+            ],
+            "dynamic_slots": [
+                "featured_profiles",
+                "banner_images"
+            ]
+        },
+        {
+            "name": "password-toggle-widget",
+            "type": "reusable-ui",
+            "blade": "themes/ehenho/components/password-toggle.blade.php",
+            "pages_count": 9,
+            "pages": [
+                "gioi-thieu.html",
+                "index.html",
+                "login.html",
+                "password-change.html",
+                "password-reset.html",
+                "profile-detail.html",
+                "signup.html",
+                "tim-ban-bon-phuong-theo-tuoi.html",
+                "tim-ban-bon-phuong.html"
+            ],
+            "dependencies": [
+                "jquery.js",
+                "font-awesome"
+            ],
+            "dynamic_slots": [
+                "input_name",
+                "input_id",
+                "label"
+            ]
+        },
+        {
+            "name": "pagination-controls",
+            "type": "reusable-ui",
+            "blade": "themes/ehenho/components/pagination.blade.php",
+            "pages_count": 4,
+            "pages": [
+                "inbox.html",
+                "message-view.html",
+                "sent.html",
+                "tim-ban-bon-phuong.html"
+            ],
+            "dependencies": [
+                "bootstrap.css"
+            ],
+            "dynamic_slots": [
+                "paginator_instance"
+            ]
+        },
+        {
+            "name": "modal-dialog",
+            "type": "reusable-ui",
+            "blade": "themes/ehenho/components/modal.blade.php",
+            "pages_count": 0,
+            "pages": [],
+            "dependencies": [
+                "bootstrap.js"
+            ],
+            "dynamic_slots": [
+                "modal_id",
+                "modal_title",
+                "slot"
+            ]
+        }
+    ]
+}

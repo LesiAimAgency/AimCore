@@ -1,0 +1,40 @@
+{
+    "theme": "ehenho",
+    "homepage": {
+        "hero": {
+            "headline": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+            "carousel_profiles": "Profile::where(\"is_featured\", true)->take(8)->get()"
+        },
+        "search_widget": {
+            "gender_options": {
+                "male": "Nam",
+                "female": "Nữ"
+            },
+            "age_range": {
+                "min": 18,
+                "max": 65
+            },
+            "provinces": "Province::all()"
+        },
+        "new_members": {
+            "title": "Thành viên mới",
+            "query": "Profile::latest()->take(12)->get()"
+        }
+    },
+    "profile_detail": {
+        "avatar": "profile.avatar_url",
+        "display_name": "profile.display_name",
+        "age": "profile.age",
+        "province": "profile.province.name",
+        "marital_status": "profile.marital_status",
+        "occupation": "profile.occupation",
+        "bio": "profile.about_me",
+        "interests": "profile.interests",
+        "photos": "profile.media_gallery"
+    },
+    "messages": {
+        "inbox": "Message::where(\"recipient_id\", auth()->id())->latest()->paginate(20)",
+        "sent": "Message::where(\"sender_id\", auth()->id())->latest()->paginate(20)",
+        "thread": "Message::where(\"conversation_id\", $id)->orderBy(\"created_at\", \"asc\")->get()"
+    }
+}

@@ -1,0 +1,181 @@
+{
+    "summary": {
+        "total_images": 469,
+        "total_images_size_bytes": 5362677,
+        "unique_image_hashes": 468,
+        "duplicate_images_count": 1,
+        "referenced_images_in_html_count": 95,
+        "unreferenced_images_count": 374,
+        "total_css_files": 3,
+        "total_js_files": 13,
+        "total_icon_files": 1
+    },
+    "css_assets": [
+        {
+            "file": "base8.css",
+            "path": "public/e-henho/css/base8.css",
+            "size_bytes": 20201,
+            "hash": "ac1e3654607501cdd39a75c47f60537c"
+        },
+        {
+            "file": "carousel.css",
+            "path": "public/e-henho/css/carousel.css",
+            "size_bytes": 1220,
+            "hash": "e8e5a62e3fcdef2a6f3109f6e5a23dca"
+        },
+        {
+            "file": "normalize.css",
+            "path": "public/e-henho/css/normalize.css",
+            "size_bytes": 1864,
+            "hash": "716c1b30adc950280b9adee341d5ea36"
+        }
+    ],
+    "js_assets": [
+        {
+            "file": "1st_f_fc.js",
+            "path": "public/e-henho/js/1st_f_fc.js",
+            "size_bytes": 276,
+            "hash": "a45906ef941fb113fc8da2db894da6ad"
+        },
+        {
+            "file": "1st_f_fc_pe.js",
+            "path": "public/e-henho/js/1st_f_fc_pe.js",
+            "size_bytes": 269,
+            "hash": "10694c3256908eec144891d12b4bef87"
+        },
+        {
+            "file": "1st_f_fc_upp.js",
+            "path": "public/e-henho/js/1st_f_fc_upp.js",
+            "size_bytes": 272,
+            "hash": "47adc141b55dd0551aeadef8ec264802"
+        },
+        {
+            "file": "auth-session.js",
+            "path": "public/e-henho/js/auth-session.js",
+            "size_bytes": 8205,
+            "hash": "1b678fe0c98096e59f6f4b0af3350a8f"
+        },
+        {
+            "file": "change_pw_validate.js",
+            "path": "public/e-henho/js/change_pw_validate.js",
+            "size_bytes": 1816,
+            "hash": "7d29bcde71db609fa3d94c3bed1f73ac"
+        },
+        {
+            "file": "django.csrf.js",
+            "path": "public/e-henho/js/django.csrf.js",
+            "size_bytes": 1043,
+            "hash": "746073268724c3381683960dfcf210c8"
+        },
+        {
+            "file": "drop_down.js",
+            "path": "public/e-henho/js/drop_down.js",
+            "size_bytes": 8698,
+            "hash": "c588c888781a3d15e0e633992316ca4c"
+        },
+        {
+            "file": "email_check.js",
+            "path": "public/e-henho/js/email_check.js",
+            "size_bytes": 1762,
+            "hash": "178a4c28639fa1daf74b4350fe920b06"
+        },
+        {
+            "file": "fc_sc.js",
+            "path": "public/e-henho/js/fc_sc.js",
+            "size_bytes": 6312,
+            "hash": "0db144757df63d9f613c35d124f38ba4"
+        },
+        {
+            "file": "fc_sc_pe.js",
+            "path": "public/e-henho/js/fc_sc_pe.js",
+            "size_bytes": 4760,
+            "hash": "6e973ea344eea56775febed4114b8008"
+        },
+        {
+            "file": "lg_vld.js",
+            "path": "public/e-henho/js/lg_vld.js",
+            "size_bytes": 1516,
+            "hash": "b25a08eaeea6126a69106673e83c2bcc"
+        },
+        {
+            "file": "mailcheck.js",
+            "path": "public/e-henho/js/mailcheck.js",
+            "size_bytes": 8913,
+            "hash": "bf417ee27840d6093c57215b18de113d"
+        },
+        {
+            "file": "vietnam_provinces.json",
+            "path": "public/e-henho/js/vietnam_provinces.json",
+            "size_bytes": 105490,
+            "hash": "6b854a5b3a998ee2408482761a798783"
+        }
+    ],
+    "icon_assets": [
+        {
+            "file": "favicon.png",
+            "path": "public/e-henho/icons/favicon.png",
+            "size_bytes": 1025,
+            "hash": "d06dce2e94c4ec64d05bc709e56d6826"
+        }
+    ],
+    "duplicate_images": [
+        {
+            "original": "s1.jpg",
+            "duplicate": "tim-ban-bon-phuong.jpg",
+            "hash": "2bc5cd491a517f43c9cbc6f0ac470b20",
+            "size": 147153
+        }
+    ],
+    "unreferenced_images_sample": [
+        "106387_pl.jpg",
+        "10761_pl.jpg",
+        "109057_pl.jpeg",
+        "109885_pl.jpg",
+        "110861_pl.jpeg",
+        "112096_pl.jpg",
+        "114027_pl.png",
+        "114346_pl.png",
+        "117629_pl.jpg",
+        "12234_pl.jpeg",
+        "126785_pl.jpg",
+        "139453_pl.jpg",
+        "142241_pl.jpg",
+        "148590_pl.jpg",
+        "152952_pl.jpg",
+        "153455_pl.jpeg",
+        "153749_pl.jpg",
+        "154782_pl.jpg",
+        "157463_pl.jpeg",
+        "160428_pl.png",
+        "162909_pl.jpg",
+        "163987_pl.png",
+        "164555_pl.jpg",
+        "165320_pl.jpeg",
+        "16703_pl.jpg",
+        "167151_pl.jpeg",
+        "167323_pl.jpg",
+        "168090_pl.jpg",
+        "172520_pl.jpg",
+        "175368_pl.jpg",
+        "182018_pl.jpeg",
+        "182852_pl.jpg",
+        "184164_pl.jpg",
+        "185015_pl.jpeg",
+        "189018_pl.jpeg",
+        "191959_pl.jpg",
+        "194965_pl.jpg",
+        "199878_pl.jpg",
+        "207818_pl.jpeg",
+        "208163_pl.png",
+        "209938_pl.jpg",
+        "21407_pl.jpg",
+        "219057_pl.jpeg",
+        "220079_pl.jpeg",
+        "226426_pl.jpg",
+        "230802_pl.jpg",
+        "231675_pl.jpg",
+        "232499_pl.jpg",
+        "235518_pl.jpg",
+        "235615_pl.jpg"
+    ]
+}

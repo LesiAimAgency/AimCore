@@ -1,0 +1,584 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<title>eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích &amp; Tính cách</title>
+<meta content="Hẹn hò, Kết bạn, Tìm bạn bốn phương, Tìm bạn gái, Tìm bạn trai, Tìm người yêu, Tìm bạn, Tìm bạn tâm sự, Tìm bạn đời, Tìm một nửa, Tìm bạn trăm năm, Tìm người để kết hôn" name="keywords"/>
+<meta content="eHenho.com là trang web hẹn hò online, tìm bạn, kết bạn theo sở thích và tính cách giúp bạn nhanh chóng tìm được một nửa yêu thương của mình." name="description"/>
+<meta content="eHenho.com, hi@ehenho.com" name="author"/>
+<meta content="eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích &amp; Tính cách" property="og:title"/>
+<meta content="eHenho.com là trang web hẹn hò online, tìm bạn, kết bạn theo sở thích và tính cách giúp bạn nhanh chóng tìm được một nửa yêu thương của mình." property="og:description"/>
+<meta content="Website" property="og:type"/>
+<link href="/static/img/favicon.png" rel="icon"/>
+<!-- Latest compiled and minified CSS -->
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet"/>
+<!-- Optional theme -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous"> -->
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="css/normalize.css" rel="stylesheet"/>
+<link href="css/base8.css" rel="stylesheet"/>
+<link href="css/carousel.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+</style>
+</head>
+<body>
+<!-- Static navbar -->
+<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
+<div class="container" style="paddingg-left:9px !important; paddingg-right:9px !important">
+<div class="navbar-header">
+<button aria-controls="navbar" aria-expanded="false" class="navbar-toggle collapsed" data-target="#navbar" data-toggle="collapse" type="button">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<!-- <a class="navbar-brand" href="/"> <img src="/static/img/ehenho_logo.png" class="brand_img"/></a> -->
+<a class="navbar-brand visible-xs-block" href="index.html"> <img class="brand_img" src="images/ehenho_logo.png"/></a>
+<a class="navbar-brand hidden-xs" href="index.html"> <img class="brand_img" src="images/ehenho_logo.png"/></a>
+<ul class="nav navbar-nav navbar-rightt pull-right no-collapse">
+<li><span class="hidden-xs">  </span>
+<a class="notification-toggle" href="inbox.html" title="Tin nhắn"><i aria-hidden="true" class="fa fa-comments" style="font-size:1.4em;"></i> <span class="badge badge-notify-zero new-msg-num" id="0" style="padding-rightt:0px;">0</span></a>
+</li>
+<li>
+<a class="notification-toggle" href="liked-profiles.html" title="Likes nhận"><i aria-hidden="true" class="fa fa-heart fa-fww" style="font-size:1.3em;"></i> <span class="badge badge-notify-zero new-msg-num" id="0" style="padding-rightt:0px;">0</span></a>
+</li>
+<li><a class="hidden-xs" href="tim-ban-bon-phuong-theo-tuoi.html"><i aria-hidden="true" class="fa fa-search" style="font-size:1.2em;"></i><span class="hidden-sm"> Tìm kiếm</span></a></li>
+<li><a class="hidden-xs" href="gioi-thieu.html"><i aria-hidden="true" class="fa fa-question-circle" style="font-size:1.2em;"></i><span class="hidden-sm"> Trợ giúp</span></a></li>  
+      </ul>
+</div>
+<div class="navbar-collapse collapse bs-navbar-collapse" id="navbar">
+<ul class="nav navbar-nav navbar-right">
+<li><a class="visible-xs-block" href="tim-ban-bon-phuong-theo-tuoi.html"><i aria-hidden="true" class="fa fa-search" style="font-size:1.2em;"></i> Tìm kiếm</a></li>
+<li><a class="visible-xs-block" href="gioi-thieu.html"><i aria-hidden="true" class="fa fa-question-circle" style="font-size:1.2em;"></i> Trợ giúp</a></li>
+<li class="dropdown">
+<a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"><i class="glyphicon glyphicon-user" style="font-size:1.2em;"></i> le si<span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li><a href="my-profile.html"><i class="fa fa-file-text-o fa-fw"></i>  Hồ sơ của tôi</a></li>
+<li><a href="upload-profile-pic.html"><i class="fa fa-file-image-o fa-fw"></i>  Tải hình đại diện</a></li>
+<li><a href="profile-edit.html"><i class="fa fa-edit fa-fw"></i>  Cập nhật hồ sơ</a></li>
+<li><a href="profile-options.html"><i class="fa fa-check-square-o fa-fw"></i>  Tùy chọn</a></li>
+<li class="divider" role="separator"></li>
+<li><a href="bookmarked-profiles.html"><i class="fa fa-star fa-fw"></i>  Hồ sơ đã đánh dấu</a></li>
+<li><a href="blocked-profiles.html"><i class="fa fa-times-circle-o fa-fw"></i>  Người đã chặn</a></li>
+<li class="divider" role="separator"></li>
+<li><a href="contactbook-profiles.html"><i class="fa fa-list-alt fa-fw"></i>  Danh bạ</a></li>
+<li class="divider" role="separator"></li>
+<li><a href="password-change.html"><i class="fa fa-key fa-fw"></i>  Đổi mật khẩu</a></li>
+<form action="logout.html" id="exit-form" method="post">
+<input name="csrfmiddlewaretoken" type="hidden" value="5YfNcrcHYQWSKjBFYtectSssQ48NaRPcgD1YFSkjfj6RxYPRiOzazZpjVqWSj8fX"/>
+</form>
+<li><a class="nav-link exit-link" onclick="$('#exit-form').submit(); return false;" style="cursor:pointer;cursor:hand"><i class="fa fa-sign-out fa-fw"></i>  Thoát</a></li>
+</ul>
+</li>
+</ul>
+<!--
+-->
+</div><!--/.nav-collapse -->
+</div>
+</header>
+<header class="navlinkbar2" id="overview">
+<div class="container">
+<!-- <div class="row" style="margin-top:3px"> -->
+<div class="row">
+<div class="col-sm-12 navlink1-left">
+<ul class="nav nav-pills"> <!-- #429fb8 -->
+<li role="presentation"><a class="navlink1" href="tim-ban-bon-phuong.html"><i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm bạn bốn phương</a></li>
+<li role="presentation"><a class="navlink1" href="tim-ban-bon-phuong.html"><i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm người kết hôn</a></li>
+<li role="presentation"><a class="navlink1" href="tim-ban-bon-phuong.html"><i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm người yêu</a></li>
+<li role="presentation"><a class="navlink1" href="tim-ban-bon-phuong.html"><i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm bạn gái</a></li>
+<li role="presentation"><a class="navlink1" href="tim-ban-bon-phuong.html"><i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm bạn trai</a></li>
+<li role="presentation"><a class="navlink1" href="tim-ban-bon-phuong.html"><i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm bạn đời</a></li>
+<li role="presentation"><a class="navlink1" href="tim-ban-bon-phuong.html"><i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm bạn tâm sự</a></li>
+<li role="presentation"><a class="navlink1" href="tim-ban-bon-phuong.html"><i aria-hidden="true" class="fa fa-arrow-circle-right"></i> Tìm bạn bè mới</a></li>
+</ul>
+</div>
+</div>
+</div>
+</header>
+<header class="text-center" style="background-color: #FCF8E3; color:#8A6D3B; padding-top:6px; padding-bottom:6px">
+<div class="container">
+<div class="row">
+<div class="col-sm-12">
+<span style="font-size:1.0em" title="Lưu ý"><i aria-hidden="true" class="fa fa-info-circle"></i> eHenho.com 100% Miễn Phí!</span>
+</div>
+</div>
+</div>
+</header>
+<style rel="stylesheet">
+  .login-btnn{line-height:40px !important;background-color:black !important;color:white;outline:1px solid white;box-sizing:border-box;border-radius:5px;line-height:40px !important;padding:6px}
+</style>
+<!-- 
+<header class="text-center visible-xs" style="background-color: #FCF8E3; color:#8A6D3B; padding-top:6px; padding-bottom:6px">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">          
+        <a href="/accounts/login/" class="btn login-btnn"><span class="visible-xs"><span class="hidden-xs"><i class="fa fa-sign-in" style="font-size:1em;" aria-hidden="true"></i></span> Đăng Nhập</span></a>
+      </div>
+    </div>
+  </div>
+</header>
+ -->
+<div class="container">
+</div>
+<noscript>
+<style type="text/css">
+        .container {display:none;}
+    </style>
+<div class="noscriptmsg">
+    Vui lòng enable javascript để có thể sử dụng trang web eHenho.com!
+    </div>
+</noscript>
+<div class="container" style="background-color:#FFF; padding-top:0px; padding-bottom:64px">
+<!-- <div class='container' style="padding-top:20px; background-color:#FFF"> -->
+<div class="row" style="background-colorr:LightBlue;">
+<div class="col-md-12 hidden-xs hidden-sm" style="background-colorr:LightGreen; margin: 12px 0px 12px 0px">
+<div class="pull-right" style="width:12.5%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Hưng Nguyễn - Tìm bạn đời - Sài Gòn, Hồ Chí Minh - Sẽ tới ngày đó" border="0" class="displayed img-responsive" height="114" src="images/477887_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-right" style="width:12.5%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Tho Ha - Tìm người yêu lâu dài - Saxony, Đức - Tình cảm nghiêm túc" border="0" class="displayed img-responsive" height="114" src="images/363597_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-right" style="width:12.5%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Trường - Tìm bạn đời - An Khánh, Hồ Chí Minh - Tìm bạn đời" border="0" class="displayed img-responsive" height="114" src="images/278867_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-right" style="width:12.5%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Huy Cường - Tìm người yêu lâu dài - Trà Vinh, Vĩnh Long - Vạn sự tùy duyên" border="0" class="displayed img-responsive" height="114" src="images/487648_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-right" style="width:12.5%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Tac - Tìm người yêu lâu dài - Thủ Đức, Hồ Chí Minh - Chân tình dao duc" border="0" class="displayed img-responsive" height="114" src="images/88115_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-right" style="width:12.5%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Mình Hải - Tìm người để kết hôn - Long Bình, Hồ Chí Minh - Anh chân tình thuỷ chung cần tìm ban đời" border="0" class="displayed img-responsive" height="114" src="images/396958_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-right" style="width:12.5%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Nguyen Jp - Tìm bạn đời - Thanh Khê, Đà Nẵng - Tìm bạn chân thành" border="0" class="displayed img-responsive" height="114" src="images/338741_pl.jpeg" width="114"/>
+</a>
+</div>
+<div class="pull-right" style="width:12.5%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Namkhanh - Tìm bạn đời - Baden-Wurttemberg, Đức - binh dan" border="0" class="displayed img-responsive" height="114" src="images/121142_pl.JPG" width="114"/>
+</a>
+</div>
+</div>
+<div class="col-xs-12 hidden-md hidden-lg" style="background-colorr:LightGreen; margin: 12px 0px 12px 0px">
+<div class="pull-right" style="width:20%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Hưng Nguyễn - Tìm bạn đời - Sài Gòn, Hồ Chí Minh - Sẽ tới ngày đó" border="0" class="displayed img-responsive" height="114" src="images/477887_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-right" style="width:20%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Tho Ha - Tìm người yêu lâu dài - Saxony, Đức - Tình cảm nghiêm túc" border="0" class="displayed img-responsive" height="114" src="images/363597_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-right" style="width:20%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Trường - Tìm bạn đời - An Khánh, Hồ Chí Minh - Tìm bạn đời" border="0" class="displayed img-responsive" height="114" src="images/278867_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-right" style="width:20%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Huy Cường - Tìm người yêu lâu dài - Trà Vinh, Vĩnh Long - Vạn sự tùy duyên" border="0" class="displayed img-responsive" height="114" src="images/487648_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-right" style="width:20%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Tac - Tìm người yêu lâu dài - Thủ Đức, Hồ Chí Minh - Chân tình dao duc" border="0" class="displayed img-responsive" height="114" src="images/88115_pl.jpg" width="114"/>
+</a>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-8 col-sm-offset-0">
+<div class="row">
+<div class="col-sm-12">
+<br/>
+<div style="margin-bottom: 7px; width:100%">
+<ul class="nav nav-tabs">
+<li class="active" role="presentation"><a href="inbox.html" style="font-size: 1.1em; border-top: 3px solid #737373; border-radius: 4px 4px 0 0;"><i class="glyphicon glyphicon-inbox"></i> Tin nhắn đến <span class="badge badge-notify-in new-msg-in-num" id="0">0 mới</span></a></li>
+<li role="presentation"><a href="sent.html" style="font-size: 1.1em"><i class="glyphicon glyphicon-send"></i> Tin nhắn đi</a></li>
+</ul>
+</div>
+<div style="width:100%">
+<table class="table table-bordered ptable" style="table-layout: fixed; border-collapse: collapse">
+<tbody>
+<tr style="border-bottom:1px solid #59730d; background:#f2f2f2;font-size: 0.9em;"> <!-- #F10028 -->
+<th class="ml-th" style="width:32px; border-right:none;"></th> <!-- ~5% of 35px -->
+<th class="ml-th" style="width:106px; border-left:none; border-right:none;">Người gửi</th> <!-- 15% -->
+<th class="ml-th" style="width:50%; border-left:none; border-right:none; padding-left:12px">Nội dung</th>
+<th class="ml-th" style="width:45px; border-left:none; border-right:none;"></th> <!-- 7% -->
+<th class="ml-th" style="width:20%; border-left:none; border-right:none; text-align:right" title="Thời gian online gần đây nhất của người gửi">Online gần nhất</th>
+<th class="ml-th" style="width:32px; border-left:none;"></th> <!-- ~5% of 35px -->
+</tr>
+<tr style="background:#f9f9f9">
+<td class="text-center ml-td" id="37844755" style="border-right:none">
+<a class="list-star ml-line" style="color:#e5e5e5;cursor:pointer;cursor:hand;" title="Chưa đánh dấu"><i aria-hidden="true" class="fa fa-star-o" style="font-size:1.3em;"></i></a>
+</td>
+<td class="ml-td" nowrap="nowrap" style="border-left:none; border-right:none;">
+<a class="ml-mlink" href="profile-detail.html" style="text-decoration:none; display:block; padding:8px; height:106px;" title="eHenho Admin">
+<div class="pull-left thumbnail" style="width:90px; margin-top:0px !important; margin-bottom:0px !important; height:90px;">
+<img class="img-responsive" src="images/1_pl.png" style="height:80px; width:80px; margin-left:0px; padding-left:0px"/>
+</div>
+</a>
+</td>
+<td class="ml-td" nowrap="nowrap" style="border-left:none; border-right:none;">
+<a class="ml-mlink" href="message-view.html" style="text-decoration:none; color:#275d8b; font-size: 1.0em; display:block; vertical-align:middle; height:106px; padding-top:12px; padding-left:12px">
+<span style="color:#333; font-size: 1.1em;">                    
+                    eHenho Admin                    
+                    </span> <!-- text-decoration:none; -->
+<br/>
+<span style="font-size:0.85em; color:#333; display:inline-block; "> <!-- #808080 -->
+<!-- -->
+
+                    09:33 Hôm nay
+
+                    <!-- 02/10/2026 09:33 a.m. -->
+<!-- -->
+</span>
+<br/>
+<span style="display:inline-block; margin-top:8px; color:#545454">
+                    Xin chào!!
+
+Chào mừng bạn le si đến với eHenho.com!!
+
+C...
+                    </span>
+<br/>
+<span style="font-size:0.75em; color:grey">
+</span>
+</a>
+</td>
+<td nowrap="nowrap" style="vertical-align: middle; overflow:hidden; border-left:none; border-right:none">
+</td>
+<!-- #4986E7 -->
+<td class="text-right" style="vertical-align: middle; overflow:hidden; border-left:none; border-right:none;">
+<span style="font-size:85%; color:#808080">
+<!-- 02/10/2026 06:30 a.m. -->
+<!-- 
+                  Tháng 10 02
+                   -->
+<!-- 06:30 02/10/26 -->
+                  
+                    06:30 02/10/26
+
+                </span>
+</td>
+<td class="text-center ml-td" style="background:#f2f2f2;">
+<a class="center-block inbox-delete ml-line" id="37844755" new_id="0" style="font-size:10px;color:grey;cursor:pointer;cursor:hand" title="Xóa"><i aria-hidden="true" class="fa fa-times" style="font-size:1.2em;"></i></a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style="width:100">
+<div class="pagination">
+<span class="step-links">
+<span class="current">
+              Trang 1 / 1
+            </span>
+</span>
+</div>
+</div>
+<div style="width:100">
+<div>
+          Có tất cả <span class="msg_total" id="1">1</span> tin nhắn đến.
+          <div>
+<div style="margin-top: 10px;">
+<div id="plwhite" style="width:80%;"></div>
+<div id="plblue" style="width:5%;"></div>
+<div id="plred" style="width:5%;"></div>
+<div id="plorange" style="width:5%;"></div>
+<div id="plgreen" style="width:5%;"></div>
+</div>
+</div>
+<hr/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-sm-4 btop-margin">
+</div>
+</div>
+<div class="row" style="background-colorr:LightBlue;">
+<div class="col-md-12 hidden-xs hidden-sm" style="background-colorr:LightGreen; margin:12px 0px 12px 0px">
+<div class="pull-left" style="width:11.1%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Thịnh Nguyễn - Tìm người yêu lâu dài - Cam Ranh, Khánh Hòa - Tìm mối quan hệ nghiêm túc" border="0" class="displayed img-responsive" height="114" src="images/312389_pl.jpeg" width="114"/>
+</a>
+</div>
+<div class="pull-left" style="width:11.1%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Bùi Nguyễn - Tìm người để kết hôn - Mỹ Tho, Đồng Tháp - Tìm bạn đời nghiêm túc" border="0" class="displayed img-responsive" height="114" src="images/61402_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-left" style="width:11.1%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Van su tuy duyên  đôc thân... - Tìm người để kết hôn - Bình Kiến, Đắk Lắk - Mun tim 1 nguoi đê kêt hôn sông hêt cuoc doi nay" border="0" class="displayed img-responsive" height="114" src="images/349632_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-left" style="width:11.1%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Đỗ hoàng cường - Tìm người yêu lâu dài - Hạc Thành, Thanh Hóa - Tìm. bạn gái" border="0" class="displayed img-responsive" height="114" src="images/65348_pl.jpeg" width="114"/>
+</a>
+</div>
+<div class="pull-left" style="width:11.1%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Noi Buon Sau Tham - Tìm người yêu lâu dài - Bavaria, Đức - Tim người phụ nữ Việt Nam" border="0" class="displayed img-responsive" height="114" src="images/426586_pl.jpeg" width="114"/>
+</a>
+</div>
+<div class="pull-left" style="width:11.1%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Phong - Tìm người yêu lâu dài - Hóc Môn, Hồ Chí Minh - Em yêu anh anh cũng yêu em" border="0" class="displayed img-responsive" height="114" src="images/427496_pl.png" width="114"/>
+</a>
+</div>
+<div class="pull-left" style="width:11.1%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Chu Hà Sơn - Tìm người yêu lâu dài - Shimane, Nhật - Anh chân thành" border="0" class="displayed img-responsive" height="114" src="images/166501_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-left" style="width:11.1%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Trần Phương - Tìm bạn đời - Trung Mỹ Tây, Hồ Chí Minh - Tìm người kết hôn" border="0" class="displayed img-responsive" height="114" src="images/447699_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-left" style="width:11.1%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Nguyễn Hùng Cường - Tìm người để kết hôn - Phú Nhuận, Hồ Chí Minh - tìm người yêu/vợ/ bạn đời" border="0" class="displayed img-responsive" height="114" src="images/230353_pl.jpg" width="114"/>
+</a>
+</div>
+</div>
+<div class="col-xs-12 hidden-md hidden-lg" style="background-colorr:LightGreen; margin:12px 0px 12px 0px">
+<div class="pull-left" style="width:20%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Thịnh Nguyễn - Tìm người yêu lâu dài - Cam Ranh, Khánh Hòa - Tìm mối quan hệ nghiêm túc" border="0" class="displayed img-responsive" height="114" src="images/312389_pl.jpeg" width="114"/>
+</a>
+</div>
+<div class="pull-left" style="width:20%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Bùi Nguyễn - Tìm người để kết hôn - Mỹ Tho, Đồng Tháp - Tìm bạn đời nghiêm túc" border="0" class="displayed img-responsive" height="114" src="images/61402_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-left" style="width:20%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Van su tuy duyên  đôc thân... - Tìm người để kết hôn - Bình Kiến, Đắk Lắk - Mun tim 1 nguoi đê kêt hôn sông hêt cuoc doi nay" border="0" class="displayed img-responsive" height="114" src="images/349632_pl.jpg" width="114"/>
+</a>
+</div>
+<div class="pull-left" style="width:20%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Đỗ hoàng cường - Tìm người yêu lâu dài - Hạc Thành, Thanh Hóa - Tìm. bạn gái" border="0" class="displayed img-responsive" height="114" src="images/65348_pl.jpeg" width="114"/>
+</a>
+</div>
+<div class="pull-left" style="width:20%; text-align:center; padding: 0px 3px 3px 3px">
+<a href="profile-detail.html"> <img alt="Noi Buon Sau Tham - Tìm người yêu lâu dài - Bavaria, Đức - Tim người phụ nữ Việt Nam" border="0" class="displayed img-responsive" height="114" src="images/426586_pl.jpeg" width="114"/>
+</a>
+</div>
+</div>
+</div>
+</div>
+<footer>
+<div class="container footer-cont">
+<div style="line-height:2.4em">
+<p>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn bốn phương có hình </a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn bốn phương có hình (nữ) </a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn bốn phương có hình (nam) </a>
+</p>
+<p>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn bốn phương Việt Nam</a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn bốn phương nước ngoài</a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn bốn phương Việt kiều</a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn bốn phương Việt kiều Mỹ</a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn bốn phương ở Mỹ</a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn bốn phương ở Úc</a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn bốn phương ở Canada</a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn bốn phương ở Đức</a>
+</p>
+<hr/>
+<p>
+<a class="g-button" href="tim-ban-bon-phuong.html"> Tìm bạn độc thân </a>
+<a class="g-button" href="tim-ban-bon-phuong.html"> Tìm bạn trai độc thân </a>
+<a class="g-button" href="tim-ban-bon-phuong.html"> Tìm bạn gái độc thân </a>
+<a class="g-button" href="tim-ban-bon-phuong.html"> Tìm bạn ly dị </a>
+<a class="g-button" href="tim-ban-bon-phuong.html"> Tìm bạn trai ly dị </a>
+<a class="g-button" href="tim-ban-bon-phuong.html"> Tìm bạn gái ly dị </a>
+<a class="g-button" href="tim-ban-bon-phuong.html"> Tìm bạn ở góa </a>
+<a class="g-button" href="tim-ban-bon-phuong.html"> Tìm bạn trai ở góa </a>
+<a class="g-button" href="tim-ban-bon-phuong.html"> Tìm bạn gái ở góa </a>
+</p>
+<hr/>
+<p>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn gái kết hôn </a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn trai kết hôn </a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm người yêu lâu dài </a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm người yêu ngắn hạn </a>
+</p>
+<p>
+<a class="t-button" href="/tim-chong/"> Tìm chồng </a>
+<a class="t-button" href="/tim-vo/"> Tìm vợ </a>
+<a class="t-button" href="/tim-mot-nua/"> Tìm một nửa </a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn trăm năm </a>
+</p>
+<p>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn gái tâm sự </a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn trai tâm sự </a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn gái làm quen </a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn trai làm quen </a>
+<a class="t-button" href="tim-ban-bon-phuong.html"> Tìm bạn chat </a>
+</p>
+<hr/>
+<p>
+<a class="c-button" href="tim-ban-bon-phuong.html"> Tìm bạn HCM</a>
+<a class="c-button" href="tim-ban-bon-phuong.html"> Tìm bạn Hà Nội</a>
+<a class="c-button" href="tim-ban-bon-phuong.html"> Tìm bạn Hải Phòng</a>
+<a class="c-button" href="tim-ban-bon-phuong.html"> Tìm bạn Huế</a>
+<a class="c-button" href="tim-ban-bon-phuong.html"> Tìm bạn Đà Nẵng</a>
+<a class="c-button" href="tim-ban-bon-phuong.html"> Tìm bạn Cần Thơ</a>
+<a class="c-button" href="tim-ban-bon-phuong.html"> Tìm bạn Khánh Hòa</a>
+<a class="c-button" href="tim-ban-bon-phuong.html"> Tìm bạn Lâm Đồng</a>
+<a class="c-button" href="tim-ban-bon-phuong.html"> Tìm bạn Đồng Nai</a><br/>
+</p>
+<p>
+<a class="c-button" href="tim-ban-bon-phuong.html"> <i aria-hidden="true" class="fa fa-arrow-right"></i> Tìm bạn bốn phương theo Nơi Ở</a>
+</p>
+</div>
+<br/><br/>
+<hr/>
+<div style="font-size:1.0em">
+<a class="navlink-b" href="gioi-thieu.html">  Giới thiệu</a>
+<a class="navlink-b" href="gioi-thieu.html">  Trợ giúp</a>
+<a class="navlink-b" href="gioi-thieu.html">  Điều khoản sử dụng</a>
+<a class="navlink-b" href="gioi-thieu.html">  Chính sách riêng tư</a>
+</div>
+</div>
+<div class="container footer-cont">
+  
+		<a href="http://www.twitter.com/ehenho"> <i class="fa fa-br fa-twitter"></i></a>
+</div>
+<div class="container footer-cont">
+<span class="footer-note">eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích &amp; Tính cách. Hoàn toàn miễn phí.</span><br/>
+<span class="footer-note">Email: hi@ehenho.com</span><br/>
+</div>
+</footer>
+<!-- JQuery JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script crossorigin="anonymous" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="js/django.csrf.js"></script>
+<script>
+$(document).ready(function(){
+
+$('a.list-star').each(function(i, obj) {
+  $(obj).attr("id", i);
+
+  $(obj).click(function(event){
+    // event.preventDefault()
+    console.log($(this).attr("id"));
+    id = jQuery(this).parent().attr("id");
+
+    var request = $.ajax({
+      method: "POST",
+      url: "/messages/ajax/msg-list/star/",
+      //timeout: 1000,
+      data: {
+        dm_id: "" +id,
+        a_id: $(this).attr("id"),
+      }
+    })
+
+    request.done(function(data){
+      if (data.success == true) {
+        console.log("done at " + data.a_id);
+        if (data.starred == true) {
+          title_txt = "Đã đánh dấu";
+          style_txt = "color:#ffe272;cursor:pointer;cursor:hand";
+          i_class = "fa fa-star";
+        } else {
+          title_txt = "Chưa đánh dấu";
+          style_txt = "color:#e5e5e5;cursor:pointer;cursor:hand";
+          i_class = "fa fa-star-o";
+        };
+
+        html_txt = "<i class='" + i_class + "' style='font-size:1.3em;' aria-hidden='true'></i>";
+        c_par = $("a.list-star").filter("#"+data.a_id);
+        c_par.attr("title", title_txt);
+        c_par.attr("style", style_txt);
+        c_par.html(html_txt);      
+
+      };
+    })
+
+    request.fail(function(jqXHR, textStatus){
+      if (jqXHR.status == 404) {
+        alert("Không tìm thấy trang!")
+      } else if (jqXHR.status == 401) {
+        alert("Bạn vui lòng đăng nhập trước.")
+      } else {
+        alert("Đã có lỗi xảy ra. Bạn vui lòng thử lại.")
+      }
+    })
+  })
+});
+
+$('a.inbox-delete').each(function(i, obj) {
+
+$(obj).click(function(event){
+  // event.preventDefault()
+  id = jQuery(this).attr("id");
+  console.log(id);  
+  var request = $.ajax({
+    method: "POST",
+    url: "/messages/ajax/inbox/delete/",
+    //timeout: 1000,
+    data: {
+      dm_id: "" +id,
+    }
+  })
+  request.done(function(data){
+    if (data.success == true) {
+      c_elem = $("a.inbox-delete").filter("#"+data.dm_id);
+      new_id = c_elem.attr("new_id");
+      c_elem.parent().parent().remove();
+
+      var x = $(".msg_total");
+      msg_count = parseInt(x.attr("id"), 10) - 1;
+      if (msg_count < 0) { msg_count = 0 };
+      x.html(msg_count);
+      x.attr("id", msg_count);
+
+      console.log(new_id);
+      if (new_id == "1") {
+        var z = $("span.new-msg-num");
+        new_msg_count = parseInt(z.attr("id"), 10) - 1;
+        if (new_msg_count < 0) { new_msg_count = 0 };
+        z.html(new_msg_count);
+        z.attr("id", new_msg_count);
+
+        var k = $("span.new-msg-in-num");
+        new_msg_in_count = parseInt(k.attr("id"), 10) - 1;
+        if (new_msg_in_count < 0) { new_msg_in_count = 0 };
+        k.html(new_msg_in_count + " mới");
+        k.attr("id", new_msg_in_count);      
+      };    
+    };
+    console.log("done at " + data.dm_id);
+  })
+
+  request.fail(function(jqXHR, textStatus){
+    if (jqXHR.status == 404) {
+      alert("Không tìm thấy trang!")
+    } else if (jqXHR.status == 401) {
+      alert("Bạn vui lòng đăng nhập trước.")
+    } else {
+      alert("Đã có lỗi xảy ra. Bạn vui lòng thử lại.")
+    }
+  })
+})
+});
+
+})
+</script>
+<script>
+    // eHenho Auth Session Manager
+    (function() {
+        // Set logged in state for demo user 'le si'
+        localStorage.setItem('ehenho_logged_in', 'true');
+        localStorage.setItem('ehenho_user', 'le si');
+        localStorage.setItem('ehenho_email', 'lesi20061998@gmail.com');
+    })();
+    </script><script src="js/auth-session.js"></script></body>
+</html>

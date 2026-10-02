@@ -1,0 +1,172 @@
+{
+    "total_pages": 22,
+    "unique_templates": 18,
+    "templates": [
+        {
+            "template": "social-profile-list",
+            "pages_count": 4,
+            "pages": [
+                "blocked-profiles.html",
+                "bookmarked-profiles.html",
+                "contactbook-profiles.html",
+                "liked-profiles.html"
+            ],
+            "layout": "layouts.account",
+            "blade_target": "resources/views/themes/ehenho/pages/social-profile-list.blade.php"
+        },
+        {
+            "template": "account-email-manager",
+            "pages_count": 1,
+            "pages": [
+                "email-manager.html"
+            ],
+            "layout": "layouts.account",
+            "blade_target": "resources/views/themes/ehenho/pages/account-email-manager.blade.php"
+        },
+        {
+            "template": "page-content",
+            "pages_count": 1,
+            "pages": [
+                "gioi-thieu.html"
+            ],
+            "layout": "layouts.frontend",
+            "blade_target": "resources/views/themes/ehenho/pages/page-content.blade.php"
+        },
+        {
+            "template": "messages-inbox",
+            "pages_count": 1,
+            "pages": [
+                "inbox.html"
+            ],
+            "layout": "layouts.account",
+            "blade_target": "resources/views/themes/ehenho/pages/messages-inbox.blade.php"
+        },
+        {
+            "template": "theme-landing",
+            "pages_count": 1,
+            "pages": [
+                "index.html"
+            ],
+            "layout": "layouts.frontend",
+            "blade_target": "resources/views/themes/ehenho/pages/theme-landing.blade.php"
+        },
+        {
+            "template": "auth-login",
+            "pages_count": 1,
+            "pages": [
+                "login.html"
+            ],
+            "layout": "layouts.auth",
+            "blade_target": "resources/views/themes/ehenho/pages/auth-login.blade.php"
+        },
+        {
+            "template": "auth-logout",
+            "pages_count": 1,
+            "pages": [
+                "logout.html"
+            ],
+            "layout": "layouts.auth",
+            "blade_target": "resources/views/themes/ehenho/pages/auth-logout.blade.php"
+        },
+        {
+            "template": "messages-thread-view",
+            "pages_count": 1,
+            "pages": [
+                "message-view.html"
+            ],
+            "layout": "layouts.account",
+            "blade_target": "resources/views/themes/ehenho/pages/messages-thread-view.blade.php"
+        },
+        {
+            "template": "profile-my-view",
+            "pages_count": 1,
+            "pages": [
+                "my-profile.html"
+            ],
+            "layout": "layouts.frontend",
+            "blade_target": "resources/views/themes/ehenho/pages/profile-my-view.blade.php"
+        },
+        {
+            "template": "account-password-change",
+            "pages_count": 1,
+            "pages": [
+                "password-change.html"
+            ],
+            "layout": "layouts.account",
+            "blade_target": "resources/views/themes/ehenho/pages/account-password-change.blade.php"
+        },
+        {
+            "template": "auth-password-reset",
+            "pages_count": 1,
+            "pages": [
+                "password-reset.html"
+            ],
+            "layout": "layouts.auth",
+            "blade_target": "resources/views/themes/ehenho/pages/auth-password-reset.blade.php"
+        },
+        {
+            "template": "profile-detail",
+            "pages_count": 1,
+            "pages": [
+                "profile-detail.html"
+            ],
+            "layout": "layouts.frontend",
+            "blade_target": "resources/views/themes/ehenho/pages/profile-detail.blade.php"
+        },
+        {
+            "template": "profile-edit",
+            "pages_count": 1,
+            "pages": [
+                "profile-edit.html"
+            ],
+            "layout": "layouts.frontend",
+            "blade_target": "resources/views/themes/ehenho/pages/profile-edit.blade.php"
+        },
+        {
+            "template": "account-settings",
+            "pages_count": 1,
+            "pages": [
+                "profile-options.html"
+            ],
+            "layout": "layouts.account",
+            "blade_target": "resources/views/themes/ehenho/pages/account-settings.blade.php"
+        },
+        {
+            "template": "messages-sent",
+            "pages_count": 1,
+            "pages": [
+                "sent.html"
+            ],
+            "layout": "layouts.account",
+            "blade_target": "resources/views/themes/ehenho/pages/messages-sent.blade.php"
+        },
+        {
+            "template": "auth-register",
+            "pages_count": 1,
+            "pages": [
+                "signup.html"
+            ],
+            "layout": "layouts.auth",
+            "blade_target": "resources/views/themes/ehenho/pages/auth-register.blade.php"
+        },
+        {
+            "template": "search-directory",
+            "pages_count": 2,
+            "pages": [
+                "tim-ban-bon-phuong-theo-tuoi.html",
+                "tim-ban-bon-phuong.html"
+            ],
+            "layout": "layouts.frontend",
+            "blade_target": "resources/views/themes/ehenho/pages/search-directory.blade.php"
+        },
+        {
+            "template": "profile-avatar-upload",
+            "pages_count": 1,
+            "pages": [
+                "upload-profile-pic.html"
+            ],
+            "layout": "layouts.frontend",
+            "blade_target": "resources/views/themes/ehenho/pages/profile-avatar-upload.blade.php"
+        }
+    ]
+}
