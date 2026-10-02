@@ -873,17 +873,23 @@ class EhenhoRichDemoSeeder extends Seeder
         foreach ($rawProfiles as $idx => $pData) {
             $userEmail = 'user_'.Str::slug($pData['name'], '_').'_'.($idx + 1).'@ehenho.local';
 
-            $user = User::firstOrCreate(
-                ['email' => $userEmail],
-                [
+            $user = User::where('email', $userEmail)->first();
+            if (! $user) {
+                $candidateUsername = 'user_ehenho_'.($idx + 101);
+                if (User::where('username', $candidateUsername)->exists()) {
+                    $candidateUsername = 'user_ehenho_'.($idx + 101).'_'.substr(md5($userEmail), 0, 4);
+                }
+
+                $user = User::create([
                     'name' => $pData['name'],
-                    'username' => 'user_ehenho_'.($idx + 101),
+                    'email' => $userEmail,
+                    'username' => $candidateUsername,
                     'password' => Hash::make('123456'),
                     'role' => 'user',
                     'status' => 1,
                     'gold' => 100,
-                ]
-            );
+                ]);
+            }
 
             // Match province cleanly
             $cleanProv = str_replace(['Tỉnh ', 'Thành phố '], '', $pData['province_name']);
