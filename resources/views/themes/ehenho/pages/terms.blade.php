@@ -30,9 +30,14 @@
   <div class="row">
     <div class="col-sm-8 col-sm-offset-0">
       <h1 class="text-success" style="font-size: 26px; font-weight: bold; margin-bottom: 15px;">
-        Điều khoản sử dụng
+        {{ $page->title ?? 'Điều khoản sử dụng' }}
       </h1>
       
+      @if(!empty($page?->content))
+        <div class="dynamic-page-content" style="font-size:1.05em; line-height:1.7em; color: #333;">
+          {!! $page->content !!}
+        </div>
+      @else
       <h2 class="text-danger" style="font-size:1.2em; line-height:1.6em; margin-bottom: 25px;">
         eHenho.com ("chúng tôi" bên dưới) có các điều khoản sử dụng liên quan đến việc người dùng sử dụng trang web eHenho.com. Khi bạn sử dụng trang web eHenho.com thì có nghĩa là bạn đã đồng ý với các điều khoản sử dụng bên dưới.
       </h2>
@@ -110,6 +115,7 @@
           Nếu người sử dụng không đồng ý với bất kỳ điều khoản sử dụng trên thì phương thức duy nhất người dùng nên thực hiện là chấm dứt sử dụng thông tin trên trang web này và chấm dứt sử dụng trang web này.
         </p>
       </div>
+      @endif
     </div>
 
     <div class="col-sm-4" style="margin-top: 20px;">

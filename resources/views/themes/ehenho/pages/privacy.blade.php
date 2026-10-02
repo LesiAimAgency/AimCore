@@ -30,9 +30,14 @@
   <div class="row">
     <div class="col-sm-8 col-sm-offset-0">
       <h1 class="text-success" style="font-size: 26px; font-weight: bold; margin-bottom: 20px;">
-        Chính sách bảo mật thông tin
+        {{ $page->title ?? 'Chính sách bảo mật thông tin' }}
       </h1>
 
+      @if(!empty($page?->content))
+        <div class="dynamic-page-content" style="font-size:1.05em; line-height:1.7em; color: #333;">
+          {!! $page->content !!}
+        </div>
+      @else
       <div style="font-size:1.05em; line-height:1.7em; color: #333;">
         <p class="lead" style="color: #2e5d69;">
           eHenho cam kết tôn trọng và bảo vệ tuyệt đối sự riêng tư của mọi người dùng khi tham gia kết bạn, hẹn hò trên nền tảng của chúng tôi.
@@ -78,6 +83,7 @@
           Bạn có toàn quyền truy cập mục <strong>Quản lý tài khoản</strong> để chỉnh sửa thông tin cá nhân, thay đổi ảnh đại diện hoặc ẩn hồ sơ của mình bất kỳ lúc nào bạn muốn.
         </p>
       </div>
+      @endif
     </div>
 
     <div class="col-sm-4" style="margin-top: 20px;">

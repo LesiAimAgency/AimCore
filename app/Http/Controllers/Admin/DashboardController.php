@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Agent;
+use App\Models\Ehenho\Conversation;
+use App\Models\Ehenho\Message;
+use App\Models\Ehenho\Profile;
 use App\Models\Order;
+use App\Models\Post;
 use App\Models\Product;
 use App\Models\Project;
 use App\Models\ProjectSetting;
@@ -571,18 +575,18 @@ class DashboardController extends Controller
 
     private function getEhenhoDashboardData(?Project $project = null): array
     {
-        $totalProfiles = \App\Models\Ehenho\Profile::count();
-        $maleProfiles = \App\Models\Ehenho\Profile::where('gender', 'male')->count();
-        $femaleProfiles = \App\Models\Ehenho\Profile::where('gender', 'female')->count();
-        $newProfilesWeek = \App\Models\Ehenho\Profile::where('created_at', '>=', now()->subDays(7))->count();
-        $recentProfiles = \App\Models\Ehenho\Profile::latest()->take(6)->get();
+        $totalProfiles = Profile::count();
+        $maleProfiles = Profile::where('gender', 'male')->count();
+        $femaleProfiles = Profile::where('gender', 'female')->count();
+        $newProfilesWeek = Profile::where('created_at', '>=', now()->subDays(7))->count();
+        $recentProfiles = Profile::latest()->take(6)->get();
 
-        $totalPages = \App\Models\Post::withoutGlobalScopes()->where('post_type', 'page')->count();
-        $totalPosts = \App\Models\Post::withoutGlobalScopes()->where('post_type', 'post')->count();
-        $recentPages = \App\Models\Post::withoutGlobalScopes()->where('post_type', 'page')->latest()->take(5)->get();
+        $totalPages = Post::withoutGlobalScopes()->where('post_type', 'page')->count();
+        $totalPosts = Post::withoutGlobalScopes()->where('post_type', 'post')->count();
+        $recentPages = Post::withoutGlobalScopes()->where('post_type', 'page')->latest()->take(5)->get();
 
-        $totalConversations = \App\Models\Ehenho\Conversation::count();
-        $totalMessages = \App\Models\Ehenho\Message::count();
+        $totalConversations = Conversation::count();
+        $totalMessages = Message::count();
 
         return [
             'totalProfiles' => $totalProfiles,
@@ -598,4 +602,3 @@ class DashboardController extends Controller
         ];
     }
 }
-

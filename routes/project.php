@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CodeWidgetController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\Ehenho\AdminProfileController;
 use App\Http\Controllers\Admin\FontController;
 use App\Http\Controllers\Admin\FormSubmissionController;
 use App\Http\Controllers\Admin\MediaController;
@@ -163,12 +164,12 @@ Route::prefix('{projectCode}/admin')
 
         // eHenho Dedicated Management Routes (Hồ sơ hẹn hò & Tương tác)
         Route::prefix('ehenho')->name('ehenho.')->group(function () {
-            Route::get('profiles', [App\Http\Controllers\Admin\Ehenho\AdminProfileController::class, 'index'])->name('profiles.index');
-            Route::get('profiles/{id}/edit', [App\Http\Controllers\Admin\Ehenho\AdminProfileController::class, 'edit'])->name('profiles.edit');
-            Route::put('profiles/{id}', [App\Http\Controllers\Admin\Ehenho\AdminProfileController::class, 'update'])->name('profiles.update');
-            Route::post('profiles/{id}/toggle-status', [App\Http\Controllers\Admin\Ehenho\AdminProfileController::class, 'toggleStatus'])->name('profiles.toggle-status');
-            Route::delete('profiles/{id}', [App\Http\Controllers\Admin\Ehenho\AdminProfileController::class, 'destroy'])->name('profiles.destroy');
-            Route::get('interactions', [App\Http\Controllers\Admin\Ehenho\AdminProfileController::class, 'interactions'])->name('interactions.index');
+            Route::get('profiles', [AdminProfileController::class, 'index'])->name('profiles.index');
+            Route::get('profiles/{id}/edit', [AdminProfileController::class, 'edit'])->name('profiles.edit');
+            Route::put('profiles/{id}', [AdminProfileController::class, 'update'])->name('profiles.update');
+            Route::post('profiles/{id}/toggle-status', [AdminProfileController::class, 'toggleStatus'])->name('profiles.toggle-status');
+            Route::delete('profiles/{id}', [AdminProfileController::class, 'destroy'])->name('profiles.destroy');
+            Route::get('interactions', [AdminProfileController::class, 'interactions'])->name('interactions.index');
         });
 
         // Products Management

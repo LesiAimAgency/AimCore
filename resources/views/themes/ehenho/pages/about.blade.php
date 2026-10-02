@@ -30,9 +30,14 @@
   <div class="row">
     <div class="col-sm-8 col-sm-offset-0">
       <h1 class="text-success" style="font-size: 26px; font-weight: bold; margin-bottom: 20px;">
-        Giới thiệu về eHenho.com
+        {{ $page->title ?? 'Giới thiệu về eHenho.com' }}
       </h1>
 
+      @if(!empty($page?->content))
+        <div class="dynamic-page-content" style="font-size:1.05em; line-height:1.7em; color: #333;">
+          {!! $page->content !!}
+        </div>
+      @else
       <div style="font-size:1.05em; line-height:1.7em; color: #333;">
         <p class="lead" style="color: #2e5d69; font-weight: 500;">
           Chào mừng bạn đến với <strong>eHenho.com</strong> – Trang web hẹn hò online, kết bạn, tìm bạn bốn phương hàng đầu với sứ mệnh kết nối những trái tim đồng điệu một cách nghiêm túc, văn minh và hoàn toàn miễn phí.
@@ -66,6 +71,8 @@
           Mọi thắc mắc, đóng góp ý kiến hoặc phản ánh vi phạm, xin vui lòng gửi email về:
           <a href="mailto:hi@ehenho.com" style="color: #008BC7; font-weight: bold;">hi@ehenho.com</a>.
         </p>
+      </div>
+      @endif
 
         <div style="margin-top: 35px; padding: 20px; background-color: #f9f9f9; border-radius: 6px; border: 1px solid #eee;">
           <h4>Bạn chưa có tài khoản?</h4>
