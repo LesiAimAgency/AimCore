@@ -421,9 +421,9 @@ Route::prefix('{projectCode}/admin')
         Route::delete('form-submissions/{submission}', [FormSubmissionController::class, 'destroy'])->name('form-submissions.destroy');
 
         // Relationship Field & Taxonomy APIs under admin
-        Route::get('relationship-field/search', [RelationshipFieldController::class, 'search']);
-        Route::get('relationship-field/items', [RelationshipFieldController::class, 'getItems']);
-        Route::get('taxonomy-field/list', [TaxonomyFieldController::class, 'list']);
+        Route::get('relationship-field/search', [RelationshipFieldController::class, 'search'])->name('relationship.search');
+        Route::get('relationship-field/items', [RelationshipFieldController::class, 'getItems'])->name('relationship.items');
+        Route::get('taxonomy-field/list', [TaxonomyFieldController::class, 'list'])->name('taxonomy.list');
 
     });
 

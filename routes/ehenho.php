@@ -90,9 +90,9 @@ Route::get('/ket-ban/{id}', [ProfileController::class, 'show'])->name('profile.k
 
 // --- 5. Authentication ---
 Route::get('/dang-nhap', [AuthController::class, 'showLogin'])->name('login');
-Route::get('/accounts/login', [AuthController::class, 'showLogin']);
+Route::get('/accounts/login', [AuthController::class, 'showLogin'])->name('login.alias');
 Route::post('/dang-nhap', [AuthController::class, 'login'])->name('login.submit');
-Route::post('/accounts/login', [AuthController::class, 'login']);
+Route::post('/accounts/login', [AuthController::class, 'login'])->name('login.submit.alias');
 Route::get('/dang-ky', [AuthController::class, 'showRegister'])->name('register');
 Route::get('/accounts/signup', [AuthController::class, 'showRegister'])->name('signup');
 Route::post('/dang-ky', [AuthController::class, 'register'])->name('register.submit');
@@ -105,8 +105,8 @@ Route::post('/quen-mat-khau', [AuthController::class, 'sendResetLink'])->name('p
 Route::middleware('auth')->group(function () {
     // Profile Management
     Route::get('/tai-khoan', [ProfileController::class, 'myProfile'])->name('account.my_profile');
-    Route::get('/my-profile', [ProfileController::class, 'myProfile']);
-    Route::get('/my-profile.html', [ProfileController::class, 'myProfile']);
+    Route::get('/my-profile', [ProfileController::class, 'myProfile'])->name('account.my_profile.alias');
+    Route::get('/my-profile.html', [ProfileController::class, 'myProfile'])->name('account.my_profile.html');
     Route::get('/tai-khoan/chinh-sua', [ProfileController::class, 'edit'])->name('account.profile_edit');
     Route::put('/tai-khoan/chinh-sua', [ProfileController::class, 'update'])->name('account.profile_update');
     Route::get('/tai-khoan/anh-dai-dien', [ProfileController::class, 'avatarUpload'])->name('account.avatar_upload');

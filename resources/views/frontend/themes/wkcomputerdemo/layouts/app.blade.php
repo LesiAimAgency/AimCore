@@ -209,7 +209,7 @@
                 </a>
             </div>
             @else
-            <a href="{{ route('login') }}" class="wk-hdr-btn">
+            <a href="{{ route('wkcomputer.login') }}" class="wk-hdr-btn">
                 <i class="fas fa-user-circle"></i>
                 <span>Đăng nhập</span>
             </a>
@@ -703,7 +703,7 @@
                         @auth
                         <li><a href="{{ route('profile') }}"><i class="fas fa-angle-right"></i>Đơn hàng của tôi</a></li>
                         @else
-                        <li><a href="{{ route('login') }}"><i class="fas fa-angle-right"></i>Đăng nhập</a></li>
+                        <li><a href="{{ route('wkcomputer.login') }}"><i class="fas fa-angle-right"></i>Đăng nhập</a></li>
                         @endauth
                     </ul>
                 </div>

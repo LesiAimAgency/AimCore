@@ -45,8 +45,8 @@ Route::post('/dat-hang', [CheckoutController::class, 'store'])->name('checkout.s
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store.en');
 Route::post('/thanh-toan', [CheckoutController::class, 'store'])->name('checkout.store.alias');
 Route::get('/dat-hang/thanh-cong/{orderNumber}', [CheckoutController::class, 'success'])->name('checkout.success');
-Route::get('/checkout/thanh-cong/{orderNumber}', [CheckoutController::class, 'success.en']);
-Route::get('/thanh-toan/thanh-cong/{orderNumber}', [CheckoutController::class, 'success.alias']);
+Route::get('/checkout/thanh-cong/{orderNumber}', [CheckoutController::class, 'success'])->name('checkout.success.en');
+Route::get('/thanh-toan/thanh-cong/{orderNumber}', [CheckoutController::class, 'success'])->name('checkout.success.alias');
 
 Route::get('/lien-he', [ContactController::class, 'index'])->name('contact.index');
 Route::get('/order-track', [CheckoutController::class, 'trackOrder'])->name('order.track');
