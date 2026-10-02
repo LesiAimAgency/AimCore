@@ -90,6 +90,11 @@ Route::get('/ket-ban/{id}', [ProfileController::class, 'show'])->name('profile.k
 
 // --- 5. Authentication ---
 Route::get('/dang-nhap', [AuthController::class, 'showLogin'])->name('login');
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login.en');
+Route::post('/login', [AuthController::class, 'login'])->name('login.en.submit');
+Route::get('/admin', function () {
+    return redirect('/ehenho/login');
+})->name('admin.entry');
 Route::get('/accounts/login', [AuthController::class, 'showLogin'])->name('login.alias');
 Route::post('/dang-nhap', [AuthController::class, 'login'])->name('login.submit');
 Route::post('/accounts/login', [AuthController::class, 'login'])->name('login.submit.alias');
