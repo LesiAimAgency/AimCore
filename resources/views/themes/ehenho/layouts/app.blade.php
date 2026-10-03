@@ -174,6 +174,24 @@
       }
     });
 
+    $(document).ajaxError(function (event, jqxhr, settings, thrownError) {
+      if (jqxhr.status === 419) {
+        // Tự động tải lại trang nếu phiên làm việc hoặc CSRF token bị hết hạn
+        window.location.reload();
+      }
+    });
+
+    // Định kỳ giữ session hoạt động nếu tab đang mở (mỗi 15 phút)
+    setInterval(function () {
+      if (document.visibilityState === 'visible') {
+        $.get('/up').fail(function (xhr) {
+          if (xhr.status === 419) {
+            window.location.reload();
+          }
+        });
+      }
+    }, 15 * 60 * 1000);
+
     $(document).ready(function () {
       $("span#mask-pw-dd, span#mask-pw").click(function (event) {
         var c_class = $(this).find("i").attr("class") || $("i#mask-pw-i-dd").attr("class");

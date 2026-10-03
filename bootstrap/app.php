@@ -26,8 +26,10 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Facades\Route;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -130,6 +132,37 @@ return Application::configure(basePath: dirname(__DIR__))
             }
 
             // Không xử lý ở đây, để Laravel xử lý mặc định
+            return null;
+        });
+
+        // Xử lý lỗi CSRF Token Mismatch (419 Page Expired)
+        $exceptions->render(function (TokenMismatchException $e, $request) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'message' => 'Phiên làm việc đã hết hạn. Vui lòng tải lại trang.',
+                    'csrf_token' => csrf_token(),
+                ], 419);
+            }
+
+            return redirect()->back()
+                ->withInput($request->except('_token', 'password', 'password_confirmation'))
+                ->with('error', 'Phiên làm việc đã hết hạn do bạn để trang quá lâu. Vui lòng gửi lại yêu cầu.');
+        });
+
+        $exceptions->render(function (HttpException $e, $request) {
+            if ($e->getStatusCode() === 419) {
+                if ($request->expectsJson() || $request->ajax()) {
+                    return response()->json([
+                        'message' => 'Phiên làm việc đã hết hạn. Vui lòng tải lại trang.',
+                        'csrf_token' => csrf_token(),
+                    ], 419);
+                }
+
+                return redirect()->back()
+                    ->withInput($request->except('_token', 'password', 'password_confirmation'))
+                    ->with('error', 'Phiên làm việc đã hết hạn do bạn để trang quá lâu. Vui lòng gửi lại yêu cầu.');
+            }
+
             return null;
         });
     })->create();
