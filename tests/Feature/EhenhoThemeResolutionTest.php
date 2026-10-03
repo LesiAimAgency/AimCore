@@ -422,5 +422,24 @@ class EhenhoThemeResolutionTest extends TestCase
         $thirdUserDetailResponse->assertStatus(200);
         $thirdUserDetailResponse->assertDontSee('Hồ sơ đang bị chặn');
         $thirdUserDetailResponse->assertSee('Chặn hồ sơ');
+
+        // 9. Blocked person CANNOT unblock or interact with blocker; only blocker can unblock
+        $targetUserDetailResponse = $this->actingAs($targetUser)->get('/ehenho/ho-so/'.$viewerProfile->slug);
+        $targetUserDetailResponse->assertStatus(200);
+        $targetUserDetailResponse->assertSee('Bạn đã bị thành viên này chặn');
+        $targetUserDetailResponse->assertDontSee('Bỏ chặn');
+
+        $targetUserTryUnblock = $this->actingAs($targetUser)->post('/ehenho/tuong-tac/toggle', [
+            'profile_id' => $viewerProfile->id,
+            'type' => 'block',
+        ]);
+        $targetUserTryUnblock->assertSessionHas('error');
+
+        // Blocker can unblock
+        $blockerUnblock = $this->actingAs($viewer)->post('/ehenho/tuong-tac/toggle', [
+            'profile_id' => $targetProfile->id,
+            'type' => 'block',
+        ]);
+        $blockerUnblock->assertSessionHas('success');
     }
 }

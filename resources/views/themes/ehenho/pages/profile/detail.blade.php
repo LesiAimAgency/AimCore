@@ -80,6 +80,12 @@
                   <small>Đổi ảnh</small>
                 </a>
               </div>
+            @elseif($isBlockedByTarget ?? false)
+              <div style="padding: 12px 6px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 4px; text-align: center;">
+                <i class="fa fa-ban text-danger" style="font-size: 2em; margin-bottom: 6px;"></i>
+                <div style="font-size: 11px; font-weight: bold; color: #be123c;">Bạn đã bị chặn</div>
+                <small class="text-muted" style="font-size: 10px; display: block; margin-top: 4px; line-height: 1.3;">Chỉ người chặn mới có quyền mở khóa.</small>
+              </div>
             @else
               <div style="margin-bottom: 12px;">
                 <form action="{{ route('ehenho.social.toggle') }}" method="POST" style="display: inline;">
@@ -151,8 +157,8 @@
                   </form>
                 </div>
               @elseif($isBlockedByTarget ?? false)
-                <div class="alert alert-danger" style="margin-bottom: 0; padding: 10px; font-size: 13px;">
-                  <i class="fa fa-ban text-danger"></i> <strong>Không thể gửi tin nhắn.</strong> Thành viên này hiện không nhận tin nhắn từ bạn.
+                <div class="alert alert-danger" style="margin-bottom: 0; padding: 12px 15px; font-size: 13px; background-color: #fff1f2; border-color: #fecdd3; color: #9f1239;">
+                  <i class="fa fa-ban text-danger" style="font-size: 1.2em; margin-right: 4px;"></i> <strong>Bạn đã bị thành viên này chặn.</strong> Bạn không thể gửi tin nhắn hoặc mở chặn kết nối này (chỉ người đã chặn mới có quyền tự mở khóa).
                 </div>
               @elseif(auth()->check())
               <form action="{{ route('ehenho.messages.store') }}" method="POST">

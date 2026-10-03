@@ -106,6 +106,23 @@ class SocialController extends Controller
             return back()->with('error', $errMessage);
         }
 
+        // The person who is blocked cannot unblock or interact with the blocker
+        if ($targetProfile->user_id) {
+            $isBlockedByTarget = SocialConnection::where('user_id', $targetProfile->user_id)
+                ->whereIn('target_profile_id', $myProfileIds)
+                ->where('relation_type', 'block')
+                ->exists();
+
+            if ($isBlockedByTarget) {
+                $errMessage = 'Bạn đã bị người này chặn nên không thể tương tác hoặc mở chặn (chỉ người chặn mới có quyền mở chặn).';
+                if ($request->wantsJson()) {
+                    return response()->json(['status' => 'error', 'message' => $errMessage], 403);
+                }
+
+                return back()->with('error', $errMessage);
+            }
+        }
+
         $existing = SocialConnection::where('user_id', $userId)
             ->where('target_profile_id', $profileId)
             ->where('relation_type', $type)
