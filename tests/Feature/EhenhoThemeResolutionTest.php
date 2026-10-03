@@ -224,11 +224,17 @@ class EhenhoThemeResolutionTest extends TestCase
         $this->assertEquals('Không uống rượu bia', $profile->drinking);
         $this->assertEquals('Chưa có', $profile->children);
 
-        // Verify profile show page displays target type and direct message box
+        // Verify profile show page displays target type and own profile notice when viewed by owner
         $showResponse = $this->get('/ehenho/ho-so/'.$profile->id);
         $showResponse->assertStatus(200);
         $showResponse->assertSee('Tìm người yêu lâu dài');
-        $showResponse->assertSee('Gửi tin nhắn tới người này');
+        $showResponse->assertSee('Đây là hồ sơ cá nhân của bạn');
+
+        // Other user or guest sees direct message box
+        auth()->logout();
+        $guestShowResponse = $this->get('/ehenho/ho-so/'.$profile->id);
+        $guestShowResponse->assertStatus(200);
+        $guestShowResponse->assertSee('Gửi tin nhắn tới người này');
     }
 
     public function test_ehenho_dropdown_login_flow_and_my_profile_redirect(): void
@@ -378,5 +384,43 @@ class EhenhoThemeResolutionTest extends TestCase
         $unblockedViewResponse->assertStatus(200);
         $unblockedViewResponse->assertSee('Chặn hồ sơ');
         $unblockedViewResponse->assertDontSee('Hồ sơ đang bị chặn');
+
+        // 7. Verify user CANNOT block themselves
+        $viewerProfile = Profile::firstOrCreate(
+            ['user_id' => $viewer->id],
+            [
+                'project_id' => $this->project->id,
+                'display_name' => $viewer->name,
+                'slug' => 'viewer-profile-'.$viewer->id,
+                'gender' => 'female',
+                'age' => 28,
+                'status' => 'active',
+            ]
+        );
+        $selfBlockResponse = $this->actingAs($viewer)->post('/ehenho/tuong-tac/toggle', [
+            'profile_id' => $viewerProfile->id,
+            'type' => 'block',
+        ]);
+        $selfBlockResponse->assertSessionHas('error');
+
+        // 8. Verify isolation: When viewer blocks target, another user does NOT see them as blocked
+        $this->actingAs($viewer)->post('/ehenho/tuong-tac/toggle', [
+            'profile_id' => $targetProfile->id,
+            'type' => 'block',
+        ]);
+
+        $thirdUser = User::factory()->create([
+            'tenant_id' => $this->tenant->id,
+            'project_ids' => [$this->project->id],
+        ]);
+        $thirdUserListResponse = $this->actingAs($thirdUser)->get('/ehenho/da-chan');
+        $thirdUserListResponse->assertStatus(200);
+        $thirdUserListResponse->assertDontSee('Võ Thanh Hải');
+        $thirdUserListResponse->assertSee('Danh sách chặn trống');
+
+        $thirdUserDetailResponse = $this->actingAs($thirdUser)->get('/ehenho/ho-so/vo-thanh-hai-82');
+        $thirdUserDetailResponse->assertStatus(200);
+        $thirdUserDetailResponse->assertDontSee('Hồ sơ đang bị chặn');
+        $thirdUserDetailResponse->assertSee('Chặn hồ sơ');
     }
 }
