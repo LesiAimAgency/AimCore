@@ -113,6 +113,28 @@ class ProjectUser extends Authenticatable
         return $this->role === 'web_admin' || $this->role === 'cms';
     }
 
+    public function canAccessEhenhoCms(): bool
+    {
+        if (in_array($this->role, ['user', 'employee', 'visitor'], true)) {
+            return false;
+        }
+
+        $adminRoles = [
+            'cms',
+            'admin',
+            'dev',
+            'super_admin',
+            'superadmin',
+            'manager',
+            'web_admin',
+            'store_manager',
+            'multi_tenancy',
+        ];
+
+        return in_array($this->role, $adminRoles, true)
+            || (isset($this->level) && (int) $this->level <= 1);
+    }
+
     public function canAccess(string $feature): bool
     {
         if ($this->isAdmin()) {

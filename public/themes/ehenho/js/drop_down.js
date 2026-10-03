@@ -144,13 +144,11 @@
     function loadDistricts(provVal) {
         var $prov = $("#id_province");
         var $dist = $("#id_district");
-        var $ward = $("#id_ward");
         var $loader = $("#loading_district_drop_down");
 
         if (isForeign(provVal)) {
             $loader.hide();
             $dist.hide().empty();
-            $ward.hide().empty();
             $("#foreign_notice").show();
             return;
         } else {
@@ -159,7 +157,6 @@
 
         $loader.show();
         $dist.hide().empty().append('<option value="">-- Chọn Quận / Huyện / Thị xã --</option>');
-        $ward.hide().empty().append('<option value="">-- Chọn Phường / Xã / Thị trấn --</option>');
 
         var provCode = getProvinceCode(provVal);
 
@@ -213,57 +210,14 @@
         }
     }
 
-    // Populate Wards for a given district
-    function loadWards(districtCode) {
-        var $ward = $("#id_ward");
-        var $loader = $("#loading_ward_drop_down");
-
-        if (!districtCode) {
-            $ward.hide().empty().append('<option value="">-- Chọn Phường / Xã / Thị trấn --</option>');
-            return;
-        }
-
-        $loader.show();
-        $ward.hide().empty().append('<option value="">-- Chọn Phường / Xã / Thị trấn --</option>');
-
-        $.ajax({
-            url: API_BASE + "/d/" + districtCode + "?depth=2",
-            dataType: "json",
-            timeout: 5000,
-            success: function(res) {
-                $loader.hide();
-                if (res && res.wards && res.wards.length > 0) {
-                    for (var i = 0; i < res.wards.length; i++) {
-                        var w = res.wards[i];
-                        $ward.append('<option value="' + w.code + '" data-name="' + w.name + '">' + w.name + '</option>');
-                    }
-                    $ward.show();
-                } else {
-                    $ward.hide();
-                }
-            },
-            error: function() {
-                $loader.hide();
-                $ward.show();
-            }
-        });
-    }
-
     // Initialize on document ready
     $(document).ready(function() {
         var $prov = $("#id_province");
-        var $dist = $("#id_district");
 
         // Event listener on Province change
         $prov.on("change", function() {
             var val = $(this).val();
             loadDistricts(val);
-        });
-
-        // Event listener on District change
-        $dist.on("change", function() {
-            var val = $(this).val();
-            loadWards(val);
         });
 
         // Initial trigger

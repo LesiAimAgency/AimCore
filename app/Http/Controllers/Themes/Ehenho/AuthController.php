@@ -366,8 +366,9 @@ class AuthController extends Controller
             $user = Auth::user();
 
             // If user has an administrative CMS role, setup project session and direct to CMS Admin
-            $adminRoles = ['cms', 'admin', 'dev', 'super_admin', 'superadmin', 'manager', 'web_admin', 'store_manager', 'multi_tenancy'];
-            $isAdmin = in_array($user->role, $adminRoles, true) || ($user->role !== 'user' && isset($user->level) && in_array((int) $user->level, [0, 1], true));
+            $isAdmin = method_exists($user, 'canAccessEhenhoCms')
+                ? $user->canAccessEhenhoCms()
+                : (in_array($user->role, ['cms', 'admin', 'dev', 'super_admin', 'superadmin', 'manager', 'web_admin', 'store_manager', 'multi_tenancy'], true) || ($user->role !== 'user' && isset($user->level) && in_array((int) $user->level, [0, 1], true)));
 
             if ($isAdmin) {
                 $project = Project::where('code', 'ehenho')->first();
@@ -395,8 +396,12 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    public function showRegister(CaptchaService $captchaService): View
+    public function showRegister(CaptchaService $captchaService): View|RedirectResponse
     {
+        if (Auth::check()) {
+            return redirect()->route('ehenho.account.my_profile');
+        }
+
         $provinces = Province::orderBy('name')->get();
         $recaptchaSiteKey = $captchaService->isEnabled() ? $captchaService->getSiteKey() : null;
 
@@ -546,7 +551,7 @@ class AuthController extends Controller
                 'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
                 'role' => 'user',
-                'level' => 1,
+                'level' => 2,
             ]);
 
             $profile = Profile::create([
@@ -600,7 +605,11 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('ehenho.home')->with('success', 'Bạn đã đăng xuất thành công.');
+        $redirectRoute = ($request->routeIs('ehenho.domain.*') || $request->getHost() === 'ehenho.local')
+            ? (Route::has('ehenho.domain.login') ? route('ehenho.domain.login') : url('/login'))
+            : (Route::has('ehenho.login') ? route('ehenho.login') : url('/ehenho/login'));
+
+        return redirect()->to($redirectRoute)->with('success', 'Bạn đã đăng xuất thành công.');
     }
 
     public function showForgotPassword(): View

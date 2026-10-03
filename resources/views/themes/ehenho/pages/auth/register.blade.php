@@ -360,18 +360,11 @@
                 <!-- District Dropdown -->
                 <div style="display:table; width:100%; margin-top:6px;">
                   <select class="pl-text select form-control" id="id_district" name="district" style="height:32px;">
-                    <option value="">-- Đang nạp danh sách Quận / Huyện... --</option>
+                    <option value="">-- Chọn Quận / Huyện / Thị xã --</option>
                   </select>
                   <span id="loading_district_drop_down" style="display:none; color:#2e5d69; font-size:12px; margin-top:4px;">
                     <i class="fa fa-spinner fa-spin"></i> Đang tải quận/huyện...
                   </span>
-                </div>
-
-                <!-- Ward Dropdown (optional) -->
-                <div style="display:table; width:100%; margin-top:6px;">
-                  <select class="pl-text select form-control" id="id_ward" name="ward" style="height:32px; display:none;">
-                    <option value="">-- Chọn Phường / Xã / Thị trấn --</option>
-                  </select>
                 </div>
               </div>
               <div class="col-xs-9 col-xs-offset-3 col-md-3 col-md-offset-0 ptop-six">

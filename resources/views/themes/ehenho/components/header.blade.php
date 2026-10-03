@@ -74,7 +74,7 @@
           </a>
         </li>
         @auth
-          @if(in_array(auth()->user()->role, ['cms', 'admin', 'dev']) || (isset(auth()->user()->level) && auth()->user()->level <= 1))
+          @if(method_exists(auth()->user(), 'canAccessEhenhoCms') ? auth()->user()->canAccessEhenhoCms() : (auth()->user()->role !== 'user' && in_array(auth()->user()->role, ['cms', 'admin', 'dev', 'super_admin', 'superadmin', 'manager', 'web_admin', 'store_manager', 'multi_tenancy'], true)))
             <li>
               <a href="{{ url('/ehenho/admin') }}" style="color:#d9534f; font-weight:bold;">
                 <i class="fa fa-dashboard"></i> CMS Quản trị

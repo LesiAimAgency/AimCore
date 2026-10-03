@@ -36,7 +36,7 @@
     <a href="{{ route('ehenho.account.password') }}" class="list-group-item {{ request()->routeIs('*.account.password') ? 'active' : '' }}">
       <i class="fa fa-key fa-fw"></i> Đổi mật khẩu
     </a>
-    @if(auth()->check() && (in_array(auth()->user()->role, ['cms', 'admin', 'dev']) || (isset(auth()->user()->level) && auth()->user()->level <= 1)))
+    @if(auth()->check() && (method_exists(auth()->user(), 'canAccessEhenhoCms') ? auth()->user()->canAccessEhenhoCms() : (auth()->user()->role !== 'user' && in_array(auth()->user()->role, ['cms', 'admin', 'dev', 'super_admin', 'superadmin', 'manager', 'web_admin', 'store_manager', 'multi_tenancy'], true))))
       <a href="{{ url('/ehenho/admin') }}" class="list-group-item text-danger" style="font-weight: bold; background-color: #fff5f5;">
         <i class="fa fa-cogs fa-fw" style="color: #dc2626;"></i> Trang Quản Trị CMS
       </a>
