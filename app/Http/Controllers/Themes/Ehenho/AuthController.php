@@ -606,8 +606,8 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         $redirectRoute = ($request->routeIs('ehenho.domain.*') || $request->getHost() === 'ehenho.local')
-            ? (Route::has('ehenho.domain.login') ? route('ehenho.domain.login') : url('/login'))
-            : (Route::has('ehenho.login') ? route('ehenho.login') : url('/ehenho/login'));
+            ? (Route::has('ehenho.domain.login.en') ? route('ehenho.domain.login.en') : (Route::has('ehenho.domain.login') ? route('ehenho.domain.login') : url('/login')))
+            : (Route::has('ehenho.login.en') ? route('ehenho.login.en') : (Route::has('ehenho.login') ? route('ehenho.login') : url('/ehenho/login')));
 
         return redirect()->to($redirectRoute)->with('success', 'Bạn đã đăng xuất thành công.');
     }
