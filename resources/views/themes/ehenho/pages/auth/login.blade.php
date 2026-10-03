@@ -35,10 +35,10 @@
       @csrf
 
       <div class="form-group">
-        <label for="id_login" class="text-muted">Địa chỉ Email</label>
+        <label for="id_login" class="text-muted">Email hoặc Tên đăng nhập</label>
         <div class="input-group">
-          <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-          <input type="email" name="email" id="id_login" class="form-control" placeholder="Địa chỉ email" value="{{ old('email') }}" required autofocus>
+          <span class="input-group-addon"><i class="fa fa-user"></i></span>
+          <input type="text" name="email" id="id_login" class="form-control" placeholder="Email hoặc Tên đăng nhập" value="{{ old('email') }}" required autofocus>
         </div>
       </div>
 
@@ -66,6 +66,20 @@
         </div>
       </div>
 
+      @if(!empty($recaptchaSiteKey))
+      <!-- Google reCAPTCHA v2 Checkbox -->
+      <div class="form-group text-center" style="margin-top: 15px; margin-bottom: 20px;">
+        <div style="display: inline-block;">
+          <div class="g-recaptcha" data-sitekey="{{ $recaptchaSiteKey }}"></div>
+        </div>
+        @error('g-recaptcha-response')
+          <span class="text-danger" style="font-size: 13px; display: block; margin-top: 6px; font-weight: bold;">
+            <i class="fa fa-exclamation-triangle"></i> {{ $message }}
+          </span>
+        @enderror
+      </div>
+      @endif
+
       <button type="submit" class="btn btn-primary btn-block btn-lg" style="background-color: #008BC7; border-color: #0077aa; font-weight: bold;">
         <i class="fa fa-sign-in"></i> Đăng nhập
       </button>
@@ -82,3 +96,10 @@
   </div>
 </div>
 @endsection
+
+@if(!empty($recaptchaSiteKey))
+@push('scripts')
+<script src="https://www.google.com/recaptcha/api.js?hl=vi" async defer></script>
+@endpush
+@endif
+

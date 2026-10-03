@@ -23,6 +23,8 @@ class DatabaseResolver
      */
     public function connect(Project $project): string
     {
+        $this->originalDefaultConnection = config('database.default', 'mysql');
+
         $tenant = $project->tenant;
         $dbName = $tenant?->database_name
             ?: ($project->deployment_config['database']['name'] ?? null);

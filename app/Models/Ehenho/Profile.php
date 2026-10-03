@@ -75,4 +75,27 @@ class Profile extends EhenhoBaseModel
     {
         return $this->hasMany(SocialConnection::class, 'target_profile_id');
     }
+
+    public function getAvatarAttribute(): ?string
+    {
+        if (! $this->avatar_url) {
+            return null;
+        }
+
+        if (str_starts_with($this->avatar_url, 'http://') || str_starts_with($this->avatar_url, 'https://')) {
+            return $this->avatar_url;
+        }
+
+        return asset($this->avatar_url);
+    }
+
+    public function getLocationTextAttribute(): string
+    {
+        $province = $this->province_name ?: ($this->province?->name ?: '');
+        if ($this->district_name && $province) {
+            return "{$this->district_name}, {$province}";
+        }
+
+        return $province ?: ($this->district_name ?: 'Toàn quốc');
+    }
 }

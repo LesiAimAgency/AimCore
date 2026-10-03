@@ -6,11 +6,11 @@
 @section('content')
 @php
     $actionUrl = isset($currentProject) 
-        ? route('project.admin.posts.store', $currentProject->code) 
+        ? ($postType === 'page' && Route::has('project.admin.pages.store') ? route('project.admin.pages.store', $currentProject->code) : route('project.admin.posts.store', $currentProject->code)) 
         : route('superadmin.posts.store');
     
     $indexUrl = isset($currentProject) 
-        ? route('project.admin.posts.index', ['projectCode' => $currentProject->code, 'type' => $postType]) 
+        ? ($postType === 'page' ? route('project.admin.pages.index', ['projectCode' => $currentProject->code]) : route('project.admin.posts.index', ['projectCode' => $currentProject->code, 'type' => $postType])) 
         : route('superadmin.posts.index', ['type' => $postType]);
 @endphp
 

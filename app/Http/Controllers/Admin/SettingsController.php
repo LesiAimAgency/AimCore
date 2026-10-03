@@ -37,14 +37,6 @@ class SettingsController extends Controller
                 \DB::setDefaultConnection($prevConn);
             }
 
-            // Luôn đảm bảo settings.languages và settings.appearance hiển thị
-            if (! in_array('settings.languages', $enabledSettings)) {
-                $enabledSettings[] = 'settings.languages';
-            }
-            if (! in_array('settings.appearance', $enabledSettings)) {
-                $enabledSettings[] = 'settings.appearance';
-            }
-
             // Chỉ hiển thị các module đã được bật
             $rawModules = collect(config('system_menu'))->filter(function ($module) use ($enabledSettings) {
                 return in_array($module['permission'], $enabledSettings);
@@ -275,14 +267,6 @@ class SettingsController extends Controller
 
         if (\DB::getDefaultConnection() !== $prevConn) {
             \DB::setDefaultConnection($prevConn);
-        }
-
-        // Luôn đảm bảo settings.languages và settings.appearance hiển thị
-        if (! in_array('settings.languages', $enabledSettings)) {
-            $enabledSettings[] = 'settings.languages';
-        }
-        if (! in_array('settings.appearance', $enabledSettings)) {
-            $enabledSettings[] = 'settings.appearance';
         }
 
         // Chỉ hiển thị các module đã được bật

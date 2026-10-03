@@ -1,7 +1,14 @@
 @extends('themes.ehenho.layouts.frontend')
 
-@section('title', 'eHenho.com - Hẹn hò Online & Tìm bạn Bốn phương')
-@section('meta_description', 'eHenho.com là trang web hẹn hò online, tìm bạn, kết bạn theo sở thích & tính cách giúp bạn nhanh chóng tìm được một nửa yêu thương của mình.')
+@php
+  $seoTitle = setting_string('seo_meta_title') ?: 'eHenho.com - Hẹn hò Online & Tìm bạn Bốn phương';
+  $seoDescription = setting_string('seo_meta_description') ?: 'eHenho.com là trang web hẹn hò online, tìm bạn, kết bạn theo sở thích & tính cách giúp bạn nhanh chóng tìm được một nửa yêu thương của mình.';
+  $seoKeywords = setting_string('seo_meta_keywords') ?: 'Hẹn hò online, Tìm bạn, Kết bạn, Tìm bạn bốn phương, Tìm bạn gái, Tìm bạn trai, Tìm người yêu, Tim ban bon phuong';
+@endphp
+
+@section('title', $seoTitle)
+@section('meta_description', $seoDescription)
+@section('meta_keywords', $seoKeywords)
 
 @section('frontend_content')
 <!-- Circular Marker Filter Buttons (100% Matching index.html) -->
@@ -30,6 +37,13 @@
   <!-- Hero Carousel Component -->
   <div class="row">
     @include('themes.ehenho.components.hero-carousel')
+  </div>
+
+  <!-- Chat All Direct Component -->
+  <div class="row">
+    <div class="col-sm-12">
+      @include('themes.ehenho.components.chat-all-inline')
+    </div>
   </div>
 
   <div class="row" style="margin-top: 20px;">

@@ -6,7 +6,7 @@
 @section('content')
 @php
     $createUrl = isset($currentProject) 
-        ? route('project.admin.posts.create', ['projectCode' => $currentProject->code, 'type' => $postType]) 
+        ? ($postType === 'page' ? route('project.admin.pages.create', ['projectCode' => $currentProject->code]) : route('project.admin.posts.create', ['projectCode' => $currentProject->code, 'type' => $postType])) 
         : route('superadmin.posts.create', ['type' => $postType]);
 @endphp
 
@@ -56,11 +56,11 @@
                 @forelse($posts as $post)
                     @php
                         $editUrl = isset($currentProject) 
-                            ? route('project.admin.posts.edit', ['projectCode' => $currentProject->code, 'post' => $post]) 
+                            ? ($postType === 'page' ? route('project.admin.pages.edit', ['projectCode' => $currentProject->code, 'post' => $post]) : route('project.admin.posts.edit', ['projectCode' => $currentProject->code, 'post' => $post])) 
                             : route('superadmin.posts.edit', ['post' => $post]);
                             
                         $destroyUrl = isset($currentProject) 
-                            ? route('project.admin.posts.destroy', ['projectCode' => $currentProject->code, 'post' => $post]) 
+                            ? ($postType === 'page' ? route('project.admin.pages.destroy', ['projectCode' => $currentProject->code, 'post' => $post]) : route('project.admin.posts.destroy', ['projectCode' => $currentProject->code, 'post' => $post])) 
                             : route('superadmin.posts.destroy', ['post' => $post]);
                     @endphp
                     <tr class="hover:bg-gray-50/50 transition">

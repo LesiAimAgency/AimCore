@@ -23,15 +23,15 @@
 
 <div class="p-6 max-w-7xl mx-auto space-y-8">
     <!-- 1. Hero Welcome Banner -->
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#001235] via-[#001B4E] to-[#881337] p-8 text-white shadow-xl">
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#001235] via-[#001B4E] to-[#1e3a8a] p-8 text-white shadow-xl">
         <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-semibold uppercase tracking-wider mb-3">
-                    <i class="fa-solid fa-heart text-rose-400"></i>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold uppercase tracking-wider mb-3">
+                    <i class="fa-solid fa-heart text-blue-400"></i>
                     Dating & Social Network Platform
                 </div>
                 <h2 class="text-2xl md:text-3xl font-black tracking-tight text-white mb-2">
-                    Trung tâm Quản trị eHenho.com
+                    Trung tâm Quản trị 
                 </h2>
                 <p class="text-slate-300 text-sm max-w-2xl">
                     Hệ thống quản lý chuyên sâu cho nền tảng Hẹn hò: Quản lý hồ sơ thành viên, phê duyệt tài khoản, xuất bản nội dung trang tĩnh, cẩm nang tình cảm và kiểm soát tương tác an toàn.
@@ -39,17 +39,17 @@
             </div>
             <div class="flex items-center gap-3">
                 <a href="{{ route('project.admin.pages.index', $projectCode) }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-slate-900 text-xs font-bold shadow hover:bg-slate-100 transition-all">
-                    <i class="fa-solid fa-file-pen text-rose-600"></i>
+                    <i class="fa-solid fa-file-pen text-blue-600"></i>
                     Quản lý Trang (Pages)
                 </a>
-                <a href="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-600 text-white text-xs font-bold shadow hover:bg-rose-700 transition-all">
+                <a href="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 text-white text-xs font-bold shadow hover:bg-blue-700 transition-all">
                     <i class="fa-solid fa-users"></i>
                     Quản lý Thành viên
                 </a>
             </div>
         </div>
         <!-- Decorative Glow -->
-        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
     </div>
 
     <!-- 2. KPI Metrics Grid -->
@@ -58,7 +58,7 @@
         <div class="eh-card bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
             <div class="flex items-center justify-between mb-3">
                 <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Tổng Thành viên</span>
-                <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
                     <i class="fa-solid fa-users"></i>
                 </div>
             </div>
@@ -101,21 +101,21 @@
             </div>
         </div>
 
-        <!-- Metric 3: CMS Pages & Content -->
+        <!-- Metric 3: CMS Pages -->
         <div class="eh-card bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
             <div class="flex items-center justify-between mb-3">
-                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Nội dung Trang & Bài</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Trang Tĩnh (Pages)</span>
                 <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg">
                     <i class="fa-solid fa-file-lines"></i>
                 </div>
             </div>
             <div class="flex items-baseline gap-2">
                 <span class="text-3xl font-black text-slate-900">{{ number_format($totalPages ?? 0) }}</span>
-                <span class="text-xs font-medium text-slate-500">Trang tĩnh</span>
+                <span class="text-xs font-medium text-slate-500">Trang</span>
             </div>
             <div class="flex items-center justify-between text-xs text-slate-500 mt-2 pt-2 border-t border-slate-50">
-                <span>Cẩm nang hẹn hò:</span>
-                <span class="font-bold text-slate-800">{{ $totalPosts ?? 0 }} bài viết</span>
+                <span>Đã xuất bản:</span>
+                <span class="font-bold text-slate-800">{{ $publishedPages ?? $totalPages ?? 0 }} trang</span>
             </div>
         </div>
 
@@ -145,12 +145,12 @@
             <div class="flex items-center justify-between mb-5">
                 <div>
                     <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                        <i class="fa-solid fa-user-check text-rose-600"></i>
+                        <i class="fa-solid fa-user-check text-blue-600"></i>
                         Hồ sơ Thành viên Mới Đăng ký
                     </h3>
                     <p class="text-xs text-slate-400">Các thành viên mới cập nhật thông tin tìm bạn</p>
                 </div>
-                <a href="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="text-xs font-bold text-rose-600 hover:text-rose-700">
+                <a href="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="text-xs font-bold text-blue-600 hover:text-blue-700">
                     Xem tất cả &rarr;
                 </a>
             </div>
@@ -162,7 +162,7 @@
                         @if($profile->avatar)
                             <img src="{{ $profile->avatar }}" alt="{{ $profile->display_name }}" class="w-10 h-10 rounded-full object-cover border border-slate-200 flex-shrink-0">
                         @else
-                            <div class="w-10 h-10 rounded-full bg-rose-100 text-rose-600 font-bold flex items-center justify-center flex-shrink-0 text-sm">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 font-bold flex items-center justify-center flex-shrink-0 text-sm">
                                 {{ strtoupper(substr($profile->display_name ?? 'U', 0, 1)) }}
                             </div>
                         @endif
@@ -172,7 +172,7 @@
                                 <span class="text-[11px] font-normal text-slate-500">({{ $profile->age ?? 25 }} tuổi)</span>
                             </p>
                             <p class="text-[11px] text-slate-500 truncate m-0">
-                                <i class="fa-solid fa-location-dot text-slate-400 mr-1"></i>{{ $profile->province ?? 'Toàn quốc' }}
+                                <i class="fa-solid fa-location-dot text-slate-400 mr-1"></i>{{ $profile->location_text }}
                                 &bull;
                                 @if($profile->gender === 'female')
                                     <span class="text-pink-600 font-medium">Nữ</span>
@@ -186,7 +186,7 @@
                         <span class="px-2 py-0.5 rounded-full text-[10px] font-bold {{ $profile->status === 'blocked' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
                             {{ $profile->status === 'blocked' ? 'Đã khóa' : 'Hoạt động' }}
                         </span>
-                        <a href="{{ route('project.admin.ehenho.profiles.edit', ['projectCode' => $projectCode, 'id' => $profile->id]) }}" class="p-1.5 text-slate-400 hover:text-rose-600 transition-colors">
+                        <a href="{{ route('project.admin.ehenho.profiles.edit', ['projectCode' => $projectCode, 'id' => $profile->id]) }}" class="p-1.5 text-slate-400 hover:text-blue-600 transition-colors">
                             <i class="fa-solid fa-pen text-xs"></i>
                         </a>
                     </div>

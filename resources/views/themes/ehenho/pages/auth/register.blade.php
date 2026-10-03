@@ -750,6 +750,20 @@
             </div>
           </div>
 
+          @if(!empty($recaptchaSiteKey))
+          <!-- Google reCAPTCHA v2 Checkbox -->
+          <div class="row" style="margin-bottom: 20px;">
+            <div class="col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-7 col-md-offset-4">
+              <div class="g-recaptcha" data-sitekey="{{ $recaptchaSiteKey }}"></div>
+              @error('g-recaptcha-response')
+                <span class="text-danger" style="font-size: 13px; display: block; margin-top: 6px; font-weight: bold;">
+                  <i class="fa fa-exclamation-triangle"></i> {{ $message }}
+                </span>
+              @enderror
+            </div>
+          </div>
+          @endif
+
           <!-- Submit Button -->
           <div class="row">
             <div class="col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-7 col-md-offset-4">
@@ -767,6 +781,9 @@
 @endsection
 
 @push('scripts')
+@if(!empty($recaptchaSiteKey))
+<script src="https://www.google.com/recaptcha/api.js?hl=vi" async defer></script>
+@endif
 <script src="{{ asset('themes/ehenho/js/drop_down.js') }}"></script>
 <script type="text/javascript">
   $(document).ready(function() {
@@ -805,6 +822,53 @@
         $("#id_dob_day").val(days);
       }
     });
+
+    // Autosave draft to localStorage (strictly excluding passwords, tokens, and captcha)
+    var draftKey = 'ehenho_reg_draft';
+    var form = $('#signup_form');
+
+    function saveDraft() {
+      var data = {};
+      form.find('input, select, textarea').each(function() {
+        var el = $(this);
+        var name = el.attr('name');
+        var type = el.attr('type');
+        if (!name || name === '_token' || name === 'password' || name === 'password_confirmation' || name === 'g-recaptcha-response' || type === 'password' || type === 'hidden') {
+          return;
+        }
+        data[name] = el.val();
+      });
+      try {
+        localStorage.setItem(draftKey, JSON.stringify(data));
+      } catch (e) {}
+    }
+
+    var saveTimer;
+    form.on('input change', 'input, select, textarea', function() {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(saveDraft, 400);
+    });
+
+    // Restore draft if available and field is not populated by old()
+    try {
+      var saved = localStorage.getItem(draftKey);
+      if (saved) {
+        var draft = JSON.parse(saved);
+        $.each(draft, function(name, val) {
+          if (val === null || val === undefined || val === '') return;
+          var field = form.find('[name="' + name + '"]');
+          if (field.length && !field.val()) {
+            field.val(val).trigger('change');
+          }
+        });
+      }
+    } catch (e) {}
   });
 </script>
+@if(session('success'))
+<script>
+  try { localStorage.removeItem('ehenho_reg_draft'); } catch(e) {}
+</script>
+@endif
 @endpush
+

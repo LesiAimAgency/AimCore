@@ -870,17 +870,21 @@ class EhenhoRichDemoSeeder extends Seeder
 
         $createdProfiles = [];
 
+        $tenantId = $project?->tenant_id ?? 7;
+
         foreach ($rawProfiles as $idx => $pData) {
             $userEmail = 'user_'.Str::slug($pData['name'], '_').'_'.($idx + 1).'@ehenho.local';
 
-            $user = User::where('email', $userEmail)->first();
+            $user = User::withoutGlobalScopes()->where('email', $userEmail)->first();
             if (! $user) {
                 $candidateUsername = 'user_ehenho_'.($idx + 101);
-                if (User::where('username', $candidateUsername)->exists()) {
+                if (User::withoutGlobalScopes()->where('username', $candidateUsername)->exists()) {
                     $candidateUsername = 'user_ehenho_'.($idx + 101).'_'.substr(md5($userEmail), 0, 4);
                 }
 
                 $user = User::create([
+                    'tenant_id' => $tenantId,
+                    'project_ids' => [$projectId],
                     'name' => $pData['name'],
                     'email' => $userEmail,
                     'username' => $candidateUsername,
@@ -889,6 +893,12 @@ class EhenhoRichDemoSeeder extends Seeder
                     'status' => 1,
                     'gold' => 100,
                 ]);
+            } else {
+                if (empty($user->tenant_id)) {
+                    $user->tenant_id = $tenantId;
+                    $user->project_ids = [$projectId];
+                    $user->save();
+                }
             }
 
             // Match province cleanly

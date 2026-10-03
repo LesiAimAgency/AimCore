@@ -5,6 +5,7 @@ namespace App\Widgets;
 use App\Contracts\WidgetRegistryInterface;
 use App\Models\WidgetTemplate;
 use App\Services\DynamicWidgetRenderer;
+use App\Widgets\Ehenho\EhenhoHeroSliderWidget;
 use App\Widgets\Groups\BannerWidget;
 use App\Widgets\Groups\BlogWidget;
 use App\Widgets\Groups\CategoryGridWidget;
@@ -25,8 +26,8 @@ use App\Widgets\Inbetween\UpcomingEventsWidget;
 use App\Widgets\Viettinmart\ViettinmartDealFlashWidget;
 use App\Widgets\Viettinmart\ViettinmartFeatureIconsWidget;
 use App\Widgets\Viettinmart\ViettinmartFooterColumnWidget;
-use App\Widgets\Viettinmart\ViettinmartFormWidget;
 // Viettinmart Widgets
+use App\Widgets\Viettinmart\ViettinmartFormWidget;
 use App\Widgets\Viettinmart\ViettinmartHeroSliderWidget;
 use App\Widgets\Viettinmart\ViettinmartPostsLatestWidget;
 use App\Widgets\Viettinmart\ViettinmartProductFeaturedWidget;
@@ -57,6 +58,10 @@ class WidgetRegistry implements WidgetRegistryInterface
         'BlogWidget' => BlogWidget::class,
         'InstagramWidget' => InstagramWidget::class,
         'FeatureWidget' => FeatureWidget::class,
+
+        // eHenho Widgets
+        'ehenho_hero_slider' => EhenhoHeroSliderWidget::class,
+        'ehenho_slider' => EhenhoHeroSliderWidget::class,
 
         // Inbetween Widgets
         'inbetween_hero_section' => HeroSectionWidget::class,

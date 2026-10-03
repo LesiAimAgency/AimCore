@@ -7,12 +7,15 @@ namespace App\Http\Controllers\Themes\Ehenho;
 use App\Http\Controllers\Controller;
 use App\Models\Ehenho\Profile;
 use App\Models\Ehenho\Province;
+use App\Models\Project;
 use App\Models\User;
+use App\Services\CaptchaService;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -321,44 +324,103 @@ class AuthController extends Controller
         'yen-bai' => 'Yên Bái',
     ];
 
-    public function showLogin(): View
+    public function showLogin(CaptchaService $captchaService): View
     {
-        return view('themes.ehenho.pages.auth.login');
+        $recaptchaSiteKey = $captchaService->isEnabled() ? $captchaService->getSiteKey() : null;
+
+        return view('themes.ehenho.pages.auth.login', compact('recaptchaSiteKey'));
     }
 
-    public function login(Request $request): RedirectResponse
+    public function login(Request $request, CaptchaService $captchaService): RedirectResponse
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        // Google reCAPTCHA Verification (server-side)
+        if ($captchaService->isEnabled()) {
+            $captchaToken = $request->input('g-recaptcha-response');
+            if (empty($captchaToken) || ! $captchaService->verify($captchaToken, $request->ip())) {
+                return back()->withErrors([
+                    'g-recaptcha-response' => 'Xác thực Google reCAPTCHA không thành công. Vui lòng xác thực lại.',
+                ])->onlyInput('email');
+            }
+        }
+
+        $loginInput = trim((string) ($request->input('login') ?: ($request->input('email') ?: $request->input('username'))));
+        $password = (string) $request->input('password');
+
+        if (empty($loginInput) || empty($password)) {
+            return back()->withErrors([
+                'email' => 'Vui lòng nhập email hoặc tên đăng nhập và mật khẩu.',
+            ])->onlyInput('email');
+        }
 
         $remember = $request->boolean('remember');
 
-        if (Auth::attempt($credentials, $remember)) {
-            $request->session()->regenerate();
+        $isEmail = filter_var($loginInput, FILTER_VALIDATE_EMAIL);
+        $primaryField = $isEmail ? 'email' : 'username';
+        $fallbackField = $isEmail ? 'username' : 'email';
 
+        $loggedIn = Auth::attempt([$primaryField => $loginInput, 'password' => $password], $remember)
+            || Auth::attempt([$fallbackField => $loginInput, 'password' => $password], $remember);
+
+        if ($loggedIn) {
+            $request->session()->regenerate();
+            $user = Auth::user();
+
+            // If user has an administrative CMS role, setup project session and direct to CMS Admin
+            $adminRoles = ['cms', 'admin', 'dev', 'super_admin', 'superadmin', 'manager', 'web_admin', 'store_manager', 'multi_tenancy'];
+            $isAdmin = in_array($user->role, $adminRoles, true) || ($user->role !== 'user' && isset($user->level) && in_array((int) $user->level, [0, 1], true));
+
+            if ($isAdmin) {
+                $project = Project::where('code', 'ehenho')->first();
+                $tenantId = $user->tenant_id ?: ($project?->tenant_id ?? 7);
+
+                $request->session()->put('current_tenant_id', $tenantId);
+                $request->session()->put('project_user_id', $user->id);
+                $request->session()->put('project_user_username', $user->username ?: $user->name);
+                $request->session()->put('current_project', 'ehenho');
+                $request->session()->put('current_project_id', $project?->id ?? 15);
+
+                return redirect()->to('/ehenho/admin')->with('success', 'Đăng nhập trang quản trị eHenho thành công!');
+            }
+
+            // Normal dating member redirect
             $defaultRoute = ($request->routeIs('ehenho.domain.*') || $request->getHost() === 'ehenho.local')
                 ? (Route::has('ehenho.domain.account.my_profile') ? route('ehenho.domain.account.my_profile') : url('/tai-khoan'))
                 : (Route::has('ehenho.account.my_profile') ? route('ehenho.account.my_profile') : url('/ehenho/tai-khoan'));
 
-            return redirect()->intended($defaultRoute)->with('success', 'Đăng nhập thành công!');
+            return redirect()->to($defaultRoute)->with('success', 'Đăng nhập thành công!');
         }
 
         return back()->withErrors([
-            'email' => 'Địa chỉ email hoặc mật khẩu không chính xác.',
+            'email' => 'Địa chỉ email/tên đăng nhập hoặc mật khẩu không chính xác.',
         ])->onlyInput('email');
     }
 
-    public function showRegister(): View
+    public function showRegister(CaptchaService $captchaService): View
     {
         $provinces = Province::orderBy('name')->get();
+        $recaptchaSiteKey = $captchaService->isEnabled() ? $captchaService->getSiteKey() : null;
 
-        return view('themes.ehenho.pages.auth.register', compact('provinces'));
+        return view('themes.ehenho.pages.auth.register', compact('provinces', 'recaptchaSiteKey'));
     }
 
-    public function register(Request $request): RedirectResponse
+    public function register(Request $request, CaptchaService $captchaService): RedirectResponse
     {
+        // 1. Google reCAPTCHA Verification (server-side)
+        if ($captchaService->isEnabled()) {
+            $captchaToken = $request->input('g-recaptcha-response');
+            if (empty($captchaToken) || ! $captchaService->verify($captchaToken, $request->ip())) {
+                // Draft preservation without logging or persisting captcha token/secrets
+                $draft = $request->except(['password', 'password_confirmation', 'g-recaptcha-response', '_token']);
+                session(['registration_draft' => $draft]);
+
+                return back()
+                    ->withInput($draft)
+                    ->withErrors([
+                        'g-recaptcha-response' => 'Xác thực Google reCAPTCHA không thành công. Vui lòng xác thực lại.',
+                    ]);
+            }
+        }
+
         $validated = $request->validate([
             'email' => 'required|email|max:191|unique:users,email',
             'password' => 'required|string|min:6',
@@ -415,14 +477,6 @@ class AuthController extends Controller
             $age = 18;
         }
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role' => 'user',
-            'level' => 1,
-        ]);
-
         // Resolve province
         $provinceInput = (string) ($request->input('province') ?: $request->input('province_id', ''));
         $provinceId = null;
@@ -465,38 +519,74 @@ class AuthController extends Controller
         $drinking = self::DRINKING_MAP[$request->input('drinking2_0')] ?? $request->input('drinking2_0');
         $children = self::CHILDREN_MAP[$request->input('children2_0')] ?? $request->input('children2_0');
 
-        $profile = Profile::create([
-            'user_id' => $user->id,
-            'display_name' => $validated['name'],
-            'slug' => Str::slug($validated['name']).'-'.$user->id,
-            'headline' => $request->input('headline'),
-            'target_type' => $targetType,
-            'gender' => in_array($validated['gender'], ['male', 'female'], true) ? $validated['gender'] : 'female',
-            'birthday' => $birthday,
-            'age' => $age,
-            'province_id' => $provinceId,
-            'province_name' => $provinceName,
-            'district_name' => $request->input('district'),
-            'marital_status' => $maritalStatus,
-            'occupation' => $occupation,
-            'height' => $request->input('height') ? (string) $request->input('height') : null,
-            'weight' => $request->input('weight') ? (string) $request->input('weight') : null,
-            'education' => $education,
-            'body_type' => $appearance,
-            'about_me' => $request->input('i_am'),
-            'looking_for' => $request->input('my_match') ?: $targetType,
-            'interests' => $interest,
-            'personality' => $personality,
-            'lifestyle' => $wayOfLife,
-            'precious' => $mostValued,
-            'religion' => $religion,
-            'smoking' => $smoking,
-            'drinking' => $drinking,
-            'children' => $children,
-            'status' => 'active',
-            'is_online' => true,
-            'last_active_at' => now(),
-        ]);
+        // DB Transaction: atomicity for User and Profile creation
+        [$user, $profile] = DB::transaction(function () use (
+            $validated,
+            $birthday,
+            $age,
+            $provinceId,
+            $provinceName,
+            $targetType,
+            $maritalStatus,
+            $education,
+            $appearance,
+            $interest,
+            $personality,
+            $wayOfLife,
+            $mostValued,
+            $occupation,
+            $religion,
+            $smoking,
+            $drinking,
+            $children,
+            $request
+        ) {
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'role' => 'user',
+                'level' => 1,
+            ]);
+
+            $profile = Profile::create([
+                'user_id' => $user->id,
+                'display_name' => $validated['name'],
+                'slug' => Str::slug($validated['name']).'-'.$user->id,
+                'headline' => $request->input('headline'),
+                'target_type' => $targetType,
+                'gender' => in_array($validated['gender'], ['male', 'female'], true) ? $validated['gender'] : 'female',
+                'birthday' => $birthday,
+                'age' => $age,
+                'province_id' => $provinceId,
+                'province_name' => $provinceName,
+                'district_name' => $request->input('district'),
+                'marital_status' => $maritalStatus,
+                'occupation' => $occupation,
+                'height' => $request->input('height') ? (string) $request->input('height') : null,
+                'weight' => $request->input('weight') ? (string) $request->input('weight') : null,
+                'education' => $education,
+                'body_type' => $appearance,
+                'about_me' => $request->input('i_am'),
+                'looking_for' => $request->input('my_match') ?: $targetType,
+                'interests' => $interest,
+                'personality' => $personality,
+                'lifestyle' => $wayOfLife,
+                'precious' => $mostValued,
+                'religion' => $religion,
+                'smoking' => $smoking,
+                'drinking' => $drinking,
+                'children' => $children,
+                'status' => 'active',
+                'is_online' => true,
+                'last_active_at' => now(),
+            ]);
+
+            return [$user, $profile];
+        });
+
+        // Clear draft upon successful creation
+        session()->forget('registration_draft');
 
         Auth::login($user);
 

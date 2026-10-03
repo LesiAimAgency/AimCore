@@ -582,7 +582,7 @@ class DashboardController extends Controller
         $recentProfiles = Profile::latest()->take(6)->get();
 
         $totalPages = Post::withoutGlobalScopes()->where('post_type', 'page')->count();
-        $totalPosts = Post::withoutGlobalScopes()->where('post_type', 'post')->count();
+        $publishedPages = Post::withoutGlobalScopes()->where('post_type', 'page')->where('status', 'published')->count();
         $recentPages = Post::withoutGlobalScopes()->where('post_type', 'page')->latest()->take(5)->get();
 
         $totalConversations = Conversation::count();
@@ -595,7 +595,7 @@ class DashboardController extends Controller
             'newProfilesWeek' => $newProfilesWeek,
             'recentProfiles' => $recentProfiles,
             'totalPages' => $totalPages,
-            'totalPosts' => $totalPosts,
+            'publishedPages' => $publishedPages,
             'recentPages' => $recentPages,
             'totalConversations' => $totalConversations,
             'totalMessages' => $totalMessages,

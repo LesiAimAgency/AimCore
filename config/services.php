@@ -44,4 +44,10 @@ return [
         'fonts_api_key' => env('GOOGLE_FONTS_API_KEY'),
     ],
 
+    'recaptcha' => [
+        'enabled' => env('RECAPTCHA_ENABLED', false),
+        'site_key' => env('RECAPTCHA_SITE_KEY'),
+        'secret_key' => env('RECAPTCHA_SECRET_KEY'),
+    ],
+
 ];

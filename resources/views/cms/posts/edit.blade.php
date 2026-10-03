@@ -6,11 +6,11 @@
 @section('content')
 @php
     $actionUrl = isset($currentProject) 
-        ? route('project.admin.posts.update', ['projectCode' => $currentProject->code, 'post' => $post]) 
+        ? ($postType === 'page' ? route('project.admin.pages.update', ['projectCode' => $currentProject->code, 'post' => $post]) : route('project.admin.posts.update', ['projectCode' => $currentProject->code, 'post' => $post])) 
         : route('superadmin.posts.update', ['post' => $post]);
         
     $indexUrl = isset($currentProject) 
-        ? route('project.admin.posts.index', ['projectCode' => $currentProject->code, 'type' => $postType]) 
+        ? ($postType === 'page' ? route('project.admin.pages.index', ['projectCode' => $currentProject->code]) : route('project.admin.posts.index', ['projectCode' => $currentProject->code, 'type' => $postType])) 
         : route('superadmin.posts.index', ['type' => $postType]);
 @endphp
 

@@ -220,7 +220,6 @@
         </button>
         <div x-show="open==='system'" x-cloak x-collapse class="sub-menu">
             <a href="{{ locale_route('admin.seo.index') }}" class="sub-item {{ request()->routeIs('*.seo.*') || request()->is('*/admin/settings/seo') ? 'active' : '' }}"><span class="dot"></span> SEO</a>
-            <a href="{{ locale_route('admin.logs.index') }}" class="sub-item {{ request()->routeIs('*.logs.*') || request()->is('*/admin/settings/logs') ? 'active' : '' }}"><span class="dot"></span> Logs</a>
             <a href="{{ locale_route('admin.spam.dashboard') }}" class="sub-item {{ request()->routeIs('*.spam.*') ? 'active' : '' }}"><span class="dot"></span> Anti-Spam</a>
         </div>
         @if(!method_exists($authUser ?? new \stdClass, 'canAccess') || ($authUser?->canAccess('users') ?? true))

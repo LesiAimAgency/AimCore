@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CodeWidgetController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\Ehenho\AdminProfileController;
+use App\Http\Controllers\Admin\Ehenho\AdminThemeSettingController;
 use App\Http\Controllers\Admin\FontController;
 use App\Http\Controllers\Admin\FormSubmissionController;
 use App\Http\Controllers\Admin\MediaController;
@@ -170,6 +171,18 @@ Route::prefix('{projectCode}/admin')
             Route::post('profiles/{id}/toggle-status', [AdminProfileController::class, 'toggleStatus'])->name('profiles.toggle-status');
             Route::delete('profiles/{id}', [AdminProfileController::class, 'destroy'])->name('profiles.destroy');
             Route::get('interactions', [AdminProfileController::class, 'interactions'])->name('interactions.index');
+
+            // Theme Appearance, Colors & Logo
+            Route::get('theme/appearance', [AdminThemeSettingController::class, 'appearance'])->name('theme.appearance');
+            Route::post('theme/appearance', [AdminThemeSettingController::class, 'updateAppearance'])->name('theme.appearance.update');
+
+            // Header Management
+            Route::get('theme/header', [AdminThemeSettingController::class, 'header'])->name('theme.header');
+            Route::post('theme/header', [AdminThemeSettingController::class, 'updateHeader'])->name('theme.header.update');
+
+            // Slider & Widgets Management
+            Route::get('theme/widgets', [AdminThemeSettingController::class, 'widgets'])->name('theme.widgets');
+            Route::post('theme/widgets', [AdminThemeSettingController::class, 'updateWidgets'])->name('theme.widgets.update');
         });
 
         // Products Management
@@ -203,8 +216,9 @@ Route::prefix('{projectCode}/admin')
         // Pages Management (Trang tĩnh)
         Route::patch('pages/{post}/restore', [App\Http\Controllers\Admin\PostController::class, 'restore'])->name('pages.restore');
         Route::delete('pages/{post}/force-delete', [App\Http\Controllers\Admin\PostController::class, 'forceDelete'])->name('pages.force-delete');
-        Route::get('pages', [App\Http\Controllers\Admin\PostController::class, 'index'])->name('pages.index')->defaults('post_type', 'page');
-        Route::get('pages/create', [App\Http\Controllers\Admin\PostController::class, 'create'])->name('pages.create')->defaults('type', 'page');
+        Route::get('pages', [App\Http\Controllers\Admin\PostController::class, 'index'])->name('pages.index')->defaults('post_type', 'page')->defaults('type', 'page');
+        Route::post('pages', [App\Http\Controllers\Admin\PostController::class, 'store'])->name('pages.store')->defaults('post_type', 'page')->defaults('type', 'page');
+        Route::get('pages/create', [App\Http\Controllers\Admin\PostController::class, 'create'])->name('pages.create')->defaults('type', 'page')->defaults('post_type', 'page');
         Route::get('pages/{post}', [App\Http\Controllers\Admin\PostController::class, 'show'])->name('pages.show');
         Route::get('pages/{post}/edit', [App\Http\Controllers\Admin\PostController::class, 'edit'])->name('pages.edit');
         Route::put('pages/{post}', [App\Http\Controllers\Admin\PostController::class, 'update'])->name('pages.update');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Themes\Ehenho\AccountController;
 use App\Http\Controllers\Themes\Ehenho\AuthController;
+use App\Http\Controllers\Themes\Ehenho\ChatAllController;
 use App\Http\Controllers\Themes\Ehenho\HomeController;
 use App\Http\Controllers\Themes\Ehenho\MessageController;
 use App\Http\Controllers\Themes\Ehenho\PageController;
@@ -24,10 +25,14 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // --- 2. Static Informational Pages ---
 Route::get('/gioi-thieu', [PageController::class, 'about'])->name('about');
-Route::get('/tro-giup', [PageController::class, 'about'])->name('help');
+Route::get('/tro-giup', [PageController::class, 'help'])->name('help');
 Route::get('/dieu-khoan-su-dung', [PageController::class, 'terms'])->name('terms');
 Route::get('/chinh-sach-bao-mat', [PageController::class, 'privacy'])->name('privacy');
 Route::get('/chinh-sach-rieng-tu', [PageController::class, 'privacy'])->name('privacy_policy');
+Route::get('/an-toan-hen-ho', fn () => app(PageController::class)->show('an-toan-hen-ho'))->name('safety');
+Route::get('/cau-hoi-thuong-gap', fn () => app(PageController::class)->show('cau-hoi-thuong-gap'))->name('faq');
+Route::get('/lien-he', fn () => app(PageController::class)->show('lien-he'))->name('contact');
+Route::get('/trang/{slug}', [PageController::class, 'show'])->name('page.show');
 
 // --- 3. Search & Discovery ---
 Route::get('/tim-kiem', [SearchController::class, 'index'])->name('search.index');
@@ -92,9 +97,6 @@ Route::get('/ket-ban/{id}', [ProfileController::class, 'show'])->name('profile.k
 Route::get('/dang-nhap', [AuthController::class, 'showLogin'])->name('login');
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login.en');
 Route::post('/login', [AuthController::class, 'login'])->name('login.en.submit');
-Route::get('/admin', function () {
-    return redirect('/ehenho/login');
-})->name('admin.entry');
 Route::get('/accounts/login', [AuthController::class, 'showLogin'])->name('login.alias');
 Route::post('/dang-nhap', [AuthController::class, 'login'])->name('login.submit');
 Route::post('/accounts/login', [AuthController::class, 'login'])->name('login.submit.alias');
@@ -140,4 +142,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/da-luu', [SocialController::class, 'bookmarks'])->name('social.bookmarks');
     Route::get('/da-chan', [SocialController::class, 'blocked'])->name('social.blocked');
     Route::post('/tuong-tac/toggle', [SocialController::class, 'toggle'])->name('social.toggle');
+
+    // Chat All Community Room (Authenticated Only)
+    Route::get('/chat-all/messages', [ChatAllController::class, 'messages'])->name('chat_all.messages');
+    Route::post('/chat-all/messages', [ChatAllController::class, 'store'])->name('chat_all.store');
+    Route::post('/chat-all/upload', [ChatAllController::class, 'uploadAttachment'])->name('chat_all.upload');
+    Route::get('/chat-all/poll', [ChatAllController::class, 'poll'])->name('chat_all.poll');
+    Route::post('/chat-all/read', [ChatAllController::class, 'markAsRead'])->name('chat_all.read');
 });

@@ -9,225 +9,257 @@
     if ($authUser && ! auth()->check()) {
         \Illuminate\Support\Facades\Auth::setUser($authUser);
     }
-    $initial = strtoupper(substr($authUser?->name ?? 'Admin', 0, 1));
+    $initial = strtoupper(substr($authUser?->name ?? 'A', 0, 1));
 
-    $inDashboard = request()->routeIs('project.admin.dashboard');
-    $inProfiles = request()->routeIs('project.admin.ehenho.profiles.*');
-    $inPages = request()->routeIs('project.admin.pages.*');
-    $inPosts = request()->routeIs('project.admin.posts.*');
-    $inInteractions = request()->routeIs('project.admin.ehenho.interactions.*');
-    $inSettings = request()->routeIs('project.admin.settings.*') || request()->routeIs('project.admin.website-config.*');
+    $inProfiles = request()->routeIs('project.admin.ehenho.profiles.*') || request()->routeIs('project.admin.ehenho.interactions.*');
+    $inContent  = request()->routeIs('project.admin.posts.*') || request()->routeIs('project.admin.pages.*');
+    $inMedia    = request()->routeIs('project.admin.ehenho.theme.*') || request()->routeIs('project.admin.settings.appearance') || request()->routeIs('project.admin.widgets.*') || request()->routeIs('project.admin.media.*');
 @endphp
 
 @once
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
-    /* ── EHENHO DATING SIDEBAR ── */
+    /* ── EHENHO STANDARD CMS SIDEBAR ── */
     #sidebar.eh-sidebar {
         width: 250px !important;
         min-width: 250px !important;
         max-width: 250px !important;
         height: 100% !important;
-        background: #001235 !important;
+        background: #0f172a !important;
         display: flex !important;
         flex-direction: column !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
         flex-shrink: 0 !important;
         z-index: 40;
-        border-right: 1px solid rgba(255,255,255,.07);
+        border-right: 1px solid rgba(255,255,255,.05);
         color: #94a3b8;
     }
     #sidebar.eh-sidebar::-webkit-scrollbar { width: 3px; }
-    #sidebar.eh-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); }
-
+    #sidebar.eh-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.06); }
     .eh-sidebar .sb-logo {
         padding: 16px 14px;
         display: flex;
         align-items: center;
         gap: 10px;
-        border-bottom: 1px solid rgba(255,255,255,.07);
-        background: #000d26;
+        border-bottom: 1px solid rgba(255,255,255,.05);
     }
     .eh-sidebar .sb-logo-icon {
-        width: 36px; height: 36px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #e11d48, #ec4899);
+        width: 34px; height: 34px;
+        border-radius: 9px;
+        background: #2563eb;
         display: flex; align-items: center; justify-content: center;
         flex-shrink: 0;
-        box-shadow: 0 4px 10px rgba(225, 29, 72, 0.3);
     }
-    .eh-sidebar .sb-logo-icon i { color: #fff; font-size: 16px; }
-    .eh-sidebar .sb-logo-text p { font-size: 14px; font-weight: 700; color: #fff; margin: 0; line-height: 1.2; letter-spacing: -0.01em; }
-    .eh-sidebar .sb-logo-text span { font-size: 10px; color: #fda4af; font-weight: 500; display: block; margin-top: 1px; }
+    .eh-sidebar .sb-logo-icon i { color: #fff; font-size: 14px; }
+    .eh-sidebar .sb-logo-text p { font-size: 13px; font-weight: 700; color: #fff; margin: 0; line-height: 1.2; }
+    .eh-sidebar .sb-logo-text span { font-size: 10px; color: #475569; font-weight: 500; display: block; margin-top: 1px; }
 
     .eh-sidebar .nav-label {
-        padding: 16px 14px 6px;
-        font-size: 10px;
+        padding: 14px 14px 4px;
+        font-size: 9px;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: .08em;
-        color: #64748b;
+        color: #334155;
         margin: 0;
     }
     .eh-sidebar .nav-item {
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 9px 14px;
+        gap: 9px;
+        padding: 8px 14px;
         font-size: 13px;
         font-weight: 500;
-        color: #94a3b8;
+        color: #64748b;
         cursor: pointer;
-        transition: all .15s ease;
+        transition: color .15s, background .15s;
         border: none;
         width: 100%;
         text-align: left;
         text-decoration: none;
         background: transparent;
         box-sizing: border-box;
-        border-left: 3px solid transparent;
     }
-    .eh-sidebar .nav-item:hover {
-        color: #fff;
-        background: rgba(255,255,255,.04);
-        border-left-color: #f43f5e;
-    }
-    .eh-sidebar .nav-item.active {
-        color: #fff;
-        background: rgba(225, 29, 72, 0.12);
-        border-left-color: #e11d48;
-        font-weight: 600;
-    }
-    .eh-sidebar .nav-item.active .nav-icon {
-        background: #e11d48;
-        color: #fff;
-        box-shadow: 0 2px 6px rgba(225, 29, 72, 0.4);
-    }
+    .eh-sidebar .nav-item:hover { color: #cbd5e1; }
+    .eh-sidebar .nav-item.active { color: #fff; background: rgba(255,255,255,.04); }
+    .eh-sidebar .nav-item.active .nav-icon { background: #2563eb; color: #fff; }
     .eh-sidebar .nav-icon {
-        width: 30px; height: 30px;
-        border-radius: 8px;
+        width: 28px; height: 28px;
+        border-radius: 7px;
         display: flex; align-items: center; justify-content: center;
         flex-shrink: 0;
-        font-size: 13px;
-        background: rgba(255,255,255,.06);
-        color: #94a3b8;
-        transition: all .15s ease;
+        font-size: 12px;
+        background: rgba(255,255,255,.04);
+        color: #475569;
+        transition: all .15s;
     }
-    .eh-sidebar .nav-item:hover .nav-icon {
-        background: rgba(255,255,255,.1);
-        color: #fff;
+    .eh-sidebar .nav-item:hover .nav-icon { background: rgba(255,255,255,.07); color: #94a3b8; }
+    .eh-sidebar .sub-menu { padding: 2px 0; }
+    .eh-sidebar .sub-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 14px 7px 50px;
+        font-size: 12.5px;
+        font-weight: 400;
+        color: #475569;
+        text-decoration: none;
+        transition: color .15s;
     }
+    .eh-sidebar .sub-item:hover { color: #94a3b8; }
+    .eh-sidebar .sub-item.active { color: #e2e8f0; font-weight: 600; }
+    .eh-sidebar .sub-item .dot {
+        width: 4px; height: 4px;
+        border-radius: 50%;
+        background: #334155;
+        flex-shrink: 0;
+    }
+    .eh-sidebar .sub-item.active .dot { background: #3b82f6; }
+
     .eh-sidebar .badge-pill {
         margin-left: auto;
         font-size: 10px;
         font-weight: 600;
-        padding: 2px 7px;
+        padding: 1px 6px;
         border-radius: 999px;
-        background: rgba(225, 29, 72, 0.2);
-        color: #fb7185;
-    }
-    .eh-sidebar .sb-footer {
-        margin-top: auto;
-        padding: 14px;
-        border-top: 1px solid rgba(255,255,255,.07);
-        background: #000d26;
+        background: #2563eb;
+        color: #ffffff;
     }
 </style>
 @endonce
 
-<div id="sidebar" class="eh-sidebar">
-    <!-- Brand / Logo -->
+<aside id="sidebar" class="eh-sidebar custom-scroll" x-data="{ open: '{{ $inProfiles ? 'profiles' : ($inContent ? 'content' : ($inMedia ? 'appearance' : '')) }}' }">
+    <!-- Brand / Logo Header -->
     <div class="sb-logo">
         <div class="sb-logo-icon">
             <i class="fa-solid fa-heart"></i>
         </div>
-        <div class="sb-logo-text">
-            <p>eHenho CMS</p>
-            <span>Hẹn hò & Tìm bạn</span>
+        <div class="sb-logo-text flex-1">
+            <p>eHenho Dating</p>
+            <span>Admin Panel</span>
         </div>
+        <button type="button" onclick="toggleAdminSidebar(false)" class="lg:hidden p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition" title="Đóng menu">
+            <i class="fa-solid fa-xmark text-base"></i>
+        </button>
     </div>
 
     <!-- Navigation List -->
-    <div class="flex-1 py-2">
+    <nav class="flex-1 py-2">
         <!-- 1. TỔNG QUAN -->
-        <p class="nav-label">Trung tâm điều hành</p>
-        <a href="{{ route('project.admin.dashboard', $projectCode) }}" class="nav-item {{ $inDashboard ? 'active' : '' }}">
-            <div class="nav-icon"><i class="fa-solid fa-chart-pie"></i></div>
-            <span>Tổng quan (Dashboard)</span>
+        <p class="nav-label">Tổng quan</p>
+        <a href="{{ route('project.admin.dashboard', $projectCode) }}" class="nav-item {{ request()->routeIs('project.admin.dashboard') ? 'active' : '' }}">
+            <span class="nav-icon"><i class="fa-solid fa-gauge"></i></span>
+            <span>Dashboard</span>
         </a>
 
-        <!-- 2. HỒ SƠ THÀNH VIÊN -->
-        <p class="nav-label">Thành viên & Kết bạn</p>
-        <a href="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="nav-item {{ $inProfiles ? 'active' : '' }}">
-            <div class="nav-icon"><i class="fa-solid fa-users"></i></div>
-            <span>Hồ sơ Hẹn hò</span>
+        <!-- 2. THÀNH VIÊN & HỒ SƠ -->
+        <p class="nav-label">Thành viên</p>
+        <button @click="open = open === 'profiles' ? '' : 'profiles'" class="nav-item {{ $inProfiles ? 'active' : '' }}" type="button">
+            <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+            <span class="flex-1">Hồ sơ Dating</span>
             @php
                 $profileCount = \App\Models\Ehenho\Profile::count();
             @endphp
             @if($profileCount > 0)
-                <span class="badge-pill">{{ $profileCount }}</span>
+                <span class="badge-pill mr-1">{{ $profileCount }}</span>
             @endif
+            <i class="fa-solid fa-chevron-down text-[10px] transition-transform" :class="open==='profiles' ? 'rotate-180' : ''"></i>
+        </button>
+        <div x-show="open==='profiles'" x-cloak x-collapse class="sub-menu">
+            <a href="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.ehenho.profiles.*') ? 'active' : '' }}">
+                <span class="dot"></span>
+                <span>Danh sách hồ sơ</span>
+            </a>
+            <a href="{{ route('project.admin.ehenho.interactions.index', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.ehenho.interactions.*') ? 'active' : '' }}">
+                <span class="dot"></span>
+                <span>Tương tác & Tin nhắn</span>
+            </a>
+        </div>
+
+        <!-- 3. NỘI DUNG -->
+        <p class="nav-label">Nội dung</p>
+        <button @click="open = open === 'content' ? '' : 'content'" class="nav-item {{ $inContent ? 'active' : '' }}" type="button">
+            <span class="nav-icon"><i class="fa-solid fa-pen-nib"></i></span>
+            <span class="flex-1">Bài viết & Trang</span>
+            <i class="fa-solid fa-chevron-down text-[10px] transition-transform" :class="open==='content' ? 'rotate-180' : ''"></i>
+        </button>
+        <div x-show="open==='content'" x-cloak x-collapse class="sub-menu">
+            <a href="{{ route('project.admin.posts.index', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.posts.index') ? 'active' : '' }}">
+                <span class="dot"></span>
+                <span>Cẩm nang hẹn hò</span>
+            </a>
+            <a href="{{ route('project.admin.posts.create', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.posts.create') ? 'active' : '' }}">
+                <span class="dot"></span>
+                <span>Viết bài mới</span>
+            </a>
+            <a href="{{ route('project.admin.pages.index', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.pages.index') ? 'active' : '' }}">
+                <span class="dot"></span>
+                <span>Trang tĩnh (Pages)</span>
+            </a>
+            <a href="{{ route('project.admin.pages.create', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.pages.create') ? 'active' : '' }}">
+                <span class="dot"></span>
+                <span>Thêm trang mới</span>
+            </a>
+        </div>
+
+        <!-- 4. GIAO DIỆN & SLIDER -->
+        <p class="nav-label">Giao diện</p>
+        <button @click="open = open === 'appearance' ? '' : 'appearance'" class="nav-item {{ $inMedia ? 'active' : '' }}" type="button">
+            <span class="nav-icon"><i class="fa-solid fa-swatchbook"></i></span>
+            <span class="flex-1">Giao diện & Media</span>
+            <i class="fa-solid fa-chevron-down text-[10px] transition-transform" :class="open==='appearance' ? 'rotate-180' : ''"></i>
+        </button>
+        <div x-show="open==='appearance'" x-cloak x-collapse class="sub-menu">
+            <a href="{{ route('project.admin.settings.appearance', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.settings.appearance') || request()->routeIs('project.admin.ehenho.theme.appearance') ? 'active' : '' }}">
+                <span class="dot"></span>
+                <span>Cấu hình UX (Giao diện)</span>
+            </a>
+            <a href="{{ route('project.admin.ehenho.theme.header', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.ehenho.theme.header') ? 'active' : '' }}">
+                <span class="dot"></span>
+                <span>Quản lý Header</span>
+            </a>
+            <a href="{{ route('project.admin.ehenho.theme.widgets', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.ehenho.theme.widgets') ? 'active' : '' }}">
+                <span class="dot"></span>
+                <span>Slider Hero & Widgets</span>
+            </a>
+            <a href="{{ route('project.admin.media.list', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.media.*') ? 'active' : '' }}">
+                <span class="dot"></span>
+                <span>Media Library</span>
+            </a>
+        </div>
+
+        <!-- 5. HỆ THỐNG -->
+        <p class="nav-label">Hệ thống</p>
+        <a href="{{ route('project.admin.settings.seo', $projectCode) }}" class="nav-item {{ request()->routeIs('project.admin.settings.seo') ? 'active' : '' }}">
+            <span class="nav-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></span>
+            <span>Cấu hình SEO</span>
         </a>
 
-        <a href="{{ route('project.admin.ehenho.interactions.index', $projectCode) }}" class="nav-item {{ $inInteractions ? 'active' : '' }}">
-            <div class="nav-icon"><i class="fa-solid fa-heart-pulse"></i></div>
-            <span>Tương tác & Tin nhắn</span>
-        </a>
-
-        <!-- 3. QUẢN LÝ NỘI DUNG -->
-        <p class="nav-label">Nội dung Trang & Bài viết</p>
-        <a href="{{ route('project.admin.pages.index', $projectCode) }}" class="nav-item {{ $inPages ? 'active' : '' }}">
-            <div class="nav-icon"><i class="fa-solid fa-file-lines"></i></div>
-            <span>Trang tĩnh (Pages)</span>
-        </a>
-
-        <a href="{{ route('project.admin.pages.create', $projectCode) }}" class="nav-item text-xs pl-12 text-slate-400 hover:text-white">
-            <i class="fa-solid fa-plus mr-2 text-[10px]"></i>
-            <span>Thêm trang mới</span>
-        </a>
-
-        <a href="{{ route('project.admin.posts.index', $projectCode) }}" class="nav-item {{ $inPosts ? 'active' : '' }}">
-            <div class="nav-icon"><i class="fa-solid fa-newspaper"></i></div>
-            <span>Cẩm nang hẹn hò</span>
-        </a>
-
-        <a href="{{ route('project.admin.posts.create', $projectCode) }}" class="nav-item text-xs pl-12 text-slate-400 hover:text-white">
-            <i class="fa-solid fa-pen-nib mr-2 text-[10px]"></i>
-            <span>Viết bài mới</span>
-        </a>
-
-        <!-- 4. HỆ THỐNG -->
-        <p class="nav-label">Cài đặt Website</p>
-        <a href="{{ route('project.admin.settings.index', $projectCode) }}" class="nav-item {{ $inSettings ? 'active' : '' }}">
-            <div class="nav-icon"><i class="fa-solid fa-sliders"></i></div>
-            <span>Cấu hình Website</span>
-        </a>
-
-        <a href="{{ url('/' . $projectCode) }}" target="_blank" class="nav-item text-slate-400 hover:text-rose-400">
-            <div class="nav-icon"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+        <a href="{{ url('/' . $projectCode) }}" target="_blank" class="nav-item text-slate-400 hover:text-white">
+            <span class="nav-icon"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
             <span>Xem Website Client</span>
         </a>
-    </div>
+    </nav>
 
-    <!-- Sidebar Footer -->
-    <div class="sb-footer">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2 overflow-hidden">
-                <div class="w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
-                    {{ $initial }}
-                </div>
-                <div class="truncate">
-                    <p class="text-xs font-semibold text-white truncate m-0 leading-tight">{{ $authUser->name ?? 'CMS Admin' }}</p>
-                    <span class="text-[10px] text-slate-400 block">Quản trị viên eHenho</span>
-                </div>
+    <!-- User Profile Footer -->
+    <div style="padding:12px;border-top:1px solid rgba(255,255,255,.05);">
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);padding:10px 12px;border-radius:10px;">
+            <div style="width:32px;height:32px;border-radius:8px;background:#2563eb;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px;flex-shrink:0;">
+                {{ $initial }}
             </div>
-            <form method="POST" action="{{ route('project.logout', $projectCode) }}">
+            <div style="flex:1;min-width:0;">
+                <p style="font-size:12.5px;font-weight:600;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0;">{{ $authUser?->name ?? 'Admin' }}</p>
+                <p style="font-size:10px;color:#475569;margin-top:1px;margin-bottom:0;">Quản trị viên eHenho</p>
+            </div>
+            <form action="{{ route('project.logout', $projectCode) }}" method="POST" style="margin:0;">
                 @csrf
-                <button type="submit" title="Đăng xuất" class="p-2 text-slate-400 hover:text-rose-400 transition-colors">
-                    <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                <button type="submit" title="Đăng xuất" style="width:28px;height:28px;border-radius:7px;background:rgba(239,68,68,.1);color:#f87171;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;"
+                    onmouseover="this.style.background='#ef4444';this.style.color='#fff'"
+                    onmouseout="this.style.background='rgba(239,68,68,.1)';this.style.color='#f87171'">
+                    <i class="fa-solid fa-right-from-bracket" style="font-size:11px;"></i>
                 </button>
             </form>
         </div>
     </div>
-</div>
+</aside>

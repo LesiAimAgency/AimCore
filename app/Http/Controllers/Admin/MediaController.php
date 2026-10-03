@@ -41,11 +41,11 @@ class MediaController extends Controller
     public function list(Request $request)
     {
         $basePath = $this->getMediaPath($request);
+        $projectCode = $request->route('projectCode');
         $path = $request->get('path', '');
         $path = ltrim(str_replace('\\', '/', $path), '/');
 
         $fullPath = $path ? $basePath.'/'.$path : $basePath;
-        $sharedFullPath = $path ? 'media/'.$path : 'media';
 
         // Ensure base directory exists
         if (! Storage::disk('public')->exists($basePath)) {
@@ -55,19 +55,25 @@ class MediaController extends Controller
         // Get folders: collect from project directory
         $dirList = collect(Storage::disk('public')->exists($fullPath) ? Storage::disk('public')->directories($fullPath) : []);
 
-        // Also include shared media folders if root or shared folder exists
-        if ($path === '' || Storage::disk('public')->exists($sharedFullPath)) {
-            $sharedDirs = collect(Storage::disk('public')->directories($sharedFullPath))
-                ->reject(function ($dir) {
-                    $base = basename($dir);
+        // Only include shared media folders if in global CMS admin (no specific project)
+        if (! $projectCode) {
+            $sharedFullPath = $path ? 'media/'.$path : 'media';
+            if ($path === '' || Storage::disk('public')->exists($sharedFullPath)) {
+                $sharedDirs = collect(Storage::disk('public')->directories($sharedFullPath))
+                    ->reject(function ($dir) {
+                        $base = basename($dir);
 
-                    return str_starts_with($base, 'project-') || str_starts_with($base, 'tenant-');
-                });
-            $dirList = $dirList->merge($sharedDirs);
+                        return str_starts_with($base, 'project-') || str_starts_with($base, 'tenant-');
+                    });
+                $dirList = $dirList->merge($sharedDirs);
+            }
         }
 
         $folders = $dirList->map(function ($dir) use ($basePath) {
-            $relPath = str_replace([$basePath.'/', 'media/'], '', $dir);
+            $relPath = ltrim(substr($dir, strlen($basePath)), '/');
+            if (! $relPath) {
+                $relPath = basename($dir);
+            }
 
             return [
                 'name' => basename($dir),
@@ -78,10 +84,13 @@ class MediaController extends Controller
         // Get files: collect from project directory
         $fileList = collect(Storage::disk('public')->exists($fullPath) ? Storage::disk('public')->files($fullPath) : []);
 
-        // Also include shared media files if root or shared folder exists
-        if ($path === '' || Storage::disk('public')->exists($sharedFullPath)) {
-            $sharedFiles = collect(Storage::disk('public')->files($sharedFullPath));
-            $fileList = $fileList->merge($sharedFiles);
+        // Only include shared media files if in global CMS admin (no specific project)
+        if (! $projectCode) {
+            $sharedFullPath = $path ? 'media/'.$path : 'media';
+            if ($path === '' || Storage::disk('public')->exists($sharedFullPath)) {
+                $sharedFiles = collect(Storage::disk('public')->files($sharedFullPath));
+                $fileList = $fileList->merge($sharedFiles);
+            }
         }
 
         $media = $fileList->filter(function ($file) {
@@ -92,7 +101,7 @@ class MediaController extends Controller
             return [
                 'id' => $file,
                 'name' => basename($file),
-                'url' => asset(Storage::url($file)),
+                'url' => Storage::disk('public')->url($file),
                 'path' => $file,
             ];
         })->values();

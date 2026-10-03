@@ -1,101 +1,491 @@
 @extends('cms.layouts.app')
 
-@section('title', 'Chỉnh sửa Hồ sơ Hẹn hò - eHenho')
-@section('page-title', 'Chỉnh Sửa Hồ Sơ: ' . $profile->display_name)
+@section('title', 'Chỉnh sửa Hồ sơ Hẹn hò: ' . $profile->display_name . ' - eHenho')
+@section('page-title', 'Chỉnh Sửa Hồ Sơ Hẹn Hò: ' . $profile->display_name)
 
 @push('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 @endpush
 
 @section('content')
-<div class="p-6 max-w-4xl mx-auto space-y-6">
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-        <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
-            <div class="flex items-center gap-4">
-                @if($profile->avatar)
-                    <img src="{{ $profile->avatar }}" alt="{{ $profile->display_name }}" class="w-14 h-14 rounded-full object-cover border-2 border-rose-500 shadow-md">
-                @else
-                    <div class="w-14 h-14 rounded-full bg-rose-100 text-rose-600 font-bold flex items-center justify-center text-xl">
-                        {{ strtoupper(substr($profile->display_name ?? 'U', 0, 1)) }}
+<div class="p-4 sm:p-6 max-w-7xl mx-auto space-y-6">
+
+    {{-- Thông báo thành công --}}
+    @if(session('success'))
+    <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>
+            <span class="text-xs font-semibold">{{ session('success') }}</span>
+        </div>
+        <button type="button" onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 text-sm">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    @endif
+
+    {{-- Lỗi validation --}}
+    @if($errors->any())
+    <div class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-xl shadow-sm">
+        <div class="flex items-center gap-2 mb-2 font-bold text-xs text-red-700">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Vui lòng kiểm tra lại các mục sau:</span>
+        </div>
+        <ul class="list-disc list-inside text-xs space-y-1 text-red-600">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
+    <form method="POST" action="{{ route('project.admin.ehenho.profiles.update', ['projectCode' => $projectCode, 'id' => $profile->id]) }}" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+
+        <!-- Sticky Header Bar -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-5 mb-6 sticky top-4 z-20">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    @if($profile->avatar)
+                        <img src="{{ $profile->avatar }}" alt="{{ $profile->display_name }}" class="w-12 h-12 rounded-full object-cover border-2 border-blue-500 shadow-sm">
+                    @else
+                        <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 font-bold flex items-center justify-center text-lg shadow-sm">
+                            {{ strtoupper(substr($profile->display_name ?? 'U', 0, 1)) }}
+                        </div>
+                    @endif
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-base font-bold text-slate-900 m-0">{{ $profile->display_name }}</h2>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold {{ $profile->status === 'blocked' ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700' }}">
+                                {{ $profile->status === 'blocked' ? 'Đã khóa' : ($profile->status === 'pending' ? 'Chờ duyệt' : 'Hoạt động') }}
+                            </span>
+                            @if($profile->is_featured)
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700">
+                                    <i class="fa-solid fa-star text-[9px] mr-0.5"></i> Nổi bật
+                                </span>
+                            @endif
+                        </div>
+                        <p class="text-xs text-slate-400 font-mono m-0">ID: #{{ $profile->id }} &bull; Slug: {{ $profile->slug }} &bull; {{ $profile->location_text }}</p>
                     </div>
-                @endif
-                <div>
-                    <h3 class="text-base font-bold text-slate-900 m-0">{{ $profile->display_name }}</h3>
-                    <p class="text-xs text-slate-400 font-mono m-0">Slug: {{ $profile->slug }}</p>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <a href="{{ url('/ehenho/ho-so/' . ($profile->slug ?: $profile->id)) }}" target="_blank" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold inline-flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+                        <span>Xem ngoài web</span>
+                    </a>
+                    <a href="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="px-3 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs font-semibold transition">
+                        Quay lại danh sách
+                    </a>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition shadow-sm inline-flex items-center gap-1.5">
+                        <i class="fa-solid fa-floppy-disk text-xs"></i>
+                        <span>Lưu thay đổi</span>
+                    </button>
                 </div>
             </div>
-            <a href="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">
-                &larr; Quay lại danh sách
-            </a>
         </div>
 
-        <form method="POST" action="{{ route('project.admin.ehenho.profiles.update', ['projectCode' => $projectCode, 'id' => $profile->id]) }}" class="space-y-5">
-            @csrf
-            @method('PUT')
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Tên hiển thị *</label>
-                    <input type="text" name="display_name" value="{{ old('display_name', $profile->display_name) }}" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
+            <!-- CỘT TRÁI (2/3): DỮ LIỆU CHI TIẾT -->
+            <div class="lg:col-span-2 space-y-6">
+
+                <!-- 1. Thông tin hiển thị & Tiêu đề -->
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
+                    <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+                        <i class="fa-solid fa-id-card text-blue-600 text-sm"></i>
+                        <h3 class="text-sm font-bold text-slate-900 m-0">1. Thông Tin Hiển Thị & Tiêu Đề</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Tên hiển thị (Display Name) <span class="text-red-500">*</span></label>
+                            <input type="text" name="display_name" value="{{ old('display_name', $profile->display_name) }}" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Marcus Nguyen, Kevin Dang...">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Slug URL</label>
+                            <input type="text" name="slug" value="{{ old('slug', $profile->slug) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Để trống hệ thống sẽ tự sinh slug">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Tiêu đề lớn / Mục tiêu tìm kiếm (Target Type)
+                            <span class="text-slate-400 font-normal">(Hiển thị chữ đỏ lớn trên trang hồ sơ)</span>
+                        </label>
+                        <input type="text" name="target_type" list="target_type_list" value="{{ old('target_type', $profile->target_type) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none font-semibold text-red-600" placeholder="VD: Tìm bạn trăm năm, Tìm người yêu lâu dài, Nam tìm nữ...">
+                        <datalist id="target_type_list">
+                            <option value="Tìm bạn trăm năm">
+                            <option value="Tìm người yêu lâu dài">
+                            <option value="Tìm bạn đời nghiêm túc">
+                            <option value="Nam tìm nữ">
+                            <option value="Nữ tìm nam">
+                            <option value="Tìm bạn tâm sự">
+                            <option value="Kết bạn bốn phương">
+                        </datalist>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Tiêu đề hồ sơ / Trích dẫn (Headline)
+                            <span class="text-slate-400 font-normal">(Hiển thị trong danh sách và trích dẫn cạnh tên)</span>
+                        </label>
+                        <input type="text" name="headline" value="{{ old('headline', $profile->headline) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Tìm bạn trăm năm - Bạn nữ chân thật, chịu khó và biết chăm lo tổ ấm.">
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Tuổi *</label>
-                    <input type="number" name="age" value="{{ old('age', $profile->age) }}" min="18" max="99" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                <!-- 2. Thông tin cơ bản & Nhân thân -->
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
+                    <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+                        <i class="fa-solid fa-user text-blue-600 text-sm"></i>
+                        <h3 class="text-sm font-bold text-slate-900 m-0">2. Thông Tin Cơ Bản & Nhân Thân</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Giới tính <span class="text-red-500">*</span></label>
+                            <select name="gender" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <option value="male" {{ old('gender', $profile->gender) === 'male' ? 'selected' : '' }}>Nam</option>
+                                <option value="female" {{ old('gender', $profile->gender) === 'female' ? 'selected' : '' }}>Nữ</option>
+                                <option value="other" {{ old('gender', $profile->gender) === 'other' ? 'selected' : '' }}>Khác</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Tuổi <span class="text-red-500">*</span></label>
+                            <input type="number" name="age" value="{{ old('age', $profile->age) }}" min="18" max="99" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Ngày sinh</label>
+                            <input type="date" name="birthday" value="{{ old('birthday', $profile->birthday ? $profile->birthday->format('Y-m-d') : '') }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Tình trạng hôn nhân</label>
+                            <input type="text" name="marital_status" list="marital_status_list" value="{{ old('marital_status', $profile->marital_status) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Độc thân, Ly dị, Đã ly hôn, Góa...">
+                            <datalist id="marital_status_list">
+                                <option value="Độc thân">
+                                <option value="Ly dị">
+                                <option value="Đã ly hôn">
+                                <option value="Góa">
+                                <option value="Đang ly thân">
+                                <option value="Đã kết hôn">
+                            </datalist>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Con cái</label>
+                            <input type="text" name="children" list="children_list" value="{{ old('children', $profile->children) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Đã có 1 con, Chưa có, Đã có 2 con...">
+                            <datalist id="children_list">
+                                <option value="Chưa có">
+                                <option value="Đã có 1 con">
+                                <option value="Đã có 2 con">
+                                <option value="Đã có 3 con trở lên">
+                                <option value="Sống cùng con">
+                                <option value="Con đã trưởng thành">
+                            </datalist>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Chiều cao (cm)</label>
+                            <input type="text" name="height" value="{{ old('height', $profile->height) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: 175">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Cân nặng (kg)</label>
+                            <input type="text" name="weight" value="{{ old('weight', $profile->weight) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: 75">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Dáng người</label>
+                            <input type="text" name="body_type" list="body_type_list" value="{{ old('body_type', $profile->body_type) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Cao lớn, Cân đối, Thon thả...">
+                            <datalist id="body_type_list">
+                                <option value="Cao lớn">
+                                <option value="Cân đối">
+                                <option value="Thon thả">
+                                <option value="Đầy đặn">
+                                <option value="Săn chắc">
+                                <option value="Nhỏ nhắn">
+                                <option value="Thể thao">
+                            </datalist>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Giới tính *</label>
-                    <select name="gender" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
-                        <option value="female" {{ old('gender', $profile->gender) === 'female' ? 'selected' : '' }}>Nữ</option>
-                        <option value="male" {{ old('gender', $profile->gender) === 'male' ? 'selected' : '' }}>Nam</option>
-                        <option value="other" {{ old('gender', $profile->gender) === 'other' ? 'selected' : '' }}>Khác</option>
-                    </select>
+                <!-- 3. Địa điểm & Nơi ở -->
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
+                    <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+                        <i class="fa-solid fa-location-dot text-blue-600 text-sm"></i>
+                        <h3 class="text-sm font-bold text-slate-900 m-0">3. Nơi Ở & Địa Điểm Sinh Sống</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Tỉnh / Thành phố / Quốc gia (Danh mục)</label>
+                            <select name="province_id" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                                <option value="">-- Chọn tỉnh thành / quốc gia --</option>
+                                @foreach($provinces as $prov)
+                                    <option value="{{ $prov->id }}" {{ (string)old('province_id', $profile->province_id) === (string)$prov->id ? 'selected' : '' }}>
+                                        {{ $prov->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">
+                                Tên tỉnh/quốc gia tùy chỉnh (Nếu khác danh mục)
+                            </label>
+                            <input type="text" name="province_name" value="{{ old('province_name', $profile->province_name) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Đức (Germany), Canada, Hoa Kỳ...">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Khu vực cụ thể / Quận Huyện (District)
+                            <span class="text-slate-400 font-normal">(Hiển thị trong bảng thông số "Nơi ở")</span>
+                        </label>
+                        <input type="text" name="district_name" value="{{ old('district_name', $profile->district_name) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Berlin - Mitte, Đức (Germany) hoặc Toronto - Ontario, Quận 1...">
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Tỉnh / Thành phố</label>
-                    <select name="province" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
-                        <option value="">-- Chọn tỉnh thành --</option>
-                        @foreach($provinces as $prov)
-                            <option value="{{ $prov->name }}" {{ old('province', $profile->province) === $prov->name ? 'selected' : '' }}>
-                                {{ $prov->name }}
-                            </option>
-                        @endforeach
-                    </select>
+                <!-- 4. Công việc, Học vấn & Thói quen -->
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
+                    <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+                        <i class="fa-solid fa-briefcase text-blue-600 text-sm"></i>
+                        <h3 class="text-sm font-bold text-slate-900 m-0">4. Nghề Nghiệp, Học Vấn & Lối Sống</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Nghề nghiệp (Occupation)</label>
+                            <input type="text" name="occupation" value="{{ old('occupation', $profile->occupation) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Kỹ sư cơ khí chính xác tại Berlin">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Trình độ học vấn (Education)</label>
+                            <input type="text" name="education" list="education_list" value="{{ old('education', $profile->education) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Kỹ sư, Đại học, Thạc sĩ...">
+                            <datalist id="education_list">
+                                <option value="Kỹ sư">
+                                <option value="Đại học">
+                                <option value="Thạc sĩ">
+                                <option value="Tiến sĩ">
+                                <option value="Cao đẳng">
+                                <option value="Trung cấp">
+                                <option value="Phổ thông">
+                            </datalist>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Tôn giáo (Religion)</label>
+                            <input type="text" name="religion" list="religion_list" value="{{ old('religion', $profile->religion) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Không đạo, Phật giáo...">
+                            <datalist id="religion_list">
+                                <option value="Không đạo">
+                                <option value="Công giáo">
+                                <option value="Phật giáo">
+                                <option value="Tin lành">
+                                <option value="Hòa Hảo">
+                                <option value="Cao Đài">
+                            </datalist>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Hút thuốc (Smoking)</label>
+                            <input type="text" name="smoking" list="smoking_list" value="{{ old('smoking', $profile->smoking) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Không hút thuốc, Có hút thuốc...">
+                            <datalist id="smoking_list">
+                                <option value="Không hút thuốc">
+                                <option value="Có hút thuốc">
+                                <option value="Thỉnh thoảng">
+                                <option value="Đang cai thuốc">
+                            </datalist>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Uống rượu bia (Drinking)</label>
+                            <input type="text" name="drinking" list="drinking_list" value="{{ old('drinking', $profile->drinking) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Uống bia Đức xã giao, Không uống...">
+                            <datalist id="drinking_list">
+                                <option value="Không uống">
+                                <option value="Uống xã giao">
+                                <option value="Uống bia Đức xã giao">
+                                <option value="Thỉnh thoảng">
+                            </datalist>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Tính cách (Personality)</label>
+                            <input type="text" name="personality" value="{{ old('personality', $profile->personality) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Chính trực, cần cù, sống tình nghĩa">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Lối sống (Lifestyle)</label>
+                            <input type="text" name="lifestyle" value="{{ old('lifestyle', $profile->lifestyle) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Quy củ, ngăn nắp">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Quý giá nhất (Precious)</label>
+                            <input type="text" name="precious" value="{{ old('precious', $profile->precious) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Tình cảm gia đình">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Sở thích (Interests)</label>
+                        <input type="text" name="interests" value="{{ old('interests', $profile->interests) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Kỹ thuật ô tô, du lịch châu Âu, nấu ăn...">
+                    </div>
                 </div>
+
+                <!-- 5. Nội dung chi tiết: Về tôi & Tìm người -->
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
+                    <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+                        <i class="fa-solid fa-pen-fancy text-blue-600 text-sm"></i>
+                        <h3 class="text-sm font-bold text-slate-900 m-0">5. Lời Giới Thiệu Bản Thân & Mẫu Người Tìm Kiếm</h3>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Về tôi (About Me)
+                            <span class="text-slate-400 font-normal">(Hiển thị ở dòng "Về tôi" trên trang chi tiết)</span>
+                        </label>
+                        <textarea name="about_me" rows="4" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none leading-relaxed" placeholder="Chia sẻ về cuộc sống, công việc, quan điểm sống...">{{ old('about_me', $profile->about_me) }}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Tìm người (Looking For)
+                            <span class="text-slate-400 font-normal">(Hiển thị ở dòng chữ đỏ "Tìm người" trên trang chi tiết)</span>
+                        </label>
+                        <textarea name="looking_for" rows="3" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none leading-relaxed font-medium text-slate-800" placeholder="Tiêu chuẩn hoặc mẫu người mong muốn tìm kiếm...">{{ old('looking_for', $profile->looking_for) }}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Tùy chọn hiển thị / Quyền riêng tư (Privacy Option)
+                        </label>
+                        <input type="text" name="privacy_option" value="{{ old('privacy_option', $profile->privacy_option) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Chỉ nhận tin nhắn từ hồ sơ có hình đại diện.">
+                    </div>
+                </div>
+
             </div>
 
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Tiêu đề tìm bạn (Headline)</label>
-                <input type="text" name="headline" value="{{ old('headline', $profile->headline) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none" placeholder="Ví dụ: Tìm bạn gái nghiêm túc để kết hôn">
+            <!-- CỘT PHẢI (1/3): AVATAR & CÀI ĐẶT TRẠNG THÁI -->
+            <div class="space-y-6">
+
+                <!-- Ảnh đại diện -->
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
+                    <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+                        <i class="fa-solid fa-camera text-blue-600 text-sm"></i>
+                        <h3 class="text-sm font-bold text-slate-900 m-0">Ảnh Đại Diện (Avatar)</h3>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="inline-block relative">
+                            <img id="avatar-preview-img" src="{{ $profile->avatar ?: asset('themes/ehenho/images/df_picture.png') }}" alt="{{ $profile->display_name }}" class="w-36 h-36 object-cover rounded-2xl border-4 border-slate-100 shadow-md mx-auto">
+                            @if($profile->avatar)
+                                <div class="absolute bottom-1 right-1 bg-emerald-500 w-4 h-4 rounded-full border-2 border-white" title="Đã có ảnh"></div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Tải ảnh đại diện mới từ máy</label>
+                        <input type="file" name="avatar_file" id="avatar_file_input" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-slate-200 rounded-xl p-1">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Hoặc đường dẫn ảnh đại diện (URL)</label>
+                        <input type="text" name="avatar_url" id="avatar_url_input" value="{{ old('avatar_url', $profile->avatar_url) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: themes/ehenho/images/avatars/... hoặc https://...">
+                    </div>
+                </div>
+
+                <!-- Thiết lập trạng thái & thời gian -->
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
+                    <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+                        <i class="fa-solid fa-gear text-blue-600 text-sm"></i>
+                        <h3 class="text-sm font-bold text-slate-900 m-0">Trạng Thái & Hiển Thị</h3>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Trạng thái hồ sơ <span class="text-red-500">*</span></label>
+                        <select name="status" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <option value="active" {{ old('status', $profile->status) === 'active' ? 'selected' : '' }} class="text-emerald-600 font-bold">Hoạt động bình thường</option>
+                            <option value="pending" {{ old('status', $profile->status) === 'pending' ? 'selected' : '' }} class="text-amber-600 font-bold">Chờ duyệt</option>
+                            <option value="blocked" {{ old('status', $profile->status) === 'blocked' ? 'selected' : '' }} class="text-red-600 font-bold">Đã khóa tài khoản</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-3 pt-2 border-t border-slate-100">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $profile->is_featured) ? 'checked' : '' }} class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                            <div>
+                                <span class="text-xs font-bold text-slate-800">Hồ sơ nổi bật (Featured)</span>
+                                <p class="text-[11px] text-slate-400 m-0">Ưu tiên hiển thị trên trang chủ và đầu danh sách</p>
+                            </div>
+                        </label>
+
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" name="is_online" value="1" {{ old('is_online', $profile->is_online) ? 'checked' : '' }} class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
+                            <div>
+                                <span class="text-xs font-bold text-slate-800">Trực tuyến (Is Online)</span>
+                                <p class="text-[11px] text-slate-400 m-0">Hiển thị chấm xanh trực tuyến</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-100">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Lần đăng nhập / hoạt động cuối
+                            <span class="text-slate-400 font-normal">(Last active)</span>
+                        </label>
+                        <input type="datetime-local" name="last_active_at" value="{{ old('last_active_at', $profile->last_active_at ? $profile->last_active_at->format('Y-m-d\TH:i') : '') }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <p class="text-[11px] text-slate-400 mt-1">Định dạng hiển thị ngoài web: <strong>{{ $profile->last_active_at ? $profile->last_active_at->format('d/m/Y h:i a') : date('d/m/Y h:i a') }}</strong></p>
+                    </div>
+                </div>
+
+                <!-- Card Lưu thay đổi -->
+                <div class="bg-blue-50 rounded-2xl border border-blue-100 p-5 text-center space-y-3">
+                    <p class="text-xs text-blue-800 font-medium m-0">Nhấn Lưu thay đổi để áp dụng ngay toàn bộ dữ liệu cập nhật cho hồ sơ này.</p>
+                    <button type="submit" class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Lưu Thay Đổi Hồ Sơ</span>
+                    </button>
+                    <a href="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="block text-xs text-slate-500 hover:text-slate-700 font-semibold">
+                        &larr; Hủy & quay lại danh sách
+                    </a>
+                </div>
+
             </div>
 
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Giới thiệu bản thân (About me)</label>
-                <textarea name="about_me" rows="4" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">{{ old('about_me', $profile->about_me) }}</textarea>
-            </div>
+        </div>
+    </form>
 
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Trạng thái hồ sơ *</label>
-                <select name="status" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
-                    <option value="active" {{ old('status', $profile->status) === 'active' ? 'selected' : '' }}>Hoạt động bình thường</option>
-                    <option value="pending" {{ old('status', $profile->status) === 'pending' ? 'selected' : '' }}>Chờ duyệt</option>
-                    <option value="blocked" {{ old('status', $profile->status) === 'blocked' ? 'selected' : '' }}>Đã khóa tài khoản</option>
-                </select>
-            </div>
-
-            <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
-                <a href="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all">
-                    Hủy bỏ
-                </a>
-                <button type="submit" class="px-6 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-md">
-                    Lưu thay đổi
-                </button>
-            </div>
-        </form>
-    </div>
 </div>
+
+<script>
+    document.getElementById('avatar_file_input')?.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                document.getElementById('avatar-preview-img').src = evt.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.getElementById('avatar_url_input')?.addEventListener('input', function(e) {
+        const url = e.target.value.trim();
+        if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+            document.getElementById('avatar-preview-img').src = url;
+        }
+    });
+</script>
 @endsection

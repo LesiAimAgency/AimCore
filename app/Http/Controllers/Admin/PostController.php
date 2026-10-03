@@ -36,7 +36,7 @@ class PostController extends Controller
 
     public function index(Request $request, $projectCode = null)
     {
-        $postType = $request->query('type', 'post');
+        $postType = $request->route('post_type') ?? $request->route('type') ?? $request->query('type', 'post');
         $config = config("post_types.{$postType}");
 
         if (! $config) {
@@ -64,7 +64,7 @@ class PostController extends Controller
 
     public function create(Request $request, $projectCode = null)
     {
-        $postType = $request->get('type', 'post');
+        $postType = $request->route('post_type') ?? $request->route('type') ?? $request->get('type', 'post');
         $config = config("post_types.{$postType}");
 
         if (! $config) {
@@ -87,7 +87,7 @@ class PostController extends Controller
 
     public function store(Request $request, $projectCode = null)
     {
-        $postType = $request->input('post_type', 'post');
+        $postType = $request->input('post_type', $request->route('post_type') ?? $request->route('type') ?? 'post');
         $config = config("post_types.{$postType}");
 
         if (! $config) {
@@ -207,12 +207,14 @@ class PostController extends Controller
 
         $projectCode = request()->route('projectCode') ?? (function_exists('project_code') ? project_code() : null);
         $route = $projectCode
-            ? route('project.admin.posts.index', ['projectCode' => $projectCode, 'type' => $postType])
+            ? ($postType === 'page'
+                ? route('project.admin.pages.index', ['projectCode' => $projectCode])
+                : route('project.admin.posts.index', ['projectCode' => $projectCode, 'type' => $postType]))
             : (Route::has('superadmin.posts.index') ? route('superadmin.posts.index', ['type' => $postType]) : route('cms.posts.index', ['type' => $postType]));
 
         return redirect($route)->with('alert', [
             'type' => 'success',
-            'message' => 'Thêm '.($config['name'] ?? 'bài viết').' thành công!',
+            'message' => 'Thêm '.($config['name'] ?? 'nội dung').' thành công!',
         ]);
     }
 
@@ -368,12 +370,14 @@ class PostController extends Controller
 
         $projectCode = request()->route('projectCode') ?? (function_exists('project_code') ? project_code() : null);
         $route = $projectCode
-            ? route('project.admin.posts.edit', ['projectCode' => $projectCode, 'post' => $post->slug ?: $post->id])
+            ? ($postType === 'page'
+                ? route('project.admin.pages.edit', ['projectCode' => $projectCode, 'post' => $post->slug ?: $post->id])
+                : route('project.admin.posts.edit', ['projectCode' => $projectCode, 'post' => $post->slug ?: $post->id]))
             : (Route::has('superadmin.posts.edit') ? route('superadmin.posts.edit', $post->slug ?: $post->id) : route('cms.posts.edit', $post->slug ?: $post->id));
 
         return redirect($route)->with('alert', [
             'type' => 'success',
-            'message' => 'Cập nhật '.($config['name'] ?? 'bài viết').' thành công!',
+            'message' => 'Cập nhật '.($config['name'] ?? 'nội dung').' thành công!',
         ]);
     }
 
@@ -387,7 +391,9 @@ class PostController extends Controller
 
         $projectCode = request()->route('projectCode');
         $route = $projectCode
-            ? route('project.admin.posts.index', ['projectCode' => $projectCode, 'type' => $postType])
+            ? ($postType === 'page'
+                ? route('project.admin.pages.index', ['projectCode' => $projectCode])
+                : route('project.admin.posts.index', ['projectCode' => $projectCode, 'type' => $postType]))
             : route('cms.posts.index', ['type' => $postType]);
 
         return redirect($route)->with('alert', [

@@ -13,12 +13,12 @@
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
         <form method="GET" action="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             <div class="lg:col-span-2 relative">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm theo tên, headline, tỉnh thành..." class="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm theo tên, headline, tỉnh thành..." class="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
             </div>
 
             <div>
-                <select name="gender" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                <select name="gender" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     <option value="">-- Tất cả giới tính --</option>
                     <option value="female" {{ request('gender') === 'female' ? 'selected' : '' }}>Nữ</option>
                     <option value="male" {{ request('gender') === 'male' ? 'selected' : '' }}>Nam</option>
@@ -26,7 +26,7 @@
             </div>
 
             <div>
-                <select name="status" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                <select name="status" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     <option value="">-- Tất cả trạng thái --</option>
                     <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Đang hoạt động</option>
                     <option value="blocked" {{ request('status') === 'blocked' ? 'selected' : '' }}>Đã khóa</option>
@@ -34,7 +34,7 @@
             </div>
 
             <div class="flex items-center gap-2">
-                <button type="submit" class="flex-1 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm">
+                <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm">
                     Lọc
                 </button>
                 <a href="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-bold transition-all">
@@ -48,7 +48,7 @@
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div class="p-4 border-b border-slate-100 flex items-center justify-between">
             <h3 class="text-sm font-bold text-slate-900">
-                Tổng số: <span class="text-rose-600 font-extrabold">{{ $profiles->total() }}</span> thành viên
+                Tổng số: <span class="text-blue-600 font-extrabold">{{ $profiles->total() }}</span> thành viên
             </h3>
         </div>
 
@@ -72,7 +72,7 @@
                                 @if($profile->avatar)
                                     <img src="{{ $profile->avatar }}" alt="{{ $profile->display_name }}" class="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-sm">
                                 @else
-                                    <div class="w-10 h-10 rounded-full bg-rose-100 text-rose-600 font-bold flex items-center justify-center text-sm">
+                                    <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 font-bold flex items-center justify-center text-sm">
                                         {{ strtoupper(substr($profile->display_name ?? 'U', 0, 1)) }}
                                     </div>
                                 @endif
@@ -96,7 +96,7 @@
                         </td>
                         <td class="py-3 px-4 text-slate-600">
                             <i class="fa-solid fa-location-dot text-slate-400 mr-1"></i>
-                            {{ $profile->province ?? 'Toàn quốc' }}
+                            {{ $profile->location_text }}
                         </td>
                         <td class="py-3 px-4 max-w-xs truncate text-slate-600" title="{{ $profile->headline }}">
                             {{ $profile->headline ?: 'Chưa cập nhật headline' }}

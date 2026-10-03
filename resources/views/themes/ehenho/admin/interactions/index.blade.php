@@ -16,7 +16,7 @@
                 <p class="text-xs text-slate-400 font-bold uppercase">Tổng kết nối</p>
                 <p class="text-2xl font-black text-slate-900 mt-1">{{ number_format($totalConnections ?? 0) }}</p>
             </div>
-            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
                 <i class="fa-solid fa-heart"></i>
             </div>
         </div>
@@ -75,19 +75,36 @@
                     @forelse($connections as $conn)
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="py-3 px-4 font-mono text-slate-400">#{{ $conn->id }}</td>
-                        <td class="py-3 px-4 font-bold text-slate-800">User ID: {{ $conn->user_id }}</td>
                         <td class="py-3 px-4">
-                            @if($conn->type === 'block')
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-700">Chặn (Block)</span>
-                            @elseif($conn->type === 'like')
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-pink-100 text-pink-700">Thích (Like)</span>
-                            @elseif($conn->type === 'match')
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700">Ghép đôi (Match)</span>
+                            <span class="font-bold text-slate-800">{{ $conn->user?->name ?? 'User #' . $conn->user_id }}</span>
+                            @if($conn->user?->email)
+                                <span class="text-[11px] text-slate-400 block">{{ $conn->user->email }}</span>
                             @else
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">{{ $conn->type }}</span>
+                                <span class="text-[11px] text-slate-400 block">ID: {{ $conn->user_id }}</span>
                             @endif
                         </td>
-                        <td class="py-3 px-4 text-slate-600">Profile / Target ID: {{ $conn->target_id ?? $conn->connected_user_id }}</td>
+                        <td class="py-3 px-4">
+                            @php $relType = $conn->relation_type ?? $conn->type; @endphp
+                            @if($relType === 'block')
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-700">Chặn (Block)</span>
+                            @elseif($relType === 'like')
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-pink-100 text-pink-700">Thích (Like)</span>
+                            @elseif($relType === 'bookmark')
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700">Lưu lại (Bookmark)</span>
+                            @elseif($relType === 'contact')
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700">Liên hệ (Contact)</span>
+                            @else
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">{{ $relType }}</span>
+                            @endif
+                        </td>
+                        <td class="py-3 px-4 text-slate-600">
+                            @if($conn->targetProfile)
+                                <span class="font-medium text-slate-800">{{ $conn->targetProfile->display_name }}</span>
+                                <span class="text-[11px] text-slate-400 block">Hồ sơ #{{ $conn->target_profile_id }}</span>
+                            @else
+                                <span>Hồ sơ #{{ $conn->target_profile_id ?? $conn->target_id }}</span>
+                            @endif
+                        </td>
                         <td class="py-3 px-4 text-slate-400">{{ $conn->created_at?->diffForHumans() ?? 'Vừa xong' }}</td>
                     </tr>
                     @empty
