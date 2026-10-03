@@ -39,13 +39,6 @@
     @include('themes.ehenho.components.hero-carousel')
   </div>
 
-  <!-- Chat All Direct Component -->
-  <div class="row">
-    <div class="col-sm-12">
-      @include('themes.ehenho.components.chat-all-inline')
-    </div>
-  </div>
-
   <div class="row" style="margin-top: 20px;">
     <!-- Main Left Column: Profiles List (100% Matching index.html) -->
     <div class="col-sm-8 col-sm-offset-0">
@@ -69,18 +62,7 @@
 
     <!-- Right Sidebar Column (100% Matching index.html) -->
     <div class="col-sm-4">
-      <h4 class="text-success" style="font-weight: bold; margin-top: 5px;">
-        eHenho - Hẹn hò Online theo Sở thích &amp; Tính cách
-      </h4>
-      <h4 class="text-info" style="font-weight: bold;">
-        100% Miễn Phí
-      </h4>
-
-      <!-- Recently Registered Widget (Nữ / Nam Tabs) -->
-      @include('themes.ehenho.components.recently-registered', [
-        'recentFemaleProfiles' => $recentFemaleProfiles,
-        'recentMaleProfiles' => $recentMaleProfiles
-      ])
+      @include('themes.ehenho.components.chat-all-inline')
     </div>
   </div>
 </div>

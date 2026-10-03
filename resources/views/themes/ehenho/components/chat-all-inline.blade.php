@@ -11,27 +11,27 @@
 @endphp
 
 <!-- Inline Chat All Section for Homepage -->
-<div class="chat-all-inline-container" style="margin-top: 15px; margin-bottom: 20px; background: #fff; border-radius: 10px; border: 1px solid #e1e4e8; box-shadow: 0 3px 12px rgba(0,0,0,0.06); overflow: hidden;">
+<div class="chat-all-inline-container" style="margin-top: 0; margin-bottom: 20px; background: #fff; border-radius: 10px; border: 1px solid #e1e4e8; box-shadow: 0 3px 12px rgba(0,0,0,0.06); overflow: hidden;">
   
   <!-- Header Bar -->
-  <div style="background: var(--eh-header-bg, #202020); color: #fff; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--eh-theme-primary, #007cae);">
-    <div style="display: flex; align-items: center; gap: 10px;">
+  <div style="background: var(--eh-header-bg, #202020); color: #fff; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--eh-theme-primary, #007cae); flex-wrap: wrap; gap: 8px;">
+    <div style="display: flex; align-items: center; gap: 8px;">
       <i class="fa fa-comments" style="font-size: 20px; color: var(--eh-theme-primary, #007cae);"></i>
       <div>
-        <h4 style="margin: 0; font-size: 16px; font-weight: bold; color: #fff; display: inline-flex; align-items: center; gap: 8px;">
+        <h4 style="margin: 0; font-size: 15px; font-weight: bold; color: #fff; display: inline-flex; align-items: center; gap: 6px;">
           Chat All 
-          <span class="label" style="background-color: var(--eh-theme-primary, #007cae); font-size: 11px; font-weight: normal; border-radius: 10px; padding: 2px 8px;">Trực tiếp</span>
+          <span class="label" style="background-color: var(--eh-theme-primary, #007cae); font-size: 11px; font-weight: normal; border-radius: 10px; padding: 2px 7px;">Trực tiếp</span>
         </h4>
-        <div style="font-size: 12px; color: #bbb;">Giao lưu kết bạn trực tiếp cùng tất cả thành viên</div>
+        <div style="font-size: 11px; color: #bbb;">Giao lưu kết bạn trực tiếp cùng tất cả thành viên</div>
       </div>
     </div>
     <div>
       @if($isAuth)
-        <span style="font-size: 12px; color: #5cb85c; font-weight: bold;">
-          <i class="fa fa-circle" style="font-size: 9px;"></i> Đang hoạt động
+        <span style="font-size: 11px; color: #5cb85c; font-weight: bold;">
+          <i class="fa fa-circle" style="font-size: 8px;"></i> Đang hoạt động
         </span>
       @else
-        <span style="font-size: 12px; color: #f0ad4e;">
+        <span style="font-size: 11px; color: #f0ad4e;">
           <i class="fa fa-lock"></i> Yêu cầu đăng nhập
         </span>
       @endif
@@ -63,7 +63,7 @@
     <div class="chat-all-auth-card" style="display: flex; flex-direction: column; background: #f8fafc;">
       
       <!-- Messages List -->
-      <div id="inlineChatMessagesList" style="height: 260px; overflow-y: auto; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px;">
+      <div id="inlineChatMessagesList" style="height: 380px; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px;">
         <div id="inlineChatLoading" style="text-align: center; color: #888; padding: 40px 0;">
           <i class="fa fa-spinner fa-spin fa-2x"></i>
           <p style="font-size: 12px; margin-top: 8px;">Đang tải tin nhắn cộng đồng...</p>
@@ -71,14 +71,14 @@
       </div>
 
       <!-- Input Form -->
-      <div style="padding: 12px 16px; background: #fff; border-top: 1px solid #e1e4e8;">
-        <form id="inlineChatSendForm" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+      <div style="padding: 10px 12px; background: #fff; border-top: 1px solid #e1e4e8;">
+        <form id="inlineChatSendForm" style="margin: 0; display: flex; align-items: center; gap: 6px;">
           <input type="file" id="inlineChatFileInput" accept="image/*,.pdf" style="display: none;">
-          <button type="button" id="inlineChatAttachBtn" class="btn btn-default" title="Đính kèm tệp/ảnh" style="border-radius: 50%; width: 36px; height: 36px; padding: 0; display: flex; align-items: center; justify-content: center; color: #555;">
-            <i class="fa fa-paperclip" style="font-size: 16px;"></i>
+          <button type="button" id="inlineChatAttachBtn" class="btn btn-default" title="Đính kèm tệp/ảnh" style="border-radius: 50%; width: 34px; height: 34px; padding: 0; display: flex; align-items: center; justify-content: center; color: #555; flex-shrink: 0;">
+            <i class="fa fa-paperclip" style="font-size: 15px;"></i>
           </button>
-          <input type="text" id="inlineChatTextInput" class="form-control" placeholder="Nhập tin nhắn để trò chuyện cùng mọi người..." maxlength="2000" autocomplete="off" style="border-radius: 20px; padding-left: 14px; padding-right: 14px; height: 36px;">
-          <button type="submit" id="inlineChatSendBtn" class="btn btn-primary" style="border-radius: 20px; padding: 7px 18px; background-color: var(--eh-theme-primary, #007cae); border: none; font-weight: bold; display: flex; align-items: center; gap: 6px;">
+          <input type="text" id="inlineChatTextInput" class="form-control" placeholder="Nhập tin nhắn..." maxlength="2000" autocomplete="off" style="border-radius: 18px; padding-left: 12px; padding-right: 12px; height: 34px; font-size: 13px;">
+          <button type="submit" id="inlineChatSendBtn" class="btn btn-primary" style="border-radius: 18px; padding: 6px 14px; background-color: var(--eh-theme-primary, #007cae); border: none; font-weight: bold; display: flex; align-items: center; gap: 5px; flex-shrink: 0; font-size: 13px;">
             <i class="fa fa-paper-plane"></i> Gửi
           </button>
         </form>
