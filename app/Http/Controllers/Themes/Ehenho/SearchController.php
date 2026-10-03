@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Themes\Ehenho;
 use App\Http\Controllers\Controller;
 use App\Models\Ehenho\Profile;
 use App\Models\Ehenho\Province;
+use App\Models\Ehenho\SocialConnection;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -231,6 +232,19 @@ class SearchController extends Controller
      */
     protected function applyFilters(Builder $query, Request $request): void
     {
+        // 0. Exclude blocked profiles (both blocked by current user and profiles that blocked current user)
+        if (auth()->check()) {
+            $userId = auth()->id();
+            $blockedTargetIds = SocialConnection::where('user_id', $userId)
+                ->where('relation_type', 'block')
+                ->pluck('target_profile_id')
+                ->toArray();
+
+            if (! empty($blockedTargetIds)) {
+                $query->whereNotIn('id', $blockedTargetIds);
+            }
+        }
+
         // 1. Gender filter
         if ($request->filled('gender') && $request->input('gender') !== 'all') {
             $gender = in_array($request->input('gender'), ['female', 'nu'], true) ? 'female' : 'male';

@@ -1,4 +1,4 @@
-@props(['profile', 'showActions' => true])
+@props(['profile', 'showActions' => true, 'activeTab' => null])
 
 @php
   $avatar = $profile->avatar_url ? (str_starts_with($profile->avatar_url, 'http') ? $profile->avatar_url : asset($profile->avatar_url)) : asset('themes/ehenho/images/s1.jpg');
@@ -73,9 +73,20 @@
         <a href="{{ route('ehenho.profile.show', $profile->slug ?: $profile->id) }}" class="btn btn-xs btn-info" style="border-radius: 3px; font-weight: 500;">
           <i class="fa fa-user"></i> Xem hồ sơ
         </a>
-        <a href="{{ route('ehenho.messages.compose', ['to' => $profile->user_id ?: $profile->id]) }}" class="btn btn-xs btn-default" style="border-radius: 3px; font-weight: 500; margin-left: 3px;">
-          <i class="fa fa-envelope"></i> Gửi tin nhắn
-        </a>
+        @if(($activeTab ?? null) === 'blocked')
+          <form action="{{ route('ehenho.social.toggle') }}" method="POST" style="display: inline-block; margin-left: 4px;" onsubmit="return confirm('Bạn có chắc chắn muốn bỏ chặn thành viên {{ $profile->display_name }}?');">
+            @csrf
+            <input type="hidden" name="profile_id" value="{{ $profile->id }}">
+            <input type="hidden" name="type" value="block">
+            <button type="submit" class="btn btn-xs btn-danger" style="border-radius: 3px; font-weight: bold; background-color: #dc2626; border-color: #b91c1c;">
+              <i class="fa fa-unlock"></i> Bỏ chặn
+            </button>
+          </form>
+        @else
+          <a href="{{ route('ehenho.messages.compose', ['to' => $profile->user_id ?: $profile->id]) }}" class="btn btn-xs btn-default" style="border-radius: 3px; font-weight: 500; margin-left: 3px;">
+            <i class="fa fa-envelope"></i> Gửi tin nhắn
+          </a>
+        @endif
       </div>
     @endif
   </div>

@@ -18,8 +18,11 @@ class SocialController extends Controller
     public function likes(): View
     {
         $userId = auth()->id();
+        $myProfileIds = Profile::where('user_id', $userId)->pluck('id')->toArray();
+
         $targetIds = SocialConnection::where('user_id', $userId)
             ->where('relation_type', 'like')
+            ->whereNotIn('target_profile_id', $myProfileIds)
             ->pluck('target_profile_id');
 
         $profiles = Profile::whereIn('id', $targetIds)->paginate(16);
@@ -32,8 +35,11 @@ class SocialController extends Controller
     public function bookmarks(): View
     {
         $userId = auth()->id();
+        $myProfileIds = Profile::where('user_id', $userId)->pluck('id')->toArray();
+
         $targetIds = SocialConnection::where('user_id', $userId)
             ->where('relation_type', 'bookmark')
+            ->whereNotIn('target_profile_id', $myProfileIds)
             ->pluck('target_profile_id');
 
         $profiles = Profile::whereIn('id', $targetIds)->paginate(16);
@@ -46,8 +52,11 @@ class SocialController extends Controller
     public function blocked(): View
     {
         $userId = auth()->id();
+        $myProfileIds = Profile::where('user_id', $userId)->pluck('id')->toArray();
+
         $targetIds = SocialConnection::where('user_id', $userId)
             ->where('relation_type', 'block')
+            ->whereNotIn('target_profile_id', $myProfileIds)
             ->pluck('target_profile_id');
 
         $profiles = Profile::whereIn('id', $targetIds)->paginate(16);
@@ -60,8 +69,11 @@ class SocialController extends Controller
     public function contacts(): View
     {
         $userId = auth()->id();
+        $myProfileIds = Profile::where('user_id', $userId)->pluck('id')->toArray();
+
         $targetIds = SocialConnection::where('user_id', $userId)
             ->where('relation_type', 'contact')
+            ->whereNotIn('target_profile_id', $myProfileIds)
             ->pluck('target_profile_id');
 
         $profiles = Profile::whereIn('id', $targetIds)->paginate(16);
@@ -81,6 +93,18 @@ class SocialController extends Controller
         $userId = auth()->id();
         $profileId = (int) $validated['profile_id'];
         $type = $validated['type'];
+
+        $targetProfile = Profile::findOrFail($profileId);
+        $myProfileIds = Profile::where('user_id', $userId)->pluck('id')->toArray();
+
+        if (($targetProfile->user_id && (int) $targetProfile->user_id === (int) $userId) || in_array($profileId, $myProfileIds, true)) {
+            $errMessage = 'Bạn không thể tự chặn hoặc tương tác trên chính hồ sơ của mình.';
+            if ($request->wantsJson()) {
+                return response()->json(['status' => 'error', 'message' => $errMessage], 422);
+            }
+
+            return back()->with('error', $errMessage);
+        }
 
         $existing = SocialConnection::where('user_id', $userId)
             ->where('target_profile_id', $profileId)

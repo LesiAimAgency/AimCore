@@ -82,6 +82,11 @@
             </li>
           @endif
           <li>
+            <a href="{{ route('ehenho.account.my_profile') }}" style="color: #2e5d69; font-weight: bold;">
+              <i class="fa fa-user-circle"></i> {{ auth()->user()->name ?: auth()->user()->username }}
+            </a>
+          </li>
+          <li>
             <a href="{{ route('ehenho.account.profile_edit') }}"><i class="fa fa-edit"></i> Chỉnh sửa hồ sơ</a>
           </li>
           <li>

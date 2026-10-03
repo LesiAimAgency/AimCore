@@ -67,41 +67,56 @@
         <tr>
           <!-- Left Action Buttons (Bookmark, Like, Block) -->
           <td style="width: 25%; text-align: center; vertical-align: top; padding: 15px 5px;">
-            <div style="margin-bottom: 12px;">
-              <form action="{{ route('ehenho.social.toggle') }}" method="POST" style="display: inline;">
-                @csrf
-                <input type="hidden" name="profile_id" value="{{ $profile->id }}">
-                <input type="hidden" name="type" value="bookmark">
-                <button type="submit" class="btn btn-default btn-block btn-sm {{ ($isBookmarked ?? false) ? 'active' : '' }}" title="{{ ($isBookmarked ?? false) ? 'Bỏ lưu hồ sơ' : 'Lưu vào danh sách yêu thích' }}" style="{{ ($isBookmarked ?? false) ? 'background-color: #fef3c7; border-color: #f59e0b; color: #b45309;' : '' }}">
-                  <i class="fa fa-star {{ ($isBookmarked ?? false) ? 'text-warning' : 'text-muted' }}" style="font-size: 1.4em;"></i><br>
-                  <small>{{ ($isBookmarked ?? false) ? 'Đã lưu' : 'Đánh dấu' }}</small>
-                </button>
-              </form>
-            </div>
+            @if($isOwnProfile ?? false)
+              <div style="margin-bottom: 12px;">
+                <a href="{{ route('ehenho.account.profile_edit') }}" class="btn btn-default btn-block btn-sm" style="color: #2e5d69; font-weight: bold; background-color: #f0fdf4; border-color: #86efac;">
+                  <i class="fa fa-edit text-success" style="font-size: 1.4em;"></i><br>
+                  <small>Sửa hồ sơ</small>
+                </a>
+              </div>
+              <div style="margin-bottom: 12px;">
+                <a href="{{ route('ehenho.account.avatar_upload') }}" class="btn btn-default btn-block btn-sm" style="color: #475569;">
+                  <i class="fa fa-camera text-primary" style="font-size: 1.4em;"></i><br>
+                  <small>Đổi ảnh</small>
+                </a>
+              </div>
+            @else
+              <div style="margin-bottom: 12px;">
+                <form action="{{ route('ehenho.social.toggle') }}" method="POST" style="display: inline;">
+                  @csrf
+                  <input type="hidden" name="profile_id" value="{{ $profile->id }}">
+                  <input type="hidden" name="type" value="bookmark">
+                  <button type="submit" class="btn btn-default btn-block btn-sm {{ ($isBookmarked ?? false) ? 'active' : '' }}" title="{{ ($isBookmarked ?? false) ? 'Bỏ lưu hồ sơ' : 'Lưu vào danh sách yêu thích' }}" style="{{ ($isBookmarked ?? false) ? 'background-color: #fef3c7; border-color: #f59e0b; color: #b45309;' : '' }}">
+                    <i class="fa fa-star {{ ($isBookmarked ?? false) ? 'text-warning' : 'text-muted' }}" style="font-size: 1.4em;"></i><br>
+                    <small>{{ ($isBookmarked ?? false) ? 'Đã lưu' : 'Đánh dấu' }}</small>
+                  </button>
+                </form>
+              </div>
 
-            <div style="margin-bottom: 12px;">
-              <form action="{{ route('ehenho.social.toggle') }}" method="POST" style="display: inline;">
-                @csrf
-                <input type="hidden" name="profile_id" value="{{ $profile->id }}">
-                <input type="hidden" name="type" value="like">
-                <button type="submit" class="btn btn-default btn-block btn-sm {{ ($isLiked ?? false) ? 'active' : '' }}" title="{{ ($isLiked ?? false) ? 'Bỏ thích hồ sơ' : 'Thích hồ sơ này' }}" style="{{ ($isLiked ?? false) ? 'background-color: #fee2e2; border-color: #ef4444; color: #b91c1c;' : '' }}">
-                  <i class="fa fa-heart {{ ($isLiked ?? false) ? 'text-danger' : 'text-muted' }}" style="font-size: 1.4em;"></i><br>
-                  <small>{{ ($isLiked ?? false) ? 'Đã thích' : 'Thích' }}</small>
-                </button>
-              </form>
-            </div>
+              <div style="margin-bottom: 12px;">
+                <form action="{{ route('ehenho.social.toggle') }}" method="POST" style="display: inline;">
+                  @csrf
+                  <input type="hidden" name="profile_id" value="{{ $profile->id }}">
+                  <input type="hidden" name="type" value="like">
+                  <button type="submit" class="btn btn-default btn-block btn-sm {{ ($isLiked ?? false) ? 'active' : '' }}" title="{{ ($isLiked ?? false) ? 'Bỏ thích hồ sơ' : 'Thích hồ sơ này' }}" style="{{ ($isLiked ?? false) ? 'background-color: #fee2e2; border-color: #ef4444; color: #b91c1c;' : '' }}">
+                    <i class="fa fa-heart {{ ($isLiked ?? false) ? 'text-danger' : 'text-muted' }}" style="font-size: 1.4em;"></i><br>
+                    <small>{{ ($isLiked ?? false) ? 'Đã thích' : 'Thích' }}</small>
+                  </button>
+                </form>
+              </div>
 
-            <div>
-              <form id="block_profile_form" action="{{ route('ehenho.social.toggle') }}" method="POST" style="display: inline;" onsubmit="return confirm('{{ ($isBlocked ?? false) ? 'Bạn có muốn bỏ chặn hồ sơ này?' : 'Bạn có chắc chắn muốn chặn hồ sơ này? Người này sẽ không thể liên lạc hoặc nhắn tin với bạn.' }}');">
-                @csrf
-                <input type="hidden" name="profile_id" value="{{ $profile->id }}">
-                <input type="hidden" name="type" value="block">
-                <button type="submit" class="btn btn-default btn-block btn-sm {{ ($isBlocked ?? false) ? 'btn-danger active' : '' }}" title="{{ ($isBlocked ?? false) ? 'Bỏ chặn hồ sơ này' : 'Chặn không cho liên lạc' }}" style="{{ ($isBlocked ?? false) ? 'background-color: #fee2e2; border-color: #dc2626; color: #dc2626; font-weight: bold;' : 'color: #666;' }}">
-                  <i class="fa fa-ban {{ ($isBlocked ?? false) ? 'text-danger' : 'text-muted' }}" style="font-size: 1.4em;"></i><br>
-                  <small>{{ ($isBlocked ?? false) ? 'Đã chặn' : 'Chặn hồ sơ' }}</small>
-                </button>
-              </form>
-            </div>
+              <div>
+                <form id="block_profile_form" action="{{ route('ehenho.social.toggle') }}" method="POST" style="display: inline;" onsubmit="return confirm('{{ ($isBlocked ?? false) ? 'Bạn có muốn bỏ chặn hồ sơ này?' : 'Bạn có chắc chắn muốn chặn hồ sơ này? Người này sẽ không thể liên lạc hoặc nhắn tin với bạn.' }}');">
+                  @csrf
+                  <input type="hidden" name="profile_id" value="{{ $profile->id }}">
+                  <input type="hidden" name="type" value="block">
+                  <button type="submit" class="btn btn-default btn-block btn-sm {{ ($isBlocked ?? false) ? 'btn-danger active' : '' }}" title="{{ ($isBlocked ?? false) ? 'Bỏ chặn hồ sơ này' : 'Chặn không cho liên lạc' }}" style="{{ ($isBlocked ?? false) ? 'background-color: #fee2e2; border-color: #dc2626; color: #dc2626; font-weight: bold;' : 'color: #666;' }}">
+                    <i class="fa fa-ban {{ ($isBlocked ?? false) ? 'text-danger' : 'text-muted' }}" style="font-size: 1.4em;"></i><br>
+                    <small>{{ ($isBlocked ?? false) ? 'Đã chặn' : 'Chặn hồ sơ' }}</small>
+                  </button>
+                </form>
+              </div>
+            @endif
           </td>
 
           <!-- Big Photo & Header Action -->
@@ -121,7 +136,11 @@
 
             <!-- Direct Message Box matching 100% screenshot -->
             <div style="border: 1px solid #dcdcdc; background: #fafafa; border-radius: 4px; padding: 12px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
-              @if($isBlocked ?? false)
+              @if($isOwnProfile ?? false)
+                <div class="alert alert-info" style="margin-bottom: 0; padding: 10px 14px; font-size: 13px;">
+                  <i class="fa fa-user-circle text-primary"></i> <strong>Đây là hồ sơ cá nhân của bạn.</strong> Bạn có thể <a href="{{ route('ehenho.account.profile_edit') }}" class="alert-link" style="text-decoration: underline;">chỉnh sửa thông tin</a> hoặc <a href="{{ route('ehenho.account.avatar_upload') }}" class="alert-link" style="text-decoration: underline;">thay đổi ảnh đại diện</a> bất cứ lúc nào.
+                </div>
+              @elseif($isBlocked ?? false)
                 <div class="alert alert-warning" style="margin-bottom: 0; padding: 10px; font-size: 13px;">
                   <i class="fa fa-ban text-danger"></i> <strong>Hồ sơ đang bị chặn.</strong> Bạn đã chặn người này (không thể gửi tin nhắn).
                   <form action="{{ route('ehenho.social.toggle') }}" method="POST" style="display: inline-block; margin-left: 10px;">
@@ -130,6 +149,10 @@
                     <input type="hidden" name="type" value="block">
                     <button type="submit" class="btn btn-xs btn-default" style="font-size: 11px;">Bỏ chặn</button>
                   </form>
+                </div>
+              @elseif($isBlockedByTarget ?? false)
+                <div class="alert alert-danger" style="margin-bottom: 0; padding: 10px; font-size: 13px;">
+                  <i class="fa fa-ban text-danger"></i> <strong>Không thể gửi tin nhắn.</strong> Thành viên này hiện không nhận tin nhắn từ bạn.
                 </div>
               @elseif(auth()->check())
               <form action="{{ route('ehenho.messages.store') }}" method="POST">

@@ -36,7 +36,7 @@
 
     <!-- Profiles List -->
     @forelse($profiles as $profile)
-      @include('themes.ehenho.components.profile-card', ['profile' => $profile])
+      @include('themes.ehenho.components.profile-card', ['profile' => $profile, 'activeTab' => $activeTab])
     @empty
       <div class="text-center" style="padding: 40px 20px;">
         @if($activeTab == 'likes')

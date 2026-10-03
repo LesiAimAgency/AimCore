@@ -32,8 +32,10 @@ class ProfileController extends Controller
         $isBookmarked = false;
         $isLiked = false;
         $isBlocked = false;
+        $isBlockedByTarget = false;
+        $isOwnProfile = $userId && ($profile->user_id === $userId);
 
-        if ($userId) {
+        if ($userId && ! $isOwnProfile) {
             $connections = SocialConnection::where('user_id', $userId)
                 ->where('target_profile_id', $profile->id)
                 ->pluck('relation_type')
@@ -42,6 +44,17 @@ class ProfileController extends Controller
             $isBookmarked = in_array('bookmark', $connections, true);
             $isLiked = in_array('like', $connections, true);
             $isBlocked = in_array('block', $connections, true);
+
+            // Also check if the profile owner has blocked the viewing user
+            if ($profile->user_id) {
+                $myProfile = Profile::where('user_id', $userId)->first();
+                if ($myProfile) {
+                    $isBlockedByTarget = SocialConnection::where('user_id', $profile->user_id)
+                        ->where('target_profile_id', $myProfile->id)
+                        ->where('relation_type', 'block')
+                        ->exists();
+                }
+            }
         }
 
         return view('themes.ehenho.pages.profile.detail', compact(
@@ -49,7 +62,9 @@ class ProfileController extends Controller
             'relatedProfiles',
             'isBookmarked',
             'isLiked',
-            'isBlocked'
+            'isBlocked',
+            'isBlockedByTarget',
+            'isOwnProfile'
         ));
     }
 
