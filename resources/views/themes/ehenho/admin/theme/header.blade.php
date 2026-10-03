@@ -1,1 +1,1 @@
-@include('frontend.themes.ehenho.admin.settings.appearance', ['initialTab' => 'header'])
+@include('frontend.themes.ehenho.admin.settings.appearance', ['initialTab' => $initialTab ?? 'design'])

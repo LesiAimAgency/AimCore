@@ -5,6 +5,11 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
+// Strip /public prefix if web server DocumentRoot is the project root folder
+if (isset($_SERVER['SCRIPT_NAME']) && str_starts_with($_SERVER['SCRIPT_NAME'], '/public')) {
+    $_SERVER['SCRIPT_NAME'] = substr($_SERVER['SCRIPT_NAME'], 7) ?: '/index.php';
+}
+
 /*
 |--------------------------------------------------------------------------
 | Check If The Application Is Under Maintenance

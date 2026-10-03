@@ -211,13 +211,9 @@
             <i class="fa-solid fa-chevron-down text-[10px] transition-transform" :class="open==='appearance' ? 'rotate-180' : ''"></i>
         </button>
         <div x-show="open==='appearance'" x-cloak x-collapse class="sub-menu">
-            <a href="{{ route('project.admin.settings.appearance', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.settings.appearance') || request()->routeIs('project.admin.ehenho.theme.appearance') ? 'active' : '' }}">
+            <a href="{{ route('project.admin.ehenho.theme.header', $projectCode) }}#design" class="sub-item {{ request()->routeIs('project.admin.ehenho.theme.header') || request()->routeIs('project.admin.ehenho.theme.appearance') || request()->routeIs('project.admin.settings.appearance') ? 'active' : '' }}">
                 <span class="dot"></span>
-                <span>Cấu hình UX (Giao diện)</span>
-            </a>
-            <a href="{{ route('project.admin.ehenho.theme.header', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.ehenho.theme.header') ? 'active' : '' }}">
-                <span class="dot"></span>
-                <span>Quản lý Header</span>
+                <span>Quản lý Header &amp; Giao diện</span>
             </a>
             <a href="{{ route('project.admin.ehenho.theme.widgets', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.ehenho.theme.widgets') ? 'active' : '' }}">
                 <span class="dot"></span>

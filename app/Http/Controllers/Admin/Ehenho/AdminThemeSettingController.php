@@ -309,7 +309,7 @@ class AdminThemeSettingController extends Controller
             SettingsService::getInstance()->clearCache();
         }
 
-        return redirect(route('project.admin.ehenho.theme.appearance', $projectCode).'#'.$activeTab)
+        return redirect(route('project.admin.ehenho.theme.header', $projectCode).'#'.$activeTab)
             ->with('success', 'Đã lưu toàn bộ cấu hình giao diện & slider thành công!');
     }
 
@@ -319,7 +319,7 @@ class AdminThemeSettingController extends Controller
     public function header(Request $request, string $projectCode): View
     {
         $data = $this->getAllThemeSettings($request, $projectCode);
-        $data['initialTab'] = 'header';
+        $data['initialTab'] = $request->query('tab', 'design');
 
         return view('frontend.themes.ehenho.admin.settings.appearance', $data);
     }

@@ -318,6 +318,11 @@ class SettingsController extends Controller
 
     public function appearance(Request $request)
     {
+        [$project] = $this->resolveProjectAndTenant($request);
+        if ($project && ($project->code === 'ehenho' || ($project->features['theme'] ?? '') === 'ehenho')) {
+            return redirect(route('project.admin.ehenho.theme.header', ['projectCode' => $project->code]).'#design');
+        }
+
         return $this->group($request, null, 'appearance');
     }
 
@@ -328,6 +333,10 @@ class SettingsController extends Controller
             ?: ($projectCodeOrGroup ?: 'appearance'));
 
         [$project, $tenantId] = $this->resolveProjectAndTenant($request);
+        if ($group === 'appearance' && $project && ($project->code === 'ehenho' || ($project->features['theme'] ?? '') === 'ehenho')) {
+            return redirect(route('project.admin.ehenho.theme.header', ['projectCode' => $project->code]).'#design');
+        }
+
         $settingsMap = $this->getSettingsMap($project, $tenantId, $group);
 
         $languages = $settingsMap['languages'] ?? setting('languages', []);
