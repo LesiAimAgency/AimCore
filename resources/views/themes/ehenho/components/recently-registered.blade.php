@@ -2,7 +2,7 @@
 
 <div class="recently-registered-widget" style="margin-top: 10px;">
   <h4 class="text-success" style="font-weight: bold; margin-bottom: 12px;">
-    Đăng ký gần đây
+   Mới đăng nhập
   </h4>
   <div style="width: 100%;">
     <ul class="nav nav-tabs" id="recent-reg-tabs">
