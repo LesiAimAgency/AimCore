@@ -1076,24 +1076,24 @@ span.footer-note {
     opacity: 0.7;
 }
 
-.fa-facebook {
-    background: #3B5998;
-    color: white;
+.fa-facebook, .fa-facebook-f {
+    background: #3B5998 !important;
+    color: white !important;
 }
 
-.fa-twitter {
-    background: #55ACEE;
-    color: white;
+.fa-twitter, .fa-x-twitter {
+    background: #55ACEE !important;
+    color: white !important;
 }
 
 .fa-instagram {
-    background: #E1306C;
-    color: white;
+    background: #E1306C !important;
+    color: white !important;
 }
 
 .fa-youtube {
-    background: #FF0000;
-    color: white;
+    background: #FF0000 !important;
+    color: white !important;
 }
 
 .fa-tiktok {
@@ -1114,29 +1114,18 @@ span.footer-note {
     mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 448 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z'/%3E%3C/svg%3E") no-repeat center / contain;
 }
 
-.fa-zalo {
-    background: #0068ff !important;
-    color: white !important;
-}
-
-.fa-zalo::before {
-    content: "" !important;
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    vertical-align: -0.15em;
-    background-color: currentColor;
-    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 4C12.95 4 4 11.83 4 21.5c0 5.48 2.87 10.37 7.37 13.68-.46 3.01-1.68 6.55-1.74 6.75-.12.43.14.88.58.98.15.03.3.02.44-.04 3.73-1.65 7.02-3.48 7.35-3.67 1.93.53 3.94.8 6 .8 11.05 0 20-7.83 20-17.5S35.05 4 24 4zm-9 22.5h-5c-.55 0-1-.45-1-1v-8c0-.55.45-1 1-1h5c.55 0 1 .45 1 1v8c0 .55-.45 1-1 1zm7.5 0h-5c-.55 0-1-.45-1-1v-8c0-.55.45-1 1-1h5c.55 0 1 .45 1 1v8c0 .55-.45 1-1 1zm9.5-3.5c0 1.93-1.57 3.5-3.5 3.5h-2c-.55 0-1-.45-1-1v-8c0-.55.45-1 1-1h2c1.93 0 3.5 1.57 3.5 3.5v3z'/%3E%3C/svg%3E") no-repeat center / contain;
-    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 4C12.95 4 4 11.83 4 21.5c0 5.48 2.87 10.37 7.37 13.68-.46 3.01-1.68 6.55-1.74 6.75-.12.43.14.88.58.98.15.03.3.02.44-.04 3.73-1.65 7.02-3.48 7.35-3.67 1.93.53 3.94.8 6 .8 11.05 0 20-7.83 20-17.5S35.05 4 24 4zm-9 22.5h-5c-.55 0-1-.45-1-1v-8c0-.55.45-1 1-1h5c.55 0 1 .45 1 1v8c0 .55-.45 1-1 1zm7.5 0h-5c-.55 0-1-.45-1-1v-8c0-.55.45-1 1-1h5c.55 0 1 .45 1 1v8c0 .55-.45 1-1 1zm9.5-3.5c0 1.93-1.57 3.5-3.5 3.5h-2c-.55 0-1-.45-1-1v-8c0-.55.45-1 1-1h2c1.93 0 3.5 1.57 3.5 3.5v3z'/%3E%3C/svg%3E") no-repeat center / contain;
-}
-
 .fa-br {
-    padding: 10px !important;
-    font-size: 20px !important;
+    font-size: 18px !important;
     width: 40px !important;
+    height: 40px !important;
     text-align: center !important;
     text-decoration: none !important;
     border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+    margin: 0 4px !important;
 }
 
 .no-collapse li,
