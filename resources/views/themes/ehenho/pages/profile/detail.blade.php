@@ -210,8 +210,8 @@
        
 
         <tr>
-          <td class="pv-td" style="font-weight: bold; width: 20%; background: #fcfcfc;">Thông tin cơ bản</td>
-          <td class="pv-details" style="width: 80%;">
+          <td class="pv-td" style="font-weight: bold; width: 14%; background: #fcfcfc;">Thông tin cơ bản</td>
+          <td class="pv-details" style="width: 86%;">
             {{ $profile->gender == 'female' ? 'Nữ' : ($profile->gender == 'male' ? 'Nam' : 'Khác') }} tìm {{ $profile->gender == 'female' ? 'nam' : 'nữ' }} - 
             {{ $profile->marital_status ?: 'Độc thân' }} - 
             {{ $profile->age }} tuổi
