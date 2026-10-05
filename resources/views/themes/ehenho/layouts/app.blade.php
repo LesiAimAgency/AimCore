@@ -82,6 +82,7 @@
   <!-- Latest compiled and minified CSS -->
   <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet" />
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
   <link href="{{ asset('themes/ehenho/css/normalize.css') }}" rel="stylesheet" />
   <link href="{{ asset('themes/ehenho/css/base8.css') }}" rel="stylesheet" />
   <link href="{{ asset('themes/ehenho/css/carousel.css') }}" rel="stylesheet" />

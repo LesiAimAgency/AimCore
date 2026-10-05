@@ -76,7 +76,7 @@
       <a href="{{ $tiktokUrl }}" target="_blank" rel="noopener noreferrer" title="TikTok"> <i class="fa fa-br fa-tiktok"></i></a>&nbsp;&nbsp;
     @endif
     @if($zaloUrl)
-      <a href="{{ $zaloUrl }}" target="_blank" rel="noopener noreferrer" title="Zalo"> <i class="fa fa-br fa-commenting" style="background:#0068ff;color:white;"></i></a>&nbsp;&nbsp;
+      <a href="{{ $zaloUrl }}" target="_blank" rel="noopener noreferrer" title="Zalo"> <i class="fa fa-br fa-zalo"></i></a>&nbsp;&nbsp;
     @endif
   </div>
   @endif
