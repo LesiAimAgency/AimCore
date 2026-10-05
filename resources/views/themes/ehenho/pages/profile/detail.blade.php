@@ -51,6 +51,10 @@
   <div class="row">
     <div class="col-sm-8 col-sm-offset-0">
       <table class="table table-striped table-bordered border-collapse ptable" style="width:100%; table-layout:fixed;">
+        <colgroup>
+          <col style="width: 14%; min-width: 90px; max-width: 110px;">
+          <col style="width: 86%;">
+        </colgroup>
         <tr>
           <td colspan="2" style="font-size:1.4em; text-align:center; vertical-align:middle; padding: 12px; height:48px; border-bottom:3px solid #EDEDED; background-color: #fafafa;">
             <span style="font-weight:bold; color:#1D788F;">
@@ -330,7 +334,15 @@
 
     <!-- Right Sidebar -->
     <div class="col-sm-4">
-      <div class="panel panel-default">
+      @include('themes.ehenho.components.chat-all-inline')
+
+      <!-- Recently Registered Widget (Nữ / Nam Tabs) -->
+      @include('themes.ehenho.components.recently-registered', [
+        'recentFemaleProfiles' => $recentFemaleProfiles,
+        'recentMaleProfiles' => $recentMaleProfiles
+      ])
+
+      <div class="panel panel-default" style="margin-top: 15px;">
         <div class="panel-heading" style="background-color: #f7f7f7; font-weight: bold; color: #2e5d69;">
           <i class="fa fa-search"></i> Tìm kiếm người khác
         </div>

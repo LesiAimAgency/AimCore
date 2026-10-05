@@ -57,9 +57,23 @@ class ProfileController extends Controller
             }
         }
 
+        $recentFemaleProfiles = Profile::where('status', 'active')
+            ->where('gender', 'female')
+            ->orderByDesc('id')
+            ->limit(5)
+            ->get();
+
+        $recentMaleProfiles = Profile::where('status', 'active')
+            ->where('gender', 'male')
+            ->orderByDesc('id')
+            ->limit(5)
+            ->get();
+
         return view('themes.ehenho.pages.profile.detail', compact(
             'profile',
             'relatedProfiles',
+            'recentFemaleProfiles',
+            'recentMaleProfiles',
             'isBookmarked',
             'isLiked',
             'isBlocked',
