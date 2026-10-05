@@ -334,15 +334,7 @@
 
     <!-- Right Sidebar -->
     <div class="col-sm-4">
-   
-
-      <!-- Recently Registered Widget (Nữ / Nam Tabs) -->
-      @include('themes.ehenho.components.recently-registered', [
-        'recentFemaleProfiles' => $recentFemaleProfiles,
-        'recentMaleProfiles' => $recentMaleProfiles
-      ])
-
-      <div class="panel panel-default" style="margin-top: 15px;">
+   <div class="panel panel-default" style="margin-top: 15px;">
         <div class="panel-heading" style="background-color: #f7f7f7; font-weight: bold; color: #2e5d69;">
           <i class="fa fa-search"></i> Tìm kiếm người khác
         </div>
@@ -355,6 +347,14 @@
           </a>
         </div>
       </div>
+
+      <!-- Recently Registered Widget (Nữ / Nam Tabs) -->
+      @include('themes.ehenho.components.recently-registered', [
+        'recentFemaleProfiles' => $recentFemaleProfiles,
+        'recentMaleProfiles' => $recentMaleProfiles
+      ])
+
+      
     </div>
   </div>
 </div>
