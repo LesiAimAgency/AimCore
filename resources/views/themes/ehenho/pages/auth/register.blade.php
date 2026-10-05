@@ -282,84 +282,82 @@
               </div>
               <div class="col-xs-9 col-sm-8 col-md-5">
                 <select class="pl-text select form-control" id="id_province" name="province" required style="height:32px;">
-                  <option value="ho-chi-minh" {{ old('province') == 'ho-chi-minh' ? 'selected' : '' }}>Hồ Chí Minh</option>
-                  <option value="ha-noi" {{ old('province') == 'ha-noi' ? 'selected' : '' }}>Hà Nội</option>
-                  <option value="da-nang" {{ old('province') == 'da-nang' ? 'selected' : '' }}>Đà Nẵng</option>
-                  <option value="hai-phong" {{ old('province') == 'hai-phong' ? 'selected' : '' }}>Hải Phòng</option>
-                  <option value="can-tho" {{ old('province') == 'can-tho' ? 'selected' : '' }}>Cần Thơ</option>
-                  <option value="an-giang">An Giang</option>
-                  <option value="ba-ria-vung-tau">Bà Rịa - Vũng Tàu</option>
-                  <option value="bac-giang">Bắc Giang</option>
-                  <option value="bac-kan">Bắc Kạn</option>
-                  <option value="bac-lieu">Bạc Liêu</option>
-                  <option value="bac-ninh">Bắc Ninh</option>
-                  <option value="ben-tre">Bến Tre</option>
-                  <option value="binh-dinh">Bình Định</option>
-                  <option value="binh-duong">Bình Dương</option>
-                  <option value="binh-phuoc">Bình Phước</option>
-                  <option value="binh-thuan">Bình Thuận</option>
-                  <option value="ca-mau">Cà Mau</option>
-                  <option value="cao-bang">Cao Bằng</option>
-                  <option value="dak-lak">Đắk Lắk</option>
-                  <option value="dak-nong">Đắk Nông</option>
-                  <option value="dien-bien">Điện Biên</option>
-                  <option value="dong-nai">Đồng Nai</option>
-                  <option value="dong-thap">Đồng Tháp</option>
-                  <option value="gia-lai">Gia Lai</option>
-                  <option value="ha-giang">Hà Giang</option>
-                  <option value="ha-nam">Hà Nam</option>
-                  <option value="ha-tinh">Hà Tĩnh</option>
-                  <option value="hai-duong">Hải Dương</option>
-                  <option value="hau-giang">Hậu Giang</option>
-                  <option value="hoa-binh">Hòa Bình</option>
-                  <option value="hung-yen">Hưng Yên</option>
-                  <option value="khanh-hoa">Khánh Hòa</option>
-                  <option value="kien-giang">Kiên Giang</option>
-                  <option value="kon-tum">Kon Tum</option>
-                  <option value="lai-chau">Lai Châu</option>
-                  <option value="lam-dong">Lâm Đồng</option>
-                  <option value="lang-son">Lạng Sơn</option>
-                  <option value="lao-cai">Lào Cai</option>
-                  <option value="long-an">Long An</option>
-                  <option value="nam-dinh">Nam Định</option>
-                  <option value="nghe-an">Nghệ An</option>
-                  <option value="ninh-binh">Ninh Bình</option>
-                  <option value="ninh-thuan">Ninh Thuận</option>
-                  <option value="phu-tho">Phú Thọ</option>
-                  <option value="phu-yen">Phú Yên</option>
-                  <option value="quang-binh">Quảng Bình</option>
-                  <option value="quang-nam">Quảng Nam</option>
-                  <option value="quang-ngai">Quảng Ngãi</option>
-                  <option value="quang-ninh">Quảng Ninh</option>
-                  <option value="quang-tri">Quảng Trị</option>
-                  <option value="soc-trang">Sóc Trăng</option>
-                  <option value="son-la">Sơn La</option>
-                  <option value="tay-ninh">Tây Ninh</option>
-                  <option value="thai-binh">Thái Bình</option>
-                  <option value="thai-nguyen">Thái Nguyên</option>
-                  <option value="thanh-hoa">Thanh Hóa</option>
-                  <option value="hue">Thừa Thiên Huế</option>
-                  <option value="tien-giang">Tiền Giang</option>
-                  <option value="tra-vinh">Trà Vinh</option>
-                  <option value="tuyen-quang">Tuyên Quang</option>
-                  <option value="vinh-long">Vĩnh Long</option>
-                  <option value="vinh-phuc">Vĩnh Phúc</option>
-                  <option value="yen-bai">Yên Bái</option>
-                  <option disabled="disabled">-----------------</option>
-                  <option value="united-states" {{ old('province') == 'united-states' ? 'selected' : '' }}>Mỹ</option>
-                  <option value="canada" {{ old('province') == 'canada' ? 'selected' : '' }}>Canada</option>
-                  <option value="australia" {{ old('province') == 'australia' ? 'selected' : '' }}>Úc</option>
-                  <option value="germany" {{ old('province') == 'germany' ? 'selected' : '' }}>Đức</option>
-                  <option value="england" {{ old('province') == 'england' ? 'selected' : '' }}>Anh</option>
-                  <option value="france" {{ old('province') == 'france' ? 'selected' : '' }}>Pháp</option>
-                  <option value="finland" {{ old('province') == 'finland' ? 'selected' : '' }}>Phần Lan</option>
-                  <option value="japan" {{ old('province') == 'japan' ? 'selected' : '' }}>Nhật</option>
-                  <option value="south-korea" {{ old('province') == 'south-korea' ? 'selected' : '' }}>Hàn Quốc</option>
+                  <optgroup label="── QUỐC GIA QUỐC TẾ ──">
+                    <option value="usa" {{ in_array(old('province'), ['usa', 'united-states', 'my'], true) ? 'selected' : '' }}>USA – Mỹ</option>
+                    <option value="japan" {{ in_array(old('province'), ['japan', 'nhat', 'nhat-ban'], true) ? 'selected' : '' }}>Nhật Bản (Nhật)</option>
+                    <option value="australia" {{ in_array(old('province'), ['australia', 'uc'], true) ? 'selected' : '' }}>Úc (Australia)</option>
+                   
+                  </optgroup>
+                  <optgroup label="── 🇻🇳 TỈNH / THÀNH PHỐ VIỆT NAM ──">
+                    <option value="ho-chi-minh" {{ old('province', 'ho-chi-minh') === 'ho-chi-minh' ? 'selected' : '' }}>TP. Hồ Chí Minh</option>
+                    <option value="ha-noi" {{ old('province') === 'ha-noi' ? 'selected' : '' }}>Hà Nội</option>
+                    <option value="da-nang" {{ old('province') === 'da-nang' ? 'selected' : '' }}>Đà Nẵng</option>
+                    <option value="hai-phong" {{ old('province') === 'hai-phong' ? 'selected' : '' }}>Hải Phòng</option>
+                    <option value="can-tho" {{ old('province') === 'can-tho' ? 'selected' : '' }}>Cần Thơ</option>
+                    <option value="an-giang" {{ old('province') === 'an-giang' ? 'selected' : '' }}>An Giang</option>
+                    <option value="ba-ria-vung-tau" {{ old('province') === 'ba-ria-vung-tau' ? 'selected' : '' }}>Bà Rịa - Vũng Tàu</option>
+                    <option value="bac-giang" {{ old('province') === 'bac-giang' ? 'selected' : '' }}>Bắc Giang</option>
+                    <option value="bac-kan" {{ old('province') === 'bac-kan' ? 'selected' : '' }}>Bắc Kạn</option>
+                    <option value="bac-lieu" {{ old('province') === 'bac-lieu' ? 'selected' : '' }}>Bạc Liêu</option>
+                    <option value="bac-ninh" {{ old('province') === 'bac-ninh' ? 'selected' : '' }}>Bắc Ninh</option>
+                    <option value="ben-tre" {{ old('province') === 'ben-tre' ? 'selected' : '' }}>Bến Tre</option>
+                    <option value="binh-dinh" {{ old('province') === 'binh-dinh' ? 'selected' : '' }}>Bình Định</option>
+                    <option value="binh-duong" {{ old('province') === 'binh-duong' ? 'selected' : '' }}>Bình Dương</option>
+                    <option value="binh-phuoc" {{ old('province') === 'binh-phuoc' ? 'selected' : '' }}>Bình Phước</option>
+                    <option value="binh-thuan" {{ old('province') === 'binh-thuan' ? 'selected' : '' }}>Bình Thuận</option>
+                    <option value="ca-mau" {{ old('province') === 'ca-mau' ? 'selected' : '' }}>Cà Mau</option>
+                    <option value="cao-bang" {{ old('province') === 'cao-bang' ? 'selected' : '' }}>Cao Bằng</option>
+                    <option value="dak-lak" {{ old('province') === 'dak-lak' ? 'selected' : '' }}>Đắk Lắk</option>
+                    <option value="dak-nong" {{ old('province') === 'dak-nong' ? 'selected' : '' }}>Đắk Nông</option>
+                    <option value="dien-bien" {{ old('province') === 'dien-bien' ? 'selected' : '' }}>Điện Biên</option>
+                    <option value="dong-nai" {{ old('province') === 'dong-nai' ? 'selected' : '' }}>Đồng Nai</option>
+                    <option value="dong-thap" {{ old('province') === 'dong-thap' ? 'selected' : '' }}>Đồng Tháp</option>
+                    <option value="gia-lai" {{ old('province') === 'gia-lai' ? 'selected' : '' }}>Gia Lai</option>
+                    <option value="ha-giang" {{ old('province') === 'ha-giang' ? 'selected' : '' }}>Hà Giang</option>
+                    <option value="ha-nam" {{ old('province') === 'ha-nam' ? 'selected' : '' }}>Hà Nam</option>
+                    <option value="ha-tinh" {{ old('province') === 'ha-tinh' ? 'selected' : '' }}>Hà Tĩnh</option>
+                    <option value="hai-duong" {{ old('province') === 'hai-duong' ? 'selected' : '' }}>Hải Dương</option>
+                    <option value="hau-giang" {{ old('province') === 'hau-giang' ? 'selected' : '' }}>Hậu Giang</option>
+                    <option value="hoa-binh" {{ old('province') === 'hoa-binh' ? 'selected' : '' }}>Hòa Bình</option>
+                    <option value="hung-yen" {{ old('province') === 'hung-yen' ? 'selected' : '' }}>Hưng Yên</option>
+                    <option value="khanh-hoa" {{ old('province') === 'khanh-hoa' ? 'selected' : '' }}>Khánh Hòa</option>
+                    <option value="kien-giang" {{ old('province') === 'kien-giang' ? 'selected' : '' }}>Kiên Giang</option>
+                    <option value="kon-tum" {{ old('province') === 'kon-tum' ? 'selected' : '' }}>Kon Tum</option>
+                    <option value="lai-chau" {{ old('province') === 'lai-chau' ? 'selected' : '' }}>Lai Châu</option>
+                    <option value="lam-dong" {{ old('province') === 'lam-dong' ? 'selected' : '' }}>Lâm Đồng</option>
+                    <option value="lang-son" {{ old('province') === 'lang-son' ? 'selected' : '' }}>Lạng Sơn</option>
+                    <option value="lao-cai" {{ old('province') === 'lao-cai' ? 'selected' : '' }}>Lào Cai</option>
+                    <option value="long-an" {{ old('province') === 'long-an' ? 'selected' : '' }}>Long An</option>
+                    <option value="nam-dinh" {{ old('province') === 'nam-dinh' ? 'selected' : '' }}>Nam Định</option>
+                    <option value="nghe-an" {{ old('province') === 'nghe-an' ? 'selected' : '' }}>Nghệ An</option>
+                    <option value="ninh-binh" {{ old('province') === 'ninh-binh' ? 'selected' : '' }}>Ninh Bình</option>
+                    <option value="ninh-thuan" {{ old('province') === 'ninh-thuan' ? 'selected' : '' }}>Ninh Thuận</option>
+                    <option value="phu-tho" {{ old('province') === 'phu-tho' ? 'selected' : '' }}>Phú Thọ</option>
+                    <option value="phu-yen" {{ old('province') === 'phu-yen' ? 'selected' : '' }}>Phú Yên</option>
+                    <option value="quang-binh" {{ old('province') === 'quang-binh' ? 'selected' : '' }}>Quảng Bình</option>
+                    <option value="quang-nam" {{ old('province') === 'quang-nam' ? 'selected' : '' }}>Quảng Nam</option>
+                    <option value="quang-ngai" {{ old('province') === 'quang-ngai' ? 'selected' : '' }}>Quảng Ngãi</option>
+                    <option value="quang-ninh" {{ old('province') === 'quang-ninh' ? 'selected' : '' }}>Quảng Ninh</option>
+                    <option value="quang-tri" {{ old('province') === 'quang-tri' ? 'selected' : '' }}>Quảng Trị</option>
+                    <option value="soc-trang" {{ old('province') === 'soc-trang' ? 'selected' : '' }}>Sóc Trăng</option>
+                    <option value="son-la" {{ old('province') === 'son-la' ? 'selected' : '' }}>Sơn La</option>
+                    <option value="tay-ninh" {{ old('province') === 'tay-ninh' ? 'selected' : '' }}>Tây Ninh</option>
+                    <option value="thai-binh" {{ old('province') === 'thai-binh' ? 'selected' : '' }}>Thái Bình</option>
+                    <option value="thai-nguyen" {{ old('province') === 'thai-nguyen' ? 'selected' : '' }}>Thái Nguyên</option>
+                    <option value="thanh-hoa" {{ old('province') === 'thanh-hoa' ? 'selected' : '' }}>Thanh Hóa</option>
+                    <option value="hue" {{ old('province') === 'hue' ? 'selected' : '' }}>Thừa Thiên Huế</option>
+                    <option value="tien-giang" {{ old('province') === 'tien-giang' ? 'selected' : '' }}>Tiền Giang</option>
+                    <option value="tra-vinh" {{ old('province') === 'tra-vinh' ? 'selected' : '' }}>Trà Vinh</option>
+                    <option value="tuyen-quang" {{ old('province') === 'tuyen-quang' ? 'selected' : '' }}>Tuyên Quang</option>
+                    <option value="vinh-long" {{ old('province') === 'vinh-long' ? 'selected' : '' }}>Vĩnh Long</option>
+                    <option value="vinh-phuc" {{ old('province') === 'vinh-phuc' ? 'selected' : '' }}>Vĩnh Phúc</option>
+                    <option value="yen-bai" {{ old('province') === 'yen-bai' ? 'selected' : '' }}>Yên Bái</option>
+                  </optgroup>
                 </select>
 
-                <!-- District Dropdown -->
-                <div style="display:table; width:100%; margin-top:6px;">
-                  <select class="pl-text select form-control" id="id_district" name="district" style="height:32px;">
+                <!-- District Dropdown (Chỉ hiện khi chọn Tỉnh/Thành Việt Nam, ẩn hoàn toàn khi chọn Quốc gia Quốc tế) -->
+                <div id="district_container" style="display:table; width:100%; margin-top:6px;">
+                  <select class="pl-text select form-control" id="id_district" name="district" data-selected="{{ old('district') }}" style="height:32px;">
                     <option value="">-- Chọn Quận / Huyện / Thị xã --</option>
                   </select>
                   <span id="loading_district_drop_down" style="display:none; color:#2e5d69; font-size:12px; margin-top:4px;">
@@ -368,11 +366,9 @@
                 </div>
               </div>
               <div class="col-xs-9 col-xs-offset-3 col-md-3 col-md-offset-0 ptop-six">
-                <span class="pr_htext" id="vietnam_notice" style="color: gray; font-size: 12px;">
-                  (Nếu bạn ở ngoài Việt Nam thì vui lòng chọn Mỹ, Canada, Úc...)
-                </span>
-                <span class="pr_htext" id="foreign_notice" style="display:none; color:#3F7E8F; font-size: 12px;">
-                  <i class="fa fa-globe"></i> Quốc gia ngoài Việt Nam
+              
+                <span class="pr_htext" id="foreign_notice" style="display:none; color:#1e7e34; font-size: 12px; font-weight: 500;">
+                  <i class="fa fa-globe"></i> Quốc gia Quốc tế (Không yêu cầu Quận/Huyện)
                 </span>
               </div>
             </div>
@@ -774,9 +770,6 @@
 @endsection
 
 @push('scripts')
-@if(!empty($recaptchaSiteKey))
-<script src="https://www.google.com/recaptcha/api.js?hl=vi" async defer></script>
-@endif
 <script src="{{ asset('themes/ehenho/js/drop_down.js') }}"></script>
 <script type="text/javascript">
   $(document).ready(function() {
@@ -851,6 +844,9 @@
           if (val === null || val === undefined || val === '') return;
           var field = form.find('[name="' + name + '"]');
           if (field.length && !field.val()) {
+            if (name === 'district') {
+              field.attr('data-selected', val);
+            }
             field.val(val).trigger('change');
           }
         });

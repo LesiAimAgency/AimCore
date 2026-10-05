@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Menu;
-use App\Models\MenuItem;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Route;
 
 class MenuService
 {
@@ -25,6 +23,7 @@ class MenuService
     {
         return [
             'header' => 'Header (Thanh điều hướng chính)',
+            'sub_location' => 'Thanh Tỉnh Thành (Sub-location / Quick Filter)',
             'footer' => 'Footer (Chân trang)',
             'footer_bottom' => 'Footer Bottom (Liên kết bản quyền & chính sách)',
             'mobile' => 'Mobile (Menu điều hướng di động)',

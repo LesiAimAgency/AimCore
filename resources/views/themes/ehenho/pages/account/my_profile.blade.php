@@ -42,8 +42,11 @@
 
         <div style="margin-bottom: 15px;">
           <span class="label label-success" style="font-size: 12px;">Đang hoạt động</span>
+          @if($profile->is_online)
+            <span class="label label-info" style="font-size: 12px; background-color: #10b981;"><i class="fa fa-circle"></i> Đang trực tuyến</span>
+          @endif
           @if($profile->is_featured)
-            <span class="label label-warning" style="font-size: 12px;"><i class="fa fa-star"></i> Hồ sơ nổi bật</span>
+            <span class="label label-warning" style="font-size: 12px; background-color: #f59e0b;"><i class="fa fa-star"></i> Hồ sơ nổi bật</span>
           @endif
         </div>
 

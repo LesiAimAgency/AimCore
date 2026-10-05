@@ -1086,6 +1086,21 @@ span.footer-note {
     color: white;
 }
 
+.fa-instagram {
+    background: #E1306C;
+    color: white;
+}
+
+.fa-youtube {
+    background: #FF0000;
+    color: white;
+}
+
+.fa-tiktok {
+    background: #010101;
+    color: white;
+}
+
 .fa-br {
     padding: 10px !important;
     font-size: 20px !important;

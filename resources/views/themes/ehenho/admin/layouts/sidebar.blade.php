@@ -11,7 +11,7 @@
     }
     $initial = strtoupper(substr($authUser?->name ?? 'A', 0, 1));
 
-    $inProfiles = request()->routeIs('project.admin.ehenho.profiles.*') || request()->routeIs('project.admin.ehenho.interactions.*');
+    $inProfiles = request()->routeIs('project.admin.ehenho.profiles.*') || request()->routeIs('project.admin.ehenho.interactions.*') || request()->routeIs('project.admin.users.*');
     $inContent  = request()->routeIs('project.admin.posts.*') || request()->routeIs('project.admin.pages.*');
     $inMedia    = request()->routeIs('project.admin.ehenho.theme.*') || request()->routeIs('project.admin.settings.appearance') || request()->routeIs('project.admin.widgets.*') || request()->routeIs('project.admin.media.*');
 @endphp
@@ -136,7 +136,7 @@
             <i class="fa-solid fa-heart"></i>
         </div>
         <div class="sb-logo-text flex-1">
-            <p>eHenho Dating</p>
+            <p>Dating</p>
             <span>Admin Panel</span>
         </div>
         <button type="button" onclick="toggleAdminSidebar(false)" class="lg:hidden p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition" title="Đóng menu">
@@ -171,6 +171,10 @@
                 <span class="dot"></span>
                 <span>Danh sách hồ sơ</span>
             </a>
+            <a href="{{ route('project.admin.users.index', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.users.*') ? 'active' : '' }}">
+                <span class="dot"></span>
+                <span>Tài khoản người dùng</span>
+            </a>
             <a href="{{ route('project.admin.ehenho.interactions.index', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.ehenho.interactions.*') ? 'active' : '' }}">
                 <span class="dot"></span>
                 <span>Tương tác & Tin nhắn</span>
@@ -185,14 +189,8 @@
             <i class="fa-solid fa-chevron-down text-[10px] transition-transform" :class="open==='content' ? 'rotate-180' : ''"></i>
         </button>
         <div x-show="open==='content'" x-cloak x-collapse class="sub-menu">
-            <a href="{{ route('project.admin.posts.index', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.posts.index') ? 'active' : '' }}">
-                <span class="dot"></span>
-                <span>Cẩm nang hẹn hò</span>
-            </a>
-            <a href="{{ route('project.admin.posts.create', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.posts.create') ? 'active' : '' }}">
-                <span class="dot"></span>
-                <span>Viết bài mới</span>
-            </a>
+           
+           
             <a href="{{ route('project.admin.pages.index', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.pages.index') ? 'active' : '' }}">
                 <span class="dot"></span>
                 <span>Trang tĩnh (Pages)</span>
@@ -250,7 +248,7 @@
             </div>
             <div style="flex:1;min-width:0;">
                 <p style="font-size:12.5px;font-weight:600;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0;">{{ $authUser?->name ?? 'Admin' }}</p>
-                <p style="font-size:10px;color:#475569;margin-top:1px;margin-bottom:0;">Quản trị viên eHenho</p>
+                <p style="font-size:10px;color:#475569;margin-top:1px;margin-bottom:0;">Quản trị viên </p>
             </div>
             <form action="{{ route('project.logout', $projectCode) }}" method="POST" style="margin:0;">
                 @csrf

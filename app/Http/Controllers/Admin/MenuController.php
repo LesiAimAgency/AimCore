@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Project;
 use App\Models\Taxonomy;
+use App\Services\MenuService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -141,10 +142,13 @@ class MenuController extends Controller
         ], $sources));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $projectCode = null)
     {
         try {
             $project = current_project();
+            if (! $project && is_string($projectCode) && ! is_numeric($projectCode)) {
+                $project = Project::where('code', $projectCode)->first();
+            }
             $projectId = $project?->id;
             $tenantId = $project?->tenant_id ?? $projectId;
 
@@ -180,7 +184,7 @@ class MenuController extends Controller
                 'tenant_id' => $tenantId,
             ]);
 
-            \App\Services\MenuService::clearMenuCache($projectId);
+            MenuService::clearMenuCache($projectId);
 
             if ($request->expectsJson() || $request->ajax()) {
                 return response()->json([
@@ -234,7 +238,7 @@ class MenuController extends Controller
 
         $menu->update($updateData);
 
-        \App\Services\MenuService::clearMenuCache($menu->project_id);
+        MenuService::clearMenuCache($menu->project_id);
 
         if ($request->expectsJson() || $request->ajax()) {
             return response()->json([
@@ -298,7 +302,7 @@ class MenuController extends Controller
 
             $menuItem = MenuItem::create($data);
 
-            \App\Services\MenuService::clearMenuCache($menu->project_id);
+            MenuService::clearMenuCache($menu->project_id);
 
             return response()->json([
                 'success' => true,
@@ -320,9 +324,9 @@ class MenuController extends Controller
 
         $item = MenuItem::withoutGlobalScopes()->findOrFail($itemId);
         $data = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'sometimes|required|string|max:255',
             'url' => 'nullable|string|max:1000',
-            'target' => 'required|in:_self,_blank',
+            'target' => 'sometimes|required|in:_self,_blank',
             'icon' => 'nullable|string|max:255',
             'css_class' => 'nullable|string|max:255',
             'image' => 'nullable|string|max:500',
@@ -339,7 +343,7 @@ class MenuController extends Controller
 
         $item->update($data);
 
-        \App\Services\MenuService::clearMenuCache($item->project_id);
+        MenuService::clearMenuCache($item->project_id);
 
         if ($request->expectsJson() || $request->ajax()) {
             return response()->json([
@@ -362,7 +366,7 @@ class MenuController extends Controller
         $projectId = $item->project_id;
         $item->delete();
 
-        \App\Services\MenuService::clearMenuCache($projectId);
+        MenuService::clearMenuCache($projectId);
 
         if (request()->expectsJson() || request()->ajax()) {
             return response()->json([
@@ -407,7 +411,7 @@ class MenuController extends Controller
                 }
             });
 
-            \App\Services\MenuService::clearMenuCache($menu->project_id);
+            MenuService::clearMenuCache($menu->project_id);
 
             return response()->json([
                 'success' => true,
@@ -452,7 +456,7 @@ class MenuController extends Controller
         $projectId = $menu->project_id;
         $menu->delete();
 
-        \App\Services\MenuService::clearMenuCache($projectId);
+        MenuService::clearMenuCache($projectId);
 
         if (request()->expectsJson() || request()->ajax()) {
             return response()->json([

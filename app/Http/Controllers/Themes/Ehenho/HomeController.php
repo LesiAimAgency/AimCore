@@ -19,14 +19,8 @@ class HomeController extends Controller
             ->take(8)
             ->get();
 
-        if ($featuredProfiles->isEmpty()) {
-            $featuredProfiles = Profile::where('status', 'active')
-                ->latest()
-                ->take(8)
-                ->get();
-        }
-
         $newestProfiles = Profile::where('status', 'active')
+            ->orderByDesc('is_featured')
             ->latest()
             ->take(12)
             ->get();

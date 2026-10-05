@@ -55,7 +55,7 @@ class SearchController extends Controller
         $query = Profile::where('status', 'active');
         $this->applyFilters($query, $request);
 
-        $profiles = $query->latest()->paginate(12)->withQueryString();
+        $profiles = $query->orderByDesc('is_featured')->latest()->paginate(12)->withQueryString();
         $provinces = Province::orderBy('name')->get();
 
         $recentFemaleProfiles = Profile::where('status', 'active')
@@ -103,7 +103,7 @@ class SearchController extends Controller
             $query->whereNotNull('avatar_url')->where('avatar_url', '!=', '');
         }
 
-        $profiles = $query->latest()->paginate(12)->withQueryString();
+        $profiles = $query->orderByDesc('is_featured')->latest()->paginate(12)->withQueryString();
         $provinces = Province::orderBy('name')->get();
 
         $recentFemaleProfiles = Profile::where('status', 'active')
@@ -138,6 +138,31 @@ class SearchController extends Controller
         $selectedProvince = null;
         $pageTitle = null;
 
+        if ($selectedProvinceId) {
+            $normalizedId = strtolower((string) $selectedProvinceId);
+            $foreignCountryMap = [
+                'my' => ['country' => 'my', 'title' => 'Tìm bạn bốn phương ở USA – Mỹ'],
+                'usa' => ['country' => 'my', 'title' => 'Tìm bạn bốn phương ở USA – Mỹ'],
+                'united-states' => ['country' => 'my', 'title' => 'Tìm bạn bốn phương ở USA – Mỹ'],
+                'uc' => ['country' => 'uc', 'title' => 'Tìm bạn bốn phương ở Úc'],
+                'australia' => ['country' => 'uc', 'title' => 'Tìm bạn bốn phương ở Úc (Australia)'],
+                'nhat' => ['country' => 'nhat', 'title' => 'Tìm bạn bốn phương ở Nhật'],
+                'nhat-ban' => ['country' => 'nhat', 'title' => 'Tìm bạn bốn phương ở Nhật Bản'],
+                'japan' => ['country' => 'nhat', 'title' => 'Tìm bạn bốn phương ở Nhật Bản'],
+                'canada' => ['country' => 'canada', 'title' => 'Tìm bạn bốn phương ở Canada'],
+                'duc' => ['country' => 'duc', 'title' => 'Tìm bạn bốn phương ở Đức'],
+                'germany' => ['country' => 'duc', 'title' => 'Tìm bạn bốn phương ở Đức'],
+                'han-quoc' => ['country' => 'han-quoc', 'title' => 'Tìm bạn bốn phương ở Hàn Quốc'],
+                'south-korea' => ['country' => 'han-quoc', 'title' => 'Tìm bạn bốn phương ở Hàn Quốc'],
+                'taiwan' => ['country' => 'taiwan', 'title' => 'Tìm bạn bốn phương ở Đài Loan'],
+                'dai-loan' => ['country' => 'taiwan', 'title' => 'Tìm bạn bốn phương ở Đài Loan'],
+            ];
+
+            if (isset($foreignCountryMap[$normalizedId])) {
+                return $this->quickCategory($request, ['country' => $foreignCountryMap[$normalizedId]['country']], $foreignCountryMap[$normalizedId]['title']);
+            }
+        }
+
         $query = Profile::where('status', 'active');
 
         if ($selectedProvinceId) {
@@ -171,7 +196,7 @@ class SearchController extends Controller
 
         $this->applyFilters($query, $request);
 
-        $profiles = $query->latest()->paginate(12)->withQueryString();
+        $profiles = $query->orderByDesc('is_featured')->latest()->paginate(12)->withQueryString();
         $provinces = Province::orderBy('name')->get();
 
         $recentFemaleProfiles = Profile::where('status', 'active')
@@ -204,7 +229,7 @@ class SearchController extends Controller
         $query = Profile::where('status', 'active');
         $this->applyFilters($query, $request);
 
-        $profiles = $query->latest()->paginate(12)->withQueryString();
+        $profiles = $query->orderByDesc('is_featured')->latest()->paginate(12)->withQueryString();
         $provinces = Province::orderBy('name')->get();
 
         $recentFemaleProfiles = Profile::where('status', 'active')
@@ -447,6 +472,37 @@ class SearchController extends Controller
                         ->orWhere('about_me', 'like', '%Đức%')
                         ->orWhere('headline', 'like', '%Đức%');
                 });
+            } elseif (in_array($country, ['nhat', 'nhat-ban', 'japan'], true)) {
+                $query->where(function (Builder $sub) {
+                    $sub->where('province_id', 68)
+                        ->orWhere('province_name', 'like', '%Nhật%')
+                        ->orWhere('province_name', 'like', '%Japan%')
+                        ->orWhere('district_name', 'like', '%Tokyo%')
+                        ->orWhere('district_name', 'like', '%Osaka%')
+                        ->orWhere('district_name', 'like', '%Nagoya%')
+                        ->orWhere('district_name', 'like', '%Yokohama%')
+                        ->orWhere('district_name', 'like', '%Fukuoka%')
+                        ->orWhere('district_name', 'like', '%Chiba%')
+                        ->orWhere('district_name', 'like', '%Saitama%')
+                        ->orWhere('district_name', 'like', '%Nhật%')
+                        ->orWhere('district_name', 'like', '%Japan%')
+                        ->orWhere('about_me', 'like', '%Nhật%')
+                        ->orWhere('headline', 'like', '%Nhật%');
+                });
+            } elseif (in_array($country, ['han-quoc', 'south-korea', 'korea'], true)) {
+                $query->where(function (Builder $sub) {
+                    $sub->where('province_name', 'like', '%Hàn Quốc%')
+                        ->orWhere('province_name', 'like', '%Korea%')
+                        ->orWhere('about_me', 'like', '%Hàn Quốc%')
+                        ->orWhere('headline', 'like', '%Hàn Quốc%');
+                });
+            } elseif (in_array($country, ['taiwan', 'dai-loan'], true)) {
+                $query->where(function (Builder $sub) {
+                    $sub->where('province_name', 'like', '%Đài Loan%')
+                        ->orWhere('province_name', 'like', '%Taiwan%')
+                        ->orWhere('about_me', 'like', '%Đài Loan%')
+                        ->orWhere('headline', 'like', '%Đài Loan%');
+                });
             }
         }
 
@@ -463,6 +519,16 @@ class SearchController extends Controller
                     ->orWhere('about_me', 'like', '%'.$kw.'%')
                     ->orWhere('headline', 'like', '%'.$kw.'%');
             });
+        }
+
+        // 10. Online status filter
+        if ($request->boolean('is_online') || $request->input('online') === '1') {
+            $query->where('is_online', true);
+        }
+
+        // 11. Featured status filter
+        if ($request->boolean('is_featured') || $request->input('featured') === '1') {
+            $query->where('is_featured', true);
         }
     }
 

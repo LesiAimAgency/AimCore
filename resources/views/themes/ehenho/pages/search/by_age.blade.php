@@ -16,26 +16,7 @@
   </div>
 </header>
 
-<div class="container cont-sb-loc">
-  <a class="b-button" href="{{ route('ehenho.search.by_location') }}">
-    <span class="glyphicon glyphicon-map-marker"></span> Tìm bạn bốn phương theo Tỉnh Thành
-  </a>
-  <a class="b-button" href="{{ route('ehenho.search.index', ['looking_for' => 'ket_hon']) }}">
-    <span class="glyphicon glyphicon-map-marker"></span> Tìm người kết hôn
-  </a>
-  <a class="b-button" href="{{ route('ehenho.search.index', ['looking_for' => 'nguoi_yeu']) }}">
-    <span class="glyphicon glyphicon-map-marker"></span> Tìm người yêu
-  </a>
-  <a class="b-button" href="{{ route('ehenho.search.index', ['gender' => 'female']) }}">
-    <span class="glyphicon glyphicon-map-marker"></span> Tìm bạn gái
-  </a>
-  <a class="b-button" href="{{ route('ehenho.search.index', ['gender' => 'male']) }}">
-    <span class="glyphicon glyphicon-map-marker"></span> Tìm bạn trai
-  </a>
-  <a class="b-button" href="{{ route('ehenho.search.index', ['looking_for' => 'ban_doi']) }}">
-    <span class="glyphicon glyphicon-map-marker"></span> Tìm bạn đời
-  </a>
-</div>
+@include('themes.ehenho.components.sub-location-bar')
 
 <div class="container" style="background-color:#FFF; padding-top:10px; padding-bottom:64px">
   <div class="row">

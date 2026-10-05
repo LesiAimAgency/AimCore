@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\ProjectSettingModel;
 use App\Models\Widget;
+use App\Services\MenuService;
 use App\Services\SettingsService;
 use App\Widgets\Ehenho\EhenhoHeroSliderWidget;
 use Illuminate\Http\RedirectResponse;
@@ -56,6 +57,7 @@ class AdminThemeSettingController extends Controller
 
         $settings = [
             'site_name' => setting('site_name', 'eHenho.com - Hẹn hò Online & Tìm bạn Bốn phương'),
+            'site_copyright' => setting('site_copyright', 'Email: hi@ehenho.com'),
             'site_logo' => setting('site_logo', ''),
             'site_favicon' => setting('site_favicon', ''),
             'logo_height' => setting('logo_height', '40'),
@@ -69,6 +71,12 @@ class AdminThemeSettingController extends Controller
             'header_show_search' => setting('header_show_search', '1'),
             'header_show_help' => setting('header_show_help', '1'),
             'header_show_auth' => setting('header_show_auth', '1'),
+            'social_facebook' => setting('social_facebook', 'http://www.facebook.com/ehenho'),
+            'social_twitter' => setting('social_twitter', 'http://www.twitter.com/ehenho'),
+            'social_instagram' => setting('social_instagram', ''),
+            'social_youtube' => setting('social_youtube', ''),
+            'social_tiktok' => setting('social_tiktok', ''),
+            'social_zalo' => setting('social_zalo', ''),
         ];
 
         $rawNavlinks = setting('ehenho_header_navlinks');
@@ -111,8 +119,8 @@ class AdminThemeSettingController extends Controller
             $slides = EhenhoHeroSliderWidget::getDefaultSlides();
         }
 
-        $menus = \App\Services\MenuService::getMenusForProject($project);
-        $availableLocations = \App\Services\MenuService::getAvailableLocations();
+        $menus = MenuService::getMenusForProject($project);
+        $availableLocations = MenuService::getAvailableLocations();
 
         return [
             'project' => $project,
@@ -157,7 +165,7 @@ class AdminThemeSettingController extends Controller
         };
 
         // 1. Process Colors & Logo if present
-        if ($hasVal('theme_color') || $hasVal('site_name') || $request->hasFile('site_logo_file') || $request->filled('site_logo_url') || $hasVal('site_logo')) {
+        if ($hasVal('theme_color') || $hasVal('site_name') || $hasVal('site_copyright') || $hasVal('social_facebook') || $hasVal('social_twitter') || $hasVal('social_instagram') || $hasVal('social_youtube') || $hasVal('social_tiktok') || $hasVal('social_zalo') || $request->hasFile('site_logo_file') || $request->filled('site_logo_url') || $hasVal('site_logo')) {
             $logoValue = setting('site_logo', '');
             if ($request->hasFile('site_logo_file')) {
                 $file = $request->file('site_logo_file');
@@ -178,11 +186,29 @@ class AdminThemeSettingController extends Controller
                 $faviconValue = $getVal('site_favicon');
             }
 
-            if (! empty($getVal('site_name'))) {
-                ProjectSettingModel::set('site_name', $getVal('site_name'), 'general');
+            if ($hasVal('site_name')) {
+                ProjectSettingModel::set('site_name', $getVal('site_name') ?? '', 'general');
             }
-            if (! empty($getVal('site_copyright'))) {
-                ProjectSettingModel::set('site_copyright', $getVal('site_copyright'), 'general');
+            if ($hasVal('site_copyright')) {
+                ProjectSettingModel::set('site_copyright', $getVal('site_copyright') ?? '', 'general');
+            }
+            if ($hasVal('social_facebook')) {
+                ProjectSettingModel::set('social_facebook', $getVal('social_facebook') ?? '', 'social');
+            }
+            if ($hasVal('social_twitter')) {
+                ProjectSettingModel::set('social_twitter', $getVal('social_twitter') ?? '', 'social');
+            }
+            if ($hasVal('social_instagram')) {
+                ProjectSettingModel::set('social_instagram', $getVal('social_instagram') ?? '', 'social');
+            }
+            if ($hasVal('social_youtube')) {
+                ProjectSettingModel::set('social_youtube', $getVal('social_youtube') ?? '', 'social');
+            }
+            if ($hasVal('social_tiktok')) {
+                ProjectSettingModel::set('social_tiktok', $getVal('social_tiktok') ?? '', 'social');
+            }
+            if ($hasVal('social_zalo')) {
+                ProjectSettingModel::set('social_zalo', $getVal('social_zalo') ?? '', 'social');
             }
             if (! empty($logoValue)) {
                 ProjectSettingModel::set('site_logo', $logoValue, 'general');

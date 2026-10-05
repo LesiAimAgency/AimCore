@@ -28,7 +28,7 @@ class EhenhoThemeResolutionTest extends TestCase
             ['domain' => 'ehenho.local'],
             [
                 'code' => 'ehenho',
-                'name' => 'eHenho Dating',
+                'name' => ' Dating',
                 'database_name' => 'core',
                 'database_type' => 'mysql',
                 'status' => 'active',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Wkcomputer;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Wkcomputer\WkOrder;
+use App\Services\CaptchaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -16,8 +17,25 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function login(Request $request, CaptchaService $captchaService)
     {
+        if ($captchaService->isEnabled()) {
+            $captchaToken = $request->input('g-recaptcha-response');
+            if (empty($captchaToken) || ! $captchaService->verify($captchaToken, $request->ip())) {
+                if ($request->expectsJson() || $request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Xác thực Google reCAPTCHA không thành công. Vui lòng xác thực lại.',
+                        'errors' => ['g-recaptcha-response' => ['Xác thực Google reCAPTCHA không thành công. Vui lòng xác thực lại.']],
+                    ], 422);
+                }
+
+                return back()->withErrors([
+                    'g-recaptcha-response' => 'Xác thực Google reCAPTCHA không thành công. Vui lòng xác thực lại.',
+                ])->onlyInput('email');
+            }
+        }
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',

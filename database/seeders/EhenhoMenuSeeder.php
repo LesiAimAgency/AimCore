@@ -66,6 +66,7 @@ class EhenhoMenuSeeder extends Seeder
                     ['title' => 'Tìm bạn bốn phương ở Úc', 'url' => '/ehenho/tim-ban-bon-phuong-o-uc', 'css_class' => 't-button'],
                     ['title' => 'Tìm bạn bốn phương ở Canada', 'url' => '/ehenho/tim-ban-bon-phuong-o-canada', 'css_class' => 't-button'],
                     ['title' => 'Tìm bạn bốn phương ở Đức', 'url' => '/ehenho/tim-ban-bon-phuong-o-duc', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn bốn phương ở Nhật', 'url' => '/ehenho/tim-ban-bon-phuong-o-nhat', 'css_class' => 't-button'],
                 ],
             ],
 
@@ -127,6 +128,7 @@ class EhenhoMenuSeeder extends Seeder
                     ['title' => 'Tìm bạn Khánh Hòa', 'url' => '/ehenho/tim-ban-bon-phuong/khanh-hoa', 'css_class' => 'c-button'],
                     ['title' => 'Tìm bạn Lâm Đồng', 'url' => '/ehenho/tim-ban-bon-phuong/lam-dong', 'css_class' => 'c-button'],
                     ['title' => 'Tìm bạn Đồng Nai', 'url' => '/ehenho/tim-ban-bon-phuong/dong-nai', 'css_class' => 'c-button'],
+                    ['title' => 'Tìm bạn Cà Mau', 'url' => '/ehenho/tim-ban-bon-phuong/ca-mau', 'css_class' => 'c-button'],
                     ['title' => 'Tìm bạn bốn phương theo Nơi Ở', 'url' => '/ehenho/tim-ban-bon-phuong-theo-noi-o', 'icon' => 'fa fa-arrow-right', 'css_class' => 'c-button'],
                 ],
             ],
@@ -142,6 +144,25 @@ class EhenhoMenuSeeder extends Seeder
                     ['title' => 'Trợ giúp', 'url' => '/ehenho/tro-giup', 'css_class' => 'navlink-b'],
                     ['title' => 'Điều khoản sử dụng', 'url' => '/ehenho/dieu-khoan-su-dung', 'css_class' => 'navlink-b'],
                     ['title' => 'Chính sách riêng tư', 'url' => '/ehenho/chinh-sach-rieng-tu', 'css_class' => 'navlink-b'],
+                ],
+            ],
+
+            // 7. Sub-Location Filter Bar (Thanh Tỉnh Thành Marker Filter Buttons)
+            [
+                'name' => 'Thanh Tỉnh Thành Tìm Bạn Nhanh',
+                'slug' => 'sub-location',
+                'location' => 'sub_location',
+                'sort_order' => 1,
+                'items' => [
+                    ['title' => 'Tìm bạn bốn phương theo Tỉnh Thành', 'url' => '/ehenho/tim-ban-bon-phuong-theo-noi-o', 'icon' => 'glyphicon glyphicon-map-marker', 'css_class' => 'b-button'],
+                    ['title' => 'TP.Hồ Chí Minh', 'url' => '/ehenho/tim-ban-bon-phuong/ho-chi-minh', 'icon' => 'glyphicon glyphicon-map-marker', 'css_class' => 'b-button'],
+                    ['title' => 'Hà Nội', 'url' => '/ehenho/tim-ban-bon-phuong/ha-noi', 'icon' => 'glyphicon glyphicon-map-marker', 'css_class' => 'b-button'],
+                    ['title' => 'Đà Nẵng', 'url' => '/ehenho/tim-ban-bon-phuong/da-nang', 'icon' => 'glyphicon glyphicon-map-marker', 'css_class' => 'b-button'],
+                    ['title' => 'Cần Thơ', 'url' => '/ehenho/tim-ban-bon-phuong/can-tho', 'icon' => 'glyphicon glyphicon-map-marker', 'css_class' => 'b-button'],
+                    ['title' => 'Cà Mau', 'url' => '/ehenho/tim-ban-bon-phuong/ca-mau', 'icon' => 'glyphicon glyphicon-map-marker', 'css_class' => 'b-button'],
+                    ['title' => 'USA – Mỹ', 'url' => '/ehenho/tim-ban-bon-phuong-o-my', 'icon' => 'glyphicon glyphicon-map-marker', 'css_class' => 'b-button'],
+                    ['title' => 'ÚC', 'url' => '/ehenho/tim-ban-bon-phuong-o-uc', 'icon' => 'glyphicon glyphicon-map-marker', 'css_class' => 'b-button'],
+                    ['title' => 'Nhật', 'url' => '/ehenho/tim-ban-bon-phuong-o-nhat', 'icon' => 'glyphicon glyphicon-map-marker', 'css_class' => 'b-button'],
                 ],
             ],
         ];

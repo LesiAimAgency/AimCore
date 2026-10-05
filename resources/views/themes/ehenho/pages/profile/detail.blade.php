@@ -54,9 +54,16 @@
         <tr>
           <td colspan="2" style="font-size:1.4em; text-align:center; vertical-align:middle; padding: 12px; height:48px; border-bottom:3px solid #EDEDED; background-color: #fafafa;">
             <span style="font-weight:bold; color:#1D788F;">
-              {{ $profile->display_name }}:
+              {{ $profile->display_name }}
             </span>
-            <span style="font-weight:500; color:#3F728E;">
+           
+            @if($profile->is_featured)
+              <span style="display:inline-flex; align-items:center; gap:4px; background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; font-size:12px; font-weight:bold; padding:3px 10px; border-radius:12px; margin-left:6px; vertical-align:middle; box-shadow:0 1px 3px rgba(245,158,11,0.4);">
+                <i class="fa fa-star text-white"></i> Hồ sơ nổi bật
+              </span>
+            @endif
+            :
+            <span style="font-weight:500; color:#3F728E; margin-left:4px;">
               <i aria-hidden="true" class="fa fa-quote-left"></i>
               {{ $profile->looking_for ?: 'Tìm bạn chân thành, nghiêm túc' }}
               <i aria-hidden="true" class="fa fa-quote-right"></i>
@@ -127,11 +134,18 @@
 
           <!-- Big Photo & Header Action -->
           <td style="width: 75%; padding: 15px;">
-            <div class="text-center" style="margin-bottom: 15px;">
+            <div class="text-center" style="margin-bottom: 15px; position:relative;">
               <img src="{{ $profile->avatar_url ? asset($profile->avatar_url) : asset('themes/ehenho/images/df_picture.png') }}"
                    alt="{{ $profile->display_name }}"
                    class="img-responsive img-thumbnail"
-                   style="max-height: 400px; margin: auto; object-fit: contain;">
+                   style="max-height: 400px; margin: auto; object-fit: contain; {{ $profile->is_featured ? 'border: 3px solid #f59e0b;' : '' }}">
+              @if($profile->is_featured)
+                <div style="margin-top:6px;">
+                  <span style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; font-size:11px; font-weight:bold; padding:3px 10px; border-radius:4px; display:inline-block;">
+                    <i class="fa fa-star"></i> HỒ SƠ NỔI BẬT ĐƯỢC ƯU TIÊN
+                  </span>
+                </div>
+              @endif
             </div>
 
             <div style="margin-top: 15px; margin-bottom: 10px;">
@@ -194,6 +208,8 @@
         </tr>
 
         <!-- Table of Specs matching 100% UI -->
+       
+
         <tr>
           <td class="pv-td" style="font-weight: bold; width: 25%; background: #fcfcfc;">Thông tin cơ bản</td>
           <td class="pv-details" style="width: 75%;">

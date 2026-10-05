@@ -78,20 +78,38 @@
     };
 
     var FOREIGN_COUNTRIES = [
-        { val: "united-states", name: "Mỹ" },
+        { val: "usa", name: "USA – Mỹ" },
+        { val: "united-states", name: "USA – Mỹ" },
+        { val: "my", name: "USA – Mỹ" },
+        { val: "japan", name: "Nhật Bản (Nhật)" },
+        { val: "nhat", name: "Nhật Bản (Nhật)" },
+        { val: "nhat-ban", name: "Nhật Bản (Nhật)" },
+        { val: "australia", name: "Úc (Australia)" },
+        { val: "uc", name: "Úc (Australia)" },
         { val: "canada", name: "Canada" },
-        { val: "australia", name: "Úc" },
-        { val: "germany", name: "Đức" },
-        { val: "england", name: "Anh" },
-        { val: "france", name: "Pháp" },
+        { val: "south-korea", name: "Hàn Quốc" },
+        { val: "han-quoc", name: "Hàn Quốc" },
+        { val: "korea", name: "Hàn Quốc" },
+        { val: "taiwan", name: "Đài Loan" },
+        { val: "dai-loan", name: "Đài Loan" },
+        { val: "germany", name: "Đức (Germany)" },
+        { val: "duc", name: "Đức (Germany)" },
+        { val: "england", name: "Anh (UK)" },
+        { val: "uk", name: "Anh (UK)" },
+        { val: "anh", name: "Anh (UK)" },
+        { val: "france", name: "Pháp (France)" },
+        { val: "phap", name: "Pháp (France)" },
+        { val: "singapore", name: "Singapore" },
+        { val: "russia", name: "Nga (Russia)" },
+        { val: "nga", name: "Nga (Russia)" },
         { val: "finland", name: "Phần Lan" },
-        { val: "japan", name: "Nhật" },
-        { val: "south-korea", name: "Hàn Quốc" }
+        { val: "phan-lan", name: "Phần Lan" },
+        { val: "other-country", name: "Quốc gia khác" }
     ];
 
     function isForeign(val) {
         if (!val) return false;
-        val = val.toLowerCase();
+        val = val.toString().toLowerCase().trim();
         for (var i = 0; i < FOREIGN_COUNTRIES.length; i++) {
             if (FOREIGN_COUNTRIES[i].val === val) return true;
         }
@@ -144,19 +162,34 @@
     function loadDistricts(provVal) {
         var $prov = $("#id_province");
         var $dist = $("#id_district");
+        var $distContainer = $("#district_container");
         var $loader = $("#loading_district_drop_down");
+        var $foreignNotice = $("#foreign_notice");
+        var $vietnamNotice = $("#vietnam_notice");
 
         if (isForeign(provVal)) {
             $loader.hide();
-            $dist.hide().empty();
-            $("#foreign_notice").show();
+            $dist.empty().val('');
+            if ($distContainer.length) {
+                $distContainer.hide();
+            } else {
+                $dist.hide();
+            }
+            $foreignNotice.show();
+            $vietnamNotice.hide();
             return;
         } else {
-            $("#foreign_notice").hide();
+            $foreignNotice.hide();
+            $vietnamNotice.show();
+            if ($distContainer.length) {
+                $distContainer.show();
+            } else {
+                $dist.show();
+            }
         }
 
         $loader.show();
-        $dist.hide().empty().append('<option value="">-- Chọn Quận / Huyện / Thị xã --</option>');
+        $dist.empty().append('<option value="">-- Chọn Quận / Huyện / Thị xã --</option>');
 
         var provCode = getProvinceCode(provVal);
 
@@ -200,10 +233,22 @@
         });
 
         function renderDistricts(districts) {
+            var selectedVal = $dist.attr('data-selected') || $dist.val() || '';
             $dist.empty().append('<option value="">-- Chọn Quận / Huyện / Thị xã --</option>');
+            var found = false;
             for (var i = 0; i < districts.length; i++) {
                 var d = districts[i];
-                $dist.append('<option value="' + d.code + '" data-name="' + d.name + '">' + d.name + '</option>');
+                var isSelected = (selectedVal && (selectedVal === d.name || String(selectedVal) === String(d.code)));
+                if (isSelected) found = true;
+                $dist.append('<option value="' + d.name + '" data-code="' + d.code + '"' + (isSelected ? ' selected' : '') + '>' + d.name + '</option>');
+            }
+            if (!found && selectedVal) {
+                for (var j = 0; j < districts.length; j++) {
+                    if (String(districts[j].code) === String(selectedVal)) {
+                        $dist.val(districts[j].name);
+                        break;
+                    }
+                }
             }
             $loader.hide();
             $dist.show();
@@ -213,10 +258,12 @@
     // Initialize on document ready
     $(document).ready(function() {
         var $prov = $("#id_province");
+        var $dist = $("#id_district");
 
         // Event listener on Province change
         $prov.on("change", function() {
             var val = $(this).val();
+            $dist.removeAttr('data-selected');
             loadDistricts(val);
         });
 

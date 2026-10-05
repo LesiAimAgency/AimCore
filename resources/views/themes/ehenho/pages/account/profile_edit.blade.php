@@ -39,7 +39,7 @@
       </div>
 
       <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <div class="form-group">
             <label for="province_id">Tỉnh / Thành phố</label>
             <select name="province_id" id="province_id" class="form-control">
@@ -52,7 +52,13 @@
             </select>
           </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="district_name">Quận / Huyện</label>
+            <input type="text" name="district_name" id="district_name" class="form-control" placeholder="Ví dụ: Quận 1, Quận 6..." value="{{ old('district_name', $profile->district_name) }}">
+          </div>
+        </div>
+        <div class="col-sm-4">
           <div class="form-group">
             <label for="marital_status">Tình trạng hôn nhân</label>
             <select name="marital_status" id="marital_status" class="form-control">

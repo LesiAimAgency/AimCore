@@ -95,7 +95,7 @@ class EhenhoMasterSeeder extends Seeder
             ->first();
 
         if ($cmsUser) {
-            $cmsUser->name = 'Quản Trị Viên eHenho';
+            $cmsUser->name = 'Quản Trị Viên ';
             $cmsUser->username = $cmsUsername;
             $cmsUser->email = $cmsEmail;
             $cmsUser->password = Hash::make($cmsPassword);
@@ -155,7 +155,7 @@ class EhenhoMasterSeeder extends Seeder
             ['user_id' => $cmsUser->id],
             [
                 'project_id' => $project->id,
-                'display_name' => 'Quản Trị Viên eHenho',
+                'display_name' => 'Quản Trị Viên ',
                 'slug' => 'quan-tri-vien-ehenho-'.$cmsUser->id,
                 'headline' => 'Ban Quản Trị eHenho.com - Hỗ trợ thành viên 24/7',
                 'target_type' => 'Tìm bạn tâm sự',
@@ -169,7 +169,7 @@ class EhenhoMasterSeeder extends Seeder
                 'about_me' => 'Tài khoản chính thức của Ban Quản Trị eHenho.com. Sẵn sàng hỗ trợ và giải đáp thắc mắc cho tất cả thành viên.',
                 'looking_for' => 'Tìm bạn tâm sự - Kết nối cộng đồng văn minh, lịch sự.',
                 'status' => 'active',
-                'is_featured' => true,
+                'is_featured' => false,
                 'is_online' => true,
                 'last_active_at' => now(),
             ]

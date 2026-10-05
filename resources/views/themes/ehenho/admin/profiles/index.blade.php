@@ -11,7 +11,7 @@
 <div class="p-6 max-w-7xl mx-auto space-y-6">
     <!-- Header Actions & Search -->
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-        <form method="GET" action="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <form method="GET" action="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
             <div class="lg:col-span-2 relative">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm theo tên, headline, tỉnh thành..." class="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
@@ -22,6 +22,19 @@
                     <option value="">-- Tất cả giới tính --</option>
                     <option value="female" {{ request('gender') === 'female' ? 'selected' : '' }}>Nữ</option>
                     <option value="male" {{ request('gender') === 'male' ? 'selected' : '' }}>Nam</option>
+                </select>
+            </div>
+
+            <div>
+                <select name="country" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <option value="">-- Quốc gia / Khu vực --</option>
+                    <option value="nhat" {{ request('country') === 'nhat' ? 'selected' : '' }}>🇯🇵 Ở Nhật (Nhật Bản)</option>
+                    <option value="vietnam" {{ request('country') === 'vietnam' ? 'selected' : '' }}>🇻🇳 Việt Nam</option>
+                    <option value="my" {{ request('country') === 'my' ? 'selected' : '' }}>🇺🇸 Hoa Kỳ (Mỹ)</option>
+                    <option value="uc" {{ request('country') === 'uc' ? 'selected' : '' }}>🇦🇺 Úc (Australia)</option>
+                    <option value="canada" {{ request('country') === 'canada' ? 'selected' : '' }}>🇨🇦 Canada</option>
+                    <option value="duc" {{ request('country') === 'duc' ? 'selected' : '' }}>🇩🇪 Đức (Germany)</option>
+                    <option value="overseas" {{ request('country') === 'overseas' ? 'selected' : '' }}>🌍 Toàn bộ Nước ngoài</option>
                 </select>
             </div>
 
@@ -77,7 +90,14 @@
                                     </div>
                                 @endif
                                 <div>
-                                    <p class="font-bold text-slate-900 m-0">{{ $profile->display_name }}</p>
+                                    <div class="flex items-center gap-1.5">
+                                        <p class="font-bold text-slate-900 m-0">{{ $profile->display_name }}</p>
+                                        @if($profile->is_featured)
+                                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-700" title="Hồ sơ nổi bật">
+                                                <i class="fa-solid fa-star text-[8px] mr-0.5 text-amber-500"></i> Nổi bật
+                                            </span>
+                                        @endif
+                                    </div>
                                     <span class="text-[11px] text-slate-400 font-mono">{{ $profile->slug }}</span>
                                 </div>
                             </div>
@@ -95,8 +115,31 @@
                             <span class="text-slate-500 ml-1">({{ $profile->age ?? '?' }} tuổi)</span>
                         </td>
                         <td class="py-3 px-4 text-slate-600">
-                            <i class="fa-solid fa-location-dot text-slate-400 mr-1"></i>
-                            {{ $profile->location_text }}
+                            <div class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
+                                <span class="font-medium text-slate-800">{{ $profile->location_text }}</span>
+                            </div>
+                            @if(str_contains($profile->province_name, 'Nhật') || str_contains($profile->province_name, 'Japan') || $profile->province_id == 68)
+                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-50 text-rose-700 border border-rose-200 mt-1">
+                                    <span>🇯🇵</span> Ở Nhật (Japan)
+                                </span>
+                            @elseif(str_contains($profile->province_name, 'Mỹ') || str_contains($profile->province_name, 'Hoa Kỳ') || $profile->province_id == 64)
+                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200 mt-1">
+                                    <span>🇺🇸</span> Ở Mỹ (USA)
+                                </span>
+                            @elseif(str_contains($profile->province_name, 'Úc') || $profile->province_id == 65)
+                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-50 text-amber-700 border border-amber-200 mt-1">
+                                    <span>🇦🇺</span> Ở Úc
+                                </span>
+                            @elseif(str_contains($profile->province_name, 'Canada') || $profile->province_id == 66)
+                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-red-50 text-red-700 border border-red-200 mt-1">
+                                    <span>🇨🇦</span> Ở Canada
+                                </span>
+                            @elseif(str_contains($profile->province_name, 'Đức') || $profile->province_id == 67)
+                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-50 text-purple-700 border border-purple-200 mt-1">
+                                    <span>🇩🇪</span> Ở Đức
+                                </span>
+                            @endif
                         </td>
                         <td class="py-3 px-4 max-w-xs truncate text-slate-600" title="{{ $profile->headline }}">
                             {{ $profile->headline ?: 'Chưa cập nhật headline' }}

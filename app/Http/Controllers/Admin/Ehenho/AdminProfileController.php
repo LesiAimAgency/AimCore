@@ -14,6 +14,7 @@ use App\Models\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -46,6 +47,52 @@ class AdminProfileController extends Controller
             });
         }
 
+        if ($country = $request->input('country')) {
+            if ($country === 'nhat') {
+                $query->where(function ($q) {
+                    $q->where('province_id', 68)
+                        ->orWhere('province_name', 'like', '%Nhật%')
+                        ->orWhere('province_name', 'like', '%Japan%')
+                        ->orWhere('district_name', 'like', '%Tokyo%')
+                        ->orWhere('district_name', 'like', '%Osaka%')
+                        ->orWhere('district_name', 'like', '%Nagoya%')
+                        ->orWhere('about_me', 'like', '%Nhật%');
+                });
+            } elseif ($country === 'vietnam') {
+                $query->where(function ($q) {
+                    $q->whereNull('province_name')
+                        ->orWhere(function ($sub) {
+                            $sub->where('province_name', 'not like', '%Nhật%')
+                                ->where('province_name', 'not like', '%Japan%')
+                                ->where('province_name', 'not like', '%Mỹ%')
+                                ->where('province_name', 'not like', '%Hoa Kỳ%')
+                                ->where('province_name', 'not like', '%USA%')
+                                ->where('province_name', 'not like', '%Úc%')
+                                ->where('province_name', 'not like', '%Canada%')
+                                ->where('province_name', 'not like', '%Đức%');
+                        });
+                });
+            } elseif ($country === 'overseas') {
+                $query->where(function ($q) {
+                    $q->where('province_id', 68)
+                        ->orWhere('province_name', 'like', '%Nhật%')
+                        ->orWhere('province_name', 'like', '%Japan%')
+                        ->orWhere('province_name', 'like', '%Mỹ%')
+                        ->orWhere('province_name', 'like', '%Hoa Kỳ%')
+                        ->orWhere('province_name', 'like', '%Úc%')
+                        ->orWhere('province_name', 'like', '%Canada%')
+                        ->orWhere('province_name', 'like', '%Đức%');
+                });
+            } elseif (in_array($country, ['my', 'uc', 'canada', 'duc'], true)) {
+                $countryMap = ['my' => 'Mỹ', 'uc' => 'Úc', 'canada' => 'Canada', 'duc' => 'Đức'];
+                $kw = $countryMap[$country];
+                $query->where(function ($q) use ($kw) {
+                    $q->where('province_name', 'like', "%{$kw}%")
+                        ->orWhere('about_me', 'like', "%{$kw}%");
+                });
+            }
+        }
+
         if ($status = $request->input('status')) {
             $query->where('status', $status);
         }
@@ -73,7 +120,7 @@ class AdminProfileController extends Controller
     public function edit(string $projectCode, int $id): View
     {
         $project = Project::where('code', $projectCode)->first();
-        $profile = Profile::findOrFail($id);
+        $profile = Profile::with('user')->findOrFail($id);
         $provinces = Province::orderBy('name')->get();
 
         return view('themes.ehenho.admin.profiles.edit', compact(
@@ -86,7 +133,7 @@ class AdminProfileController extends Controller
 
     public function update(Request $request, string $projectCode, int $id): RedirectResponse
     {
-        $profile = Profile::findOrFail($id);
+        $profile = Profile::with('user')->findOrFail($id);
 
         $validated = $request->validate([
             'display_name' => 'required|string|max:150',
@@ -118,13 +165,22 @@ class AdminProfileController extends Controller
             'privacy_option' => 'nullable|string|max:255',
             'status' => 'required|in:active,pending,blocked',
             'is_featured' => 'nullable',
-            'is_online' => 'nullable',
             'last_active_at' => 'nullable|date',
             'avatar_url' => 'nullable|string|max:500',
             'avatar_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:5120',
+            'user_email' => 'nullable|email|max:255',
+            'user_username' => 'nullable|string|max:255',
+            'user_password' => 'nullable|string|min:6',
         ]);
 
-        if (! empty($validated['province_id'])) {
+        if ($request->boolean('is_in_japan')) {
+            $japanProv = Province::where('name', 'like', '%Nhật%')->first();
+            $validated['province_id'] = $japanProv?->id ?? 68;
+            $validated['province_name'] = $japanProv?->name ?? 'Nhật Bản (Japan)';
+            if (empty($validated['district_name']) || $validated['district_name'] === 'Chưa cập nhật') {
+                $validated['district_name'] = 'Tokyo, Nhật Bản';
+            }
+        } elseif (! empty($validated['province_id'])) {
             $province = Province::find($validated['province_id']);
             $validated['province_name'] = $province?->name ?? ($validated['province_name'] ?? null);
         } elseif (! empty($validated['province_name'])) {
@@ -134,12 +190,15 @@ class AdminProfileController extends Controller
             }
         }
 
+        if (! empty($validated['district_name'])) {
+            $validated['district_name'] = Profile::resolveDistrictCode($validated['district_name']) ?: $validated['district_name'];
+        }
+
         if (empty($validated['slug']) && ! empty($validated['display_name'])) {
             $validated['slug'] = Str::slug($validated['display_name']).'-'.$profile->id;
         }
 
         $validated['is_featured'] = $request->boolean('is_featured');
-        $validated['is_online'] = $request->boolean('is_online');
 
         if ($request->hasFile('avatar_file')) {
             $file = $request->file('avatar_file');
@@ -153,10 +212,29 @@ class AdminProfileController extends Controller
         }
         unset($validated['avatar_file']);
 
+        // Update linked user account if exists
+        if ($profile->user_id && $profile->user) {
+            $user = $profile->user;
+            if (! empty($validated['user_email']) && $validated['user_email'] !== $user->email) {
+                $request->validate(['user_email' => 'unique:users,email,'.$user->id]);
+                $user->email = $validated['user_email'];
+            }
+            if (! empty($validated['user_username']) && $validated['user_username'] !== $user->username) {
+                $request->validate(['user_username' => 'unique:users,username,'.$user->id]);
+                $user->username = $validated['user_username'];
+            }
+            if (! empty($validated['user_password'])) {
+                $user->password = Hash::make($validated['user_password']);
+            }
+            $user->name = $validated['display_name'];
+            $user->save();
+        }
+        unset($validated['user_email'], $validated['user_username'], $validated['user_password']);
+
         $profile->update($validated);
 
         return redirect()->route('project.admin.ehenho.profiles.edit', ['projectCode' => $projectCode, 'id' => $profile->id])
-            ->with('success', 'Đã cập nhật toàn bộ thông tin hồ sơ thành công!');
+            ->with('success', 'Đã cập nhật toàn bộ thông tin hồ sơ và tài khoản thành công!');
     }
 
     public function toggleStatus(Request $request, string $projectCode, int $id): RedirectResponse

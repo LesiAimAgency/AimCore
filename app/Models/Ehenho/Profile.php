@@ -76,6 +76,55 @@ class Profile extends EhenhoBaseModel
         return $this->hasMany(SocialConnection::class, 'target_profile_id');
     }
 
+    private static ?array $districtMap = null;
+
+    public static function resolveDistrictCode(int|string|null $code): ?string
+    {
+        if (empty($code) || ! is_numeric($code)) {
+            return is_string($code) ? $code : null;
+        }
+
+        $numericCode = (int) $code;
+
+        if (self::$districtMap === null) {
+            self::$districtMap = [];
+            $jsonPath = public_path('themes/ehenho/js/vietnam_provinces.json');
+            if (file_exists($jsonPath)) {
+                $content = @file_get_contents($jsonPath);
+                $data = json_decode($content, true);
+                if (is_array($data)) {
+                    foreach ($data as $prov) {
+                        foreach ($prov['districts'] ?? [] as $dist) {
+                            if (isset($dist['code'], $dist['name'])) {
+                                self::$districtMap[(int) $dist['code']] = $dist['name'];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return self::$districtMap[$numericCode] ?? (string) $code;
+    }
+
+    public function getDistrictNameAttribute(?string $value): ?string
+    {
+        if ($value && is_numeric($value)) {
+            return self::resolveDistrictCode($value) ?: $value;
+        }
+
+        return $value;
+    }
+
+    public function setDistrictNameAttribute(?string $value): void
+    {
+        if ($value && is_numeric($value)) {
+            $this->attributes['district_name'] = self::resolveDistrictCode($value) ?: $value;
+        } else {
+            $this->attributes['district_name'] = $value;
+        }
+    }
+
     public function getAvatarAttribute(): ?string
     {
         if (! $this->avatar_url) {

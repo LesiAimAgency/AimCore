@@ -109,6 +109,7 @@ class ProfileController extends Controller
             'gender' => 'required|in:male,female,other',
             'age' => 'required|integer|min:18|max:90',
             'province_id' => 'nullable|exists:provinces,id',
+            'district_name' => 'nullable|string|max:150',
             'marital_status' => 'nullable|string|max:100',
             'occupation' => 'nullable|string|max:150',
             'height' => 'nullable|string|max:50',
@@ -121,6 +122,10 @@ class ProfileController extends Controller
         if (! empty($validated['province_id'])) {
             $province = Province::find($validated['province_id']);
             $validated['province_name'] = $province?->name;
+        }
+
+        if (! empty($validated['district_name'])) {
+            $validated['district_name'] = Profile::resolveDistrictCode($validated['district_name']) ?: $validated['district_name'];
         }
 
         $profile = Profile::where('user_id', $user->id)->first();

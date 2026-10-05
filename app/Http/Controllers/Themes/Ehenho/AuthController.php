@@ -247,15 +247,33 @@ class AuthController extends Controller
     ];
 
     private const OVERSEAS_MAP = [
-        'united-states' => 'Mỹ',
+        'usa' => 'USA (Mỹ)',
+        'united-states' => 'USA (Mỹ)',
+        'my' => 'USA (Mỹ)',
+        'japan' => 'Nhật Bản (Japan)',
+        'nhat' => 'Nhật Bản (Japan)',
+        'nhat-ban' => 'Nhật Bản (Japan)',
+        'australia' => 'Úc (Australia)',
+        'uc' => 'Úc (Australia)',
         'canada' => 'Canada',
-        'australia' => 'Úc',
-        'germany' => 'Đức',
-        'england' => 'Anh',
-        'france' => 'Pháp',
-        'finland' => 'Phần Lan',
-        'japan' => 'Nhật',
         'south-korea' => 'Hàn Quốc',
+        'han-quoc' => 'Hàn Quốc',
+        'korea' => 'Hàn Quốc',
+        'taiwan' => 'Đài Loan',
+        'dai-loan' => 'Đài Loan',
+        'germany' => 'Đức (Germany)',
+        'duc' => 'Đức (Germany)',
+        'england' => 'Anh (UK)',
+        'uk' => 'Anh (UK)',
+        'anh' => 'Anh (UK)',
+        'france' => 'Pháp (France)',
+        'phap' => 'Pháp (France)',
+        'singapore' => 'Singapore',
+        'russia' => 'Nga (Russia)',
+        'nga' => 'Nga (Russia)',
+        'finland' => 'Phần Lan',
+        'phan-lan' => 'Phần Lan',
+        'other-country' => 'Quốc gia khác',
     ];
 
     private const PROVINCE_SLUG_MAP = [
@@ -486,9 +504,12 @@ class AuthController extends Controller
         $provinceInput = (string) ($request->input('province') ?: $request->input('province_id', ''));
         $provinceId = null;
         $provinceName = null;
+        $isOverseas = false;
 
         if (isset(self::OVERSEAS_MAP[$provinceInput])) {
             $provinceName = self::OVERSEAS_MAP[$provinceInput];
+            $provinceId = null;
+            $isOverseas = true;
         } elseif (isset(self::PROVINCE_SLUG_MAP[$provinceInput])) {
             $provinceName = self::PROVINCE_SLUG_MAP[$provinceInput];
             $p = Province::where('name', 'like', "%{$provinceName}%")->first();
@@ -524,6 +545,10 @@ class AuthController extends Controller
         $drinking = self::DRINKING_MAP[$request->input('drinking2_0')] ?? $request->input('drinking2_0');
         $children = self::CHILDREN_MAP[$request->input('children2_0')] ?? $request->input('children2_0');
 
+        // Quốc gia quốc tế thì chỉ cần tên quốc gia, không cần quận/huyện
+        $districtInput = $isOverseas ? null : $request->input('district');
+        $districtName = $isOverseas ? null : (Profile::resolveDistrictCode($districtInput) ?: $districtInput);
+
         // DB Transaction: atomicity for User and Profile creation
         [$user, $profile] = DB::transaction(function () use (
             $validated,
@@ -531,6 +556,7 @@ class AuthController extends Controller
             $age,
             $provinceId,
             $provinceName,
+            $districtName,
             $targetType,
             $maritalStatus,
             $education,
@@ -565,7 +591,7 @@ class AuthController extends Controller
                 'age' => $age,
                 'province_id' => $provinceId,
                 'province_name' => $provinceName,
-                'district_name' => $request->input('district'),
+                'district_name' => $districtName,
                 'marital_status' => $maritalStatus,
                 'occupation' => $occupation,
                 'height' => $request->input('height') ? (string) $request->input('height') : null,

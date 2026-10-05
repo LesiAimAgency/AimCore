@@ -17,14 +17,7 @@
   </div>
 </header>
 
-<div class="container cont-sb-loc">
-  <a class="b-button" href="{{ route('ehenho.search.index') }}">
-    <span class="glyphicon glyphicon-map-marker"></span> Tìm bạn bốn phương theo Tỉnh Thành
-  </a>
-  <a class="b-button" href="{{ route('ehenho.about') }}">
-    <span class="glyphicon glyphicon-question-sign"></span> Giới thiệu về eHenho
-  </a>
-</div>
+@include('themes.ehenho.components.sub-location-bar')
 
 <div class="container" style="background-color:#FFF; padding-top:20px; padding-bottom:64px">
   <div class="row">

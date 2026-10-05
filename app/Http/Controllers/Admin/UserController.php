@@ -65,15 +65,45 @@ class UserController extends Controller
 
             $roles = Role::whereNotIn('name', ['visitor', 'multi_tenancy'])->get();
         } else {
-            // Context ngoai superadmin (neu co trong CMS du an)
-            $totalCount = User::count();
-            $multiTenancyCount = User::multiTenancy()->count();
-            $internalCount = User::internal()->count();
-            $superAdminCount = User::superAdminOnly()->count();
+            // Context ngoai superadmin (trong CMS du an)
+            $projectCode = request()->route('projectCode');
+            $currentProject = request()->attributes->get('project') ?? ($projectCode ? Project::where('code', $projectCode)->first() : null);
 
-            $query = User::with(['roles', 'tenant', 'activityLogs' => function ($q) {
-                $q->latest()->limit(5);
-            }]);
+            $projectUserScope = null;
+            if ($currentProject) {
+                $pId = $currentProject->id;
+                $tId = $currentProject->tenant_id;
+
+                $projectUserScope = function ($q) use ($pId, $tId) {
+                    $q->where(function ($sub) use ($pId, $tId) {
+                        if ($tId) {
+                            $sub->where('tenant_id', $tId);
+                        }
+                        $sub->orWhereJsonContains('project_ids', $pId)
+                            ->orWhereJsonContains('project_ids', (string) $pId);
+                    });
+                };
+            }
+
+            if ($projectUserScope) {
+                $totalCount = User::where($projectUserScope)->count();
+                $multiTenancyCount = User::multiTenancy()->where($projectUserScope)->count();
+                $internalCount = User::internal()->where($projectUserScope)->count();
+                $superAdminCount = User::superAdminOnly()->where($projectUserScope)->count();
+
+                $query = User::where($projectUserScope)->with(['roles', 'tenant', 'activityLogs' => function ($q) {
+                    $q->latest()->limit(5);
+                }]);
+            } else {
+                $totalCount = User::count();
+                $multiTenancyCount = User::multiTenancy()->count();
+                $internalCount = User::internal()->count();
+                $superAdminCount = User::superAdminOnly()->count();
+
+                $query = User::with(['roles', 'tenant', 'activityLogs' => function ($q) {
+                    $q->latest()->limit(5);
+                }]);
+            }
 
             if ($type === 'multi_tenancy') {
                 $query->multiTenancy();

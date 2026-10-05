@@ -58,6 +58,7 @@ Route::get('/tim-ban-bon-phuong-o-my', fn (Request $r) => app(SearchController::
 Route::get('/tim-ban-bon-phuong-o-uc', fn (Request $r) => app(SearchController::class)->quickCategory($r, ['country' => 'uc'], 'Tìm bạn bốn phương ở Úc'))->name('search.o_uc');
 Route::get('/tim-ban-bon-phuong-o-canada', fn (Request $r) => app(SearchController::class)->quickCategory($r, ['country' => 'canada'], 'Tìm bạn bốn phương ở Canada'))->name('search.o_canada');
 Route::get('/tim-ban-bon-phuong-o-duc', fn (Request $r) => app(SearchController::class)->quickCategory($r, ['country' => 'duc'], 'Tìm bạn bốn phương ở Đức'))->name('search.o_duc');
+Route::get('/tim-ban-bon-phuong-o-nhat', fn (Request $r) => app(SearchController::class)->quickCategory($r, ['country' => 'nhat'], 'Tìm bạn bốn phương ở Nhật'))->name('search.o_nhat');
 
 // 3. Marital Status
 Route::get('/tim-ban-doc-than', fn (Request $r) => app(SearchController::class)->quickCategory($r, ['marital_status' => 'doc_than'], 'Tìm bạn độc thân'))->name('search.doc_than');

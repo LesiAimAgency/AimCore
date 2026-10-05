@@ -85,6 +85,10 @@
           </div>
         </div>
 
+        @php
+          $recaptchaSiteKey = $recaptchaSiteKey ?? (app(\App\Services\CaptchaService::class)->isEnabled() ? app(\App\Services\CaptchaService::class)->getSiteKey() : null);
+        @endphp
+
         @if(!empty($recaptchaSiteKey))
         <!-- Google reCAPTCHA v2 Checkbox -->
         <div class="form-group text-center" style="margin-top: 15px; margin-bottom: 20px;">
@@ -97,6 +101,9 @@
             </span>
           @enderror
         </div>
+        @push('scripts')
+        <script src="https://www.google.com/recaptcha/api.js?hl=vi" async defer></script>
+        @endpush
         @endif
 
         <button type="submit" class="btn btn-primary btn-block btn-lg" style="background-color: #008BC7; border-color: #0077aa; font-weight: bold;">
@@ -116,10 +123,4 @@
   </div>
 </div>
 @endsection
-
-@if(!empty($recaptchaSiteKey))
-@push('scripts')
-<script src="https://www.google.com/recaptcha/api.js?hl=vi" async defer></script>
-@endpush
-@endif
 

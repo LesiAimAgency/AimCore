@@ -6,43 +6,7 @@
 @section('content')
 <div class="space-y-4">
     <!-- Header Tabs Phân loại tài khoản -->
-    <div class="bg-white rounded-lg shadow-sm p-1.5 flex flex-wrap gap-1 border border-gray-100">
-        <a href="{{ request()->fullUrlWithQuery(['type' => 'all', 'page' => 1]) }}" 
-           class="px-4 py-2 rounded-md text-sm font-semibold transition-colors flex items-center gap-2 {{ ($type ?? 'all') === 'all' ? 'bg-blue-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
-            <span>Tất cả tài khoản</span>
-            <span class="px-2 py-0.5 text-xs rounded-full {{ ($type ?? 'all') === 'all' ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-700' }}">
-                {{ $totalCount ?? $users->total() }}
-            </span>
-        </a>
-
-        @if(request()->routeIs('superadmin.*'))
-            <a href="{{ request()->fullUrlWithQuery(['type' => 'super_admin', 'page' => 1]) }}" 
-               class="px-4 py-2 rounded-md text-sm font-semibold transition-colors flex items-center gap-2 {{ ($type ?? 'all') === 'super_admin' ? 'bg-amber-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
-                <span>Super Admin</span>
-                <span class="px-2 py-0.5 text-xs rounded-full {{ ($type ?? 'all') === 'super_admin' ? 'bg-amber-700 text-white' : 'bg-gray-200 text-gray-700' }}">
-                    {{ $superAdminCount ?? 0 }}
-                </span>
-            </a>
-        @endif
-
-        <a href="{{ request()->fullUrlWithQuery(['type' => 'internal', 'page' => 1]) }}" 
-           class="px-4 py-2 rounded-md text-sm font-semibold transition-colors flex items-center gap-2 {{ ($type ?? 'all') === 'internal' ? 'bg-blue-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
-            <span>Nhân sự nội bộ</span>
-            <span class="px-2 py-0.5 text-xs rounded-full {{ ($type ?? 'all') === 'internal' ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-700' }}">
-                {{ $internalCount ?? 0 }}
-            </span>
-        </a>
-
-        @if(!request()->routeIs('superadmin.*') || ($type ?? '') === 'multi_tenancy')
-            <a href="{{ request()->fullUrlWithQuery(['type' => 'multi_tenancy', 'page' => 1]) }}" 
-               class="px-4 py-2 rounded-md text-sm font-semibold transition-colors flex items-center gap-2 {{ ($type ?? 'all') === 'multi_tenancy' ? 'bg-purple-600 text-white shadow-xs' : 'text-purple-700 hover:bg-purple-50' }}">
-                <span>Tài khoản Multi-Tenancy</span>
-                <span class="px-2 py-0.5 text-xs rounded-full {{ ($type ?? 'all') === 'multi_tenancy' ? 'bg-purple-700 text-white' : 'bg-purple-100 text-purple-800' }}">
-                    {{ $multiTenancyCount ?? 0 }}
-                </span>
-            </a>
-        @endif
-    </div>
+    
 
     <!-- Table Container -->
     <div class="bg-white rounded-lg shadow-sm">
@@ -94,7 +58,7 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="border-b border-gray-100 bg-gray-50/50">
-                        <th class="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Phân loại</th>
+                        
                         <th class="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Tên / Email</th>
                         <th class="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Phòng ban / Đơn vị</th>
                         <th class="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Vai trò</th>
@@ -109,21 +73,7 @@
                             $isMulti = ! $isSuper && $user->isMultiTenancy();
                         @endphp
                         <tr class="hover:bg-gray-50/50 transition-colors {{ $isSuper ? 'bg-amber-50/20' : ($isMulti ? 'bg-purple-50/20' : '') }}">
-                            <td class="px-4 py-3 text-sm">
-                                @if($isSuper)
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
-                                        Super Admin
-                                    </span>
-                                @elseif($isMulti)
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-purple-100 text-purple-800 border border-purple-200">
-                                        Multi-Tenancy
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-gray-100 text-gray-700 border border-gray-200">
-                                        {{ $user->employee_code ?: 'Nội bộ' }}
-                                    </span>
-                                @endif
-                            </td>
+                          
                             <td class="px-4 py-3">
                                 <div class="flex items-center gap-3">
                                     @if($user->avatar)

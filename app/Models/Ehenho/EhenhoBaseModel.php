@@ -42,6 +42,15 @@ abstract class EhenhoBaseModel extends Model
                 }
             }
         });
+
+        static::creating(function ($model) {
+            if ($model->usesProjectScope() && empty($model->project_id)) {
+                $projectId = app()->bound('current_project_id') ? app('current_project_id') : session('current_project_id');
+                if ($projectId) {
+                    $model->project_id = $projectId;
+                }
+            }
+        });
     }
 
     public function usesProjectScope(): bool

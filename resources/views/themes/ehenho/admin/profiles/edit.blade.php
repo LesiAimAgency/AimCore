@@ -220,38 +220,130 @@
 
                 <!-- 3. Địa điểm & Nơi ở -->
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
-                    <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
-                        <i class="fa-solid fa-location-dot text-blue-600 text-sm"></i>
-                        <h3 class="text-sm font-bold text-slate-900 m-0">3. Nơi Ở & Địa Điểm Sinh Sống</h3>
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-location-dot text-blue-600 text-sm"></i>
+                            <h3 class="text-sm font-bold text-slate-900 m-0">3. Nơi Ở & Địa Điểm Sinh Sống</h3>
+                        </div>
+                        <span class="text-[11px] text-slate-400 font-medium">Hỗ trợ lọc tự động theo chuyên mục Tỉnh thành / Quốc gia</span>
+                    </div>
+
+                    @php
+                        $isJapan = (bool) (
+                            $profile->province_id == 68 || 
+                            str_contains($profile->province_name ?? '', 'Nhật') || 
+                            str_contains($profile->province_name ?? '', 'Japan') ||
+                            str_contains($profile->district_name ?? '', 'Tokyo') ||
+                            str_contains($profile->district_name ?? '', 'Osaka')
+                        );
+                    @endphp
+
+                    <!-- Checkbox / Toggle đặc biệt: Chuyên mục Tìm bạn bốn phương ở Nhật -->
+                    <div id="japan_feature_box" class="p-4 rounded-xl border {{ $isJapan ? 'bg-rose-50/70 border-rose-200' : 'bg-slate-50 border-slate-200' }} transition-all">
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="hidden" name="is_in_japan" value="0">
+                            <input type="checkbox" id="is_in_japan_checkbox" name="is_in_japan" value="1" {{ old('is_in_japan', $isJapan) ? 'checked' : '' }} onchange="toggleJapanStatus(this.checked)" class="mt-0.5 w-4 h-4 text-rose-600 rounded border-slate-300 focus:ring-rose-500">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                                        <span class="text-sm">🇯🇵</span> Tích chọn gán vào chuyên mục "Tìm bạn bốn phương ở Nhật" (/tim-ban-bon-phuong-o-nhat)
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700">Chuyên mục Hot</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 mt-1 m-0">
+                                    Khi tích chọn, hệ thống tự động thiết lập quốc gia là <strong>Nhật Bản (Japan)</strong> và đưa hồ sơ này vào trang tìm kiếm <a href="{{ route('ehenho.search.o_nhat') }}" target="_blank" class="text-blue-600 underline font-semibold">/tim-ban-bon-phuong-o-nhat</a>.
+                                </p>
+                                
+                                <div class="flex flex-wrap items-center gap-1.5 mt-2.5 pt-2 border-t border-rose-100/60" id="japan_city_chips">
+                                    <span class="text-[10px] text-slate-500 font-bold">Gợi ý nhanh thành phố ở Nhật:</span>
+                                    <button type="button" onclick="setJapanCity('Tokyo - Shinjuku')" class="px-2 py-0.5 bg-white border border-rose-200 text-rose-700 hover:bg-rose-100 rounded text-[10px] font-semibold transition">Tokyo</button>
+                                    <button type="button" onclick="setJapanCity('Osaka')" class="px-2 py-0.5 bg-white border border-rose-200 text-rose-700 hover:bg-rose-100 rounded text-[10px] font-semibold transition">Osaka</button>
+                                    <button type="button" onclick="setJapanCity('Nagoya - Aichi')" class="px-2 py-0.5 bg-white border border-rose-200 text-rose-700 hover:bg-rose-100 rounded text-[10px] font-semibold transition">Nagoya</button>
+                                    <button type="button" onclick="setJapanCity('Yokohama - Kanagawa')" class="px-2 py-0.5 bg-white border border-rose-200 text-rose-700 hover:bg-rose-100 rounded text-[10px] font-semibold transition">Yokohama</button>
+                                    <button type="button" onclick="setJapanCity('Fukuoka')" class="px-2 py-0.5 bg-white border border-rose-200 text-rose-700 hover:bg-rose-100 rounded text-[10px] font-semibold transition">Fukuoka</button>
+                                    <button type="button" onclick="setJapanCity('Chiba')" class="px-2 py-0.5 bg-white border border-rose-200 text-rose-700 hover:bg-rose-100 rounded text-[10px] font-semibold transition">Chiba</button>
+                                    <button type="button" onclick="setJapanCity('Saitama')" class="px-2 py-0.5 bg-white border border-rose-200 text-rose-700 hover:bg-rose-100 rounded text-[10px] font-semibold transition">Saitama</button>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Quick Location Presets (8 Sub-location Bar Presets) -->
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                        <span class="block text-[11px] font-bold text-slate-600 mb-1.5">Chọn nhanh khu vực theo Sub-Location Bar:</span>
+                        <div class="flex flex-wrap gap-1.5">
+                            <button type="button" onclick="setPresetLocation(68, 'Nhật Bản (Japan)', 'Tokyo, Nhật Bản', true)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white border border-rose-300 text-rose-700 hover:bg-rose-50 shadow-xs transition flex items-center gap-1">
+                                <span>🇯🇵</span> Nhật Bản
+                            </button>
+                            @php
+                                $presetCities = [
+                                    'Hà Nội' => 'Thành phố Hà Nội',
+                                    'TP.HCM' => 'Thành phố Hồ Chí Minh',
+                                    'Đà Nẵng' => 'Thành phố Đà Nẵng',
+                                    'Bình Dương' => 'Tỉnh Bình Dương',
+                                    'Cần Thơ' => 'Thành phố Cần Thơ',
+                                    'Hải Phòng' => 'Thành phố Hải Phòng',
+                                    'Đồng Nai' => 'Tỉnh Đồng Nai',
+                                ];
+                            @endphp
+                            @foreach($presetCities as $shortName => $fullName)
+                                @php
+                                    $matched = $provinces->first(fn($p) => str_contains($p->name, $shortName));
+                                @endphp
+                                @if($matched)
+                                    <button type="button" onclick="setPresetLocation({{ $matched->id }}, '{{ $matched->name }}', '{{ $shortName }}', false)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 shadow-xs transition">
+                                        {{ $shortName }}
+                                    </button>
+                                @endif
+                            @endforeach
+                            <button type="button" onclick="setPresetLocation(64, 'Hoa Kỳ (Mỹ)', 'California, USA', false)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 shadow-xs transition">
+                                🇺🇸 Mỹ
+                            </button>
+                            <button type="button" onclick="setPresetLocation(65, 'Úc (Australia)', 'Melbourne, Úc', false)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 shadow-xs transition">
+                                🇦🇺 Úc
+                            </button>
+                            <button type="button" onclick="setPresetLocation(66, 'Canada', 'Toronto, Canada', false)" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 shadow-xs transition">
+                                🇨🇦 Canada
+                            </button>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Tỉnh / Thành phố / Quốc gia (Danh mục)</label>
-                            <select name="province_id" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <select name="province_id" id="province_id_select" onchange="onProvinceSelectChange(this)" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
                                 <option value="">-- Chọn tỉnh thành / quốc gia --</option>
-                                @foreach($provinces as $prov)
-                                    <option value="{{ $prov->id }}" {{ (string)old('province_id', $profile->province_id) === (string)$prov->id ? 'selected' : '' }}>
-                                        {{ $prov->name }}
-                                    </option>
-                                @endforeach
+                                <optgroup label="🌏 Quốc gia Nước ngoài (Tìm bạn hải ngoại)">
+                                    @foreach($provinces->filter(fn($p) => $p->type === 'quoc_gia' || in_array($p->code, ['JP', 'US', 'AU', 'CA', 'DE'])) as $prov)
+                                        <option value="{{ $prov->id }}" {{ (string)old('province_id', $profile->province_id) === (string)$prov->id ? 'selected' : '' }}>
+                                            {{ $prov->name }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+                                <optgroup label="🇻🇳 Tỉnh / Thành phố Việt Nam">
+                                    @foreach($provinces->filter(fn($p) => $p->type !== 'quoc_gia' && !in_array($p->code, ['JP', 'US', 'AU', 'CA', 'DE'])) as $prov)
+                                        <option value="{{ $prov->id }}" {{ (string)old('province_id', $profile->province_id) === (string)$prov->id ? 'selected' : '' }}>
+                                            {{ $prov->name }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
                             </select>
                         </div>
 
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">
-                                Tên tỉnh/quốc gia tùy chỉnh (Nếu khác danh mục)
+                                Tên tỉnh/quốc gia tùy chỉnh (Hiển thị chi tiết)
                             </label>
-                            <input type="text" name="province_name" value="{{ old('province_name', $profile->province_name) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Đức (Germany), Canada, Hoa Kỳ...">
+                            <input type="text" name="province_name" id="province_name_input" value="{{ old('province_name', $profile->province_name) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Nhật Bản (Japan), Đức (Germany), Hoa Kỳ...">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">
-                            Khu vực cụ thể / Quận Huyện (District)
+                            Khu vực cụ thể / Quận Huyện / Thành phố (District)
                             <span class="text-slate-400 font-normal">(Hiển thị trong bảng thông số "Nơi ở")</span>
                         </label>
-                        <input type="text" name="district_name" value="{{ old('district_name', $profile->district_name) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Berlin - Mitte, Đức (Germany) hoặc Toronto - Ontario, Quận 1...">
+                        <input type="text" name="district_name" id="district_name_input" value="{{ old('district_name', $profile->district_name) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: Tokyo - Shinjuku, Osaka, hoặc Quận 1, Cầu Giấy...">
                     </div>
                 </div>
 
@@ -406,6 +498,48 @@
                     </div>
                 </div>
 
+                <!-- Thông tin Tài khoản Đăng nhập (User Account) -->
+                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-user-shield text-blue-600 text-sm"></i>
+                            <h3 class="text-sm font-bold text-slate-900 m-0">Tài Khoản Đăng Nhập</h3>
+                        </div>
+                        @if($profile->user_id)
+                            <a href="{{ route('project.admin.users.edit', ['projectCode' => $projectCode, 'user' => $profile->user_id]) }}" target="_blank" class="text-[11px] text-blue-600 hover:text-blue-800 font-semibold inline-flex items-center gap-1" title="Quản lý chi tiết tài khoản">
+                                <span>CMS User #{{ $profile->user_id }}</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                            </a>
+                        @endif
+                    </div>
+
+                    @if($profile->user)
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Tên đăng nhập (Username)</label>
+                            <input type="text" name="user_username" value="{{ old('user_username', $profile->user->username) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: user_ehenho_123">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Email tài khoản</label>
+                            <input type="email" name="user_email" value="{{ old('user_email', $profile->user->email) }}" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="VD: user@ehenho.local">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Đổi mật khẩu mới <span class="text-slate-400 font-normal">(để trống nếu không đổi)</span></label>
+                            <input type="password" name="user_password" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Tối thiểu 6 ký tự">
+                        </div>
+
+                        <div class="p-2.5 bg-slate-50 rounded-xl text-[11px] text-slate-500 flex items-center justify-between">
+                            <span>Vai trò: <strong class="text-slate-700 uppercase">{{ $profile->user->role ?? 'USER' }}</strong></span>
+                            <span>Trạng thái: <strong class="{{ $profile->user->status ? 'text-emerald-600' : 'text-red-500' }}">{{ $profile->user->status ? 'Kích hoạt' : 'Bị khóa' }}</strong></span>
+                        </div>
+                    @else
+                        <div class="p-3 bg-amber-50 rounded-xl text-xs text-amber-700">
+                            <i class="fa-solid fa-triangle-exclamation mr-1"></i> Hồ sơ này chưa liên kết tài khoản User hệ thống.
+                        </div>
+                    @endif
+                </div>
+
                 <!-- Thiết lập trạng thái & thời gian -->
                 <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
                     <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
@@ -422,20 +556,13 @@
                         </select>
                     </div>
 
-                    <div class="space-y-3 pt-2 border-t border-slate-100">
+                    <div class="pt-2 border-t border-slate-100">
                         <label class="flex items-center gap-3 cursor-pointer">
-                            <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $profile->is_featured) ? 'checked' : '' }} class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
+                            <input type="hidden" name="is_featured" value="0">
+                            <input type="checkbox" name="is_featured" value="1" {{ (old('is_featured') !== null ? (string) old('is_featured') === '1' : (bool) $profile->is_featured) ? 'checked' : '' }} class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
                             <div>
                                 <span class="text-xs font-bold text-slate-800">Hồ sơ nổi bật (Featured)</span>
                                 <p class="text-[11px] text-slate-400 m-0">Ưu tiên hiển thị trên trang chủ và đầu danh sách</p>
-                            </div>
-                        </label>
-
-                        <label class="flex items-center gap-3 cursor-pointer">
-                            <input type="checkbox" name="is_online" value="1" {{ old('is_online', $profile->is_online) ? 'checked' : '' }} class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
-                            <div>
-                                <span class="text-xs font-bold text-slate-800">Trực tuyến (Is Online)</span>
-                                <p class="text-[11px] text-slate-400 m-0">Hiển thị chấm xanh trực tuyến</p>
                             </div>
                         </label>
                     </div>
@@ -470,6 +597,82 @@
 </div>
 
 <script>
+    function toggleJapanStatus(checked) {
+        const provSelect = document.getElementById('province_id_select');
+        const provInput = document.getElementById('province_name_input');
+        const distInput = document.getElementById('district_name_input');
+        const box = document.getElementById('japan_feature_box');
+
+        if (checked) {
+            if (provSelect) {
+                provSelect.value = '68'; // 68 is Nhật Bản (Japan)
+            }
+            if (provInput) {
+                provInput.value = 'Nhật Bản (Japan)';
+            }
+            if (distInput && (!distInput.value || distInput.value.trim() === '')) {
+                distInput.value = 'Tokyo - Shinjuku, Nhật Bản';
+            }
+            if (box) {
+                box.classList.remove('bg-slate-50', 'border-slate-200');
+                box.classList.add('bg-rose-50/70', 'border-rose-200');
+            }
+        } else {
+            if (provSelect && provSelect.value === '68') {
+                provSelect.value = '';
+            }
+            if (provInput && (provInput.value === 'Nhật Bản (Japan)' || provInput.value.includes('Nhật'))) {
+                provInput.value = '';
+            }
+            if (box) {
+                box.classList.remove('bg-rose-50/70', 'border-rose-200');
+                box.classList.add('bg-slate-50', 'border-slate-200');
+            }
+        }
+    }
+
+    function setJapanCity(city) {
+        const cb = document.getElementById('is_in_japan_checkbox');
+        if (cb && !cb.checked) {
+            cb.checked = true;
+            toggleJapanStatus(true);
+        }
+        const distInput = document.getElementById('district_name_input');
+        if (distInput) {
+            distInput.value = city + ', Nhật Bản';
+        }
+    }
+
+    function setPresetLocation(provId, provName, distName, isJapan) {
+        const provSelect = document.getElementById('province_id_select');
+        const provInput = document.getElementById('province_name_input');
+        const distInput = document.getElementById('district_name_input');
+        const cb = document.getElementById('is_in_japan_checkbox');
+
+        if (provSelect) provSelect.value = provId;
+        if (provInput) provInput.value = provName;
+        if (distInput) distInput.value = distName;
+        if (cb) {
+            cb.checked = isJapan;
+            toggleJapanStatus(isJapan);
+        }
+    }
+
+    function onProvinceSelectChange(select) {
+        const selectedText = select.options[select.selectedIndex]?.text?.trim() || '';
+        const provInput = document.getElementById('province_name_input');
+        if (provInput && selectedText && !selectedText.startsWith('--')) {
+            provInput.value = selectedText;
+        }
+
+        const isJapan = select.value === '68' || selectedText.includes('Nhật') || selectedText.includes('Japan');
+        const cb = document.getElementById('is_in_japan_checkbox');
+        if (cb) {
+            cb.checked = isJapan;
+            toggleJapanStatus(isJapan);
+        }
+    }
+
     document.getElementById('avatar_file_input')?.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {

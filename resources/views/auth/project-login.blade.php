@@ -49,6 +49,19 @@
                     <label for="remember" class="ml-2 text-sm text-gray-600">Ghi nhớ đăng nhập</label>
                 </div>
 
+                @php
+                    $recaptchaSiteKey = $recaptchaSiteKey ?? (app(\App\Services\CaptchaService::class)->isEnabled() ? app(\App\Services\CaptchaService::class)->getSiteKey() : null);
+                @endphp
+
+                @if(!empty($recaptchaSiteKey))
+                    <div class="flex flex-col items-center justify-center my-4">
+                        <div class="g-recaptcha" data-sitekey="{{ $recaptchaSiteKey }}"></div>
+                        @error('g-recaptcha-response')
+                            <p class="mt-2 text-sm text-red-600 font-medium text-center">{{ $message }}</p>
+                        @enderror
+                    </div>
+                @endif
+
                 <button type="submit" class="w-full bg-[#001B4E] text-white py-3 rounded-lg hover:bg-[#001235] font-bold tracking-wide transition transform hover:scale-[1.02]">
                     ĐĂNG NHẬP
                 </button>
@@ -59,5 +72,8 @@
             </div>
         </div>
     </div>
+    @if(!empty($recaptchaSiteKey))
+        <script src="https://www.google.com/recaptcha/api.js?hl=vi" async defer></script>
+    @endif
 </body>
 </html>

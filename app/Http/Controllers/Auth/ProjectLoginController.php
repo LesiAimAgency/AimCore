@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\CaptchaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +18,7 @@ class ProjectLoginController extends Controller
         return Auth::guard('project');
     }
 
-    public function showLoginForm(Request $request)
+    public function showLoginForm(Request $request, CaptchaService $captchaService)
     {
         $project = $request->attributes->get('project');
 
@@ -30,15 +31,26 @@ class ProjectLoginController extends Controller
             return redirect('/'.$project->code.'/admin');
         }
 
-        return view('auth.project-login', compact('project'));
+        $recaptchaSiteKey = $captchaService->isEnabled() ? $captchaService->getSiteKey() : null;
+
+        return view('auth.project-login', compact('project', 'recaptchaSiteKey'));
     }
 
-    public function login(Request $request)
+    public function login(Request $request, CaptchaService $captchaService)
     {
         $project = $request->attributes->get('project');
 
         if (! $project) {
             abort(404, 'Dự án không tồn tại.');
+        }
+
+        if ($captchaService->isEnabled()) {
+            $captchaToken = $request->input('g-recaptcha-response');
+            if (empty($captchaToken) || ! $captchaService->verify($captchaToken, $request->ip())) {
+                return back()->withErrors([
+                    'g-recaptcha-response' => 'Xác thực Google reCAPTCHA không thành công. Vui lòng xác thực lại.',
+                ])->onlyInput('username');
+            }
         }
 
         $credentials = $request->validate([

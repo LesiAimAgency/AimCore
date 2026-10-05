@@ -1,7 +1,7 @@
 @extends('cms.layouts.app')
 
-@section('title', 'Trung tâm Điều hành eHenho Dating')
-@section('page-title', 'Bảng Điều Khiển eHenho')
+@section('title', 'Trung tâm Điều hành  Dating')
+@section('page-title', 'Bảng Điều Khiển ')
 
 @push('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">

@@ -14,6 +14,10 @@
     $siteCopyright = setting('site_copyright', 'Email: hi@ehenho.com');
     $facebookUrl = setting('social_facebook', 'http://www.facebook.com/ehenho');
     $twitterUrl = setting('social_twitter', 'http://www.twitter.com/ehenho');
+    $instagramUrl = setting('social_instagram', '');
+    $youtubeUrl = setting('social_youtube', '');
+    $tiktokUrl = setting('social_tiktok', '');
+    $zaloUrl = setting('social_zalo', '');
 @endphp
 
 <footer class="footer bs-docs-footer" role="contentinfo">
@@ -54,14 +58,28 @@
     @endif
   </div>	
 
+  @if($facebookUrl || $twitterUrl || $instagramUrl || $youtubeUrl || $tiktokUrl || $zaloUrl)
   <div class="container footer-cont">
     @if($facebookUrl)
-      <a href="{{ $facebookUrl }}" target="_blank" rel="noopener noreferrer"> <i class="fa fa-br fa-facebook"></i></a>&nbsp;&nbsp;
+      <a href="{{ $facebookUrl }}" target="_blank" rel="noopener noreferrer" title="Facebook"> <i class="fa fa-br fa-facebook"></i></a>&nbsp;&nbsp;
     @endif
     @if($twitterUrl)
-      <a href="{{ $twitterUrl }}" target="_blank" rel="noopener noreferrer"> <i class="fa fa-br fa-twitter"></i></a>
+      <a href="{{ $twitterUrl }}" target="_blank" rel="noopener noreferrer" title="Twitter / X"> <i class="fa fa-br fa-twitter"></i></a>&nbsp;&nbsp;
+    @endif
+    @if($instagramUrl)
+      <a href="{{ $instagramUrl }}" target="_blank" rel="noopener noreferrer" title="Instagram"> <i class="fa fa-br fa-instagram"></i></a>&nbsp;&nbsp;
+    @endif
+    @if($youtubeUrl)
+      <a href="{{ $youtubeUrl }}" target="_blank" rel="noopener noreferrer" title="YouTube"> <i class="fa fa-br fa-youtube"></i></a>&nbsp;&nbsp;
+    @endif
+    @if($tiktokUrl)
+      <a href="{{ $tiktokUrl }}" target="_blank" rel="noopener noreferrer" title="TikTok"> <i class="fa fa-br fa-tiktok"></i></a>&nbsp;&nbsp;
+    @endif
+    @if($zaloUrl)
+      <a href="{{ $zaloUrl }}" target="_blank" rel="noopener noreferrer" title="Zalo"> <i class="fa fa-br fa-commenting" style="background:#0068ff;color:white;"></i></a>&nbsp;&nbsp;
     @endif
   </div>
+  @endif
 
   <div class="container footer-cont">	 
     <span class="footer-note">{!! strip_tags($siteName, '<a><b><strong><span>') !!}</span><br>

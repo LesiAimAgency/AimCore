@@ -32,22 +32,31 @@ class ProjectSubdomainMiddleware
             // Auto-heal: Ensure ehenho project is registered automatically if missing in database
             if (! $project && $projectCode === 'ehenho') {
                 try {
-                    $tenant = Tenant::where('code', 'ehenho')->orWhere('domain', 'ehenho.local')->first()
-                        ?? Tenant::first();
+                    $project = Project::where('external_domain', 'ehenho.local')
+                        ->orWhere('subdomain', 'like', '%ehenho%')
+                        ->orWhere('tenant_id', 7)
+                        ->first();
 
-                    $project = Project::create([
-                        'tenant_id' => $tenant?->id ?? 1,
-                        'name' => 'eHenho Dating & Social Network',
-                        'code' => 'ehenho',
-                        'subdomain' => 'https://aimagency.vn/ehenho',
-                        'external_domain' => 'ehenho.local',
-                        'status' => 'active',
-                        'project_type' => 'website',
-                        'is_multi_tenancy' => true,
-                        'total_gold' => 1000,
-                        'project_admin_username' => 'cms_ehenho',
-                        'project_admin_password' => bcrypt('password123'),
-                    ]);
+                    if ($project) {
+                        $project->update(['code' => 'ehenho']);
+                    } else {
+                        $tenant = Tenant::where('code', 'ehenho')->orWhere('domain', 'ehenho.local')->first()
+                            ?? Tenant::first();
+
+                        $project = Project::create([
+                            'tenant_id' => $tenant?->id ?? 1,
+                            'name' => ' Dating & Social Network',
+                            'code' => 'ehenho',
+                            'subdomain' => 'https://aimagency.vn/ehenho',
+                            'external_domain' => 'ehenho.local',
+                            'status' => 'active',
+                            'project_type' => 'website',
+                            'is_multi_tenancy' => true,
+                            'total_gold' => 1000,
+                            'project_admin_username' => 'cms_ehenho',
+                            'project_admin_password' => bcrypt('password123'),
+                        ]);
+                    }
                 } catch (\Throwable $e) {
                     $project = Project::where('code', 'ehenho')->first();
                 }

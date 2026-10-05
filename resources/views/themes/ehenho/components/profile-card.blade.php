@@ -4,7 +4,7 @@
   $avatar = $profile->avatar_url ? (str_starts_with($profile->avatar_url, 'http') ? $profile->avatar_url : asset($profile->avatar_url)) : asset('themes/ehenho/images/s1.jpg');
 @endphp
 
-<div class="profile-card-container" style="background-color:#fff; border:1px #dedede solid; margin:auto; margin-bottom:12px; text-align:left; padding:10px 0 10px 0; word-wrap:break-word; overflow:hidden; border-radius:5px; box-shadow:0 1px 2px #dfdfdf;">
+<div class="profile-card-container" style="background-color:#fff; border:1px #dedede solid; {{ $profile->is_featured ? 'border-left: 4px solid #f59e0b; background: #fffdfa;' : '' }} margin:auto; margin-bottom:12px; text-align:left; padding:10px 0 10px 0; word-wrap:break-word; overflow:hidden; border-radius:5px; box-shadow:0 1px 2px #dfdfdf;">
   <style>
     .col1 { width: 21%; }
     .col2 { width: 79%; }
@@ -14,11 +14,16 @@
     }
   </style>
 
-  <div class="pull-left col1" id="pro_pic" style="height:138px; word-wrap:break-word; overflow:hidden; padding-left:10px; padding-right:10px; margin-top:5px; margin-bottom:5px;">
-    <a href="{{ route('ehenho.profile.show', $profile->slug ?: $profile->id) }}">
+  <div class="pull-left col1" id="pro_pic" style="height:138px; word-wrap:break-word; overflow:hidden; padding-left:10px; padding-right:10px; margin-top:5px; margin-bottom:5px; position:relative;">
+    <a href="{{ route('ehenho.profile.show', $profile->slug ?: $profile->id) }}" style="position:relative; display:block;">
       <img alt="{{ $profile->display_name }}" border="0" class="displayed img-responsive" 
            src="{{ $avatar }}" width="138" 
-           style="max-height:138px; width:100%; object-fit:cover; border-radius:3px;" />
+           style="max-height:138px; width:100%; object-fit:cover; border-radius:3px; {{ $profile->is_featured ? 'border: 2px solid #f59e0b;' : '' }}" />
+      @if($profile->is_featured)
+        <span style="position:absolute; top:4px; left:4px; background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; font-size:9px; font-weight:bold; padding:2px 6px; border-radius:3px; box-shadow:0 1px 2px rgba(0,0,0,0.3); text-transform:uppercase;">
+          <i class="fa fa-star" style="color:#fef08a;"></i> Nổi bật
+        </span>
+      @endif
     </a>
   </div>
 
@@ -28,11 +33,16 @@
         <a href="{{ route('ehenho.profile.show', $profile->slug ?: $profile->id) }}" style="color:#008BC7; font-size:1.2em; font-weight:bold;">
           {{ $profile->display_name }}
         </a>
-        <span style="font-size:1.1em; font-weight:bold; color:#444; margin-left: 4px;">{{ $profile->age }}</span>
+       
         @if($profile->marital_status)
           <a href="{{ route('ehenho.search.index', ['marital_status' => $profile->marital_status]) }}" style="color:#545454; font-size:0.95em; margin-left: 6px;">
             {{ $profile->marital_status }}
           </a>
+        @endif
+        @if($profile->is_featured)
+          <span class="label" style="background-color: #f59e0b; color: #fff; font-size: 10px; margin-left: 6px; padding: 2px 6px;">
+            <i class="fa fa-star"></i> Nổi bật
+          </span>
         @endif
       </span>
       <br />
