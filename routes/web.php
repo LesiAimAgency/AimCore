@@ -51,6 +51,18 @@ Route::get('/media/{path}', [WatermarkImageController::class, 'serve'])
     ->where('path', '.*')
     ->name('watermark.image');
 
+// Fallback for public storage files (handles cPanel hosting when symlink is missing/broken)
+Route::get('/storage/{path}', function ($path) {
+    $fullPath = storage_path('app/public/'.$path);
+    if (! file_exists($fullPath)) {
+        abort(404);
+    }
+
+    return response()->file($fullPath, [
+        'Cache-Control' => 'public, max-age=31536000',
+    ]);
+})->where('path', '.*')->name('storage.fallback');
+
 // API Routes - MUST BE FIRST
 Route::prefix('api')->name('api.')->middleware('api')->group(function () {
     Route::post('/bridge', [ProjectBridgeController::class, 'handle'])->name('bridge');

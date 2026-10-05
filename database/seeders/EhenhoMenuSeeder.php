@@ -19,7 +19,10 @@ class EhenhoMenuSeeder extends Seeder
     public function run(?int $projectId = null, ?int $tenantId = null): void
     {
         if (! $projectId) {
-            $project = Project::where('code', 'DA010-EHENHO-DATING-SOCIAL-NETWORK')->orWhere('code', 'ehenho')->first();
+            $project = Project::where('code', 'DA010')
+                ->orWhere('code', 'DA010-EHENHO-DATING-SOCIAL-NETWORK')
+                ->orWhere('code', 'ehenho')
+                ->first();
             $projectId = $project ? $project->id : 15;
             $tenantId = $tenantId ?? $project?->tenant_id;
         }
