@@ -34,22 +34,56 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $type = $request->get('type', 'all'); // 'all', 'internal', 'multi_tenancy'
+        $isSuperAdminRoute = request()->routeIs('superadmin.*');
+        $type = $request->get('type', 'all'); // 'all', 'super_admin', 'internal', 'multi_tenancy'
 
-        // Tab counts
-        $totalCount = User::count();
-        $multiTenancyCount = User::multiTenancy()->count();
-        $internalCount = User::internal()->count();
+        if ($isSuperAdminRoute) {
+            // Khi o SuperAdmin: mac dinh chi hien thi tai khoan SuperAdmin & Nhan su noi bo (10 tai khoan he thong)
+            $totalCount = User::superAdminPersonnel()->count();
+            $superAdminCount = User::superAdminOnly()->count();
+            $internalCount = User::internal()->count();
+            $multiTenancyCount = User::multiTenancy()->count();
 
-        $query = User::with(['roles', 'tenant', 'activityLogs' => function ($q) {
-            $q->latest()->limit(5);
-        }]);
+            $query = User::superAdminPersonnel()->with(['roles', 'tenant', 'activityLogs' => function ($q) {
+                $q->latest()->limit(5);
+            }]);
 
-        // Filter by tab type
-        if ($type === 'multi_tenancy') {
-            $query->multiTenancy();
-        } elseif ($type === 'internal') {
-            $query->internal();
+            // Filter by tab type
+            if ($type === 'super_admin') {
+                $query = User::superAdminOnly()->with(['roles', 'tenant', 'activityLogs' => function ($q) {
+                    $q->latest()->limit(5);
+                }]);
+            } elseif ($type === 'internal') {
+                $query = User::internal()->with(['roles', 'tenant', 'activityLogs' => function ($q) {
+                    $q->latest()->limit(5);
+                }]);
+            } elseif ($type === 'multi_tenancy') {
+                $query = User::multiTenancy()->with(['roles', 'tenant', 'activityLogs' => function ($q) {
+                    $q->latest()->limit(5);
+                }]);
+            }
+
+            $roles = Role::whereNotIn('name', ['visitor', 'multi_tenancy'])->get();
+        } else {
+            // Context ngoai superadmin (neu co trong CMS du an)
+            $totalCount = User::count();
+            $multiTenancyCount = User::multiTenancy()->count();
+            $internalCount = User::internal()->count();
+            $superAdminCount = User::superAdminOnly()->count();
+
+            $query = User::with(['roles', 'tenant', 'activityLogs' => function ($q) {
+                $q->latest()->limit(5);
+            }]);
+
+            if ($type === 'multi_tenancy') {
+                $query->multiTenancy();
+            } elseif ($type === 'internal') {
+                $query->internal();
+            } elseif ($type === 'super_admin') {
+                $query->superAdminOnly();
+            }
+
+            $roles = Role::where('name', '!=', 'visitor')->get();
         }
 
         // Search functionality
@@ -79,7 +113,6 @@ class UserController extends Controller
         }
 
         $users = $query->latest()->paginate(15)->withQueryString();
-        $roles = Role::where('name', '!=', 'visitor')->get();
         $projects = Project::select('id', 'name', 'code')->get()->keyBy('id');
 
         return view('cms.users.index', compact(
@@ -87,6 +120,7 @@ class UserController extends Controller
             'roles',
             'type',
             'totalCount',
+            'superAdminCount',
             'internalCount',
             'multiTenancyCount',
             'projects'
@@ -98,7 +132,11 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::where('name', '!=', 'visitor')->get();
+        $isSuperAdminRoute = request()->routeIs('superadmin.*');
+        $roles = $isSuperAdminRoute
+            ? Role::whereNotIn('name', ['visitor', 'multi_tenancy'])->get()
+            : Role::where('name', '!=', 'visitor')->get();
+
         $managers = User::where('status', true)
             ->where(function ($q) {
                 $q->where('role', 'manager')
@@ -107,7 +145,7 @@ class UserController extends Controller
                     });
             })->get();
         $departments = Department::where('status', 'active')->pluck('name');
-        $projects = Project::select('id', 'name', 'code')->orderBy('name')->get();
+        $projects = $isSuperAdminRoute ? collect() : Project::select('id', 'name', 'code')->orderBy('name')->get();
 
         return view('cms.users.create', compact('roles', 'managers', 'departments', 'projects'));
     }
@@ -220,7 +258,11 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $roles = Role::where('name', '!=', 'visitor')->get();
+        $isSuperAdminRoute = request()->routeIs('superadmin.*');
+        $roles = $isSuperAdminRoute
+            ? Role::whereNotIn('name', ['visitor', 'multi_tenancy'])->get()
+            : Role::where('name', '!=', 'visitor')->get();
+
         $managers = User::where('status', true)
             ->where('id', '!=', $user->id)
             ->where(function ($q) {
@@ -230,7 +272,7 @@ class UserController extends Controller
                     });
             })->get();
         $departments = Department::where('status', 'active')->pluck('name');
-        $projects = Project::select('id', 'name', 'code')->orderBy('name')->get();
+        $projects = $isSuperAdminRoute ? collect() : Project::select('id', 'name', 'code')->orderBy('name')->get();
         $user->load('roles');
 
         return view('cms.users.edit', compact('user', 'roles', 'managers', 'departments', 'projects'));

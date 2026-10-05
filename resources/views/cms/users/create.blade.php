@@ -60,6 +60,7 @@
                             @error('roles') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                         </div>
 
+                        @if(isset($projects) && $projects->isNotEmpty())
                         <div class="md:col-span-2 mt-2 pt-2 border-t border-gray-200">
                             <label class="block text-sm font-medium text-gray-700 mb-1">
                                 Gán Dự án / Website quản lý <span class="text-xs text-purple-600 font-normal">(Dành cho Multi-Tenancy Control Center)</span>
@@ -74,6 +75,7 @@
                             </select>
                             <p class="text-xs text-gray-500 mt-1">Tài khoản Multi-Tenancy sẽ được liên kết và chỉ quản lý website/dự án này.</p>
                         </div>
+                        @endif
                         <div class="md:col-span-2">
                             <label class="flex items-center gap-2 cursor-pointer">
                                 <input type="checkbox" name="status" value="1" {{ old('status', '1') == '1' ? 'checked' : '' }}

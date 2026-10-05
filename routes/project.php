@@ -55,9 +55,7 @@ Route::prefix('wkcomputer')
     ])
     ->group(base_path('routes/wkcomputer.php'));
 
-// ============================================
-// EHENHO DEDICATED FRONTEND (100% ISOLATED & MULTI-DATABASE)
-// ============================================
+
 Route::prefix('ehenho')
     ->name('ehenho.')
     ->middleware([
@@ -183,7 +181,15 @@ Route::prefix('{projectCode}/admin')
             // Slider & Widgets Management
             Route::get('theme/widgets', [AdminThemeSettingController::class, 'widgets'])->name('theme.widgets');
             Route::post('theme/widgets', [AdminThemeSettingController::class, 'updateWidgets'])->name('theme.widgets.update');
+
+            // Multi Menu Management Route alias
+            Route::get('theme/widgets/menus', [MenuController::class, 'index'])->name('theme.widgets.menus');
         });
+
+        // Generic Theme Menu Management Routes (Multi-project ready)
+        Route::get('theme/widgets/menus', [MenuController::class, 'index'])->name('theme.widgets.menus');
+        Route::get('theme/widgets/menus/create', [MenuController::class, 'create'])->name('theme.widgets.menus.create');
+        Route::get('theme/widgets/menus/{menu}/edit', [MenuController::class, 'edit'])->name('theme.widgets.menus.edit');
 
         // Products Management
         Route::post('products/sync-widgets', [ProductController::class, 'syncWidgets'])->name('products.sync-widgets');

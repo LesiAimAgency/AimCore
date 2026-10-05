@@ -1,7 +1,7 @@
 @extends('themes.ehenho.layouts.app')
 
-@section('title', 'Điều khoản sử dụng - eHenho.com')
-@section('meta_description', 'Các điều khoản sử dụng và quy định tham gia cộng đồng eHenho.com.')
+@section('title', !empty($page?->meta_title) ? $page->meta_title : ($page?->title ?? 'Điều khoản sử dụng - eHenho.com'))
+@section('meta_description', !empty($page?->meta_description) ? $page->meta_description : ($page?->excerpt ?? 'Các điều khoản sử dụng và quy định tham gia cộng đồng eHenho.com.'))
 
 @section('content')
 <header class="text-center" style="background-color: #FCF8E3; color:#8A6D3B; padding-top:6px; padding-bottom:6px">

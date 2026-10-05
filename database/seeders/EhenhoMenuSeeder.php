@@ -1,0 +1,187 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Database\Seeders;
+
+use App\Models\Menu;
+use App\Models\MenuItem;
+use App\Models\Project;
+use App\Models\Tenant;
+use App\Services\MenuService;
+use Illuminate\Database\Seeder;
+
+class EhenhoMenuSeeder extends Seeder
+{
+    /**
+     * Run the database seeds for eHenho Multi-Menu System.
+     */
+    public function run(?int $projectId = null, ?int $tenantId = null): void
+    {
+        if (! $projectId) {
+            $project = Project::where('code', 'ehenho')->first();
+            $projectId = $project ? $project->id : 15;
+            $tenantId = $tenantId ?? $project?->tenant_id;
+        }
+
+        if (! $tenantId) {
+            $tenant = Tenant::where('code', 'ehenho')->orWhere('domain', 'ehenho.local')->first();
+            $tenantId = $tenant ? $tenant->id : 7;
+        }
+
+        $menus = [
+            // 1. Header Main Menu
+            [
+                'name' => 'Menu Header Điều Hướng',
+                'slug' => 'main-menu',
+                'location' => 'header',
+                'sort_order' => 1,
+                'items' => [
+                    ['title' => 'Tìm bạn bốn phương', 'url' => '/ehenho/tim-kiem', 'icon' => 'fa fa-arrow-circle-right'],
+                    ['title' => 'Tìm người kết hôn', 'url' => '/ehenho/tim-kiem?looking_for=ket_hon', 'icon' => 'fa fa-arrow-circle-right'],
+                    ['title' => 'Tìm người yêu', 'url' => '/ehenho/tim-kiem?looking_for=nguoi_yeu', 'icon' => 'fa fa-arrow-circle-right'],
+                    ['title' => 'Tìm bạn gái', 'url' => '/ehenho/tim-kiem?gender=female', 'icon' => 'fa fa-arrow-circle-right'],
+                    ['title' => 'Tìm bạn trai', 'url' => '/ehenho/tim-kiem?gender=male', 'icon' => 'fa fa-arrow-circle-right'],
+                    ['title' => 'Tìm bạn đời', 'url' => '/ehenho/tim-kiem?looking_for=ban_doi', 'icon' => 'fa fa-arrow-circle-right'],
+                    ['title' => 'Tìm bạn tâm sự', 'url' => '/ehenho/tim-kiem?looking_for=tam_su', 'icon' => 'fa fa-arrow-circle-right'],
+                    ['title' => 'Tìm bạn bè mới', 'url' => '/ehenho/tim-kiem?looking_for=ban_be', 'icon' => 'fa fa-arrow-circle-right'],
+                ],
+            ],
+
+            // 2. Footer Menu 1: Khu vực & Hình ảnh
+            [
+                'name' => 'Footer - Tìm bạn theo khu vực',
+                'slug' => 'footer-khu-vuc',
+                'location' => 'footer',
+                'sort_order' => 1,
+                'items' => [
+                    ['title' => 'Tìm bạn bốn phương có hình', 'url' => '/ehenho/tim-ban-bon-phuong-co-hinh', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn bốn phương có hình (nữ)', 'url' => '/ehenho/tim-ban-bon-phuong-co-hinh/nu', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn bốn phương có hình (nam)', 'url' => '/ehenho/tim-ban-bon-phuong-co-hinh/nam', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn bốn phương Việt Nam', 'url' => '/ehenho/tim-ban-bon-phuong-viet-nam', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn bốn phương nước ngoài', 'url' => '/ehenho/tim-ban-bon-phuong-nuoc-ngoai', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn bốn phương Việt kiều', 'url' => '/ehenho/tim-ban-bon-phuong-viet-kieu', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn bốn phương Việt kiều Mỹ', 'url' => '/ehenho/tim-ban-bon-phuong-viet-kieu-my', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn bốn phương ở Mỹ', 'url' => '/ehenho/tim-ban-bon-phuong-o-my', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn bốn phương ở Úc', 'url' => '/ehenho/tim-ban-bon-phuong-o-uc', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn bốn phương ở Canada', 'url' => '/ehenho/tim-ban-bon-phuong-o-canada', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn bốn phương ở Đức', 'url' => '/ehenho/tim-ban-bon-phuong-o-duc', 'css_class' => 't-button'],
+                ],
+            ],
+
+            // 3. Footer Menu 2: Tình trạng hôn nhân
+            [
+                'name' => 'Footer - Tình trạng hôn nhân',
+                'slug' => 'footer-tinh-trang',
+                'location' => 'footer',
+                'sort_order' => 2,
+                'items' => [
+                    ['title' => 'Tìm bạn độc thân', 'url' => '/ehenho/tim-ban-doc-than', 'css_class' => 'g-button'],
+                    ['title' => 'Tìm bạn trai độc thân', 'url' => '/ehenho/tim-ban-trai-doc-than', 'css_class' => 'g-button'],
+                    ['title' => 'Tìm bạn gái độc thân', 'url' => '/ehenho/tim-ban-gai-doc-than', 'css_class' => 'g-button'],
+                    ['title' => 'Tìm bạn ly dị', 'url' => '/ehenho/tim-ban-ly-di', 'css_class' => 'g-button'],
+                    ['title' => 'Tìm bạn trai ly dị', 'url' => '/ehenho/tim-ban-trai-ly-di', 'css_class' => 'g-button'],
+                    ['title' => 'Tìm bạn gái ly dị', 'url' => '/ehenho/tim-ban-gai-ly-di', 'css_class' => 'g-button'],
+                    ['title' => 'Tìm bạn ở góa', 'url' => '/ehenho/tim-ban-o-goa', 'css_class' => 'g-button'],
+                    ['title' => 'Tìm bạn trai ở góa', 'url' => '/ehenho/tim-ban-trai-o-goa', 'css_class' => 'g-button'],
+                    ['title' => 'Tìm bạn gái ở góa', 'url' => '/ehenho/tim-ban-gai-o-goa', 'css_class' => 'g-button'],
+                ],
+            ],
+
+            // 4. Footer Menu 3: Mục đích hẹn hò & Kết hôn
+            [
+                'name' => 'Footer - Mục đích & Kết hôn',
+                'slug' => 'footer-muc-dich',
+                'location' => 'footer',
+                'sort_order' => 3,
+                'items' => [
+                    ['title' => 'Tìm bạn gái kết hôn', 'url' => '/ehenho/tim-ban-gai-ket-hon', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn trai kết hôn', 'url' => '/ehenho/tim-ban-trai-ket-hon', 'css_class' => 't-button'],
+                    ['title' => 'Tìm người yêu lâu dài', 'url' => '/ehenho/tim-nguoi-yeu-lau-dai', 'css_class' => 't-button'],
+                    ['title' => 'Tìm người yêu ngắn hạn', 'url' => '/ehenho/tim-nguoi-yeu-ngan-han', 'css_class' => 't-button'],
+                    ['title' => 'Tìm chồng', 'url' => '/ehenho/tim-chong', 'css_class' => 't-button'],
+                    ['title' => 'Tìm vợ', 'url' => '/ehenho/tim-vo', 'css_class' => 't-button'],
+                    ['title' => 'Tìm một nửa', 'url' => '/ehenho/tim-mot-nua', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn trăm năm', 'url' => '/ehenho/tim-ban-tram-nam', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn gái tâm sự', 'url' => '/ehenho/tim-ban-gai-tam-su', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn trai tâm sự', 'url' => '/ehenho/tim-ban-trai-tam-su', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn gái làm quen', 'url' => '/ehenho/tim-ban-gai-lam-quen', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn trai làm quen', 'url' => '/ehenho/tim-ban-trai-lam-quen', 'css_class' => 't-button'],
+                    ['title' => 'Tìm bạn chat', 'url' => '/ehenho/tim-ban-chat', 'css_class' => 't-button'],
+                ],
+            ],
+
+            // 5. Footer Menu 4: Tỉnh thành
+            [
+                'name' => 'Footer - Tìm bạn theo tỉnh thành',
+                'slug' => 'footer-tinh-thanh',
+                'location' => 'footer',
+                'sort_order' => 4,
+                'items' => [
+                    ['title' => 'Tìm bạn HCM', 'url' => '/ehenho/tim-ban-bon-phuong/ho-chi-minh', 'css_class' => 'c-button'],
+                    ['title' => 'Tìm bạn Hà Nội', 'url' => '/ehenho/tim-ban-bon-phuong/ha-noi', 'css_class' => 'c-button'],
+                    ['title' => 'Tìm bạn Hải Phòng', 'url' => '/ehenho/tim-ban-bon-phuong/hai-phong', 'css_class' => 'c-button'],
+                    ['title' => 'Tìm bạn Huế', 'url' => '/ehenho/tim-ban-bon-phuong/hue', 'css_class' => 'c-button'],
+                    ['title' => 'Tìm bạn Đà Nẵng', 'url' => '/ehenho/tim-ban-bon-phuong/da-nang', 'css_class' => 'c-button'],
+                    ['title' => 'Tìm bạn Cần Thơ', 'url' => '/ehenho/tim-ban-bon-phuong/can-tho', 'css_class' => 'c-button'],
+                    ['title' => 'Tìm bạn Khánh Hòa', 'url' => '/ehenho/tim-ban-bon-phuong/khanh-hoa', 'css_class' => 'c-button'],
+                    ['title' => 'Tìm bạn Lâm Đồng', 'url' => '/ehenho/tim-ban-bon-phuong/lam-dong', 'css_class' => 'c-button'],
+                    ['title' => 'Tìm bạn Đồng Nai', 'url' => '/ehenho/tim-ban-bon-phuong/dong-nai', 'css_class' => 'c-button'],
+                    ['title' => 'Tìm bạn bốn phương theo Nơi Ở', 'url' => '/ehenho/tim-ban-bon-phuong-theo-noi-o', 'icon' => 'fa fa-arrow-right', 'css_class' => 'c-button'],
+                ],
+            ],
+
+            // 6. Footer Menu 5: Chính sách & Thông tin (footer_bottom)
+            [
+                'name' => 'Footer - Thông tin chính sách',
+                'slug' => 'footer-bottom',
+                'location' => 'footer_bottom',
+                'sort_order' => 5,
+                'items' => [
+                    ['title' => 'Giới thiệu', 'url' => '/ehenho/gioi-thieu', 'css_class' => 'navlink-b'],
+                    ['title' => 'Trợ giúp', 'url' => '/ehenho/tro-giup', 'css_class' => 'navlink-b'],
+                    ['title' => 'Điều khoản sử dụng', 'url' => '/ehenho/dieu-khoan-su-dung', 'css_class' => 'navlink-b'],
+                    ['title' => 'Chính sách riêng tư', 'url' => '/ehenho/chinh-sach-rieng-tu', 'css_class' => 'navlink-b'],
+                ],
+            ],
+        ];
+
+        foreach ($menus as $m) {
+            $menu = Menu::withoutGlobalScopes()->updateOrCreate(
+                [
+                    'project_id' => $projectId,
+                    'slug' => $m['slug'],
+                ],
+                [
+                    'tenant_id' => $tenantId,
+                    'name' => $m['name'],
+                    'location' => $m['location'],
+                    'sort_order' => $m['sort_order'],
+                    'is_active' => true,
+                ]
+            );
+
+            // Re-sync items cleanly
+            $menu->allItems()->delete();
+
+            $order = 1;
+            foreach ($m['items'] as $itemData) {
+                MenuItem::withoutGlobalScopes()->create([
+                    'menu_id' => $menu->id,
+                    'project_id' => $projectId,
+                    'tenant_id' => $tenantId,
+                    'title' => $itemData['title'],
+                    'url' => $itemData['url'],
+                    'icon' => $itemData['icon'] ?? null,
+                    'css_class' => $itemData['css_class'] ?? null,
+                    'target' => '_self',
+                    'order' => $order++,
+                    'is_active' => true,
+                ]);
+            }
+        }
+
+        MenuService::clearMenuCache($projectId);
+        $this->command?->info("✓ Đã seed thành công hệ thống Multi-Menu eHenho (Header & Footer) cho Project ID {$projectId}.");
+    }
+}

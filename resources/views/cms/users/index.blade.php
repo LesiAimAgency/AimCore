@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="space-y-4">
-    <!-- Header Tabs Phân loại tài khoản: Tất cả / Nội bộ / Multi-Tenancy -->
+    <!-- Header Tabs Phân loại tài khoản -->
     <div class="bg-white rounded-lg shadow-sm p-1.5 flex flex-wrap gap-1 border border-gray-100">
         <a href="{{ request()->fullUrlWithQuery(['type' => 'all', 'page' => 1]) }}" 
            class="px-4 py-2 rounded-md text-sm font-semibold transition-colors flex items-center gap-2 {{ ($type ?? 'all') === 'all' ? 'bg-blue-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
@@ -15,21 +15,33 @@
             </span>
         </a>
 
+        @if(request()->routeIs('superadmin.*'))
+            <a href="{{ request()->fullUrlWithQuery(['type' => 'super_admin', 'page' => 1]) }}" 
+               class="px-4 py-2 rounded-md text-sm font-semibold transition-colors flex items-center gap-2 {{ ($type ?? 'all') === 'super_admin' ? 'bg-amber-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <span>Super Admin</span>
+                <span class="px-2 py-0.5 text-xs rounded-full {{ ($type ?? 'all') === 'super_admin' ? 'bg-amber-700 text-white' : 'bg-gray-200 text-gray-700' }}">
+                    {{ $superAdminCount ?? 0 }}
+                </span>
+            </a>
+        @endif
+
         <a href="{{ request()->fullUrlWithQuery(['type' => 'internal', 'page' => 1]) }}" 
            class="px-4 py-2 rounded-md text-sm font-semibold transition-colors flex items-center gap-2 {{ ($type ?? 'all') === 'internal' ? 'bg-blue-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
-            <span>Nhân sự & Quản trị nội bộ</span>
+            <span>Nhân sự nội bộ</span>
             <span class="px-2 py-0.5 text-xs rounded-full {{ ($type ?? 'all') === 'internal' ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-700' }}">
                 {{ $internalCount ?? 0 }}
             </span>
         </a>
 
-        <a href="{{ request()->fullUrlWithQuery(['type' => 'multi_tenancy', 'page' => 1]) }}" 
-           class="px-4 py-2 rounded-md text-sm font-semibold transition-colors flex items-center gap-2 {{ ($type ?? 'all') === 'multi_tenancy' ? 'bg-purple-600 text-white shadow-xs' : 'text-purple-700 hover:bg-purple-50' }}">
-            <span>Tài khoản Multi-Tenancy</span>
-            <span class="px-2 py-0.5 text-xs rounded-full {{ ($type ?? 'all') === 'multi_tenancy' ? 'bg-purple-700 text-white' : 'bg-purple-100 text-purple-800' }}">
-                {{ $multiTenancyCount ?? 0 }}
-            </span>
-        </a>
+        @if(!request()->routeIs('superadmin.*') || ($type ?? '') === 'multi_tenancy')
+            <a href="{{ request()->fullUrlWithQuery(['type' => 'multi_tenancy', 'page' => 1]) }}" 
+               class="px-4 py-2 rounded-md text-sm font-semibold transition-colors flex items-center gap-2 {{ ($type ?? 'all') === 'multi_tenancy' ? 'bg-purple-600 text-white shadow-xs' : 'text-purple-700 hover:bg-purple-50' }}">
+                <span>Tài khoản Multi-Tenancy</span>
+                <span class="px-2 py-0.5 text-xs rounded-full {{ ($type ?? 'all') === 'multi_tenancy' ? 'bg-purple-700 text-white' : 'bg-purple-100 text-purple-800' }}">
+                    {{ $multiTenancyCount ?? 0 }}
+                </span>
+            </a>
+        @endif
     </div>
 
     <!-- Table Container -->
@@ -66,7 +78,8 @@
             <div class="flex items-center gap-2">
                 @if(request()->routeIs('superadmin.*'))
                     <a href="{{ route('superadmin.multi-tenancy.index') }}" 
-                       class="px-3 py-2 bg-purple-50 text-purple-700 border border-purple-200 rounded-lg text-sm hover:bg-purple-100 flex items-center gap-1 font-medium whitespace-nowrap">
+                       class="px-3 py-2 bg-purple-50 text-purple-700 border border-purple-200 rounded-lg text-sm hover:bg-purple-100 flex items-center gap-1 font-medium whitespace-nowrap"
+                       title="Quản lý website và tài khoản Multi-Tenancy Control Center">
                         Quản lý Multi-Tenancy
                     </a>
                 @endif
@@ -83,7 +96,7 @@
                     <tr class="border-b border-gray-100 bg-gray-50/50">
                         <th class="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Phân loại</th>
                         <th class="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Tên / Email</th>
-                        <th class="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Phòng ban / Dự án (Tenant)</th>
+                        <th class="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Phòng ban / Đơn vị</th>
                         <th class="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Vai trò</th>
                         <th class="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Trạng thái</th>
                         <th class="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Thao tác</th>
@@ -92,11 +105,16 @@
                 <tbody class="divide-y divide-gray-100">
                     @forelse($users as $user)
                         @php
-                            $isMulti = $user->isMultiTenancy();
+                            $isSuper = $user->isSuperAdmin();
+                            $isMulti = ! $isSuper && $user->isMultiTenancy();
                         @endphp
-                        <tr class="hover:bg-gray-50/50 transition-colors {{ $isMulti ? 'bg-purple-50/20' : '' }}">
+                        <tr class="hover:bg-gray-50/50 transition-colors {{ $isSuper ? 'bg-amber-50/20' : ($isMulti ? 'bg-purple-50/20' : '') }}">
                             <td class="px-4 py-3 text-sm">
-                                @if($isMulti)
+                                @if($isSuper)
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                        Super Admin
+                                    </span>
+                                @elseif($isMulti)
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-purple-100 text-purple-800 border border-purple-200">
                                         Multi-Tenancy
                                     </span>
@@ -111,14 +129,16 @@
                                     @if($user->avatar)
                                         <img src="{{ asset('storage/' . $user->avatar) }}" alt="" class="w-8 h-8 rounded-full object-cover bg-gray-100">
                                     @else
-                                        <div class="w-8 h-8 rounded-full {{ $isMulti ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-600' }} flex items-center justify-center font-bold text-xs">
+                                        <div class="w-8 h-8 rounded-full {{ $isSuper ? 'bg-amber-100 text-amber-700' : ($isMulti ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-600') }} flex items-center justify-center font-bold text-xs">
                                             {{ strtoupper(substr($user->name, 0, 1)) }}
                                         </div>
                                     @endif
                                     <div>
                                         <div class="text-sm font-semibold text-gray-900 flex items-center gap-1.5">
                                             <span>{{ $user->name }}</span>
-                                            @if($isMulti)
+                                            @if($isSuper)
+                                                <span class="text-[10px] bg-amber-600 text-white font-bold px-1.5 py-0.2 rounded">SUPER</span>
+                                            @elseif($isMulti)
                                                 <span class="text-[10px] bg-purple-600 text-white font-bold px-1.5 py-0.2 rounded">MT</span>
                                             @endif
                                         </div>
@@ -130,13 +150,15 @@
                                 </div>
                             </td>
                             <td class="px-4 py-3 text-sm">
-                                @if($isMulti)
+                                @if($isSuper)
+                                    <span class="text-amber-800 font-semibold text-xs">{{ $user->department ?: 'Ban Quản trị SuperAdmin' }}</span>
+                                @elseif($isMulti)
                                     @php
                                         $userProjectIds = is_array($user->project_ids) ? $user->project_ids : json_decode($user->project_ids ?? '[]', true) ?? [];
                                     @endphp
                                     @if(!empty($userProjectIds) && isset($projects))
                                         <div class="space-y-1">
-                                            @foreach($userProjectIds as $pid)
+                                             @foreach($userProjectIds as $pid)
                                                 @if(isset($projects[$pid]))
                                                     <div class="font-medium text-purple-700 text-xs flex items-center gap-1">
                                                         <span>{{ $projects[$pid]->name }}</span>
@@ -155,24 +177,28 @@
                                         <span class="text-gray-400 text-xs italic">Chưa gắn dự án</span>
                                     @endif
                                 @else
-                                    <span class="text-gray-700 font-medium">{{ $user->department ?? '-' }}</span>
+                                    <span class="text-gray-700 font-medium">{{ $user->department ?: '-' }}</span>
                                 @endif
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex flex-wrap gap-1">
-                                    @if($isMulti)
+                                    @if($isSuper)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
+                                            Super Admin
+                                        </span>
+                                    @elseif($isMulti)
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-200">
                                             Multi-Tenancy Control Center
                                         </span>
                                     @endif
                                     @foreach($user->roles as $role)
-                                        @if($role->name !== 'multi_tenancy')
+                                        @if(!in_array($role->name, ['multi_tenancy', 'super_admin', 'superadmin']))
                                             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
                                                 {{ $role->display_name ?? $role->name }}
                                             </span>
                                         @endif
                                     @endforeach
-                                    @if($user->roles->isEmpty() && !$isMulti)
+                                    @if($user->roles->isEmpty() && !$isMulti && !$isSuper)
                                         <span class="text-xs text-gray-400 italic">{{ $user->role ?? 'N/A' }}</span>
                                     @endif
                                 </div>

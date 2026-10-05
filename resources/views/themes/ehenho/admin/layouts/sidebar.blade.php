@@ -215,6 +215,10 @@
                 <span class="dot"></span>
                 <span>Quản lý Header &amp; Giao diện</span>
             </a>
+            <a href="{{ route('project.admin.ehenho.theme.widgets', $projectCode) }}#menus" class="sub-item">
+                <span class="dot"></span>
+                <span>Quản lý Menu (Header &amp; Footer)</span>
+            </a>
             <a href="{{ route('project.admin.ehenho.theme.widgets', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.ehenho.theme.widgets') ? 'active' : '' }}">
                 <span class="dot"></span>
                 <span>Slider Hero & Widgets</span>

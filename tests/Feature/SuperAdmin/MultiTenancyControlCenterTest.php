@@ -164,12 +164,20 @@ class MultiTenancyControlCenterTest extends TestCase
         ]);
         $mtUser->roles()->attach($this->multiTenancyRole);
 
-        // Filter: Tất cả
+        // Filter: Tất cả (Chỉ hiển thị SuperAdmin và Nhân sự nội bộ, loại bỏ Multi-Tenancy)
         $allResponse = $this->actingAs($this->superAdmin)
             ->get(route('superadmin.users.index', ['type' => 'all']));
         $allResponse->assertStatus(200);
         $allResponse->assertSee('Nhân viên Kinh Doanh');
-        $allResponse->assertSee('Admin Shop Demo');
+        $allResponse->assertSee('Super Administrator');
+        $allResponse->assertDontSee('Admin Shop Demo');
+
+        // Filter: Super Admin
+        $superAdminResponse = $this->actingAs($this->superAdmin)
+            ->get(route('superadmin.users.index', ['type' => 'super_admin']));
+        $superAdminResponse->assertStatus(200);
+        $superAdminResponse->assertSee('Super Administrator');
+        $superAdminResponse->assertDontSee('Admin Shop Demo');
 
         // Filter: Nội bộ
         $internalResponse = $this->actingAs($this->superAdmin)

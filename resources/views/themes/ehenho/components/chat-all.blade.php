@@ -7,6 +7,9 @@
     $uploadRoute = $isDomain && Route::has('ehenho.domain.chat_all.upload') ? route('ehenho.domain.chat_all.upload') : (Route::has('ehenho.chat_all.upload') ? route('ehenho.chat_all.upload') : url('/ehenho/chat-all/upload'));
     $pollRoute = $isDomain && Route::has('ehenho.domain.chat_all.poll') ? route('ehenho.domain.chat_all.poll') : (Route::has('ehenho.chat_all.poll') ? route('ehenho.chat_all.poll') : url('/ehenho/chat-all/poll'));
     $readRoute = $isDomain && Route::has('ehenho.domain.chat_all.read') ? route('ehenho.domain.chat_all.read') : (Route::has('ehenho.chat_all.read') ? route('ehenho.chat_all.read') : url('/ehenho/chat-all/read'));
+    $profileRouteTemplate = $isDomain && Route::has('ehenho.domain.profile.show') 
+        ? route('ehenho.domain.profile.show', '__SLUG__') 
+        : (Route::has('ehenho.profile.show') ? route('ehenho.profile.show', '__SLUG__') : url('/ehenho/ho-so/__SLUG__'));
     $isAuth = auth()->check();
 @endphp
 
@@ -42,37 +45,20 @@
     </div>
   </div>
 
-  @if(! $isAuth)
-    <!-- GUEST VIEW: 100% Strict Block - No messages loaded, prompt login using existing project login route -->
-    <div id="chatAllGuestBox" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 24px; text-align: center; background: #fafafa;">
-      <div style="width: 64px; height: 64px; background: #eef6f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-        <i class="fa fa-lock" style="font-size: 30px; color: var(--eh-theme-primary, #007cae);"></i>
-      </div>
-      <h4 style="font-weight: bold; margin: 0 0 10px 0; color: #333;">Chat All</h4>
-      <p style="color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 24px;">
-        Bạn cần đăng nhập để<br>sử dụng chức năng chat.
-      </p>
-      <a href="{{ $loginRoute }}" class="btn btn-primary" style="min-width: 170px; font-weight: bold; border-radius: 22px; padding: 10px 24px; background-color: var(--eh-theme-primary, #007cae); border: none; box-shadow: 0 3px 8px rgba(0,124,174,0.3);">
-        <i class="fa fa-sign-in"></i> Đăng nhập
-      </a>
-      <div style="margin-top: 18px; font-size: 12px; color: #888;">
-        Chưa có tài khoản?
-        <a href="{{ $registerRoute }}" style="color: #e85151; font-weight: bold; text-decoration: underline;">Đăng ký ngay</a>
+  <!-- Chat Window Body: Cả khách vãng lai và thành viên đều xem được -->
+  <div id="chatAllAuthBox" style="flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #f4f6f9;">
+    
+    <!-- Messages Scroll Area -->
+    <div id="chatAllMessagesList" style="flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+      <div id="chatAllLoading" style="text-align: center; color: #888; padding: 20px 0;">
+        <i class="fa fa-spinner fa-spin fa-2x"></i>
+        <p style="font-size: 12px; margin-top: 8px;">Đang tải tin nhắn...</p>
       </div>
     </div>
-  @else
-    <!-- AUTHENTICATED USER VIEW: Load messages, send, attachments, real-time poll -->
-    <div id="chatAllAuthBox" style="flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #f4f6f9;">
-      
-      <!-- Messages Scroll Area -->
-      <div id="chatAllMessagesList" style="flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
-        <div id="chatAllLoading" style="text-align: center; color: #888; padding: 20px 0;">
-          <i class="fa fa-spinner fa-spin fa-2x"></i>
-          <p style="font-size: 12px; margin-top: 8px;">Đang tải tin nhắn...</p>
-        </div>
-      </div>
 
-      <!-- Input Form -->
+    <!-- Bottom Bar -->
+    @if($isAuth)
+      <!-- Input Form cho thành viên đã đăng nhập -->
       <div style="padding: 10px; background: #fff; border-top: 1px solid #e1e4e8;">
         <form id="chatAllSendForm" style="margin: 0; display: flex; align-items: center; gap: 6px;">
           <input type="file" id="chatAllFileInput" accept="image/*,.pdf" style="display: none;">
@@ -85,9 +71,21 @@
           </button>
         </form>
       </div>
+    @else
+      <!-- Guest Bar: Chưa đăng nhập vẫn thấy tin nhắn, muốn chat thì click đăng nhập -->
+      <div style="padding: 10px; background: #fff; border-top: 1px solid #e1e4e8; display: flex; align-items: center; gap: 6px;">
+        <a href="{{ $loginRoute }}" style="flex: 1; text-decoration: none;">
+          <div style="background: #f1f3f5; border: 1px solid #ced4da; border-radius: 18px; height: 34px; padding: 0 12px; display: flex; align-items: center; color: #777; font-size: 12px; cursor: pointer;">
+            <i class="fa fa-lock" style="margin-right: 6px; color: #f0ad4e;"></i> Đăng nhập để chat...
+          </div>
+        </a>
+        <a href="{{ $loginRoute }}" class="btn btn-primary btn-sm" style="border-radius: 18px; padding: 6px 14px; background-color: var(--eh-theme-primary, #007cae); border: none; font-weight: bold; font-size: 12px; flex-shrink: 0; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 4px;">
+          <i class="fa fa-sign-in"></i> Đăng nhập
+        </a>
+      </div>
+    @endif
 
-    </div>
-  @endif
+  </div>
 
 </div>
 
@@ -172,6 +170,18 @@
   var pollUrl = "{{ $pollRoute }}";
   var readUrl = "{{ $readRoute }}";
   var loginUrl = "{{ $loginRoute }}";
+  var profileRouteTemplate = "{{ $profileRouteTemplate }}";
+
+  function getProfileUrl(msg) {
+    if (msg.sender_profile_url) {
+      return msg.sender_profile_url;
+    }
+    var slug = msg.sender_slug || msg.profile_slug || msg.slug;
+    if (slug) {
+      return profileRouteTemplate.replace('__SLUG__', encodeURIComponent(slug));
+    }
+    return '';
+  }
   
   var isOpen = false;
   var lastMessageId = 0;
@@ -198,13 +208,13 @@
     isOpen = true;
     $('#chatAllBadge').hide().text('0');
 
+    if (!hasLoadedOnce) {
+      loadMessages();
+    } else {
+      scrollToBottom();
+    }
+    startPolling();
     if (isAuth) {
-      if (!hasLoadedOnce) {
-        loadMessages();
-      } else {
-        scrollToBottom();
-      }
-      startPolling();
       markRead();
     }
   }
@@ -215,10 +225,8 @@
     stopPolling();
   }
 
-  // Load Messages from Backend (Authenticated Only)
+  // Load Messages from Backend (Guests & Authenticated Users)
   function loadMessages() {
-    if (!isAuth) return;
-
     $.ajax({
       url: messagesUrl,
       type: 'GET',
@@ -234,6 +242,7 @@
           $('#chatAllMessagesList').empty();
           
           if (res.messages.length === 0) {
+            $('#chatAllEmptyState').remove();
             $('#chatAllMessagesList').html('<div id="chatAllEmptyState" style="text-align: center; color: #999; margin-top: 40px; font-size: 13px;"><i class="fa fa-comments-o fa-2x" style="color: #ccc; margin-bottom: 6px;"></i><p>Chưa có tin nhắn nào.<br>Hãy là người gửi tin nhắn đầu tiên!</p></div>');
           } else {
             res.messages.forEach(function(msg) {
@@ -248,18 +257,16 @@
       },
       error: function(xhr) {
         $('#chatAllLoading').remove();
-        if (xhr.status === 401) {
-          handleUnauthenticated();
-        } else {
+        if (xhr.status !== 401) {
           $('#chatAllMessagesList').html('<div style="text-align: center; color: #d9534f; margin-top: 30px; font-size: 12px;"><i class="fa fa-exclamation-triangle"></i> Không thể tải tin nhắn. Vui lòng thử lại sau.</div>');
         }
       }
     });
   }
 
-  // Poll for New Messages (Authenticated Only)
+  // Poll for New Messages (Guests & Authenticated Users)
   function pollNewMessages() {
-    if (!isAuth || !isOpen) return;
+    if (!isOpen) return;
 
     $.ajax({
       url: pollUrl,
@@ -283,9 +290,7 @@
         }
       },
       error: function(xhr) {
-        if (xhr.status === 401) {
-          handleUnauthenticated();
-        }
+        // Silent on polling error
       }
     });
   }
@@ -437,16 +442,32 @@
     var rowClass = isMine ? 'chat-all-msg-row chat-all-msg-mine' : 'chat-all-msg-row chat-all-msg-other';
     var senderName = escapeHtml(msg.sender_name || 'Thành viên');
     var senderAvatar = escapeHtml(msg.sender_avatar || '{{ asset('themes/ehenho/images/df_picture.png') }}');
+    var profileUrl = getProfileUrl(msg);
     
     var html = '<div class="' + rowClass + '" id="chatMsg_' + msg.id + '">';
     
     if (!isMine) {
-      html += '<img src="' + senderAvatar + '" alt="' + senderName + '" class="chat-all-avatar">';
+      if (profileUrl) {
+        html += '<a href="' + escapeHtml(profileUrl) + '" target="_blank" title="' + senderName + '" style="display:inline-block; flex-shrink:0;">';
+        html += '<img src="' + senderAvatar + '" alt="' + senderName + '" class="chat-all-avatar" style="cursor:pointer; transition:opacity 0.2s;" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">';
+        html += '</a>';
+      } else {
+        html += '<img src="' + senderAvatar + '" alt="' + senderName + '" class="chat-all-avatar">';
+      }
+
       html += '<div style="display: flex; flex-direction: column; max-width: 78%;">';
-      html += '<span class="chat-all-sender-name">' + senderName + '</span>';
+      if (profileUrl) {
+        html += '<a href="' + escapeHtml(profileUrl) + '" target="_blank" class="chat-all-sender-name" style="text-decoration: none; color: #333; font-weight: 600; font-size: 11px; margin-bottom: 3px; display: inline-block;" title="Xem hồ sơ ' + senderName + '">' + senderName + '</a>';
+      } else {
+        html += '<span class="chat-all-sender-name">' + senderName + '</span>';
+      }
     } else {
       html += '<div style="display: flex; flex-direction: column; align-items: flex-end; max-width: 78%;">';
-      html += '<span class="chat-all-sender-name mine">' + senderName + ' <small style="font-size: 10px; color: #888; font-weight: normal;">(Bạn)</small></span>';
+      if (profileUrl) {
+        html += '<a href="' + escapeHtml(profileUrl) + '" target="_blank" class="chat-all-sender-name mine" style="text-decoration: none; font-size: 11px; margin-bottom: 3px; display: inline-block;" title="Xem hồ sơ của bạn">' + senderName + ' <small style="font-size: 10px; color: #888; font-weight: normal;">(Bạn)</small></a>';
+      } else {
+        html += '<span class="chat-all-sender-name mine">' + senderName + ' <small style="font-size: 10px; color: #888; font-weight: normal;">(Bạn)</small></span>';
+      }
     }
 
     html += '<div class="chat-all-bubble">';
@@ -464,7 +485,13 @@
     html += '</div>'; // close column wrapper
 
     if (isMine) {
-      html += '<img src="' + senderAvatar + '" alt="' + senderName + '" class="chat-all-avatar">';
+      if (profileUrl) {
+        html += '<a href="' + escapeHtml(profileUrl) + '" target="_blank" title="' + senderName + '" style="display:inline-block; flex-shrink:0;">';
+        html += '<img src="' + senderAvatar + '" alt="' + senderName + '" class="chat-all-avatar" style="cursor:pointer; transition:opacity 0.2s;" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">';
+        html += '</a>';
+      } else {
+        html += '<img src="' + senderAvatar + '" alt="' + senderName + '" class="chat-all-avatar">';
+      }
     }
 
     html += '</div>'; // close row
@@ -478,23 +505,7 @@
   }
 
   function handleUnauthenticated() {
-    isAuth = false;
-    stopPolling();
-    // Swap content to friendly guest prompt
-    $('#chatAllAuthBox').replaceWith(
-      '<div id="chatAllGuestBox" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 24px; text-align: center; background: #fafafa;">' +
-        '<div style="width: 64px; height: 64px; background: #eef6f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">' +
-          '<i class="fa fa-lock" style="font-size: 30px; color: var(--eh-theme-primary, #007cae);"></i>' +
-        '</div>' +
-        '<h4 style="font-weight: bold; margin: 0 0 10px 0; color: #333;">Chat All</h4>' +
-        '<p style="color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 24px;">' +
-          'Bạn cần đăng nhập để<br>sử dụng chức năng chat.' +
-        '</p>' +
-        '<a href="' + loginUrl + '" class="btn btn-primary" style="min-width: 170px; font-weight: bold; border-radius: 22px; padding: 10px 24px; background-color: var(--eh-theme-primary, #007cae); border: none; box-shadow: 0 3px 8px rgba(0,124,174,0.3);">' +
-          '<i class="fa fa-sign-in"></i> Đăng nhập' +
-        '</a>' +
-      '</div>'
-    );
+    window.location.href = loginUrl;
   }
 
   function escapeHtml(text) {

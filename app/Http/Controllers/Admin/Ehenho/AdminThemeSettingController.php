@@ -111,6 +111,9 @@ class AdminThemeSettingController extends Controller
             $slides = EhenhoHeroSliderWidget::getDefaultSlides();
         }
 
+        $menus = \App\Services\MenuService::getMenusForProject($project);
+        $availableLocations = \App\Services\MenuService::getAvailableLocations();
+
         return [
             'project' => $project,
             'currentProject' => $project,
@@ -121,6 +124,8 @@ class AdminThemeSettingController extends Controller
             'slides' => $slides,
             'interval' => $interval,
             'widget' => $widget,
+            'menus' => $menus,
+            'availableLocations' => $availableLocations,
         ];
     }
 

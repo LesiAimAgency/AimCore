@@ -108,6 +108,10 @@ Route::post('/dang-xuat', [AuthController::class, 'logout'])->name('logout');
 Route::get('/quen-mat-khau', [AuthController::class, 'showForgotPassword'])->name('password.request');
 Route::post('/quen-mat-khau', [AuthController::class, 'sendResetLink'])->name('password.email');
 
+// --- Chat All Public Endpoints (Anyone can view & poll messages) ---
+Route::get('/chat-all/messages', [ChatAllController::class, 'messages'])->name('chat_all.messages');
+Route::get('/chat-all/poll', [ChatAllController::class, 'poll'])->name('chat_all.poll');
+
 // --- 6. Authenticated User Account Area ---
 Route::middleware('auth')->group(function () {
     // Profile Management
@@ -143,10 +147,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/da-chan', [SocialController::class, 'blocked'])->name('social.blocked');
     Route::post('/tuong-tac/toggle', [SocialController::class, 'toggle'])->name('social.toggle');
 
-    // Chat All Community Room (Authenticated Only)
-    Route::get('/chat-all/messages', [ChatAllController::class, 'messages'])->name('chat_all.messages');
+    // Chat All Community Room (Authenticated Actions: Sending, Uploading, Marking Read)
     Route::post('/chat-all/messages', [ChatAllController::class, 'store'])->name('chat_all.store');
     Route::post('/chat-all/upload', [ChatAllController::class, 'uploadAttachment'])->name('chat_all.upload');
-    Route::get('/chat-all/poll', [ChatAllController::class, 'poll'])->name('chat_all.poll');
     Route::post('/chat-all/read', [ChatAllController::class, 'markAsRead'])->name('chat_all.read');
 });

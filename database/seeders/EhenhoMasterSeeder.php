@@ -257,6 +257,10 @@ class EhenhoMasterSeeder extends Seeder
         $this->command->info('6. Seeding Cấu hình SEO & Cài đặt hệ thống eHenho...');
         $this->call(EhenhoSettingsSeeder::class, false, ['projectId' => $project->id, 'tenantId' => $tenant->id]);
 
+        // 10. Seed Multi-Menu System (Header & Footer Multi-Menus)
+        $this->command->info('7. Seeding Multi-Menu System (Header & Multi-Footer Menus)...');
+        $this->call(EhenhoMenuSeeder::class, false, ['projectId' => $project->id, 'tenantId' => $tenant->id]);
+
         $this->command->info('=== HOÀN TẤT SEEDER DỰ ÁN EHENHO ===');
     }
 }

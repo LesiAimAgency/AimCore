@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
 class ChatAllController extends Controller
@@ -56,14 +57,10 @@ class ChatAllController extends Controller
     }
 
     /**
-     * Get recent messages for Chat All (Authenticated Only)
+     * Get recent messages for Chat All (Public: Guests & Authenticated Users)
      */
     public function messages(Request $request): JsonResponse|RedirectResponse
     {
-        if ($authCheck = $this->checkAuth($request)) {
-            return $authCheck;
-        }
-
         $userId = Auth::id();
         $projectId = $this->getCurrentProjectId();
 
@@ -82,12 +79,14 @@ class ChatAllController extends Controller
                 return $this->formatMessage($msg, $userId);
             });
 
-        // Mark as read in session
-        session(['chat_all_last_read_at' => now()->toIso8601String()]);
+        // Mark as read in session for authenticated users
+        if ($userId) {
+            session(['chat_all_last_read_at' => now()->toIso8601String()]);
+        }
 
         return response()->json([
             'success' => true,
-            'authenticated' => true,
+            'authenticated' => (bool) $userId,
             'messages' => $messages,
             'current_user_id' => $userId,
         ]);
@@ -174,14 +173,10 @@ class ChatAllController extends Controller
     }
 
     /**
-     * Poll for new messages (Authenticated Only)
+     * Poll for new messages (Public: Guests & Authenticated Users)
      */
     public function poll(Request $request): JsonResponse|RedirectResponse
     {
-        if ($authCheck = $this->checkAuth($request)) {
-            return $authCheck;
-        }
-
         $userId = Auth::id();
         $lastId = (int) $request->input('last_id', 0);
         $projectId = $this->getCurrentProjectId();
@@ -200,22 +195,25 @@ class ChatAllController extends Controller
                 return $this->formatMessage($msg, $userId);
             });
 
-        // Calculate unread count based on session read timestamp
-        $lastRead = session('chat_all_last_read_at');
+        // Calculate unread count based on session read timestamp for authenticated users
         $unreadCount = 0;
-        if ($lastRead) {
-            $unreadCount = ChatAllMessage::when($projectId, function ($q) use ($projectId) {
-                $q->where(function ($sub) use ($projectId) {
-                    $sub->whereNull('project_id')->orWhere('project_id', $projectId);
-                });
-            })
-                ->where('created_at', '>', Carbon::parse($lastRead))
-                ->where('user_id', '!=', $userId)
-                ->count();
+        if ($userId) {
+            $lastRead = session('chat_all_last_read_at');
+            if ($lastRead) {
+                $unreadCount = ChatAllMessage::when($projectId, function ($q) use ($projectId) {
+                    $q->where(function ($sub) use ($projectId) {
+                        $sub->whereNull('project_id')->orWhere('project_id', $projectId);
+                    });
+                })
+                    ->where('created_at', '>', Carbon::parse($lastRead))
+                    ->where('user_id', '!=', $userId)
+                    ->count();
+            }
         }
 
         return response()->json([
             'success' => true,
+            'authenticated' => (bool) $userId,
             'new_messages' => $newMessages,
             'unread_count' => $unreadCount,
         ]);
@@ -241,14 +239,30 @@ class ChatAllController extends Controller
     /**
      * Format a message for frontend consumption
      */
-    private function formatMessage(ChatAllMessage $msg, int $currentUserId): array
+    private function formatMessage(ChatAllMessage $msg, ?int $currentUserId): array
     {
+        $slug = $msg->sender_slug;
+        $profileUrl = null;
+
+        if ($slug) {
+            $isDomain = request()->getHost() === 'ehenho.local' || str_starts_with(request()->route()?->getName() ?? '', 'ehenho.domain.');
+            if ($isDomain && Route::has('ehenho.domain.profile.show')) {
+                $profileUrl = route('ehenho.domain.profile.show', $slug);
+            } elseif (Route::has('ehenho.profile.show')) {
+                $profileUrl = route('ehenho.profile.show', $slug);
+            } else {
+                $profileUrl = url('/ehenho/ho-so/'.$slug);
+            }
+        }
+
         return [
             'id' => $msg->id,
             'user_id' => $msg->user_id,
-            'is_mine' => ($msg->user_id === $currentUserId),
+            'is_mine' => ($currentUserId !== null && $msg->user_id === $currentUserId),
             'sender_name' => $msg->sender_name,
             'sender_avatar' => $msg->sender_avatar,
+            'sender_slug' => $slug,
+            'sender_profile_url' => $profileUrl,
             'message' => $msg->message,
             'attachment_url' => $msg->attachment_url,
             'attachment_type' => $msg->attachment_type,

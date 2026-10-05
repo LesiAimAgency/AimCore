@@ -19,16 +19,28 @@ class MenuItem extends Model
         'title',
         'url',
         'target',
+        'is_active',
         'icon',
+        'css_class',
         'image',
         'badge',
         'badge_color',
+        'settings',
         'linkable_type',
         'linkable_id',
         'order',
         'tenant_id',
         'project_id',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+            'order' => 'integer',
+            'settings' => 'array',
+        ];
+    }
 
     public function menu(): BelongsTo
     {

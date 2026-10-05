@@ -5,11 +5,19 @@
     $showHelp = (string) setting('header_show_help', '1') !== '0';
     $showAuth = (string) setting('header_show_auth', '1') !== '0';
 
-    $rawNavlinks = setting('ehenho_header_navlinks');
-    if (is_string($rawNavlinks) && !empty($rawNavlinks)) {
-        $headerNavlinks = json_decode($rawNavlinks, true) ?: [];
-    } elseif (is_array($rawNavlinks)) {
-        $headerNavlinks = $rawNavlinks;
+    // Retrieve Header Menu via Menu Engine
+    $headerMenu = \App\Services\MenuService::getMenuByLocation('header');
+    $headerItems = $headerMenu ? $headerMenu->items : collect();
+
+    if ($headerItems->isEmpty()) {
+        $rawNavlinks = setting('ehenho_header_navlinks');
+        if (is_string($rawNavlinks) && !empty($rawNavlinks)) {
+            $headerNavlinks = json_decode($rawNavlinks, true) ?: [];
+        } elseif (is_array($rawNavlinks)) {
+            $headerNavlinks = $rawNavlinks;
+        } else {
+            $headerNavlinks = [];
+        }
     } else {
         $headerNavlinks = [];
     }
@@ -144,7 +152,15 @@
     <div class="row">
       <div class="col-sm-12 navlink1-left">
         <ul class="nav nav-pills">
-          @if(!empty($headerNavlinks))
+          @if(!empty($headerItems) && $headerItems->isNotEmpty())
+            @foreach($headerItems as $item)
+              <li role="presentation">
+                <a class="navlink1" href="{{ $item->url ?? '#' }}" target="{{ $item->target ?? '_self' }}">
+                  <i aria-hidden="true" class="{{ $item->icon ?: 'fa fa-arrow-circle-right' }}"></i> {{ $item->title ?? '' }}
+                </a>
+              </li>
+            @endforeach
+          @elseif(!empty($headerNavlinks))
             @foreach($headerNavlinks as $link)
               @if(($link['is_active'] ?? true))
                 <li role="presentation">

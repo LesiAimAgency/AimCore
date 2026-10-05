@@ -152,6 +152,8 @@ class MenuController extends Controller
                 'name' => 'required|string|max:255',
                 'slug' => 'required|string|max:255',
                 'location' => 'nullable|string|max:50',
+                'sort_order' => 'nullable|integer',
+                'is_active' => 'nullable|boolean',
             ]);
 
             $existsQuery = Menu::withoutGlobalScopes()->where('slug', $validated['slug']);
@@ -172,23 +174,34 @@ class MenuController extends Controller
                 'name' => $validated['name'],
                 'slug' => $validated['slug'],
                 'location' => $validated['location'] ?? 'header',
-                'is_active' => true,
+                'sort_order' => isset($validated['sort_order']) ? (int) $validated['sort_order'] : 0,
+                'is_active' => $request->has('is_active') ? (bool) $request->input('is_active') : true,
                 'project_id' => $projectId,
                 'tenant_id' => $tenantId,
             ]);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Menu đã được tạo thành công!',
-                'menu' => $menu,
-            ]);
+            \App\Services\MenuService::clearMenuCache($projectId);
+
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Menu đã được tạo thành công!',
+                    'menu' => $menu,
+                ]);
+            }
+
+            return back()->with('success', 'Menu đã được tạo thành công!');
         } catch (\Exception $e) {
             Log::error('Menu creation failed: '.$e->getMessage());
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Lỗi: '.$e->getMessage(),
-            ], 500);
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Lỗi: '.$e->getMessage(),
+                ], 500);
+            }
+
+            return back()->with('error', 'Lỗi: '.$e->getMessage());
         }
     }
 
@@ -203,24 +216,45 @@ class MenuController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'nullable|string|max:50',
+            'sort_order' => 'nullable|integer',
             'is_active' => 'nullable|boolean',
         ]);
 
-        $menu->update([
+        $updateData = [
             'name' => $validated['name'],
             'location' => $validated['location'] ?? $menu->location,
-            'is_active' => $request->has('is_active') ? (bool) $request->input('is_active') : $menu->is_active,
-        ]);
+        ];
 
-        if ($request->expectsJson()) {
+        if ($request->has('sort_order')) {
+            $updateData['sort_order'] = (int) $validated['sort_order'];
+        }
+        if ($request->has('is_active')) {
+            $updateData['is_active'] = (bool) $request->input('is_active');
+        }
+
+        $menu->update($updateData);
+
+        \App\Services\MenuService::clearMenuCache($menu->project_id);
+
+        if ($request->expectsJson() || $request->ajax()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Menu đã được cập nhật!',
-                'menu' => $menu,
+                'menu' => $menu->fresh(),
             ]);
         }
 
         return back()->with('success', 'Menu đã được cập nhật!');
+    }
+
+    public function create($projectCode = null)
+    {
+        return $this->index($projectCode);
+    }
+
+    public function edit($projectCode = null, $menu = null)
+    {
+        return $this->show($projectCode, $menu);
     }
 
     public function storeItem(Request $request, $projectCode = null, $menuId = null)
@@ -240,14 +274,17 @@ class MenuController extends Controller
                 'linkable_id' => 'nullable|integer',
                 'parent_id' => 'nullable|exists:menu_items,id',
                 'icon' => 'nullable|string|max:255',
+                'css_class' => 'nullable|string|max:255',
                 'image' => 'nullable|string|max:500',
                 'badge' => 'nullable|string|max:100',
                 'badge_color' => 'nullable|string|max:50',
+                'is_active' => 'nullable|boolean',
             ]);
 
             $data['menu_id'] = $menu->id;
             $data['project_id'] = $menu->project_id;
             $data['tenant_id'] = $menu->tenant_id;
+            $data['is_active'] = $request->has('is_active') ? (bool) $request->input('is_active') : true;
             $data['order'] = MenuItem::withoutGlobalScopes()
                 ->where('menu_id', $menu->id)
                 ->where(function ($query) use ($data) {
@@ -260,6 +297,8 @@ class MenuController extends Controller
                 ->max('order') + 1;
 
             $menuItem = MenuItem::create($data);
+
+            \App\Services\MenuService::clearMenuCache($menu->project_id);
 
             return response()->json([
                 'success' => true,
@@ -285,14 +324,24 @@ class MenuController extends Controller
             'url' => 'nullable|string|max:1000',
             'target' => 'required|in:_self,_blank',
             'icon' => 'nullable|string|max:255',
+            'css_class' => 'nullable|string|max:255',
             'image' => 'nullable|string|max:500',
             'badge' => 'nullable|string|max:100',
             'badge_color' => 'nullable|string|max:50',
+            'is_active' => 'nullable|boolean',
+            'order' => 'nullable|integer',
+            'parent_id' => 'nullable',
         ]);
+
+        if ($request->has('is_active')) {
+            $data['is_active'] = (bool) $request->input('is_active');
+        }
 
         $item->update($data);
 
-        if ($request->expectsJson()) {
+        \App\Services\MenuService::clearMenuCache($item->project_id);
+
+        if ($request->expectsJson() || $request->ajax()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Đã cập nhật mục menu thành công!',
@@ -310,9 +359,12 @@ class MenuController extends Controller
         }
 
         $item = MenuItem::withoutGlobalScopes()->findOrFail($itemId);
+        $projectId = $item->project_id;
         $item->delete();
 
-        if (request()->expectsJson()) {
+        \App\Services\MenuService::clearMenuCache($projectId);
+
+        if (request()->expectsJson() || request()->ajax()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Đã xóa mục menu!',
@@ -355,6 +407,8 @@ class MenuController extends Controller
                 }
             });
 
+            \App\Services\MenuService::clearMenuCache($menu->project_id);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Cấu trúc menu đã được cập nhật thành công!',
@@ -395,9 +449,12 @@ class MenuController extends Controller
 
         $menu = Menu::withoutGlobalScopes()->findOrFail($menuId);
         $menuName = $menu->name;
+        $projectId = $menu->project_id;
         $menu->delete();
 
-        if (request()->expectsJson()) {
+        \App\Services\MenuService::clearMenuCache($projectId);
+
+        if (request()->expectsJson() || request()->ajax()) {
             return response()->json([
                 'success' => true,
                 'message' => "Đã xóa menu '{$menuName}' và tất cả mục con!",

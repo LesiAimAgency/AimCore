@@ -7,6 +7,9 @@
     $uploadRoute = $isDomain && Route::has('ehenho.domain.chat_all.upload') ? route('ehenho.domain.chat_all.upload') : (Route::has('ehenho.chat_all.upload') ? route('ehenho.chat_all.upload') : url('/ehenho/chat-all/upload'));
     $pollRoute = $isDomain && Route::has('ehenho.domain.chat_all.poll') ? route('ehenho.domain.chat_all.poll') : (Route::has('ehenho.chat_all.poll') ? route('ehenho.chat_all.poll') : url('/ehenho/chat-all/poll'));
     $readRoute = $isDomain && Route::has('ehenho.domain.chat_all.read') ? route('ehenho.domain.chat_all.read') : (Route::has('ehenho.chat_all.read') ? route('ehenho.chat_all.read') : url('/ehenho/chat-all/read'));
+    $profileRouteTemplate = $isDomain && Route::has('ehenho.domain.profile.show') 
+        ? route('ehenho.domain.profile.show', '__SLUG__') 
+        : (Route::has('ehenho.profile.show') ? route('ehenho.profile.show', '__SLUG__') : url('/ehenho/ho-so/__SLUG__'));
     $isAuth = auth()->check();
 @endphp
 
@@ -31,65 +34,117 @@
           <i class="fa fa-circle" style="font-size: 8px;"></i> Đang hoạt động
         </span>
       @else
-        <span style="font-size: 11px; color: #f0ad4e;">
-          <i class="fa fa-lock"></i> Yêu cầu đăng nhập
-        </span>
+        <a href="{{ $loginRoute }}" style="font-size: 12px; color: #f0ad4e; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+          <i class="fa fa-sign-in"></i> Đăng nhập để chat
+        </a>
       @endif
     </div>
   </div>
 
-  @if(! $isAuth)
-    <!-- GUEST VIEW: Yêu cầu đăng nhập theo đúng quy tắc authentication -->
-    <div class="chat-all-guest-card" style="padding: 35px 20px; text-align: center; background: #fdfdfd;">
-      <div style="width: 58px; height: 58px; background: #eaf4f8; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;">
-        <i class="fa fa-lock" style="font-size: 26px; color: var(--eh-theme-primary, #007cae);"></i>
-      </div>
-      <h4 style="font-weight: bold; color: #333; margin: 0 0 8px 0;">Chat All</h4>
-      <p style="color: #666; font-size: 15px; line-height: 1.6; margin-bottom: 20px;">
-        Bạn cần đăng nhập để<br>sử dụng chức năng chat.
-      </p>
-      <div>
-        <a href="{{ $loginRoute }}" class="btn btn-primary btn-lg" style="min-width: 180px; font-weight: bold; border-radius: 24px; padding: 9px 28px; background-color: var(--eh-theme-primary, #007cae); border: none; box-shadow: 0 4px 10px rgba(0,124,174,0.3);">
-          <i class="fa fa-sign-in"></i> Đăng nhập
-        </a>
-      </div>
-      <div style="margin-top: 14px; font-size: 13px; color: #888;">
-        Chưa có tài khoản?
-        <a href="{{ $registerRoute }}" style="color: #e85151; font-weight: bold; text-decoration: underline;">Đăng ký miễn phí</a>
+  <!-- Messages & Chat Section (Cả khách vãng lai và thành viên đều xem được) -->
+  <div class="chat-all-auth-card" style="display: flex; flex-direction: column; background: #f8fafc;">
+    
+    <!-- Messages List -->
+    <div id="inlineChatMessagesList" style="height: 380px; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px;">
+      <div id="inlineChatLoading" style="text-align: center; color: #888; padding: 40px 0;">
+        <i class="fa fa-spinner fa-spin fa-2x"></i>
+        <p style="font-size: 12px; margin-top: 8px;">Đang tải tin nhắn cộng đồng...</p>
       </div>
     </div>
-  @else
-    <!-- AUTHENTICATED USER VIEW: Chat trực tiếp ngay tại trang chủ -->
-    <div class="chat-all-auth-card" style="display: flex; flex-direction: column; background: #f8fafc;">
-      
-      <!-- Messages List -->
-      <div id="inlineChatMessagesList" style="height: 380px; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px;">
-        <div id="inlineChatLoading" style="text-align: center; color: #888; padding: 40px 0;">
-          <i class="fa fa-spinner fa-spin fa-2x"></i>
-          <p style="font-size: 12px; margin-top: 8px;">Đang tải tin nhắn cộng đồng...</p>
-        </div>
-      </div>
 
-      <!-- Input Form -->
+    <!-- Bottom Chat Area -->
+    @if($isAuth)
+      <!-- Input Form cho thành viên đã đăng nhập -->
       <div style="padding: 10px 12px; background: #fff; border-top: 1px solid #e1e4e8;">
         <form id="inlineChatSendForm" style="margin: 0; display: flex; align-items: center; gap: 6px;">
-          <input type="file" id="inlineChatFileInput" accept="image/*,.pdf" style="display: none;">
-          <button type="button" id="inlineChatAttachBtn" class="btn btn-default" title="Đính kèm tệp/ảnh" style="border-radius: 50%; width: 34px; height: 34px; padding: 0; display: flex; align-items: center; justify-content: center; color: #555; flex-shrink: 0;">
-            <i class="fa fa-paperclip" style="font-size: 15px;"></i>
-          </button>
+        
           <input type="text" id="inlineChatTextInput" class="form-control" placeholder="Nhập tin nhắn..." maxlength="2000" autocomplete="off" style="border-radius: 18px; padding-left: 12px; padding-right: 12px; height: 34px; font-size: 13px;">
           <button type="submit" id="inlineChatSendBtn" class="btn btn-primary" style="border-radius: 18px; padding: 6px 14px; background-color: var(--eh-theme-primary, #007cae); border: none; font-weight: bold; display: flex; align-items: center; gap: 5px; flex-shrink: 0; font-size: 13px;">
             <i class="fa fa-paper-plane"></i> Gửi
           </button>
         </form>
       </div>
+    @else
+      <!-- Thanh kêu gọi đăng nhập cho khách chưa đăng nhập: Vẫn thấy tin nhắn, muốn chat thì bấm đăng nhập -->
+      <div style="padding: 10px 12px; background: #fff; border-top: 1px solid #e1e4e8; display: flex; align-items: center; gap: 8px;">
+        
+        <a href="{{ $loginRoute }}" class="btn btn-primary" style="border-radius: 18px; padding: 6px 16px; background-color: var(--eh-theme-primary, #007cae); border: none; font-weight: bold; font-size: 13px; flex-shrink: 0; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+          <i class="fa fa-sign-in"></i> Đăng nhập
+        </a>
+        <a href="{{ $registerRoute }}" class="btn btn-default" style="border-radius: 18px; padding: 6px 14px; font-weight: bold; font-size: 13px; flex-shrink: 0; color: #e85151; text-decoration: none; display: flex; align-items: center; gap: 5px; border-color: #ddd;">
+          Đăng ký
+        </a>
+      </div>
+    @endif
 
-    </div>
-  @endif
+  </div>
 
 </div>
 
-@if($isAuth)
+<style>
+  .chat-all-msg-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .chat-all-msg-mine {
+    justify-content: flex-end;
+  }
+  .chat-all-msg-mine .chat-all-bubble {
+    background-color: var(--eh-theme-primary, #007cae);
+    color: #fff;
+    border-bottom-right-radius: 2px;
+  }
+  .chat-all-msg-other .chat-all-bubble {
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #e1e4e8;
+    border-bottom-left-radius: 2px;
+  }
+  .chat-all-bubble {
+    max-width: 100%;
+    padding: 8px 12px;
+    border-radius: 14px;
+    font-size: 13px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+  .chat-all-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .chat-all-sender-name {
+    font-size: 11px;
+    color: #555;
+    margin-bottom: 3px;
+    font-weight: 600;
+    line-height: 1.2;
+    transition: color 0.15s;
+  }
+  a.chat-all-sender-name:hover {
+    color: var(--eh-theme-primary, #007cae) !important;
+    text-decoration: underline !important;
+  }
+  .chat-all-sender-name.mine {
+    color: var(--eh-theme-primary, #007cae);
+    text-align: right;
+  }
+  .chat-all-time {
+    font-size: 10px;
+    color: #999;
+    margin-top: 3px;
+    text-align: right;
+  }
+  .chat-all-msg-mine .chat-all-time {
+    color: rgba(255,255,255,0.85);
+  }
+</style>
+
 @push('scripts')
 <script>
 (function() {
@@ -105,6 +160,18 @@
   var pollUrl = "{{ $pollRoute }}";
   var readUrl = "{{ $readRoute }}";
   var loginUrl = "{{ $loginRoute }}";
+  var profileRouteTemplate = "{{ $profileRouteTemplate }}";
+
+  function getProfileUrl(msg) {
+    if (msg.sender_profile_url) {
+      return msg.sender_profile_url;
+    }
+    var slug = msg.sender_slug || msg.profile_slug || msg.slug;
+    if (slug) {
+      return profileRouteTemplate.replace('__SLUG__', encodeURIComponent(slug));
+    }
+    return '';
+  }
   
   var lastMessageId = 0;
   var pollTimer = null;
@@ -139,9 +206,7 @@
       },
       error: function(xhr) {
         $('#inlineChatLoading').remove();
-        if (xhr.status === 401) {
-          window.location.href = loginUrl;
-        } else {
+        if (xhr.status !== 401) {
           $('#inlineChatMessagesList').html('<div style="text-align: center; color: #d9534f; margin-top: 40px; font-size: 12px;"><i class="fa fa-exclamation-triangle"></i> Không thể tải tin nhắn. Vui lòng tải lại trang.</div>');
         }
       }
@@ -172,9 +237,7 @@
         }
       },
       error: function(xhr) {
-        if (xhr.status === 401) {
-          clearInterval(pollTimer);
-        }
+        // Silent on polling failure
       }
     });
   }
@@ -280,13 +343,34 @@
   function appendInlineMessage(msg) {
     var isMine = msg.is_mine;
     var rowClass = isMine ? 'chat-all-msg-row chat-all-msg-mine' : 'chat-all-msg-row chat-all-msg-other';
+    var senderName = escapeHtml(msg.sender_name || 'Thành viên');
+    var senderAvatar = escapeHtml(msg.sender_avatar || '{{ asset('themes/ehenho/images/df_picture.png') }}');
+    var profileUrl = getProfileUrl(msg);
     
     var html = '<div class="' + rowClass + '" id="inlineChatMsg_' + msg.id + '">';
     
     if (!isMine) {
-      html += '<img src="' + escapeHtml(msg.sender_avatar) + '" alt="" class="chat-all-avatar">';
-      html += '<div style="display: flex; flex-direction: column;">';
-      html += '<span class="chat-all-sender-name">' + escapeHtml(msg.sender_name) + '</span>';
+      if (profileUrl) {
+        html += '<a href="' + escapeHtml(profileUrl) + '" target="_blank" title="' + senderName + '" style="display:inline-block; flex-shrink:0;">';
+        html += '<img src="' + senderAvatar + '" alt="' + senderName + '" class="chat-all-avatar" style="cursor:pointer; transition:opacity 0.2s;" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">';
+        html += '</a>';
+      } else {
+        html += '<img src="' + senderAvatar + '" alt="' + senderName + '" class="chat-all-avatar">';
+      }
+
+      html += '<div style="display: flex; flex-direction: column; max-width: 82%;">';
+      if (profileUrl) {
+        html += '<a href="' + escapeHtml(profileUrl) + '" target="_blank" class="chat-all-sender-name" style="text-decoration: none; color: #333; font-weight: 600; font-size: 11px; margin-bottom: 3px; display: inline-block;" title="Xem hồ sơ ' + senderName + '">' + senderName + '</a>';
+      } else {
+        html += '<span class="chat-all-sender-name">' + senderName + '</span>';
+      }
+    } else {
+      html += '<div style="display: flex; flex-direction: column; align-items: flex-end; max-width: 82%;">';
+      if (profileUrl) {
+        html += '<a href="' + escapeHtml(profileUrl) + '" target="_blank" class="chat-all-sender-name mine" style="text-decoration: none; font-size: 11px; margin-bottom: 3px; display: inline-block;" title="Xem hồ sơ của bạn">' + senderName + ' <small style="font-size: 10px; color: #888; font-weight: normal;">(Bạn)</small></a>';
+      } else {
+        html += '<span class="chat-all-sender-name mine">' + senderName + ' <small style="font-size: 10px; color: #888; font-weight: normal;">(Bạn)</small></span>';
+      }
     }
 
     html += '<div class="chat-all-bubble">';
@@ -301,11 +385,9 @@
     html += '<div class="chat-all-time">' + escapeHtml(msg.time) + '</div>';
     html += '</div>';
 
-    if (!isMine) {
-      html += '</div>';
-    }
+    html += '</div>'; // close flex-column
 
-    html += '</div>';
+    html += '</div>'; // close row
 
     $('#inlineChatMessagesList').append(html);
   }
@@ -329,4 +411,3 @@
 })();
 </script>
 @endpush
-@endif

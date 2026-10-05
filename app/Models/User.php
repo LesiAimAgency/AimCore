@@ -376,6 +376,49 @@ class User extends Authenticatable
             });
     }
 
+    public function scopeSuperAdminPersonnel($query)
+    {
+        return $query->where(function ($q) {
+            // 1. Super Admin (level 0, role super_admin / superadmin, hoac email admin goc)
+            $q->where('level', 0)
+                ->orWhereIn('role', ['super_admin', 'superadmin'])
+                ->orWhere('email', 'admin@example.com')
+                ->orWhereHas('roles', function ($rq) {
+                    $rq->whereIn('name', ['super_admin', 'superadmin']);
+                })
+                // 2. Nhan su & Quan tri noi bo (Internal)
+                ->orWhere(function ($sub) {
+                    $nonInternal = array_merge(self::MULTI_TENANCY_ROLES, ['visitor', 'customer', 'user', 'admin', 'store_manager', 'web_admin']);
+                    $sub->where(function ($roleQ) use ($nonInternal) {
+                        $roleQ->whereNotIn('role', $nonInternal)
+                            ->orWhereNull('role');
+                    })
+                        ->whereDoesntHave('roles', function ($rq) use ($nonInternal) {
+                            $rq->whereIn('name', $nonInternal);
+                        })
+                        ->whereNull('tenant_id')
+                        ->where(function ($sq) {
+                            $sq->whereNull('project_ids')
+                                ->orWhere('project_ids', '[]')
+                                ->orWhere('project_ids', 'null')
+                                ->orWhere('project_ids', '""');
+                        });
+                });
+        });
+    }
+
+    public function scopeSuperAdminOnly($query)
+    {
+        return $query->where(function ($q) {
+            $q->where('level', 0)
+                ->orWhereIn('role', ['super_admin', 'superadmin'])
+                ->orWhere('email', 'admin@example.com')
+                ->orWhereHas('roles', function ($rq) {
+                    $rq->whereIn('name', ['super_admin', 'superadmin']);
+                });
+        });
+    }
+
     public function scopeMultiTenancy($query)
     {
         return $query->where(function ($q) {

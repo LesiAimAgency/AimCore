@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Models\Project;
 use App\Models\Taxonomy;
 use App\Traits\HasAlerts;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class PostController extends Controller
 {
@@ -26,12 +28,34 @@ class PostController extends Controller
         }
 
         $param = $postId ?? $projectCodeOrPost;
+        $projectCode = is_string($projectCodeOrPost) && ! is_numeric($projectCodeOrPost) && $postId !== null
+            ? $projectCodeOrPost
+            : (request()->route('projectCode') ?? (function_exists('project_code') ? project_code() : null));
 
-        if (is_numeric($param)) {
-            return Post::withTrashed()->where('id', $param)->firstOrFail();
+        $query = Post::withTrashed();
+
+        if ($projectCode) {
+            $project = Project::where('code', $projectCode)->first();
+            if ($project) {
+                $query->where(function ($q) use ($project) {
+                    $q->where('project_id', $project->id);
+                    if ($project->tenant_id) {
+                        $q->orWhere('tenant_id', $project->tenant_id);
+                    }
+                });
+            }
         }
 
-        return Post::withTrashed()->where('slug', $param)->orWhere('id', $param)->firstOrFail();
+        if (is_numeric($param)) {
+            return (clone $query)->where('id', $param)->first()
+                ?? Post::withTrashed()->where('id', $param)->firstOrFail();
+        }
+
+        return (clone $query)->where(function ($q) use ($param) {
+            $q->where('slug', $param)->orWhere('id', $param);
+        })->first() ?? Post::withTrashed()->where(function ($q) use ($param) {
+            $q->where('slug', $param)->orWhere('id', $param);
+        })->firstOrFail();
     }
 
     public function index(Request $request, $projectCode = null)
@@ -97,9 +121,25 @@ class PostController extends Controller
             ];
         }
 
+        $projectCode = request()->route('projectCode') ?? (function_exists('project_code') ? project_code() : null);
+        $project = $projectCode ? Project::where('code', $projectCode)->first() : request()->attributes->get('project');
+        $projectId = $project?->id ?? session('current_project_id') ?? (function_exists('project_id') ? project_id() : null);
+        $tenantId = $project?->tenant_id ?? session('current_tenant_id') ?? (function_exists('tenant_id') ? tenant_id() : null);
+
+        $slugRule = Rule::unique('posts', 'slug')
+            ->where(function ($query) use ($projectId, $tenantId, $postType) {
+                if ($projectId) {
+                    $query->where('project_id', $projectId);
+                } elseif ($tenantId) {
+                    $query->where('tenant_id', $tenantId);
+                }
+                $query->where('post_type', $postType);
+            });
+
         // Validate basic fields
         $rules = [
-            'slug' => 'nullable|string|unique:posts,slug',
+            'slug' => ['nullable', 'string', $slugRule],
+            'template' => 'nullable|string',
             'featured_image' => 'nullable|string',
             'post_type' => 'required|string',
             'status' => 'required|in:draft,published,archived',
@@ -139,6 +179,10 @@ class PostController extends Controller
         // Process meta data
         if ($request->has('meta_data')) {
             $validated['meta_data'] = $request->input('meta_data');
+        }
+
+        if ($request->has('template')) {
+            $validated['template'] = $request->input('template');
         }
 
         $post = Post::create($validated);
@@ -205,7 +249,7 @@ class PostController extends Controller
             $post->saveTranslations($request->input('translations'));
         }
 
-        $projectCode = request()->route('projectCode') ?? (function_exists('project_code') ? project_code() : null);
+        $projectCode = request()->route('projectCode') ?? $projectCode ?? ($post->project ? $post->project->code : null) ?? (function_exists('project_code') ? project_code() : null);
         $route = $projectCode
             ? ($postType === 'page'
                 ? route('project.admin.pages.index', ['projectCode' => $projectCode])
@@ -274,8 +318,25 @@ class PostController extends Controller
             ];
         }
 
+        $projectCode = request()->route('projectCode') ?? (function_exists('project_code') ? project_code() : null);
+        $project = $projectCode ? Project::where('code', $projectCode)->first() : request()->attributes->get('project');
+        $projectId = $post->project_id ?? $project?->id ?? session('current_project_id') ?? (function_exists('project_id') ? project_id() : null);
+        $tenantId = $post->tenant_id ?? $project?->tenant_id ?? session('current_tenant_id') ?? (function_exists('tenant_id') ? tenant_id() : null);
+
+        $slugRule = Rule::unique('posts', 'slug')
+            ->ignore($post->id)
+            ->where(function ($query) use ($projectId, $tenantId, $postType) {
+                if ($projectId) {
+                    $query->where('project_id', $projectId);
+                } elseif ($tenantId) {
+                    $query->where('tenant_id', $tenantId);
+                }
+                $query->where('post_type', $postType);
+            });
+
         $rules = [
-            'slug' => 'nullable|string|unique:posts,slug,'.$post->id,
+            'slug' => ['nullable', 'string', $slugRule],
+            'template' => 'nullable|string',
             'featured_image' => 'nullable|string',
             'status' => 'required|in:draft,published,archived',
             'published_at' => 'nullable|date',
@@ -302,6 +363,10 @@ class PostController extends Controller
 
         if ($request->has('meta_data')) {
             $validated['meta_data'] = $request->input('meta_data');
+        }
+
+        if ($request->has('template')) {
+            $validated['template'] = $request->input('template');
         }
 
         $post->update($validated);
@@ -368,7 +433,7 @@ class PostController extends Controller
             $post->saveTranslations($request->input('translations'));
         }
 
-        $projectCode = request()->route('projectCode') ?? (function_exists('project_code') ? project_code() : null);
+        $projectCode = request()->route('projectCode') ?? (is_string($projectCodeOrPost) && $postId !== null ? $projectCodeOrPost : null) ?? ($post->project ? $post->project->code : null) ?? (function_exists('project_code') ? project_code() : null);
         $route = $projectCode
             ? ($postType === 'page'
                 ? route('project.admin.pages.edit', ['projectCode' => $projectCode, 'post' => $post->slug ?: $post->id])

@@ -42,4 +42,14 @@ class ChatAllMessage extends EhenhoBaseModel
 
         return asset('themes/ehenho/images/df_picture.png');
     }
+
+    public function getSenderSlugAttribute(): ?string
+    {
+        $profile = $this->user?->profile;
+        if (! $profile && $this->user_id) {
+            $profile = Profile::where('user_id', $this->user_id)->first();
+        }
+
+        return $profile?->slug ?: ($profile?->id ? (string) $profile->id : null);
+    }
 }

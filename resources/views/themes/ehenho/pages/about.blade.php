@@ -1,7 +1,7 @@
 @extends('themes.ehenho.layouts.app')
 
-@section('title', 'Giới thiệu về eHenho - Hẹn hò Online & Tìm bạn Bốn phương')
-@section('meta_description', 'eHenho.com là mạng xã hội hẹn hò trực tuyến, tìm bạn bốn phương, tìm người yêu hoàn toàn miễn phí và an toàn.')
+@section('title', !empty($page?->meta_title) ? $page->meta_title : ($page?->title ?? 'Giới thiệu về eHenho - Hẹn hò Online & Tìm bạn Bốn phương'))
+@section('meta_description', !empty($page?->meta_description) ? $page->meta_description : ($page?->excerpt ?? 'eHenho.com là mạng xã hội hẹn hò trực tuyến, tìm bạn bốn phương, tìm người yêu hoàn toàn miễn phí và an toàn.'))
 
 @section('content')
 <header class="text-center" style="background-color: #FCF8E3; color:#8A6D3B; padding-top:6px; padding-bottom:6px">
