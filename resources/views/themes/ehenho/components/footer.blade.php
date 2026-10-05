@@ -58,25 +58,22 @@
     @endif
   </div>	
 
-  @if($facebookUrl || $twitterUrl || $instagramUrl || $youtubeUrl || $tiktokUrl || $zaloUrl)
+  @if($facebookUrl || $twitterUrl || $instagramUrl || $youtubeUrl || $tiktokUrl)
   <div class="container footer-cont">
     @if($facebookUrl)
-      <a href="{{ $facebookUrl }}" target="_blank" rel="noopener noreferrer" title="Facebook"> <i class="fa fa-br fa-facebook"></i></a>&nbsp;&nbsp;
+      <a href="{{ $facebookUrl }}" target="_blank" rel="noopener noreferrer" title="Facebook"> <i class="fa-brands fa-facebook-f fa-br"></i></a>&nbsp;&nbsp;
     @endif
     @if($twitterUrl)
-      <a href="{{ $twitterUrl }}" target="_blank" rel="noopener noreferrer" title="Twitter / X"> <i class="fa fa-br fa-twitter"></i></a>&nbsp;&nbsp;
+      <a href="{{ $twitterUrl }}" target="_blank" rel="noopener noreferrer" title="Twitter / X"> <i class="fa-brands fa-x-twitter fa-br"></i></a>&nbsp;&nbsp;
     @endif
     @if($instagramUrl)
-      <a href="{{ $instagramUrl }}" target="_blank" rel="noopener noreferrer" title="Instagram"> <i class="fa fa-br fa-instagram"></i></a>&nbsp;&nbsp;
+      <a href="{{ $instagramUrl }}" target="_blank" rel="noopener noreferrer" title="Instagram"> <i class="fa-brands fa-instagram fa-br"></i></a>&nbsp;&nbsp;
     @endif
     @if($youtubeUrl)
-      <a href="{{ $youtubeUrl }}" target="_blank" rel="noopener noreferrer" title="YouTube"> <i class="fa fa-br fa-youtube"></i></a>&nbsp;&nbsp;
+      <a href="{{ $youtubeUrl }}" target="_blank" rel="noopener noreferrer" title="YouTube"> <i class="fa-brands fa-youtube fa-br"></i></a>&nbsp;&nbsp;
     @endif
     @if($tiktokUrl)
-      <a href="{{ $tiktokUrl }}" target="_blank" rel="noopener noreferrer" title="TikTok"> <i class="fa fa-br fa-tiktok"></i></a>&nbsp;&nbsp;
-    @endif
-    @if($zaloUrl)
-      <a href="{{ $zaloUrl }}" target="_blank" rel="noopener noreferrer" title="Zalo"> <i class="fa fa-br fa-zalo"></i></a>&nbsp;&nbsp;
+      <a href="{{ $tiktokUrl }}" target="_blank" rel="noopener noreferrer" title="TikTok"> <i class="fa-brands fa-tiktok fa-br"></i></a>&nbsp;&nbsp;
     @endif
   </div>
   @endif
