@@ -57,8 +57,15 @@ Route::prefix('wkcomputer')
 
 // ============================================
 // EHENHO DATING & SOCIAL NETWORK (100% ISOLATED)
-// Supports: DA010-EHENHO-DATING-SOCIAL-NETWORK, DA010, ehenho
+// Supports: DA010 (Primary), DA010-EHENHO-DATING-SOCIAL-NETWORK, ehenho
 // ============================================
+Route::prefix('DA010')
+    ->name('ehenho.')
+    ->middleware([
+        ResolveProjectContext::class,
+    ])
+    ->group(base_path('routes/ehenho.php'));
+
 Route::prefix('DA010-EHENHO-DATING-SOCIAL-NETWORK')
     ->name('ehenho.full.')
     ->middleware([
@@ -66,15 +73,8 @@ Route::prefix('DA010-EHENHO-DATING-SOCIAL-NETWORK')
     ])
     ->group(base_path('routes/ehenho.php'));
 
-Route::prefix('DA010')
-    ->name('ehenho.short.')
-    ->middleware([
-        ResolveProjectContext::class,
-    ])
-    ->group(base_path('routes/ehenho.php'));
-
 Route::prefix('ehenho')
-    ->name('ehenho.')
+    ->name('ehenho.legacy.')
     ->middleware([
         ResolveProjectContext::class,
     ])
