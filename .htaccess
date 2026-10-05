@@ -14,8 +14,15 @@
     RewriteRule ^(.*)$ public/$1 [L,QSA]
 </IfModule>
 
-# Cấu hình PHP Limits
-php_value max_execution_time 120
-php_value memory_limit 256M
-php_value upload_max_filesize 50M
-php_value post_max_size 50M
+<IfModule mod_php.c>
+    php_value max_execution_time 120
+    php_value memory_limit 256M
+    php_value upload_max_filesize 50M
+    php_value post_max_size 50M
+</IfModule>
+<IfModule mod_php7.c>
+    php_value max_execution_time 120
+    php_value memory_limit 256M
+    php_value upload_max_filesize 50M
+    php_value post_max_size 50M
+</IfModule>
