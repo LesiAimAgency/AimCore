@@ -334,7 +334,7 @@
 
     <!-- Right Sidebar -->
     <div class="col-sm-4">
-      @include('themes.ehenho.components.chat-all-inline')
+   
 
       <!-- Recently Registered Widget (Nữ / Nam Tabs) -->
       @include('themes.ehenho.components.recently-registered', [
