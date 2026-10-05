@@ -19,7 +19,7 @@ class EhenhoRichDemoSeeder extends Seeder
 {
     public function run(): void
     {
-        $project = Project::where('code', 'DA010-EHENHO-DATING-SOCIAL-NETWORK')->orWhere('code', 'ehenho')->first();
+        $project = Project::whereIn('code', ['DA010-EHENHO-DATING-SOCIAL-NETWORK', 'DA010', 'ehenho'])->first();
         $projectId = $project?->id ?? 15;
 
         // Ensure base provinces exist
