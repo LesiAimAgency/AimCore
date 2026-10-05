@@ -25,7 +25,10 @@ class PageController extends Controller
             }
         }
 
-        return Project::where('code', 'ehenho')->first();
+        return Project::where('code', 'DA010')
+            ->orWhere('code', 'DA010-EHENHO-DATING-SOCIAL-NETWORK')
+            ->orWhere('code', 'ehenho')
+            ->first();
     }
 
     private function queryPage()

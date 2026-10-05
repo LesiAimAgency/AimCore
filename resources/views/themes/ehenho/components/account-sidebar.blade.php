@@ -37,7 +37,7 @@
       <i class="fa fa-key fa-fw"></i> Đổi mật khẩu
     </a>
     @if(auth()->check() && (method_exists(auth()->user(), 'canAccessEhenhoCms') ? auth()->user()->canAccessEhenhoCms() : (auth()->user()->role !== 'user' && in_array(auth()->user()->role, ['cms', 'admin', 'dev', 'super_admin', 'superadmin', 'manager', 'web_admin', 'store_manager', 'multi_tenancy'], true))))
-      <a href="{{ url('/ehenho/admin') }}" class="list-group-item text-danger" style="font-weight: bold; background-color: #fff5f5;">
+      <a href="{{ url('/DA010/admin') }}" class="list-group-item text-danger" style="font-weight: bold; background-color: #fff5f5;">
         <i class="fa fa-cogs fa-fw" style="color: #dc2626;"></i> Trang Quản Trị CMS
       </a>
     @endif

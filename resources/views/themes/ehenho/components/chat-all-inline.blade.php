@@ -1,15 +1,15 @@
 @php
     $isDomain = request()->getHost() === 'ehenho.local' || str_starts_with(request()->route()?->getName() ?? '', 'ehenho.domain.');
-    $loginRoute = $isDomain && Route::has('ehenho.domain.login') ? route('ehenho.domain.login') : (Route::has('ehenho.login') ? route('ehenho.login') : url('/ehenho/dang-nhap'));
-    $registerRoute = $isDomain && Route::has('ehenho.domain.register') ? route('ehenho.domain.register') : (Route::has('ehenho.register') ? route('ehenho.register') : url('/ehenho/dang-ky'));
-    $messagesRoute = $isDomain && Route::has('ehenho.domain.chat_all.messages') ? route('ehenho.domain.chat_all.messages') : (Route::has('ehenho.chat_all.messages') ? route('ehenho.chat_all.messages') : url('/ehenho/chat-all/messages'));
-    $storeRoute = $isDomain && Route::has('ehenho.domain.chat_all.store') ? route('ehenho.domain.chat_all.store') : (Route::has('ehenho.chat_all.store') ? route('ehenho.chat_all.store') : url('/ehenho/chat-all/messages'));
-    $uploadRoute = $isDomain && Route::has('ehenho.domain.chat_all.upload') ? route('ehenho.domain.chat_all.upload') : (Route::has('ehenho.chat_all.upload') ? route('ehenho.chat_all.upload') : url('/ehenho/chat-all/upload'));
-    $pollRoute = $isDomain && Route::has('ehenho.domain.chat_all.poll') ? route('ehenho.domain.chat_all.poll') : (Route::has('ehenho.chat_all.poll') ? route('ehenho.chat_all.poll') : url('/ehenho/chat-all/poll'));
-    $readRoute = $isDomain && Route::has('ehenho.domain.chat_all.read') ? route('ehenho.domain.chat_all.read') : (Route::has('ehenho.chat_all.read') ? route('ehenho.chat_all.read') : url('/ehenho/chat-all/read'));
+    $loginRoute = $isDomain && Route::has('ehenho.domain.login') ? route('ehenho.domain.login') : (Route::has('ehenho.login') ? route('ehenho.login') : url('/DA010/dang-nhap'));
+    $registerRoute = $isDomain && Route::has('ehenho.domain.register') ? route('ehenho.domain.register') : (Route::has('ehenho.register') ? route('ehenho.register') : url('/DA010/dang-ky'));
+    $messagesRoute = $isDomain && Route::has('ehenho.domain.chat_all.messages') ? route('ehenho.domain.chat_all.messages') : (Route::has('ehenho.chat_all.messages') ? route('ehenho.chat_all.messages') : url('/DA010/chat-all/messages'));
+    $storeRoute = $isDomain && Route::has('ehenho.domain.chat_all.store') ? route('ehenho.domain.chat_all.store') : (Route::has('ehenho.chat_all.store') ? route('ehenho.chat_all.store') : url('/DA010/chat-all/messages'));
+    $uploadRoute = $isDomain && Route::has('ehenho.domain.chat_all.upload') ? route('ehenho.domain.chat_all.upload') : (Route::has('ehenho.chat_all.upload') ? route('ehenho.chat_all.upload') : url('/DA010/chat-all/upload'));
+    $pollRoute = $isDomain && Route::has('ehenho.domain.chat_all.poll') ? route('ehenho.domain.chat_all.poll') : (Route::has('ehenho.chat_all.poll') ? route('ehenho.chat_all.poll') : url('/DA010/chat-all/poll'));
+    $readRoute = $isDomain && Route::has('ehenho.domain.chat_all.read') ? route('ehenho.domain.chat_all.read') : (Route::has('ehenho.chat_all.read') ? route('ehenho.chat_all.read') : url('/DA010/chat-all/read'));
     $profileRouteTemplate = $isDomain && Route::has('ehenho.domain.profile.show') 
         ? route('ehenho.domain.profile.show', '__SLUG__') 
-        : (Route::has('ehenho.profile.show') ? route('ehenho.profile.show', '__SLUG__') : url('/ehenho/ho-so/__SLUG__'));
+        : (Route::has('ehenho.profile.show') ? route('ehenho.profile.show', '__SLUG__') : url('/DA010/ho-so/__SLUG__'));
     $isAuth = auth()->check();
 @endphp
 

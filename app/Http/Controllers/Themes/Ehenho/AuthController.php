@@ -389,22 +389,22 @@ class AuthController extends Controller
                 : (in_array($user->role, ['cms', 'admin', 'dev', 'super_admin', 'superadmin', 'manager', 'web_admin', 'store_manager', 'multi_tenancy'], true) || ($user->role !== 'user' && isset($user->level) && in_array((int) $user->level, [0, 1], true)));
 
             if ($isAdmin) {
-                $project = Project::where('code', 'ehenho')->first();
+                $project = Project::whereIn('code', ['DA010', 'DA010-EHENHO-DATING-SOCIAL-NETWORK', 'ehenho'])->first();
                 $tenantId = $user->tenant_id ?: ($project?->tenant_id ?? 7);
 
                 $request->session()->put('current_tenant_id', $tenantId);
                 $request->session()->put('project_user_id', $user->id);
                 $request->session()->put('project_user_username', $user->username ?: $user->name);
-                $request->session()->put('current_project', 'ehenho');
+                $request->session()->put('current_project', 'DA010');
                 $request->session()->put('current_project_id', $project?->id ?? 15);
 
-                return redirect()->to('/ehenho/admin')->with('success', 'Đăng nhập trang quản trị eHenho thành công!');
+                return redirect()->to('/DA010/admin')->with('success', 'Đăng nhập trang quản trị eHenho thành công!');
             }
 
             // Normal dating member redirect
             $defaultRoute = ($request->routeIs('ehenho.domain.*') || $request->getHost() === 'ehenho.local')
                 ? (Route::has('ehenho.domain.account.my_profile') ? route('ehenho.domain.account.my_profile') : url('/tai-khoan'))
-                : (Route::has('ehenho.account.my_profile') ? route('ehenho.account.my_profile') : url('/ehenho/tai-khoan'));
+                : (Route::has('ehenho.account.my_profile') ? route('ehenho.account.my_profile') : url('/DA010/tai-khoan'));
 
             return redirect()->to($defaultRoute)->with('success', 'Đăng nhập thành công!');
         }

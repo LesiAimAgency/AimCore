@@ -57,7 +57,7 @@ Route::prefix('wkcomputer')
 
 // ============================================
 // EHENHO DATING & SOCIAL NETWORK (100% ISOLATED)
-// Supports: DA010 (Primary), DA010-EHENHO-DATING-SOCIAL-NETWORK, ehenho
+// Supports: DA010 (Sole Primary Route)
 // ============================================
 Route::prefix('DA010')
     ->name('ehenho.')
@@ -66,19 +66,21 @@ Route::prefix('DA010')
     ])
     ->group(base_path('routes/ehenho.php'));
 
-Route::prefix('DA010-EHENHO-DATING-SOCIAL-NETWORK')
-    ->name('ehenho.full.')
-    ->middleware([
-        ResolveProjectContext::class,
-    ])
-    ->group(base_path('routes/ehenho.php'));
+// 301 Permanent Redirect from legacy /ehenho to /DA010
+Route::any('ehenho/{any?}', function ($any = null) {
+    $queryString = request()->getQueryString();
+    $target = '/DA010'.($any ? '/'.$any : '').($queryString ? '?'.$queryString : '');
 
-Route::prefix('ehenho')
-    ->name('ehenho.legacy.')
-    ->middleware([
-        ResolveProjectContext::class,
-    ])
-    ->group(base_path('routes/ehenho.php'));
+    return redirect($target, 301);
+})->where('any', '.*');
+
+// 301 Permanent Redirect from /DA010-EHENHO-DATING-SOCIAL-NETWORK to /DA010
+Route::any('DA010-EHENHO-DATING-SOCIAL-NETWORK/{any?}', function ($any = null) {
+    $queryString = request()->getQueryString();
+    $target = '/DA010'.($any ? '/'.$any : '').($queryString ? '?'.$queryString : '');
+
+    return redirect($target, 301);
+})->where('any', '.*');
 
 Route::domain('ehenho.local')
     ->name('ehenho.domain.')

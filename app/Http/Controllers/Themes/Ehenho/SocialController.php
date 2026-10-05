@@ -171,8 +171,8 @@ class SocialController extends Controller
             return (int) session('current_project_id');
         }
 
-        $project = Project::where('code', 'ehenho')->first();
+        $project = Project::whereIn('code', ['DA010', 'DA010-EHENHO-DATING-SOCIAL-NETWORK', 'ehenho'])->first();
 
-        return $project ? $project->id : 16;
+        return $project ? $project->id : 15;
     }
 }

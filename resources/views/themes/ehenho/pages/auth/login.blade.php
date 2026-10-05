@@ -26,7 +26,7 @@
 
         <div style="display: flex; gap: 10px; justify-content: center; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
           @if(method_exists(auth()->user(), 'canAccessEhenhoCms') ? auth()->user()->canAccessEhenhoCms() : (auth()->user()->role !== 'user' && in_array(auth()->user()->role, ['cms', 'admin', 'dev', 'super_admin', 'superadmin', 'manager', 'web_admin', 'store_manager', 'multi_tenancy'], true)))
-            <a href="{{ url('/ehenho/admin') }}" class="btn btn-danger btn-lg" style="font-weight: bold; padding: 10px 20px;">
+            <a href="{{ url('/DA010/admin') }}" class="btn btn-danger btn-lg" style="font-weight: bold; padding: 10px 20px;">
               <i class="fa fa-dashboard"></i> Vào CMS Quản Trị
             </a>
           @endif
