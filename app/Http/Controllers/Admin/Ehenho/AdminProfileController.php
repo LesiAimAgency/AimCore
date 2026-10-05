@@ -28,7 +28,7 @@ class AdminProfileController extends Controller
     {
         return $request->attributes->get('project')
             ?? Project::where('code', $projectCode)
-                ->orWhere('code', 'DA010-EHENHO-DATING-SOCIAL-NETWORK')
+                ->orWhere('code', 'DA010')
                 ->orWhere('code', 'ehenho')
                 ->orWhere('external_domain', 'ehenho.local')
                 ->first();

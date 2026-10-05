@@ -11,6 +11,7 @@ use App\Models\Ehenho\SocialConnection;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class SearchController extends Controller
 {
@@ -173,10 +174,22 @@ class SearchController extends Controller
                     $pageTitle = 'Tìm Bạn Bốn Phương '.$selectedProvince->name;
                 }
             } else {
+                $targetSlug = Str::slug((string) $selectedProvinceId);
                 $provNormalized = str_replace('-', ' ', (string) $selectedProvinceId);
-                $selectedProvince = Province::where('name', 'like', '%'.$provNormalized.'%')
-                    ->orWhere('name', 'like', '%'.$selectedProvinceId.'%')
-                    ->first();
+
+                // Match province by slug (e.g. da-nang matches Thành phố Đà Nẵng)
+                $selectedProvince = Province::all()->first(function ($p) use ($targetSlug) {
+                    $pSlug = Str::slug($p->name);
+                    $shortSlug = str_replace(['thanh-pho-', 'tinh-'], '', $pSlug);
+
+                    return $pSlug === $targetSlug || $shortSlug === $targetSlug || str_contains($pSlug, $targetSlug);
+                });
+
+                if (! $selectedProvince) {
+                    $selectedProvince = Province::where('name', 'like', '%'.$provNormalized.'%')
+                        ->orWhere('name', 'like', '%'.$selectedProvinceId.'%')
+                        ->first();
+                }
 
                 if ($selectedProvince) {
                     $query->where(function (Builder $sub) use ($selectedProvince) {

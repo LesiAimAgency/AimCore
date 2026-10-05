@@ -23,7 +23,8 @@ class ProjectResolver
             }
 
             if (in_array(strtoupper($firstSegment), ['EHENHO', 'DA010', 'DA010-EHENHO-DATING-SOCIAL-NETWORK'])) {
-                $project = Project::where('code', 'DA010-EHENHO-DATING-SOCIAL-NETWORK')
+                $project = Project::where('code', 'DA010')
+                    ->orWhere('code', 'DA010-EHENHO-DATING-SOCIAL-NETWORK')
                     ->orWhere('code', 'ehenho')
                     ->first();
                 if ($project) {
@@ -41,7 +42,8 @@ class ProjectResolver
             }
 
             if (in_array(strtoupper($projectCode), ['EHENHO', 'DA010', 'DA010-EHENHO-DATING-SOCIAL-NETWORK'])) {
-                $project = Project::where('code', 'DA010-EHENHO-DATING-SOCIAL-NETWORK')
+                $project = Project::where('code', 'DA010')
+                    ->orWhere('code', 'DA010-EHENHO-DATING-SOCIAL-NETWORK')
                     ->orWhere('code', 'ehenho')
                     ->first();
                 if ($project) {
