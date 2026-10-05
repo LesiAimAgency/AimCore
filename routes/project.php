@@ -55,6 +55,24 @@ Route::prefix('wkcomputer')
     ])
     ->group(base_path('routes/wkcomputer.php'));
 
+// ============================================
+// EHENHO DATING & SOCIAL NETWORK (100% ISOLATED)
+// Supports: DA010-EHENHO-DATING-SOCIAL-NETWORK, DA010, ehenho
+// ============================================
+Route::prefix('DA010-EHENHO-DATING-SOCIAL-NETWORK')
+    ->name('ehenho.full.')
+    ->middleware([
+        ResolveProjectContext::class,
+    ])
+    ->group(base_path('routes/ehenho.php'));
+
+Route::prefix('DA010')
+    ->name('ehenho.short.')
+    ->middleware([
+        ResolveProjectContext::class,
+    ])
+    ->group(base_path('routes/ehenho.php'));
+
 Route::prefix('ehenho')
     ->name('ehenho.')
     ->middleware([
@@ -163,6 +181,8 @@ Route::prefix('{projectCode}/admin')
         // eHenho Dedicated Management Routes (Hồ sơ hẹn hò & Tương tác)
         Route::prefix('ehenho')->name('ehenho.')->group(function () {
             Route::get('profiles', [AdminProfileController::class, 'index'])->name('profiles.index');
+            Route::get('profiles/create', [AdminProfileController::class, 'create'])->name('profiles.create');
+            Route::post('profiles', [AdminProfileController::class, 'store'])->name('profiles.store');
             Route::get('profiles/{id}/edit', [AdminProfileController::class, 'edit'])->name('profiles.edit');
             Route::put('profiles/{id}', [AdminProfileController::class, 'update'])->name('profiles.update');
             Route::post('profiles/{id}/toggle-status', [AdminProfileController::class, 'toggleStatus'])->name('profiles.toggle-status');

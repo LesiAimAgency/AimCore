@@ -74,6 +74,10 @@
                         <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
                         <span>Xem ngoài web</span>
                     </a>
+                    <button type="button" onclick="if(confirm('Bạn có chắc chắn muốn xóa vĩnh viễn hồ sơ {{ $profile->display_name }} và tài khoản liên kết? Hành động này không thể hoàn tác.')) document.getElementById('delete-profile-form').submit();" class="px-3 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold inline-flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-trash-can text-[11px]"></i>
+                        <span>Xóa thành viên</span>
+                    </button>
                     <a href="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="px-3 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs font-semibold transition">
                         Quay lại danh sách
                     </a>
@@ -592,6 +596,11 @@
             </div>
 
         </div>
+    </form>
+
+    <form id="delete-profile-form" method="POST" action="{{ route('project.admin.ehenho.profiles.destroy', ['projectCode' => $projectCode, 'id' => $profile->id]) }}" style="display:none;">
+        @csrf
+        @method('DELETE')
     </form>
 
 </div>

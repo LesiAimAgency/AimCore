@@ -9,6 +9,20 @@
 
 @section('content')
 <div class="p-6 max-w-7xl mx-auto space-y-6">
+
+    {{-- Thông báo thành công --}}
+    @if(session('success'))
+    <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>
+            <span class="text-xs font-semibold">{{ session('success') }}</span>
+        </div>
+        <button type="button" onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 text-sm">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    @endif
+
     <!-- Header Actions & Search -->
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
         <form method="GET" action="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
@@ -59,10 +73,14 @@
 
     <!-- Profiles Table -->
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-        <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+        <div class="p-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
             <h3 class="text-sm font-bold text-slate-900">
                 Tổng số: <span class="text-blue-600 font-extrabold">{{ $profiles->total() }}</span> thành viên
             </h3>
+            <a href="{{ route('project.admin.ehenho.profiles.create', $projectCode) }}" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-sm inline-flex items-center gap-2">
+                <i class="fa-solid fa-user-plus text-xs"></i>
+                <span>Thêm thành viên</span>
+            </a>
         </div>
 
         <div class="overflow-x-auto">
@@ -149,7 +167,7 @@
                                 {{ $profile->status === 'blocked' ? 'Đã khóa' : 'Hoạt động' }}
                             </span>
                         </td>
-                        <td class="py-3 px-4 text-right space-x-1">
+                        <td class="py-3 px-4 text-right space-x-1 whitespace-nowrap">
                             <a href="{{ url('/ehenho/ho-so/' . ($profile->slug ?: $profile->id)) }}" target="_blank" title="Xem ngoài web" class="p-1.5 rounded bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200 inline-block">
                                 <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
                             </a>
@@ -160,6 +178,13 @@
                                 @csrf
                                 <button type="submit" title="{{ $profile->status === 'blocked' ? 'Mở khóa' : 'Khóa hồ sơ' }}" class="p-1.5 rounded {{ $profile->status === 'blocked' ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' : 'bg-amber-50 text-amber-600 hover:bg-amber-100' }}">
                                     <i class="fa-solid {{ $profile->status === 'blocked' ? 'fa-lock-open' : 'fa-lock' }} text-xs"></i>
+                                </button>
+                            </form>
+                            <form method="POST" action="{{ route('project.admin.ehenho.profiles.destroy', ['projectCode' => $projectCode, 'id' => $profile->id]) }}" class="inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa thành viên {{ $profile->display_name }}? Toàn bộ dữ liệu hồ sơ và tài khoản sẽ bị xóa vĩnh viễn.');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" title="Xóa thành viên" class="p-1.5 rounded bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
                                 </button>
                             </form>
                         </td>

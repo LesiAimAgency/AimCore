@@ -1008,15 +1008,18 @@ html:not(.alpine-loaded):not([data-admin-tab]) .ap-nav-btn[data-tab-target="desi
 
                     <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
                         <div>
-                            <h2 class="text-base font-bold text-slate-900 tracking-tight">Cấu hình chung &amp; Chân trang (Footer)</h2>
-                            <p class="text-xs text-slate-500 mt-0.5">Tên hiển thị thương hiệu và thông tin bản quyền website.</p>
+                            <h2 class="text-base font-bold text-slate-900 tracking-tight">Cấu hình chung, Footer &amp; Mạng Xã Hội</h2>
+                            <p class="text-xs text-slate-500 mt-0.5">Tên hiển thị thương hiệu, thông tin bản quyền và các liên kết mạng xã hội dưới chân trang.</p>
                         </div>
                         <span class="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-bold text-[11px] uppercase tracking-wider">
-                            General
+                            General &amp; Social
                         </span>
                     </div>
 
                     <div class="card p-5 space-y-4">
+                        <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-2">
+                            <i class="fa-solid fa-circle-info text-blue-600"></i> Thông Tin Thương Hiệu &amp; Bản Quyền
+                        </h3>
                         <div>
                             <label class="form-label">Tên website chính (Site Name)</label>
                             <input type="text" name="site_name" value="{{ $siteName }}" class="form-input text-xs font-bold text-slate-800" placeholder="VD: eHenho.com - Hẹn hò Online">
@@ -1024,7 +1027,61 @@ html:not(.alpine-loaded):not([data-admin-tab]) .ap-nav-btn[data-tab-target="desi
 
                         <div>
                             <label class="form-label">Bản quyền chân trang (Copyright text)</label>
-                            <input type="text" name="site_copyright" value="{{ $siteCopyright }}" class="form-input text-xs font-medium text-slate-700" placeholder="VD: © 2026 eHenho.com. Bản quyền thuộc về eHenho.">
+                            <input type="text" name="site_copyright" value="{{ $siteCopyright }}" class="form-input text-xs font-medium text-slate-700" placeholder="VD: Email: hi@ehenho.com">
+                        </div>
+                    </div>
+
+                    <div class="card p-5 space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2 m-0">
+                                <i class="fa-solid fa-share-nodes text-blue-600"></i> Liên Kết Mạng Xã Hội Chân Trang (Footer Social Links)
+                            </h3>
+                            <span class="text-[11px] text-slate-400">Hiển thị ở thanh Footer</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 mb-2">Các biểu tượng mạng xã hội sẽ hiển thị ở khu vực chân trang (footer). Để trống nếu không muốn hiển thị mạng xã hội đó.</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="form-label flex items-center gap-1.5">
+                                    <i class="fa-brands fa-facebook text-blue-600"></i> Facebook URL
+                                </label>
+                                <input type="url" name="social_facebook" value="{{ $socialFacebook }}" class="form-input text-xs font-mono text-slate-700" placeholder="http://www.facebook.com/ehenho">
+                            </div>
+
+                            <div>
+                                <label class="form-label flex items-center gap-1.5">
+                                    <i class="fa-brands fa-x-twitter text-slate-900"></i> Twitter / X URL
+                                </label>
+                                <input type="url" name="social_twitter" value="{{ $socialTwitter }}" class="form-input text-xs font-mono text-slate-700" placeholder="http://www.twitter.com/ehenho">
+                            </div>
+
+                            <div>
+                                <label class="form-label flex items-center gap-1.5">
+                                    <i class="fa-brands fa-instagram text-pink-600"></i> Instagram URL
+                                </label>
+                                <input type="url" name="social_instagram" value="{{ $socialInstagram }}" class="form-input text-xs font-mono text-slate-700" placeholder="https://instagram.com/ehenho">
+                            </div>
+
+                            <div>
+                                <label class="form-label flex items-center gap-1.5">
+                                    <i class="fa-brands fa-youtube text-red-600"></i> YouTube URL
+                                </label>
+                                <input type="url" name="social_youtube" value="{{ $socialYoutube }}" class="form-input text-xs font-mono text-slate-700" placeholder="https://youtube.com/@ehenho">
+                            </div>
+
+                            <div>
+                                <label class="form-label flex items-center gap-1.5">
+                                    <i class="fa-brands fa-tiktok text-slate-800"></i> TikTok URL
+                                </label>
+                                <input type="url" name="social_tiktok" value="{{ $socialTiktok }}" class="form-input text-xs font-mono text-slate-700" placeholder="https://tiktok.com/@ehenho">
+                            </div>
+
+                            <div>
+                                <label class="form-label flex items-center gap-1.5">
+                                    <i class="fa-solid fa-comment-dots text-blue-500"></i> Zalo URL / Số điện thoại
+                                </label>
+                                <input type="url" name="social_zalo" value="{{ $socialZalo }}" class="form-input text-xs font-mono text-slate-700" placeholder="https://zalo.me/090xxxxxxx">
+                            </div>
                         </div>
                     </div>
                 </div>

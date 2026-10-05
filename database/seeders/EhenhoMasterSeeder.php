@@ -51,21 +51,23 @@ class EhenhoMasterSeeder extends Seeder
         }
         $this->command->info("1. Tenant ID: {$tenant->id} ({$tenant->name})");
 
-        // 2. Ensure Project (search by code 'ehenho' first to avoid duplicate key 'projects_code_unique')
-        $project = Project::where('code', 'ehenho')->first();
+        // 2. Ensure Project (search by code 'DA010-EHENHO-DATING-SOCIAL-NETWORK' or 'ehenho' first to avoid duplicate key 'projects_code_unique')
+        $project = Project::where('code', 'DA010-EHENHO-DATING-SOCIAL-NETWORK')
+            ->orWhere('code', 'ehenho')
+            ->first();
 
         if (! $project) {
             $project = Project::where('external_domain', 'ehenho.local')->first();
             if ($project) {
-                $project->code = 'ehenho';
+                $project->code = 'DA010-EHENHO-DATING-SOCIAL-NETWORK';
             }
         }
 
         if (! $project) {
             $project = Project::create([
-                'code' => 'ehenho',
+                'code' => 'DA010-EHENHO-DATING-SOCIAL-NETWORK',
                 'name' => 'eHenho Dating & Social Network',
-                'subdomain' => 'http://127.0.0.1:8000/ehenho',
+                'subdomain' => 'https://aimagency.vn/DA010-EHENHO-DATING-SOCIAL-NETWORK',
                 'external_domain' => 'ehenho.local',
                 'tenant_id' => $tenant->id,
                 'status' => 'active',

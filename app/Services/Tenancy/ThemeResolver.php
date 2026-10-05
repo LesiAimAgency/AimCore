@@ -19,7 +19,7 @@ class ThemeResolver
             ?? match (true) {
                 $project->code === 'viettinmart-eco' || str_contains($project->code, 'viettinmart') => 'viettinmartdemo',
                 str_contains($project->code, 'wkcomputer') => 'wkcomputerdemo',
-                $project->code === 'ehenho' || str_contains($project->code, 'henho') => 'ehenho',
+                $project->code === 'ehenho' || str_contains(strtolower($project->code), 'henho') || str_contains(strtoupper($project->code), 'DA010') => 'ehenho',
                 default => 'ehenho'
             };
 

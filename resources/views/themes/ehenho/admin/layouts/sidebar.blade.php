@@ -167,9 +167,13 @@
             <i class="fa-solid fa-chevron-down text-[10px] transition-transform" :class="open==='profiles' ? 'rotate-180' : ''"></i>
         </button>
         <div x-show="open==='profiles'" x-cloak x-collapse class="sub-menu">
-            <a href="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.ehenho.profiles.*') ? 'active' : '' }}">
+            <a href="{{ route('project.admin.ehenho.profiles.index', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.ehenho.profiles.index') ? 'active' : '' }}">
                 <span class="dot"></span>
                 <span>Danh sách hồ sơ</span>
+            </a>
+            <a href="{{ route('project.admin.ehenho.profiles.create', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.ehenho.profiles.create') ? 'active' : '' }}">
+                <span class="dot"></span>
+                <span>Thêm thành viên mới</span>
             </a>
             <a href="{{ route('project.admin.users.index', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.users.*') ? 'active' : '' }}">
                 <span class="dot"></span>
@@ -220,6 +224,10 @@
             <a href="{{ route('project.admin.ehenho.theme.widgets', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.ehenho.theme.widgets') ? 'active' : '' }}">
                 <span class="dot"></span>
                 <span>Slider Hero & Widgets</span>
+            </a>
+            <a href="{{ route('project.admin.ehenho.theme.header', $projectCode) }}#general" class="sub-item">
+                <span class="dot"></span>
+                <span>Cấu hình chung &amp; Mạng xã hội</span>
             </a>
             <a href="{{ route('project.admin.media.list', $projectCode) }}" class="sub-item {{ request()->routeIs('project.admin.media.*') ? 'active' : '' }}">
                 <span class="dot"></span>

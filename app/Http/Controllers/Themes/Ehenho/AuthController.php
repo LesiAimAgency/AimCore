@@ -22,14 +22,14 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    private const MARITAL_STATUS_MAP = [
+    public const MARITAL_STATUS_MAP = [
         'single' => 'Độc thân',
         'divorced' => 'Ly dị',
         'widowed' => 'Ở góa',
         'in-relationship' => 'Đang có người yêu',
     ];
 
-    private const LOOK_FOR_MAP = [
+    public const LOOK_FOR_MAP = [
         'marriage' => 'Tìm người để kết hôn',
         'long-term-love' => 'Tìm người yêu lâu dài',
         'short-term-love' => 'Tìm người yêu ngắn hạn',
@@ -38,7 +38,7 @@ class AuthController extends Controller
         'life-mate' => 'Tìm bạn đời',
     ];
 
-    private const EDUCATION_MAP = [
+    public const EDUCATION_MAP = [
         'GRA' => 'Phổ thông',
         'VCA' => 'Trung cấp',
         'ASO' => 'Cao đẳng',
@@ -47,7 +47,7 @@ class AuthController extends Controller
         'AMA' => 'Trên cao học',
     ];
 
-    private const APPEARANCE_MAP = [
+    public const APPEARANCE_MAP = [
         '1' => 'Cân đối',
         '2' => 'Cao lớn',
         '3' => 'Mảnh mai',
@@ -58,7 +58,7 @@ class AuthController extends Controller
         '8' => 'Vạm vỡ',
     ];
 
-    private const INTEREST_MAP = [
+    public const INTEREST_MAP = [
         '1' => 'Ẩm thực (tín đồ ẩm thực)',
         '2' => 'Chăm sóc gia đình',
         '3' => 'Chơi môn thể thao ngoài trời (đá bóng, tennis, chạy bộ...)',
@@ -88,7 +88,7 @@ class AuthController extends Controller
         '27' => 'Sở thích khác',
     ];
 
-    private const PERSONALITY_MAP = [
+    public const PERSONALITY_MAP = [
         '1' => 'Chân thành',
         '2' => 'Chung thủy',
         '3' => 'Dễ gần',
@@ -114,7 +114,7 @@ class AuthController extends Controller
         '23' => 'Vui vẻ',
     ];
 
-    private const WAY_OF_LIFE_MAP = [
+    public const WAY_OF_LIFE_MAP = [
         '1' => 'An nhàn',
         '2' => 'Bình dân',
         '3' => 'Chan hòa tình yêu thương',
@@ -156,7 +156,7 @@ class AuthController extends Controller
         '61' => 'Tự lập/ Tự thân',
     ];
 
-    private const MOST_VALUED_MAP = [
+    public const MOST_VALUED_MAP = [
         '2' => 'Bạn đời',
         '3' => 'Bản thân mình',
         '4' => 'Cha mẹ',
@@ -186,7 +186,7 @@ class AuthController extends Controller
         '47' => 'Tri kỷ/ Bạn tâm giao',
     ];
 
-    private const OCCUPATION_MAP = [
+    public const OCCUPATION_MAP = [
         '1' => 'Buôn bán-thương mại',
         '2' => 'Chủ doanh nghiệp',
         '3' => 'Công nhân (kỹ thuật, giản đơn...)',
@@ -215,7 +215,7 @@ class AuthController extends Controller
         '26' => 'Nghề nghiệp khác',
     ];
 
-    private const RELIGION_MAP = [
+    public const RELIGION_MAP = [
         '1' => 'Không có Đạo',
         '2' => 'Đạo Cơ Đốc giáo',
         '3' => 'Đạo Phật',
@@ -224,7 +224,7 @@ class AuthController extends Controller
         '6' => 'Đạo khác',
     ];
 
-    private const SMOKING_MAP = [
+    public const SMOKING_MAP = [
         '1' => 'Không hút thuốc',
         '2' => 'Chỉ hút xã giao',
         '3' => 'Hút thuốc ít',
@@ -232,7 +232,7 @@ class AuthController extends Controller
         '5' => 'Hút thuốc rất nhiều',
     ];
 
-    private const DRINKING_MAP = [
+    public const DRINKING_MAP = [
         '1' => 'Không uống rượu bia',
         '2' => 'Chỉ uống xã giao',
         '3' => 'Uống ít thôi',
@@ -240,13 +240,13 @@ class AuthController extends Controller
         '5' => 'Uống rất nhiều',
     ];
 
-    private const CHILDREN_MAP = [
+    public const CHILDREN_MAP = [
         '1' => 'Chưa có',
         '2' => 'Đã có & Đang sống cùng',
         '3' => 'Đã có & Không sống cùng',
     ];
 
-    private const OVERSEAS_MAP = [
+    public const OVERSEAS_MAP = [
         'usa' => 'USA (Mỹ)',
         'united-states' => 'USA (Mỹ)',
         'my' => 'USA (Mỹ)',
@@ -276,7 +276,7 @@ class AuthController extends Controller
         'other-country' => 'Quốc gia khác',
     ];
 
-    private const PROVINCE_SLUG_MAP = [
+    public const PROVINCE_SLUG_MAP = [
         'ho-chi-minh' => 'Hồ Chí Minh',
         'ha-noi' => 'Hà Nội',
         'da-nang' => 'Đà Nẵng',

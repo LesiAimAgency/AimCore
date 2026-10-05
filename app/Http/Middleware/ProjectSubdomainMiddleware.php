@@ -29,8 +29,16 @@ class ProjectSubdomainMiddleware
                 ->orWhere('external_domain', $projectCode)
                 ->first();
 
+            // Support DA010 and ehenho aliases if not matched directly
+            if (! $project && in_array(strtoupper($projectCode), ['EHENHO', 'DA010', 'DA010-EHENHO-DATING-SOCIAL-NETWORK'])) {
+                $project = Project::where('code', 'DA010-EHENHO-DATING-SOCIAL-NETWORK')
+                    ->orWhere('code', 'ehenho')
+                    ->orWhere('external_domain', 'ehenho.local')
+                    ->first();
+            }
+
             // Auto-heal: Ensure ehenho project is registered automatically if missing in database
-            if (! $project && $projectCode === 'ehenho') {
+            if (! $project && in_array(strtoupper($projectCode), ['EHENHO', 'DA010', 'DA010-EHENHO-DATING-SOCIAL-NETWORK'])) {
                 try {
                     $project = Project::where('external_domain', 'ehenho.local')
                         ->orWhere('subdomain', 'like', '%ehenho%')
@@ -38,16 +46,16 @@ class ProjectSubdomainMiddleware
                         ->first();
 
                     if ($project) {
-                        $project->update(['code' => 'ehenho']);
+                        $project->update(['code' => 'DA010-EHENHO-DATING-SOCIAL-NETWORK']);
                     } else {
                         $tenant = Tenant::where('code', 'ehenho')->orWhere('domain', 'ehenho.local')->first()
                             ?? Tenant::first();
 
                         $project = Project::create([
                             'tenant_id' => $tenant?->id ?? 1,
-                            'name' => ' Dating & Social Network',
-                            'code' => 'ehenho',
-                            'subdomain' => 'https://aimagency.vn/ehenho',
+                            'name' => 'eHenho Dating & Social Network',
+                            'code' => 'DA010-EHENHO-DATING-SOCIAL-NETWORK',
+                            'subdomain' => 'https://aimagency.vn/DA010-EHENHO-DATING-SOCIAL-NETWORK',
                             'external_domain' => 'ehenho.local',
                             'status' => 'active',
                             'project_type' => 'website',
@@ -58,7 +66,9 @@ class ProjectSubdomainMiddleware
                         ]);
                     }
                 } catch (\Throwable $e) {
-                    $project = Project::where('code', 'ehenho')->first();
+                    $project = Project::where('code', 'DA010-EHENHO-DATING-SOCIAL-NETWORK')
+                        ->orWhere('code', 'ehenho')
+                        ->first();
                 }
             }
         } else {

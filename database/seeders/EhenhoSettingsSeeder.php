@@ -46,6 +46,13 @@ class EhenhoSettingsSeeder extends Seeder
             'header_show_search' => '1',
             'header_show_help' => '1',
             'header_show_auth' => '1',
+            'site_copyright' => 'Email: hi@ehenho.com',
+            'social_facebook' => 'http://www.facebook.com/ehenho',
+            'social_twitter' => 'http://www.twitter.com/ehenho',
+            'social_instagram' => '',
+            'social_youtube' => '',
+            'social_tiktok' => '',
+            'social_zalo' => '',
 
             // 2. SEO Settings (Seed using exact previously hardcoded values from home page & layout)
             'seo_meta_title' => 'eHenho.com - Hẹn hò Online & Tìm bạn Bốn phương',

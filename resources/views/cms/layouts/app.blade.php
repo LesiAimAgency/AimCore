@@ -72,10 +72,12 @@
             || request()->is('wkcomputer*');
 
         $isEhenho = ($projectCode === 'ehenho')
-            || (is_string($projectCode) && str_contains($projectCode, 'ehenho'))
+            || (is_string($projectCode) && (str_contains(strtolower($projectCode), 'ehenho') || str_contains(strtoupper($projectCode), 'DA010')))
             || ($projectTheme === 'ehenho')
             || request()->is('ehenho/*')
-            || request()->is('ehenho*');
+            || request()->is('ehenho*')
+            || request()->is('DA010*')
+            || request()->is('da010*');
 
         $hasCustomSidebar = $isVtm || $isWk || $isEhenho;
     @endphp
