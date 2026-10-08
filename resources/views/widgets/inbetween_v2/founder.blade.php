@@ -106,20 +106,13 @@
               </div>
             </div>
             <div class="founder-divider w-full h-[0.5px] bg-[#323232]/20 my-4"></div>
-           
-            <div class="pt-2 pb-2">
-              <div class="p-5 rounded-2xl bg-white border border-neutral-200/90 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 max-w-[600px]">
-                <div class="space-y-1">
-                  <h4 class="text-[16px] font-medium text-[#131313]">{{ $settings['cta_card_title'] ?? 'START A CONVERSATION' }}</h4>
-                  <p class="text-[13px] font-light text-[#3E3939]">{{ $settings['cta_card_desc'] ?? 'Explore how INBETWEEN can serve as your dedicated local team before you are ready to hire one.' }}</p>
-                </div>
-                <div class="shrink-0"><a class="inbetween-btn-pill inline-flex items-center justify-between gap-4 pl-6 pr-2 py-2 rounded-full bg-[#131313] text-white text-[16px] font-medium tracking-normal hover:bg-[#3E3939] transition-all duration-300 shadow-md group shrink-0 cursor-pointer" href="{{ $settings['cta_card_btn_link'] ?? '#contact' }}" data-contact-modal-toggle="" title="{{ $settings['cta_card_btn_text'] ?? 'Let\'s Connect With AiRu' }}"><span class="font-medium">{{ $settings['cta_card_btn_text'] ?? 'Let\'s Connect With AiRu' }}</span><span class="w-8 h-8 rounded-full bg-white text-[#131313] flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1 shrink-0">
-                      <svg class="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3.33334 8H12.6667M12.6667 8L8.66668 4M12.6667 8L8.66668 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                      </svg></span></a>
-                </div>
-              </div>
+            <div class="founder-detail-section space-y-3">
+              <h3 class="text-[15px] sm:text-[16px] font-medium text-[#EC460B] uppercase tracking-wider">{{ $settings['alliances_title'] ?? 'BUSINESS DEVELOPMENT & STRATEGIC ALLIANCES' }}
+              </h3>
+              <p class="text-[13px] sm:text-[14px] lg:text-[14.5px] font-light text-[#3E3939] leading-relaxed tracking-normal">{{ $settings['alliances_desc'] ?? 'At INBETWEEN, AiRu leverages deep relational equity and agile localized strategies to bridge international standards with Vietnam\'s dynamic commercial realities. Her approach removes operational friction, minimizes foreign market entry risk, and accelerates time-to-market for pioneering ventures.' }}
+              </p>
             </div>
+           
           </div>
           <div class="founder-bottom-line w-full h-[0.5px] bg-[#323232]/80 mt-3 hidden"></div>
         </div>

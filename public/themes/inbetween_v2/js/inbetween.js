@@ -65,10 +65,14 @@ import{g as D}from"./main.js";import{_ as oe,O as Ke,a as Ne,b as et,c as qe,d a
 
   function m(w) {
     if (w < 0 || w >= e.length || (c && l === w)) return;
+    const prev = l;
     c = !0;
     l = w;
     e[w].scrollIntoView({ behavior: "smooth", block: "start" });
     u(w);
+    if (w === 0 && prev === 1 && window._introGoToFrame) {
+      window._introGoToFrame(11);
+    }
     setTimeout(() => { c = !1; }, h);
   }
 
@@ -87,6 +91,33 @@ import{g as D}from"./main.js";import{_ as oe,O as Ke,a as Ne,b as et,c as qe,d a
     }
     if (w.preventDefault(), !c) {
       const p = e[l];
+      if (l === 0) {
+        const curF = window._introGetCurrentFrame ? window._introGetCurrentFrame() : 0,
+              totF = window._introGetTotalFrames ? window._introGetTotalFrames() : 11;
+        const now = Date.now();
+        if (now - g < 180) {
+          if (curF >= totF && window._introRecordWheel) window._introRecordWheel();
+          return;
+        }
+        g = now;
+        if (w.deltaY > 0) {
+          if (curF < totF) {
+            window._introNextFrame && window._introNextFrame();
+            return;
+          } else {
+            if (window._introCanLeaveToNext && window._introCanLeaveToNext(w.deltaY)) {
+              m(1);
+            }
+            return;
+          }
+        } else if (w.deltaY < 0) {
+          if (curF > 0) {
+            window._introPrevFrame && window._introPrevFrame();
+            return;
+          }
+          return;
+        }
+      }
       if (p && p._pullUp && p._pullDown) {
         if (p._isPulledUp()) {
           const _ = Date.now();
@@ -132,6 +163,25 @@ import{g as D}from"./main.js";import{_ as oe,O as Ke,a as Ne,b as et,c as qe,d a
       const y = A - w.changedTouches[0].clientY,
         p = L - w.changedTouches[0].clientX;
       if (Math.abs(y) > 45 && Math.abs(y) > Math.abs(p)) {
+        if (l === 0) {
+          const curF = window._introGetCurrentFrame ? window._introGetCurrentFrame() : 0,
+                totF = window._introGetTotalFrames ? window._introGetTotalFrames() : 11;
+          if (y > 0) {
+            if (curF < totF) {
+              window._introNextFrame && window._introNextFrame();
+              return;
+            } else {
+              m(1);
+              return;
+            }
+          } else {
+            if (curF > 0) {
+              window._introPrevFrame && window._introPrevFrame();
+              return;
+            }
+            return;
+          }
+        }
         if (y > 0) {
           const _ = e[l];
           if (_ && _._pullUp) {
@@ -163,6 +213,19 @@ import{g as D}from"./main.js";import{_ as oe,O as Ke,a as Ne,b as et,c as qe,d a
       ["input", "textarea", "select"].includes(document.activeElement.tagName.toLowerCase())
     ) return;
     if (["ArrowDown", "PageDown", " "].includes(w.key) && !w.shiftKey) {
+      if (l === 0) {
+        const curF = window._introGetCurrentFrame ? window._introGetCurrentFrame() : 0,
+              totF = window._introGetTotalFrames ? window._introGetTotalFrames() : 11;
+        if (curF < totF) {
+          w.preventDefault();
+          window._introNextFrame && window._introNextFrame();
+          return;
+        } else {
+          w.preventDefault();
+          m(1);
+          return;
+        }
+      }
       const y = e[l];
       if (y && y._pullUp) {
         if (y._isPulledUp()) {
@@ -173,6 +236,14 @@ import{g as D}from"./main.js";import{_ as oe,O as Ke,a as Ne,b as et,c as qe,d a
       }
       l < e.length - 1 && (w.preventDefault(), m(l + 1));
     } else if (["ArrowUp", "PageUp"].includes(w.key) || (w.key === " " && w.shiftKey)) {
+      if (l === 0) {
+        const curF = window._introGetCurrentFrame ? window._introGetCurrentFrame() : 0;
+        if (curF > 0) {
+          w.preventDefault();
+          window._introPrevFrame && window._introPrevFrame();
+          return;
+        }
+      }
       const y = e[l];
       if (y && y._pullDown) {
         if (y._isPulledUp()) {
@@ -206,7 +277,13 @@ import{g as D}from"./main.js";import{_ as oe,O as Ke,a as Ne,b as et,c as qe,d a
     if (y) {
       const p = y.getAttribute("href").replace("#", ""),
         _ = e.findIndex(x => x.id === p);
-      _ !== -1 && (w.preventDefault(), m(_));
+      if (_ !== -1) {
+        w.preventDefault();
+        if (_ === 0 && window._introGoToFrame) {
+          window._introGoToFrame(0);
+        }
+        m(_);
+      }
     }
   });
 
@@ -235,15 +312,38 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
   const heroSec = document.getElementById("inbetween-hero");
   if (!introSec && !heroSec) return;
 
+  const targetSec = introSec || heroSec;
   const t = document.getElementById("intro-subtitle"),
     n = document.getElementById("intro-title-base"),
     s = document.getElementById("floating-words-group"),
-    a = Array.from((introSec || heroSec).querySelectorAll(".floating-word")),
+    a = Array.from(targetSec.querySelectorAll(".floating-word")),
     u = document.getElementById("intro-scroll-helper") || document.getElementById("scroll-prompt-helper"),
     m = document.getElementById("hero-preloader");
 
+  const C = 11;
+  let v = 0,
+    A = !1,
+    B_introComplete = !1;
+
+  const L = {
+    0: { top: 100, bottom: 100, glow: 0, alpha: 0 },
+    1: { top: 72, bottom: 98, glow: 6, alpha: 0.3 },
+    2: { top: 60, bottom: 88, glow: 8, alpha: 0.38 },
+    3: { top: 48, bottom: 78, glow: 10, alpha: 0.45 },
+    4: { top: 38, bottom: 68, glow: 12, alpha: 0.5 },
+    5: { top: 28, bottom: 58, glow: 15, alpha: 0.58 },
+    6: { top: 18, bottom: 48, glow: 18, alpha: 0.65 },
+    7: { top: 8, bottom: 38, glow: 20, alpha: 0.7 },
+    8: { top: -2, bottom: 28, glow: 22, alpha: 0.75 },
+    9: { top: -12, bottom: 18, glow: 24, alpha: 0.8 },
+    10: { top: -22, bottom: 8, glow: 26, alpha: 0.85 },
+    11: { top: -35, bottom: 0, glow: 30, alpha: 0.95 }
+  };
+
+  const M = { top: 100, bottom: 100, glow: 0, alpha: 0 };
+
   const P = a.map(k => {
-    const F = parseInt(k.getAttribute("data-word-idx"), 10),
+    const F = parseInt(k.getAttribute("data-word-idx"), 10) || 1,
       N = (k.getAttribute("style") || "").match(/opacity:\s*([\d\.]+)/),
       R = N ? parseFloat(N[1]) : 0.85;
     let b = k.querySelector(".floating-word-inner");
@@ -276,6 +376,7 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
   });
 
   function T(k, F) {
+    if (v !== 0) return;
     const Y = Math.min((F || 16.6) / 1e3, 0.033) * 60;
     for (let N = 0; N < P.length; N++) {
       const R = P[N], b = E[N];
@@ -292,14 +393,38 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
     }
   }
 
+  function stopFloating() {
+    if (S) {
+      D.ticker.remove(T);
+      S = !1;
+    }
+    P.forEach((k, F) => {
+      if (k.innerEl) {
+        D.killTweensOf(k.innerEl);
+        D.to(k.innerEl, {
+          x: 0,
+          y: 0,
+          duration: 0.35,
+          ease: "power2.out",
+          onComplete: () => {
+            if (E[F]) {
+              E[F].dispX = 0;
+              E[F].dispY = 0;
+            }
+          }
+        });
+      }
+    });
+  }
+
   function startFloating() {
-    if (!S) {
+    stopFloating();
+    if (v === 0 && !S) {
       D.ticker.add(T);
       S = !0;
     }
   }
 
-  let A = !1;
   function runIntro() {
     if (A) return;
     A = !0;
@@ -317,13 +442,14 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
       });
     }
 
-    if (t) D.set(t, { opacity: 0, y: -16 });
+    if (t) D.set(t, { opacity: 0, y: -16, letterSpacing: "0.01em" });
     if (n) {
-      D.set(n, { opacity: 0, scale: 0.94, y: 16 });
-      n.style.setProperty("--grad-top", "0%");
+      D.set(n, { opacity: 0, scale: 0.94, y: 16, letterSpacing: "0.01em" });
+      n.style.setProperty("--grad-top", "100%");
       n.style.setProperty("--grad-bottom", "100%");
-      n.style.setProperty("--grad-glow", "16px");
-      n.style.setProperty("--grad-glow-alpha", "0.65");
+      n.style.setProperty("--grad-glow", "0px");
+      n.style.setProperty("--grad-glow-alpha", "0");
+      n.style.filter = "none";
     }
     P.forEach(F => {
       D.set(F.el, { opacity: 0, scale: 0.7, y: 14 });
@@ -333,6 +459,7 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
     const k = D.timeline({
       delay: 0.1,
       onComplete: () => {
+        B_introComplete = !0;
         startFloating();
       }
     });
@@ -349,6 +476,243 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
     if (u) k.to(u, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.2");
   }
 
+  function K(k) {
+    if (!s || !n) return { dx: 0, dy: 0 };
+    const F = s.getBoundingClientRect(),
+      Y = n.getBoundingClientRect(),
+      N = Y.left + Y.width / 2 - F.left,
+      R = Y.top + Y.height / 2 - F.top,
+      b = k.el.offsetLeft + k.el.offsetWidth / 2,
+      H = k.el.offsetTop + k.el.offsetHeight / 2;
+    return { dx: N - b, dy: R - H };
+  }
+
+  function V(k, F = !1) {
+    const Y = F ? 0 : 0.28,
+      N = "power2.out";
+    const R = L[k] || { top: 100, bottom: 100, glow: 0, alpha: 0 };
+    D.killTweensOf(M);
+
+    if (F) {
+      M.top = R.top;
+      M.bottom = R.bottom;
+      M.glow = R.glow;
+      M.alpha = R.alpha;
+      if (n) {
+        n.style.setProperty("--grad-top", `${R.top}%`);
+        n.style.setProperty("--grad-bottom", `${R.bottom}%`);
+        n.style.setProperty("--grad-glow", `${R.glow}px`);
+        n.style.setProperty("--grad-glow-alpha", `${R.alpha}`);
+        n.style.filter = R.glow > 0 ? `drop-shadow(0 0 ${R.glow}px rgba(236, 70, 11, ${R.alpha}))` : "none";
+      }
+    } else {
+      D.to(M, {
+        top: R.top,
+        bottom: R.bottom,
+        glow: R.glow,
+        alpha: R.alpha,
+        duration: Y,
+        ease: "power2.out",
+        onUpdate: () => {
+          if (n) {
+            n.style.setProperty("--grad-top", `${M.top}%`);
+            n.style.setProperty("--grad-bottom", `${M.bottom}%`);
+            n.style.setProperty("--grad-glow", `${M.glow}px`);
+            n.style.setProperty("--grad-glow-alpha", `${M.alpha}`);
+            n.style.filter = M.glow > 0 ? `drop-shadow(0 0 ${M.glow.toFixed(1)}px rgba(236, 70, 11, ${M.alpha.toFixed(2)}))` : "none";
+          }
+        }
+      });
+    }
+
+    const b = 0.01 + (k / 11) * 0.06;
+    if (n) D.to(n, { letterSpacing: `${b}em`, duration: Y, ease: N });
+    if (t) {
+      const H = 0.01 + (k / 11) * 0.04;
+      D.to(t, { letterSpacing: `${H}em`, duration: Y, ease: N });
+    }
+
+    if (k >= 1) {
+      stopFloating();
+    }
+
+    const suckedCount = k === 0 ? 0 : Math.ceil((k / 11) * P.length);
+    P.forEach(H => {
+      const isSucked = k >= 1 && H.idx <= suckedCount;
+      D.killTweensOf(H.el);
+      if (isSucked) {
+        H.el.classList.add("word-sucking");
+        const { dx, dy } = K(H);
+        D.to(H.el, {
+          x: dx,
+          y: dy,
+          scale: 0.1,
+          rotation: H.idx % 2 === 0 ? 8 : -8,
+          opacity: 0,
+          duration: Y * 0.9,
+          ease: "power3.in"
+        });
+      } else {
+        H.el.classList.remove("word-sucking");
+        D.to(H.el, {
+          x: 0,
+          y: 0,
+          scale: 1,
+          rotation: 0,
+          opacity: H.baseOpacity,
+          duration: Y * 0.9,
+          ease: "power2.out"
+        });
+      }
+    });
+
+    if (k === 0 && !F) {
+      setTimeout(() => {
+        if (v === 0) startFloating();
+      }, Y * 1000 + 120);
+    }
+  }
+
+  let _heroLandedAt = 0,
+    _heroLastWheelAt = 0,
+    _heroInertiaSettled = !1,
+    _heroInertiaTimer = null;
+
+  window._introNotifyLanded = () => {
+    _heroLandedAt = Date.now();
+    _heroLastWheelAt = Date.now();
+    _heroInertiaSettled = !1;
+    _heroInertiaTimer && clearTimeout(_heroInertiaTimer);
+    _heroInertiaTimer = setTimeout(() => {
+      _heroInertiaSettled = !0;
+    }, 300);
+  };
+
+  window._introRecordWheel = () => {
+    _heroLastWheelAt = Date.now();
+    _heroInertiaSettled = !1;
+    _heroInertiaTimer && clearTimeout(_heroInertiaTimer);
+    _heroInertiaTimer = setTimeout(() => {
+      _heroInertiaSettled = !0;
+    }, 300);
+  };
+
+  window._introCanLeaveToNext = (dy = 0) => {
+    const now = Date.now();
+    if (!_heroLandedAt) _heroLandedAt = now;
+    if (now - _heroLandedAt < 400) {
+      window._introRecordWheel();
+      return !1;
+    }
+    if (!_heroInertiaSettled && (now - _heroLastWheelAt < 250)) {
+      window._introRecordWheel();
+      return !1;
+    }
+    if (dy !== undefined && Math.abs(dy) < 15) {
+      window._introRecordWheel();
+      return !1;
+    }
+    return !0;
+  };
+
+  function Q(k, F = !1) {
+    if (k < 0) k = 0;
+    if (k > C) k = C;
+    if (k === v && !F && A) return;
+    v = k;
+    if (u) {
+      u.style.opacity = v === 0 ? "1" : "0";
+      u.style.pointerEvents = v === 0 ? "auto" : "none";
+    }
+    if (v > 0 && !A) {
+      A = !0;
+      if (introSec) introSec.classList.add("hero-ready");
+      if (m) m.style.display = "none";
+    }
+    V(v, F);
+    if (v === C) {
+      window._introNotifyLanded();
+    } else {
+      _heroLandedAt = 0;
+      _heroInertiaSettled = !1;
+      _heroInertiaTimer && clearTimeout(_heroInertiaTimer);
+    }
+  }
+
+  Q(0, !0);
+
+  window._introNextFrame = () => Q(v + 1);
+  window._introPrevFrame = () => Q(v - 1);
+  window._introGoToFrame = k => Q(k, !0);
+  window._introGetCurrentFrame = () => v;
+  window._introGetTotalFrames = () => C;
+
+  window._heroIntroComplete = () => B_introComplete;
+  window._heroNextFrame = window._introNextFrame;
+  window._heroPrevFrame = window._introPrevFrame;
+  window._heroGoToFrame = window._introGoToFrame;
+  window._heroGetCurrentFrame = window._introGetCurrentFrame;
+  window._heroGetTotalFrames = window._introGetTotalFrames;
+  window._heroNotifyLanded = window._introNotifyLanded;
+  window._heroRecordWheel = window._introRecordWheel;
+  window._heroCanLeaveToNext = window._introCanLeaveToNext;
+
+  if (targetSec) {
+    let isDragging = !1,
+      dragStartY = 0,
+      dragAccum = 0;
+    const dragThreshold = 22;
+
+    targetSec.style.cursor = "grab";
+
+    targetSec.addEventListener("pointerdown", k => {
+      if (k.pointerType === "touch") return;
+      if (k.button === 0 && !k.target.closest("a, button, input, textarea, select, .contact-modal-overlay")) {
+        isDragging = !0;
+        dragStartY = k.clientY;
+        dragAccum = 0;
+        targetSec.style.cursor = "grabbing";
+      }
+    });
+
+    window.addEventListener("pointermove", k => {
+      if (!isDragging) return;
+      const diff = dragStartY - k.clientY;
+      dragStartY = k.clientY;
+      dragAccum += diff;
+
+      if (Math.abs(dragAccum) >= dragThreshold) {
+        const steps = Math.floor(Math.abs(dragAccum) / dragThreshold);
+        const dir = dragAccum > 0 ? 1 : -1;
+        dragAccum = dragAccum % dragThreshold;
+
+        if (dir > 0) {
+          if (v < C) {
+            Q(v + steps);
+          } else {
+            if (window._introCanLeaveToNext && window._introCanLeaveToNext(diff) && window._goToSection) {
+              window._goToSection(1);
+            }
+          }
+        } else {
+          if (v > 0) {
+            Q(v - steps);
+          }
+        }
+      }
+    });
+
+    const endDrag = () => {
+      if (isDragging) {
+        isDragging = !1;
+        dragAccum = 0;
+        targetSec.style.cursor = "grab";
+      }
+    };
+    window.addEventListener("pointerup", endDrag);
+    window.addEventListener("pointercancel", endDrag);
+  }
+
   const fontPromise = document.fonts ? document.fonts.ready : Promise.resolve(),
     domPromise = new Promise(N => {
       document.readyState === "complete" || document.readyState === "interactive"
@@ -362,14 +726,4 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
       runIntro();
     });
   });
-
-  window._heroIntroComplete = () => !0;
-  window._heroNextFrame = () => {};
-  window._heroPrevFrame = () => {};
-  window._heroGoToFrame = () => {};
-  window._heroGetCurrentFrame = () => 0;
-  window._heroGetTotalFrames = () => 0;
-  window._heroNotifyLanded = () => {};
-  window._heroRecordWheel = () => {};
-  window._heroCanLeaveToNext = () => !0;
 }
