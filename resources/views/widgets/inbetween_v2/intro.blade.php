@@ -66,26 +66,60 @@
       ];
       $floatingWords = !empty($settings['floating_words']) && is_array($settings['floating_words']) ? array_values($settings['floating_words']) : $defaultWords;
       $wordPositions = [
-        1 => ['style' => 'top: 16%; left: 8%; opacity: 0.95;', 'class' => 'text-[13px] sm:text-[15px] lg:text-[17px] font-medium'],
+        1 => ['style' => 'top: 15%; left: 8%; opacity: 0.95;', 'class' => 'text-[13px] sm:text-[15px] lg:text-[17px] font-medium'],
         2 => ['style' => 'top: 25%; left: 24%; opacity: 0.65;', 'class' => 'text-[12px] sm:text-[14px] lg:text-[16px] font-normal'],
-        3 => ['style' => 'top: 18%; left: 50%; transform: translateX(-50%); opacity: 0.50;', 'class' => 'text-[12px] sm:text-[13px] lg:text-[15px] font-normal'],
-        4 => ['style' => 'top: 16%; right: 8%; opacity: 0.92;', 'class' => 'text-[13px] sm:text-[15px] lg:text-[17px] font-medium'],
-        5 => ['style' => 'top: 30%; right: 10%; opacity: 0.55;', 'class' => 'text-[12px] sm:text-[13px] lg:text-[15px] font-normal'],
+        3 => ['style' => 'top: 17%; left: 50%; transform: translateX(-50%); opacity: 0.50;', 'class' => 'text-[12px] sm:text-[13px] lg:text-[15px] font-normal'],
+        4 => ['style' => 'top: 15%; right: 8%; opacity: 0.92;', 'class' => 'text-[13px] sm:text-[15px] lg:text-[17px] font-medium'],
+        5 => ['style' => 'top: 28%; right: 10%; opacity: 0.55;', 'class' => 'text-[12px] sm:text-[13px] lg:text-[15px] font-normal'],
         6 => ['style' => 'top: 60%; right: 7%; opacity: 0.88;', 'class' => 'text-[13px] sm:text-[15px] lg:text-[17px] font-medium'],
         7 => ['style' => 'bottom: 12%; left: 50%; transform: translateX(-50%); opacity: 0.92;', 'class' => 'text-[13px] sm:text-[15px] lg:text-[17px] font-medium'],
         8 => ['style' => 'bottom: 25%; left: 50%; transform: translateX(-50%); opacity: 0.50;', 'class' => 'text-[12px] sm:text-[13px] lg:text-[15px] font-normal'],
         9 => ['style' => 'bottom: 18%; left: 18%; opacity: 0.60;', 'class' => 'text-[12px] sm:text-[13px] lg:text-[15px] font-normal'],
         10 => ['style' => 'bottom: 28%; left: 8%; opacity: 0.88;', 'class' => 'text-[13px] sm:text-[15px] lg:text-[17px] font-medium'],
+        11 => ['style' => 'top: 26%; right: 26%; opacity: 0.70;', 'class' => 'text-[12px] sm:text-[14px] lg:text-[16px] font-normal'],
+        12 => ['style' => 'bottom: 19%; right: 19%; opacity: 0.65;', 'class' => 'text-[12px] sm:text-[14px] lg:text-[16px] font-normal'],
+        13 => ['style' => 'top: 45%; left: 6%; opacity: 0.75;', 'class' => 'text-[12px] sm:text-[13px] lg:text-[15px] font-normal'],
+        14 => ['style' => 'top: 45%; right: 6%; opacity: 0.75;', 'class' => 'text-[12px] sm:text-[13px] lg:text-[15px] font-normal'],
+        15 => ['style' => 'bottom: 10%; right: 33%; opacity: 0.60;', 'class' => 'text-[12px] sm:text-[13px] lg:text-[15px] font-normal'],
       ];
+
+      $assignedWords = [];
+      $usedPositions = [];
+      foreach ($floatingWords as $wordItem) {
+          $wText = is_array($wordItem) ? ($wordItem['text'] ?? '') : (string)$wordItem;
+          if (trim((string)$wText) === '') continue;
+          $reqPos = is_array($wordItem) ? ($wordItem['position'] ?? null) : null;
+          if ($reqPos !== null && $reqPos !== '' && $reqPos !== 'auto') {
+              $pNum = (int)$reqPos;
+              if (isset($wordPositions[$pNum]) && !in_array($pNum, $usedPositions, true)) {
+                  $assignedWords[] = ['text' => $wText, 'pos' => $pNum];
+                  $usedPositions[] = $pNum;
+                  continue;
+              }
+          }
+          $assignedWords[] = ['text' => $wText, 'pos' => null];
+      }
+
+      $allPosKeys = array_keys($wordPositions);
+      foreach ($assignedWords as &$aw) {
+          if ($aw['pos'] === null) {
+              $available = array_values(array_diff($allPosKeys, $usedPositions));
+              if (!empty($available)) {
+                  $aw['pos'] = $available[0];
+                  $usedPositions[] = $available[0];
+              } else {
+                  $aw['pos'] = 1;
+              }
+          }
+      }
+      unset($aw);
     @endphp
     <div class="intro-floating-words absolute inset-0 pointer-events-none" id="floating-words-group">
-      @foreach($floatingWords as $idx => $wordItem)
+      @foreach($assignedWords as $idx => $assignedItem)
         @php
-          $posIdx = ($idx % 10) + 1;
-          $posConfig = $wordPositions[$posIdx] ?? ['style' => 'top: 50%; left: 50%; opacity: 0.8;', 'class' => 'text-[14px] font-normal'];
-          $wText = is_array($wordItem) ? ($wordItem['text'] ?? '') : (string)$wordItem;
+          $posConfig = $wordPositions[$assignedItem['pos']] ?? ['style' => 'top: 50%; left: 50%; opacity: 0.8;', 'class' => 'text-[14px] font-normal'];
         @endphp
-        <div class="floating-word {{ $posConfig['class'] }} text-[#F6F4F4] pointer-events-auto cursor-default" data-word-idx="{{ $idx + 1 }}" style="{{ $posConfig['style'] }}"><span class="floating-word-inner">{{ $wText }}</span></div>
+        <div class="floating-word {{ $posConfig['class'] }} text-[#F6F4F4] pointer-events-auto cursor-default" data-word-idx="{{ $idx + 1 }}" data-word-pos="{{ $assignedItem['pos'] }}" style="{{ $posConfig['style'] }}"><span class="floating-word-inner">{{ $assignedItem['text'] }}</span></div>
       @endforeach
     </div>
   </div>

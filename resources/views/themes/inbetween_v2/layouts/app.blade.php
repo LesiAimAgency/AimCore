@@ -33,6 +33,7 @@
           <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-founder" data-nav-link>FOUNDER</a></li>
           <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-our-clients" data-nav-link>OUR CLIENTS</a></li>
           <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-business" data-nav-link>BEYOND BUSINESS</a></li>
+          <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-footer" data-nav-link>CONTACT</a></li>
         </ul>
         <div class="pt-3"><a class="btn-drawer-outline btn-drawer-inbetween inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-[#131313] text-[#131313] hover:bg-[#EC460B] hover:border-[#EC460B] hover:text-white transition-all text-xs font-bold uppercase tracking-wider cursor-pointer" href="#contact-modal" data-contact-modal-toggle><span>LET'S CONNECT</span><span>&rarr;</span></a></div>
       </div>

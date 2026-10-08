@@ -16,6 +16,7 @@ use App\Widgets\Groups\InstagramWidget;
 use App\Widgets\Groups\ProductWidget;
 use App\Widgets\Groups\SliderWidget;
 use App\Widgets\InbetweenV2\InbetweenV2BusinessWidget;
+use App\Widgets\InbetweenV2\InbetweenV2FooterWidget;
 use App\Widgets\InbetweenV2\InbetweenV2FounderWidget;
 use App\Widgets\InbetweenV2\InbetweenV2HeroWidget;
 use App\Widgets\InbetweenV2\InbetweenV2IntroWidget;
@@ -70,6 +71,7 @@ class WidgetRegistry implements WidgetRegistryInterface
         'inbetween_v2_founder' => InbetweenV2FounderWidget::class,
         'inbetween_v2_our_clients' => InbetweenV2OurClientsWidget::class,
         'inbetween_v2_business' => InbetweenV2BusinessWidget::class,
+        'inbetween_v2_footer' => InbetweenV2FooterWidget::class,
 
         // Viettinmart Widgets
         'vtm_hero_slider' => ViettinmartHeroSliderWidget::class,

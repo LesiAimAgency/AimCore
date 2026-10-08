@@ -419,6 +419,8 @@ Route::post('/inbetween_v2/contact', [InbetweenV2Controller::class, 'contact'])-
 Route::any('/inbetween/{any?}', fn ($any = null) => redirect('/DA005'.($any ? '/'.$any : ''), 301));
 Route::any('/inbetwen/{any?}', fn ($any = null) => redirect('/DA005'.($any ? '/'.$any : ''), 301));
 
+Route::get('/preview-footer', fn () => view('preview_footer'));
+
 // Web Installer Routes for Exported Websites
 Route::prefix('install')->name('install.')->group(function () {
     Route::get('/', [InstallController::class, 'index'])->name('index');

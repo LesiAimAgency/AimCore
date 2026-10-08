@@ -653,6 +653,29 @@ function addRepeatableItem(fieldId, fieldName) {
     
     container.insertAdjacentHTML('beforeend', itemHtml);
     
+    // Auto-select unoccupied position/zone for fields having position select
+    const newItem = container.lastElementChild;
+    if (newItem) {
+        const posSelect = newItem.querySelector('select[name*="[position]"]');
+        if (posSelect) {
+            const usedPositions = new Set();
+            container.querySelectorAll('.repeatable-item').forEach(el => {
+                if (el !== newItem) {
+                    const sel = el.querySelector('select[name*="[position]"]');
+                    if (sel && sel.value && sel.value !== 'auto') {
+                        usedPositions.add(sel.value.toString());
+                    }
+                }
+            });
+            for (let i = 1; i <= 15; i++) {
+                if (!usedPositions.has(i.toString())) {
+                    posSelect.value = i.toString();
+                    break;
+                }
+            }
+        }
+    }
+
     // Initialize any new TinyMCE editors
     if (typeof window.initTinyMCE === 'function') {
         window.initTinyMCE();
@@ -660,7 +683,6 @@ function addRepeatableItem(fieldId, fieldName) {
 
     // Initialize Alpine.js on new content if available
     if (window.Alpine) {
-        const newItem = container.lastElementChild;
         Alpine.initTree(newItem);
     }
     

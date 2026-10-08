@@ -40,10 +40,10 @@ import{g as D}from"./main.js";import{_ as oe,O as Ke,a as Ne,b as et,c as qe,d a
       V === w ? (K.classList.add("active"), K.setAttribute("aria-current", "true")) : (K.classList.remove("active"), K.removeAttribute("aria-current"));
     });
     n && (n.textContent = String(w + 1).padStart(2, "0"));
-    const _ = p === "inbetween-intro" || p === "inbetween-hero" || p === "inbetween-our-clients";
+    const _ = p === "inbetween-intro" || p === "inbetween-hero" || p === "inbetween-our-clients" || p === "inbetween-footer";
     if (r && (_ ? r.classList.add("dots-theme-dark") : r.classList.remove("dots-theme-dark")), a) {
       const K = a.querySelector(".inbetween-container-1440");
-      p === "inbetween-business"
+      (p === "inbetween-business" || p === "inbetween-footer")
         ? (K && K.classList.add("opacity-0", "pointer-events-none", "invisible"), a.classList.remove("theme-dark", "text-white"), a.classList.add("theme-light", "text-[#111111]"))
         : (K && K.classList.remove("opacity-0", "pointer-events-none", "invisible"), _ ? (a.classList.add("theme-dark", "text-white"), a.classList.remove("theme-light", "text-[#111111]")) : (a.classList.add("theme-light", "text-[#111111]"), a.classList.remove("theme-dark", "text-white")));
     }
