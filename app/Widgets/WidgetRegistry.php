@@ -63,6 +63,17 @@ class WidgetRegistry implements WidgetRegistryInterface
         'ehenho_hero_slider' => EhenhoHeroSliderWidget::class,
         'ehenho_slider' => EhenhoHeroSliderWidget::class,
 
+        // Inbetween V1 Widgets
+        'inbetween_theme' => InbetweenThemeWidget::class,
+        'inbetween_hero_section' => HeroSectionWidget::class,
+        'inbetween_community_collage' => CommunityCollageWidget::class,
+        'inbetween_community_statement' => CommunityStatementWidget::class,
+        'inbetween_core_values' => CoreValuesWidget::class,
+        'inbetween_founder_section' => FounderSectionWidget::class,
+        'inbetween_upcoming_events' => UpcomingEventsWidget::class,
+        'inbetween_media_stories' => MediaStoriesWidget::class,
+        'inbetween_packages' => PackagesWidget::class,
+
         // Inbetween V2 Widgets (1 Section = 1 Widget)
         'inbetween_v2_intro' => InbetweenV2IntroWidget::class,
         'inbetween_v2_hero' => InbetweenV2HeroWidget::class,

@@ -71,7 +71,20 @@ import{g as D}from"./main.js";import{_ as oe,O as Ke,a as Ne,b as et,c as qe,d a
     e[w].scrollIntoView({ behavior: "smooth", block: "start" });
     u(w);
     if (w === 0 && prev === 1 && window._introGoToFrame) {
-      window._introGoToFrame(11);
+      window._introGoToFrame(22);
+    }
+    if (w === 1 && prev === 0) {
+      const d = document.getElementById("hero-white-transition");
+      if (d) {
+        D.to(d, {
+          opacity: 0,
+          duration: 0.6,
+          ease: "power2.out",
+          onComplete: () => {
+            d.style.display = "none";
+          }
+        });
+      }
     }
     setTimeout(() => { c = !1; }, h);
   }
@@ -93,7 +106,7 @@ import{g as D}from"./main.js";import{_ as oe,O as Ke,a as Ne,b as et,c as qe,d a
       const p = e[l];
       if (l === 0) {
         const curF = window._introGetCurrentFrame ? window._introGetCurrentFrame() : 0,
-              totF = window._introGetTotalFrames ? window._introGetTotalFrames() : 11;
+              totF = window._introGetTotalFrames ? window._introGetTotalFrames() : 22;
         const now = Date.now();
         if (now - g < 280) {
           if (curF >= totF && window._introRecordWheel) window._introRecordWheel();
@@ -165,7 +178,7 @@ import{g as D}from"./main.js";import{_ as oe,O as Ke,a as Ne,b as et,c as qe,d a
       if (Math.abs(y) > 45 && Math.abs(y) > Math.abs(p)) {
         if (l === 0) {
           const curF = window._introGetCurrentFrame ? window._introGetCurrentFrame() : 0,
-                totF = window._introGetTotalFrames ? window._introGetTotalFrames() : 11;
+                totF = window._introGetTotalFrames ? window._introGetTotalFrames() : 22;
           if (y > 0) {
             if (curF < totF) {
               window._introNextFrame && window._introNextFrame();
@@ -217,7 +230,7 @@ import{g as D}from"./main.js";import{_ as oe,O as Ke,a as Ne,b as et,c as qe,d a
     if (["ArrowDown", "PageDown", " "].includes(w.key) && !w.shiftKey) {
       if (l === 0) {
         const curF = window._introGetCurrentFrame ? window._introGetCurrentFrame() : 0,
-              totF = window._introGetTotalFrames ? window._introGetTotalFrames() : 11;
+              totF = window._introGetTotalFrames ? window._introGetTotalFrames() : 22;
         if (curF < totF) {
           w.preventDefault();
           window._introNextFrame && window._introNextFrame();
@@ -315,17 +328,23 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
   if (!introSec && !heroSec) return;
 
   const targetSec = introSec || heroSec;
-  const t = document.getElementById("intro-subtitle"),
+  const e = document.getElementById("act-question-container"),
+    t = document.getElementById("intro-subtitle"),
     n = document.getElementById("intro-title-base"),
     s = document.getElementById("floating-words-group"),
     a = Array.from(targetSec.querySelectorAll(".floating-word")),
+    l = document.getElementById("act-wecanhelp-container"),
+    c = document.getElementById("wecanhelp-text"),
+    d = document.getElementById("hero-white-transition"),
     u = document.getElementById("intro-scroll-helper") || document.getElementById("scroll-prompt-helper"),
     m = document.getElementById("hero-preloader");
 
-  const C = 11;
+  const C = 22;
   let v = 0,
     A = !1,
     B_introComplete = !1;
+
+
 
   const P = a.map(k => {
     const F = parseInt(k.getAttribute("data-word-idx"), 10) || 1,
@@ -475,58 +494,182 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
     const Y = F ? 0 : 0.28,
       N = "power2.out";
 
-    if (n) {
-      n.style.color = "#F6F4F4";
-      n.style.webkitTextFillColor = "#F6F4F4";
-      n.style.backgroundImage = "none";
-      n.style.filter = "none";
-    }
-
-    const b = 0.01 + (k / 11) * 0.05;
-    if (n) D.to(n, { letterSpacing: `${b}em`, duration: Y, ease: N });
-    if (t) {
-      const H = 0.01 + (k / 11) * 0.03;
-      D.to(t, { letterSpacing: `${H}em`, duration: Y, ease: N });
-    }
-
-    if (k >= 1) {
-      stopFloating();
-    }
-
-    const suckedCount = k === 0 ? 0 : Math.ceil((k / 11) * P.length);
-    P.forEach(H => {
-      const isSucked = k >= 1 && H.idx <= suckedCount;
-      D.killTweensOf(H.el);
-      if (isSucked) {
-        H.el.classList.add("word-sucking");
-        const { dx, dy } = K(H);
-        D.to(H.el, {
-          x: dx,
-          y: dy,
-          scale: 0.1,
-          rotation: H.idx % 2 === 0 ? 8 : -8,
+    if (k <= 11) {
+      if (e) {
+        e.style.display = "flex";
+        D.killTweensOf(e);
+        D.to(e, { opacity: 1, scale: 1, pointerEvents: "auto", duration: Y, ease: N });
+      }
+      if (l) {
+        D.killTweensOf(l);
+        D.to(l, {
           opacity: 0,
-          duration: Y * 0.9,
-          ease: "power3.in"
-        });
-      } else {
-        H.el.classList.remove("word-sucking");
-        D.to(H.el, {
-          x: 0,
-          y: 0,
-          scale: 1,
-          rotation: 0,
-          opacity: H.baseOpacity,
-          duration: Y * 0.9,
-          ease: "power2.out"
+          pointerEvents: "none",
+          duration: Y * 0.7,
+          ease: N,
+          onComplete: () => {
+            v <= 11 && (l.style.display = "none");
+          }
         });
       }
-    });
+      if (d) {
+        D.killTweensOf(d);
+        d.style.display = "none";
+        d.style.opacity = "0";
+      }
 
-    if (k === 0 && !F) {
-      setTimeout(() => {
-        if (v === 0) startFloating();
-      }, Y * 1000 + 120);
+      if (n) {
+        n.style.color = "#F6F4F4";
+        n.style.webkitTextFillColor = "#F6F4F4";
+        n.style.backgroundImage = "none";
+        n.style.filter = "none";
+      }
+
+      const b = 0.01 + (k / 11) * 0.05;
+      if (n) D.to(n, { letterSpacing: `${b}em`, duration: Y, ease: N });
+      if (t) {
+        const H = 0.01 + (k / 11) * 0.03;
+        D.to(t, { letterSpacing: `${H}em`, duration: Y, ease: N });
+      }
+
+      if (k >= 1) {
+        stopFloating();
+      }
+
+      const suckedCount = k === 0 ? 0 : (k >= 11 ? 999 : Math.ceil((k / 11) * P.length));
+      P.forEach(H => {
+        const isSucked = k >= 1 && (H.idx <= k || H.idx <= suckedCount);
+        D.killTweensOf(H.el);
+        if (isSucked) {
+          H.el.classList.add("word-sucking");
+          const { dx, dy } = K(H);
+          D.to(H.el, {
+            x: dx,
+            y: dy,
+            scale: 0.1,
+            rotation: H.idx % 2 === 0 ? 8 : -8,
+            opacity: 0,
+            duration: Y * 0.9,
+            ease: "power3.in"
+          });
+        } else {
+          H.el.classList.remove("word-sucking");
+          D.to(H.el, {
+            x: 0,
+            y: 0,
+            scale: 1,
+            rotation: 0,
+            opacity: H.baseOpacity,
+            duration: Y * 0.9,
+            ease: "power2.out"
+          });
+        }
+      });
+
+      if (k === 0 && !F) {
+        setTimeout(() => {
+          if (v === 0) startFloating();
+        }, Y * 1000 + 120);
+      }
+    } else if (k >= 12 && k <= 21) {
+      if (e) {
+        D.killTweensOf(e);
+        D.to(e, {
+          opacity: 0,
+          scale: 0.94,
+          pointerEvents: "none",
+          duration: Y * 0.7,
+          ease: N,
+          onComplete: () => {
+            v >= 12 && (e.style.display = "none");
+          }
+        });
+      }
+      if (l) {
+        l.style.display = "flex";
+        D.killTweensOf(l);
+        D.to(l, {
+          opacity: 1,
+          pointerEvents: "auto",
+          duration: Y,
+          ease: N
+        });
+      }
+      if (d) {
+        D.killTweensOf(d);
+        if (F) {
+          d.style.display = "none";
+          d.style.opacity = "0";
+        } else {
+          D.to(d, {
+            opacity: 0,
+            duration: Y * 0.5,
+            ease: N,
+            onComplete: () => {
+              v <= 21 && (d.style.display = "none");
+            }
+          });
+        }
+      }
+
+      const b = {
+        12: { scale: 0.4, opacity: 0.8, tracking: 0.02 },
+        13: { scale: 0.55, opacity: 0.9, tracking: 0.04 },
+        14: { scale: 0.75, opacity: 1, tracking: 0.06 },
+        15: { scale: 1.05, opacity: 1, tracking: 0.08 },
+        16: { scale: 1.5, opacity: 1, tracking: 0.11 },
+        17: { scale: 2.2, opacity: 1, tracking: 0.15 },
+        18: { scale: 3.4, opacity: 1, tracking: 0.2 },
+        19: { scale: 5.6, opacity: 1, tracking: 0.26 },
+        20: { scale: 9.8, opacity: 1, tracking: 0.34 },
+        21: { scale: 18, opacity: 0.95, tracking: 0.42 }
+      }[k] || { scale: 1, opacity: 1, tracking: 0.08 };
+
+      if (c) {
+        D.killTweensOf(c);
+        D.to(c, {
+          scale: b.scale,
+          opacity: b.opacity,
+          letterSpacing: `${b.tracking}em`,
+          duration: Y,
+          ease: "power2.out",
+          transformOrigin: "50% 50%"
+        });
+      }
+    } else if (k === 22) {
+      if (e) e.style.display = "none";
+      if (c) {
+        D.killTweensOf(c);
+        D.to(c, {
+          scale: 40,
+          opacity: 0,
+          letterSpacing: "0.60em",
+          duration: Y * 0.9,
+          ease: "power2.in",
+          transformOrigin: "50% 50%"
+        });
+      }
+      if (l) {
+        D.killTweensOf(l);
+        D.to(l, {
+          opacity: 0,
+          pointerEvents: "none",
+          duration: Y * 0.8,
+          ease: "power2.in",
+          onComplete: () => {
+            v >= 22 && (l.style.display = "none");
+          }
+        });
+      }
+      if (d) {
+        d.style.display = "block";
+        D.killTweensOf(d);
+        D.to(d, {
+          opacity: 1,
+          duration: Y * 0.8,
+          ease: "power2.in"
+        });
+      }
     }
   }
 
@@ -560,8 +703,8 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
       _heroLandedAt = now;
       return !1;
     }
-    // Must pause at frame 11 for at least 800ms so user sees the completed state
-    if (now - _heroLandedAt < 800) {
+    // Must pause at frame 22 for at least 600ms so user sees the transition state
+    if (now - _heroLandedAt < 600) {
       window._introRecordWheel && window._introRecordWheel();
       return !1;
     }
