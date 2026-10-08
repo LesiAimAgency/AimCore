@@ -5,18 +5,13 @@ $app = require_once __DIR__ . '/bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 
-$request = Illuminate\Http\Request::create('/DA005', 'GET');
-$response = $app->handle($request);
-$html = $response->getContent();
-
-$dom = new DOMDocument();
-@$dom->loadHTML($html);
-$xpath = new DOMXPath($dom);
-$imgs = $xpath->query('//img');
-foreach ($imgs as $img) {
-    $src = $img->getAttribute('src');
-    $alt = $img->getAttribute('alt');
-    $parent = $img->parentNode ? $img->parentNode->nodeName . '.' . ($img->parentNode->getAttribute('class') ?: $img->parentNode->getAttribute('id')) : '';
-    echo "SRC: $src | ALT: $alt | PARENT: $parent\n";
+$files = glob('public/themes/inbetween_v2/images/hero-person-*.png');
+foreach ($files as $f) {
+    $info = getimagesize($f);
+    echo "$f => {$info[0]}x{$info[1]}\n";
 }
+$stage = 'public/themes/inbetween_v2/images/founder-airu-stage.png';
+$info = getimagesize($stage);
+echo "$stage => {$info[0]}x{$info[1]}\n";
+
 
