@@ -238,11 +238,11 @@
   <div class="absolute inset-0 z-35 bg-white opacity-0 pointer-events-none" id="hero-white-transition" style="display: none; opacity: 0;"></div>
 
   <!-- Bottom Scroll Helper pointing to Section 2 (#inbetween-hero) -->
-  <div class="w-full shrink-0 flex flex-col items-center justify-center pb-5 sm:pb-7 z-30 pointer-events-auto transition-opacity duration-300" id="intro-scroll-helper">
+  <!-- <div class="w-full shrink-0 flex flex-col items-center justify-center pb-5 sm:pb-7 z-30 pointer-events-auto transition-opacity duration-300" id="intro-scroll-helper">
     <a class="inline-flex flex-col items-center gap-1.5 text-white/70 hover:text-white transition-colors duration-200 group cursor-pointer" href="#inbetween-hero" title="Cuộn sang Hero Section">
       <span class="w-4 h-7 rounded-full border border-white/40 flex items-start justify-center p-0.5 group-hover:border-white">
         <span class="w-1 h-1.5 rounded-full bg-[#EC460B] animate-bounce"></span>
       </span>
     </a>
-  </div>
+  </div> -->
 </section>
