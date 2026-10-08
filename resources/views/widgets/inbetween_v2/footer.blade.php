@@ -41,7 +41,7 @@
     
     <!-- Left Column: MORE CONNECTIONS (Text rotates 1s top-to-bottom) -->
     <div class="lg:col-span-6 flex flex-col justify-center">
-      <h2 class="text-[38px] sm:text-[46px] md:text-[52px] lg:text-[58px] xl:text-[64px] font-bold text-white tracking-tight uppercase leading-[1.1] select-none flex flex-wrap items-center">
+      <h2 class="gap-[20px] text-[38px] sm:text-[46px] md:text-[52px] lg:text-[58px] xl:text-[64px] font-bold text-white tracking-tight uppercase leading-[1.1] select-none flex flex-wrap items-center">
         <span class="mr-4 sm:mr-5 lg:mr-6">{{ $headingPrefix }}</span>
         <!-- Rotating Text Viewport Wrapper -->
         <span class="inbetween-rotating-wrapper relative inline-flex items-center overflow-hidden h-[1.18em] align-top text-[#EC460B] min-w-[280px] sm:min-w-[340px] lg:min-w-[420px]"
