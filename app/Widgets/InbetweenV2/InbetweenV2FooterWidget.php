@@ -96,13 +96,13 @@ class InbetweenV2FooterWidget extends BaseWidget
                     'name' => 'form_privacy_text',
                     'label' => 'Nội dung điều khoản Chính sách',
                     'type' => 'text',
-                    'default' => 'Tôi đã đọc và hoàn toàn đồng ý với Chính sách dữ liệu của Đại Phúc 68',
+                    'default' => 'I have read and agree to the Data & Privacy Policy of in • between',
                 ],
                 [
                     'name' => 'form_newsletter_text',
                     'label' => 'Nội dung đăng ký nhận tin',
                     'type' => 'text',
-                    'default' => 'Gửi email cập nhật tin tức mới cho tôi',
+                    'default' => 'Send me regular business updates and market insights',
                 ],
                 [
                     'name' => 'contact_phone',
