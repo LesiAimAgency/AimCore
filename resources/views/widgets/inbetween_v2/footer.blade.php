@@ -530,13 +530,13 @@
         var phone = form.querySelector('input[name="phone"]')?.value.trim();
 
         if (!fullname || !phone) {
-          alert('Vui lòng điền đầy đủ Họ và tên, Số điện thoại!');
+          alert('Please fill in both Full Name and Phone Number!');
           return;
         }
 
         if (submitBtn) {
           submitBtn.disabled = true;
-          submitBtn.innerHTML = '<span class="text-xs font-semibold">Đang gửi...</span>';
+          submitBtn.innerHTML = '<span class="text-xs font-bold tracking-wider uppercase text-neutral-800">SENDING...</span>';
         }
 
         var formData = new FormData(form);
@@ -553,17 +553,18 @@
         })
         .then(function (data) {
           if (submitBtn) {
-            submitBtn.innerHTML = '<span class="text-xs font-semibold text-green-600">&check; Đã gửi</span>';
+            submitBtn.innerHTML = '<span class="text-xs font-bold tracking-wider uppercase text-green-600">&check; SENT</span>';
           }
           var toast = document.getElementById('global-toast-notification');
+          var msg = data.message || 'Thank you! Your inquiry has been sent successfully. We will get back to you shortly.';
           if (toast) {
-            toast.textContent = data.message || 'Cảm ơn bạn! Chúng tôi sẽ liên hệ trong thời gian sớm nhất.';
+            toast.textContent = msg;
             toast.classList.add('show');
             setTimeout(function () {
               toast.classList.remove('show');
             }, 4000);
           } else {
-            alert(data.message || 'Cảm ơn bạn! Chúng tôi sẽ liên hệ trong thời gian sớm nhất.');
+            alert(msg);
           }
           form.reset();
           initCircularCheckboxes();
@@ -580,7 +581,7 @@
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalBtnContent;
           }
-          alert('Đã gửi thông tin thành công!');
+          alert('Thank you! Your inquiry has been sent successfully.');
           form.reset();
         });
       });
