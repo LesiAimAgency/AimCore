@@ -20,8 +20,12 @@
     $formTitle1 = $settings['form_title_line1'] ?? 'READY TO BUILD';
     $formTitleHighlight = $settings['form_title_highlight'] ?? 'SOMETHING BOLD';
     $formTitle2 = $settings['form_title_line2'] ?? 'IN VIETNAM?';
-    $formPrivacy = $settings['form_privacy_text'] ?? 'Tôi đã đọc và hoàn toàn đồng ý với Chính sách dữ liệu của Đại Phúc 68';
-    $formNewsletter = $settings['form_newsletter_text'] ?? 'Gửi email cập nhật tin tức mới cho tôi';
+    $formPrivacy = !empty($settings['form_privacy_text']) && !str_contains($settings['form_privacy_text'], 'Đại Phúc')
+        ? $settings['form_privacy_text']
+        : 'I have read and agree to the Data & Privacy Policy of in • between';
+    $formNewsletter = !empty($settings['form_newsletter_text']) && !str_contains($settings['form_newsletter_text'], 'email cập nhật')
+        ? $settings['form_newsletter_text']
+        : 'Send me regular business updates and market insights';
     $phone = $settings['contact_phone'] ?? '0909 999 999';
     $email = $settings['contact_email'] ?? 'inbetween.asia@gmail.com';
     $copyright = $settings['copyright_text'] ?? 'Copyright belong to INBETWEEN';
@@ -72,7 +76,7 @@
 
     <!-- Right Column: Consultation / Contact Form -->
     <div class="lg:col-span-6 w-full max-w-[550px] lg:ml-auto">
-      <div class="mb-5 sm:mb-6">
+      <div class="mb-4 sm:mb-5">
         <h3 class="text-[22px] sm:text-[25px] lg:text-[27px] font-bold text-white tracking-tight uppercase leading-[1.25]">
           <span class="block">{{ $formTitle1 }}</span>
           <span class="block">
@@ -81,47 +85,47 @@
         </h3>
       </div>
 
-      <form id="inbetween-footer-contact-form" class="space-y-3.5 sm:space-y-4" novalidate>
+      <form id="inbetween-footer-contact-form" class="space-y-3 sm:space-y-3.5" novalidate>
         @csrf
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
           <!-- Full Name -->
           <div>
             <label class="block text-[11px] sm:text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
-              HỌ VÀ TÊN
+              FULL NAME
             </label>
             <input type="text" name="fullname" required
-              class="w-full h-[42px] px-3.5 bg-transparent border border-neutral-700/90 rounded-[4px] text-[13.5px] text-white placeholder-neutral-500 focus:outline-none focus:border-[#EC460B] transition-colors" />
+              class="w-full h-[40px] px-3.5 bg-transparent border border-neutral-700/90 rounded-[4px] text-[13.5px] text-white placeholder-neutral-500 focus:outline-none focus:border-[#EC460B] transition-colors" />
           </div>
 
           <!-- Phone Number -->
           <div>
             <label class="block text-[11px] sm:text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
-              SỐ ĐIỆN THOẠI *
+              PHONE NUMBER *
             </label>
             <input type="tel" name="phone" required
-              class="w-full h-[42px] px-3.5 bg-transparent border border-neutral-700/90 rounded-[4px] text-[13.5px] text-white placeholder-neutral-500 focus:outline-none focus:border-[#EC460B] transition-colors" />
+              class="w-full h-[40px] px-3.5 bg-transparent border border-neutral-700/90 rounded-[4px] text-[13.5px] text-white placeholder-neutral-500 focus:outline-none focus:border-[#EC460B] transition-colors" />
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
           <!-- Email -->
           <div>
             <label class="block text-[11px] sm:text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
               EMAIL
             </label>
             <input type="email" name="email"
-              class="w-full h-[42px] px-3.5 bg-transparent border border-neutral-700/90 rounded-[4px] text-[13.5px] text-white placeholder-neutral-500 focus:outline-none focus:border-[#EC460B] transition-colors" />
+              class="w-full h-[40px] px-3.5 bg-transparent border border-neutral-700/90 rounded-[4px] text-[13.5px] text-white placeholder-neutral-500 focus:outline-none focus:border-[#EC460B] transition-colors" />
           </div>
 
-          <!-- Dịch vụ cần tư vấn -->
+          <!-- Service Needed -->
           <div>
             <label class="block text-[11px] sm:text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
-              DỊCH VỤ CẦN TƯ VẤN
+              SERVICE NEEDED
             </label>
             <div class="relative footer-select-box" id="footer-service-dropdown">
-              <input type="hidden" name="service" value="tu-van-thiet-ke" id="footer-service-val">
-              <button type="button" class="footer-select-trigger w-full h-[42px] px-3 bg-transparent border border-neutral-700/90 rounded-[4px] text-[13px] text-neutral-300 flex items-center justify-between focus:outline-none focus:border-[#EC460B] transition-colors cursor-pointer select-none" aria-haspopup="listbox" aria-expanded="false">
-                <span class="footer-selected-label text-neutral-400 truncate">Tư vấn thiết kế</span>
+              <input type="hidden" name="service" value="sales-bd" id="footer-service-val">
+              <button type="button" class="footer-select-trigger w-full h-[40px] px-3 bg-transparent border border-neutral-700/90 rounded-[4px] text-[13px] text-neutral-300 flex items-center justify-between focus:outline-none focus:border-[#EC460B] transition-colors cursor-pointer select-none" aria-haspopup="listbox" aria-expanded="false">
+                <span class="footer-selected-label text-neutral-300 truncate">Sales & BD</span>
                 <span class="flex items-center pl-2.5 ml-2 border-l border-neutral-700/80 text-neutral-400 shrink-0">
                   <svg class="w-3.5 h-3.5 transition-transform footer-select-arrow" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -129,7 +133,6 @@
                 </span>
               </button>
               <ul class="footer-select-options absolute top-full left-0 right-0 mt-1 bg-[#1A1A1A] border border-neutral-700 rounded-[4px] shadow-2xl overflow-hidden z-40 hidden" role="listbox">
-                <li class="px-3.5 py-2 text-[13px] text-neutral-300 hover:bg-[#EC460B] hover:text-white cursor-pointer transition-colors" data-value="tu-van-thiet-ke" role="option">Tư vấn thiết kế</li>
                 <li class="px-3.5 py-2 text-[13px] text-neutral-300 hover:bg-[#EC460B] hover:text-white cursor-pointer transition-colors" data-value="sales-bd" role="option">Sales & BD</li>
                 <li class="px-3.5 py-2 text-[13px] text-neutral-300 hover:bg-[#EC460B] hover:text-white cursor-pointer transition-colors" data-value="market-validation" role="option">Market Validation</li>
                 <li class="px-3.5 py-2 text-[13px] text-neutral-300 hover:bg-[#EC460B] hover:text-white cursor-pointer transition-colors" data-value="market-entry" role="option">Market Entry Execution</li>
@@ -139,15 +142,24 @@
           </div>
         </div>
 
-        <!-- Subtle Divider Line above Checkboxes as in SVG -->
-        <div class="border-t border-neutral-800/80 pt-2"></div>
+        <!-- Message / Inquiry -->
+        <div>
+          <label class="block text-[11px] sm:text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
+            MESSAGE / INQUIRY
+          </label>
+          <textarea name="message" rows="2"
+            class="w-full h-[76px] min-h-[76px] max-h-[76px] px-3.5 py-2 bg-transparent border border-neutral-700/90 rounded-[4px] text-[13.5px] text-white placeholder-neutral-500 focus:outline-none focus:border-[#EC460B] transition-colors resize-none"></textarea>
+        </div>
+
+        <!-- Divider Line -->
+        <div class="border-t border-neutral-800/80 pt-1.5"></div>
 
         <!-- Custom Circular Checkboxes -->
-        <div class="space-y-2.5 pt-0.5">
+        <div class="space-y-2 pt-0.5">
           <label class="flex items-center gap-3 cursor-pointer select-none group">
-            <input type="checkbox" name="privacy_consent" class="hidden footer-circular-cb" required>
+            <input type="checkbox" name="privacy_consent" class="hidden footer-circular-cb" required checked>
             <span class="w-[15px] h-[15px] rounded-full border border-neutral-400 group-hover:border-white transition-colors flex items-center justify-center shrink-0 footer-cb-circle bg-transparent">
-              <span class="w-[7px] h-[7px] rounded-full bg-white transition-opacity footer-cb-dot opacity-0"></span>
+              <span class="w-[7px] h-[7px] rounded-full bg-white transition-opacity footer-cb-dot opacity-100" style="opacity: 1;"></span>
             </span>
             <span class="text-neutral-300 text-[12.5px] sm:text-[13px] font-light group-hover:text-white transition-colors leading-snug">
               {{ $formPrivacy }}
@@ -157,7 +169,7 @@
           <label class="flex items-center gap-3 cursor-pointer select-none group">
             <input type="checkbox" name="newsletter" class="hidden footer-circular-cb">
             <span class="w-[15px] h-[15px] rounded-full border border-neutral-400 group-hover:border-white transition-colors flex items-center justify-center shrink-0 footer-cb-circle bg-transparent">
-              <span class="w-[7px] h-[7px] rounded-full bg-white transition-opacity footer-cb-dot opacity-0"></span>
+              <span class="w-[7px] h-[7px] rounded-full bg-white transition-opacity footer-cb-dot opacity-0" style="opacity: 0;"></span>
             </span>
             <span class="text-neutral-300 text-[12.5px] sm:text-[13px] font-light group-hover:text-white transition-colors leading-snug">
               {{ $formNewsletter }}
@@ -165,13 +177,14 @@
           </label>
         </div>
 
-        <!-- White Pill Submit Button: 135px x 39px with Arrow -->
-        <div class="pt-2 sm:pt-3">
-          <button type="submit" class="w-[135px] h-[40px] rounded-full bg-[#F6F4F4] text-[#131313] hover:bg-[#EC460B] hover:text-white transition-all duration-300 flex items-center justify-center cursor-pointer shadow-sm group">
-            <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="4" y1="12" x2="20" y2="12"></line>
-              <polyline points="13 5 20 12 13 19"></polyline>
-            </svg>
+        <!-- Submit Button: Matching Modal Box LET'S CONNECT pill with arrow animation -->
+        <div class="pt-1.5 sm:pt-2">
+          <button type="submit" class="footer-submit-btn group cursor-pointer" aria-label="Submit Inquiry">
+            <span class="submit-arrow-box">
+              <span class="arrow-primary">&rarr;</span>
+              <span class="arrow-secondary">&rarr;</span>
+            </span>
+            <span class="submit-btn-text">LET'S CONNECT</span>
           </button>
         </div>
       </form>
@@ -289,6 +302,81 @@
 
   .anim-slide-down-in {
     animation: slideTopToBottomEnter 0.35s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+  }
+
+  /* Footer Pill Submit Button matching Modal Box style */
+  .footer-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    height: 40px;
+    padding: 0 1.625rem;
+    border-radius: 9999px;
+    background-color: #F6F4F4;
+    color: #131313;
+    border: none;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .footer-submit-btn .submit-arrow-box {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+  }
+
+  .footer-submit-btn .submit-arrow-box .arrow-primary,
+  .footer-submit-btn .submit-arrow-box .arrow-secondary {
+    position: absolute;
+    font-size: 1.1rem;
+    line-height: 1;
+    color: #131313;
+    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s ease;
+  }
+
+  .footer-submit-btn .submit-arrow-box .arrow-primary {
+    transform: translate(0);
+  }
+
+  .footer-submit-btn .submit-arrow-box .arrow-secondary {
+    transform: translate(-24px);
+    color: #ffffff;
+  }
+
+  .footer-submit-btn .submit-btn-text {
+    color: #131313;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: color 0.3s ease;
+  }
+
+  .footer-submit-btn:hover {
+    background-color: #EC460B;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(236, 70, 11, 0.35);
+  }
+
+  .footer-submit-btn:hover .submit-arrow-box .arrow-primary {
+    transform: translate(24px);
+  }
+
+  .footer-submit-btn:hover .submit-arrow-box .arrow-secondary {
+    transform: translate(0);
+    color: #ffffff;
+  }
+
+  .footer-submit-btn:hover .submit-btn-text {
+    color: #ffffff;
   }
 </style>
 
