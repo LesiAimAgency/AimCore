@@ -98,6 +98,14 @@
       transform: translate(0, -50%);
       color: #ec460b !important;
     }
+    .intro-title-gradient {
+      background: linear-gradient(180deg, #FFFFFF var(--grad-top, 100%), #EC460B var(--grad-bottom, 100%));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      will-change: background, filter, letter-spacing;
+      filter: drop-shadow(0 0 var(--grad-glow, 0px) rgba(236, 70, 11, var(--grad-glow-alpha, 0)));
+    }
   </style>
   <header class="inbetween-header fixed top-0 left-0 w-full z-50 select-none transition-colors duration-300 pointer-events-auto theme-dark text-white" id="inbetween-header">
     <div class="inbetween-container-1440 pt-5 sm:pt-6 pb-2 sm:pb-3">
