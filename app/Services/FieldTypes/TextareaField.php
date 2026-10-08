@@ -14,7 +14,19 @@ class TextareaField extends BaseFieldType
             $attributes['maxlength'] = $config['max_length'];
         }
 
-        $content = htmlspecialchars($value ?? $config['default'] ?? '');
+        if (is_array($value)) {
+            $parts = [];
+            foreach ($value as $item) {
+                if (is_array($item)) {
+                    $parts[] = $item['title'] ?? $item['name'] ?? $item['text'] ?? implode(' ', array_filter($item, 'is_scalar'));
+                } elseif (is_scalar($item)) {
+                    $parts[] = (string) $item;
+                }
+            }
+            $value = implode(', ', array_filter(array_map('trim', $parts)));
+        }
+
+        $content = htmlspecialchars((string) ($value ?? $config['default'] ?? ''));
         $fieldHtml = '<textarea'.$this->renderAttributes($attributes).">{$content}</textarea>";
 
         return $this->renderFieldWrapper($config, $fieldHtml);

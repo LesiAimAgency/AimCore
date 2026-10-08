@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Project;
+use App\Models\Setting;
 use App\Models\Widget;
 use Illuminate\Database\Seeder;
 
@@ -17,10 +18,12 @@ class InbetweenV2WidgetsSeeder extends Seeder
                 'name' => '1. Hero Section',
                 'type' => 'inbetween_v2_hero',
                 'settings' => [
-                    'logo_white' => 'themes/inbetween_v2/images/Logo-white.svg',
-                    'logo_dark' => 'themes/inbetween_v2/images/Logo.svg',
-                    'connect_text' => "LET'S CONNECT",
-                    'connect_link' => '#contact-modal',
+                    'wecanhelp_text' => 'WE CAN HELP!',
+                    'headline_text' => "YOUR LOCAL TEAM BEFORE YOU'RE READY TO HIRE ONE.",
+                    'services' => 'Sales & BD, Market Validation, Market Entry Execution, Local Business Support',
+                    'description' => 'We help <strong class="font-semibold text-white">Asian SMEs, founders and entrepreneurs</strong> enter and grow in Vietnam.',
+                    'cta_text' => 'Talk to us',
+                    'cta_link' => '#inbetween-founder',
                     'intro_subtitle' => 'Your business is',
                     'intro_title' => 'ENTERING VIETNAM?',
                     'floating_words' => [
@@ -35,17 +38,8 @@ class InbetweenV2WidgetsSeeder extends Seeder
                         ['text' => 'Market Research'],
                         ['text' => 'Build Relationships'],
                     ],
-                    'wecanhelp_text' => 'WE CAN HELP!',
-                    'headline_text' => "YOUR LOCAL TEAM BEFORE YOU'RE READY TO HIRE ONE.",
-                    'services' => [
-                        ['title' => 'Sales & BD'],
-                        ['title' => 'Market Validation'],
-                        ['title' => 'Market Entry Execution'],
-                        ['title' => 'Local Business Support'],
-                    ],
-                    'description' => 'We help <strong class="font-semibold text-white">Asian SMEs, founders and entrepreneurs</strong> enter and grow in Vietnam.',
-                    'cta_text' => 'Talk to us',
-                    'cta_link' => '#inbetween-founder',
+                    'connect_text' => "LET'S CONNECT",
+                    'connect_link' => '#contact-modal',
                 ],
             ],
             2 => [
@@ -246,7 +240,7 @@ class InbetweenV2WidgetsSeeder extends Seeder
                 $features['theme'] = 'inbetween_v2';
                 $proj->update(['features' => $features]);
 
-                \App\Models\Setting::updateOrCreate(
+                Setting::updateOrCreate(
                     ['project_id' => $targetProjId, 'key' => 'theme'],
                     ['value' => 'inbetween_v2', 'tenant_id' => $targetTenantId]
                 );

@@ -81,19 +81,23 @@
             <h1 class="text-[30px] sm:text-[38px] lg:text-[49px] font-semibold uppercase tracking-normal text-[#F6F4F4] leading-[1.15] drop-shadow-md max-w-[648px]" id="hero-headline-text">{{ $settings['headline_text'] ?? "YOUR LOCAL TEAM BEFORE YOU'RE READY TO HIRE ONE." }}
             </h1>
             @php
-              $defaultServices = [
-                ['title' => 'Sales & BD'],
-                ['title' => 'Market Validation'],
-                ['title' => 'Market Entry Execution'],
-                ['title' => 'Local Business Support'],
-              ];
-              $services = !empty($settings['services']) && is_array($settings['services']) ? array_values($settings['services']) : $defaultServices;
+              $rawServices = $settings['services'] ?? 'Sales & BD, Market Validation, Market Entry Execution, Local Business Support';
+              if (is_string($rawServices)) {
+                $serviceList = array_values(array_filter(array_map('trim', explode(',', $rawServices))));
+              } elseif (is_array($rawServices)) {
+                $serviceList = [];
+                foreach ($rawServices as $s) {
+                  $val = is_array($s) ? ($s['title'] ?? reset($s)) : (string)$s;
+                  if (trim((string)$val) !== '') {
+                    $serviceList[] = trim((string)$val);
+                  }
+                }
+              } else {
+                $serviceList = ['Sales & BD', 'Market Validation', 'Market Entry Execution', 'Local Business Support'];
+              }
             @endphp
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-3.5 gap-x-6 pt-1 max-w-[600px]" id="hero-services-list">
-              @foreach($services as $svc)
-                @php
-                  $svcTitle = is_array($svc) ? ($svc['title'] ?? '') : (string)$svc;
-                @endphp
+              @foreach($serviceList as $svcTitle)
                 <div class="hero-svc-item flex items-center gap-2.5 text-[16px] lg:text-[20px] font-medium text-[#F6F4F4] tracking-normal drop-shadow-sm"><span class="font-medium text-[20px] leading-none text-[#F6F4F4]">+</span><span>{{ $svcTitle }}</span></div>
               @endforeach
             </div>
