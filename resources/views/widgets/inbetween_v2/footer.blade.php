@@ -141,16 +141,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Message / Inquiry -->
-        <div>
-          <label class="block text-[11px] sm:text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
-            MESSAGE / INQUIRY
-          </label>
-          <textarea name="message" rows="2"
-            class="w-full h-[76px] min-h-[76px] max-h-[76px] px-3.5 py-2 bg-transparent border border-neutral-700/90 rounded-[4px] text-[13.5px] text-white placeholder-neutral-500 focus:outline-none focus:border-[#EC460B] transition-colors resize-none"></textarea>
-        </div>
-
         <!-- Divider Line -->
         <div class="border-t border-neutral-800/80 pt-1.5"></div>
 
