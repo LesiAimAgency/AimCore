@@ -1,3 +1,175 @@
+@php
+  $logoWhite = !empty($settings['logo_white']) ? (str_starts_with($settings['logo_white'], 'http') || str_starts_with($settings['logo_white'], '/') ? $settings['logo_white'] : asset($settings['logo_white'])) : asset('themes/inbetween_v2/images/Logo-white.svg');
+  $logoDark = !empty($settings['logo_dark']) ? (str_starts_with($settings['logo_dark'], 'http') || str_starts_with($settings['logo_dark'], '/') ? $settings['logo_dark'] : asset($settings['logo_dark'])) : asset('themes/inbetween_v2/images/Logo.svg');
+  $connectText = $settings['connect_text'] ?? "LET'S CONNECT";
+  $connectLink = $settings['connect_link'] ?? '#contact-modal';
+  $langEn = $settings['lang_en_label'] ?? 'EN';
+  $langZh = $settings['lang_zh_label'] ?? '汉语';
+@endphp
+
+<!-- Fixed Header across sections -->
+@once('inbetween-header')
+<style>
+  #inbetween-hero .intro-title-gradient,
+  #inbetween-intro .intro-title-gradient,
+  .intro-title-gradient {
+    color: #fff !important;
+    background-image: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF var(--grad-top, 100%), #EC460B var(--grad-bottom, 100%), #EC460B 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    display: inline-block;
+    transition: filter .35s ease;
+    will-change: --grad-top, --grad-bottom, letter-spacing, filter;
+    filter: drop-shadow(0 0 var(--grad-glow, 0px) rgba(236, 70, 11, var(--grad-glow-alpha, 0)));
+  }
+  /* Fixed hit-area & stable hover for inbetween menu toggle */
+  .inbetween-header .inbetween-menu-toggle {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%) !important;
+    z-index: 50;
+    cursor: pointer;
+    font-family: 'SVN-Gilroy', 'Inter', sans-serif;
+    -webkit-user-select: none;
+    user-select: none;
+    padding: 16px 28px 16px 0 !important;
+    min-height: 56px;
+    min-width: 48px;
+    display: inline-flex;
+    align-items: center;
+    background: transparent;
+    border: none;
+    outline: none;
+    overflow: visible;
+    transition: color .25s ease;
+  }
+  /* Generous invisible hit-area box to ensure easy hover and click without precision aiming */
+  .inbetween-header .inbetween-menu-toggle::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -16px;
+    bottom: -16px;
+    right: -24px;
+    min-width: 64px;
+    pointer-events: auto;
+  }
+  /* Sliding track holding icon + text: moves inside stationary button */
+  .inbetween-header .inbetween-menu-toggle .menu-toggle-track {
+    display: inline-flex;
+    align-items: center;
+    transform: translateX(-12px);
+    transition: transform .32s cubic-bezier(0.16, 1, 0.3, 1), color .25s ease;
+    will-change: transform;
+    pointer-events: none;
+  }
+  .inbetween-header .inbetween-menu-toggle:hover .menu-toggle-track,
+  .inbetween-header .inbetween-menu-toggle.is-active .menu-toggle-track,
+  .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] .menu-toggle-track {
+    transform: translateX(16px);
+    color: #ec460b !important;
+  }
+  @media (min-width: 640px) {
+    .inbetween-header .inbetween-menu-toggle:hover .menu-toggle-track,
+    .inbetween-header .inbetween-menu-toggle.is-active .menu-toggle-track,
+    .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] .menu-toggle-track {
+      transform: translateX(24px);
+    }
+  }
+  @media (min-width: 1024px) {
+    .inbetween-header .inbetween-menu-toggle:hover .menu-toggle-track,
+    .inbetween-header .inbetween-menu-toggle.is-active .menu-toggle-track,
+    .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] .menu-toggle-track {
+      transform: translateX(32px);
+    }
+  }
+  .inbetween-header .inbetween-menu-toggle .menu-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    transition: transform .3s ease;
+    pointer-events: none;
+  }
+  .inbetween-header .inbetween-menu-toggle:hover .menu-icon-wrap {
+    transform: scale(1.06);
+  }
+  .inbetween-header .inbetween-menu-toggle .menu-icon-svg {
+    display: block;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    color: currentColor;
+    pointer-events: none;
+  }
+  .inbetween-header .inbetween-menu-toggle .menu-text {
+    font-family: 'SVN-Gilroy', 'Inter', sans-serif;
+    font-weight: 700;
+    letter-spacing: .06em;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-10px);
+    transition: opacity .3s cubic-bezier(0.16, 1, 0.3, 1), transform .3s cubic-bezier(0.16, 1, 0.3, 1), visibility .3s ease, color .2s ease;
+    pointer-events: none;
+  }
+  .inbetween-header .inbetween-menu-toggle:hover .menu-text,
+  .inbetween-header .inbetween-menu-toggle.is-active .menu-text,
+  .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] .menu-text {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    color: #ec460b !important;
+  }
+</style>
+<header class="inbetween-header fixed top-0 left-0 w-full z-50 select-none transition-colors duration-300 pointer-events-auto theme-dark text-white" id="inbetween-header">
+  <div class="inbetween-container-1440 pt-5 sm:pt-6 pb-2 sm:pb-3 transition-all duration-300">
+    <a class="inbetween-logo inline-flex items-center w-[210px] h-[32px] shrink-0 select-none transition-opacity hover:opacity-85" href="#inbetween-intro" title="in • between">
+      <img class="inbetween-logo-white w-[210px] h-[32px] object-contain" src="{{ $logoWhite }}" alt="in • between Logo" width="210" height="32"/>
+      <img class="inbetween-logo-dark w-[210px] h-[32px] object-contain" src="{{ $logoDark }}" alt="in • between Logo" width="210" height="32"/>
+    </a>
+    <div class="flex items-center gap-5 sm:gap-7">
+      <!-- Language Switcher -->
+      <div class="flex items-center gap-1.5 text-xs sm:text-[13px] tracking-wider uppercase font-medium inbetween-header-lang">
+        <span class="inbetween-lang-btn inbetween-lang-en active cursor-pointer font-semibold text-current hover:text-[#EC460B] transition-colors" data-lang="en">{{ $langEn }}</span>
+        <span class="opacity-40">|</span>
+        <span class="inbetween-lang-btn inbetween-lang-zh cursor-pointer opacity-70 hover:opacity-100 hover:text-[#EC460B] transition-all" data-lang="zh">{{ $langZh }}</span>
+      </div>
+      <nav>
+        <a class="inbetween-connect-link inline-flex items-center gap-3 text-pc-h6 text-[15px] sm:text-[16px] font-normal uppercase tracking-normal transition-all duration-200 group border-b border-transparent hover:border-current pb-0.5 text-current cursor-pointer" href="{{ $connectLink }}" data-contact-modal-toggle="" title="{{ $connectText }}">
+          <span>{{ $connectText }}</span>
+          <span class="transition-transform duration-200 group-hover:translate-x-1 inline-block">&rarr;</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+  <button class="menu-toggle-btn inbetween-menu-toggle group focus:outline-none fixed left-0 top-1/2 -translate-y-1/2 z-50 flex items-center cursor-pointer select-none" type="button" data-menu-toggle aria-label="Mở trình đơn điều hướng" aria-expanded="false">
+    <span class="menu-toggle-track flex items-center">
+      <span class="menu-icon-wrap flex items-center justify-center shrink-0 w-6 h-6">
+        <svg class="menu-icon-svg w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#clip0_inbetween_menu)">
+            <path d="M4 13C4.55228 13 5 12.5523 5 12C5 11.4477 4.55228 11 4 11C3.44772 11 3 11.4477 3 12C3 12.5523 3.44772 13 4 13Z" fill="currentColor"/>
+            <path d="M20.06 11H7.94C7.42085 11 7 11.4209 7 11.94V12.06C7 12.5791 7.42085 13 7.94 13H20.06C20.5791 13 21 12.5791 21 12.06V11.94C21 11.4209 20.5791 11 20.06 11Z" fill="currentColor"/>
+            <path d="M20.06 16H3.94C3.42085 16 3 16.4209 3 16.94V17.06C3 17.5791 3.42085 18 3.94 18H20.06C20.5791 18 21 17.5791 21 17.06V16.94C21 16.4209 20.5791 16 20.06 16Z" fill="currentColor"/>
+            <path d="M20.06 6H3.94C3.42085 6 3 6.42085 3 6.94V7.06C3 7.57915 3.42085 8 3.94 8H20.06C20.5791 8 21 7.57915 21 7.06V6.94C21 6.42085 20.5791 6 20.06 6Z" fill="currentColor"/>
+          </g>
+          <defs>
+            <clipPath id="clip0_inbetween_menu">
+              <rect width="24" height="24" fill="white"/>
+            </clipPath>
+          </defs>
+        </svg>
+      </span>
+      <span class="menu-text text-[13px] sm:text-[14px] md:text-[15px] font-bold uppercase tracking-wider ml-2.5">Menu</span>
+    </span>
+  </button>
+</header>
+@endonce
+
 <!-- SECTION 1: INTRO (Entering Vietnam) -->
 <section class="inbetween-onepage-section relative w-full h-screen min-h-screen max-h-screen overflow-hidden select-none bg-[#131313] text-white flex flex-col justify-between items-center cursor-default" id="inbetween-intro" aria-label="in • between Intro - Entering Vietnam">
   <!-- Preloader -->
@@ -10,178 +182,6 @@
       </div>
     </div>
   </div>
-  @endonce
-
-  @php
-    $logoWhite = !empty($settings['logo_white']) ? (str_starts_with($settings['logo_white'], 'http') || str_starts_with($settings['logo_white'], '/') ? $settings['logo_white'] : asset($settings['logo_white'])) : asset('themes/inbetween_v2/images/Logo-white.svg');
-    $logoDark = !empty($settings['logo_dark']) ? (str_starts_with($settings['logo_dark'], 'http') || str_starts_with($settings['logo_dark'], '/') ? $settings['logo_dark'] : asset($settings['logo_dark'])) : asset('themes/inbetween_v2/images/Logo.svg');
-    $connectText = $settings['connect_text'] ?? "LET'S CONNECT";
-    $connectLink = $settings['connect_link'] ?? '#contact-modal';
-    $langEn = $settings['lang_en_label'] ?? 'EN';
-    $langZh = $settings['lang_zh_label'] ?? '汉语';
-  @endphp
-
-  <!-- Fixed Header across sections -->
-  @once('inbetween-header')
-  <style>
-    #inbetween-hero .intro-title-gradient,
-    #inbetween-intro .intro-title-gradient,
-    .intro-title-gradient {
-      color: #fff !important;
-      background-image: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF var(--grad-top, 100%), #EC460B var(--grad-bottom, 100%), #EC460B 100%) !important;
-      -webkit-background-clip: text !important;
-      -webkit-text-fill-color: transparent !important;
-      background-clip: text !important;
-      display: inline-block;
-      transition: filter .35s ease;
-      will-change: --grad-top, --grad-bottom, letter-spacing, filter;
-      filter: drop-shadow(0 0 var(--grad-glow, 0px) rgba(236, 70, 11, var(--grad-glow-alpha, 0)));
-    }
-    /* Fixed hit-area & stable hover for inbetween menu toggle */
-    .inbetween-header .inbetween-menu-toggle {
-      position: fixed;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%) !important;
-      z-index: 50;
-      cursor: pointer;
-      font-family: 'SVN-Gilroy', 'Inter', sans-serif;
-      -webkit-user-select: none;
-      user-select: none;
-      padding: 16px 28px 16px 0 !important;
-      min-height: 56px;
-      min-width: 48px;
-      display: inline-flex;
-      align-items: center;
-      background: transparent;
-      border: none;
-      outline: none;
-      overflow: visible;
-      transition: color .25s ease;
-    }
-    /* Generous invisible hit-area box to ensure easy hover and click without precision aiming */
-    .inbetween-header .inbetween-menu-toggle::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: -16px;
-      bottom: -16px;
-      right: -24px;
-      min-width: 64px;
-      pointer-events: auto;
-    }
-    /* Sliding track holding icon + text: moves inside stationary button */
-    .inbetween-header .inbetween-menu-toggle .menu-toggle-track {
-      display: inline-flex;
-      align-items: center;
-      transform: translateX(-12px);
-      transition: transform .32s cubic-bezier(0.16, 1, 0.3, 1), color .25s ease;
-      will-change: transform;
-      pointer-events: none;
-    }
-    .inbetween-header .inbetween-menu-toggle:hover .menu-toggle-track,
-    .inbetween-header .inbetween-menu-toggle.is-active .menu-toggle-track,
-    .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] .menu-toggle-track {
-      transform: translateX(16px);
-      color: #ec460b !important;
-    }
-    @media (min-width: 640px) {
-      .inbetween-header .inbetween-menu-toggle:hover .menu-toggle-track,
-      .inbetween-header .inbetween-menu-toggle.is-active .menu-toggle-track,
-      .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] .menu-toggle-track {
-        transform: translateX(24px);
-      }
-    }
-    @media (min-width: 1024px) {
-      .inbetween-header .inbetween-menu-toggle:hover .menu-toggle-track,
-      .inbetween-header .inbetween-menu-toggle.is-active .menu-toggle-track,
-      .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] .menu-toggle-track {
-        transform: translateX(32px);
-      }
-    }
-    .inbetween-header .inbetween-menu-toggle .menu-icon-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      flex-shrink: 0;
-      transition: transform .3s ease;
-      pointer-events: none;
-    }
-    .inbetween-header .inbetween-menu-toggle:hover .menu-icon-wrap {
-      transform: scale(1.06);
-    }
-    .inbetween-header .inbetween-menu-toggle .menu-icon-svg {
-      display: block;
-      width: 24px;
-      height: 24px;
-      flex-shrink: 0;
-      color: currentColor;
-      pointer-events: none;
-    }
-    .inbetween-header .inbetween-menu-toggle .menu-text {
-      font-family: 'SVN-Gilroy', 'Inter', sans-serif;
-      font-weight: 700;
-      letter-spacing: .06em;
-      white-space: nowrap;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateX(-10px);
-      transition: opacity .3s cubic-bezier(0.16, 1, 0.3, 1), transform .3s cubic-bezier(0.16, 1, 0.3, 1), visibility .3s ease, color .2s ease;
-      pointer-events: none;
-    }
-    .inbetween-header .inbetween-menu-toggle:hover .menu-text,
-    .inbetween-header .inbetween-menu-toggle.is-active .menu-text,
-    .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] .menu-text {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(0);
-      color: #ec460b !important;
-    }
-  </style>
-  <header class="inbetween-header fixed top-0 left-0 w-full z-50 select-none transition-colors duration-300 pointer-events-auto theme-dark text-white" id="inbetween-header">
-    <div class="inbetween-container-1440 pt-5 sm:pt-6 pb-2 sm:pb-3 transition-all duration-300">
-      <a class="inbetween-logo inline-flex items-center w-[210px] h-[32px] shrink-0 select-none transition-opacity hover:opacity-85" href="#inbetween-intro" title="in • between">
-        <img class="inbetween-logo-white w-[210px] h-[32px] object-contain" src="{{ $logoWhite }}" alt="in • between Logo" width="210" height="32"/>
-        <img class="inbetween-logo-dark w-[210px] h-[32px] object-contain" src="{{ $logoDark }}" alt="in • between Logo" width="210" height="32"/>
-      </a>
-      <div class="flex items-center gap-5 sm:gap-7">
-        <!-- Language Switcher -->
-        <div class="flex items-center gap-1.5 text-xs sm:text-[13px] tracking-wider uppercase font-medium inbetween-header-lang">
-          <span class="inbetween-lang-btn inbetween-lang-en active cursor-pointer font-semibold text-current hover:text-[#EC460B] transition-colors" data-lang="en">{{ $langEn }}</span>
-          <span class="opacity-40">|</span>
-          <span class="inbetween-lang-btn inbetween-lang-zh cursor-pointer opacity-70 hover:opacity-100 hover:text-[#EC460B] transition-all" data-lang="zh">{{ $langZh }}</span>
-        </div>
-        <nav>
-          <a class="inbetween-connect-link inline-flex items-center gap-3 text-pc-h6 text-[15px] sm:text-[16px] font-normal uppercase tracking-normal transition-all duration-200 group border-b border-transparent hover:border-current pb-0.5 text-current cursor-pointer" href="{{ $connectLink }}" data-contact-modal-toggle="" title="{{ $connectText }}">
-            <span>{{ $connectText }}</span>
-            <span class="transition-transform duration-200 group-hover:translate-x-1 inline-block">&rarr;</span>
-          </a>
-        </nav>
-      </div>
-    </div>
-    <button class="menu-toggle-btn inbetween-menu-toggle group focus:outline-none fixed left-0 top-1/2 -translate-y-1/2 z-50 flex items-center cursor-pointer select-none" type="button" data-menu-toggle aria-label="Mở trình đơn điều hướng" aria-expanded="false">
-      <span class="menu-toggle-track flex items-center">
-        <span class="menu-icon-wrap flex items-center justify-center shrink-0 w-6 h-6">
-          <svg class="menu-icon-svg w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_inbetween_menu)">
-              <path d="M4 13C4.55228 13 5 12.5523 5 12C5 11.4477 4.55228 11 4 11C3.44772 11 3 11.4477 3 12C3 12.5523 3.44772 13 4 13Z" fill="currentColor"/>
-              <path d="M20.06 11H7.94C7.42085 11 7 11.4209 7 11.94V12.06C7 12.5791 7.42085 13 7.94 13H20.06C20.5791 13 21 12.5791 21 12.06V11.94C21 11.4209 20.5791 11 20.06 11Z" fill="currentColor"/>
-              <path d="M20.06 16H3.94C3.42085 16 3 16.4209 3 16.94V17.06C3 17.5791 3.42085 18 3.94 18H20.06C20.5791 18 21 17.5791 21 17.06V16.94C21 16.4209 20.5791 16 20.06 16Z" fill="currentColor"/>
-              <path d="M20.06 6H3.94C3.42085 6 3 6.42085 3 6.94V7.06C3 7.57915 3.42085 8 3.94 8H20.06C20.5791 8 21 7.57915 21 7.06V6.94C21 6.42085 20.5791 6 20.06 6Z" fill="currentColor"/>
-            </g>
-            <defs>
-              <clipPath id="clip0_inbetween_menu">
-                <rect width="24" height="24" fill="white"/>
-              </clipPath>
-            </defs>
-          </svg>
-        </span>
-        <span class="menu-text text-[13px] sm:text-[14px] md:text-[15px] font-bold uppercase tracking-wider ml-2.5">Menu</span>
-      </span>
-    </button>
-  </header>
   @endonce
 
   <!-- Section 1 Content: Question & Floating Words -->

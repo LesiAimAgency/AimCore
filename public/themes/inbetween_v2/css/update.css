@@ -38,16 +38,23 @@
     padding-top: 60px !important;
 }
 
-/* Header container smooth hide/show transition */
+/* Header container smooth transition */
 .inbetween-header .inbetween-container-1440 {
-    transition: opacity .35s cubic-bezier(0.16, 1, 0.3, 1), visibility .35s cubic-bezier(0.16, 1, 0.3, 1), transform .35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    transition: opacity .35s cubic-bezier(0.16, 1, 0.3, 1), transform .35s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-.inbetween-header .inbetween-container-1440.invisible {
-    opacity: 0 !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-    transform: translateY(-8px) !important;
+/* Logo White vs Dark toggle based on header theme */
+.inbetween-header.theme-dark .inbetween-logo-white {
+    display: block !important;
+}
+.inbetween-header.theme-dark .inbetween-logo-dark {
+    display: none !important;
+}
+.inbetween-header.theme-light .inbetween-logo-white {
+    display: none !important;
+}
+.inbetween-header.theme-light .inbetween-logo-dark {
+    display: block !important;
 }
 
 .inbetween-header-lang .inbetween-lang-btn {
