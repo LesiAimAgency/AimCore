@@ -17,6 +17,8 @@
     $logoDark = !empty($settings['logo_dark']) ? (str_starts_with($settings['logo_dark'], 'http') || str_starts_with($settings['logo_dark'], '/') ? $settings['logo_dark'] : asset($settings['logo_dark'])) : asset('themes/inbetween_v2/images/Logo.svg');
     $connectText = $settings['connect_text'] ?? "LET'S CONNECT";
     $connectLink = $settings['connect_link'] ?? '#contact-modal';
+    $langEn = $settings['lang_en_label'] ?? 'EN';
+    $langZh = $settings['lang_zh_label'] ?? '汉语';
   @endphp
 
   <!-- Fixed Header across sections -->
