@@ -359,7 +359,7 @@
                                 <span class="text-sm nav-text">Menus</span>
                             </a>
 
-                            <a href="{{ isset($currentProject) ? route('project.admin.website-config.index', $currentProject->code) : route('cms.website-config.index') }}" class="flex items-center px-4 py-2 text-slate-400 hover:bg-[blue-600] hover:text-white rounded-lg transition-all duration-200 {{ request()->routeIs('project.admin.website-config.*') || request()->routeIs('cms.website-config.*') ? 'bg-[blue-600] text-white' : '' }}">
+                            <!-- <a href="{{ isset($currentProject) ? route('project.admin.website-config.index', $currentProject->code) : route('cms.website-config.index') }}" class="flex items-center px-4 py-2 text-slate-400 hover:bg-[blue-600] hover:text-white rounded-lg transition-all duration-200 {{ request()->routeIs('project.admin.website-config.*') || request()->routeIs('cms.website-config.*') ? 'bg-[blue-600] text-white' : '' }}">
                                 <svg class="h-4 w-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
                                 </svg>
@@ -370,42 +370,12 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
                                 </svg>
                                 <span class="text-sm nav-text">Theme Options</span>
-                            </a>
+                            </a> -->
                         </div>
                     </div>
                 </div>
 
-                <!-- Marketing -->
-                <div class="mb-4">
-                    <div class="dropdown-parent">
-                        <button class="nav-item flex items-center justify-between w-full px-4 py-3 mb-2 text-slate-300 hover:bg-[blue-600] hover:text-white rounded-lg transition-all duration-200">
-                            <div class="flex items-center">
-                                <svg class="h-5 w-5 nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
-                                </svg>
-                                <span class="font-medium nav-text ml-3">Marketing</span>
-                            </div>
-                            <svg class="h-4 w-4 nav-text dropdown-arrow transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="dropdown-menu ml-4 space-y-1 max-h-0 overflow-hidden transition-all duration-300">
-                            <a href="#" class="flex items-center px-4 py-2 text-slate-400 hover:bg-[blue-600] hover:text-white rounded-lg transition-all duration-200">
-                                <svg class="h-4 w-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                </svg>
-                                <span class="text-sm nav-text">Newsletter</span>
-                            </a>
-                            <a href="#" class="flex items-center px-4 py-2 text-slate-400 hover:bg-[blue-600] hover:text-white rounded-lg transition-all duration-200">
-                                <svg class="h-4 w-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586l-2.828-2.828A2 2 0 014 14.172V6a2 2 0 012-2h6a2 2 0 012 2v2"></path>
-                                </svg>
-                                <span class="text-sm nav-text">Feedback</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+             
 
                 <!-- Cài đặt -->
                 <a href="{{ isset($currentProject) && $currentProject ? route('project.admin.settings.index', $currentProject->code) : route('admin.settings.index') }}" class="nav-item flex items-center px-4 py-3 mb-2 text-slate-300 hover:bg-[blue-600] hover:text-white rounded-lg transition-all duration-200 {{ request()->routeIs('project.admin.settings.*') || request()->routeIs('admin.settings.*') ? 'bg-[blue-600] text-white shadow-lg' : '' }}">

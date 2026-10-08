@@ -9,7 +9,6 @@
 
     $widgetAreas = [
         'homepage-main'  => ['label' => 'Trang chủ', 'icon' => 'home'],
-        'inbetween_v2'   => ['label' => 'INBETWEEN V2', 'icon' => 'cube'],
         'sidebar'        => ['label' => 'Sidebar', 'icon' => 'view-list'],
         'footer'         => ['label' => 'Footer', 'icon' => 'template'],
         'blog-sidebar'   => ['label' => 'Blog Sidebar', 'icon' => 'document-text'],
@@ -30,119 +29,50 @@
 {{-- ================================================================ --}}
 {{-- CONFIG MODAL — Full-screen: Left = Form | Right = Live Preview   --}}
 {{-- ================================================================ --}}
-<div id="config-drawer" class="fixed inset-0 z-[100] hidden flex-col" style="background:rgba(15,23,42,0.7);">
-    <div class="absolute inset-4 bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+<div id="config-drawer" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6" style="background:rgba(15,23,42,0.75);">
+    <div class="bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden w-full max-w-4xl max-h-[92vh]">
 
         {{-- ── Top bar ──────────────────────────────────────────── --}}
-        <div class="flex items-center gap-3 px-5 py-3 bg-gray-900 text-white flex-shrink-0">
+        <div class="flex items-center gap-3 px-6 py-4 bg-gray-900 text-white flex-shrink-0">
             <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                 </svg>
             </div>
             <div class="flex-1 min-w-0">
-                <p class="font-bold text-sm leading-tight truncate" id="drawer-title">Cấu hình Widget</p>
-                <p class="text-xs text-gray-400 leading-tight truncate" id="drawer-subtitle"></p>
+                <p class="font-bold text-base leading-tight truncate" id="drawer-title">Cấu hình Widget</p>
+                <p class="text-xs text-gray-400 leading-tight truncate mt-0.5" id="drawer-subtitle"></p>
             </div>
-            {{-- Viewport buttons --}}
-            <div class="flex items-center gap-1 bg-gray-800 rounded-lg p-1 flex-shrink-0">
-                <button data-vp-width="375" class="modal-vp-btn text-gray-400 hover:text-white flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition" title="Mobile (375px)">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                    </svg>
-                    Mobile
-                </button>
-                <button data-vp-width="768" class="modal-vp-btn text-gray-400 hover:text-white flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition" title="Tablet (768px)">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                    </svg>
-                    Tablet
-                </button>
-                <button data-vp-width="1280" class="modal-vp-btn text-white bg-blue-600 flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition" title="Desktop (Chuẩn 1320px)">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                    </svg>
-                    Desktop
-                </button>
-                <button data-vp-width="100%" class="modal-vp-btn text-gray-400 hover:text-white flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition" title="Toàn màn hình (100%)">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
-                    </svg>
-                    100%
-                </button>
-            </div>
-            <button id="btn-close-drawer" class="ml-1 p-2 hover:bg-gray-700 rounded-lg transition flex-shrink-0" title="Đóng (ESC)">
+            <button id="btn-close-drawer" class="p-2 hover:bg-gray-700 rounded-lg transition flex-shrink-0" title="Đóng (ESC)">
                 <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
         </div>
 
-        {{-- ── Main: Form (left) + Preview (right) ─────────────── --}}
-        <div class="flex flex-1 overflow-hidden">
-
-            {{-- Left: Config Form --}}
-            <div class="w-[550px] flex-shrink-0 flex flex-col border-r border-gray-200 bg-gray-50">
-                <div class="flex-1 overflow-y-auto px-5 py-4" id="drawer-body">
-                    <div class="flex flex-col items-center justify-center h-40 text-gray-400">
-                        <svg class="w-5 h-5 animate-spin mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                        </svg>
-                        <span class="text-sm">Đang tải form...</span>
-                    </div>
-                </div>
-                {{-- Action bar --}}
-                <div class="flex-shrink-0 px-4 py-3 border-t border-gray-200 bg-white flex flex-col gap-2">
-                    <div class="flex items-center gap-2">
-                        <button id="btn-cancel-drawer"
-                                class="flex-1 py-2 px-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium text-sm rounded-lg transition">
-                            Huỷ
-                        </button>
-                        <button id="btn-save-config"
-                                class="flex-[2] flex items-center justify-center gap-2 py-2 px-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            Lưu cấu hình
-                        </button>
-                    </div>
-                </div>
+        {{-- ── Form body ────────────────────────────────────────── --}}
+        <div class="flex-1 overflow-y-auto px-6 py-5 bg-gray-50" id="drawer-body">
+            <div class="flex flex-col items-center justify-center h-40 text-gray-400">
+                <svg class="w-5 h-5 animate-spin mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                <span class="text-sm">Đang tải form...</span>
             </div>
+        </div>
 
-            {{-- Right: Live Preview --}}
-            <div class="flex-1 flex flex-col bg-[#f1f5f9] overflow-hidden relative">
-                
-                {{-- Toolbar inside preview --}}
-                <div class="absolute top-0 inset-x-0 z-10 flex items-center gap-3 px-4 py-2 bg-white/80 backdrop-blur border-b border-gray-200 shadow-sm">
-                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Live Preview</span>
-                    <span class="text-xs text-gray-500 bg-gray-200 px-2 py-0.5 rounded-md font-medium" id="modal-vp-size-label">
-                        Desktop (1280px)
-                    </span>
-                    <div class="flex-1"></div>
-                    <span class="text-xs text-gray-400">Preview có thể khác một chút so với thực tế</span>
-                </div>
-
-                {{-- Scrollable Container --}}
-                <div class="flex-1 overflow-auto p-6 pt-16 flex items-start justify-center">
-                    
-                    {{-- Device Wrapper --}}
-                    <div id="modal-preview-wrapper" class="relative transition-all duration-300 w-full" style="width: 100%; max-width: 1320px; min-height: 400px;">
-                        
-                        {{-- Loading Overlay --}}
-                        <div id="modal-preview-loading" class="absolute inset-0 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center z-20 rounded-xl shadow-xl hidden">
-                            <svg class="w-8 h-8 text-blue-500 animate-spin mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                            </svg>
-                            <span class="text-sm font-medium text-gray-600">Đang render preview...</span>
-                        </div>
-
-                        {{-- Frame & Content --}}
-                        <iframe id="modal-preview-content" class="bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-200 w-full" style="height: 800px;" scrolling="auto"></iframe>
-
-                    </div>
-                </div>
-
-            </div>
+        {{-- ── Action bar ───────────────────────────────────────── --}}
+        <div class="flex-shrink-0 px-6 py-3.5 border-t border-gray-200 bg-white flex items-center justify-end gap-3">
+            <button id="btn-cancel-drawer"
+                    class="py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium text-sm rounded-lg transition">
+                Huỷ
+            </button>
+            <button id="btn-save-config"
+                    class="flex items-center justify-center gap-2 py-2 px-5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow-sm transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Lưu cấu hình
+            </button>
         </div>
     </div>
 </div>
@@ -170,7 +100,7 @@
     <div class="flex items-start justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Widget Manager</h1>
-            <p class="text-sm text-gray-500 mt-1">Thêm, cấu hình và xem trước các block nội dung cho từng khu vực website.</p>
+            <p class="text-sm text-gray-500 mt-1">Thêm, sắp xếp và cấu hình các block nội dung cho từng khu vực website.</p>
         </div>
         <button id="btn-clear-cache" class="flex-shrink-0 px-3 py-2 text-xs text-gray-600 hover:bg-gray-100 rounded-lg border border-gray-200 transition flex items-center gap-1.5">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -224,22 +154,22 @@
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            Di chuột vào widget bên phải để xem trước giao diện
+            Click vào widget bên phải để thêm vào khu vực đang chọn
         </div>
     </div>
 </div>
 
-{{-- Main 3-Column Layout --}}
-<div class="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
+{{-- Main 2-Column Layout --}}
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-    {{-- COL 1: Widget Areas (5/12) --}}
-    <div class="xl:col-span-5 space-y-4">
+    {{-- COL 1: Widget Areas (7/12) --}}
+    <div class="lg:col-span-7 xl:col-span-7 space-y-4">
         @foreach($widgetAreas as $areaKey => $areaInfo)
             @php $areaWidgets = $existingWidgets[$areaKey] ?? collect([]); @endphp
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 {{-- Area Header --}}
-                <div class="flex items-center gap-3 px-4 py-3 bg-gray-50 border-b">
+                <div class="flex items-center gap-3 px-5 py-3.5 bg-gray-50 border-b">
                     <div class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
                         @if($areaInfo['icon'] === 'home')
                             <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -261,44 +191,45 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <h3 class="font-semibold text-sm text-gray-800">{{ $areaInfo['label'] }}</h3>
-                        <p class="text-xs text-gray-400">{{ $areaKey }}</p>
+                        <p class="text-xs text-gray-400 font-mono">{{ $areaKey }}</p>
                     </div>
-                    <span class="bg-blue-50 text-blue-600 text-xs font-medium px-2.5 py-0.5 rounded-full" id="badge-{{ $areaKey }}">
+                    <span class="bg-blue-50 text-blue-600 text-xs font-semibold px-2.5 py-1 rounded-full border border-blue-100" id="badge-{{ $areaKey }}">
                         {{ $areaWidgets->count() }} widget
                     </span>
                 </div>
 
                 {{-- Widget List --}}
-                <div class="widget-area-list divide-y divide-gray-50" id="area-list-{{ $areaKey }}" data-area="{{ $areaKey }}">
+                <div class="widget-area-list divide-y divide-gray-100" id="area-list-{{ $areaKey }}" data-area="{{ $areaKey }}">
                     @forelse($areaWidgets as $w)
-                        <div class="flex items-center gap-2.5 px-4 py-3 hover:bg-gray-50/80 transition group widget-row select-none"
+                        <div class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50/80 transition group widget-row select-none"
                              data-id="{{ $w['id'] ?? '' }}"
                              data-type="{{ $w['type'] }}"
                              data-area="{{ $areaKey }}"
                              data-name="{{ $w['name'] }}">
-                            <div class="drag-handle cursor-grab active:cursor-grabbing text-gray-300 hover:text-blue-600 transition-colors p-1 -ml-1 flex-shrink-0" title="Kéo thả lên/xuống để đổi vị trí">
+                            <div class="drag-handle cursor-grab active:cursor-grabbing text-gray-300 hover:text-blue-600 transition-colors p-1.5 -ml-1 flex-shrink-0" title="Kéo thả lên/xuống để đổi vị trí">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
                                 </svg>
                             </div>
-                            <div class="w-1 h-8 bg-blue-400 rounded-full flex-shrink-0"></div>
+                            <div class="w-1.5 h-8 bg-blue-500 rounded-full flex-shrink-0"></div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-800 truncate">{{ $w['name'] }}</p>
-                                <p class="text-xs text-gray-400 truncate">{{ $w['type'] }}</p>
+                                <p class="text-sm font-semibold text-gray-800 truncate">{{ $w['name'] }}</p>
+                                <p class="text-xs text-gray-400 font-mono truncate">{{ $w['type'] }}</p>
                             </div>
-                            <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
-                                <button class="btn-open-config p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg transition"
+                            <div class="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition">
+                                <button class="btn-open-config inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition"
                                         data-id="{{ $w['id'] ?? '' }}"
                                         data-type="{{ $w['type'] }}"
                                         data-name="{{ $w['name'] }}"
                                         data-settings="{{ htmlspecialchars(json_encode($w['settings'] ?? []), ENT_QUOTES) }}"
                                         data-variant="{{ $w['variant'] ?? 'default' }}"
                                         title="Cấu hình">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                     </svg>
+                                    <span>Cấu hình</span>
                                 </button>
-                                <button class="btn-remove-widget p-1.5 text-red-400 hover:bg-red-50 rounded-lg transition"
+                                <button class="btn-remove-widget p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
                                         data-id="{{ $w['id'] ?? '' }}"
                                         data-area="{{ $areaKey }}"
                                         title="Xoá">
@@ -321,51 +252,55 @@
         @endforeach
     </div>
 
-    {{-- COL 2: Available Widgets (4/12) --}}
-    <div class="xl:col-span-4 sticky top-4">
+    {{-- COL 2: Available Widgets (5/12) --}}
+    <div class="lg:col-span-5 xl:col-span-5 sticky top-4">
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             {{-- Header --}}
-            <div class="px-4 py-3 bg-gray-50 border-b flex items-center gap-2">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                </svg>
-                <h3 class="font-semibold text-sm text-gray-800 flex-1">Widget có sẵn</h3>
-                <span class="bg-blue-100 text-blue-700 text-xs font-medium px-2 py-0.5 rounded-full">
+            <div class="px-4 py-3 bg-gray-50 border-b flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                    <h3 class="font-semibold text-sm text-gray-800">Widget có sẵn</h3>
+                </div>
+                <span class="bg-blue-100 text-blue-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">
                     {{ array_sum(array_map('count', $availableWidgets)) }}
                 </span>
             </div>
 
-            {{-- Search --}}
-            <div class="px-3 py-2.5 border-b">
+            {{-- Target Area & Search --}}
+            <div class="p-3 border-b space-y-2.5 bg-gray-50/40">
+                <div>
+                    <label class="flex items-center gap-1.5 text-xs font-medium text-gray-600 mb-1">
+                        <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Thêm vào khu vực:
+                    </label>
+                    <select id="targetArea" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 bg-white outline-none font-medium text-gray-700">
+                        @foreach($widgetAreas as $areaKey => $areaInfo)
+                            <option value="{{ $areaKey }}">{{ $areaInfo['label'] }} ({{ $areaKey }})</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="relative">
                     <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
                     </svg>
                     <input type="text" id="widgetSearch"
-                           placeholder="Tìm widget..."
-                           class="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                           placeholder="Tìm kiếm widget..."
+                           class="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white">
                 </div>
             </div>
 
-            {{-- Area Selector --}}
-            <div class="px-3 py-2.5 border-b bg-blue-50/40">
-                <label class="flex items-center gap-1.5 text-xs font-medium text-gray-600 mb-1.5">
-                    <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                    Thêm vào khu vực:
-                </label>
-                <select id="targetArea" class="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 bg-white outline-none">
-                    @foreach($widgetAreas as $areaKey => $areaInfo)
-                        <option value="{{ $areaKey }}">{{ $areaInfo['label'] }}</option>
-                    @endforeach
-                </select>
-            </div>
-
             {{-- Widget Categories List --}}
-            <div class="overflow-y-auto max-h-[calc(100vh-380px)]" id="widgetTemplatesList">
+            <div class="overflow-y-auto max-h-[calc(100vh-270px)] divide-y divide-gray-50" id="widgetTemplatesList">
                 @forelse($availableWidgets as $category => $categoryWidgets)
+                    @php
+                        $isSingleCat = count($availableWidgets) === 1;
+                        $isOpen = $isSingleCat || $loop->first;
+                    @endphp
                     <div class="widget-category" data-category="{{ $category }}">
                         {{-- Category toggle button --}}
                         <button type="button"
@@ -373,6 +308,7 @@
                                 class="btn-toggle-category w-full flex items-center justify-between px-4 py-2.5 text-left hover:bg-gray-50 transition border-b border-gray-100">
                             <span class="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                 <svg class="w-3.5 h-3.5 transition-transform duration-200 category-arrow" id="arrow-{{ $category }}"
+                                     style="{{ $isOpen ? 'transform: rotate(90deg);' : '' }}"
                                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                 </svg>
@@ -382,12 +318,13 @@
                         </button>
 
                         {{-- Category items --}}
-                        <div class="category-content hidden divide-y divide-gray-50" id="category-{{ $category }}">
+                        <div class="category-content {{ $isOpen ? '' : 'hidden' }} divide-y divide-gray-50" id="category-{{ $category }}">
                             @foreach($categoryWidgets as $widget)
-                                <div class="widget-template flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-blue-50 transition group border-l-2 border-transparent hover:border-blue-400"
+                                <div class="widget-template flex items-center justify-between gap-3 px-4 py-2.5 cursor-pointer hover:bg-blue-50/70 transition group border-l-2 border-transparent hover:border-blue-400"
                                      data-type="{{ $widget['type'] }}"
                                      data-name="{{ $widget['metadata']['name'] ?? ($widget['name'] ?? $widget['type']) }}"
-                                     data-cat="{{ $category }}">
+                                     data-cat="{{ $category }}"
+                                     title="Click để thêm widget này vào khu vực">
                                     <div class="w-7 h-7 bg-gray-100 rounded-md flex items-center justify-center flex-shrink-0 group-hover:bg-blue-100 transition">
                                         <svg class="w-3.5 h-3.5 text-gray-500 group-hover:text-blue-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
@@ -399,9 +336,12 @@
                                         </p>
                                         <p class="text-xs text-gray-400 truncate">{{ $widget['type'] }}</p>
                                     </div>
-                                    <svg class="w-4 h-4 text-gray-300 group-hover:text-blue-500 flex-shrink-0 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                                    </svg>
+                                    <span class="inline-flex items-center gap-1 text-xs text-blue-600 bg-blue-50 group-hover:bg-blue-600 group-hover:text-white px-2 py-1 rounded transition flex-shrink-0">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                        </svg>
+                                        <span>Thêm</span>
+                                    </span>
                                 </div>
                             @endforeach
                         </div>
@@ -417,80 +357,6 @@
             </div>
         </div>
     </div>
-    {{-- COL 3: Widget Preview (3/12) --}}
-    <div class="xl:col-span-3 sticky top-4">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            {{-- Preview Header --}}
-            <div class="px-4 py-3 bg-gray-50 border-b flex items-center gap-2">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                </svg>
-                <h3 class="font-semibold text-sm text-gray-800 flex-1">Xem trước</h3>
-                <span class="text-xs text-gray-400" id="preview-widget-type"></span>
-            </div>
-
-            {{-- Preview Body --}}
-            <div id="preview-body" class="min-h-[200px] overflow-auto">
-                {{-- Empty state --}}
-                <div id="preview-empty" class="flex flex-col items-center justify-center py-12 px-4 text-center">
-                    <div class="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center mb-3">
-                        <svg class="w-7 h-7 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                    </div>
-                    <p class="text-sm font-medium text-gray-500">Xem trước giao diện</p>
-                    <p class="text-xs text-gray-400 mt-1">Di chuột hoặc click vào một widget ở danh sách bên trái để xem trước</p>
-                </div>
-
-                {{-- Loading state (hidden by default) --}}
-                <div id="preview-loading" class="hidden flex flex-col items-center justify-center py-12 px-4">
-                    <svg class="w-6 h-6 text-blue-400 animate-spin mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                    </svg>
-                    <p class="text-xs text-gray-400">Đang tải xem trước...</p>
-                </div>
-
-                {{-- Preview content (hidden by default) --}}
-                <div id="preview-content" class="hidden">
-                    {{-- Widget name badge --}}
-                    <div class="px-3 py-2 bg-blue-50 border-b border-blue-100 flex items-center gap-2">
-                        <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>
-                        </svg>
-                        <span class="text-xs font-medium text-blue-700" id="preview-widget-name"></span>
-                    </div>
-                    {{-- Scaled iframe preview --}}
-                    <div class="relative bg-gray-50 overflow-hidden" style="height: 420px;">
-                        <div id="preview-scale-wrapper" style="width: 1280px; transform-origin: top left;">
-                            <div id="preview-html" class="w-full"></div>
-                        </div>
-                    </div>
-                    {{-- Add button --}}
-                    <div class="px-3 py-2.5 border-t bg-gray-50">
-                        <button id="btn-add-previewed-widget"
-                                class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                            </svg>
-                            Thêm widget này vào khu vực
-                        </button>
-                    </div>
-                </div>
-
-                {{-- Error state (hidden by default) --}}
-                <div id="preview-error" class="hidden flex flex-col items-center justify-center py-12 px-4 text-center">
-                    <svg class="w-8 h-8 text-red-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                    </svg>
-                    <p class="text-sm text-gray-500">Widget này chưa có preview</p>
-                    <p class="text-xs text-gray-400 mt-1" id="preview-error-msg"></p>
-                </div>
-            </div>
-        </div>
-    {{-- Global Media Picker Modal --}}
-    <x-media-picker-modal />
 </div>
 @endsection
 
@@ -529,9 +395,6 @@
     let drawerWidgetId   = null;
     let drawerWidgetType = null;
     let drawerWidgetArea = null;
-    let previewedType    = null;
-    let previewedName    = null;
-    let previewTimer     = null;
     let modalPreviewTimer = null;
 
     // ── TOAST ──────────────────────────────────────────────────────
@@ -588,40 +451,43 @@
 
     function buildWidgetRow(area, widget) {
         var row = document.createElement('div');
-        row.className = 'flex items-center gap-2.5 px-4 py-3 hover:bg-gray-50/80 transition group widget-row select-none';
+        row.className = 'flex items-center gap-3 px-4 py-3 hover:bg-gray-50/80 transition group widget-row select-none';
         row.dataset.id   = widget.id || '';
         row.dataset.type = widget.type;
         row.dataset.area = area;
         row.dataset.name = widget.name;
         row.innerHTML =
-            '<div class="drag-handle cursor-grab active:cursor-grabbing text-gray-300 hover:text-blue-600 transition-colors p-1 -ml-1 flex-shrink-0" title="Kéo thả lên/xuống để đổi vị trí">' +
+            '<div class="drag-handle cursor-grab active:cursor-grabbing text-gray-300 hover:text-blue-600 transition-colors p-1.5 -ml-1 flex-shrink-0" title="Kéo thả lên/xuống để đổi vị trí">' +
                 '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
                     '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>' +
                 '</svg>' +
             '</div>' +
-            '<div class="w-1 h-8 bg-blue-400 rounded-full flex-shrink-0"></div>' +
+            '<div class="w-1.5 h-8 bg-blue-500 rounded-full flex-shrink-0"></div>' +
             '<div class="flex-1 min-w-0">' +
-                '<p class="text-sm font-medium text-gray-800 truncate">' + escAttr(widget.name) + '</p>' +
-                '<p class="text-xs text-gray-400 truncate">' + escAttr(widget.type) + '</p>' +
+                '<p class="text-sm font-semibold text-gray-800 truncate">' + escAttr(widget.name) + '</p>' +
+                '<p class="text-xs text-gray-400 font-mono truncate">' + escAttr(widget.type) + '</p>' +
             '</div>' +
-            '<div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">' +
-                '<button class="btn-open-config p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg transition"' +
+            '<div class="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition">' +
+                '<button class="btn-open-config inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition"' +
                     ' data-id="' + escAttr(widget.id || '') + '"' +
                     ' data-type="' + escAttr(widget.type) + '"' +
                     ' data-name="' + escAttr(widget.name) + '"' +
                     ' data-settings="' + escAttr(JSON.stringify(widget.settings || {})) + '"' +
                     ' data-variant="' + escAttr(widget.variant || 'default') + '"' +
                     ' title="Cấu hình">' +
-                    '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
-                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>' +
-                    '</svg></button>' +
-                '<button class="btn-remove-widget p-1.5 text-red-400 hover:bg-red-50 rounded-lg transition"' +
+                    '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>' +
+                    '</svg>' +
+                    '<span>Cấu hình</span>' +
+                '</button>' +
+                '<button class="btn-remove-widget p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"' +
                     ' data-id="' + escAttr(widget.id || '') + '"' +
                     ' data-area="' + escAttr(area) + '"' +
                     ' title="Xoá">' +
                     '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
-                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>' +
-                    '</svg></button>' +
+                        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>' +
+                    '</svg>' +
+                '</button>' +
             '</div>';
         return row;
     }
@@ -777,18 +643,7 @@
     }
     
     function initFormInputListeners() {
-        var drawerBody = document.getElementById('drawer-body');
-        if (!drawerBody || drawerBody._hasInputListeners) return;
-        drawerBody._hasInputListeners = true;
-
-        ['input', 'change', 'keyup'].forEach(function(evtName) {
-            drawerBody.addEventListener(evtName, function(e) {
-                clearTimeout(window.previewTimeout);
-                window.previewTimeout = setTimeout(function() {
-                    loadModalPreview();
-                }, 200);
-            });
-        });
+        // Live preview disabled
     }
 
     // ── OPEN CONFIG DRAWER ─────────────────────────────────────────
@@ -826,21 +681,6 @@
             '<svg class="w-5 h-5 animate-spin mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
             '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>' +
             '<span class="text-sm">Đang tải form...</span></div>';
-
-        // Reset modal preview
-        var previewContent = document.getElementById('modal-preview-content');
-        if (previewContent && previewContent.contentWindow) {
-            var doc = previewContent.contentWindow.document;
-            var styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style')).map(function(el) { return el.outerHTML; }).join('');
-            doc.open();
-            doc.write('<html><head>' + styles + '<style>body{margin:0;padding:0;background:transparent;}</style></head><body>' +
-                '<div class="flex flex-col items-center justify-center py-20 px-4 text-center text-gray-400">' +
-                '<svg class="w-12 h-12 mb-3 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
-                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>' +
-                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>' +
-                '</svg><p class="text-sm font-medium text-gray-500">Đang tải preview...</p></div></body></html>');
-            doc.close();
-        }
 
         var drawer = document.getElementById('config-drawer');
         drawer.classList.remove('hidden');
@@ -971,235 +811,8 @@
         return settings;
     }
 
-    var iframeInitialized = false;
-
-    function adjustIframeHeight(iframe) {
-        if (!iframe || !iframe.contentWindow) return;
-        var doc = iframe.contentWindow.document;
-        if (!doc || !doc.body) return;
-
-        // Get actual content height
-        var height = Math.max(
-            doc.body.scrollHeight,
-            doc.body.offsetHeight,
-            doc.documentElement.scrollHeight,
-            doc.documentElement.offsetHeight,
-            250
-        );
-
-        // Add some padding
-        iframe.style.height = (height + 20) + 'px';
-    }
-
     function loadModalPreview() {
-        if (!drawerWidgetType) return;
-        var settings = getFormSettings();
-        var loadingOverlay = document.getElementById('modal-preview-loading');
-        if (loadingOverlay) loadingOverlay.classList.remove('hidden');
-
-        fetch(BASE_URL + '/widgets/preview', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' },
-            body: JSON.stringify({ _token: CSRF, type: drawerWidgetType, settings: settings, variant: 'default' })
-        })
-        .then(safeJson)
-        .then(function (data) {
-            var iframe = document.getElementById('modal-preview-content');
-            if (!iframe || !iframe.contentWindow) return;
-            var doc = iframe.contentWindow.document;
-
-            if (! data.success || ! data.preview) {
-                doc.open();
-                doc.write('<div style="padding: 1.5rem; color: #ef4444; font-family: sans-serif;">Lỗi preview: ' + (data.message || 'Lỗi không xác định') + '</div>');
-                doc.close();
-                iframeInitialized = false;
-            } else {
-                // Always re-write the iframe with full HTML so all scripts/styles load correctly
-                var isVtm = (drawerWidgetType && drawerWidgetType.startsWith('vtm_')) || 
-                            ('{{ $projectCode }}'.indexOf('viettinmart') !== -1 || '{{ $projectCode }}'.indexOf('vtm') !== -1);
-                var isWk = (drawerWidgetType && (drawerWidgetType.startsWith('wk_') || ['product_section', 'hero_slider', 'deal_flash', 'posts_latest', 'footer_column'].indexOf(drawerWidgetType) !== -1)) ||
-                           ('{{ $projectCode }}'.indexOf('wkcomputer') !== -1 || '{{ $projectCode }}'.indexOf('wk') !== -1);
-
-                var themeStyles = '';
-                var themeScripts = '';
-                var tailwindScript = '';
-
-                if (isWk) {
-                    themeStyles = 
-                        '<link rel="preconnect" href="https://fonts.googleapis.com">' +
-                        '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
-                        '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700;900&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">' +
-                        '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">' +
-                        '<link rel="stylesheet" href="/themes/wkcomputerdemo/css/frontend.css">' +
-                        '<link rel="stylesheet" href="/themes/wkcomputerdemo/css/components.css">' +
-                        '<style>' +
-                        'html, body { margin: 0 !important; padding: 12px !important; background: #f8fafc !important; font-family: "Inter", sans-serif !important; overflow-x: hidden !important; }' +
-                        'img { max-width: 100% !important; height: auto !important; }' +
-                        '.wk-card-img { width: 100% !important; height: 180px !important; object-fit: contain !important; display: block !important; margin: 0 auto !important; }' +
-                        '.wk-card-img-wrap { width: 100% !important; height: 180px !important; display: flex !important; align-items: center !important; justify-content: center !important; overflow: hidden !important; position: relative !important; background: #fff !important; }' +
-                        '.wk-product-card { background: #fff !important; border: 1px solid #e2e8f0 !important; border-radius: 10px !important; padding: 10px !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important; position: relative !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; }' +
-                        '</style>';
-
-                    themeScripts = '<script src="/themes/wkcomputerdemo/js/frontend.js"><\/script>';
-                    tailwindScript = '<script src="https://cdn.tailwindcss.com"><\/script>';
-                } else if (isVtm) {
-                    themeStyles = 
-                        '<link rel="preconnect" href="https://fonts.googleapis.com">' +
-                        '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
-                        '<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">' +
-                        '<link rel="stylesheet" href="/theme/css/plugins.css">' +
-                        '<link rel="stylesheet" href="/theme/css/style.css">' +
-                        '<link rel="stylesheet" href="/theme/css/update.css">' +
-                        '<link rel="stylesheet" href="/theme/css/category-menu.css">' +
-                        '<link rel="stylesheet" href="/theme/css/cart-dropdown.css">' +
-                        '<link rel="stylesheet" href="/theme/css/alert-fix.css">' +
-                        '<style>' +
-                        ':root {' +
-                        '    --color-primary: #629D23;' +
-                        '    --color-secondary: #1F1F25;' +
-                        '    --color-body: #6E777D;' +
-                        '    --color-heading-1: #2C3C28;' +
-                        '    --site-bg: #ffffff;' +
-                        '    --color-white: #fff;' +
-                        '    --color-primary-hover: color-mix(in srgb, var(--color-primary), black 10%);' +
-                        '    --color-primary-light: color-mix(in srgb, var(--color-primary), white 85%);' +
-                        '    --color-primary-alpha-10: color-mix(in srgb, var(--color-primary), transparent 90%);' +
-                        '    --color-primary-alpha-20: color-mix(in srgb, var(--color-primary), transparent 80%);' +
-                        '    --color-secondary-hover: color-mix(in srgb, var(--color-secondary), black 10%);' +
-                        '    --font-primary: "Barlow", sans-serif;' +
-                        '    --font-secondary: "Quicksand", sans-serif;' +
-                        '}' +
-                        'html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; font-family: var(--font-primary) !important; overflow-x: hidden !important; }' +
-                        'h1, h2, h3, h4, h5, h6, .font-heading { font-family: var(--font-primary) !important; }' +
-                        '[x-cloak] { display: none !important; }' +
-                        '.swiper { width: 100% !important; height: auto !important; }' +
-                        '.swiper-slide { height: auto !important; }' +
-                        '.single-shopping-card-one {' +
-                        '    display: flex !important; flex-direction: column !important; height: 100% !important; min-height: 420px !important;' +
-                        '    background: #fff; border: 1px solid #f1f5f9; border-radius: 12px; overflow: hidden;' +
-                        '    transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative;' +
-                        '}' +
-                        '.single-shopping-card-one:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }' +
-                        '.single-shopping-card-one .image-and-action-area-wrapper {' +
-                        '    position: relative; width: 100% !important; height: 220px !important; background-color: #f8fafc; overflow: hidden; display: block !important;' +
-                        '}' +
-                        '.single-shopping-card-one .image-and-action-area-wrapper .thumbnail-preview { display: block !important; width: 100% !important; height: 100% !important; position: relative; }' +
-                        '.single-shopping-card-one .image-and-action-area-wrapper .thumbnail-preview img { width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important; }' +
-                        '.single-shopping-card-one .image-and-action-area-wrapper .badge { position: absolute !important; top: 10px !important; left: 10px !important; z-index: 5 !important; margin: 0 !important; pointer-events: none; }' +
-                        '.single-shopping-card-one .body-content { padding: 16px !important; flex-grow: 1 !important; display: flex !important; flex-direction: column !important; }' +
-                        '.single-shopping-card-one .body-content .title { font-size: 15px !important; font-weight: 600 !important; line-height: 1.4 !important; height: 42px !important; margin-bottom: 8px !important; overflow: hidden; display: -webkit-box !important; -webkit-line-clamp: 2; -webkit-box-orient: vertical; color: #1e293b !important; }' +
-                        '.single-shopping-card-one .body-content .availability { font-size: 12px !important; color: #94a3b8 !important; margin-bottom: 10px !important; display: block !important; }' +
-                        '.single-shopping-card-one .price-area { margin-top: auto !important; display: flex !important; align-items: baseline !important; gap: 8px !important; margin-bottom: 15px !important; }' +
-                        '.single-shopping-card-one .price-area .current { font-size: 18px !important; font-weight: 800 !important; color: var(--color-primary) !important; }' +
-                        '.single-shopping-card-one .price-area .previous { font-size: 13px !important; text-decoration: line-through !important; color: #cbd5e1 !important; }' +
-                        '.single-shopping-card-one .cart-counter-action { margin-top: auto !important; width: 100% !important; }' +
-                        '.single-shopping-card-one .cart-counter-action .rts-btn { width: 100% !important; justify-content: center !important; }' +
-                        '</style>';
-
-                    themeScripts = 
-                        '<script src="/theme/js/plugins.js"><\/script>' +
-                        '<script src="/theme/js/main.js"><\/script>' +
-                        '<script src="/theme/js/update.js"><\/script>' +
-                        '<script>' +
-                        '  setTimeout(function() {' +
-                        '    try {' +
-                        '      if (window.Swiper) {' +
-                        '        document.querySelectorAll(".swiper, .swiper-container, .swiper-data").forEach(function(swiperEl) {' +
-                        '          if (!swiperEl.swiper) {' +
-                        '            var optionsData = swiperEl.dataset.swiper ? JSON.parse(swiperEl.dataset.swiper) : {};' +
-                        '            new Swiper(swiperEl, Object.assign({ observer: true, observeParents: true }, optionsData));' +
-                        '          } else {' +
-                        '            swiperEl.swiper.update();' +
-                        '          }' +
-                        '        });' +
-                        '      }' +
-                        '    } catch(err) { console.error(err); }' +
-                        '  }, 200);' +
-                        '<\/script>';
-                } else {
-                    themeStyles = '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />' +
-                        '<link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet">' +
-                        '<link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">' +
-                        '<link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:300,300i,400,400i,500,500i&display=swap" rel="stylesheet">' +
-                        '<link href="/themes/inbetween/style.css" rel="stylesheet" type="text/css" onerror="this.remove()" />';
-
-                    themeScripts = '<script src="https://code.jquery.com/jquery-3.7.1.min.js"><\/script>' +
-                        '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"><\/script>' +
-                        '<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"><\/script>' +
-                        '<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"><\/script>' +
-                        '<script src="/themes/inbetween/script.js" onerror="this.remove()"><\/script>' +
-                        '<script>' +
-                        '  setTimeout(function() {' +
-                        '    try {' +
-                        '      if (window.jQuery && window.jQuery.fn.flickity) {' +
-                        '        window.jQuery("[data-flickity]").each(function() {' +
-                        '          try { window.jQuery(this).flickity("destroy"); } catch(err){}' +
-                        '          window.jQuery(this).flickity();' +
-                        '        });' +
-                        '      }' +
-                        '      if (window.Swiper) {' +
-                        '        document.querySelectorAll(".swiper, .swiper-container").forEach(function(el) {' +
-                        '          new Swiper(el, { loop: true, autoplay: { delay: 4000 } });' +
-                        '        });' +
-                        '      }' +
-                        '    } catch(e) {}' +
-                        '  }, 300);' +
-                        '<\/script>';
-
-                    tailwindScript = '<script src="https://cdn.tailwindcss.com"><\/script>';
-                }
-                
-                var fullHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">'
-                    + themeStyles
-                    + tailwindScript
-                    + '</head><body>'
-                    + data.preview
-                    + themeScripts
-                    + '</body></html>';
-                
-                // Write new content to iframe document directly
-                try {
-                    doc.open();
-                    doc.write(fullHtml);
-                    doc.close();
-                } catch(e) {
-                    iframe.srcdoc = fullHtml;
-                }
-                iframeInitialized = true;
-                
-                // Adjust height immediately and after assets load
-                adjustIframeHeight(iframe);
-                setTimeout(function() { adjustIframeHeight(iframe); }, 150);
-                setTimeout(function() { adjustIframeHeight(iframe); }, 500);
-                setTimeout(function() { adjustIframeHeight(iframe); }, 1200);
-
-                try {
-                    var body = doc.body;
-                    if (body && window.MutationObserver) {
-                        var ro = new MutationObserver(function() { adjustIframeHeight(iframe); });
-                        ro.observe(body, { childList: true, subtree: true, attributes: true });
-                    }
-                } catch(e) {}
-            }
-        })
-        .catch(function (err) {
-            console.error('Preview fetch error:', err);
-            var iframe = document.getElementById('modal-preview-content');
-            if (iframe && iframe.contentWindow) {
-                var doc = iframe.contentWindow.document;
-                if (!iframeInitialized) {
-                    doc.open();
-                    doc.write('<div style="padding: 1.5rem; color: #ef4444; font-family: sans-serif;">Lỗi kết nối khi tải preview: ' + err.message + '</div>');
-                    doc.close();
-                } else {
-                    var wrapper = doc.getElementById('preview-inner-wrapper');
-                    if (wrapper) wrapper.innerHTML = '<div style="padding: 1.5rem; color: #ef4444; font-family: sans-serif;">Lỗi kết nối khi tải preview: ' + err.message + '</div>';
-                }
-            }
-        })
-        .finally(function() {
-            if (loadingOverlay) loadingOverlay.classList.add('hidden');
-        });
+        // Live preview disabled per user request
     }
 
     // ── SAVE CONFIG ────────────────────────────────────────────────
@@ -1303,57 +916,6 @@
         });
     }
 
-    // ── PREVIEW ────────────────────────────────────────────────────
-    function showPreviewState(state) {
-        var states = ['preview-empty', 'preview-loading', 'preview-content', 'preview-error'];
-        states.forEach(function (id) {
-            var el = document.getElementById(id);
-            if (el) { el.classList.toggle('hidden', id !== state); }
-        });
-    }
-
-    function rescalePreview() {
-        var wrapper   = document.getElementById('preview-scale-wrapper');
-        var container = wrapper ? wrapper.parentElement : null;
-        if (!wrapper || !container) { return; }
-        var scale = container.offsetWidth / 1280;
-        wrapper.style.transform = 'scale(' + scale + ')';
-        wrapper.style.height    = Math.ceil(wrapper.scrollHeight) + 'px';
-        container.style.height  = Math.ceil(wrapper.scrollHeight * scale) + 'px';
-    }
-
-    function loadPreview(type, name) {
-        if (previewedType === type) { return; }
-        previewedType = type;
-        previewedName = name;
-
-        document.getElementById('preview-widget-type').textContent = type;
-        showPreviewState('preview-loading');
-
-        fetch(BASE_URL + '/widgets/preview', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' },
-            body: JSON.stringify({ _token: CSRF, type: type, settings: [], variant: 'default' })
-        })
-        .then(safeJson)
-        .then(function (data) {
-            if (! data.success || ! data.preview) {
-                document.getElementById('preview-error-msg').textContent = data.message || '';
-                showPreviewState('preview-error');
-                return;
-            }
-            document.getElementById('preview-widget-name').textContent = name;
-            document.getElementById('preview-html').innerHTML = data.preview;
-            showPreviewState('preview-content');
-            // Scale after content renders
-            setTimeout(rescalePreview, 50);
-        })
-        .catch(function () {
-            document.getElementById('preview-error-msg').textContent = 'Không thể kết nối server';
-            showPreviewState('preview-error');
-        });
-    }
-
     // ── EVENT DELEGATION ───────────────────────────────────────────
     document.addEventListener('click', function (e) {
         // Open config
@@ -1368,9 +930,12 @@
         var catBtn = e.target.closest('.btn-toggle-category');
         if (catBtn) { toggleCategory(catBtn.dataset.cat); return; }
 
-        // Widget template click → add + load preview
+        // Widget template click → add widget to selected area
         var tpl = e.target.closest('.widget-template');
-        if (tpl) { addWidget(tpl.dataset.type, tpl.dataset.name); loadPreview(tpl.dataset.type, tpl.dataset.name); return; }
+        if (tpl) {
+            addWidget(tpl.dataset.type, tpl.dataset.name);
+            return;
+        }
 
         // Drawer close
         if (e.target.id === 'drawer-backdrop' || e.target.closest('#btn-close-drawer') || e.target.closest('#btn-cancel-drawer')) {
@@ -1378,26 +943,6 @@
             return;
         }
     });
-
-    // Hover on widget template → preview (debounced 300ms)
-    document.addEventListener('mouseover', function (e) {
-        var tpl = e.target.closest('.widget-template');
-        if (!tpl) { return; }
-        clearTimeout(previewTimer);
-        var type = tpl.dataset.type;
-        var name = tpl.dataset.name;
-        previewTimer = setTimeout(function () { loadPreview(type, name); }, 300);
-    });
-
-    // Add previewed widget button
-    document.getElementById('btn-add-previewed-widget').addEventListener('click', function () {
-        if (previewedType && previewedName) {
-            addWidget(previewedType, previewedName);
-        }
-    });
-
-    // Rescale on window resize
-    window.addEventListener('resize', rescalePreview);
 
     // Search input
     document.getElementById('widgetSearch').addEventListener('input', function () {
@@ -1411,60 +956,6 @@
     // Clear cache button
     var btnClearCache = document.getElementById('btn-clear-cache');
     if (btnClearCache) btnClearCache.addEventListener('click', clearCache);
-
-    // Auto-refresh modal preview on input change
-    document.getElementById('drawer-body').addEventListener('input', function (e) {
-        if (e.target.matches('input, textarea, select')) {
-            clearTimeout(modalPreviewTimer);
-            modalPreviewTimer = setTimeout(loadModalPreview, 400);
-        }
-    });
-    document.getElementById('drawer-body').addEventListener('change', function (e) {
-        if (e.target.matches('input[type="checkbox"], input[type="radio"], select')) {
-            clearTimeout(modalPreviewTimer);
-            modalPreviewTimer = setTimeout(loadModalPreview, 100);
-        }
-    });
-
-    // Viewport switcher
-    document.querySelectorAll('.modal-vp-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            // Update active state
-            document.querySelectorAll('.modal-vp-btn').forEach(function(b) {
-                b.classList.remove('bg-blue-600', 'text-white');
-                b.classList.add('text-gray-400');
-            });
-            this.classList.remove('text-gray-400');
-            this.classList.add('bg-blue-600', 'text-white');
-            
-            // Set wrapper width
-            var w = this.dataset.vpWidth;
-            var wrapper = document.getElementById('modal-preview-wrapper');
-            var label = document.getElementById('modal-vp-size-label');
-            if (wrapper) {
-                if (w === '100%') {
-                    wrapper.style.width = '100%';
-                    wrapper.style.maxWidth = '100%';
-                } else if (w === '1280') {
-                    wrapper.style.width = '100%';
-                    wrapper.style.maxWidth = '1320px';
-                } else {
-                    wrapper.style.width = w + 'px';
-                    wrapper.style.maxWidth = '100%';
-                }
-            }
-            if (label) {
-                if (w === '375') label.textContent = 'Mobile (375px)';
-                else if (w === '768') label.textContent = 'Tablet (768px)';
-                else if (w === '100%') label.textContent = 'Toàn màn hình (100%)';
-                else label.textContent = 'Desktop (Chuẩn 1320px)';
-            }
-            var iframe = document.getElementById('modal-preview-content');
-            if (iframe) {
-                setTimeout(function() { adjustIframeHeight(iframe); }, 100);
-            }
-        });
-    });
 
     // ESC key
     document.addEventListener('keydown', function (e) {

@@ -28,7 +28,6 @@ use App\Widgets\InbetweenV2\InbetweenV2BusinessWidget;
 use App\Widgets\InbetweenV2\InbetweenV2FounderWidget;
 use App\Widgets\InbetweenV2\InbetweenV2HeroWidget;
 use App\Widgets\InbetweenV2\InbetweenV2OurClientsWidget;
-use App\Widgets\InbetweenV2\InbetweenV2ThemeWidget;
 use App\Widgets\InbetweenV2\InbetweenV2WhatWeDoWidget;
 use App\Widgets\InbetweenV2\InbetweenV2WhereWeFocusWidget;
 use App\Widgets\Viettinmart\ViettinmartDealFlashWidget;
@@ -86,15 +85,11 @@ class WidgetRegistry implements WidgetRegistryInterface
 
         // Inbetween V2 Widgets (1 Section = 1 Widget)
         'inbetween_v2_hero' => InbetweenV2HeroWidget::class,
-        'inbetween_v2_hero_section' => InbetweenV2HeroWidget::class,
         'inbetween_v2_what_we_do' => InbetweenV2WhatWeDoWidget::class,
         'inbetween_v2_where_we_focus' => InbetweenV2WhereWeFocusWidget::class,
         'inbetween_v2_founder' => InbetweenV2FounderWidget::class,
         'inbetween_v2_our_clients' => InbetweenV2OurClientsWidget::class,
         'inbetween_v2_business' => InbetweenV2BusinessWidget::class,
-        'inbetween_v2_theme' => InbetweenV2ThemeWidget::class,
-        'inbetween_v2_master' => InbetweenV2ThemeWidget::class,
-        'inbetween_v2_landing' => InbetweenV2ThemeWidget::class,
 
         // Viettinmart Widgets (Both vtm_* and inbetween_* aliases)
         'vtm_hero_slider' => ViettinmartHeroSliderWidget::class,
@@ -242,7 +237,9 @@ class WidgetRegistry implements WidgetRegistryInterface
                 }
 
                 $rawName = Str::replaceLast('Widget', '', $filename);
-                $widgetType = Str::snake(Str::camel($categoryName.'_'.$rawName));
+                $widgetType = Str::startsWith($rawName, $categoryName)
+                    ? Str::snake($rawName)
+                    : Str::snake(Str::camel($categoryName.'_'.$rawName));
 
                 try {
                     $metadata = method_exists($widgetClass, 'getConfig')
@@ -260,9 +257,9 @@ class WidgetRegistry implements WidgetRegistryInterface
                     'metadata' => $metadata,
                 ];
 
-                // Also register direct snake case of class name as type alias
+                // Also register direct snake case of class name as type alias if different
                 $shortType = Str::snake($rawName);
-                if (! isset($discovered[$shortType])) {
+                if ($shortType !== $widgetType && ! isset($discovered[$shortType])) {
                     $discovered[$shortType] = $discovered[$widgetType];
                 }
             }

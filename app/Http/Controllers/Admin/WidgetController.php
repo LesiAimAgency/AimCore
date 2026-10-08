@@ -163,8 +163,32 @@ class WidgetController extends Controller
         $permissionService = new WidgetPermissionService;
         $availableWidgets = $permissionService->getAccessibleWidgetsByCategory($user);
 
+        // Filter available widgets by project context so user only sees widgets of their project
+        if ($currentProject) {
+            $projCode = strtolower((string) ($currentProject->code ?? ''));
+            $projName = strtolower((string) ($currentProject->name ?? ''));
+            $themeSetting = Setting::where(function ($q) use ($projId, $tenantId) {
+                $q->where('project_id', $projId)->orWhere('tenant_id', $tenantId);
+            })->where('key', 'theme')->value('value');
+
+            $isIbV2 = str_contains($projCode, 'inbetween_v2') || $projCode === 'da005' || $themeSetting === 'inbetween_v2' || ($currentProject->id == 16) || ($currentProject->id == 7);
+            $isIb = str_contains($projCode, 'inbetween') || str_contains($projName, 'inbetween') || $themeSetting === 'inbetween';
+            $isWk = str_contains($projCode, 'wk') || $themeSetting === 'wkcomputerdemo';
+            $isVtm = str_contains($projCode, 'viettin') || str_contains($projCode, 'vtm') || $themeSetting === 'viettinmartdemo';
+
+            if ($isIbV2) {
+                $availableWidgets = array_intersect_key($availableWidgets, array_flip(['inbetween_v2']));
+            } elseif ($isIb) {
+                $availableWidgets = array_intersect_key($availableWidgets, array_flip(['inbetween_v2', 'inbetween']));
+            } elseif ($isWk) {
+                $availableWidgets = array_intersect_key($availableWidgets, array_flip(['wkcomputer']));
+            } elseif ($isVtm) {
+                $availableWidgets = array_intersect_key($availableWidgets, array_flip(['viettinmart']));
+            }
+        }
+
         $permissionSummary = config('app.env') === 'local' ?
-            ['can_manage_widgets' => true, 'can_toggle_widgets' => true, 'accessible_widget_count' => 999, 'total_widget_count' => 999, 'is_super_admin' => true] :
+            ['can_manage_widgets' => true, 'can_toggle_widgets' => true, 'accessible_widget_count' => array_sum(array_map('count', $availableWidgets)), 'total_widget_count' => array_sum(array_map('count', $availableWidgets)), 'is_super_admin' => true] :
             $permissionService->getPermissionSummary();
 
         return view('cms.widgets.builder', compact('existingWidgets', 'availableWidgets', 'currentProject', 'permissionSummary'));

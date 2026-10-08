@@ -240,9 +240,13 @@ class InbetweenV2WidgetsSeeder extends Seeder
             $targetProjId = $proj->id;
             $targetTenantId = $tenantId ?? $proj->tenant_id ?? 8;
 
-            // Delete existing widgets in area inbetween_v2 for this project
+            // Delete existing inbetween_v2 widgets and old theme widgets in homepage-main and inbetween_v2
             Widget::withoutGlobalScopes()
-                ->where('area', 'inbetween_v2')
+                ->where(function ($q) {
+                    $q->where('area', 'inbetween_v2')
+                        ->orWhere('area', 'homepage-main')
+                        ->orWhere('area', 'homepage');
+                })
                 ->where('project_id', $targetProjId)
                 ->delete();
 
@@ -250,7 +254,7 @@ class InbetweenV2WidgetsSeeder extends Seeder
                 Widget::withoutGlobalScopes()->create([
                     'project_id' => $targetProjId,
                     'tenant_id' => $targetTenantId,
-                    'area' => 'inbetween_v2',
+                    'area' => 'homepage-main',
                     'name' => $widget['name'],
                     'type' => $widget['type'],
                     'is_active' => true,
