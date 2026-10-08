@@ -1,1 +1,31 @@
 /* Custom styles for Inbetween V2 */
+
+.intro-title-gradient {
+  background-image: linear-gradient(180deg, #F6F4F4 var(--grad-top, 100%), #EC460B var(--grad-bottom, 100%));
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+  filter: drop-shadow(0 0 var(--grad-glow, 0px) rgba(236, 70, 11, var(--grad-glow-alpha, 0)));
+  transition: filter 0.25s ease;
+  display: inline-block;
+  will-change: filter;
+}
+
+#wecanhelp-text {
+  will-change: transform, letter-spacing, opacity;
+  transform-origin: 50% 50%;
+}
+
+.floating-word {
+  will-change: transform, opacity;
+}
+
+.floating-word.word-sucking {
+  pointer-events: none !important;
+}
+
+#white-transition-screen,
+#hero-white-transition {
+  will-change: opacity;
+}

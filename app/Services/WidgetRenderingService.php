@@ -55,6 +55,10 @@ class WidgetRenderingService
                 return $this->renderError("Widget type '{$type}' not found");
             }
 
+            if (! class_exists($widgetClass)) {
+                return $this->renderError("Widget class '{$widgetClass}' for type '{$type}' not found");
+            }
+
             // Create widget instance
             $widget = new $widgetClass($settings, $variant);
             if (isset($settings['id'])) {
@@ -68,7 +72,7 @@ class WidgetRenderingService
 
             return $this->renderWidget($widget);
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('Widget rendering failed: '.$e->getMessage().' in '.$e->getFile().':'.$e->getLine());
 
             // If an inner view exception caused Laravel to flush the outer section stack, restore it
@@ -316,7 +320,7 @@ class WidgetRenderingService
                     $context
                 );
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('Error rendering widget area: '.$area, ['error' => $e->getMessage()]);
         }
 
@@ -334,6 +338,10 @@ class WidgetRenderingService
                 return $this->renderError("Widget type '{$type}' not found");
             }
 
+            if (! class_exists($widgetClass)) {
+                return $this->renderError("Widget class '{$widgetClass}' for type '{$type}' not found");
+            }
+
             $widget = new $widgetClass($settings, $variant);
 
             // If custom template is specified, try to use it
@@ -348,7 +356,7 @@ class WidgetRenderingService
 
             return $this->renderWidget($widget);
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('Widget template rendering failed: '.$e->getMessage());
 
             return $this->renderError('Template rendering failed');
@@ -491,7 +499,7 @@ class WidgetRenderingService
                 'metadata' => $widget->getMetadata(),
             ];
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return [
                 'success' => false,
                 'error' => $e->getMessage(),

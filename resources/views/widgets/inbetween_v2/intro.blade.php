@@ -22,6 +22,17 @@
   <!-- Fixed Header across sections -->
   @once('inbetween-header')
   <style>
+    .intro-title-gradient {
+      background-image: linear-gradient(180deg, #F6F4F4 var(--grad-top, 100%), #EC460B var(--grad-bottom, 100%));
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      background-clip: text !important;
+      color: transparent !important;
+      filter: drop-shadow(0 0 var(--grad-glow, 0px) rgba(236, 70, 11, var(--grad-glow-alpha, 0)));
+      transition: filter 0.25s ease;
+      display: inline-block;
+      will-change: filter;
+    }
     .inbetween-header .inbetween-menu-toggle {
       position: fixed;
       left: 0;
@@ -140,10 +151,7 @@
     <div class="relative z-20 text-center select-none" id="center-title-block">
       <p class="text-[15px] sm:text-[20px] lg:text-[25px] font-normal text-[#F6F4F4]/90 tracking-normal mb-1.5 sm:mb-2 transition-all duration-300" id="intro-subtitle">{{ $settings['intro_subtitle'] ?? 'Your business is' }}</p>
       <div class="relative inline-block">
-        <h1 class="text-[26px] sm:text-[42px] lg:text-[62px] font-bold uppercase tracking-tight leading-tight select-none text-[#F6F4F4]" id="intro-title-base">{{ $settings['intro_title'] ?? 'ENTERING VIETNAM?' }}</h1>
-        <div class="absolute inset-0 overflow-hidden pointer-events-none select-none" id="intro-title-gradient-wrap" style="clip-path: inset(100% 0 0 0);">
-          <h1 class="text-[26px] sm:text-[42px] lg:text-[62px] font-bold uppercase tracking-tight leading-tight select-none text-[#EC460B] drop-shadow-[0_0_25px_rgba(236,70,11,0.85)]">{{ $settings['intro_title'] ?? 'ENTERING VIETNAM?' }}</h1>
-        </div>
+        <h1 class="intro-title-gradient text-[26px] sm:text-[42px] lg:text-[62px] font-bold uppercase tracking-tight leading-tight select-none" id="intro-title-base">{{ $settings['intro_title'] ?? 'ENTERING VIETNAM?' }}</h1>
       </div>
     </div>
     @php
@@ -224,8 +232,8 @@
     <h2 class="text-[60px] sm:text-[90px] lg:text-[120px] font-bold uppercase tracking-tight text-white whitespace-nowrap will-change-transform font-sans" id="wecanhelp-text">{{ $settings['wecanhelp_text'] ?? 'WE CAN HELP!' }}</h2>
   </div>
 
-  <!-- Act 3: White Transition Flash Screen (Frame 18) -->
-  <div class="absolute inset-0 z-35 bg-white opacity-0 pointer-events-none" id="white-transition-screen" style="display: none; opacity: 0;"></div>
+  <!-- Act 3: White Transition Flash Screen (Frame 22) -->
+  <div class="absolute inset-0 z-35 bg-white opacity-0 pointer-events-none" id="hero-white-transition" style="display: none; opacity: 0;"></div>
 
   <!-- Bottom Scroll Helper pointing to Section 2 (#inbetween-hero) -->
   <div class="w-full shrink-0 flex flex-col items-center justify-center pb-5 sm:pb-7 z-30 pointer-events-auto transition-opacity duration-300" id="intro-scroll-helper">
