@@ -115,12 +115,18 @@
     }
   </style>
   <header class="inbetween-header fixed top-0 left-0 w-full z-50 select-none transition-colors duration-300 pointer-events-auto theme-dark text-white" id="inbetween-header">
-    <div class="inbetween-container-1440 pt-5 sm:pt-6 pb-2 sm:pb-3">
+    <div class="inbetween-container-1440 pt-5 sm:pt-6 pb-2 sm:pb-3 transition-all duration-300">
       <a class="inbetween-logo inline-flex items-center w-[210px] h-[32px] shrink-0 select-none transition-opacity hover:opacity-85" href="#inbetween-intro" title="in • between">
         <img class="inbetween-logo-white w-[210px] h-[32px] object-contain" src="{{ $logoWhite }}" alt="in • between Logo" width="210" height="32"/>
         <img class="inbetween-logo-dark w-[210px] h-[32px] object-contain" src="{{ $logoDark }}" alt="in • between Logo" width="210" height="32"/>
       </a>
       <div class="flex items-center gap-5 sm:gap-7">
+        <!-- Language Switcher -->
+        <div class="flex items-center gap-1.5 text-xs sm:text-[13px] tracking-wider uppercase font-medium inbetween-header-lang">
+          <span class="inbetween-lang-btn inbetween-lang-en active cursor-pointer font-semibold text-current hover:text-[#EC460B] transition-colors" data-lang="en">{{ $langEn }}</span>
+          <span class="opacity-40">|</span>
+          <span class="inbetween-lang-btn inbetween-lang-zh cursor-pointer opacity-70 hover:opacity-100 hover:text-[#EC460B] transition-all" data-lang="zh">{{ $langZh }}</span>
+        </div>
         <nav>
           <a class="inbetween-connect-link inline-flex items-center gap-3 text-pc-h6 text-[15px] sm:text-[16px] font-normal uppercase tracking-normal transition-all duration-200 group border-b border-transparent hover:border-current pb-0.5 text-current cursor-pointer" href="{{ $connectLink }}" data-contact-modal-toggle="" title="{{ $connectText }}">
             <span>{{ $connectText }}</span>
