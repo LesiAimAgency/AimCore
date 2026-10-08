@@ -35,27 +35,6 @@
 @endphp
 
 <section class="inbetween-onepage-section relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#131313] text-[#F6F4F4] flex flex-col justify-between py-6 sm:py-8 lg:py-10 px-6 sm:px-10 lg:px-16" id="inbetween-footer" aria-label="in • between Footer">
-  
-  <!-- 1. Top Bar inside Section -->
-  <div class="w-full max-w-[1312px] mx-auto flex items-center justify-between z-10 shrink-0">
-    <div class="flex items-center">
-      <a href="#inbetween-intro" class="inline-block transition-opacity hover:opacity-80" aria-label="in • between Homepage">
-        <img class="h-6 sm:h-7 lg:h-8 w-auto object-contain" src="{{ $logoWhite }}" alt="in • between Logo">
-      </a>
-    </div>
-    
-    <div class="flex items-center gap-5 sm:gap-8 text-xs sm:text-[13px] tracking-wider uppercase font-medium">
-      <div class="flex items-center gap-1.5 text-neutral-400">
-        <span class="text-white cursor-pointer hover:text-[#EC460B] transition-colors">{{ $settings['lang_en_label'] ?? 'EN' }}</span>
-        <span>|</span>
-        <span class="text-neutral-400 cursor-pointer hover:text-white transition-colors">{{ $settings['lang_zh_label'] ?? '汉语' }}</span>
-      </div>
-      <a href="{{ $topConnectLink }}" class="inline-flex items-center gap-2 text-white hover:text-[#EC460B] transition-colors group cursor-pointer border-b border-white/60 hover:border-[#EC460B] pb-0.5" data-contact-modal-toggle>
-        <span>{{ $topConnectText }}</span>
-        <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
-      </a>
-    </div>
-  </div>
 
   <!-- 2. Main Middle Section: More Connections & Contact Form -->
   <div class="w-full max-w-[1312px] mx-auto my-auto py-8 lg:py-6 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center z-10">
