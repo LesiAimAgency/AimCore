@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Project;
 use App\Models\ProjectUser;
+use App\Models\Tenant;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,7 +46,7 @@ class CheckCmsRole
                 return $next($request);
             }
 
-            if (isset($user->role) && in_array($user->role, ['cms', 'admin', 'dev'])) {
+            if (isset($user->role) && in_array($user->role, ['cms', 'admin', 'dev', 'multi_tenancy', 'multi_tenancy_control_center'])) {
                 return $next($request);
             }
 
@@ -103,7 +104,7 @@ class CheckCmsRole
             }
 
             // Allow all users with cms, admin, dev, manager, web_admin, store_manager role
-            if (isset($user->role) && in_array($user->role, ['cms', 'admin', 'dev', 'manager', 'web_admin', 'store_manager'])) {
+            if (isset($user->role) && in_array($user->role, ['cms', 'admin', 'dev', 'manager', 'web_admin', 'store_manager', 'multi_tenancy', 'multi_tenancy_control_center'])) {
                 return $next($request);
             }
 
@@ -123,7 +124,7 @@ class CheckCmsRole
         }
 
         // Allow all users with cms, admin, or dev role to access all CMS
-        if (isset($user->role) && in_array($user->role, ['cms', 'admin', 'dev'])) {
+        if (isset($user->role) && in_array($user->role, ['cms', 'admin', 'dev', 'multi_tenancy', 'multi_tenancy_control_center'])) {
             return $next($request);
         }
 

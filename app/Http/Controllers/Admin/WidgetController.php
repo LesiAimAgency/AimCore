@@ -111,7 +111,9 @@ class WidgetController extends Controller
                         $q->where('project_id', $projId)->orWhere('tenant_id', $tenantId);
                     })->where('key', 'theme')->value('value') ?: ($currentProject?->code === 'viettinmart-eco' ? 'viettinmartdemo' : ($currentProject?->code === 'wkcomputer' ? 'wkcomputerdemo' : null));
 
-                    if ($theme === 'inbetween' && class_exists('\Database\Seeders\InbetweenHomepageMainSeeder')) {
+                    if (($theme === 'inbetween_v2' || str_contains($currentProject?->code ?? '', 'inbetween_v2')) && class_exists('\Database\Seeders\InbetweenV2WidgetsSeeder')) {
+                        (new \Database\Seeders\InbetweenV2WidgetsSeeder)->run($projId, $tenantId);
+                    } elseif ($theme === 'inbetween' && class_exists('\Database\Seeders\InbetweenHomepageMainSeeder')) {
                         (new InbetweenHomepageMainSeeder)->run($projId, $tenantId);
                     } elseif ($theme === 'wkcomputerdemo' && class_exists('\Database\Seeders\WkcomputerWidgetsSeeder')) {
                         (new WkcomputerWidgetsSeeder)->run($projId, $tenantId);

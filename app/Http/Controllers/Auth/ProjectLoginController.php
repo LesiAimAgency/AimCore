@@ -69,7 +69,18 @@ class ProjectLoginController extends Controller
                     ->orWhere('email', $credentials['username']);
             })
             ->where(function ($q) {
-                $q->whereIn('role', ['cms', 'admin', 'dev', 'super_admin', 'superadmin', 'manager', 'web_admin', 'store_manager']);
+                $q->whereIn('role', [
+                    'cms',
+                    'admin',
+                    'dev',
+                    'super_admin',
+                    'superadmin',
+                    'manager',
+                    'web_admin',
+                    'store_manager',
+                    'multi_tenancy',
+                    'multi_tenancy_control_center',
+                ]);
             })
             ->get()
             ->first(function ($u) use ($project, $projectTenantId) {

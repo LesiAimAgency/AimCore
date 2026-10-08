@@ -75,26 +75,46 @@ class InbetweenV2WidgetsSeeder extends Seeder
             ],
         ];
 
-        // Delete all existing widgets in area inbetween_v2
-        Widget::withoutGlobalScopes()->where('area', 'inbetween_v2')->delete();
+        $targetProjects = $projectId
+            ? Project::withoutGlobalScopes()->where('id', $projectId)->get()
+            : Project::withoutGlobalScopes()
+                ->where(function ($q) {
+                    $q->whereIn('code', ['inbetween_v2', 'DA005', 'inbetween'])
+                        ->orWhere('name', 'like', '%INBETWEEN%');
+                })
+                ->get();
 
-        $project = $projectId ? Project::withoutGlobalScopes()->find($projectId) : Project::withoutGlobalScopes()->first();
-        $targetProjId = $project?->id ?? 17;
-        $targetTenantId = $project?->tenant_id ?? $targetProjId;
-
-        foreach ($widgets as $order => $widget) {
-            Widget::withoutGlobalScopes()->create([
-                'project_id' => $targetProjId,
-                'tenant_id' => $targetTenantId,
-                'area' => 'inbetween_v2',
-                'name' => $widget['name'],
-                'type' => $widget['type'],
-                'is_active' => true,
-                'sort_order' => $order,
-                'settings' => $widget['settings'],
-            ]);
+        if ($targetProjects->isEmpty()) {
+            $defaultProject = Project::withoutGlobalScopes()->first();
+            if ($defaultProject) {
+                $targetProjects = collect([$defaultProject]);
+            }
         }
 
-        $this->command?->info('INBETWEEN V2 widgets seeded successfully (6 sections, 6 widgets).');
+        foreach ($targetProjects as $proj) {
+            $targetProjId = $proj->id;
+            $targetTenantId = $tenantId ?? $proj->tenant_id ?? 8;
+
+            // Delete existing widgets in area inbetween_v2 for this project
+            Widget::withoutGlobalScopes()
+                ->where('area', 'inbetween_v2')
+                ->where('project_id', $targetProjId)
+                ->delete();
+
+            foreach ($widgets as $order => $widget) {
+                Widget::withoutGlobalScopes()->create([
+                    'project_id' => $targetProjId,
+                    'tenant_id' => $targetTenantId,
+                    'area' => 'inbetween_v2',
+                    'name' => $widget['name'],
+                    'type' => $widget['type'],
+                    'is_active' => true,
+                    'sort_order' => $order,
+                    'settings' => $widget['settings'],
+                ]);
+            }
+        }
+
+        $this->command?->info('INBETWEEN V2 widgets seeded successfully for projects: ' . $targetProjects->pluck('code')->implode(', '));
     }
 }
