@@ -37,39 +37,66 @@
       will-change: --grad-top, --grad-bottom, letter-spacing, filter;
       filter: drop-shadow(0 0 var(--grad-glow, 0px) rgba(236, 70, 11, var(--grad-glow-alpha, 0)));
     }
+    /* Fixed hit-area & stable hover for inbetween menu toggle */
     .inbetween-header .inbetween-menu-toggle {
       position: fixed;
       left: 0;
       top: 50%;
-      transform: translate(-12px, -50%);
+      transform: translateY(-50%) !important;
       z-index: 50;
       cursor: pointer;
       font-family: 'SVN-Gilroy', 'Inter', sans-serif;
-      transition: color .25s ease, transform .32s cubic-bezier(0.16, 1, 0.3, 1);
       -webkit-user-select: none;
       user-select: none;
-      padding: .5rem .75rem .5rem 0 !important;
+      padding: 16px 28px 16px 0 !important;
+      min-height: 56px;
+      min-width: 48px;
       display: inline-flex;
       align-items: center;
+      background: transparent;
+      border: none;
+      outline: none;
+      overflow: visible;
+      transition: color .25s ease;
     }
-    .inbetween-header .inbetween-menu-toggle:hover,
-    .inbetween-header .inbetween-menu-toggle.is-active,
-    .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] {
-      transform: translate(16px, -50%);
+    /* Generous invisible hit-area box to ensure easy hover and click without precision aiming */
+    .inbetween-header .inbetween-menu-toggle::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: -16px;
+      bottom: -16px;
+      right: -24px;
+      min-width: 64px;
+      pointer-events: auto;
+    }
+    /* Sliding track holding icon + text: moves inside stationary button */
+    .inbetween-header .inbetween-menu-toggle .menu-toggle-track {
+      display: inline-flex;
+      align-items: center;
+      transform: translateX(-12px);
+      transition: transform .32s cubic-bezier(0.16, 1, 0.3, 1), color .25s ease;
+      will-change: transform;
+      pointer-events: none;
+    }
+    .inbetween-header .inbetween-menu-toggle:hover .menu-toggle-track,
+    .inbetween-header .inbetween-menu-toggle.is-active .menu-toggle-track,
+    .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] .menu-toggle-track {
+      transform: translateX(16px);
       color: #ec460b !important;
     }
     @media (min-width: 640px) {
-      .inbetween-header .inbetween-menu-toggle:hover,
-      .inbetween-header .inbetween-menu-toggle.is-active,
-      .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] {
-        transform: translate(24px, -50%);
+      .inbetween-header .inbetween-menu-toggle:hover .menu-toggle-track,
+      .inbetween-header .inbetween-menu-toggle.is-active .menu-toggle-track,
+      .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] .menu-toggle-track {
+        transform: translateX(24px);
       }
     }
     @media (min-width: 1024px) {
-      .inbetween-header .inbetween-menu-toggle:hover,
-      .inbetween-header .inbetween-menu-toggle.is-active,
-      .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] {
-        transform: translate(32px, -50%);
+      .inbetween-header .inbetween-menu-toggle:hover .menu-toggle-track,
+      .inbetween-header .inbetween-menu-toggle.is-active .menu-toggle-track,
+      .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] .menu-toggle-track {
+        transform: translateX(32px);
       }
     }
     .inbetween-header .inbetween-menu-toggle .menu-icon-wrap {
@@ -80,6 +107,7 @@
       height: 24px;
       flex-shrink: 0;
       transition: transform .3s ease;
+      pointer-events: none;
     }
     .inbetween-header .inbetween-menu-toggle:hover .menu-icon-wrap {
       transform: scale(1.06);
@@ -90,27 +118,25 @@
       height: 24px;
       flex-shrink: 0;
       color: currentColor;
+      pointer-events: none;
     }
     .inbetween-header .inbetween-menu-toggle .menu-text {
       font-family: 'SVN-Gilroy', 'Inter', sans-serif;
       font-weight: 700;
       letter-spacing: .06em;
-      position: absolute;
-      left: 100%;
-      top: 50%;
-      margin-left: 0.625rem;
       white-space: nowrap;
       opacity: 0;
+      visibility: hidden;
+      transform: translateX(-10px);
+      transition: opacity .3s cubic-bezier(0.16, 1, 0.3, 1), transform .3s cubic-bezier(0.16, 1, 0.3, 1), visibility .3s ease, color .2s ease;
       pointer-events: none;
-      transform: translate(-10px, -50%);
-      transition: opacity .32s cubic-bezier(0.16, 1, 0.3, 1), transform .32s cubic-bezier(0.16, 1, 0.3, 1), color .2s ease;
     }
     .inbetween-header .inbetween-menu-toggle:hover .menu-text,
     .inbetween-header .inbetween-menu-toggle.is-active .menu-text,
     .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] .menu-text {
       opacity: 1;
-      pointer-events: auto;
-      transform: translate(0, -50%);
+      visibility: visible;
+      transform: translateX(0);
       color: #ec460b !important;
     }
   </style>
@@ -135,23 +161,25 @@
         </nav>
       </div>
     </div>
-    <button class="menu-toggle-btn inbetween-menu-toggle group focus:outline-none fixed left-0 top-1/2 -translate-y-1/2 z-50 flex items-center py-2 pl-0 pr-3 cursor-pointer" type="button" data-menu-toggle aria-label="Mở trình đơn điều hướng" aria-expanded="false">
-      <span class="menu-icon-wrap flex items-center justify-center shrink-0 w-6 h-6">
-        <svg class="menu-icon-svg w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_inbetween_menu)">
-            <path d="M4 13C4.55228 13 5 12.5523 5 12C5 11.4477 4.55228 11 4 11C3.44772 11 3 11.4477 3 12C3 12.5523 3.44772 13 4 13Z" fill="currentColor"/>
-            <path d="M20.06 11H7.94C7.42085 11 7 11.4209 7 11.94V12.06C7 12.5791 7.42085 13 7.94 13H20.06C20.5791 13 21 12.5791 21 12.06V11.94C21 11.4209 20.5791 11 20.06 11Z" fill="currentColor"/>
-            <path d="M20.06 16H3.94C3.42085 16 3 16.4209 3 16.94V17.06C3 17.5791 3.42085 18 3.94 18H20.06C20.5791 18 21 17.5791 21 17.06V16.94C21 16.4209 20.5791 16 20.06 16Z" fill="currentColor"/>
-            <path d="M20.06 6H3.94C3.42085 6 3 6.42085 3 6.94V7.06C3 7.57915 3.42085 8 3.94 8H20.06C20.5791 8 21 7.57915 21 7.06V6.94C21 6.42085 20.5791 6 20.06 6Z" fill="currentColor"/>
-          </g>
-          <defs>
-            <clipPath id="clip0_inbetween_menu">
-              <rect width="24" height="24" fill="white"/>
-            </clipPath>
-          </defs>
-        </svg>
+    <button class="menu-toggle-btn inbetween-menu-toggle group focus:outline-none fixed left-0 top-1/2 -translate-y-1/2 z-50 flex items-center cursor-pointer select-none" type="button" data-menu-toggle aria-label="Mở trình đơn điều hướng" aria-expanded="false">
+      <span class="menu-toggle-track flex items-center">
+        <span class="menu-icon-wrap flex items-center justify-center shrink-0 w-6 h-6">
+          <svg class="menu-icon-svg w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_inbetween_menu)">
+              <path d="M4 13C4.55228 13 5 12.5523 5 12C5 11.4477 4.55228 11 4 11C3.44772 11 3 11.4477 3 12C3 12.5523 3.44772 13 4 13Z" fill="currentColor"/>
+              <path d="M20.06 11H7.94C7.42085 11 7 11.4209 7 11.94V12.06C7 12.5791 7.42085 13 7.94 13H20.06C20.5791 13 21 12.5791 21 12.06V11.94C21 11.4209 20.5791 11 20.06 11Z" fill="currentColor"/>
+              <path d="M20.06 16H3.94C3.42085 16 3 16.4209 3 16.94V17.06C3 17.5791 3.42085 18 3.94 18H20.06C20.5791 18 21 17.5791 21 17.06V16.94C21 16.4209 20.5791 16 20.06 16Z" fill="currentColor"/>
+              <path d="M20.06 6H3.94C3.42085 6 3 6.42085 3 6.94V7.06C3 7.57915 3.42085 8 3.94 8H20.06C20.5791 8 21 7.57915 21 7.06V6.94C21 6.42085 20.5791 6 20.06 6Z" fill="currentColor"/>
+            </g>
+            <defs>
+              <clipPath id="clip0_inbetween_menu">
+                <rect width="24" height="24" fill="white"/>
+              </clipPath>
+            </defs>
+          </svg>
+        </span>
+        <span class="menu-text text-[13px] sm:text-[14px] md:text-[15px] font-bold uppercase tracking-wider ml-2.5">Menu</span>
       </span>
-      <span class="menu-text text-[13px] sm:text-[14px] md:text-[15px] font-bold uppercase tracking-wider ml-1">Menu</span>
     </button>
   </header>
   @endonce
