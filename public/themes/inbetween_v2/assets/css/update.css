@@ -33,3 +33,26 @@
 #hero-white-transition {
   will-change: opacity;
 }
+
+/* Header container smooth hide/show transition */
+.inbetween-header .inbetween-container-1440 {
+  transition: opacity .35s cubic-bezier(0.16, 1, 0.3, 1), visibility .35s cubic-bezier(0.16, 1, 0.3, 1), transform .35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.inbetween-header .inbetween-container-1440.invisible {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateY(-8px) !important;
+}
+
+.inbetween-header-lang .inbetween-lang-btn {
+  transition: color .2s ease, opacity .2s ease;
+  user-select: none;
+}
+
+.inbetween-header-lang .inbetween-lang-btn.active {
+  color: #EC460B !important;
+  opacity: 1 !important;
+}
+
