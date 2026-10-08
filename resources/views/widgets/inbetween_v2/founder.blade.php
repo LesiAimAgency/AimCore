@@ -106,12 +106,7 @@
               </div>
             </div>
             <div class="founder-divider w-full h-[0.5px] bg-[#323232]/20 my-4"></div>
-            <div class="founder-detail-section space-y-3">
-              <h3 class="text-[15px] sm:text-[16px] font-medium text-[#EC460B] uppercase tracking-wider">{{ $settings['alliances_title'] ?? 'BUSINESS DEVELOPMENT & STRATEGIC ALLIANCES' }}
-              </h3>
-              <p class="text-[13px] sm:text-[14px] lg:text-[14.5px] font-light text-[#3E3939] leading-relaxed tracking-normal">{{ $settings['alliances_desc'] ?? 'At INBETWEEN, AiRu leverages deep relational equity and agile localized strategies to bridge international standards with Vietnam\'s dynamic commercial realities. Her approach removes operational friction, minimizes foreign market entry risk, and accelerates time-to-market for pioneering ventures.' }}
-              </p>
-            </div>
+           
             <div class="pt-2 pb-2">
               <div class="p-5 rounded-2xl bg-white border border-neutral-200/90 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 max-w-[600px]">
                 <div class="space-y-1">
