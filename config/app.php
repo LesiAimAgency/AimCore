@@ -143,6 +143,7 @@ return [
     | without the {projectCode} URL prefix (exported from SuperAdmin).
     |
     */
-    'standalone_mode' => env('STANDALONE_MODE', false),
+    'standalone_mode' => (bool) env('STANDALONE_MODE', false),
+    'project_code' => env('PROJECT_CODE'),
 
 ];

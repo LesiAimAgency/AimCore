@@ -4,6 +4,8 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Services\Export\ExportValidationService;
+use App\Services\ProjectExportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -15,7 +17,9 @@ class ProjectExportController extends Controller
 {
     public function exportDatabaseOnly(Project $project)
     {
-        $sql = $this->generateDatabaseSQL($project);
+        /** @var ProjectExportService $exportService */
+        $exportService = app(ProjectExportService::class);
+        $sql = $exportService->generateDatabaseSQL($project);
 
         return response($sql)
             ->header('Content-Type', 'text/sql')
@@ -24,47 +28,71 @@ class ProjectExportController extends Controller
 
     public function exportWebsite(Request $request, $projectCode)
     {
-        // Tăng thời gian thực thi
         set_time_limit(300); // 5 phút
         ini_set('memory_limit', '1G');
 
         try {
             $project = Project::where('code', $projectCode)->firstOrFail();
 
-            // Mốc 1: Chuẩn bị thư mục export (25%)
-            $exportsDir = storage_path('app/exports');
-            if (! File::exists($exportsDir)) {
-                File::makeDirectory($exportsDir, 0755, true);
+            // Run pre-flight validation
+            $validator = app(ExportValidationService::class);
+            $validation = $validator->validateProject($project);
+            if (! $validation['is_valid'] && ! $request->boolean('force')) {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Export validation failed: '.implode('; ', $validation['errors']),
+                    'validation' => $validation,
+                ], 422);
             }
 
-            $exportPath = $exportsDir.'/'.$projectCode;
-            if (File::exists($exportPath)) {
-                File::deleteDirectory($exportPath);
-            }
-            File::makeDirectory($exportPath, 0755, true);
+            /** @var ProjectExportService $exportService */
+            $exportService = app(ProjectExportService::class);
+            $result = $exportService->buildExportPackage($project);
+            $zipPath = $result['zip_path'];
 
-            // Mốc 2: Copy source code tối ưu (50%)
-            $this->exportEssentialFiles($project, $exportPath);
-
-            // Mốc 3: Export database (75%)
-            $this->exportDatabase($project, $exportPath);
-
-            // Mốc 4: Tạo file cấu hình (90%)
-            $this->createConfigFiles($project, $exportPath);
-            // Tắt pre-deploy để tránh timeout
-            // $this->preDeployOptimization($exportPath);
-
-            // Hoàn thành: Tạo ZIP file (100%)
-            $zipPath = $exportsDir.'/'.$projectCode.'_website.zip';
-            $this->createCompleteZip($exportPath, $zipPath, $project);
-
-            File::deleteDirectory($exportPath);
-
-            return response()->download($zipPath)->deleteFileAfterSend();
+            return response()->download($zipPath, strtolower($project->code).'_full_website.zip')->deleteFileAfterSend();
 
         } catch (\Exception $e) {
             \Log::error('Export failed: '.$e->getMessage());
 
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function exportTheme(Request $request, string $themeSlug)
+    {
+        set_time_limit(300);
+        ini_set('memory_limit', '1G');
+
+        try {
+            /** @var ProjectExportService $exportService */
+            $exportService = app(ProjectExportService::class);
+            $result = $exportService->exportTheme($themeSlug);
+
+            return response()->download($result['zip_path'], $result['filename'])->deleteFileAfterSend();
+
+        } catch (\Exception $e) {
+            \Log::error('Theme export failed: '.$e->getMessage());
+
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function validateProject(Request $request, string $projectCode)
+    {
+        try {
+            $project = Project::where('code', $projectCode)->firstOrFail();
+            $validator = app(ExportValidationService::class);
+            $validation = $validator->validateProject($project);
+
+            return response()->json($validation);
+        } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
                 'message' => $e->getMessage(),

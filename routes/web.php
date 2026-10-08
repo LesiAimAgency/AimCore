@@ -14,7 +14,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\MagicLoginController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\FormSubmissionController;
+use App\Http\Controllers\Install\InstallController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\Themes\InbetweenV2\InbetweenV2Controller;
 use App\Http\Controllers\WatermarkImageController;
 use App\Http\Controllers\Wkcomputer\CartController;
 use App\Livewire\Admin\CodeWidgetList;
@@ -28,6 +30,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    $lockFile = storage_path('installed.lock');
+    if (file_exists($lockFile)) {
+        try {
+            $info = json_decode(file_get_contents($lockFile), true) ?: [];
+            $projectCode = $info['project_code'] ?? env('DEFAULT_PROJECT_CODE');
+            if ($projectCode) {
+                return redirect('/'.$projectCode);
+            }
+        } catch (Throwable $e) {
+        }
+    }
+
+    if (env('DEFAULT_PROJECT_CODE')) {
+        return redirect('/'.env('DEFAULT_PROJECT_CODE'));
+    }
+
     if (app()->environment('local')) {
         return redirect('/superadmin');
     }
@@ -383,4 +401,20 @@ Route::get('/my-profile.html', function () {
 
 Route::get('/my-profile', function () {
     return redirect('/ehenho/tai-khoan');
+});
+
+// INBETWEEN Direct Routes
+Route::prefix('inbetween')->name('web.inbetween.')->group(base_path('routes/inbetween.php'));
+Route::prefix('inbetwen')->name('web.inbetwen.')->group(base_path('routes/inbetween.php'));
+
+// INBETWEEN V2 Route (1 Section = 1 Widget via CMS Widget System)
+Route::get('/inbetween_v2', [InbetweenV2Controller::class, 'index'])->name('web.inbetween_v2');
+Route::post('/inbetween_v2/contact', [InbetweenV2Controller::class, 'contact'])->name('web.inbetween_v2.contact');
+
+// Web Installer Routes for Exported Websites
+Route::prefix('install')->name('install.')->group(function () {
+    Route::get('/', [InstallController::class, 'index'])->name('index');
+    Route::post('/test-db', [InstallController::class, 'testDb'])->name('test_db');
+    Route::post('/execute', [InstallController::class, 'install'])->name('execute');
+    Route::post('/reset', [InstallController::class, 'reset'])->name('reset');
 });

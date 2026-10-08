@@ -1,5 +1,6 @@
 <?php
 
+use App\Core\Theme\ThemeManager;
 use App\Http\Controllers\Admin\AiController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\BrandController;
@@ -55,6 +56,16 @@ Route::prefix('wkcomputer')
     ])
     ->group(base_path('routes/wkcomputer.php'));
 
+if (config('app.standalone_mode') || env('STANDALONE_MODE')) {
+    Route::middleware([
+        WkcomputerMiddleware::class,
+        SetProjectDatabase::class,
+    ])
+        ->group(base_path('routes/wkcomputer.php'));
+
+    return;
+}
+
 // ============================================
 // EHENHO DATING & SOCIAL NETWORK (100% ISOLATED)
 // Supports: DA010 (Sole Primary Route)
@@ -88,6 +99,52 @@ Route::domain('ehenho.local')
         ResolveProjectContext::class,
     ])
     ->group(base_path('routes/ehenho.php'));
+
+// ============================================
+// INBETWEEN COMMUNITY & PLATFORM (THEME-FIRST)
+// Supports: /inbetween and alias /inbetwen
+// ============================================
+Route::prefix('inbetween')
+    ->name('inbetween.')
+    ->group(base_path('routes/inbetween.php'));
+
+Route::prefix('inbetwen')
+    ->name('inbetwen.')
+    ->group(base_path('routes/inbetween.php'));
+
+Route::domain('inbetween.local')
+    ->name('inbetween.domain.')
+    ->group(base_path('routes/inbetween.php'));
+
+// Dynamic route prefix for custom installed Project Code
+$installedLock = storage_path('installed.lock');
+$installedProjectCode = null;
+if (file_exists($installedLock)) {
+    try {
+        $info = json_decode(file_get_contents($installedLock), true) ?: [];
+        $installedProjectCode = $info['project_code'] ?? null;
+    } catch (Throwable $e) {
+    }
+}
+if (! $installedProjectCode) {
+    $installedProjectCode = env('DEFAULT_PROJECT_CODE');
+}
+
+if ($installedProjectCode && ! in_array(strtolower($installedProjectCode), ['inbetween', 'da010', 'ehenho', 'wkcomputer'])) {
+    $activeTheme = $info['theme'] ?? app(ThemeManager::class)->getActiveTheme();
+
+    if ($activeTheme === 'inbetween' && file_exists(base_path('routes/inbetween.php'))) {
+        Route::prefix($installedProjectCode)
+            ->name($installedProjectCode.'.')
+            ->middleware([ProjectSubdomainMiddleware::class, SetProjectDatabase::class])
+            ->group(base_path('routes/inbetween.php'));
+    } elseif ($activeTheme === 'ehenho' && file_exists(base_path('routes/ehenho.php'))) {
+        Route::prefix($installedProjectCode)
+            ->name($installedProjectCode.'.')
+            ->middleware([ResolveProjectContext::class, SetProjectDatabase::class])
+            ->group(base_path('routes/ehenho.php'));
+    }
+}
 
 Route::prefix('{projectCode}')
     ->name('project.')

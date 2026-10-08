@@ -17,21 +17,26 @@ class LogVisitor
 
             $url = $request->fullUrl();
 
-            // Bỏ qua admin, assets, api
+            // Bỏ qua admin, assets, api, install
             if (! str_contains($url, '/admin') &&
                 ! str_contains($url, '/assets/') &&
-                ! str_contains($url, '/api/')) {
+                ! str_contains($url, '/api/') &&
+                ! str_contains($url, '/install')) {
 
-                VisitorLog::create([
-                    'ip_address' => $request->ip(),
-                    'user_agent' => $request->userAgent(),
-                    'url' => $url,
-                    'method' => $request->method(),
-                    'user_id' => auth()->id(),
-                    'visited_at' => now(),
-                ]);
+                try {
+                    VisitorLog::create([
+                        'ip_address' => $request->ip(),
+                        'user_agent' => $request->userAgent(),
+                        'url' => $url,
+                        'method' => $request->method(),
+                        'user_id' => auth()->id(),
+                        'visited_at' => now(),
+                    ]);
 
-                session(['visitor_logged_'.date('Y-m-d-H') => true]);
+                    session(['visitor_logged_'.date('Y-m-d-H') => true]);
+                } catch (\Throwable $e) {
+                    // Ignore DB exception when visitor_logs table does not exist yet
+                }
             }
         }
 

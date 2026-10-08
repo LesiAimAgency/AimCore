@@ -32,11 +32,11 @@ class ResolveProjectContext
             // Connect project database
             $connection = $this->databaseResolver->connect($project);
             $this->projectContext->setConnection($connection);
-
-            // Resolve theme
-            $theme = $this->themeResolver->resolve($project);
-            $this->projectContext->setTheme($theme);
         }
+
+        // Always resolve active theme even if project is null
+        $theme = $this->themeResolver->resolve($project);
+        $this->projectContext->setTheme($theme);
 
         $response = $next($request);
 

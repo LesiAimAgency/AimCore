@@ -9,6 +9,7 @@
 
     $widgetAreas = [
         'homepage-main'  => ['label' => 'Trang chủ', 'icon' => 'home'],
+        'inbetween_v2'   => ['label' => 'INBETWEEN V2', 'icon' => 'cube'],
         'sidebar'        => ['label' => 'Sidebar', 'icon' => 'view-list'],
         'footer'         => ['label' => 'Footer', 'icon' => 'template'],
         'blog-sidebar'   => ['label' => 'Blog Sidebar', 'icon' => 'document-text'],

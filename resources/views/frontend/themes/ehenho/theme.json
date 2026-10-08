@@ -1,0 +1,110 @@
+{
+  "$schema": "https://vgt.local/schemas/theme.v1.json",
+  "name": "ehenho",
+  "title": "eHenho Dating & Social Network",
+  "version": "1.0.0",
+  "description": "Nền tảng mạng xã hội hẹn hò online, tìm bạn bốn phương, kết bạn theo sở thích và tính cách.",
+  "author": "VGT Team",
+  "engine_compatibility": ">=1.0.0",
+  "type": "social",
+
+  "features": [
+    "social",
+    "dating",
+    "chat",
+    "profiles",
+    "widgets",
+    "menus",
+    "seo",
+    "media"
+  ],
+
+  "database": {
+    "tables": [
+      "profiles",
+      "provinces",
+      "conversations",
+      "messages",
+      "social_connections",
+      "chat_all_messages"
+    ],
+    "seeders": [
+      "EhenhoProvinceSeeder",
+      "EhenhoSettingsSeeder",
+      "EhenhoMenuSeeder",
+      "EhenhoMasterSeeder"
+    ]
+  },
+
+  "widgets": [
+    "ehenho_hero_slider"
+  ],
+
+  "menus": {
+    "header": {
+      "name": "Menu Header Điều Hướng",
+      "items": [
+        {"title": "Tìm bạn bốn phương", "url": "/tim-kiem", "icon": "fa fa-arrow-circle-right"},
+        {"title": "Tìm người kết hôn", "url": "/tim-kiem?looking_for=ket_hon", "icon": "fa fa-arrow-circle-right"},
+        {"title": "Tìm người yêu", "url": "/tim-kiem?looking_for=nguoi_yeu", "icon": "fa fa-arrow-circle-right"},
+        {"title": "Tìm bạn gái", "url": "/tim-kiem?gender=female", "icon": "fa fa-arrow-circle-right"},
+        {"title": "Tìm bạn trai", "url": "/tim-kiem?gender=male", "icon": "fa fa-arrow-circle-right"},
+        {"title": "Tìm bạn đời", "url": "/tim-kiem?looking_for=ban_doi", "icon": "fa fa-arrow-circle-right"},
+        {"title": "Tìm bạn tâm sự", "url": "/tim-kiem?looking_for=tam_su", "icon": "fa fa-arrow-circle-right"},
+        {"title": "Tìm bạn bè mới", "url": "/tim-kiem?looking_for=ban_be", "icon": "fa fa-arrow-circle-right"}
+      ]
+    },
+    "sub_location": {
+      "name": "Thanh Tỉnh Thành",
+      "items": [
+        {"title": "TP.HCM", "url": "/tim-ban-bon-phuong-tinh-thanh/ho-chi-minh"},
+        {"title": "Hà Nội", "url": "/tim-ban-bon-phuong-tinh-thanh/ha-noi"},
+        {"title": "Đà Nẵng", "url": "/tim-ban-bon-phuong-tinh-thanh/da-nang"},
+        {"title": "Cần Thơ", "url": "/tim-ban-bon-phuong-tinh-thanh/can-tho"},
+        {"title": "Hải Phòng", "url": "/tim-ban-bon-phuong-tinh-thanh/hai-phong"}
+      ]
+    },
+    "footer": {
+      "name": "Footer - Tìm bạn theo khu vực",
+      "items": [
+        {"title": "Tìm bạn có hình", "url": "/tim-ban-bon-phuong-co-hinh"},
+        {"title": "Tìm bạn gái có hình", "url": "/tim-ban-bon-phuong-co-hinh/nu"},
+        {"title": "Tìm bạn trai có hình", "url": "/tim-ban-bon-phuong-co-hinh/nam"},
+        {"title": "Tìm bạn Việt Nam", "url": "/tim-ban-bon-phuong-viet-nam"},
+        {"title": "Tìm bạn Nước ngoài", "url": "/tim-ban-bon-phuong-nuoc-ngoai"},
+        {"title": "Tìm bạn Việt kiều", "url": "/tim-ban-bon-phuong-viet-kieu"},
+        {"title": "Tìm bạn ở Mỹ", "url": "/tim-ban-bon-phuong-o-my"}
+      ]
+    },
+    "footer_bottom": {
+      "name": "Footer Bottom - Chính sách & Điều khoản",
+      "items": [
+        {"title": "Giới thiệu", "url": "/gioi-thieu"},
+        {"title": "Trợ giúp", "url": "/tro-giup"},
+        {"title": "Điều khoản sử dụng", "url": "/dieu-khoan-su-dung"},
+        {"title": "Chính sách bảo mật", "url": "/chinh-sach-bao-mat"},
+        {"title": "An toàn hẹn hò", "url": "/an-toan-hen-ho"},
+        {"title": "Liên hệ", "url": "/lien-he"}
+      ]
+    }
+  },
+
+  "default_settings": {
+    "site_name": "eHenho.com - Hẹn hò Online, Tìm bạn, Kết bạn theo Sở thích & Tính cách",
+    "site_title": "eHenho.com - Hẹn hò Online & Tìm bạn Bốn phương",
+    "site_description": "eHenho.com là trang web hẹn hò online, tìm bạn, kết bạn theo sở thích & tính cách giúp bạn nhanh chóng tìm được một nửa yêu thương của mình.",
+    "theme": "ehenho",
+    "theme_color": "#007cae",
+    "category_bar_color": "#e85151",
+    "header_bg_color": "#202020",
+    "header_text_color": "#f0f0f0",
+    "header_button_color": "#d9534f",
+    "site_copyright": "Email: hi@ehenho.com",
+    "social_facebook": "http://www.facebook.com/ehenho",
+    "social_twitter": "http://www.twitter.com/ehenho"
+  },
+
+  "routes_file": "routes/ehenho.php",
+  "view_path": "resources/views/themes/ehenho",
+  "asset_path": "public/themes/ehenho"
+}

@@ -1,0 +1,8 @@
+/* Theme: Victorious */
+:root {
+    --theme-primary: #d97706;
+    --theme-font: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+body {
+    font-family: var(--theme-font);
+}

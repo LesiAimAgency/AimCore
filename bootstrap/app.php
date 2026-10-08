@@ -62,6 +62,9 @@ return Application::configure(basePath: dirname(__DIR__))
             '*/admin/widgets/preview',
             'widgets/preview',
             '*/widgets/preview',
+            'install/*',
+            'inbetween_v2/contact',
+            '*/inbetween_v2/contact',
         ]);
 
         // Chỉ áp dụng TenantMiddleware cho các route không phải admin

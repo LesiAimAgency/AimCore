@@ -1,0 +1,55 @@
+<section class="inbetween-onepage-section relative w-full h-screen min-h-screen max-h-screen overflow-hidden select-none bg-[#F6F4F4] text-[#131313]" id="inbetween-where-we-focus">
+  <div class="inbetween-container-1440 relative z-10">
+    <div class="w-full shrink-0 pt-8 sm:pt-10 lg:pt-12 pb-1 sm:pb-2 lg:pb-[24px]">
+      <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5 sm:gap-4">
+        <div class="text-[14px] font-light text-[#3E3939] uppercase tracking-widest">[ WHERE WE FOCUS ]</div>
+        <div class="text-left sm:text-right">
+          <h2 class="text-[26px] sm:text-[36px] lg:text-[49px] font-semibold tracking-normal leading-[1.2]"><span class="text-[#EC460B] block">{{ $settings['heading_line1'] ?? 'Our core business sectors' }}</span><span class="text-[#131313] block">{{ $settings['heading_line2'] ?? 'Where we create values' }}</span></h2>
+        </div>
+      </div>
+    </div>
+    <div class="sectors-grid-wrap w-full my-auto flex flex-col gap-3 sm:gap-4 lg:gap-[32px]">
+      <div class="sectors-row-1 grid grid-cols-1 lg:grid-cols-[519fr_741fr] gap-3 sm:gap-4 lg:gap-[clamp(35px,2.7vw,40px)]">
+        <div class="inbetween-sector-card relative rounded-[14px] overflow-hidden bg-[#F6F4F4] border border-neutral-200/90 flex flex-col justify-center shadow-xs">
+          <div class="absolute inset-0 w-full h-full bg-cover bg-left bg-no-repeat pointer-events-none" style="background-image: url('{{ asset('themes/inbetween_v2/images/sector-robot-arm.png') }}')" role="img" aria-label="Industrial &amp; Manufacturing Robot Arm"></div>
+          <div class="relative z-10 w-full sm:max-w-[270px] xl:max-w-[285px] sm:ml-auto mr-0 xl:mr-2 space-y-2 sm:space-y-2.5">
+            <h3 class="text-[20px] sm:text-[20px] xl:text-[20px] font-regular  tracking-wide text-[#131313] leading-[1.25]"><span class="block">INDUSTRIAL &amp;</span><span class="block">MANUFACTURING</span>
+            </h3>
+            <div class="flex flex-wrap items-center gap-2.5"><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Machinery</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Equipment</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Components</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Factory Solutions</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Materials</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Materials</span>
+            </div>
+          </div>
+        </div>
+        <div class="inbetween-sector-card relative rounded-[14px] overflow-hidden bg-[#F6F4F4] border border-neutral-200/90 flex flex-col justify-center shadow-xs">
+          <div class="absolute inset-0 w-full h-full bg-cover bg-right bg-no-repeat pointer-events-none scale-x-[-1]" style="background-image: url('{{ asset('themes/inbetween_v2/images/sector-chipset-ai.png') }}')" role="img" aria-label="Electronics and Automation AI Chipset"></div>
+          <div class="relative z-10 w-full sm:max-w-[310px] xl:max-w-[330px] sm:mr-auto ml-0 xl:ml-2 space-y-2 sm:space-y-2.5">
+            <h3 class="text-[20px] sm:text-[20px] xl:text-[20px] font-regular  tracking-wide text-[#131313] leading-[1.25]"><span class="block">ELECTRONICS, AUTOMATION</span><span class="block">&amp; TECHNOLOGY</span>
+            </h3>
+            <div class="flex flex-wrap items-center gap-2.5"><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Testing &amp; Inspection</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Electronics</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Industrial Technology</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Automation</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Digital Solutions</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sectors-row-2 grid grid-cols-1 lg:grid-cols-[741fr_519fr] gap-3 sm:gap-4 lg:gap-[clamp(16px,2.5vw,40px)]">
+        <div class="inbetween-sector-card relative rounded-[14px] overflow-hidden bg-[#F6F4F4] border border-neutral-200/90 flex flex-col justify-center shadow-xs">
+          <div class="absolute inset-0 w-full h-full bg-cover bg-left bg-no-repeat pointer-events-none" style="background-image: url('{{ asset('themes/inbetween_v2/images/sector-dna-helix.png') }}')" role="img" aria-label="Biotechnology &amp; Healthcare Glass DNA Helix"></div>
+          <div class="relative z-10 w-full sm:max-w-[310px] xl:max-w-[330px] sm:ml-auto mr-0 xl:mr-2 space-y-2 sm:space-y-2.5">
+            <h3 class="text-[20px] sm:text-[20px] xl:text-[20px] font-regular  tracking-wide text-[#131313] leading-[1.25]"><span class="block">BIOTECHNOLOGY &amp;</span><span class="block">HEALTHCARE</span>
+            </h3>
+            <div class="flex flex-wrap items-center gap-2.5"><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Healthcare solutions</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Biotech</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Medical Technology</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Pharma</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Laboratory</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Diagnostics</span>
+            </div>
+          </div>
+        </div>
+        <div class="inbetween-sector-card relative rounded-[14px] overflow-hidden bg-[#F6F4F4] border border-neutral-200/90 flex flex-col justify-center shadow-xs">
+          <div class="absolute inset-0 w-full h-full bg-cover bg-right bg-no-repeat pointer-events-none" style="background-image: url('{{ asset('themes/inbetween_v2/images/sector-lightning-bolt.png') }}')" role="img" aria-label="Energy &amp; Sustainability Crystal Lightning Bolt"></div>
+          <div class="relative z-10 w-full sm:max-w-[270px] xl:max-w-[285px] sm:mr-auto ml-0 xl:ml-2 space-y-2 sm:space-y-2.5">
+            <h3 class="text-[20px] sm:text-[20px] xl:text-[20px] font-regular  tracking-wide text-[#131313] leading-[1.25]"><span class="block">ENERGY, ENVIRONMENT</span><span class="block">&amp; SUSTAINABILITY</span>
+            </h3>
+            <div class="flex flex-wrap items-center gap-2.5"><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Sustainability Technology</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Energy Technology</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Environmental Solutions</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Water &amp; Waste</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Renewable Energy</span><span class="inbetween-tag-pill inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full border border-neutral-300/80 bg-white text-[12px] font-light text-[#3E3939] whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]">Materials</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="relative z-20 w-full shrink-0 flex justify-center pb-1"><a class="inline-flex flex-col items-center gap-0.5 text-neutral-400 hover:text-[#EC460B] transition-colors duration-200 group text-[12px] font-light uppercase tracking-widest" href="#inbetween-founder" title="Cuộn sang Founder Profile"><span class="w-3.5 h-6 sm:w-4 sm:h-7 rounded-full border border-neutral-300 flex items-start justify-center p-0.5 group-hover:border-[#EC460B]"><span class="w-1 h-1.5 rounded-full bg-neutral-400 group-hover:bg-[#EC460B] animate-bounce"></span></span></a></div>
+  </div>
+</section>

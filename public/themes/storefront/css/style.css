@@ -1,0 +1,8 @@
+/* Theme: Storefront */
+:root {
+    --theme-primary: #2563eb;
+    --theme-font: 'Inter', system-ui, sans-serif;
+}
+body {
+    font-family: var(--theme-font);
+}

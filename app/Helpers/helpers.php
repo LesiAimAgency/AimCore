@@ -2,6 +2,7 @@
 
 use App\Models\Menu;
 use App\Models\Project;
+use App\Services\Tenancy\ProjectResolver;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -85,29 +86,22 @@ if (! function_exists('current_project')) {
     function current_project()
     {
         $project = request()->attributes->get('project');
-        if (! $project) {
-            $code = request()->route('projectCode');
-            if ($code) {
-                $project = Project::where('code', $code)->first();
-                if ($project) {
-                    request()->attributes->set('project', $project);
-                }
-            }
-        }
-        if (! $project && app()->bound('current_project_id')) {
-            $project = Project::find(app('current_project_id'));
-            if ($project) {
-                request()->attributes->set('project', $project);
-            }
-        }
-        if (! $project && session('current_project_id')) {
-            $project = Project::find(session('current_project_id'));
-            if ($project) {
-                request()->attributes->set('project', $project);
-            }
+        if ($project instanceof Project) {
+            return $project;
         }
 
-        return $project;
+        try {
+            $resolved = app(ProjectResolver::class)->resolve(request());
+            if ($resolved) {
+                request()->attributes->set('project', $resolved);
+
+                return $resolved;
+            }
+        } catch (Throwable $e) {
+            // Ignore during DB initialization or testing
+        }
+
+        return null;
     }
 }
 

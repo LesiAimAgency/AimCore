@@ -1,0 +1,95 @@
+{
+  "$schema": "https://vgt.local/schemas/theme.v1.json",
+  "name": "viettinmartdemo",
+  "title": "Viettinmart - Siêu Thị Nông Sản & Hàng Tiêu Dùng",
+  "version": "1.0.0",
+  "description": "Nền tảng thương mại điện tử chuyên nghiệp cho chuỗi siêu thị bán lẻ, thực phẩm tươi sạch và tiêu dùng nhanh.",
+  "author": "VGT Team",
+  "engine_compatibility": ">=1.0.0",
+  "type": "ecommerce",
+
+  "features": [
+    "ecommerce",
+    "catalog",
+    "cart",
+    "checkout",
+    "widgets",
+    "menus",
+    "seo",
+    "reviews",
+    "coupons"
+  ],
+
+  "database": {
+    "tables": [
+      "products_enhanced",
+      "categories",
+      "orders",
+      "order_items",
+      "settings",
+      "widgets",
+      "widget_templates",
+      "menus",
+      "menu_items",
+      "coupons",
+      "flash_sale_campaigns"
+    ],
+    "seeders": [
+      "ViettinmartSettingsSeeder",
+      "ViettinmartProductsSeeder",
+      "ViettinmartMenuSeeder",
+      "ViettinmartWidgetsSeeder",
+      "ViettinmartMasterSeeder"
+    ]
+  },
+
+  "widgets": [
+    "vtm_hero_slider",
+    "vtm_feature_icons",
+    "vtm_product_featured",
+    "vtm_deal_flash",
+    "vtm_product_tabs",
+    "vtm_promo_banners",
+    "vtm_top_trending",
+    "vtm_posts_latest",
+    "vtm_form_widget",
+    "vtm_footer_column"
+  ],
+
+  "menus": {
+    "header": {
+      "name": "Header Menu Chính",
+      "items": [
+        {"title": "Trang chủ", "url": "/"},
+        {"title": "Cửa hàng", "url": "/cua-hang"},
+        {"title": "Khuyến mãi", "url": "/khuyen-mai"},
+        {"title": "Tin tức", "url": "/blog"},
+        {"title": "Liên hệ", "url": "/lien-he"}
+      ]
+    },
+    "footer": {
+      "name": "Footer - Chính sách & Hỗ trợ",
+      "items": [
+        {"title": "Chính sách giao hàng", "url": "/chinh-sach-giao-hang"},
+        {"title": "Chính sách đổi trả", "url": "/chinh-sach-doi-tra"},
+        {"title": "Bảo mật thông tin", "url": "/chinh-sach-bao-mat"},
+        {"title": "Điều khoản dịch vụ", "url": "/dieu-khoan-dich-vu"}
+      ]
+    }
+  },
+
+  "default_settings": {
+    "site_title": "VietTinMart - Thực phẩm tươi sạch mỗi ngày",
+    "site_name": "VietTinMart",
+    "site_tagline": "Thực phẩm tươi sạch & hàng tiêu dùng an toàn",
+    "site_description": "VietTinMart - Chuỗi siêu thị thực phẩm sạch và nhu yếu phẩm chất lượng cao hàng đầu.",
+    "theme_primary_color": "#008848",
+    "site_email": "cskh@viettinmart.vn",
+    "site_phone": "1900 8888",
+    "site_copyright": "Copyright © 2026 VietTinMart. All rights reserved."
+  },
+
+  "routes_file": "routes/viettinmart.php",
+  "view_path": "resources/views/themes/viettinmartdemo",
+  "asset_path": "public/themes/viettinmartdemo"
+}

@@ -1,0 +1,451 @@
+/* ===== CART DROPDOWN - BEAUTIFUL DESIGN ===== */
+
+/* Cart button wrapper */
+.btn-border-only.cart.category-hover-header {
+    position: relative !important;
+}
+
+/* CRITICAL: Prevent theme CSS from affecting cart dropdown */
+.btn-border-only.cart.category-hover-header:hover .cart-dropdown-container {
+    /* Do NOT show on CSS hover - JavaScript controls this */
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* CRITICAL: Override theme CSS positioning */
+.category-hover-header .category-sub-menu.card-number-show {
+    right: 0 !important;
+    left: auto !important;
+    padding: 0 !important;
+    min-width: unset !important;
+    width: 420px !important;
+    max-width: calc(100vw - 40px) !important;
+}
+
+/* Ensure cart button wrapper has position relative */
+.accont-wishlist-cart-area-header .btn-border-only.cart.category-hover-header {
+    position: relative !important;
+}
+
+/* Cart dropdown container - ẩn mặc định */
+.btn-border-only.cart.category-hover-header .cart-dropdown-container {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    top: calc(100% + 15px) !important;
+    right: 0 !important;
+    left: auto !important;
+    z-index: 999999 !important;
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15) !important;
+    border: 1px solid #e0e0e0 !important;
+    width: 420px !important;
+    max-width: calc(100vw - 40px) !important;
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.25s !important;
+    transform: translateY(-10px) !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+}
+
+/* JavaScript sẽ control display/visibility/opacity/transform */
+/* Khi JavaScript set inline styles, nó sẽ override !important */
+
+/* Arrow pointing to cart button */
+.cart-dropdown-container::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: 30px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 12px solid #ffffff;
+    z-index: 2;
+    filter: drop-shadow(0 -3px 3px rgba(0,0,0,0.08));
+}
+
+/* Cart dropdown content - OVERRIDE theme CSS */
+.cart-dropdown-container .category-sub-menu {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    border-radius: 16px !important;
+    list-style: none !important;
+    /* CRITICAL: Override theme CSS that sets opacity: 0 */
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    position: static !important;
+    display: block !important;
+}
+
+/* Header - Clean & Simple */
+.cart-dropdown-container .shopping-cart-number {
+    padding: 18px 20px !important;
+    margin: 0 !important;
+    border-bottom: 2px solid #f5f5f5 !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #333333 !important;
+    background: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.cart-dropdown-container .shopping-cart-number i {
+    color: #10b981 !important;
+    font-size: 17px !important;
+}
+
+/* Cart items list */
+.cart-dropdown-container .cart-items-mini-list {
+    padding: 0 !important;
+    max-height: 300px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+/* Custom scrollbar - Đẹp hơn */
+.cart-dropdown-container .cart-items-mini-list::-webkit-scrollbar {
+    width: 6px !important;
+}
+
+.cart-dropdown-container .cart-items-mini-list::-webkit-scrollbar-track {
+    background: #f8fafc !important;
+    border-radius: 10px !important;
+}
+
+.cart-dropdown-container .cart-items-mini-list::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #10b981 0%, #059669 100%) !important;
+    border-radius: 10px !important;
+}
+
+.cart-dropdown-container .cart-items-mini-list::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #059669 0%, #047857 100%) !important;
+}
+
+/* Individual cart item */
+.cart-dropdown-container .cart-item-1 {
+    padding: 16px 20px !important;
+    border-bottom: 1px solid #f5f5f5 !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.cart-dropdown-container .cart-item-1:hover {
+    background: #fafafa !important;
+}
+
+.cart-dropdown-container .cart-item-1:last-child {
+    border-bottom: none !important;
+}
+
+/* Product image */
+.cart-dropdown-container .cart-item-1 .img-name {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    flex: 1 !important;
+}
+
+.cart-dropdown-container .cart-item-1 .thumbanil {
+    flex-shrink: 0 !important;
+}
+
+.cart-dropdown-container .cart-item-1 .thumbanil img {
+    width: 75px !important;
+    height: 75px !important;
+    object-fit: cover !important;
+    border-radius: 8px !important;
+    transition: transform 0.2s ease !important;
+    border: 1px solid #e5e5e5 !important;
+}
+
+.cart-dropdown-container .cart-item-1:hover .thumbanil img {
+    transform: scale(1.02) !important;
+    border-color: #10b981 !important;
+}
+
+/* Product details */
+.cart-dropdown-container .cart-item-1 .details {
+    flex: 1 !important;
+}
+
+.cart-dropdown-container .cart-item-1 .details .title {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #333333 !important;
+    margin-bottom: 8px !important;
+    line-height: 1.5 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+.cart-dropdown-container .cart-item-1 .number {
+    font-size: 14px !important;
+    color: #666666 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.cart-dropdown-container .cart-item-1 .number .qty {
+    font-weight: 600 !important;
+    color: #333333 !important;
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+.cart-dropdown-container .cart-item-1 .number .price {
+    font-weight: 700 !important;
+    color: #e74c3c !important;
+    font-size: 15px !important;
+}
+
+/* Remove button - Simple & Clean */
+.cart-dropdown-container .close-c1 {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    background: #f5f5f5 !important;
+    color: #999999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 13px !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
+    border: 1px solid #e5e5e5 !important;
+}
+
+.cart-dropdown-container .close-c1:hover {
+    background: #2f9ecf !important;
+    color: white !important;
+    transform: scale(1.1) !important;
+    border-color: #ffffff !important;
+}
+.single-category>input{
+    display: inline !important;
+    
+}
+.single-category{
+    gap: 10px;
+}
+/* Footer with totals and buttons */
+.cart-dropdown-container .sub-total-cart-balance {
+    padding: 18px 20px !important;
+    border-top: 2px solid #f5f5f5 !important;
+    background: #fafafa !important;
+}
+
+.cart-dropdown-container .sub-total-cart-balance .top {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 14px !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    color: #333333 !important;
+}
+
+.cart-dropdown-container .sub-total-cart-balance .number-c {
+    color: #e74c3c !important;
+    font-weight: 700 !important;
+    font-size: 17px !important;
+}
+
+/* Progress bar - Miễn phí giao hàng */
+.cart-dropdown-container .progress {
+    height: 6px !important;
+    background: #e5e5e5 !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    margin: 10px 0 !important;
+}
+
+.cart-dropdown-container .progress-bar {
+    background: #10b981 !important;
+    height: 100% !important;
+    transition: width 0.3s ease !important;
+    border-radius: 10px !important;
+}
+
+/* Shipping message */
+.cart-dropdown-container .shipping-message {
+    font-size: 13px !important;
+    color: #666666 !important;
+    margin: 10px 0 0 0 !important;
+    text-align: center !important;
+    line-height: 1.5 !important;
+}
+
+.cart-dropdown-container .shipping-message.success {
+    color: #10b981 !important;
+    font-weight: 600 !important;
+}
+
+.cart-dropdown-container .shipping-message strong {
+    color: #10b981 !important;
+    font-weight: 700 !important;
+}
+
+/* Action buttons - Clean & Modern */
+.cart-dropdown-container .button-wrapper {
+    display: flex !important;
+    gap: 10px !important;
+    margin-top: 16px !important;
+}
+
+.cart-dropdown-container .button-wrapper .rts-btn {
+    flex: 1 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 12px 16px !important;
+    text-align: center !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    border: 2px solid transparent !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px !important;
+}
+
+/* View Cart Button - Outline style */
+/* .cart-dropdown-container .button-wrapper .rts-btn:first-child {
+    background: #ffffff !important;
+    color: #10b981 !important;
+    border-color: #10b981 !important;
+}
+
+.cart-dropdown-container .button-wrapper .rts-btn:first-child:hover {
+    background: #10b981 !important;
+    color: white !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25) !important;
+} */
+
+/* Checkout Button - Solid style */
+/* .cart-dropdown-container .button-wrapper .rts-btn:last-child {
+    background: #10b981 !important;
+    color: white !important;
+    border-color: #10b981 !important;
+} */
+
+/* .cart-dropdown-container .button-wrapper .rts-btn:last-child:hover {
+    background: #059669 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+} */
+
+/* Empty cart state */
+.cart-dropdown-container .empty-cart-message {
+    text-align: center !important;
+    padding: 60px 40px !important;
+}
+
+.cart-dropdown-container .empty-cart-message .empty-icon {
+    font-size: 56px !important;
+    color: #d0d0d0 !important;
+    margin-bottom: 16px !important;
+}
+
+.cart-dropdown-container .empty-cart-message .empty-text {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #666666 !important;
+    margin-bottom: 6px !important;
+}
+
+.cart-dropdown-container .empty-cart-message .empty-subtext {
+    font-size: 13px !important;
+    color: #999999 !important;
+}
+
+/* Tablet responsive */
+@media (max-width: 1024px) {
+    .btn-border-only.cart.category-hover-header .cart-dropdown-container {
+        right: 10px !important;
+        width: 380px !important;
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .btn-border-only.cart.category-hover-header .cart-dropdown-container {
+        position: fixed !important;
+        top: 70px !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: calc(100vw - 20px) !important;
+        max-width: calc(100vw - 20px) !important;
+        transform: translateY(0) !important;
+    }
+    
+    .cart-dropdown-container .shopping-cart-number,
+    .cart-dropdown-container .sub-total-cart-balance {
+        padding: 16px 18px !important;
+    }
+    
+    .cart-dropdown-container .cart-item-1 {
+        padding: 14px 18px !important;
+    }
+    
+    .cart-dropdown-container .cart-item-1 .thumbanil img {
+        width: 65px !important;
+        height: 65px !important;
+    }
+    
+    .cart-dropdown-container .button-wrapper .rts-btn {
+        font-size: 11px !important;
+        padding: 10px 12px !important;
+        gap: 4px !important;
+    }
+}
+
+/* Smooth hover transition */
+.btn-border-only.cart.category-hover-header,
+.btn-border-only.cart.category-hover-header .cart-dropdown-container {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .cart-dropdown-container {
+        border: 2px solid #000 !important;
+    }
+    
+    .cart-dropdown-container .cart-item-1:hover {
+        background: #000 !important;
+        color: #fff !important;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .cart-dropdown-container,
+    .cart-dropdown-container .cart-item-1,
+    .cart-dropdown-container .close-c1,
+    .cart-dropdown-container .button-wrapper .rts-btn {
+        transition: none !important;
+        animation: none !important;
+    }
+}

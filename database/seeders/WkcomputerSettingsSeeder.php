@@ -81,7 +81,12 @@ class WkcomputerSettingsSeeder extends Seeder
         foreach ($settings as $key => $val) {
             DB::table('settings')
                 ->where('key', $key)
-                ->where('project_id', $projectId)
+                ->where(function ($q) use ($projectId, $tenantId) {
+                    $q->where('project_id', $projectId);
+                    if ($tenantId) {
+                        $q->orWhere('tenant_id', $tenantId);
+                    }
+                })
                 ->delete();
 
             DB::table('settings')->insert([
@@ -107,7 +112,15 @@ class WkcomputerSettingsSeeder extends Seeder
             ['id' => 'f1', 'key' => 'roboto', 'type' => 'google', 'label' => 'Roboto', 'load' => '400,500,700', 'is_default' => 1],
             ['id' => 'f2', 'key' => 'inter', 'type' => 'google', 'label' => 'Inter', 'load' => '400,600,700', 'is_default' => 0],
         ];
-        DB::table('settings')->where('key', 'fonts')->where('project_id', $projectId)->delete();
+        DB::table('settings')
+            ->where('key', 'fonts')
+            ->where(function ($q) use ($projectId, $tenantId) {
+                $q->where('project_id', $projectId);
+                if ($tenantId) {
+                    $q->orWhere('tenant_id', $tenantId);
+                }
+            })
+            ->delete();
         DB::table('settings')->insert([
             'key' => 'fonts',
             'payload' => json_encode($fonts),

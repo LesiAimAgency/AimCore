@@ -76,13 +76,16 @@ Route::post('/review/submit', fn () => response()->json(['success' => true, 'mes
 // ─── CUSTOMER AUTH & ACCOUNT ──────────────────────────────────────────
 Route::get('/khach-hang/dang-nhap', [AuthController::class, 'showLogin'])->name('customer.login');
 Route::post('/khach-hang/dang-nhap', [AuthController::class, 'login']);
-Route::get('/dang-nhap', [AuthController::class, 'showLogin'])->name('wkcomputer.login');
-Route::post('/dang-nhap', [AuthController::class, 'login'])->name('wkcomputer.login.post');
+Route::get('/dang-nhap', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/dang-nhap', [AuthController::class, 'login'])->name('login.post');
+Route::get('/wkcomputer/dang-nhap', [AuthController::class, 'showLogin'])->name('wkcomputer.login');
 Route::get('/khach-hang/dang-ky', [AuthController::class, 'showRegister'])->name('customer.register');
-Route::get('/dang-ky', [AuthController::class, 'showRegister'])->name('wkcomputer.register');
-Route::post('/khach-hang/dang-ky', [AuthController::class, 'register'])->name('wkcomputer.register.post');
+Route::get('/dang-ky', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/khach-hang/dang-ky', [AuthController::class, 'register'])->name('register.post');
+Route::get('/wkcomputer/dang-ky', [AuthController::class, 'showRegister'])->name('wkcomputer.register');
 Route::post('/khach-hang/dang-xuat', [AuthController::class, 'logout'])->name('customer.logout');
-Route::post('/dang-xuat', [AuthController::class, 'logout'])->name('wkcomputer.logout');
+Route::post('/dang-xuat', [AuthController::class, 'logout'])->name('logout');
+Route::post('/wkcomputer/dang-xuat', [AuthController::class, 'logout'])->name('wkcomputer.logout');
 
 Route::prefix('tai-khoan')->middleware('auth')->group(function () {
     Route::get('/thong-tin', [AuthController::class, 'profile'])->name('profile');

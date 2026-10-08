@@ -11,7 +11,19 @@ class Project extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['tenant_id', 'customer_id', 'contract_id', 'name', 'code', 'subdomain', 'remote_url', 'api_token', 'external_domain', 'sync_enabled', 'client_name', 'start_date', 'deadline', 'status', 'total_gold', 'contract_value', 'contract_file', 'technical_requirements', 'features', 'cms_features', 'deployment_config', 'deployment_status', 'environment', 'notes', 'admin_id', 'employee_ids', 'created_by', 'project_admin_username', 'project_admin_password', 'project_admin_password_plain', 'password_updated_at', 'password_updated_by', 'approved_at', 'initialized_at', 'department_id', 'service_id', 'current_stage_id', 'dynamic_form_data', 'project_type', 'is_multi_tenancy'];
+    protected $fillable = [
+        'uuid', 'project_key', 'installation_id', 'cms_version', 'theme_version',
+        'last_heartbeat_at', 'connection_status', 'remote_ip', 'health_metrics',
+        'tenant_id', 'customer_id', 'contract_id', 'name', 'code', 'subdomain',
+        'remote_url', 'api_token', 'external_domain', 'sync_enabled', 'client_name',
+        'start_date', 'deadline', 'status', 'total_gold', 'contract_value',
+        'contract_file', 'technical_requirements', 'features', 'cms_features',
+        'deployment_config', 'deployment_status', 'environment', 'notes',
+        'admin_id', 'employee_ids', 'created_by', 'project_admin_username',
+        'project_admin_password', 'project_admin_password_plain', 'password_updated_at',
+        'password_updated_by', 'approved_at', 'initialized_at', 'department_id',
+        'service_id', 'current_stage_id', 'dynamic_form_data', 'project_type', 'is_multi_tenancy',
+    ];
 
     protected $casts = [
         'is_multi_tenancy' => 'boolean',
@@ -22,10 +34,13 @@ class Project extends Model
         'approved_at' => 'datetime',
         'initialized_at' => 'datetime',
         'password_updated_at' => 'datetime',
+        'last_heartbeat_at' => 'datetime',
+        'features' => 'array',
         'employee_ids' => 'array',
         'cms_features' => 'array',
         'deployment_config' => 'array',
         'dynamic_form_data' => 'array',
+        'health_metrics' => 'array',
     ];
 
     protected $hidden = ['project_admin_password', 'project_admin_password_plain'];
@@ -216,6 +231,13 @@ class Project extends Model
         return $this->external_domain ?: ($this->subdomain ?: $this->tenant?->domain);
     }
 
+    public function getThemeAttribute(): ?string
+    {
+        $features = is_array($this->features) ? $this->features : json_decode($this->features ?? '[]', true);
+
+        return $features['theme'] ?? 'inbetween';
+    }
+
     public function permissions()
     {
         return $this->hasMany(ProjectPermission::class);
@@ -268,5 +290,49 @@ class Project extends Model
     public function deploymentHistories(): HasMany
     {
         return $this->hasMany(DeploymentHistory::class);
+    }
+
+    /**
+     * Remote project tokens for Control Plane communication
+     */
+    public function tokens(): HasMany
+    {
+        return $this->hasMany(ProjectToken::class);
+    }
+
+    /**
+     * Get currently active token
+     */
+    public function activeToken(): ?ProjectToken
+    {
+        return $this->tokens()
+            ->whereNull('revoked_at')
+            ->latest()
+            ->first();
+    }
+
+    /**
+     * Issue a new token for this project
+     */
+    public function issueToken(string $name = 'default', array $abilities = ['*']): array
+    {
+        return ProjectToken::createForProject($this, $name, $abilities);
+    }
+
+    /**
+     * Determine if remote website is currently reporting as online
+     */
+    public function isOnline(): bool
+    {
+        if ($this->connection_status === 'offline' || $this->connection_status === 'revoked') {
+            return false;
+        }
+
+        if (! $this->last_heartbeat_at) {
+            return false;
+        }
+
+        // Considered online if heartbeat received within last 10 minutes
+        return $this->last_heartbeat_at->gte(now()->subMinutes(10));
     }
 }

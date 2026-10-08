@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Core\Theme\ThemeManager;
 use App\Models\Project;
 use App\Models\Widget;
 use App\Widgets\BaseWidget;
@@ -192,6 +193,20 @@ class WidgetRenderingService
             if (! $project && request()->route('projectCode')) {
                 $project = Project::where('code', request()->route('projectCode'))->first();
             }
+            if (! $project && (config('app.standalone_mode') || env('STANDALONE_MODE'))) {
+                try {
+                    $project = Project::first();
+                } catch (\Throwable $e) {
+                }
+            }
+            if (! $project) {
+                try {
+                    if (Project::count() === 1) {
+                        $project = Project::first();
+                    }
+                } catch (\Throwable $e) {
+                }
+            }
 
             $projectId = $project?->id;
             $tenantId = $project?->tenant_id ?? session('current_tenant_id') ?? ($project?->code === 'viettinmart-eco' ? 3 : null);
@@ -211,10 +226,31 @@ class WidgetRenderingService
                     }
                 });
             } else {
-                $query->whereNull('project_id');
+                $hasGlobal = (clone $query)->whereNull('project_id')->exists();
+                if ($hasGlobal) {
+                    $query->whereNull('project_id');
+                }
             }
 
             $widgets = $query->get();
+
+            // Theme-First fallback for homepage-main: if DB has no widgets, render theme master widget
+            if ($widgets->isEmpty() && $area === 'homepage-main') {
+                $themeManager = app(ThemeManager::class);
+                $activeTheme = $themeManager->resolveActiveTheme($project);
+                $manifest = $themeManager->getManifest($activeTheme);
+                $declaredWidgets = $manifest?->getWidgets() ?? [];
+
+                foreach ($declaredWidgets as $widgetSlug) {
+                    if (WidgetRegistry::has($widgetSlug)) {
+                        return $this->render($widgetSlug, [], 'default', $context);
+                    }
+                }
+
+                if (WidgetRegistry::has("{$activeTheme}_theme")) {
+                    return $this->render("{$activeTheme}_theme", [], 'default', $context);
+                }
+            }
 
             // Auto-heal fallback for Viettinmart if homepage is empty
             if ($widgets->isEmpty() && $area === 'homepage-main' && $project && ($project->code === 'viettinmart-eco' || $project->code === 'viettinmart')) {

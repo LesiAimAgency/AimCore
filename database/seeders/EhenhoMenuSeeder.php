@@ -189,13 +189,18 @@ class EhenhoMenuSeeder extends Seeder
             $menu->allItems()->delete();
 
             $order = 1;
+            $urlPrefix = ($project && ($project->code === 'DA010' || $project->code === 'DA010-EHENHO-DATING-SOCIAL-NETWORK')) ? '/DA010' : '';
+
             foreach ($m['items'] as $itemData) {
+                $rawUrl = $itemData['url'];
+                $normalizedUrl = str_replace('/DA010', $urlPrefix, $rawUrl);
+
                 MenuItem::withoutGlobalScopes()->create([
                     'menu_id' => $menu->id,
                     'project_id' => $projectId,
                     'tenant_id' => $tenantId,
                     'title' => $itemData['title'],
-                    'url' => $itemData['url'],
+                    'url' => $normalizedUrl,
                     'icon' => $itemData['icon'] ?? null,
                     'css_class' => $itemData['css_class'] ?? null,
                     'target' => '_self',

@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Core\Theme\ThemeManager;
+use App\Models\Project;
 use App\Models\ProjectSettingModel;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
@@ -30,13 +32,45 @@ class SettingsService
     }
 
     /**
+     * Resolve project context with standalone/single-project auto detection
+     */
+    public function resolveCurrentProject()
+    {
+        $project = request()->attributes->get('project');
+        if ($project) {
+            return $project;
+        }
+
+        if (function_exists('current_project')) {
+            $current = current_project();
+            if ($current) {
+                return $current;
+            }
+        }
+
+        if (config('app.standalone_mode') || env('STANDALONE_MODE')) {
+            try {
+                return Project::first();
+            } catch (\Throwable $e) {
+            }
+        }
+
+        try {
+            if (Project::count() === 1) {
+                return Project::first();
+            }
+        } catch (\Throwable $e) {
+        }
+
+        return null;
+    }
+
+    /**
      * Check if currently in project context
      */
     private function isProjectContext(): bool
     {
-        // Check if project is set in request attributes (frontend routes)
-        $project = request()->attributes->get('project');
-        if ($project) {
+        if ($this->resolveCurrentProject()) {
             return true;
         }
 
@@ -48,22 +82,22 @@ class SettingsService
      */
     private function getCurrentProjectKey(): string
     {
+        $project = $this->resolveCurrentProject();
+        if ($project) {
+            return 'project_'.($project->id ?? $project->code ?? 'unknown');
+        }
+
+        $projId = session('current_project_id');
+        if ($projId) {
+            return 'project_'.$projId;
+        }
+
+        $sess = session('current_project');
+        if (is_string($sess)) {
+            return 'project_'.$sess;
+        }
+
         if ($this->isProjectContext()) {
-            $project = request()->attributes->get('project');
-            if ($project) {
-                return 'project_'.($project->id ?? $project->code ?? 'unknown');
-            }
-
-            $projId = session('current_project_id');
-            if ($projId) {
-                return 'project_'.$projId;
-            }
-
-            $sess = session('current_project');
-            if (is_string($sess)) {
-                return 'project_'.$sess;
-            }
-
             return config('database.connections.project.database') ?? 'project';
         }
 
@@ -121,8 +155,8 @@ class SettingsService
 
         if ($this->isProjectContext()) {
             try {
-                // DEMO MODE: Đọc từ main database với project scoping
-                $project = request()->attributes->get('project');
+                // Đọc từ database với project scoping
+                $project = $this->resolveCurrentProject();
                 if ($project) {
                     $mainConn = config('database.default');
                     // Load global settings (project_id IS NULL) làm fallback
@@ -164,12 +198,20 @@ class SettingsService
                 $this->settings = [];
             }
         } else {
-            $cacheKey = 'all_settings_main';
-            $this->settings = Cache::rememberForever($cacheKey, function () {
-                $rows = Setting::select(['key', 'payload', 'value'])->get();
+            try {
+                $cacheKey = 'all_settings_main';
+                $this->settings = Cache::rememberForever($cacheKey, function () {
+                    try {
+                        $rows = Setting::select(['key', 'payload', 'value'])->get();
 
-                return $this->parseSettingsRows($rows);
-            });
+                        return $this->parseSettingsRows($rows);
+                    } catch (\Throwable $e) {
+                        return [];
+                    }
+                }) ?? [];
+            } catch (\Throwable $e) {
+                $this->settings = [];
+            }
         }
     }
 
@@ -178,6 +220,13 @@ class SettingsService
         $this->loadSettings();
 
         if (! array_key_exists($key, $this->settings)) {
+            if (class_exists(ThemeManager::class)) {
+                $themeFallback = app(ThemeManager::class)->getDefaultSetting($key, null);
+                if ($themeFallback !== null) {
+                    return $themeFallback;
+                }
+            }
+
             return $default;
         }
 
@@ -188,13 +237,24 @@ class SettingsService
             if (array_key_exists('value', $value)) {
                 $val = $value['value'];
 
-                return $val !== null ? $val : $default;
+                if ($val !== null && $val !== '') {
+                    return $val;
+                }
+            } else {
+                return $value;
             }
-
+        } elseif ($value !== null && $value !== '') {
             return $value;
         }
 
-        return $value !== null ? $value : $default;
+        if (class_exists(ThemeManager::class)) {
+            $themeFallback = app(ThemeManager::class)->getDefaultSetting($key, null);
+            if ($themeFallback !== null) {
+                return $themeFallback;
+            }
+        }
+
+        return $default;
     }
 
     public function set($key, $value, $group = null, $locked = false)

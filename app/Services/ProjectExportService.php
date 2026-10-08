@@ -2,12 +2,15 @@
 
 namespace App\Services;
 
+use App\Core\Theme\ThemeManager;
 use App\Models\HostingProfile;
 use App\Models\Project;
+use App\Services\Export\ExportValidationService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use ZipArchive;
 
 /**
@@ -36,7 +39,7 @@ class ProjectExportService
      *
      * @throws \Exception on any failure
      */
-    public function buildExportPackage(Project $project, ?HostingProfile $profile = null): array
+    public function buildExportPackage(Project $project, ?HostingProfile $profile = null, bool $includeVendor = false): array
     {
         set_time_limit(0);
         ini_set('memory_limit', '1G');
@@ -55,8 +58,15 @@ class ProjectExportService
 
         Log::info("[Export] Starting export for project {$project->code}");
 
+        // Pre-flight validation
+        $validator = app(ExportValidationService::class);
+        $validation = $validator->validateProject($project);
+        if (! $validation['is_valid']) {
+            Log::warning("[Export] Project {$project->code} validation warnings/errors: ".implode('; ', $validation['errors']));
+        }
+
         // 1. Copy source files (minus SuperAdmin)
-        $this->exportEssentialFiles($project, $exportSourceDir);
+        $this->exportEssentialFiles($project, $exportSourceDir, $includeVendor);
         Log::info('[Export] Source files copied.');
 
         // 2. Generate CMS-only database SQL
@@ -73,7 +83,32 @@ class ProjectExportService
         $bootstrapContent = $this->generateBootstrapInstaller();
         File::put($exportSourceDir.'/deploy_setup.php', $bootstrapContent);
 
-        // 5. ZIP everything
+        // 5. Generate Phase 2 Package Manifest
+        $themeManager = app(ThemeManager::class);
+        $activeTheme = $themeManager->resolveActiveTheme($project);
+
+        $manifestData = [
+            'name' => 'website-package',
+            'package_type' => 'standalone_website_application',
+            'theme' => $activeTheme,
+            'cms_version' => '2.0.0',
+            'version' => '2.0.0',
+            'exported_at' => now()->toIso8601String(),
+            'platform' => 'VGT Platform Control Plane',
+            'routing' => [
+                'frontend' => '/',
+                'admin' => '/admin',
+                'installer' => '/install',
+            ],
+            'isolation' => [
+                'database' => 'independent_website_db',
+                'authentication' => 'independent_cms_auth',
+                'control_plane' => 'vgt_remote_api',
+            ],
+        ];
+        File::put($exportSourceDir.'/manifest.json', json_encode($manifestData, JSON_PRETTY_PRINT));
+
+        // 6. ZIP everything
         $this->createZipFromDirectory($exportSourceDir, $zipPath, $project);
         Log::info("[Export] ZIP created at {$zipPath} (".round(filesize($zipPath) / 1024 / 1024, 2).' MB).');
 
@@ -84,6 +119,7 @@ class ProjectExportService
             'zip_path' => $zipPath,
             'db_sql_content' => $dbSqlContent,
             'env_content' => $envContent,
+            'validation' => $validation,
         ];
     }
 
@@ -91,7 +127,7 @@ class ProjectExportService
     // SOURCE CODE EXPORT
     // =========================================================================
 
-    private function exportEssentialFiles(Project $project, string $exportPath): void
+    private function exportEssentialFiles(Project $project, string $exportPath, bool $includeVendor = false): void
     {
         $basePath = base_path();
 
@@ -102,29 +138,64 @@ class ProjectExportService
             'database' => 'database',
             'public' => 'public',
             'resources' => 'resources',
-            'vendor' => 'vendor',
             'storage/app/public' => 'storage/app/public',
             'storage/framework/cache' => 'storage/framework/cache',
             'storage/framework/sessions' => 'storage/framework/sessions',
             'storage/framework/views' => 'storage/framework/views',
         ];
 
-        // Determine public exclusions
+        if ($includeVendor) {
+            $directories['vendor'] = 'vendor';
+        }
+
+        $themeManager = app(ThemeManager::class);
+        $activeTheme = strtolower($themeManager->resolveActiveTheme($project));
+        $projectCode = strtolower($project->code);
+
+        // Determine public exclusions (skip heavy unneeded media and other themes)
         $publicExcludes = [
             'storage',
+            'media-files',
             'Front-end',
-            'viettinmartdemo',
+            'theme',
         ];
 
-        // Only include the project's own theme in public/themes
-        $projectCode = strtolower($project->code);
+        if ($activeTheme !== 'ehenho' && ! str_contains($projectCode, 'da010') && ! str_contains($projectCode, 'ehenho')) {
+            $publicExcludes[] = 'e-henho';
+        }
+
+        if ($activeTheme !== 'viettinmartdemo' && ! str_contains($projectCode, 'viettinmart')) {
+            $publicExcludes[] = 'viettinmartdemo';
+        }
+
         $themesDir = $basePath.'/public/themes';
         if (File::isDirectory($themesDir)) {
             foreach (File::directories($themesDir) as $themePath) {
-                $themeName = basename($themePath);
-                // If the theme folder doesn't match the project code or theme, exclude it
-                if (! str_contains(strtolower($themeName), $projectCode)) {
-                    $publicExcludes[] = 'themes/'.$themeName;
+                $themeName = strtolower(basename($themePath));
+                $matchesTheme = str_contains($themeName, $activeTheme) || str_contains($activeTheme, $themeName);
+                $matchesProject = str_contains($themeName, $projectCode) || str_contains($projectCode, $themeName);
+                if (! $matchesTheme && ! $matchesProject) {
+                    $publicExcludes[] = 'themes/'.basename($themePath);
+                }
+            }
+        }
+
+        $resourceExcludes = [];
+        $resourceThemesDir = $basePath.'/resources/views/themes';
+        if (File::isDirectory($resourceThemesDir)) {
+            foreach (File::directories($resourceThemesDir) as $themePath) {
+                $themeName = strtolower(basename($themePath));
+                if ($themeName !== $activeTheme) {
+                    $resourceExcludes[] = 'views/themes/'.basename($themePath);
+                }
+            }
+        }
+        $frontendThemesDir = $basePath.'/resources/views/frontend/themes';
+        if (File::isDirectory($frontendThemesDir)) {
+            foreach (File::directories($frontendThemesDir) as $themePath) {
+                $themeName = strtolower(basename($themePath));
+                if ($themeName !== $activeTheme) {
+                    $resourceExcludes[] = 'views/frontend/themes/'.basename($themePath);
                 }
             }
         }
@@ -132,7 +203,11 @@ class ProjectExportService
         foreach ($directories as $source => $dest) {
             $sourcePath = $basePath.'/'.$source;
             if (File::exists($sourcePath)) {
-                $excludes = ($source === 'public') ? $publicExcludes : [];
+                $excludes = match ($source) {
+                    'public' => $publicExcludes,
+                    'resources' => $resourceExcludes,
+                    default => []
+                };
                 $this->robustCopyDirectory($sourcePath, $exportPath.'/'.$dest, $excludes);
             }
         }
@@ -141,7 +216,12 @@ class ProjectExportService
         $this->copyAppWithoutSuperAdmin($basePath, $exportPath);
 
         // Copy /routes but strip superadmin.php and patch project.php
-        $this->copyRoutesWithoutSuperAdmin($basePath, $exportPath);
+        $this->copyRoutesWithoutSuperAdmin($basePath, $exportPath, $project);
+
+        // Remove installed.lock from exported storage so web installer can execute on first boot
+        if (File::exists($exportPath.'/storage/installed.lock')) {
+            File::delete($exportPath.'/storage/installed.lock');
+        }
 
         // Ensure storage dirs exist cleanly with .gitkeep
         $storageDirs = [
@@ -194,6 +274,26 @@ PHP;
     {
         if (! is_dir($dest)) {
             @mkdir($dest, 0755, true);
+        }
+
+        // High-speed native copy on Windows using Robocopy
+        if (PHP_OS_FAMILY === 'Windows' && function_exists('exec')) {
+            $srcWin = str_replace('/', '\\', $source);
+            $destWin = str_replace('/', '\\', $dest);
+            $cmd = "robocopy \"{$srcWin}\" \"{$destWin}\" /E /NFL /NDL /NJH /NJS /nc /ns /np";
+            if (! empty($excludePatterns)) {
+                $excludeDirs = [];
+                foreach ($excludePatterns as $pattern) {
+                    $patternWin = str_replace('/', '\\', $pattern);
+                    $excludeDirs[] = '"'.basename($patternWin).'"';
+                }
+                $cmd .= ' /XD '.implode(' ', array_unique($excludeDirs));
+            }
+            @exec($cmd, $out, $code);
+            // In robocopy, exit codes 0-7 indicate success (files copied, extras, etc.)
+            if ($code <= 7) {
+                return;
+            }
         }
 
         $iterator = new \RecursiveIteratorIterator(
@@ -252,7 +352,7 @@ PHP;
         }
     }
 
-    private function copyRoutesWithoutSuperAdmin(string $basePath, string $exportPath): void
+    private function copyRoutesWithoutSuperAdmin(string $basePath, string $exportPath, ?Project $project = null): void
     {
         $routesSource = $basePath.'/routes';
         $routesDest = $exportPath.'/routes';
@@ -269,6 +369,21 @@ PHP;
             File::delete($superAdminRoute);
         }
 
+        // Determine destination redirect for root route
+        $themeManager = app(ThemeManager::class);
+        $themeSlug = $project ? $themeManager->resolveActiveTheme($project) : 'inbetween';
+
+        $destination = '/'.($project?->code ?: $themeSlug);
+        if ($themeSlug === 'inbetween') {
+            $destination = '/inbetween';
+        } elseif ($themeSlug === 'ehenho') {
+            $destination = '/ehenho';
+        } elseif ($themeSlug === 'wkcomputerdemo') {
+            $destination = '/wkcomputer';
+        } elseif ($themeSlug === 'viettinmartdemo') {
+            $destination = '/viettinmart-eco';
+        }
+
         // Patch web.php: remove superadmin require & ensure root route redirects to storefront
         $webRoute = $routesDest.'/web.php';
         if (File::exists($webRoute)) {
@@ -278,9 +393,15 @@ PHP;
                 '// SuperAdmin routes removed for standalone deployment',
                 $content
             );
+            $rootReplacement = "if (! file_exists(storage_path('installed.lock'))) {\n        return redirect('/install');\n    }\n\n    return redirect('{$destination}');";
             $content = str_replace(
                 "return view('coming-soon');",
-                "return redirect('/wkcomputer');",
+                $rootReplacement,
+                $content
+            );
+            $content = preg_replace(
+                "/if\s*\(\s*app\(\)->environment\('local'\)\s*\)\s*\{\s*return redirect\('\/superadmin'\);\s*\}/",
+                "if (! file_exists(storage_path('installed.lock'))) { return redirect('/install'); }",
                 $content
             );
             File::put($webRoute, $content);
@@ -300,17 +421,15 @@ PHP;
     }
 
     // =========================================================================
-    // DATABASE SQL EXPORT (CMS WHITELIST ONLY)
+    // DATABASE SQL EXPORT (CMS WHITELIST + THEME MANIFEST TABLES)
     // =========================================================================
 
     /**
-     * CMS-only table whitelist.
-     * Only these tables have their schema + project-scoped data exported.
-     * Central system tables (projects, tasks, contracts, users, etc.) are NEVER included.
+     * CMS table whitelist with dynamic Theme Manifest tables inclusion.
      */
-    public function getCmsTableWhitelist(): array
+    public function getCmsTableWhitelist(?Project $project = null): array
     {
-        return [
+        $tables = [
             // Content
             'posts', 'page_sections', 'taxonomies', 'term_relationships', 'translations',
             'archive_templates', 'form_submissions', 'form_templates', 'modal_forms',
@@ -334,11 +453,20 @@ PHP;
             // Shipping
             'shipping_carriers', 'shipping_zones', 'shipping_zone_locations',
             'shipping_rules', 'shipping_rule_conditions', 'shipping_rate_versions',
-            // Project Core, Tenants & Settings (Single project scoped)
-            'projects', 'project_settings', 'tenants',
             // System Framework
-            'sessions', 'cache', 'cache_locks',
+            'sessions', 'cache', 'cache_locks', 'visitor_logs',
         ];
+
+        if ($project) {
+            $themeManager = app(ThemeManager::class);
+            $themeSlug = $themeManager->resolveActiveTheme($project);
+            $manifest = $themeManager->getManifest($themeSlug);
+            if ($manifest) {
+                $tables = array_unique(array_merge($tables, $manifest->getDatabaseTables()));
+            }
+        }
+
+        return $tables;
     }
 
     public function generateDatabaseSQL(Project $project): string
@@ -355,7 +483,7 @@ PHP;
             DB::select('SHOW TABLES')
         );
 
-        $tablesToExport = array_intersect($this->getCmsTableWhitelist(), $existingTables);
+        $tablesToExport = array_intersect($this->getCmsTableWhitelist($project), $existingTables);
 
         foreach ($tablesToExport as $table) {
             $sql .= $this->exportTableSQL($table, $project);
@@ -389,17 +517,18 @@ PHP;
         $columns = Schema::getColumnListing($table);
         $query = DB::table($table);
 
-        // Scope to project + shared test data
-        if ($table === 'projects') {
-            $query->where('id', $project->id);
-        } elseif ($table === 'users') {
-            // Include project users + all admin/root accounts (so user can login with their credentials)
-            $query->where(function ($q) use ($project) {
-                if ($project->tenant_id) {
-                    $q->where('tenant_id', $project->tenant_id);
-                }
-                $q->orWhereNull('tenant_id')
-                    ->orWhere('tenant_id', 0);
+        // Schema-only tables (never export temporary session, cache, or visitor logs)
+        if (in_array($table, ['cache', 'cache_locks', 'sessions', 'visitor_logs', 'failed_jobs', 'jobs', 'job_batches'])) {
+            return $sql;
+        }
+
+        // Scope to CMS Data Plane
+        if ($table === 'users') {
+            // Include project admin/cms accounts only (never superadmin)
+            $query->where(function ($q) {
+                $q->where('role', 'admin')
+                    ->orWhere('role', 'cms')
+                    ->orWhere('username', 'admin');
             });
         } elseif (in_array($table, ['roles', 'permissions', 'role_permissions', 'languages', 'fonts', 'term_relationships', 'product_attributes', 'attribute_groups', 'product_reviews', 'coupons', 'flash_sale_campaigns', 'flash_sale_items'])) {
             // Shared system and e-commerce test tables: export all
@@ -416,7 +545,8 @@ PHP;
                     if ($project->tenant_id) {
                         $q->where('tenant_id', $project->tenant_id);
                     }
-                    $q->orWhereNull('tenant_id');
+                    $q->orWhere('role', 'superadmin')
+                        ->orWhere('username', 'admin');
                 })
                 ->pluck('id');
             $query = DB::table($table)->whereIn('user_id', $userIds);
@@ -444,7 +574,6 @@ PHP;
                 return $sql;
             }
 
-            $sql .= "INSERT INTO `{$table}` VALUES\n";
             $values = [];
 
             foreach ($data as $row) {
@@ -461,7 +590,10 @@ PHP;
                 $values[] = '('.implode(', ', $rowData).')';
             }
 
-            $sql .= implode(",\n", $values).";\n";
+            $chunks = array_chunk($values, 50);
+            foreach ($chunks as $chunk) {
+                $sql .= "INSERT INTO `{$table}` VALUES\n".implode(",\n", $chunk).";\n";
+            }
         } catch (\Exception $e) {
             $sql .= '-- Error exporting data: '.$e->getMessage()."\n";
         }
@@ -675,11 +807,160 @@ PHP;
     }
 
     // =========================================================================
+    // THEME STANDALONE EXPORT (WORDPRESS-STYLE)
+    // =========================================================================
+
+    /**
+     * Export standalone Theme package (WordPress-style ZIP).
+     * Includes theme.json, views, assets, widgets, controllers, seeders, routes, and demo SQL.
+     */
+    public function exportTheme(string $themeSlug): array
+    {
+        set_time_limit(0);
+        ini_set('memory_limit', '1G');
+
+        $themeManager = app(ThemeManager::class);
+        $manifest = $themeManager->getManifest($themeSlug);
+        if (! $manifest) {
+            throw new \InvalidArgumentException("Theme '{$themeSlug}' not found or lacks a valid theme.json.");
+        }
+
+        $exportBaseDir = storage_path("app/theme_exports/{$themeSlug}");
+        $exportSourceDir = $exportBaseDir.'/theme';
+        $zipPath = $exportBaseDir."/{$themeSlug}_theme.zip";
+
+        if (File::exists($exportBaseDir)) {
+            File::deleteDirectory($exportBaseDir);
+        }
+        File::makeDirectory($exportSourceDir, 0755, true, true);
+
+        // 1. theme.json
+        $themeJsonPath = $manifest->getPath();
+        File::copy($themeJsonPath, $exportSourceDir.'/theme.json');
+
+        // 2. Views
+        $viewPaths = [
+            resource_path("views/themes/{$themeSlug}"),
+            resource_path("views/frontend/themes/{$themeSlug}"),
+        ];
+        foreach ($viewPaths as $vp) {
+            if (File::isDirectory($vp)) {
+                $this->robustCopyDirectory($vp, $exportSourceDir.'/views');
+            }
+        }
+
+        // 3. Public Assets
+        $assetPath = public_path("themes/{$themeSlug}");
+        if (File::isDirectory($assetPath)) {
+            $this->robustCopyDirectory($assetPath, $exportSourceDir.'/assets');
+        }
+
+        // 4. Dedicated Widgets
+        $studlyTheme = Str::studly($themeSlug);
+        $widgetClassDir = app_path("Widgets/{$studlyTheme}");
+        if (File::isDirectory($widgetClassDir)) {
+            $this->robustCopyDirectory($widgetClassDir, $exportSourceDir.'/widgets/classes');
+        }
+        $widgetViewDir = resource_path("views/widgets/{$themeSlug}");
+        if (File::isDirectory($widgetViewDir)) {
+            $this->robustCopyDirectory($widgetViewDir, $exportSourceDir.'/widgets/views');
+        }
+
+        // 5. Dedicated Controllers
+        $controllerDir = app_path("Http/Controllers/Themes/{$studlyTheme}");
+        if (File::isDirectory($controllerDir)) {
+            $this->robustCopyDirectory($controllerDir, $exportSourceDir.'/controllers');
+        }
+
+        // 6. Dedicated Seeders
+        $seedersDir = database_path('seeders');
+        if (File::isDirectory($seedersDir)) {
+            foreach (File::files($seedersDir) as $file) {
+                if (str_contains(strtolower($file->getFilename()), strtolower($themeSlug))) {
+                    File::ensureDirectoryExists($exportSourceDir.'/seeders');
+                    File::copy($file->getPathname(), $exportSourceDir.'/seeders/'.$file->getFilename());
+                }
+            }
+        }
+
+        // 7. Route declarations
+        $routeFile = base_path("routes/{$themeSlug}.php");
+        if (File::exists($routeFile)) {
+            File::ensureDirectoryExists($exportSourceDir.'/routes');
+            File::copy($routeFile, $exportSourceDir."/routes/{$themeSlug}.php");
+        }
+
+        // 8. Theme Database Schema & Demo SQL
+        $themeTables = $manifest->getDatabaseTables();
+        if (! empty($themeTables)) {
+            $sql = "-- Theme {$themeSlug} Schema & Demo SQL\n";
+            $sql .= "SET FOREIGN_KEY_CHECKS=0;\n";
+            $sql .= "SET UNIQUE_CHECKS=0;\n";
+            $sql .= "SET NAMES utf8mb4;\n\n";
+
+            foreach ($themeTables as $table) {
+                if (Schema::hasTable($table)) {
+                    $createTable = DB::select("SHOW CREATE TABLE `{$table}`");
+                    $sql .= "DROP TABLE IF EXISTS `{$table}`;\n";
+                    $sql .= $createTable[0]->{'Create Table'}.";\n\n";
+
+                    $rows = DB::table($table)->limit(100)->get();
+                    if ($rows->isNotEmpty()) {
+                        $sql .= "INSERT INTO `{$table}` VALUES\n";
+                        $valStrings = [];
+                        foreach ($rows as $row) {
+                            $quoted = array_map(function ($val) {
+                                if (is_null($val)) {
+                                    return 'NULL';
+                                }
+                                if (is_numeric($val) && ! is_string($val)) {
+                                    return $val;
+                                }
+
+                                return DB::getPdo()->quote($val);
+                            }, (array) $row);
+                            $valStrings[] = '('.implode(', ', $quoted).')';
+                        }
+                        $sql .= implode(",\n", $valStrings).";\n\n";
+                    }
+                }
+            }
+            $sql .= "SET FOREIGN_KEY_CHECKS=1;\n";
+            $sql .= "SET UNIQUE_CHECKS=1;\n";
+            File::ensureDirectoryExists($exportSourceDir.'/data');
+            File::put($exportSourceDir.'/data/demo.sql', $sql);
+        }
+
+        // 9. Create ZIP
+        $this->createZipFromDirectory($exportSourceDir, $zipPath);
+
+        // Clean up source dir, keep ZIP
+        File::deleteDirectory($exportSourceDir);
+
+        return [
+            'zip_path' => $zipPath,
+            'filename' => "{$themeSlug}_theme.zip",
+            'size' => filesize($zipPath),
+        ];
+    }
+
+    // =========================================================================
     // ZIP
     // =========================================================================
 
-    private function createZipFromDirectory(string $sourceDir, string $zipPath, Project $project): void
+    private function createZipFromDirectory(string $sourceDir, string $zipPath, ?Project $project = null): void
     {
+        // High-speed native ZIP creation on Windows using built-in tar.exe (bsdtar)
+        if (PHP_OS_FAMILY === 'Windows' && function_exists('exec')) {
+            $srcWin = str_replace('/', '\\', $sourceDir);
+            $zipWin = str_replace('/', '\\', $zipPath);
+            $cmd = "tar -a -c -f \"{$zipWin}\" -C \"{$srcWin}\" .";
+            @exec($cmd, $out, $code);
+            if ($code === 0 && file_exists($zipPath) && filesize($zipPath) > 1000) {
+                return;
+            }
+        }
+
         $zip = new ZipArchive;
 
         if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {

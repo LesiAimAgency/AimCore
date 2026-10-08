@@ -1,0 +1,75 @@
+{
+  "$schema": "https://vgt.local/schemas/theme.v1.json",
+  "name": "victorious",
+  "title": "Victorious Cruise & Luxury Hospitality",
+  "version": "1.0.0",
+  "description": "Giao diện du lịch, du thuyền và khách sạn nghỉ dưỡng cao cấp với thiết kế sang trọng chuẩn 5 sao.",
+  "author": "VGT Team",
+  "engine_compatibility": ">=1.0.0",
+  "type": "corporate",
+
+  "features": [
+    "corporate",
+    "hospitality",
+    "booking",
+    "widgets",
+    "menus",
+    "seo"
+  ],
+
+  "database": {
+    "tables": [
+      "widgets",
+      "widget_templates",
+      "settings",
+      "menus",
+      "menu_items",
+      "form_submissions"
+    ],
+    "seeders": [
+      "HomePageSeeder"
+    ]
+  },
+
+  "widgets": [
+    "hero",
+    "features",
+    "banner",
+    "footer"
+  ],
+
+  "menus": {
+    "header": {
+      "name": "Victorious Main Navigation",
+      "items": [
+        {"title": "Trang chủ", "url": "/"},
+        {"title": "Du thuyền", "url": "#cruises"},
+        {"title": "Hải trình", "url": "#itinerary"},
+        {"title": "Trải nghiệm", "url": "#experience"},
+        {"title": "Đặt phòng", "url": "#booking"}
+      ]
+    },
+    "footer": {
+      "name": "Victorious Footer Links",
+      "items": [
+        {"title": "Chính sách đặt tour", "url": "#terms"},
+        {"title": "Bảo mật", "url": "#privacy"}
+      ]
+    }
+  },
+
+  "default_settings": {
+    "site_title": "Victorious Cruise - Đẳng Cấp Du Thuyền Nghỉ Dưỡng",
+    "site_name": "Victorious Cruise",
+    "site_tagline": "Hành trình nghỉ dưỡng 5 sao thượng lưu",
+    "site_description": "Trải nghiệm kỳ nghỉ thượng lưu trên du thuyền 5 sao đẳng cấp quốc tế Victorious Cruise.",
+    "theme_primary_color": "#D97706",
+    "site_email": "booking@victoriouscruise.com",
+    "site_phone": "1900 6688",
+    "site_copyright": "Copyright © 2026 Victorious Cruise. All rights reserved."
+  },
+
+  "routes_file": "routes/victorious.php",
+  "view_path": "resources/views/themes/victorious",
+  "asset_path": "public/themes/victorious"
+}

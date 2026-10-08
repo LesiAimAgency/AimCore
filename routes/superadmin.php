@@ -19,6 +19,7 @@ use App\Http\Controllers\SuperAdmin\PermissionController;
 use App\Http\Controllers\SuperAdmin\ProjectController;
 use App\Http\Controllers\SuperAdmin\ProjectExportController;
 use App\Http\Controllers\SuperAdmin\RemoteCmsController;
+use App\Http\Controllers\SuperAdmin\RemoteWebsiteController;
 use App\Http\Controllers\SuperAdmin\RoleController;
 use App\Http\Controllers\SuperAdmin\ServiceController;
 use App\Http\Controllers\SuperAdmin\ServiceStageController;
@@ -115,8 +116,20 @@ Route::middleware([
     Route::post('websites/{tenant}/control', [WebsiteController::class, 'control'])->name('websites.control');
     Route::post('websites/{tenant}/sync', [WebsiteController::class, 'updateData'])->name('websites.sync');
 
+    // Remote Website Supervision (Control Plane - Phase 2)
+    Route::prefix('remote-websites')->name('remote-websites.')->group(function () {
+        Route::get('/', [RemoteWebsiteController::class, 'index'])->name('index');
+        Route::get('/{project}', [RemoteWebsiteController::class, 'show'])->name('show');
+        Route::post('/{project}/rotate-token', [RemoteWebsiteController::class, 'rotateToken'])->name('rotate-token');
+        Route::post('/{project}/revoke-token', [RemoteWebsiteController::class, 'revokeToken'])->name('revoke-token');
+        Route::post('/{project}/ping', [RemoteWebsiteController::class, 'ping'])->name('ping');
+    });
+
     // Website Export & CMS Control
     Route::post('projects/{projectCode}/export', [ProjectExportController::class, 'exportWebsite'])->name('projects.export');
+    Route::get('projects/{projectCode}/export', [ProjectExportController::class, 'exportWebsite'])->name('projects.export.get');
+    Route::get('projects/{projectCode}/validate', [ProjectExportController::class, 'validateProject'])->name('projects.validate');
+    Route::get('themes/{themeSlug}/export', [ProjectExportController::class, 'exportTheme'])->name('themes.export');
     Route::get('projects/{projectId}/cms-features', [ProjectExportController::class, 'getCmsFeatures'])->name('projects.cms-features.get');
     Route::put('projects/{projectId}/cms-features', [ProjectExportController::class, 'updateCmsFeatures'])->name('projects.cms-features.update');
 

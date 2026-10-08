@@ -4,6 +4,13 @@
 
 @section('content')
 
-{!! render_widget_area('homepage-main') !!}
+@php
+    $renderedArea = render_widget_area('homepage-main');
+@endphp
 
+@if(!empty(trim($renderedArea)))
+    {!! $renderedArea !!}
+@else
+    @include('widgets.inbetween.theme')
+@endif
 @endsection

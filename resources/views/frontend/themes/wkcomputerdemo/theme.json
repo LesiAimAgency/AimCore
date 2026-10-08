@@ -1,0 +1,92 @@
+{
+  "$schema": "https://vgt.local/schemas/theme.v1.json",
+  "name": "wkcomputerdemo",
+  "title": "WK Computer - Gaming & Hi-End PC",
+  "version": "1.0.0",
+  "description": "Nền tảng thương mại điện tử chuyên nghiệp cho ngành máy tính, PC Gaming, linh kiện và giải pháp công nghệ.",
+  "author": "VGT Team",
+  "engine_compatibility": ">=1.0.0",
+  "type": "ecommerce",
+
+  "features": [
+    "ecommerce",
+    "catalog",
+    "cart",
+    "checkout",
+    "build_pc",
+    "widgets",
+    "menus",
+    "seo",
+    "reviews"
+  ],
+
+  "database": {
+    "tables": [
+      "wk_products",
+      "wk_categories",
+      "categories",
+      "orders",
+      "order_items",
+      "settings",
+      "widgets",
+      "widget_templates",
+      "menus",
+      "menu_items",
+      "brands"
+    ],
+    "seeders": [
+      "WkcomputerSettingsSeeder",
+      "WkcomputerProductsSeeder",
+      "WkcomputerMenuSeeder",
+      "WkcomputerWidgetsSeeder",
+      "WkcomputerMasterSeeder"
+    ]
+  },
+
+  "widgets": [
+    "wk_hero_slider",
+    "wk_deal_flash",
+    "wk_product_featured",
+    "wk_product_tabs",
+    "wk_promo_banners",
+    "wk_posts_latest",
+    "wk_footer_column"
+  ],
+
+  "menus": {
+    "header": {
+      "name": "Header Navigation",
+      "items": [
+        {"title": "Trang chủ", "url": "/"},
+        {"title": "Cửa hàng", "url": "/cua-hang"},
+        {"title": "Xây dựng cấu hình", "url": "/xay-dung-cau-hinh"},
+        {"title": "Tin tức công nghệ", "url": "/blog"},
+        {"title": "Liên hệ", "url": "/lien-he"}
+      ]
+    },
+    "footer": {
+      "name": "Footer - Hỗ trợ khách hàng",
+      "items": [
+        {"title": "Chính sách bảo hành", "url": "/chinh-sach-bao-hanh"},
+        {"title": "Chính sách đổi trả", "url": "/chinh-sach-doi-tra"},
+        {"title": "Hướng dẫn mua hàng", "url": "/huong-dan-mua-hang"},
+        {"title": "Thanh toán & Giao hàng", "url": "/thanh-toan-giao-hang"}
+      ]
+    }
+  },
+
+  "default_settings": {
+    "site_title": "WK Computer - Máy Tính Gaming & Workstation Chính Hãng",
+    "site_name": "WK Computer",
+    "site_tagline": "Hệ Thống Bán Lẻ Máy Tính & Linh Kiện Chính Hãng",
+    "site_description": "WK Computer - Hệ thống bán lẻ laptop, PC, linh kiện, gaming gear và phụ kiện công nghệ chính hãng. Bảo hành dài hạn, giao hàng toàn quốc.",
+    "theme_primary_color": "#E11D48",
+    "site_email": "sales@wkcomputer.vn",
+    "site_phone": "1900 1234",
+    "site_copyright": "Copyright © 2026 WK Computer. All rights reserved."
+  },
+
+  "routes_file": "routes/wkcomputer.php",
+  "view_path": "resources/views/themes/wkcomputerdemo",
+  "asset_path": "public/themes/wkcomputerdemo"
+}

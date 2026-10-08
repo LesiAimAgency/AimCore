@@ -20,6 +20,10 @@
       <p class="text-xs sm:text-sm text-gray-600">{{ $project->code }}</p>
     </div>
     <div class="flex items-center gap-3">
+      <a href="{{ route('superadmin.projects.export-viewer', $project) }}" class="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 shadow-xs transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        Xuất Website & Packages
+      </a>
       <a href="#deployment-tab" class="px-3 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 shadow-xs transition-all">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg>
         Triển khai & Hosting (cPanel)

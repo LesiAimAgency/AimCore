@@ -1,0 +1,77 @@
+{
+  "$schema": "https://vgt.local/schemas/theme.v1.json",
+  "name": "inbetween",
+  "title": "INBETWEEN - Cross-border Community & Platform",
+  "version": "1.0.0",
+  "description": "Cross-border community, media & connection platform for Professionals, Founders, Creatives & Organizations.",
+  "author": "VGT Team",
+  "engine_compatibility": ">=1.0.0",
+  "type": "landing",
+
+  "features": [
+    "widgets",
+    "community",
+    "events",
+    "media",
+    "packages",
+    "contact",
+    "seo"
+  ],
+
+  "database": {
+    "tables": [
+      "widgets",
+      "widget_templates",
+      "settings",
+      "form_submissions"
+    ],
+    "seeders": [
+      "InbetweenThemeSeeder",
+      "InbetweenWidgetsSeeder",
+      "InbetweenHomepageMainSeeder"
+    ]
+  },
+
+  "widgets": [
+    "inbetween_theme",
+    "inbetween_hero_section",
+    "inbetween_community_collage",
+    "inbetween_community_statement",
+    "inbetween_core_values",
+    "inbetween_founder_section",
+    "inbetween_upcoming_events",
+    "inbetween_media_stories",
+    "inbetween_packages"
+  ],
+
+  "menus": {
+    "header": {
+      "name": "Inbetween Navigation",
+      "items": [
+        {"title": "About us", "url": "#about"},
+        {"title": "Media", "url": "#media"},
+        {"title": "Community", "url": "#community"},
+        {"title": "Events", "url": "#events"},
+        {"title": "Let's Connect", "url": "#contact"}
+      ]
+    }
+  },
+
+  "default_settings": {
+    "site_name": "INBETWEEN",
+    "site_tagline": "Cross-border Community & Platform",
+    "site_description": "INBETWEEN - Cross-border community, media & connection platform",
+    "site_email": "inbetween.asia@gmail.com",
+    "site_phone": "0909 999 999",
+    "theme_primary_color": "#EC460B",
+    "site_copyright": "Copyright belong to INBETWEEN",
+    "social_facebook": "https://facebook.com",
+    "social_instagram": "https://instagram.com",
+    "social_linkedin": "https://linkedin.com",
+    "social_tiktok": "https://tiktok.com"
+  },
+
+  "routes_file": "routes/inbetween.php",
+  "view_path": "resources/views/themes/inbetween",
+  "asset_path": "public/themes/inbetween"
+}

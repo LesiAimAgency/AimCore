@@ -20,9 +20,17 @@ use App\Widgets\Inbetween\CommunityStatementWidget;
 use App\Widgets\Inbetween\CoreValuesWidget;
 use App\Widgets\Inbetween\FounderSectionWidget;
 use App\Widgets\Inbetween\HeroSectionWidget;
+use App\Widgets\Inbetween\InbetweenThemeWidget;
 use App\Widgets\Inbetween\MediaStoriesWidget;
 use App\Widgets\Inbetween\PackagesWidget;
 use App\Widgets\Inbetween\UpcomingEventsWidget;
+use App\Widgets\InbetweenV2\InbetweenV2BusinessWidget;
+use App\Widgets\InbetweenV2\InbetweenV2FounderWidget;
+use App\Widgets\InbetweenV2\InbetweenV2HeroWidget;
+use App\Widgets\InbetweenV2\InbetweenV2OurClientsWidget;
+use App\Widgets\InbetweenV2\InbetweenV2ThemeWidget;
+use App\Widgets\InbetweenV2\InbetweenV2WhatWeDoWidget;
+use App\Widgets\InbetweenV2\InbetweenV2WhereWeFocusWidget;
 use App\Widgets\Viettinmart\ViettinmartDealFlashWidget;
 use App\Widgets\Viettinmart\ViettinmartFeatureIconsWidget;
 use App\Widgets\Viettinmart\ViettinmartFooterColumnWidget;
@@ -64,6 +72,9 @@ class WidgetRegistry implements WidgetRegistryInterface
         'ehenho_slider' => EhenhoHeroSliderWidget::class,
 
         // Inbetween Widgets
+        'inbetween_theme' => InbetweenThemeWidget::class,
+        'inbetween_master' => InbetweenThemeWidget::class,
+        'inbetween_landing' => InbetweenThemeWidget::class,
         'inbetween_hero_section' => HeroSectionWidget::class,
         'inbetween_community_collage' => CommunityCollageWidget::class,
         'inbetween_community_statement' => CommunityStatementWidget::class,
@@ -72,6 +83,18 @@ class WidgetRegistry implements WidgetRegistryInterface
         'inbetween_upcoming_events' => UpcomingEventsWidget::class,
         'inbetween_media_stories' => MediaStoriesWidget::class,
         'inbetween_packages' => PackagesWidget::class,
+
+        // Inbetween V2 Widgets (1 Section = 1 Widget)
+        'inbetween_v2_hero' => InbetweenV2HeroWidget::class,
+        'inbetween_v2_hero_section' => InbetweenV2HeroWidget::class,
+        'inbetween_v2_what_we_do' => InbetweenV2WhatWeDoWidget::class,
+        'inbetween_v2_where_we_focus' => InbetweenV2WhereWeFocusWidget::class,
+        'inbetween_v2_founder' => InbetweenV2FounderWidget::class,
+        'inbetween_v2_our_clients' => InbetweenV2OurClientsWidget::class,
+        'inbetween_v2_business' => InbetweenV2BusinessWidget::class,
+        'inbetween_v2_theme' => InbetweenV2ThemeWidget::class,
+        'inbetween_v2_master' => InbetweenV2ThemeWidget::class,
+        'inbetween_v2_landing' => InbetweenV2ThemeWidget::class,
 
         // Viettinmart Widgets (Both vtm_* and inbetween_* aliases)
         'vtm_hero_slider' => ViettinmartHeroSliderWidget::class,
@@ -142,10 +165,14 @@ class WidgetRegistry implements WidgetRegistryInterface
         if (config('app.debug')) {
             self::$discoveredWidgets = self::performDiscovery();
         } else {
-            $cacheKey = 'widget_discovery_'.md5(app_path('Widgets'));
-            self::$discoveredWidgets = Cache::remember($cacheKey, 3600, function () {
-                return self::performDiscovery();
-            });
+            try {
+                $cacheKey = 'widget_discovery_'.md5(app_path('Widgets'));
+                self::$discoveredWidgets = Cache::remember($cacheKey, 3600, function () {
+                    return self::performDiscovery();
+                });
+            } catch (\Throwable $e) {
+                self::$discoveredWidgets = self::performDiscovery();
+            }
         }
 
         self::$discoveryComplete = true;
@@ -175,26 +202,18 @@ class WidgetRegistry implements WidgetRegistryInterface
                 continue;
             }
 
+            // 1. Discover widgets organized as subdirectories
             $widgetDirs = File::directories($categoryDir);
-
             foreach ($widgetDirs as $widgetDir) {
                 $widgetName = basename($widgetDir);
                 $widgetClass = self::buildWidgetClassName($categoryName, $widgetName);
 
-                // Check if widget class exists
-                if (! class_exists($widgetClass)) {
+                if (! class_exists($widgetClass) || ! is_subclass_of($widgetClass, BaseWidget::class)) {
                     continue;
                 }
 
-                // Check if it extends BaseWidget
-                if (! is_subclass_of($widgetClass, BaseWidget::class)) {
-                    continue;
-                }
-
-                // Generate widget type from class name
                 $widgetType = self::generateWidgetType($categoryName, $widgetName);
 
-                // Validate metadata exists
                 try {
                     $metadata = self::loadWidgetMetadata($widgetClass);
                     $discovered[$widgetType] = [
@@ -204,11 +223,47 @@ class WidgetRegistry implements WidgetRegistryInterface
                         'name' => $widgetName,
                         'metadata' => $metadata,
                     ];
-                } catch (\Exception $e) {
-                    // Skip widgets with invalid metadata
-                    \Log::warning("Skipping widget {$widgetClass}: ".$e->getMessage());
-
+                } catch (\Throwable $e) {
                     continue;
+                }
+            }
+
+            // 2. Discover *.php widget files directly in category folder (e.g. app/Widgets/{Theme}/{Name}Widget.php)
+            $phpFiles = File::files($categoryDir);
+            foreach ($phpFiles as $file) {
+                if ($file->getExtension() !== 'php') {
+                    continue;
+                }
+                $filename = $file->getFilenameWithoutExtension();
+                $widgetClass = "App\\Widgets\\{$categoryName}\\{$filename}";
+
+                if (! class_exists($widgetClass) || ! is_subclass_of($widgetClass, BaseWidget::class)) {
+                    continue;
+                }
+
+                $rawName = Str::replaceLast('Widget', '', $filename);
+                $widgetType = Str::snake(Str::camel($categoryName.'_'.$rawName));
+
+                try {
+                    $metadata = method_exists($widgetClass, 'getConfig')
+                        ? $widgetClass::getConfig()
+                        : (File::exists($widgetClass::getMetadataPath()) ? self::loadWidgetMetadata($widgetClass) : ['name' => $rawName]);
+                } catch (\Throwable $e) {
+                    $metadata = ['name' => $rawName];
+                }
+
+                $discovered[$widgetType] = [
+                    'class' => $widgetClass,
+                    'type' => $widgetType,
+                    'category' => $categoryName,
+                    'name' => $filename,
+                    'metadata' => $metadata,
+                ];
+
+                // Also register direct snake case of class name as type alias
+                $shortType = Str::snake($rawName);
+                if (! isset($discovered[$shortType])) {
+                    $discovered[$shortType] = $discovered[$widgetType];
                 }
             }
         }
@@ -355,6 +410,14 @@ class WidgetRegistry implements WidgetRegistryInterface
     public static function exists(string $type): bool
     {
         return self::get($type) !== null;
+    }
+
+    /**
+     * Check if a widget type is registered or exists (alias for exists)
+     */
+    public static function has(string $type): bool
+    {
+        return self::exists($type);
     }
 
     /**

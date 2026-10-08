@@ -80,7 +80,8 @@
   <script src="{{ asset('themes/inbetween/script.js') }}"></script>
   <script>
     (function(){
-      var CONTACT_URL='{{ url(request()->route("projectCode")."/contact") }}';
+      var projectCode = '{{ request()->route("projectCode") }}';
+      var CONTACT_URL = projectCode ? '{{ url(request()->route("projectCode")."/contact") }}' : '{{ url("inbetween/contact") }}';
       var CSRF=document.querySelector('meta[name="csrf-token"]');
       document.addEventListener('DOMContentLoaded',function(){
         var form=document.getElementById('drawer-form');
@@ -104,7 +105,7 @@
         });
       });
     })();
-  <script src="{{ asset('themes/inbetween/script.js') }}"></script>
+  </script>
   @stack('scripts')
 </body>
 </html>

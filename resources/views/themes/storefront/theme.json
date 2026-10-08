@@ -1,0 +1,73 @@
+{
+  "$schema": "https://vgt.local/schemas/theme.v1.json",
+  "name": "storefront",
+  "title": "Storefront - Modern Digital Store",
+  "version": "1.0.0",
+  "description": "Giao diện cửa hàng thương mại điện tử hiện đại, tinh gọn và tối ưu chuyển đổi bán hàng.",
+  "author": "VGT Team",
+  "engine_compatibility": ">=1.0.0",
+  "type": "ecommerce",
+
+  "features": [
+    "ecommerce",
+    "catalog",
+    "widgets",
+    "menus",
+    "seo"
+  ],
+
+  "database": {
+    "tables": [
+      "widgets",
+      "widget_templates",
+      "settings",
+      "menus",
+      "menu_items",
+      "products"
+    ],
+    "seeders": [
+      "EcommerceSeeder"
+    ]
+  },
+
+  "widgets": [
+    "ProductWidget",
+    "BannerWidget",
+    "SliderWidget",
+    "CategoryGridWidget"
+  ],
+
+  "menus": {
+    "header": {
+      "name": "Storefront Navigation",
+      "items": [
+        {"title": "Trang chủ", "url": "/"},
+        {"title": "Sản phẩm", "url": "/san-pham"},
+        {"title": "Khuyến mãi", "url": "/khuyen-mai"},
+        {"title": "Liên hệ", "url": "/lien-he"}
+      ]
+    },
+    "footer": {
+      "name": "Storefront Footer Links",
+      "items": [
+        {"title": "Chính sách bảo mật", "url": "#privacy"},
+        {"title": "Điều khoản sử dụng", "url": "#terms"}
+      ]
+    }
+  },
+
+  "default_settings": {
+    "site_title": "Storefront - Cửa Hàng Số Hiện Đại",
+    "site_name": "Storefront",
+    "site_tagline": "Nền tảng mua sắm hiện đại & tiện lợi",
+    "site_description": "Trải nghiệm mua sắm trực tuyến nhanh chóng, thuận tiện và an toàn tuyệt đối.",
+    "theme_primary_color": "#2563EB",
+    "site_email": "contact@storefront.local",
+    "site_phone": "0909 111 222",
+    "site_copyright": "Copyright © 2026 Storefront. All rights reserved."
+  },
+
+  "routes_file": "routes/storefront.php",
+  "view_path": "resources/views/themes/storefront",
+  "asset_path": "public/themes/storefront"
+}

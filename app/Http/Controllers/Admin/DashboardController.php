@@ -68,6 +68,13 @@ class DashboardController extends Controller
             return view('themes.ehenho.admin.dashboard', array_merge($data, $ehenhoData));
         }
 
+        $isInbetweenV2 = ($project && ($project->code === 'inbetween_v2' || ($project->features['theme'] ?? null) === 'inbetween_v2'))
+            || in_array($request->route('projectCode'), ['inbetween_v2', 'inbetween-v2']);
+
+        if ($isInbetweenV2 && view()->exists('themes.inbetween_v2.admin.dashboard')) {
+            return view('themes.inbetween_v2.admin.dashboard', $data);
+        }
+
         return view('cms.dashboard.index', $data);
     }
 

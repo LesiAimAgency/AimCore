@@ -35,7 +35,7 @@ class ProjectSettingModel extends Model
             }
 
             if (! $setting->project_id) {
-                $project = request()->attributes->get('project');
+                $project = function_exists('current_project') ? current_project() : request()->attributes->get('project');
                 if ($project) {
                     $setting->project_id = $project->id;
                 }
@@ -45,12 +45,26 @@ class ProjectSettingModel extends Model
 
     public static function set($key, $value, $group = 'general')
     {
-        $project = request()->attributes->get('project');
+        $project = function_exists('current_project') ? current_project() : request()->attributes->get('project');
         if (! $project && session('current_project_id')) {
             $project = Project::find(session('current_project_id'));
         }
         if (! $project && request()->route('projectCode')) {
             $project = Project::where('code', request()->route('projectCode'))->first();
+        }
+        if (! $project && (config('app.standalone_mode') || env('STANDALONE_MODE'))) {
+            try {
+                $project = Project::first();
+            } catch (\Throwable $e) {
+            }
+        }
+        if (! $project) {
+            try {
+                if (Project::count() === 1) {
+                    $project = Project::first();
+                }
+            } catch (\Throwable $e) {
+            }
         }
 
         $projectId = $project ? $project->id : null;

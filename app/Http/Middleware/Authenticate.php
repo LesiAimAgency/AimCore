@@ -30,6 +30,11 @@ class Authenticate extends Middleware
     {
         $routeName = $request->route()?->getName() ?? '';
 
+        // 0. SuperAdmin or Admin routes should always go to central /login
+        if (str_starts_with($routeName, 'superadmin.') || $request->is('superadmin') || $request->is('superadmin/*') || str_starts_with($routeName, 'admin.') || $request->is('admin') || $request->is('admin/*')) {
+            return Route::has('login') ? route('login') : url('/login');
+        }
+
         // 1. Ehenho theme / project
         if (str_starts_with($routeName, 'ehenho.domain.') || ($request->getHost() === 'ehenho.local' && Route::has('ehenho.domain.login'))) {
             return route('ehenho.domain.login');

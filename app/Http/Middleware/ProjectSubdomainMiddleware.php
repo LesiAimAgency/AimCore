@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Core\Theme\ThemeManager;
 use App\Models\Category;
 use App\Models\Project;
 use App\Models\Tenant;
@@ -29,7 +30,14 @@ class ProjectSubdomainMiddleware
                 ->orWhere('external_domain', $projectCode)
                 ->first();
 
-            // Support DA010 and ehenho aliases if not matched directly
+            // Dynamic match by code or subdomain contains project code / theme slug
+            if (! $project) {
+                $project = Project::where('code', 'like', "%{$projectCode}%")
+                    ->orWhere('subdomain', 'like', "%{$projectCode}%")
+                    ->first();
+            }
+
+            // Fallback for DA010 / ehenho aliases for backward compatibility
             if (! $project && in_array(strtoupper($projectCode), ['EHENHO', 'DA010', 'DA010-EHENHO-DATING-SOCIAL-NETWORK'])) {
                 $project = Project::where('code', 'DA010')
                     ->orWhere('code', 'DA010-EHENHO-DATING-SOCIAL-NETWORK')
@@ -38,43 +46,42 @@ class ProjectSubdomainMiddleware
                     ->first();
             }
 
-            // Auto-heal: Ensure ehenho project is registered automatically if missing in database
-            if (! $project && in_array(strtoupper($projectCode), ['EHENHO', 'DA010', 'DA010-EHENHO-DATING-SOCIAL-NETWORK'])) {
+            // Fallback for inbetween / inbetween_v2 aliases for theme-first URLs
+            if (! $project && in_array(strtolower($projectCode), ['inbetween', 'inbetween_v2', 'inbetween-v2', 'inbetwen', 'da005'])) {
+                $targetCode = match (strtolower($projectCode)) {
+                    'inbetween_v2', 'inbetween-v2' => 'inbetween_v2',
+                    default => 'inbetween',
+                };
+                $project = Project::where('code', $targetCode)
+                    ->orWhere('code', 'like', "%{$targetCode}%")
+                    ->orWhereJsonContains('features->theme', $targetCode)
+                    ->orWhere('name', 'like', '%INBETWEEN%')
+                    ->first();
+            }
+
+            // Standalone mode or single project database fallback
+            if (! $project && (config('app.standalone_mode') || env('STANDALONE_MODE'))) {
                 try {
-                    $project = Project::where('external_domain', 'ehenho.local')
-                        ->orWhere('subdomain', 'like', '%ehenho%')
-                        ->orWhere('tenant_id', 7)
-                        ->first();
+                    $project = Project::first();
+                } catch (\Throwable $e) {
+                }
+            }
 
-                    if ($project) {
-                        $project->update(['code' => 'DA010']);
-                    } else {
-                        $tenant = Tenant::where('code', 'ehenho')->orWhere('domain', 'ehenho.local')->first()
-                            ?? Tenant::first();
-
-                        $project = Project::create([
-                            'tenant_id' => $tenant?->id ?? 1,
-                            'name' => 'eHenho Dating & Social Network',
-                            'code' => 'DA010',
-                            'subdomain' => 'https://aimagency.vn/DA010',
-                            'external_domain' => 'ehenho.local',
-                            'status' => 'active',
-                            'project_type' => 'website',
-                            'is_multi_tenancy' => true,
-                            'total_gold' => 1000,
-                            'project_admin_username' => 'cms_ehenho',
-                            'project_admin_password' => bcrypt('password123'),
-                        ]);
+            if (! $project) {
+                try {
+                    if (Project::count() === 1) {
+                        $project = Project::first();
                     }
                 } catch (\Throwable $e) {
-                    $project = Project::where('code', 'DA010-EHENHO-DATING-SOCIAL-NETWORK')
-                        ->orWhere('code', 'ehenho')
-                        ->first();
                 }
             }
         } else {
-            // For exported standalone projects where {projectCode} is removed from routes
-            $project = Project::first();
+            // For exported standalone projects or direct domain access
+            try {
+                $project = Project::first();
+            } catch (\Throwable $e) {
+                $project = null;
+            }
         }
 
         if (! $project) {
@@ -142,7 +149,8 @@ class ProjectSubdomainMiddleware
         }
 
         // Prepend active project's theme view path so project theme templates/layouts take precedence
-        $theme = ($project->features['theme'] ?? null) ?: ($project->code === 'viettinmart-eco' ? 'viettinmartdemo' : (str_contains($project->code, 'wkcomputer') ? 'wkcomputerdemo' : setting('theme')));
+        $themeManager = app(ThemeManager::class);
+        $theme = $themeManager->resolveActiveTheme($project);
         if ($theme) {
             $themeViewPath = resource_path("views/frontend/themes/{$theme}");
             if (is_dir($themeViewPath)) {
