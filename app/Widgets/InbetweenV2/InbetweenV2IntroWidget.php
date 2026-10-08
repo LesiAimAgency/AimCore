@@ -36,6 +36,12 @@ class InbetweenV2IntroWidget extends BaseWidget
                     'default' => 'ENTERING VIETNAM?',
                 ],
                 [
+                    'name' => 'wecanhelp_text',
+                    'label' => 'Transition Big Text (Chữ phóng to chuyển cảnh)',
+                    'type' => 'text',
+                    'default' => 'WE CAN HELP!',
+                ],
+                [
                     'name' => 'floating_words',
                     'label' => 'Intro Floating Words (Các cụm từ trôi dạt)',
                     'type' => 'repeatable',
@@ -112,6 +118,7 @@ class InbetweenV2IntroWidget extends BaseWidget
             'connect_link' => '#contact-modal',
             'intro_subtitle' => 'Your business is',
             'intro_title' => 'ENTERING VIETNAM?',
+            'wecanhelp_text' => 'WE CAN HELP!',
             'floating_words' => [
                 ['text' => '[ Find Customers ]', 'position' => '1'],
                 ['text' => 'Find Suppliers', 'position' => '2'],
