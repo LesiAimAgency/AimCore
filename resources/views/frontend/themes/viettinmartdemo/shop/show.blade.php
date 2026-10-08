@@ -50,7 +50,7 @@
         .vtm-flash-branding i {
             font-size: 24px;
             margin-bottom: 5px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+   
         }
         .vtm-flash-branding span {
             font-weight: 800;
