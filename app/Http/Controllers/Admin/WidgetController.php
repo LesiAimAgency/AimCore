@@ -12,6 +12,7 @@ use App\Services\WidgetImportExportService;
 use App\Services\WidgetPermissionService;
 use App\Widgets\WidgetRegistry;
 use Database\Seeders\InbetweenHomepageMainSeeder;
+use Database\Seeders\InbetweenV2WidgetsSeeder;
 use Database\Seeders\ViettinmartWidgetsSeeder;
 use Database\Seeders\WkcomputerWidgetsSeeder;
 use Illuminate\Http\Request;
@@ -112,7 +113,7 @@ class WidgetController extends Controller
                     })->where('key', 'theme')->value('value') ?: ($currentProject?->code === 'viettinmart-eco' ? 'viettinmartdemo' : ($currentProject?->code === 'wkcomputer' ? 'wkcomputerdemo' : null));
 
                     if (($theme === 'inbetween_v2' || str_contains($currentProject?->code ?? '', 'inbetween_v2')) && class_exists('\Database\Seeders\InbetweenV2WidgetsSeeder')) {
-                        (new \Database\Seeders\InbetweenV2WidgetsSeeder)->run($projId, $tenantId);
+                        (new InbetweenV2WidgetsSeeder)->run($projId, $tenantId);
                     } elseif ($theme === 'inbetween' && class_exists('\Database\Seeders\InbetweenHomepageMainSeeder')) {
                         (new InbetweenHomepageMainSeeder)->run($projId, $tenantId);
                     } elseif ($theme === 'wkcomputerdemo' && class_exists('\Database\Seeders\WkcomputerWidgetsSeeder')) {

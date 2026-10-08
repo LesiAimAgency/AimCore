@@ -7,11 +7,11 @@
             <path d="M19 2.15C18.696 2.013 18.359 1.969 18.03 2.022C17.701 2.075 17.395 2.224 17.15 2.45L15 4.45V3C15 2.204 14.684 1.441 14.121 0.879C13.559 0.316 12.796 0 12 0H3C2.204 0 1.441 0.316 0.879 0.879C0.316 1.441 0 2.204 0 3V11C0 11.796 0.316 12.559 0.879 13.121C1.441 13.684 2.204 14 3 14H12C12.796 14 13.559 13.684 14.121 13.121C14.684 12.559 15 11.796 15 11V9.55L17.16 11.55C17.478 11.838 17.891 11.998 18.32 12C18.558 11.999 18.793 11.948 19.01 11.85C19.305 11.731 19.558 11.526 19.736 11.263C19.914 10.999 20.009 10.688 20.01 10.37V3.63C20.009 3.311 19.912 2.999 19.732 2.735C19.552 2.472 19.297 2.268 19 2.15ZM13 11C13 11.265 12.895 11.52 12.707 11.707C12.52 11.895 12.265 12 12 12H3C2.735 12 2.48 11.895 2.293 11.707C2.105 11.52 2 11.265 2 11V3C2 2.735 2.105 2.48 2.293 2.293C2.48 2.105 2.735 2 3 2H12C12.265 2 12.52 2.105 12.707 2.293C12.895 2.48 13 2.735 13 3V11ZM18 9.6L15.19 7L18 4.4V9.6Z" fill="#EC460B"></path>
           </svg>
         </div>
-        <div><span class="block text-[13px] font-semibold text-[#131313] tracking-widest uppercase">MEDIA</span>
-          <p class="text-[12px] font-light text-[#131313] leading-snug mt-0.5">Business, culture, society and perspectives from across Asia.
+        <div><span class="block text-[13px] font-semibold text-[#131313] tracking-widest uppercase">{{ $settings['media_title'] ?? 'MEDIA' }}</span>
+          <p class="text-[12px] font-light text-[#131313] leading-snug mt-0.5">{{ $settings['media_desc'] ?? 'Business, culture, society and perspectives from across Asia.' }}
           </p>
         </div>
-      </div><span class="text-[13px] font-medium tracking-[0.2em] text-[#131313] uppercase">[ BEYOND BUSINESS ]</span>
+      </div><span class="text-[13px] font-medium tracking-[0.2em] text-[#131313] uppercase">{{ $settings['badge_title'] ?? '[ BEYOND BUSINESS ]' }}</span>
       <div class="business-badge-connections hidden xl:flex items-start gap-3 w-[220px] text-left">
         <div class="w-6 h-6 shrink-0 text-[#EC460B] mt-0.5">
           <svg class="w-5 h-5" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -20,8 +20,8 @@
             <path d="M17.66 1.22C16.45 0.326 14.96 -0.098 13.47 0.027C11.97 0.153 10.57 0.818 9.53 1.9L8.45 3C8.33 3.089 8.22 3.204 8.15 3.336C8.07 3.468 8.02 3.615 8.01 3.767C7.99 3.919 8.01 4.072 8.05 4.217C8.1 4.362 8.18 4.496 8.28 4.61C8.37 4.703 8.48 4.778 8.61 4.828C8.73 4.879 8.86 4.905 8.99 4.905C9.12 4.905 9.25 4.879 9.37 4.828C9.5 4.778 9.61 4.703 9.7 4.61L11 3.3C11.71 2.556 12.68 2.103 13.71 2.03C14.74 1.956 15.76 2.266 16.57 2.9C17 3.255 17.36 3.699 17.61 4.201C17.86 4.703 18.01 5.253 18.03 5.814C18.06 6.376 17.97 6.936 17.76 7.459C17.55 7.982 17.24 8.456 16.84 8.85L15.42 10.28C15.33 10.373 15.25 10.483 15.2 10.605C15.15 10.727 15.12 10.858 15.12 10.99C15.12 11.122 15.15 11.252 15.2 11.374C15.25 11.496 15.33 11.607 15.42 11.7C15.51 11.793 15.62 11.868 15.75 11.918C15.87 11.969 16 11.995 16.13 11.995C16.26 11.995 16.39 11.969 16.51 11.918C16.64 11.868 16.75 11.793 16.84 11.7L18.26 10.28C18.86 9.67 19.33 8.938 19.63 8.134C19.93 7.33 20.06 6.471 20 5.614C19.94 4.758 19.71 3.923 19.3 3.165C18.9 2.408 18.34 1.744 17.66 1.22Z" fill="#EC460B"></path>
           </svg>
         </div>
-        <div><span class="block text-[13px] font-semibold text-[#131313] tracking-widest uppercase">CONNECTIONS</span>
-          <p class="text-[12px] font-light text-[#131313] leading-snug mt-0.5">Business networking, industry gatherings, workshops and cross-border connections — bringing people and ideas into the same room.
+        <div><span class="block text-[13px] font-semibold text-[#131313] tracking-widest uppercase">{{ $settings['connections_title'] ?? 'CONNECTIONS' }}</span>
+          <p class="text-[12px] font-light text-[#131313] leading-snug mt-0.5">{{ $settings['connections_desc'] ?? 'Business networking, industry gatherings, workshops and cross-border connections — bringing people and ideas into the same room.' }}
           </p>
         </div>
       </div>
@@ -36,22 +36,35 @@
               <path d="M3.33334 8H12.6667M12.6667 8L8.66668 4M12.6667 8L8.66668 12" stroke="#131313" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg></span></a></div>
       <div class="business-ellipse-stage relative w-full h-[500px] flex items-start justify-center overflow-visible pointer-events-auto select-none">
+        @php
+          $defaultCarousel = [
+            ['image' => 'themes/inbetween_v2/images/hero-person-left-outer.png', 'alt' => 'Person Left Outer'],
+            ['image' => 'themes/inbetween_v2/images/hero-person-left-inner.png', 'alt' => 'Person Left Inner'],
+            ['image' => 'themes/inbetween_v2/images/hero-person-center.png', 'alt' => 'Person Center'],
+            ['image' => 'themes/inbetween_v2/images/hero-person-right-inner.png', 'alt' => 'Person Right Inner'],
+            ['image' => 'themes/inbetween_v2/images/hero-person-right-outer.png', 'alt' => 'Person Right Outer'],
+          ];
+          $carouselList = !empty($settings['carousel_images']) && is_array($settings['carousel_images']) ? array_values($settings['carousel_images']) : $defaultCarousel;
+        @endphp
         <div class="business-panels-container relative w-full h-full flex items-start justify-center overflow-visible pointer-events-auto">
-          <div class="business-ellipse-card business-panel-card absolute left-1/2 top-[2px] w-[400px] h-[400px] rounded-[24px] overflow-hidden cursor-pointer shadow-lg will-change-transform" data-index="0" data-slot="0"><img class="w-full h-full object-cover object-center pointer-events-none" src="{{ asset('themes/inbetween_v2/images/hero-person-left-outer.png') }}" alt="">
-            <div class="business-card-overlay absolute inset-0 bg-white/40 pointer-events-none transition-opacity duration-300"></div>
-          </div>
-          <div class="business-ellipse-card business-panel-card absolute left-1/2 top-[2px] w-[400px] h-[400px] rounded-[24px] overflow-hidden cursor-pointer shadow-lg will-change-transform" data-index="1" data-slot="1"><img class="w-full h-full object-cover object-center pointer-events-none" src="{{ asset('themes/inbetween_v2/images/hero-person-left-inner.png') }}" alt="">
-            <div class="business-card-overlay absolute inset-0 bg-white/30 pointer-events-none transition-opacity duration-300"></div>
-          </div>
-          <div class="business-ellipse-card business-panel-card absolute left-1/2 top-[2px] w-[400px] h-[400px] rounded-[24px] overflow-hidden cursor-pointer shadow-2xl will-change-transform bg-black" data-index="2" data-slot="2"><img class="w-full h-full object-cover object-center pointer-events-none" src="{{ asset('themes/inbetween_v2/images/hero-person-center.png') }}" alt="">
-            <div class="business-card-overlay absolute inset-0 bg-white/0 pointer-events-none transition-opacity duration-300"></div>
-          </div>
-          <div class="business-ellipse-card business-panel-card absolute left-1/2 top-[2px] w-[400px] h-[400px] rounded-[24px] overflow-hidden cursor-pointer shadow-lg will-change-transform" data-index="3" data-slot="3"><img class="w-full h-full object-cover object-center pointer-events-none" src="{{ asset('themes/inbetween_v2/images/hero-person-right-inner.png') }}" alt="">
-            <div class="business-card-overlay absolute inset-0 bg-white/30 pointer-events-none transition-opacity duration-300"></div>
-          </div>
-          <div class="business-ellipse-card business-panel-card absolute left-1/2 top-[2px] w-[400px] h-[400px] rounded-[24px] overflow-hidden cursor-pointer shadow-lg will-change-transform" data-index="4" data-slot="4"><img class="w-full h-full object-cover object-center pointer-events-none" src="{{ asset('themes/inbetween_v2/images/hero-person-right-outer.png') }}" alt="">
-            <div class="business-card-overlay absolute inset-0 bg-white/40 pointer-events-none transition-opacity duration-300"></div>
-          </div>
+          @foreach($carouselList as $imgIndex => $cImgItem)
+            @php
+              $cImgSrc = is_array($cImgItem) ? ($cImgItem['image'] ?? '') : (string)$cImgItem;
+              $cImgUrl = !empty($cImgSrc) ? (str_starts_with($cImgSrc, 'http') || str_starts_with($cImgSrc, '/') ? $cImgSrc : asset($cImgSrc)) : '';
+              $cImgAlt = is_array($cImgItem) ? ($cImgItem['alt'] ?? '') : '';
+              $slot = $imgIndex;
+              $overlayClass = match($slot) {
+                0, 4 => 'bg-white/40',
+                1, 3 => 'bg-white/30',
+                2 => 'bg-white/0',
+                default => 'bg-white/40',
+              };
+              $extraCardClass = ($slot === 2) ? 'shadow-2xl bg-black' : 'shadow-lg';
+            @endphp
+            <div class="business-ellipse-card business-panel-card absolute left-1/2 top-[2px] w-[400px] h-[400px] rounded-[24px] overflow-hidden cursor-pointer {{ $extraCardClass }} will-change-transform" data-index="{{ $imgIndex }}" data-slot="{{ $slot }}"><img class="w-full h-full object-cover object-center pointer-events-none" src="{{ $cImgUrl }}" alt="{{ $cImgAlt }}">
+              <div class="business-card-overlay absolute inset-0 {{ $overlayClass }} pointer-events-none transition-opacity duration-300"></div>
+            </div>
+          @endforeach
         </div>
         <div class="business-slider-container absolute left-1/2 top-[440px] -translate-x-1/2 flex flex-col items-center justify-center z-30 pointer-events-auto select-none opacity-0 pointer-events-none transition-opacity duration-500">
           <div class="business-slider-track-wrap relative w-[217px] h-[24px] flex items-center justify-center cursor-pointer group" aria-label="Thanh trượt chuyển ảnh">

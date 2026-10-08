@@ -86,6 +86,10 @@ class FieldTypeService
             $type = 'datetime';
         }
 
+        if ($type === 'repeater') {
+            $type = 'repeatable';
+        }
+
         return $this->fieldTypes[$type] ?? null;
     }
 
@@ -96,6 +100,10 @@ class FieldTypeService
     {
         if ($type === 'datetime-local' || $type === 'picktime') {
             $type = 'datetime';
+        }
+
+        if ($type === 'repeater') {
+            $type = 'repeatable';
         }
 
         return isset($this->fieldTypes[$type]);

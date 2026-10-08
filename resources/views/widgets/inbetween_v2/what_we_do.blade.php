@@ -1,7 +1,7 @@
 <section class="inbetween-onepage-section relative w-full h-screen min-h-screen max-h-screen overflow-hidden select-none bg-[#F6F4F4] text-[#131313]" id="inbetween-what-we-do">
   <div class="inbetween-container-1440 relative z-10 pb-2 sm:pb-3">
     <div class="w-full shrink-0 pt-[52px] sm:pt-[56px] lg:pt-[62px]">
-      <div class="text-[14px] font-light text-[#3E3939] uppercase tracking-widest mb-2 sm:mb-2.5">[ WHAT WE DO ]</div>
+      <div class="text-[14px] font-light text-[#3E3939] uppercase tracking-widest mb-2 sm:mb-2.5">{{ $settings['badge_text'] ?? '[ WHAT WE DO ]' }}</div>
       <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4 lg:gap-12">
         <div class="w-full max-w-[650px]">
           <h2 class="text-[28px] sm:text-[36px] lg:text-[49px] font-semibold tracking-normal leading-[1.15]"><span class="text-[#EC460B] block">{{ $settings['title_line1'] ?? 'Flexible local support,' }}</span><span class="text-[#131313] block">{{ $settings['title_line2'] ?? 'built around what you need.' }}</span></h2>
@@ -16,71 +16,82 @@
         </div>
       </div>
     </div>
+    @php
+      $defaultCards = [
+        [
+          'card_id' => 'find',
+          'badge' => 'FIND',
+          'title' => 'Market & Opportunity Development',
+          'description' => 'Identify priority sectors, companies, decision-makers, distributors and commercial opportunities.',
+          'active_image' => 'themes/inbetween_v2/images/what-we-do-magnifier.png',
+          'sand_image' => 'themes/inbetween_v2/images/what-we-do-sand-waves.jpg',
+        ],
+        [
+          'card_id' => 'connect',
+          'badge' => 'CONNECT',
+          'title' => 'Strategic Partnerships & Networking',
+          'description' => 'Connect directly with local key stakeholders, industry associations, and verified commercial partners.',
+          'active_image' => 'themes/inbetween_v2/images/what-we-do-chain.png',
+          'sand_image' => 'themes/inbetween_v2/images/what-we-do-sand-waves.jpg',
+        ],
+        [
+          'card_id' => 'execute',
+          'badge' => 'EXECUTE',
+          'title' => 'Market Entry & Operational Setup',
+          'description' => 'End-to-end execution of operational roadmaps, pilot testing, and localized compliance support.',
+          'active_image' => 'themes/inbetween_v2/images/what-we-do-gears.png',
+          'sand_image' => 'themes/inbetween_v2/images/what-we-do-sand-waves.jpg',
+        ],
+        [
+          'card_id' => 'grow',
+          'badge' => 'GROW',
+          'title' => 'Scale & Long-term Expansion',
+          'description' => 'Accelerate revenue pipelines, expand regional presence, and build sustainable local capabilities.',
+          'active_image' => 'themes/inbetween_v2/images/what-we-do-arrow.png',
+          'sand_image' => 'themes/inbetween_v2/images/what-we-do-sand-waves.jpg',
+        ],
+      ];
+      $cards = !empty($settings['cards']) && is_array($settings['cards']) ? array_values($settings['cards']) : $defaultCards;
+    @endphp
     <div class="inbetween-accordion-container flex flex-col lg:flex-row items-stretch gap-3 sm:gap-4 lg:gap-5 w-full mt-6 lg:mt-8 mb-auto">
-      <div class="inbetween-card inbetween-card-find inbetween-card-active" id="card-find" data-card-id="find"><img class="inbetween-card-bg-sand inbetween-card-bg-sand" src="{{ asset('themes/inbetween_v2/images/what-we-do-sand-waves.jpg') }}" alt="Market &amp; Opportunity Development Pattern"><img class="inbetween-card-bg-active inbetween-card-bg-active" src="{{ asset('themes/inbetween_v2/images/what-we-do-magnifier.png') }}" alt="Market &amp; Opportunity Development">
-        <div class="inbetween-card-active-content">
-          <div class="text-[32px] sm:text-[44px] lg:text-[61px] font-semibold uppercase tracking-tight text-white leading-none">FIND
+      @foreach($cards as $index => $card)
+        @php
+          $cardSlug = !empty($card['card_id']) ? \Illuminate\Support\Str::slug($card['card_id']) : \Illuminate\Support\Str::slug($card['badge'] ?? 'item-'.$index);
+          if (empty($cardSlug)) { $cardSlug = 'item-'.$index; }
+          $isActive = ($index === 0);
+          $sandImgUrl = !empty($card['sand_image']) ? (str_starts_with($card['sand_image'], 'http') || str_starts_with($card['sand_image'], '/') ? $card['sand_image'] : asset($card['sand_image'])) : asset('themes/inbetween_v2/images/what-we-do-sand-waves.jpg');
+          $activeImgUrl = !empty($card['active_image']) ? (str_starts_with($card['active_image'], 'http') || str_starts_with($card['active_image'], '/') ? $card['active_image'] : asset($card['active_image'])) : asset('themes/inbetween_v2/images/what-we-do-magnifier.png');
+          $badge = $card['badge'] ?? strtoupper($cardSlug);
+          $title = $card['title'] ?? '';
+          $desc = $card['description'] ?? '';
+        @endphp
+        <div class="inbetween-card inbetween-card-{{ $cardSlug }} {{ $isActive ? 'inbetween-card-active' : 'inbetween-card-collapsed' }}" id="card-{{ $cardSlug }}" data-card-id="{{ $cardSlug }}">
+          <img class="inbetween-card-bg-sand" src="{{ $sandImgUrl }}" alt="{{ $title }} Pattern">
+          <img class="inbetween-card-bg-active" src="{{ $activeImgUrl }}" alt="{{ $title }}">
+          <div class="inbetween-card-active-content">
+            <div class="text-[32px] sm:text-[44px] lg:text-[61px] font-semibold uppercase tracking-tight text-white leading-none">
+              {{ $badge }}
+            </div>
+            <div class="space-y-2 max-w-[500px]">
+              <h3 class="text-[20px] sm:text-[24px] lg:text-[31px] font-medium text-white leading-snug tracking-normal">
+                {{ $title }}
+              </h3>
+              <p class="text-[14px] lg:text-[16px] font-normal text-white/95 leading-normal tracking-normal">
+                {{ $desc }}
+              </p>
+            </div>
           </div>
-          <div class="space-y-2 max-w-[500px]">
-            <h3 class="text-[20px] sm:text-[24px] lg:text-[31px] font-medium text-white leading-snug tracking-normal">Market &amp; Opportunity Development
-            </h3>
-            <p class="text-[14px] lg:text-[16px] font-normal text-white/95 leading-normal tracking-normal">Identify priority sectors, companies, decision-makers, distributors and commercial opportunities.
-            </p>
-          </div>
-        </div>
-        <div class="inbetween-card-collapsed-content">
-          <div class="hidden lg:flex items-center justify-center w-full h-full select-none"><span class="inbetween-vertical-title text-[26px] xl:text-[32px]">FIND</span></div>
-          <div class="lg:hidden flex items-center justify-between w-full p-4"><span class="text-[20px] font-semibold uppercase tracking-wider text-white">FIND</span><span class="text-[12px] font-light text-white/80">Nhấn để mở rộng ;</span></div>
-        </div>
-      </div>
-      <div class="inbetween-card inbetween-card-connect inbetween-card-collapsed" id="card-connect" data-card-id="connect"><img class="inbetween-card-bg-sand inbetween-card-bg-sand" src="{{ asset('themes/inbetween_v2/images/what-we-do-sand-waves.jpg') }}" alt="Strategic Partnerships &amp; Networking Pattern"><img class="inbetween-card-bg-active inbetween-card-bg-active" src="{{ asset('themes/inbetween_v2/images/what-we-do-chain.png') }}" alt="Strategic Partnerships &amp; Networking">
-        <div class="inbetween-card-active-content">
-          <div class="text-[32px] sm:text-[44px] lg:text-[61px] font-semibold uppercase tracking-tight text-white leading-none">CONNECT
-          </div>
-          <div class="space-y-2 max-w-[500px]">
-            <h3 class="text-[20px] sm:text-[24px] lg:text-[31px] font-medium text-white leading-snug tracking-normal">Strategic Partnerships &amp; Networking
-            </h3>
-            <p class="text-[14px] lg:text-[16px] font-normal text-white/95 leading-normal tracking-normal">Connect directly with local key stakeholders, industry associations, and verified commercial partners.
-            </p>
-          </div>
-        </div>
-        <div class="inbetween-card-collapsed-content">
-          <div class="hidden lg:flex items-center justify-center w-full h-full select-none"><span class="inbetween-vertical-title text-[26px] xl:text-[32px]">CONNECT</span></div>
-          <div class="lg:hidden flex items-center justify-between w-full p-4"><span class="text-[20px] font-semibold uppercase tracking-wider text-white">CONNECT</span><span class="text-[12px] font-light text-white/80">Nhấn để mở rộng ;</span></div>
-        </div>
-      </div>
-      <div class="inbetween-card inbetween-card-execute inbetween-card-collapsed" id="card-execute" data-card-id="execute"><img class="inbetween-card-bg-sand inbetween-card-bg-sand" src="{{ asset('themes/inbetween_v2/images/what-we-do-sand-waves.jpg') }}" alt="Market Entry &amp; Operational Setup Pattern"><img class="inbetween-card-bg-active inbetween-card-bg-active" src="{{ asset('themes/inbetween_v2/images/what-we-do-gears.png') }}" alt="Market Entry &amp; Operational Setup">
-        <div class="inbetween-card-active-content">
-          <div class="text-[32px] sm:text-[44px] lg:text-[61px] font-semibold uppercase tracking-tight text-white leading-none">EXECUTE
-          </div>
-          <div class="space-y-2 max-w-[500px]">
-            <h3 class="text-[20px] sm:text-[24px] lg:text-[31px] font-medium text-white leading-snug tracking-normal">Market Entry &amp; Operational Setup
-            </h3>
-            <p class="text-[14px] lg:text-[16px] font-normal text-white/95 leading-normal tracking-normal">End-to-end execution of operational roadmaps, pilot testing, and localized compliance support.
-            </p>
+          <div class="inbetween-card-collapsed-content">
+            <div class="hidden lg:flex items-center justify-center w-full h-full select-none">
+              <span class="inbetween-vertical-title text-[26px] xl:text-[32px]">{{ $badge }}</span>
+            </div>
+            <div class="lg:hidden flex items-center justify-between w-full p-4">
+              <span class="text-[20px] font-semibold uppercase tracking-wider text-white">{{ $badge }}</span>
+              <span class="text-[12px] font-light text-white/80">Nhấn để mở rộng &rsaquo;</span>
+            </div>
           </div>
         </div>
-        <div class="inbetween-card-collapsed-content">
-          <div class="hidden lg:flex items-center justify-center w-full h-full select-none"><span class="inbetween-vertical-title text-[26px] xl:text-[32px]">EXECUTE</span></div>
-          <div class="lg:hidden flex items-center justify-between w-full p-4"><span class="text-[20px] font-semibold uppercase tracking-wider text-white">EXECUTE</span><span class="text-[12px] font-light text-white/80">Nhấn để mở rộng ;</span></div>
-        </div>
-      </div>
-      <div class="inbetween-card inbetween-card-grow inbetween-card-collapsed" id="card-grow" data-card-id="grow"><img class="inbetween-card-bg-sand inbetween-card-bg-sand" src="{{ asset('themes/inbetween_v2/images/what-we-do-sand-waves.jpg') }}" alt="Scale &amp; Long-term Expansion Pattern"><img class="inbetween-card-bg-active inbetween-card-bg-active" src="{{ asset('themes/inbetween_v2/images/what-we-do-arrow.png') }}" alt="Scale &amp; Long-term Expansion">
-        <div class="inbetween-card-active-content">
-          <div class="text-[32px] sm:text-[44px] lg:text-[61px] font-semibold uppercase tracking-tight text-white leading-none">GROW
-          </div>
-          <div class="space-y-2 max-w-[500px]">
-            <h3 class="text-[20px] sm:text-[24px] lg:text-[31px] font-medium text-white leading-snug tracking-normal">Scale &amp; Long-term Expansion
-            </h3>
-            <p class="text-[14px] lg:text-[16px] font-normal text-white/95 leading-normal tracking-normal">Accelerate revenue pipelines, expand regional presence, and build sustainable local capabilities.
-            </p>
-          </div>
-        </div>
-        <div class="inbetween-card-collapsed-content">
-          <div class="hidden lg:flex items-center justify-center w-full h-full select-none"><span class="inbetween-vertical-title text-[26px] xl:text-[32px]">GROW</span></div>
-          <div class="lg:hidden flex items-center justify-between w-full p-4"><span class="text-[20px] font-semibold uppercase tracking-wider text-white">GROW</span><span class="text-[12px] font-light text-white/80">Nhấn để mở rộng ;</span></div>
-        </div>
-      </div>
+      @endforeach
     </div>
   </div>
 </section>
