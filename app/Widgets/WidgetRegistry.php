@@ -18,6 +18,7 @@ use App\Widgets\Groups\SliderWidget;
 use App\Widgets\InbetweenV2\InbetweenV2BusinessWidget;
 use App\Widgets\InbetweenV2\InbetweenV2FounderWidget;
 use App\Widgets\InbetweenV2\InbetweenV2HeroWidget;
+use App\Widgets\InbetweenV2\InbetweenV2IntroWidget;
 use App\Widgets\InbetweenV2\InbetweenV2OurClientsWidget;
 use App\Widgets\InbetweenV2\InbetweenV2WhatWeDoWidget;
 use App\Widgets\InbetweenV2\InbetweenV2WhereWeFocusWidget;
@@ -62,6 +63,7 @@ class WidgetRegistry implements WidgetRegistryInterface
         'ehenho_slider' => EhenhoHeroSliderWidget::class,
 
         // Inbetween V2 Widgets (1 Section = 1 Widget)
+        'inbetween_v2_intro' => InbetweenV2IntroWidget::class,
         'inbetween_v2_hero' => InbetweenV2HeroWidget::class,
         'inbetween_v2_what_we_do' => InbetweenV2WhatWeDoWidget::class,
         'inbetween_v2_where_we_focus' => InbetweenV2WhereWeFocusWidget::class,

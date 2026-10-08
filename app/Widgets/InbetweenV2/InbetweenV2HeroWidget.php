@@ -10,7 +10,7 @@ class InbetweenV2HeroWidget extends BaseWidget
 {
     public static string $label = 'Hero Section';
 
-    public static string $description = 'Hero banner chính với preloader, glowing hands và intro headline animation';
+    public static string $description = 'Hero banner chính với radiant touch hands, headline, danh sách dịch vụ và CTA';
 
     public static string $icon = 'hero';
 
@@ -18,17 +18,11 @@ class InbetweenV2HeroWidget extends BaseWidget
     {
         return [
             'name' => 'Hero Section',
-            'description' => 'Hero banner chính với preloader, glowing hands và intro headline animation',
+            'description' => 'Hero banner chính với radiant touch hands, headline, danh sách dịch vụ và CTA',
             'category' => 'inbetween_v2',
             'version' => '2.0.0',
             'icon' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>',
             'fields' => [
-                [
-                    'name' => 'wecanhelp_text',
-                    'label' => 'We Can Help! Headline',
-                    'type' => 'text',
-                    'default' => 'WE CAN HELP!',
-                ],
                 [
                     'name' => 'headline_text',
                     'label' => 'Hero Stage Headline Text',
@@ -64,31 +58,16 @@ class InbetweenV2HeroWidget extends BaseWidget
                     'default' => '#inbetween-founder',
                 ],
                 [
-                    'name' => 'intro_subtitle',
-                    'label' => 'Intro Subtitle',
+                    'name' => 'logo_white',
+                    'label' => 'Header Logo White (Fallback)',
                     'type' => 'text',
-                    'default' => 'Your business is',
+                    'default' => 'themes/inbetween_v2/images/Logo-white.svg',
                 ],
                 [
-                    'name' => 'intro_title',
-                    'label' => 'Intro Title Base',
+                    'name' => 'logo_dark',
+                    'label' => 'Header Logo Dark (Fallback)',
                     'type' => 'text',
-                    'default' => 'ENTERING VIETNAM?',
-                ],
-                [
-                    'name' => 'floating_words',
-                    'label' => 'Intro Floating Words (Các cụm từ bay lặp lại)',
-                    'type' => 'repeatable',
-                    'min_items' => 1,
-                    'max_items' => 15,
-                    'fields' => [
-                        [
-                            'name' => 'text',
-                            'label' => 'Cụm từ hiển thị (VD: [ Find Customers ])',
-                            'type' => 'text',
-                            'default' => 'Business Development',
-                        ],
-                    ],
+                    'default' => 'themes/inbetween_v2/images/Logo.svg',
                 ],
                 [
                     'name' => 'connect_text',
@@ -113,21 +92,6 @@ class InbetweenV2HeroWidget extends BaseWidget
             'logo_dark' => 'themes/inbetween_v2/images/Logo.svg',
             'connect_text' => "LET'S CONNECT",
             'connect_link' => '#contact-modal',
-            'intro_subtitle' => 'Your business is',
-            'intro_title' => 'ENTERING VIETNAM?',
-            'floating_words' => [
-                ['text' => '[ Find Customers ]'],
-                ['text' => 'Find Suppliers'],
-                ['text' => 'Business Development'],
-                ['text' => 'Build Partnerships'],
-                ['text' => 'Market Research'],
-                ['text' => 'Coordinate Meetings'],
-                ['text' => 'Get Things Done Locally'],
-                ['text' => 'Find Talents'],
-                ['text' => 'Market Research'],
-                ['text' => 'Build Relationships'],
-            ],
-            'wecanhelp_text' => 'WE CAN HELP!',
             'headline_text' => "YOUR LOCAL TEAM BEFORE YOU'RE READY TO HIRE ONE.",
             'services' => 'Sales & BD, Market Validation, Market Entry Execution, Local Business Support',
             'description' => 'We help <strong class="font-semibold text-white">Asian SMEs, founders and entrepreneurs</strong> enter and grow in Vietnam.',

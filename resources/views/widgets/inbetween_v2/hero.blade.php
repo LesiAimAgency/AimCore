@@ -18,6 +18,7 @@
   @endphp
 
   <!-- Fixed Header across sections -->
+  @once('inbetween-header')
   <header class="inbetween-header fixed top-0 left-0 w-full z-50 select-none transition-colors duration-300 pointer-events-auto theme-dark text-white" id="inbetween-header">
     <div class="inbetween-container-1440 pt-5 sm:pt-6 pb-2 sm:pb-3">
       <a class="inbetween-logo inline-flex items-center w-[210px] h-[32px] shrink-0 select-none transition-opacity hover:opacity-85" href="#inbetween-intro" title="in • between">
@@ -38,13 +39,14 @@
       <span class="menu-text text-[13px] sm:text-[14px] md:text-[15px] font-bold uppercase tracking-wider ml-1">Menu</span>
     </button>
   </header>
+  @endonce
 
   <!-- Section 1 Content: Question & Floating Words -->
-  <div class="relative w-full flex-1 max-w-[1440px] mx-auto px-8 sm:px-12 flex flex-col items-center justify-center my-auto z-20 transition-all duration-300 pt-[80px] sm:pt-[88px] lg:pt-0 pb-6 sm:pb-8 lg:pb-0" id="act-question-container">
+  <div class="relative w-full flex-1 max-w-[1440px] mx-auto px-6 sm:px-12 flex flex-col items-center justify-center my-auto z-20 transition-all duration-300" id="act-question-container">
     <div class="relative z-20 text-center select-none" id="center-title-block">
-      <p class="text-[15px] sm:text-[20px] lg:text-[25px] font-normal text-[#F6F4F4]/90 tracking-normal mb-1.5 sm:mb-2 transition-all duration-300" id="intro-subtitle">{{ $settings['intro_subtitle'] ?? 'Your business is' }}</p>
+      <p class="text-[18px] sm:text-[22px] lg:text-[25px] font-normal text-[#F6F4F4]/90 tracking-normal mb-1.5 sm:mb-2 transition-all duration-300" id="intro-subtitle">{{ $settings['intro_subtitle'] ?? 'Your business is' }}</p>
       <div class="relative inline-block">
-        <h1 class="intro-title-gradient text-[26px] sm:text-[42px] lg:text-[62px] font-bold uppercase tracking-tight leading-tight select-none" id="intro-title-base">{{ $settings['intro_title'] ?? 'ENTERING VIETNAM?' }}</h1>
+        <h1 class="intro-title-gradient text-[34px] sm:text-[48px] lg:text-[62px] font-bold uppercase tracking-tight leading-tight select-none" id="intro-title-base">{{ $settings['intro_title'] ?? 'ENTERING VIETNAM?' }}</h1>
       </div>
     </div>
     @php
@@ -62,16 +64,16 @@
       ];
       $floatingWords = !empty($settings['floating_words']) && is_array($settings['floating_words']) ? array_values($settings['floating_words']) : $defaultWords;
       $wordPositions = [
-        1 => ['style' => 'top: 16%; left: 8%; opacity: 0.95;', 'class' => 'text-[13px] sm:text-[15px] lg:text-[17px] font-medium'],
-        2 => ['style' => 'top: 25%; left: 24%; opacity: 0.65;', 'class' => 'text-[12px] sm:text-[14px] lg:text-[16px] font-normal'],
-        3 => ['style' => 'top: 18%; left: 50%; transform: translateX(-50%); opacity: 0.50;', 'class' => 'text-[12px] sm:text-[13px] lg:text-[15px] font-normal'],
-        4 => ['style' => 'top: 16%; right: 8%; opacity: 0.92;', 'class' => 'text-[13px] sm:text-[15px] lg:text-[17px] font-medium'],
-        5 => ['style' => 'top: 30%; right: 10%; opacity: 0.55;', 'class' => 'text-[12px] sm:text-[13px] lg:text-[15px] font-normal'],
-        6 => ['style' => 'top: 60%; right: 7%; opacity: 0.88;', 'class' => 'text-[13px] sm:text-[15px] lg:text-[17px] font-medium'],
-        7 => ['style' => 'bottom: 12%; left: 50%; transform: translateX(-50%); opacity: 0.92;', 'class' => 'text-[13px] sm:text-[15px] lg:text-[17px] font-medium'],
-        8 => ['style' => 'bottom: 25%; left: 50%; transform: translateX(-50%); opacity: 0.50;', 'class' => 'text-[12px] sm:text-[13px] lg:text-[15px] font-normal'],
-        9 => ['style' => 'bottom: 18%; left: 18%; opacity: 0.60;', 'class' => 'text-[12px] sm:text-[13px] lg:text-[15px] font-normal'],
-        10 => ['style' => 'bottom: 28%; left: 8%; opacity: 0.88;', 'class' => 'text-[13px] sm:text-[15px] lg:text-[17px] font-medium'],
+        1 => ['style' => 'top: 12%; left: 9%; opacity: 0.95;', 'class' => 'text-[15px] lg:text-[17px] font-medium'],
+        2 => ['style' => 'top: 24%; left: 26%; opacity: 0.65;', 'class' => 'text-[14px] lg:text-[16px] font-normal'],
+        3 => ['style' => 'top: 14%; left: 50%; transform: translateX(-50%); opacity: 0.50;', 'class' => 'text-[13px] lg:text-[15px] font-normal'],
+        4 => ['style' => 'top: 12%; right: 9%; opacity: 0.92;', 'class' => 'text-[15px] lg:text-[17px] font-medium'],
+        5 => ['style' => 'top: 30%; right: 12%; opacity: 0.55;', 'class' => 'text-[13px] lg:text-[15px] font-normal'],
+        6 => ['style' => 'top: 62%; right: 7%; opacity: 0.88;', 'class' => 'text-[15px] lg:text-[17px] font-medium'],
+        7 => ['style' => 'bottom: 10%; left: 50%; transform: translateX(-50%); opacity: 0.92;', 'class' => 'text-[15px] lg:text-[17px] font-medium'],
+        8 => ['style' => 'bottom: 27%; left: 50%; transform: translateX(-50%); opacity: 0.50;', 'class' => 'text-[13px] lg:text-[15px] font-normal'],
+        9 => ['style' => 'bottom: 18%; left: 20%; opacity: 0.60;', 'class' => 'text-[13px] lg:text-[15px] font-normal'],
+        10 => ['style' => 'bottom: 30%; left: 7%; opacity: 0.88;', 'class' => 'text-[15px] lg:text-[17px] font-medium'],
       ];
     @endphp
     <div class="intro-floating-words absolute inset-0 pointer-events-none" id="floating-words-group">

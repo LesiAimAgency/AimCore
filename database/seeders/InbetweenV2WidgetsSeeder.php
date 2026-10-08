@@ -15,15 +15,9 @@ class InbetweenV2WidgetsSeeder extends Seeder
     {
         $widgets = [
             1 => [
-                'name' => '1. Hero Section',
-                'type' => 'inbetween_v2_hero',
+                'name' => '1. Intro Section',
+                'type' => 'inbetween_v2_intro',
                 'settings' => [
-                    'wecanhelp_text' => 'WE CAN HELP!',
-                    'headline_text' => "YOUR LOCAL TEAM BEFORE YOU'RE READY TO HIRE ONE.",
-                    'services' => 'Sales & BD, Market Validation, Market Entry Execution, Local Business Support',
-                    'description' => 'We help <strong class="font-semibold text-white">Asian SMEs, founders and entrepreneurs</strong> enter and grow in Vietnam.',
-                    'cta_text' => 'Talk to us',
-                    'cta_link' => '#inbetween-founder',
                     'intro_subtitle' => 'Your business is',
                     'intro_title' => 'ENTERING VIETNAM?',
                     'floating_words' => [
@@ -38,12 +32,29 @@ class InbetweenV2WidgetsSeeder extends Seeder
                         ['text' => 'Market Research'],
                         ['text' => 'Build Relationships'],
                     ],
+                    'logo_white' => 'themes/inbetween_v2/images/Logo-white.svg',
+                    'logo_dark' => 'themes/inbetween_v2/images/Logo.svg',
                     'connect_text' => "LET'S CONNECT",
                     'connect_link' => '#contact-modal',
                 ],
             ],
             2 => [
-                'name' => '2. What We Do',
+                'name' => '2. Hero Section',
+                'type' => 'inbetween_v2_hero',
+                'settings' => [
+                    'headline_text' => "YOUR LOCAL TEAM BEFORE YOU'RE READY TO HIRE ONE.",
+                    'services' => 'Sales & BD, Market Validation, Market Entry Execution, Local Business Support',
+                    'description' => 'We help <strong class="font-semibold text-white">Asian SMEs, founders and entrepreneurs</strong> enter and grow in Vietnam.',
+                    'cta_text' => 'Talk to us',
+                    'cta_link' => '#inbetween-founder',
+                    'logo_white' => 'themes/inbetween_v2/images/Logo-white.svg',
+                    'logo_dark' => 'themes/inbetween_v2/images/Logo.svg',
+                    'connect_text' => "LET'S CONNECT",
+                    'connect_link' => '#contact-modal',
+                ],
+            ],
+            3 => [
+                'name' => '3. What We Do',
                 'type' => 'inbetween_v2_what_we_do',
                 'settings' => [
                     'badge_text' => '[ WHAT WE DO ]',
@@ -88,8 +99,8 @@ class InbetweenV2WidgetsSeeder extends Seeder
                     ],
                 ],
             ],
-            3 => [
-                'name' => '3. Where We Focus',
+            4 => [
+                'name' => '4. Where We Focus',
                 'type' => 'inbetween_v2_where_we_focus',
                 'settings' => [
                     'badge_text' => '[ WHERE WE FOCUS ]',
@@ -123,8 +134,8 @@ class InbetweenV2WidgetsSeeder extends Seeder
                     ],
                 ],
             ],
-            4 => [
-                'name' => '4. Founder Profile',
+            5 => [
+                'name' => '5. Founder Profile',
                 'type' => 'inbetween_v2_founder',
                 'settings' => [
                     'founder_portrait' => 'themes/inbetween_v2/images/founder-airu-portrait.png',
@@ -161,8 +172,8 @@ class InbetweenV2WidgetsSeeder extends Seeder
                     'cta_card_btn_link' => '#contact',
                 ],
             ],
-            5 => [
-                'name' => '5. Our Clients',
+            6 => [
+                'name' => '6. Our Clients',
                 'type' => 'inbetween_v2_our_clients',
                 'settings' => [
                     'heading_word1' => 'OUR',
@@ -189,8 +200,8 @@ class InbetweenV2WidgetsSeeder extends Seeder
                     ],
                 ],
             ],
-            6 => [
-                'name' => '6. Beyond Business',
+            7 => [
+                'name' => '7. Beyond Business',
                 'type' => 'inbetween_v2_business',
                 'settings' => [
                     'badge_title' => '[ BEYOND BUSINESS ]',
