@@ -103,7 +103,7 @@
             </label>
             <div class="relative footer-select-box" id="footer-service-dropdown">
               <input type="hidden" name="service" value="sales-bd" id="footer-service-val">
-              <button type="button" class="footer-select-trigger w-full h-[40px] px-3 bg-transparent border border-neutral-700/90 rounded-[4px] text-[13px] text-neutral-300 flex items-center justify-between focus:outline-none focus:border-[#EC460B] transition-colors cursor-pointer select-none" aria-haspopup="listbox" aria-expanded="false">
+              <button type="button" style="border:1px solid" class="footer-select-trigger w-full h-[40px] px-3 bg-transparent border border-neutral-700/90 rounded-[4px] text-[13px] text-neutral-300 flex items-center justify-between focus:outline-none focus:border-[#EC460B] transition-colors cursor-pointer select-none" aria-haspopup="listbox" aria-expanded="false">
                 <span class="footer-selected-label text-neutral-300 truncate">Sales & BD</span>
                 <span class="flex items-center pl-2.5 ml-2 border-l border-neutral-700/80 text-neutral-400 shrink-0">
                   <svg class="w-3.5 h-3.5 transition-transform footer-select-arrow" viewBox="0 0 20 20" fill="currentColor">
