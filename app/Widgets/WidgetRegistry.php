@@ -15,6 +15,15 @@ use App\Widgets\Groups\HeaderWidget;
 use App\Widgets\Groups\InstagramWidget;
 use App\Widgets\Groups\ProductWidget;
 use App\Widgets\Groups\SliderWidget;
+use App\Widgets\Inbetween\CommunityCollageWidget;
+use App\Widgets\Inbetween\CommunityStatementWidget;
+use App\Widgets\Inbetween\CoreValuesWidget;
+use App\Widgets\Inbetween\FounderSectionWidget;
+use App\Widgets\Inbetween\HeroSectionWidget;
+use App\Widgets\Inbetween\InbetweenThemeWidget;
+use App\Widgets\Inbetween\MediaStoriesWidget;
+use App\Widgets\Inbetween\PackagesWidget;
+use App\Widgets\Inbetween\UpcomingEventsWidget;
 use App\Widgets\InbetweenV2\InbetweenV2BusinessWidget;
 use App\Widgets\InbetweenV2\InbetweenV2FooterWidget;
 use App\Widgets\InbetweenV2\InbetweenV2FounderWidget;
@@ -299,7 +308,7 @@ class WidgetRegistry implements WidgetRegistryInterface
                     'class' => $class,
                     'metadata' => $metadata,
                 ];
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 \Log::warning("Error loading widget {$class}: ".$e->getMessage());
             }
         }
@@ -464,12 +473,12 @@ class WidgetRegistry implements WidgetRegistryInterface
         $class = self::get($type);
 
         // If code-based widget exists
-        if ($class) {
+        if ($class && class_exists($class)) {
             try {
                 $widget = new $class($settings, $variant);
 
                 return $widget->css().$widget->render().$widget->js();
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 \Log::error("Error rendering widget {$type}: ".$e->getMessage());
 
                 return '<div class="widget-error">Widget rendering failed</div>';
