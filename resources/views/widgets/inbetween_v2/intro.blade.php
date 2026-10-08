@@ -265,20 +265,12 @@
     </div>
   </div>
 
-  <!-- Act 2: Big WE CAN HELP! Container (Frames 12 - 21) -->
-  <div class="absolute inset-0 z-[30] flex items-center justify-center opacity-0 pointer-events-none select-none overflow-hidden" id="act-wecanhelp-container" style="display: none; opacity: 0; z-index: 30;">
-    <h2 class="text-[52px] sm:text-[84px] lg:text-[116px] xl:text-[132px] font-bold uppercase tracking-tight text-white whitespace-nowrap will-change-transform font-sans" id="wecanhelp-text">{{ $settings['wecanhelp_text'] ?? 'WE CAN HELP!' }}</h2>
+  <!-- Act 2: Big WE CAN HELP! Container (Frame 12) -->
+  <div class="absolute inset-0 z-[30] flex items-center justify-center opacity-0 pointer-events-none select-none overflow-hidden px-4" id="act-wecanhelp-container" style="display: none; opacity: 0; z-index: 30;">
+    <h2 class="text-[34px] sm:text-[62px] md:text-[88px] lg:text-[112px] xl:text-[128px] font-bold uppercase tracking-tight text-white whitespace-nowrap will-change-transform font-sans text-center max-w-full drop-shadow-md" id="wecanhelp-text">{{ $settings['wecanhelp_text'] ?? 'WE CAN HELP!' }}</h2>
   </div>
 
-  <!-- Act 3: White Transition Flash Screen (Frame 22) -->
+  <!-- Act 3: White Transition Flash Screen -->
   <div class="absolute inset-0 z-[35] bg-white opacity-0 pointer-events-none" id="hero-white-transition" style="display: none; opacity: 0; z-index: 35;"></div>
 
-  <!-- Bottom Scroll Helper pointing to Section 2 (#inbetween-hero) -->
-  <!-- <div class="w-full shrink-0 flex flex-col items-center justify-center pb-5 sm:pb-7 z-30 pointer-events-auto transition-opacity duration-300" id="intro-scroll-helper">
-    <a class="inline-flex flex-col items-center gap-1.5 text-white/70 hover:text-white transition-colors duration-200 group cursor-pointer" href="#inbetween-hero" title="Cuộn sang Hero Section">
-      <span class="w-4 h-7 rounded-full border border-white/40 flex items-start justify-center p-0.5 group-hover:border-white">
-        <span class="w-1 h-1.5 rounded-full bg-[#EC460B] animate-bounce"></span>
-      </span>
-    </a>
-  </div> -->
 </section>
