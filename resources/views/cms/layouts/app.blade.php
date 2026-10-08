@@ -79,7 +79,13 @@
             || request()->is('DA010*')
             || request()->is('da010*');
 
-        $hasCustomSidebar = $isVtm || $isWk || $isEhenho;
+        $isInbetween = ($projectCode === 'inbetween_v2' || $projectCode === 'inbetween' || $projectCode === 'DA005')
+            || (is_string($projectCode) && str_contains(strtolower($projectCode), 'inbetween'))
+            || ($projectTheme === 'inbetween_v2' || $projectTheme === 'inbetween')
+            || request()->is('inbetween_v2/*')
+            || request()->is('inbetween/*');
+
+        $hasCustomSidebar = $isVtm || $isWk || $isEhenho || $isInbetween;
     @endphp
 
     <div class="min-h-screen flex w-full">
@@ -94,6 +100,10 @@
         @elseif($isEhenho)
             <div class="fixed top-0 left-0 h-screen z-40">
                 @include('themes.ehenho.admin.layouts.sidebar')
+            </div>
+        @elseif($isInbetween)
+            <div class="fixed top-0 left-0 h-screen z-40">
+                @include('themes.inbetween_v2.admin.layouts.sidebar')
             </div>
         @else
         <!-- Sidebar -->

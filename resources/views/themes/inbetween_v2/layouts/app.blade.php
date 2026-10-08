@@ -119,6 +119,31 @@
       </div>
     </div>
     <div class="toast-notification" id="global-toast-notification"></div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var form = document.getElementById('modal-contact-form');
+        if (form && !form.__ajaxAttached) {
+          form.__ajaxAttached = true;
+          form.addEventListener('submit', function (e) {
+            var formData = new FormData(form);
+            fetch('{{ route("web.inbetween_v2.contact") }}', {
+              method: 'POST',
+              headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+              },
+              body: formData
+            }).then(function (res) {
+              return res.json();
+            }).then(function (data) {
+              console.log('Inbetween V2 contact stored:', data);
+            }).catch(function (err) {
+              console.warn('Inbetween V2 contact submit warning:', err);
+            });
+          }, true);
+        }
+      });
+    </script>
     @stack('scripts')
   </body>
 </html>

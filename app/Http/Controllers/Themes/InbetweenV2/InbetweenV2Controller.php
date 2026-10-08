@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Themes\InbetweenV2;
 use App\Core\Theme\ThemeManager;
 use App\Http\Controllers\Controller;
 use App\Models\FormSubmission;
+use App\Models\Project;
 use App\Models\Widget;
 use Database\Seeders\InbetweenV2WidgetsSeeder;
 use Illuminate\Http\JsonResponse;
@@ -56,12 +57,25 @@ class InbetweenV2Controller extends Controller
 
         try {
             if (Schema::hasTable('form_submissions')) {
+                $project = function_exists('current_project') ? current_project() : null;
+                if (! $project) {
+                    $project = Project::where('code', 'inbetween_v2')->first();
+                }
+                $projId = $project?->id ?? 16;
+                $tenantId = $project?->tenant_id ?? $projId;
+
+                $inputData = array_merge($validated, $request->except(['_token', 'fullname', 'phone', 'email', 'service', 'message']));
+
                 FormSubmission::create([
                     'form_name' => 'inbetween_v2_contact_modal',
-                    'data' => $validated,
+                    'data' => $inputData,
                     'ip_address' => $request->ip(),
                     'user_agent' => $request->userAgent(),
-                    'project_id' => function_exists('current_project') ? current_project()?->id : null,
+                    'project_id' => $projId,
+                    'tenant_id' => $tenantId,
+                    'status' => 'pending',
+                    'source' => 'modal',
+                    'submitted_at' => now(),
                 ]);
             }
         } catch (\Throwable $e) {

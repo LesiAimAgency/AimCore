@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             EcommerceSeeder::class,
             InbetweenThemeSeeder::class,
             InbetweenHomepageMainSeeder::class,
+            InbetweenV2WidgetsSeeder::class,
             ViettinmartMasterSeeder::class,
             WkcomputerMasterSeeder::class,
             EhenhoMasterSeeder::class,

@@ -77,7 +77,13 @@
             || request()->is('DA010*')
             || request()->is('da010*');
 
-        $hasCustomSidebar = $isVtm || $isWk || $isEhenho;
+        $isInbetween = ($projectCode === 'inbetween_v2' || $projectCode === 'inbetween' || $projectCode === 'DA005')
+            || (is_string($projectCode) && str_contains(strtolower($projectCode), 'inbetween'))
+            || ($projectTheme === 'inbetween_v2' || $projectTheme === 'inbetween')
+            || request()->is('inbetween_v2/*')
+            || request()->is('inbetween/*');
+
+        $hasCustomSidebar = $isVtm || $isWk || $isEhenho || $isInbetween;
     @endphp
 
     <div class="min-h-screen flex w-full relative">
@@ -95,6 +101,10 @@
         @elseif($isEhenho)
             <div id="admin-sidebar-wrapper" class="fixed top-0 left-0 h-screen z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out">
                 @include('themes.ehenho.admin.layouts.sidebar')
+            </div>
+        @elseif($isInbetween)
+            <div id="admin-sidebar-wrapper" class="fixed top-0 left-0 h-screen z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out">
+                @include('themes.inbetween_v2.admin.layouts.sidebar')
             </div>
         @else
         <!-- Sidebar -->
@@ -127,6 +137,7 @@
                 </a>
 
                 <!-- E-Commerce -->
+                @if(isset($currentProject) && ($currentProject->hasFeature('commerce') || $currentProject->hasFeature('product_listing')))
                 <div class="mb-4">
                     <div class="dropdown-parent">
                         <button class="nav-item flex items-center justify-between w-full px-4 py-3 mb-2 text-slate-300 hover:bg-[blue-600] hover:text-white rounded-lg transition-all duration-200">
@@ -174,6 +185,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
 
                 <!-- Content Management -->
                 <div class="mb-4">

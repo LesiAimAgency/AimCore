@@ -7,6 +7,7 @@ use App\Models\Agent;
 use App\Models\Ehenho\Conversation;
 use App\Models\Ehenho\Message;
 use App\Models\Ehenho\Profile;
+use App\Models\FormSubmission;
 use App\Models\Order;
 use App\Models\Post;
 use App\Models\Product;
@@ -14,6 +15,7 @@ use App\Models\Project;
 use App\Models\ProjectSetting;
 use App\Models\User;
 use App\Models\VisitorLog;
+use App\Models\Widget;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -39,8 +41,21 @@ class DashboardController extends Controller
     public function projectDashboard(Request $request)
     {
         $project = $request->attributes->get('project');
-        if (! $project && $request->route('projectCode')) {
-            $project = Project::where('code', $request->route('projectCode'))->first();
+        $code = $request->route('projectCode') ?? $request->segment(1);
+        if (! $project && $code) {
+            $project = Project::where('code', $code)->first();
+        }
+
+        $isInbetweenV2 = ($project && ($project->code === 'inbetween_v2' || ($project->features['theme'] ?? null) === 'inbetween_v2'))
+            || in_array($code, ['inbetween_v2', 'inbetween-v2', 'inbetween', 'inbetwen']);
+
+        if ($isInbetweenV2) {
+            $inbetweenData = $this->getInbetweenV2DashboardData($project);
+            if (view()->exists('themes.inbetween_v2.admin.dashboard')) {
+                return view('themes.inbetween_v2.admin.dashboard', $inbetweenData);
+            }
+
+            return view('cms.dashboard', $inbetweenData);
         }
 
         $data = $this->getDashboardData($project);
@@ -68,11 +83,12 @@ class DashboardController extends Controller
             return view('themes.ehenho.admin.dashboard', array_merge($data, $ehenhoData));
         }
 
-        $isInbetweenV2 = ($project && ($project->code === 'inbetween_v2' || ($project->features['theme'] ?? null) === 'inbetween_v2'))
-            || in_array($request->route('projectCode'), ['inbetween_v2', 'inbetween-v2']);
+        // For non-ecommerce projects, use the cleaned visitor and form dashboard
+        $hasCommerce = $project && ($project->hasFeature('commerce') || $project->hasFeature('product_listing'));
+        if (! $hasCommerce) {
+            $inbetweenData = $this->getInbetweenV2DashboardData($project);
 
-        if ($isInbetweenV2 && view()->exists('themes.inbetween_v2.admin.dashboard')) {
-            return view('themes.inbetween_v2.admin.dashboard', $data);
+            return view('cms.dashboard', array_merge($data, $inbetweenData));
         }
 
         return view('cms.dashboard.index', $data);
@@ -224,8 +240,12 @@ class DashboardController extends Controller
                     $item->total_sold = $item->total_qty;
                     $img = $item->image ?? null;
                     if (! $img && $item->product_id) {
-                        $p = Product::find($item->product_id);
-                        $img = $p?->thumbnail_url;
+                        try {
+                            $p = Product::find($item->product_id);
+                            $img = $p?->thumbnail_url;
+                        } catch (\Throwable $e) {
+                            $img = null;
+                        }
                     }
                     $item->image_url = $img
                         ? (str_starts_with($img, 'http') ? $img : (str_starts_with($img, 'media/') ? \Storage::url($img) : asset($img)))
@@ -606,6 +626,118 @@ class DashboardController extends Controller
             'recentPages' => $recentPages,
             'totalConversations' => $totalConversations,
             'totalMessages' => $totalMessages,
+        ];
+    }
+
+    public function getInbetweenV2DashboardData(?Project $project = null): array
+    {
+        $projectId = $project?->id;
+        $todayStart = today()->startOfDay();
+        $yesterdayStart = today()->subDay()->startOfDay();
+        $yesterdayEnd = today()->subDay()->endOfDay();
+
+        // 1. Visitor Stats
+        $totalVisits = VisitorLog::count();
+        $visitsToday = VisitorLog::where('visited_at', '>=', $todayStart)->count();
+        $visitsYesterday = VisitorLog::whereBetween('visited_at', [$yesterdayStart, $yesterdayEnd])->count();
+        $visitGrowth = $visitsYesterday > 0
+            ? round((($visitsToday - $visitsYesterday) / $visitsYesterday) * 100, 1)
+            : ($visitsToday > 0 ? 100 : 0);
+
+        $uniqueIpsToday = VisitorLog::where('visited_at', '>=', $todayStart)->distinct('ip_address')->count('ip_address');
+        $uniqueIpsTotal = VisitorLog::distinct('ip_address')->count('ip_address');
+
+        // 7-day daily traffic trend for visual chart
+        $dailyVisits = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = today()->subDays($i);
+            $count = VisitorLog::whereDate('visited_at', $date)->count();
+            $dailyVisits[] = [
+                'day' => $date->translatedFormat('D'),
+                'date' => $date->format('d/m'),
+                'full_date' => $date->format('Y-m-d'),
+                'visits' => $count,
+            ];
+        }
+        $maxDailyVisits = max(array_column($dailyVisits, 'visits') ?: [1]);
+        if ($maxDailyVisits <= 0) {
+            $maxDailyVisits = 1;
+        }
+        foreach ($dailyVisits as &$dItem) {
+            $dItem['percentage'] = round(($dItem['visits'] / $maxDailyVisits) * 100);
+        }
+        unset($dItem);
+
+        // Top pages
+        $topPages = VisitorLog::select('url', DB::raw('COUNT(*) as visits'))
+            ->where('visited_at', '>=', now()->subDays(30))
+            ->groupBy('url')
+            ->orderBy('visits', 'desc')
+            ->limit(6)
+            ->get();
+
+        // Recent visitors
+        $recentVisitors = VisitorLog::latest('visited_at')->take(10)->get();
+
+        // 2. Form Submissions (Lưu trữ và theo dõi thông tin user gửi form)
+        $formQuery = FormSubmission::withoutGlobalScopes();
+        if ($projectId) {
+            $formQuery->where(function ($q) use ($projectId) {
+                $q->where('project_id', $projectId)
+                    ->orWhere('tenant_id', $projectId)
+                    ->orWhere('form_name', 'like', '%inbetween%');
+            });
+        }
+
+        $totalSubmissions = (clone $formQuery)->count();
+        $submissionsToday = (clone $formQuery)->where('created_at', '>=', $todayStart)->count();
+        $pendingSubmissions = (clone $formQuery)->where('status', 'pending')->count();
+        $approvedSubmissions = (clone $formQuery)->where('status', 'approved')->count();
+        $rejectedSubmissions = (clone $formQuery)->where('status', 'rejected')->count();
+
+        $recentSubmissions = (clone $formQuery)->latest()->take(15)->get();
+
+        $conversionRate = $uniqueIpsTotal > 0
+            ? round(($totalSubmissions / $uniqueIpsTotal) * 100, 1)
+            : 0;
+
+        // 3. Content stats
+        $totalWidgets = Widget::withoutGlobalScopes()
+            ->whereIn('area', ['inbetween_v2', 'homepage-main', 'inbetween'])
+            ->count();
+        $totalPages = Post::withoutGlobalScopes()->where('post_type', 'page')->count();
+        $totalPosts = Post::withoutGlobalScopes()->where('post_type', 'post')->count();
+
+        return [
+            'visitor_stats' => [
+                'total_visits' => $totalVisits,
+                'visits_today' => $visitsToday,
+                'visits_yesterday' => $visitsYesterday,
+                'visit_growth' => $visitGrowth,
+                'unique_ips' => $uniqueIpsToday,
+                'unique_ips_total' => $uniqueIpsTotal,
+                'top_pages' => $topPages,
+                'daily_visits' => $dailyVisits,
+            ],
+            'form_stats' => [
+                'total_submissions' => $totalSubmissions,
+                'submissions_today' => $submissionsToday,
+                'submissions_pending' => $pendingSubmissions,
+                'submissions_approved' => $approvedSubmissions,
+                'submissions_rejected' => $rejectedSubmissions,
+                'conversion_rate' => $conversionRate,
+            ],
+            'recent_submissions' => $recentSubmissions,
+            'recent_visitors' => $recentVisitors,
+            'device_chart' => $this->getDeviceChart(),
+            'traffic_chart' => $this->getTrafficChart(),
+            'content_stats' => [
+                'total_widgets' => $totalWidgets,
+                'total_pages' => $totalPages,
+                'total_posts' => $totalPosts,
+            ],
+            'currentProject' => $project,
+            'project' => $project,
         ];
     }
 }
