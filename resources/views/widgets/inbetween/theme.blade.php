@@ -23,13 +23,13 @@
         <img src="{{ asset('themes/inbetween/assets/logo-white.svg') }}" alt="{{ setting('site_name', 'INBETWEEN') }}" class="w-full h-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
       </div>
 
-      @if($showCollage)
+      <!-- @if($showCollage)
         @include('widgets.inbetween.community_collage')
       @endif
 
       @if($showStatement)
         @include('widgets.inbetween.community_statement')
-      @endif
+      @endif -->
     </section>
   @endif
 
