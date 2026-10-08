@@ -26,7 +26,7 @@
       </div>
       <div class="flex-1 flex flex-col justify-start gap-8 font-sans">
         <ul class="space-y-5 pt-2">
-          <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-hero" data-nav-link>HOME</a></li>
+          <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-intro" data-nav-link>HOME</a></li>
           <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-what-we-do" data-nav-link>WHAT WE DO</a></li>
           <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-where-we-focus" data-nav-link>WHERE WE FOCUS</a></li>
           <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-founder" data-nav-link>FOUNDER</a></li>
