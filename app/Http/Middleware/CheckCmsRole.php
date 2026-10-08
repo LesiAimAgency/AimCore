@@ -93,6 +93,10 @@ class CheckCmsRole
                     }
                 }
 
+                if (! $hasAccess && $project->admin_id && (int) $user->id === (int) $project->admin_id) {
+                    $hasAccess = true;
+                }
+
                 if (! $hasAccess) {
                     abort(403, 'Bạn không có quyền truy cập dự án này.');
                 }
