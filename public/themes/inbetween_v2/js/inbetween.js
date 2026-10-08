@@ -95,7 +95,7 @@ import{g as D}from"./main.js";import{_ as oe,O as Ke,a as Ne,b as et,c as qe,d a
         const curF = window._introGetCurrentFrame ? window._introGetCurrentFrame() : 0,
               totF = window._introGetTotalFrames ? window._introGetTotalFrames() : 11;
         const now = Date.now();
-        if (now - g < 180) {
+        if (now - g < 280) {
           if (curF >= totF && window._introRecordWheel) window._introRecordWheel();
           return;
         }
@@ -171,7 +171,9 @@ import{g as D}from"./main.js";import{_ as oe,O as Ke,a as Ne,b as et,c as qe,d a
               window._introNextFrame && window._introNextFrame();
               return;
             } else {
-              m(1);
+              if (window._introCanLeaveToNext && window._introCanLeaveToNext(y)) {
+                m(1);
+              }
               return;
             }
           } else {
@@ -325,23 +327,6 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
     A = !1,
     B_introComplete = !1;
 
-  const L = {
-    0: { top: 100, bottom: 100, glow: 0, alpha: 0 },
-    1: { top: 72, bottom: 98, glow: 6, alpha: 0.3 },
-    2: { top: 60, bottom: 88, glow: 8, alpha: 0.38 },
-    3: { top: 48, bottom: 78, glow: 10, alpha: 0.45 },
-    4: { top: 38, bottom: 68, glow: 12, alpha: 0.5 },
-    5: { top: 28, bottom: 58, glow: 15, alpha: 0.58 },
-    6: { top: 18, bottom: 48, glow: 18, alpha: 0.65 },
-    7: { top: 8, bottom: 38, glow: 20, alpha: 0.7 },
-    8: { top: -2, bottom: 28, glow: 22, alpha: 0.75 },
-    9: { top: -12, bottom: 18, glow: 24, alpha: 0.8 },
-    10: { top: -22, bottom: 8, glow: 26, alpha: 0.85 },
-    11: { top: -35, bottom: 0, glow: 30, alpha: 0.95 }
-  };
-
-  const M = { top: 100, bottom: 100, glow: 0, alpha: 0 };
-
   const P = a.map(k => {
     const F = parseInt(k.getAttribute("data-word-idx"), 10) || 1,
       N = (k.getAttribute("style") || "").match(/opacity:\s*([\d\.]+)/),
@@ -445,10 +430,9 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
     if (t) D.set(t, { opacity: 0, y: -16, letterSpacing: "0.01em" });
     if (n) {
       D.set(n, { opacity: 0, scale: 0.94, y: 16, letterSpacing: "0.01em" });
-      n.style.setProperty("--grad-top", "100%");
-      n.style.setProperty("--grad-bottom", "100%");
-      n.style.setProperty("--grad-glow", "0px");
-      n.style.setProperty("--grad-glow-alpha", "0");
+      n.style.color = "#F6F4F4";
+      n.style.webkitTextFillColor = "#F6F4F4";
+      n.style.backgroundImage = "none";
       n.style.filter = "none";
     }
     P.forEach(F => {
@@ -490,45 +474,18 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
   function V(k, F = !1) {
     const Y = F ? 0 : 0.28,
       N = "power2.out";
-    const R = L[k] || { top: 100, bottom: 100, glow: 0, alpha: 0 };
-    D.killTweensOf(M);
 
-    if (F) {
-      M.top = R.top;
-      M.bottom = R.bottom;
-      M.glow = R.glow;
-      M.alpha = R.alpha;
-      if (n) {
-        n.style.setProperty("--grad-top", `${R.top}%`);
-        n.style.setProperty("--grad-bottom", `${R.bottom}%`);
-        n.style.setProperty("--grad-glow", `${R.glow}px`);
-        n.style.setProperty("--grad-glow-alpha", `${R.alpha}`);
-        n.style.filter = R.glow > 0 ? `drop-shadow(0 0 ${R.glow}px rgba(236, 70, 11, ${R.alpha}))` : "none";
-      }
-    } else {
-      D.to(M, {
-        top: R.top,
-        bottom: R.bottom,
-        glow: R.glow,
-        alpha: R.alpha,
-        duration: Y,
-        ease: "power2.out",
-        onUpdate: () => {
-          if (n) {
-            n.style.setProperty("--grad-top", `${M.top}%`);
-            n.style.setProperty("--grad-bottom", `${M.bottom}%`);
-            n.style.setProperty("--grad-glow", `${M.glow}px`);
-            n.style.setProperty("--grad-glow-alpha", `${M.alpha}`);
-            n.style.filter = M.glow > 0 ? `drop-shadow(0 0 ${M.glow.toFixed(1)}px rgba(236, 70, 11, ${M.alpha.toFixed(2)}))` : "none";
-          }
-        }
-      });
+    if (n) {
+      n.style.color = "#F6F4F4";
+      n.style.webkitTextFillColor = "#F6F4F4";
+      n.style.backgroundImage = "none";
+      n.style.filter = "none";
     }
 
-    const b = 0.01 + (k / 11) * 0.06;
+    const b = 0.01 + (k / 11) * 0.05;
     if (n) D.to(n, { letterSpacing: `${b}em`, duration: Y, ease: N });
     if (t) {
-      const H = 0.01 + (k / 11) * 0.04;
+      const H = 0.01 + (k / 11) * 0.03;
       D.to(t, { letterSpacing: `${H}em`, duration: Y, ease: N });
     }
 
@@ -585,7 +542,7 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
     _heroInertiaTimer && clearTimeout(_heroInertiaTimer);
     _heroInertiaTimer = setTimeout(() => {
       _heroInertiaSettled = !0;
-    }, 300);
+    }, 450);
   };
 
   window._introRecordWheel = () => {
@@ -594,22 +551,27 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
     _heroInertiaTimer && clearTimeout(_heroInertiaTimer);
     _heroInertiaTimer = setTimeout(() => {
       _heroInertiaSettled = !0;
-    }, 300);
+    }, 450);
   };
 
   window._introCanLeaveToNext = (dy = 0) => {
     const now = Date.now();
-    if (!_heroLandedAt) _heroLandedAt = now;
-    if (now - _heroLandedAt < 400) {
-      window._introRecordWheel();
+    if (!_heroLandedAt) {
+      _heroLandedAt = now;
       return !1;
     }
-    if (!_heroInertiaSettled && (now - _heroLastWheelAt < 250)) {
-      window._introRecordWheel();
+    // Must pause at frame 11 for at least 800ms so user sees the completed state
+    if (now - _heroLandedAt < 800) {
+      window._introRecordWheel && window._introRecordWheel();
       return !1;
     }
-    if (dy !== undefined && Math.abs(dy) < 15) {
-      window._introRecordWheel();
+    // Must let rapid wheel inertia settle
+    if (!_heroInertiaSettled && (now - _heroLastWheelAt < 400)) {
+      window._introRecordWheel && window._introRecordWheel();
+      return !1;
+    }
+    if (dy !== undefined && Math.abs(dy) < 18) {
+      window._introRecordWheel && window._introRecordWheel();
       return !1;
     }
     return !0;
@@ -660,10 +622,21 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
   if (targetSec) {
     let isDragging = !1,
       dragStartY = 0,
-      dragAccum = 0;
-    const dragThreshold = 22;
+      dragAccum = 0,
+      lastDragStepTime = 0;
+    const dragThreshold = 50;
 
-    targetSec.style.cursor = "grab";
+    targetSec.style.cursor = "default";
+
+    // Prevent middle mouse button autoscroll bug everywhere on Intro
+    const preventMiddle = k => {
+      if (k.button === 1) {
+        k.preventDefault();
+        k.stopPropagation();
+      }
+    };
+    window.addEventListener("mousedown", preventMiddle, { capture: true });
+    window.addEventListener("auxclick", preventMiddle, { capture: true });
 
     targetSec.addEventListener("pointerdown", k => {
       if (k.pointerType === "touch") return;
@@ -671,7 +644,6 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
         isDragging = !0;
         dragStartY = k.clientY;
         dragAccum = 0;
-        targetSec.style.cursor = "grabbing";
       }
     });
 
@@ -682,21 +654,19 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
       dragAccum += diff;
 
       if (Math.abs(dragAccum) >= dragThreshold) {
-        const steps = Math.floor(Math.abs(dragAccum) / dragThreshold);
+        const now = Date.now();
+        if (now - lastDragStepTime < 280) return;
+        lastDragStepTime = now;
         const dir = dragAccum > 0 ? 1 : -1;
-        dragAccum = dragAccum % dragThreshold;
+        dragAccum = 0;
 
         if (dir > 0) {
           if (v < C) {
-            Q(v + steps);
-          } else {
-            if (window._introCanLeaveToNext && window._introCanLeaveToNext(diff) && window._goToSection) {
-              window._goToSection(1);
-            }
+            Q(v + 1);
           }
         } else {
           if (v > 0) {
-            Q(v - steps);
+            Q(v - 1);
           }
         }
       }
@@ -706,7 +676,6 @@ function qo(){const o=document.querySelector(".inbetween-accordion-container");i
       if (isDragging) {
         isDragging = !1;
         dragAccum = 0;
-        targetSec.style.cursor = "grab";
       }
     };
     window.addEventListener("pointerup", endDrag);

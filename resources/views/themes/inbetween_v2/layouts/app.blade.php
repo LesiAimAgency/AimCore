@@ -14,6 +14,7 @@
     <script type="module" crossorigin src="{{ asset('themes/inbetween_v2/js/Observer.js') }}"></script>
     <script type="module" crossorigin src="{{ asset('themes/inbetween_v2/js/inbetween.js') }}"></script>
     <link rel="stylesheet" crossorigin href="{{ asset('themes/inbetween_v2/css/style.css') }}">
+    <link rel="stylesheet" crossorigin href="{{ asset('themes/inbetween_v2/css/update.css') }}">
     @stack('styles')
   </head>
   <body class="bg-[#131313] text-[#131313] font-sans antialiased overflow-hidden selection:bg-[#EC460B] selection:text-white">

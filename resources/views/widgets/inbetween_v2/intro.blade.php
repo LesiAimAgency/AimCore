@@ -140,7 +140,7 @@
     <div class="relative z-20 text-center select-none" id="center-title-block">
       <p class="text-[15px] sm:text-[20px] lg:text-[25px] font-normal text-[#F6F4F4]/90 tracking-normal mb-1.5 sm:mb-2 transition-all duration-300" id="intro-subtitle">{{ $settings['intro_subtitle'] ?? 'Your business is' }}</p>
       <div class="relative inline-block">
-        <h1 class="intro-title-gradient text-[26px] sm:text-[42px] lg:text-[62px] font-bold uppercase tracking-tight leading-tight select-none" id="intro-title-base">{{ $settings['intro_title'] ?? 'ENTERING VIETNAM?' }}</h1>
+        <h1 class="text-[26px] sm:text-[42px] lg:text-[62px] font-bold uppercase tracking-tight leading-tight select-none text-[#F6F4F4]" id="intro-title-base">{{ $settings['intro_title'] ?? 'ENTERING VIETNAM?' }}</h1>
       </div>
     </div>
     @php
