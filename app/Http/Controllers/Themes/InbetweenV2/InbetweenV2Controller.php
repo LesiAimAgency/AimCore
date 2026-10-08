@@ -24,16 +24,24 @@ class InbetweenV2Controller extends Controller
         $themeManager->setActiveTheme('inbetween_v2');
 
         $project = function_exists('current_project') ? current_project() : null;
+        if (! $project) {
+            $project = Project::where('code', 'DA005')->first() ?: Project::where('code', 'inbetween_v2')->first();
+            if ($project) {
+                $request->attributes->set('project', $project);
+            }
+        }
 
-        // Auto-seed widgets for inbetween_v2 area if none exist yet
+        // Auto-seed widgets for homepage-main/inbetween_v2 area if none exist yet
+        $projId = $project?->id ?? 7;
+        $tenantId = $project?->tenant_id ?? 6;
+
         $hasWidgets = Widget::withoutGlobalScope('tenant')
-            ->where('area', 'inbetween_v2')
+            ->whereIn('area', ['homepage-main', 'inbetween_v2'])
+            ->where('project_id', $projId)
             ->exists();
 
         if (! $hasWidgets && class_exists(InbetweenV2WidgetsSeeder::class)) {
             try {
-                $projId = $project?->id;
-                $tenantId = $project?->tenant_id ?? $projId;
                 (new InbetweenV2WidgetsSeeder)->run($projId, $tenantId);
             } catch (\Throwable $e) {
                 Log::warning('InbetweenV2WidgetsSeeder auto-seed failed: '.$e->getMessage());
@@ -59,10 +67,10 @@ class InbetweenV2Controller extends Controller
             if (Schema::hasTable('form_submissions')) {
                 $project = function_exists('current_project') ? current_project() : null;
                 if (! $project) {
-                    $project = Project::where('code', 'inbetween_v2')->first();
+                    $project = Project::where('code', 'DA005')->first() ?: Project::where('code', 'inbetween_v2')->first();
                 }
-                $projId = $project?->id ?? 16;
-                $tenantId = $project?->tenant_id ?? $projId;
+                $projId = $project?->id ?? 7;
+                $tenantId = $project?->tenant_id ?? 6;
 
                 $inputData = array_merge($validated, $request->except(['_token', 'fullname', 'phone', 'email', 'service', 'message']));
 

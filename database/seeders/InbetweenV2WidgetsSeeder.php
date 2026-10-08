@@ -240,6 +240,20 @@ class InbetweenV2WidgetsSeeder extends Seeder
             $targetProjId = $proj->id;
             $targetTenantId = $tenantId ?? $proj->tenant_id ?? 8;
 
+            // Ensure project features and settings are set to inbetween_v2 theme
+            try {
+                $features = is_array($proj->features) ? $proj->features : [];
+                $features['theme'] = 'inbetween_v2';
+                $proj->update(['features' => $features]);
+
+                \App\Models\Setting::updateOrCreate(
+                    ['project_id' => $targetProjId, 'key' => 'theme'],
+                    ['value' => 'inbetween_v2', 'tenant_id' => $targetTenantId]
+                );
+            } catch (\Throwable $e) {
+                // Ignore if schema differs
+            }
+
             // Delete existing inbetween_v2 widgets and old theme widgets in homepage-main and inbetween_v2
             Widget::withoutGlobalScopes()
                 ->where(function ($q) {

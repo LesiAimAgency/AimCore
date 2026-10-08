@@ -31,6 +31,7 @@ use App\Http\Controllers\Auth\ProjectLoginController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\PostController;
+use App\Http\Controllers\Themes\InbetweenV2\InbetweenV2Controller;
 use App\Http\Controllers\ThemeController;
 use App\Http\Middleware\CheckCmsRole;
 use App\Http\Middleware\ProjectSubdomainMiddleware;
@@ -101,20 +102,59 @@ Route::domain('ehenho.local')
     ->group(base_path('routes/ehenho.php'));
 
 // ============================================
-// INBETWEEN COMMUNITY & PLATFORM (THEME-FIRST)
-// Supports: /inbetween and alias /inbetwen
+// INBETWEEN COMMUNITY & PLATFORM (100% ISOLATED)
+// Supports: DA005 (Sole Primary Route)
 // ============================================
-Route::prefix('inbetween')
+Route::prefix('DA005')
     ->name('inbetween.')
-    ->group(base_path('routes/inbetween.php'));
+    ->middleware([
+        ResolveProjectContext::class,
+        ProjectSubdomainMiddleware::class,
+        SetProjectDatabase::class,
+    ])
+    ->group(function () {
+        Route::get('/', [InbetweenV2Controller::class, 'index'])->name('home');
+        Route::post('/contact', [InbetweenV2Controller::class, 'contact'])->name('contact');
+        Route::post('/form-submit', [InbetweenV2Controller::class, 'contact'])->name('form.submit');
+    });
 
-Route::prefix('inbetwen')
-    ->name('inbetwen.')
-    ->group(base_path('routes/inbetween.php'));
+// 301 Permanent Redirects: /inbetween_v2, /inbetween, /inbetwen -> /DA005
+Route::any('inbetween_v2/{any?}', function ($any = null) {
+    if (request()->isMethod('post') && $any === 'contact') {
+        return app(InbetweenV2Controller::class)->contact(request());
+    }
+    $queryString = request()->getQueryString();
+    $target = '/DA005'.($any ? '/'.$any : '').($queryString ? '?'.$queryString : '');
+
+    return redirect($target, 301);
+})->where('any', '.*');
+
+Route::any('inbetween/{any?}', function ($any = null) {
+    $queryString = request()->getQueryString();
+    $target = '/DA005'.($any ? '/'.$any : '').($queryString ? '?'.$queryString : '');
+
+    return redirect($target, 301);
+})->where('any', '.*');
+
+Route::any('inbetwen/{any?}', function ($any = null) {
+    $queryString = request()->getQueryString();
+    $target = '/DA005'.($any ? '/'.$any : '').($queryString ? '?'.$queryString : '');
+
+    return redirect($target, 301);
+})->where('any', '.*');
 
 Route::domain('inbetween.local')
     ->name('inbetween.domain.')
-    ->group(base_path('routes/inbetween.php'));
+    ->middleware([
+        ResolveProjectContext::class,
+        ProjectSubdomainMiddleware::class,
+        SetProjectDatabase::class,
+    ])
+    ->group(function () {
+        Route::get('/', [InbetweenV2Controller::class, 'index'])->name('home');
+        Route::post('/contact', [InbetweenV2Controller::class, 'contact'])->name('contact');
+        Route::post('/form-submit', [InbetweenV2Controller::class, 'contact'])->name('form.submit');
+    });
 
 // Dynamic route prefix for custom installed Project Code
 $installedLock = storage_path('installed.lock');

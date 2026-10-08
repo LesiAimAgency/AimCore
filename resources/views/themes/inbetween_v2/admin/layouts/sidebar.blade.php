@@ -1,6 +1,6 @@
 @php
     $currentProject = $currentProject ?? (request()->attributes->get('project') ?? session('current_project'));
-    $projectCode = is_object($currentProject) ? ($currentProject->code ?? 'inbetween_v2') : (is_string($currentProject) ? $currentProject : 'inbetween_v2');
+    $projectCode = is_object($currentProject) ? ($currentProject->code ?? 'DA005') : (is_string($currentProject) ? $currentProject : 'DA005');
 
     $authUser = $authUser ?? auth()->user();
     if (! $authUser && session('project_user_id')) {
@@ -228,7 +228,7 @@
         @endif
 
         <!-- Xem Website Ngoài Client -->
-        <a href="{{ url('/inbetween_v2') }}" target="_blank"
+        <a href="{{ url('/' . $projectCode) }}" target="_blank"
            class="nav-item hover:text-orange-400">
             <span class="nav-icon"><i class="fa-solid fa-arrow-up-right-from-square text-[#EC460B]"></i></span>
             <span>Xem Website</span>

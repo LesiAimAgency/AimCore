@@ -81,7 +81,9 @@
             || (is_string($projectCode) && str_contains(strtolower($projectCode), 'inbetween'))
             || ($projectTheme === 'inbetween_v2' || $projectTheme === 'inbetween')
             || request()->is('inbetween_v2/*')
-            || request()->is('inbetween/*');
+            || request()->is('inbetween/*')
+            || request()->is('DA005*')
+            || request()->is('da005*');
 
         $hasCustomSidebar = $isVtm || $isWk || $isEhenho || $isInbetween;
     @endphp

@@ -403,13 +403,21 @@ Route::get('/my-profile', function () {
     return redirect('/ehenho/tai-khoan');
 });
 
-// INBETWEEN Direct Routes
-Route::prefix('inbetween')->name('web.inbetween.')->group(base_path('routes/inbetween.php'));
-Route::prefix('inbetwen')->name('web.inbetwen.')->group(base_path('routes/inbetween.php'));
+// INBETWEEN Routes (Synchronized with DA005)
+Route::any('/inbetween_v2/{any?}', function ($any = null) {
+    if (request()->isMethod('post') && $any === 'contact') {
+        return app(InbetweenV2Controller::class)->contact(request());
+    }
+    $queryString = request()->getQueryString();
+    $target = '/DA005'.($any ? '/'.$any : '').($queryString ? '?'.$queryString : '');
 
-// INBETWEEN V2 Route (1 Section = 1 Widget via CMS Widget System)
-Route::get('/inbetween_v2', [InbetweenV2Controller::class, 'index'])->name('web.inbetween_v2');
+    return redirect($target, 301);
+})->where('any', '.*');
+
+Route::get('/inbetween_v2', fn () => redirect('/DA005', 301))->name('web.inbetween_v2');
 Route::post('/inbetween_v2/contact', [InbetweenV2Controller::class, 'contact'])->name('web.inbetween_v2.contact');
+Route::any('/inbetween/{any?}', fn ($any = null) => redirect('/DA005'.($any ? '/'.$any : ''), 301));
+Route::any('/inbetwen/{any?}', fn ($any = null) => redirect('/DA005'.($any ? '/'.$any : ''), 301));
 
 // Web Installer Routes for Exported Websites
 Route::prefix('install')->name('install.')->group(function () {

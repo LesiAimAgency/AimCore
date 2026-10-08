@@ -18,7 +18,7 @@ class ProjectSubdomainMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $projectCode = $request->route('projectCode');
+        $projectCode = $request->route('projectCode') ?: $request->segment(1);
 
         // Block placeholder URLs
         if ($projectCode && (str_contains($projectCode, '{') || str_contains($projectCode, '}'))) {
@@ -46,15 +46,11 @@ class ProjectSubdomainMiddleware
                     ->first();
             }
 
-            // Fallback for inbetween / inbetween_v2 aliases for theme-first URLs
+            // Fallback for inbetween / inbetween_v2 aliases -> always resolve canonical DA005
             if (! $project && in_array(strtolower($projectCode), ['inbetween', 'inbetween_v2', 'inbetween-v2', 'inbetwen', 'da005'])) {
-                $targetCode = match (strtolower($projectCode)) {
-                    'inbetween_v2', 'inbetween-v2' => 'inbetween_v2',
-                    default => 'inbetween',
-                };
-                $project = Project::where('code', $targetCode)
-                    ->orWhere('code', 'like', "%{$targetCode}%")
-                    ->orWhereJsonContains('features->theme', $targetCode)
+                $project = Project::where('code', 'DA005')
+                    ->orWhere('code', 'inbetween_v2')
+                    ->orWhereJsonContains('features->theme', 'inbetween_v2')
                     ->orWhere('name', 'like', '%INBETWEEN%')
                     ->first();
             }
