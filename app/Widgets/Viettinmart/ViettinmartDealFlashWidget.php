@@ -134,7 +134,7 @@ class ViettinmartDealFlashWidget extends BaseWidget
             }
         }
 
-        return view('widgets.inbetween.viettinmart_deal_flash', [
+        return view('widgets.viettinmart.viettinmart_deal_flash', [
             'widget' => $this,
             'settings' => $config,
             'config' => $config,

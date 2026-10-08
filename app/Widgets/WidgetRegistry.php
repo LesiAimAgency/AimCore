@@ -15,15 +15,6 @@ use App\Widgets\Groups\HeaderWidget;
 use App\Widgets\Groups\InstagramWidget;
 use App\Widgets\Groups\ProductWidget;
 use App\Widgets\Groups\SliderWidget;
-use App\Widgets\Inbetween\CommunityCollageWidget;
-use App\Widgets\Inbetween\CommunityStatementWidget;
-use App\Widgets\Inbetween\CoreValuesWidget;
-use App\Widgets\Inbetween\FounderSectionWidget;
-use App\Widgets\Inbetween\HeroSectionWidget;
-use App\Widgets\Inbetween\InbetweenThemeWidget;
-use App\Widgets\Inbetween\MediaStoriesWidget;
-use App\Widgets\Inbetween\PackagesWidget;
-use App\Widgets\Inbetween\UpcomingEventsWidget;
 use App\Widgets\InbetweenV2\InbetweenV2BusinessWidget;
 use App\Widgets\InbetweenV2\InbetweenV2FounderWidget;
 use App\Widgets\InbetweenV2\InbetweenV2HeroWidget;
@@ -70,19 +61,6 @@ class WidgetRegistry implements WidgetRegistryInterface
         'ehenho_hero_slider' => EhenhoHeroSliderWidget::class,
         'ehenho_slider' => EhenhoHeroSliderWidget::class,
 
-        // Inbetween Widgets
-        'inbetween_theme' => InbetweenThemeWidget::class,
-        'inbetween_master' => InbetweenThemeWidget::class,
-        'inbetween_landing' => InbetweenThemeWidget::class,
-        'inbetween_hero_section' => HeroSectionWidget::class,
-        'inbetween_community_collage' => CommunityCollageWidget::class,
-        'inbetween_community_statement' => CommunityStatementWidget::class,
-        'inbetween_core_values' => CoreValuesWidget::class,
-        'inbetween_founder_section' => FounderSectionWidget::class,
-        'inbetween_upcoming_events' => UpcomingEventsWidget::class,
-        'inbetween_media_stories' => MediaStoriesWidget::class,
-        'inbetween_packages' => PackagesWidget::class,
-
         // Inbetween V2 Widgets (1 Section = 1 Widget)
         'inbetween_v2_hero' => InbetweenV2HeroWidget::class,
         'inbetween_v2_what_we_do' => InbetweenV2WhatWeDoWidget::class,
@@ -91,40 +69,19 @@ class WidgetRegistry implements WidgetRegistryInterface
         'inbetween_v2_our_clients' => InbetweenV2OurClientsWidget::class,
         'inbetween_v2_business' => InbetweenV2BusinessWidget::class,
 
-        // Viettinmart Widgets (Both vtm_* and inbetween_* aliases)
+        // Viettinmart Widgets
         'vtm_hero_slider' => ViettinmartHeroSliderWidget::class,
-        'inbetween_hero_slider' => ViettinmartHeroSliderWidget::class,
-
         'vtm_feature_icons' => ViettinmartFeatureIconsWidget::class,
-        'inbetween_feature_icons' => ViettinmartFeatureIconsWidget::class,
-
         'vtm_product_featured' => ViettinmartProductFeaturedWidget::class,
-        'inbetween_product_featured' => ViettinmartProductFeaturedWidget::class,
         'vtm_prod_featured' => ViettinmartProductFeaturedWidget::class,
-        'inbetween_prod_featured' => ViettinmartProductFeaturedWidget::class,
-
         'vtm_deal_flash' => ViettinmartDealFlashWidget::class,
-        'inbetween_deal_flash' => ViettinmartDealFlashWidget::class,
-
         'vtm_product_tabs' => ViettinmartProductTabsWidget::class,
-        'inbetween_product_tabs' => ViettinmartProductTabsWidget::class,
         'vtm_prod_tabs' => ViettinmartProductTabsWidget::class,
-        'inbetween_prod_tabs' => ViettinmartProductTabsWidget::class,
-
         'vtm_promo_banners' => ViettinmartPromoBannersWidget::class,
-        'inbetween_promo_banners' => ViettinmartPromoBannersWidget::class,
-
         'vtm_top_trending' => ViettinmartTopTrendingWidget::class,
-        'inbetween_top_trending' => ViettinmartTopTrendingWidget::class,
-
         'vtm_posts_latest' => ViettinmartPostsLatestWidget::class,
-        'inbetween_posts_latest' => ViettinmartPostsLatestWidget::class,
-
         'vtm_form_widget' => ViettinmartFormWidget::class,
-        'inbetween_form_widget' => ViettinmartFormWidget::class,
-
         'vtm_footer_column' => ViettinmartFooterColumnWidget::class,
-        'inbetween_footer_column' => ViettinmartFooterColumnWidget::class,
         'footer_column' => WkFooterColumnWidget::class,
 
         // WKComputer Widgets

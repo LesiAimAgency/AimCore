@@ -62,7 +62,7 @@ class ViettinmartFormWidget extends BaseWidget
             ],
         ];
 
-        return view('widgets.inbetween.viettinmart_form', [
+        return view('widgets.viettinmart.viettinmart_form', [
             'widget' => $this,
             'settings' => $config,
             'config' => $config,

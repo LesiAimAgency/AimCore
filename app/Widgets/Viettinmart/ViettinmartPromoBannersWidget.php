@@ -61,7 +61,7 @@ class ViettinmartPromoBannersWidget extends BaseWidget
     {
         $config = $this->settings;
 
-        return view('widgets.inbetween.viettinmart_promo_banners', [
+        return view('widgets.viettinmart.viettinmart_promo_banners', [
             'widget' => $this,
             'settings' => $config,
             'config' => $config,

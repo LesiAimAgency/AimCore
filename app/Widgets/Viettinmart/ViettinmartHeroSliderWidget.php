@@ -59,7 +59,7 @@ class ViettinmartHeroSliderWidget extends BaseWidget
             ],
         ];
 
-        return view('widgets.inbetween.viettinmart_hero_slider', [
+        return view('widgets.viettinmart.viettinmart_hero_slider', [
             'widget' => $this,
             'settings' => $config,
             'config' => $config,

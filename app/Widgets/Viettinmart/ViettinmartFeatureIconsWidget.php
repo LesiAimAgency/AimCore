@@ -59,7 +59,7 @@ class ViettinmartFeatureIconsWidget extends BaseWidget
             ['icon' => 'fa-solid fa-shield-halved', 'title' => 'Best Quality', 'sub' => 'Orders $50 or more'],
         ];
 
-        return view('widgets.inbetween.viettinmart_feature_icons', [
+        return view('widgets.viettinmart.viettinmart_feature_icons', [
             'widget' => $this,
             'settings' => $config,
             'config' => $config,

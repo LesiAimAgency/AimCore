@@ -63,7 +63,7 @@ class ViettinmartPostsLatestWidget extends BaseWidget
 
         $posts = $query->latest()->take($limit)->get();
 
-        return view('widgets.inbetween.viettinmart_posts_latest', [
+        return view('widgets.viettinmart.viettinmart_posts_latest', [
             'widget' => $this,
             'settings' => $config,
             'config' => $config,

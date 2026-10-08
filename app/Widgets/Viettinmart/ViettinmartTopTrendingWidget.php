@@ -170,7 +170,7 @@ class ViettinmartTopTrendingWidget extends BaseWidget
 
         $products = $query->take($limit)->get();
 
-        return view('widgets.inbetween.viettinmart_top_trending', [
+        return view('widgets.viettinmart.viettinmart_top_trending', [
             'widget' => $this,
             'settings' => $config,
             'config' => $config,

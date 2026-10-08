@@ -308,7 +308,7 @@ class ViettinmartProductFeaturedWidget extends BaseWidget
 
         $products = $query->take($limit)->get();
 
-        return view('widgets.inbetween.viettinmart_product_featured', [
+        return view('widgets.viettinmart.viettinmart_product_featured', [
             'widget' => $this,
             'settings' => $config,
             'config' => $config,

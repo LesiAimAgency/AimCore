@@ -135,7 +135,7 @@ class ViettinmartProductTabsWidget extends BaseWidget
             $tabProducts[$i] = $prods->isNotEmpty() ? $prods : $allProducts;
         }
 
-        return view('widgets.inbetween.viettinmart_product_tabs', [
+        return view('widgets.viettinmart.viettinmart_product_tabs', [
             'widget' => $this,
             'settings' => $config,
             'config' => $config,
