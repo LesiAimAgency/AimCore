@@ -22,7 +22,7 @@
     $formTitle2 = $settings['form_title_line2'] ?? 'IN VIETNAM?';
     $formPrivacy = !empty($settings['form_privacy_text']) && !str_contains($settings['form_privacy_text'], 'Đại Phúc')
         ? $settings['form_privacy_text']
-        : 'I have read and agree to the Data & Privacy Policy of in • between';
+        : 'I have read and agree to the Data & Privacy Policy of in &bull; between';
     $formNewsletter = !empty($settings['form_newsletter_text']) && !str_contains($settings['form_newsletter_text'], 'email cập nhật')
         ? $settings['form_newsletter_text']
         : 'Send me regular business updates and market insights';
@@ -162,7 +162,7 @@
               <span class="w-[7px] h-[7px] rounded-full bg-white transition-opacity footer-cb-dot opacity-100" style="opacity: 1;"></span>
             </span>
             <span class="text-neutral-300 text-[12.5px] sm:text-[13px] font-light group-hover:text-white transition-colors leading-snug">
-              {{ $formPrivacy }}
+              {!! $formPrivacy !!}
             </span>
           </label>
 
