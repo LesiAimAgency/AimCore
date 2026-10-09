@@ -141,6 +141,30 @@ class InbetweenV2FooterWidget extends BaseWidget
                     'default' => '#',
                 ],
                 [
+                    'name' => 'facebook_url',
+                    'label' => 'Đường dẫn Facebook',
+                    'type' => 'text',
+                    'default' => 'https://facebook.com',
+                ],
+                [
+                    'name' => 'instagram_url',
+                    'label' => 'Đường dẫn Instagram',
+                    'type' => 'text',
+                    'default' => 'https://instagram.com',
+                ],
+                [
+                    'name' => 'linkedin_url',
+                    'label' => 'Đường dẫn LinkedIn',
+                    'type' => 'text',
+                    'default' => 'https://linkedin.com',
+                ],
+                [
+                    'name' => 'tiktok_url',
+                    'label' => 'Đường dẫn TikTok',
+                    'type' => 'text',
+                    'default' => 'https://tiktok.com',
+                ],
+                [
                     'name' => 'copyright_text',
                     'label' => 'Copyright Text',
                     'type' => 'text',

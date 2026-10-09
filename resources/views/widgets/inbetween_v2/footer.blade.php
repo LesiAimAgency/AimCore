@@ -38,6 +38,10 @@
     $communityLinkText = $settings['community_link_text'] ?? 'Join the group';
     $communityLinkUrl = $settings['community_link_url'] ?? '#';
     $communityTarget = (!empty($communityLinkUrl) && str_starts_with($communityLinkUrl, 'http')) ? '_blank' : '_self';
+    $facebookUrl = $settings['facebook_url'] ?? $settings['social_facebook_url'] ?? 'https://facebook.com';
+    $instagramUrl = $settings['instagram_url'] ?? $settings['social_instagram_url'] ?? 'https://instagram.com';
+    $linkedinUrl = $settings['linkedin_url'] ?? $settings['social_linkedin_url'] ?? 'https://linkedin.com';
+    $tiktokUrl = $settings['tiktok_url'] ?? $settings['social_tiktok_url'] ?? 'https://tiktok.com';
 @endphp
 
 <section class="inbetween-onepage-section relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#131313] text-[#F6F4F4] flex flex-col justify-between py-6 sm:py-8 lg:py-10 px-6 sm:px-10 lg:px-16" id="inbetween-footer" aria-label="in • between Footer">
@@ -214,7 +218,47 @@
           </div>
         </div>
       </div>
+    <!-- Col 4: Explore more on, Social Icons & Copyright -->
+      <div class="lg:col-span-3 flex flex-col items-start lg:items-end">
+        <div class="inline-flex flex-col items-start text-left" style="gap:8px">
+          
+          <!-- Explore More On -->
+          <div class="text-[12px] text-neutral-400 font-normal mb-[8px] tracking-normal">
+            Explore more on
+          </div>
 
+          <!-- Social Icons (Glyphs with no border circle, font-size 24px) -->
+          <div class="flex items-center gap-3 text-white text-[24px] leading-none">
+            @if(!empty($facebookUrl))
+              <a href="{{ $facebookUrl }}" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="Facebook">
+                <i class="fa-brands fa-facebook"></i>
+              </a>
+            @endif
+            @if(!empty($instagramUrl))
+              <a href="{{ $instagramUrl }}" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="Instagram">
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+            @endif
+            @if(!empty($linkedinUrl))
+              <a href="{{ $linkedinUrl }}" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="LinkedIn">
+                <i class="fa-brands fa-linkedin"></i>
+              </a>
+            @endif
+            @if(!empty($tiktokUrl))
+              <a href="{{ $tiktokUrl }}" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="TikTok">
+                <i class="fa-brands fa-tiktok"></i>
+              </a>
+            @endif
+          </div>
+
+          <!-- Copyright & Powered By (16px gap from icons) -->
+          <div class="mt-[16px] text-[11px] text-neutral-400 font-light leading-normal text-left">
+            <div>{{ $copyright }}</div>
+            <div>{{ $poweredBy }}</div>
+          </div>
+
+        </div>
+      </div>
       <!-- Col 3: Community / Zalo Group (Kế bên Explore more on) -->
       <div class="lg:col-span-3 flex flex-col items-start text-left">
         <div class="inline-flex flex-col items-start text-left" style="gap:8px">
@@ -239,39 +283,7 @@
         </div>
       </div>
 
-      <!-- Col 4: Explore more on, Social Icons & Copyright -->
-      <div class="lg:col-span-3 flex flex-col items-start lg:items-end">
-        <div class="inline-flex flex-col items-start text-left" style="gap:8px">
-          
-          <!-- Explore More On -->
-          <div class="text-[12px] text-neutral-400 font-normal mb-[8px] tracking-normal">
-            Explore more on
-          </div>
-
-          <!-- Social Icons (Glyphs with no border circle, font-size 24px) -->
-          <div class="flex items-center gap-3 text-white text-[24px] leading-none">
-            <a href="https://facebook.com" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="Facebook">
-              <i class="fa-brands fa-facebook"></i>
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="Instagram">
-              <i class="fa-brands fa-instagram"></i>
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="LinkedIn">
-              <i class="fa-brands fa-linkedin"></i>
-            </a>
-            <a href="https://tiktok.com" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="TikTok">
-              <i class="fa-brands fa-tiktok"></i>
-            </a>
-          </div>
-
-          <!-- Copyright & Powered By (16px gap from icons) -->
-          <div class="mt-[16px] text-[11px] text-neutral-400 font-light leading-normal text-left">
-            <div>{{ $copyright }}</div>
-            <div>{{ $poweredBy }}</div>
-          </div>
-
-        </div>
-      </div>
+      
       
     </div>
   </div>
