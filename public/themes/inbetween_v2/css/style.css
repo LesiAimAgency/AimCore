@@ -6927,9 +6927,9 @@ html {
 
 #inbetween-business.inbetween-section-business .business-slider-line {
     width: 217px;
-    height: 1.5px;
-    background-color: #3e3939;
-    border-radius: 9999px
+    height: 0.5px;
+    background-color: #323232;
+    border-radius: 9999px;
 }
 
 #inbetween-business.inbetween-section-business .business-slider-thumb {

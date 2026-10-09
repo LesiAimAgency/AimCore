@@ -657,7 +657,7 @@
     }
 
     #inbetween-business .business-stage-wrap>div:first-child {
-        margin-bottom: clamp(12px, 1.6vh, 18px) !important;
+        margin-bottom: 60px !important;
     }
 
     #inbetween-business .business-ellipse-stage {
@@ -665,7 +665,7 @@
     }
 
     #inbetween-business .business-slider-container {
-        top: 432px !important;
+        top: 450px !important;
         bottom: auto !important;
     }
 }

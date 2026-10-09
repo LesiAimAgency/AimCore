@@ -1,4 +1,4 @@
-<section class="inbetween-onepage-section inbetween-section-business relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#F6F4F4] text-[#131313] flex flex-col justify-start items-center pt-16 sm:pt-20 lg:pt-[96px] pb-3 sm:pb-4 px-4 sm:px-6" id="inbetween-business" aria-label="INBETWEEN Beyond Business">
+<section style="  padding-top: 112px !important;" class="inbetween-onepage-section inbetween-section-business relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#F6F4F4] text-[#131313] flex flex-col justify-start items-center pt-16 sm:pt-20 lg:pt-[96px] pb-3 sm:pb-4 px-4 sm:px-6" id="inbetween-business" aria-label="INBETWEEN Beyond Business">
   <div class="business-intro-text relative w-full max-w-[1296px] mx-auto px-4 sm:px-8 lg:px-12 flex flex-col items-center text-center z-20 pointer-events-auto shrink-0">
     <div class="w-full flex items-center justify-between mb-2 sm:mb-3 pointer-events-auto relative z-30">
       <!-- Media Badge Toggle -->
