@@ -569,88 +569,106 @@ class MenuController extends Controller
 
         $projectId = $project->id;
         $tenantId = $project->tenant_id ?? $projectId;
-
-        // Only initialize if project has zero menus
-        $hasMenu = Menu::withoutGlobalScopes()->where('project_id', $projectId)->exists();
-        if ($hasMenu) {
-            return;
-        }
-
         $isIb = ($project->code === 'DA005' || $project->code === 'inbetween_v2' || ($project->features['theme'] ?? '') === 'inbetween_v2');
 
         // 1. Menu chính (Header)
-        $mainMenu = Menu::create([
-            'project_id' => $projectId,
-            'tenant_id' => $tenantId,
-            'name' => $isIb ? 'Inbetween V2 Header Navigation' : 'Menu chính',
-            'slug' => $isIb ? 'inbetween-v2-header' : 'main-menu',
-            'location' => 'header',
-            'is_active' => true,
-        ]);
+        $hasHeader = Menu::withoutGlobalScopes()
+            ->where('project_id', $projectId)
+            ->where(function ($q) use ($isIb) {
+                $q->where('location', 'header');
+                if ($isIb) {
+                    $q->orWhere('slug', 'inbetween-v2-header');
+                }
+            })
+            ->exists();
 
-        $mainItems = $isIb ? [
-            ['title' => 'HOME', 'url' => '#inbetween-intro', 'order' => 1],
-            ['title' => 'ABOUT', 'url' => '#inbetween-hero', 'order' => 2],
-            ['title' => 'WHAT WE DO', 'url' => '#inbetween-what-we-do', 'order' => 3],
-            ['title' => 'WHERE WE FOCUS', 'url' => '#inbetween-where-we-focus', 'order' => 4],
-            ['title' => 'FOUNDER', 'url' => '#inbetween-founder', 'order' => 5],
-            ['title' => 'OUR CLIENTS', 'url' => '#inbetween-our-clients', 'order' => 6],
-            ['title' => 'BEYOND BUSINESS', 'url' => '#inbetween-business', 'order' => 7],
-            ['title' => 'MEDIA', 'url' => '#inbetween-business', 'order' => 8],
-            ['title' => 'CONTACT', 'url' => '#inbetween-footer', 'order' => 9],
-        ] : [
-            ['title' => 'Trang chủ', 'url' => '/', 'order' => 1],
-            ['title' => 'Cửa hàng', 'url' => '/cua-hang', 'order' => 2],
-            ['title' => 'Tin tức', 'url' => '/blog', 'order' => 3],
-            ['title' => 'Liên hệ', 'url' => '/lien-he', 'order' => 4],
-        ];
-
-        foreach ($mainItems as $mItem) {
-            MenuItem::create([
-                'menu_id' => $mainMenu->id,
+        if (! $hasHeader) {
+            $mainMenu = Menu::create([
                 'project_id' => $projectId,
                 'tenant_id' => $tenantId,
-                'title' => $mItem['title'],
-                'url' => $mItem['url'],
-                'order' => $mItem['order'],
-                'target' => '_self',
+                'name' => $isIb ? 'Inbetween V2 Header Navigation' : 'Menu chính',
+                'slug' => $isIb ? 'inbetween-v2-header' : 'main-menu',
+                'location' => 'header',
+                'is_active' => true,
+            ]);
+
+            $mainItems = $isIb ? [
+                ['title' => 'HOME', 'url' => '#inbetween-intro', 'order' => 1],
+                ['title' => 'ABOUT', 'url' => '#inbetween-hero', 'order' => 2],
+                ['title' => 'WHAT WE DO', 'url' => '#inbetween-what-we-do', 'order' => 3],
+                ['title' => 'WHERE WE FOCUS', 'url' => '#inbetween-where-we-focus', 'order' => 4],
+                ['title' => 'FOUNDER', 'url' => '#inbetween-founder', 'order' => 5],
+                ['title' => 'OUR CLIENTS', 'url' => '#inbetween-our-clients', 'order' => 6],
+                ['title' => 'BEYOND BUSINESS', 'url' => '#inbetween-business', 'order' => 7],
+                ['title' => 'MEDIA', 'url' => '#inbetween-business', 'order' => 8],
+                ['title' => 'CONTACT', 'url' => '#inbetween-footer', 'order' => 9],
+            ] : [
+                ['title' => 'Trang chủ', 'url' => '/', 'order' => 1],
+                ['title' => 'Cửa hàng', 'url' => '/cua-hang', 'order' => 2],
+                ['title' => 'Tin tức', 'url' => '/blog', 'order' => 3],
+                ['title' => 'Liên hệ', 'url' => '/lien-he', 'order' => 4],
+            ];
+
+            foreach ($mainItems as $mItem) {
+                MenuItem::create([
+                    'menu_id' => $mainMenu->id,
+                    'project_id' => $projectId,
+                    'tenant_id' => $tenantId,
+                    'title' => $mItem['title'],
+                    'url' => $mItem['url'],
+                    'order' => $mItem['order'],
+                    'target' => '_self',
+                    'is_active' => true,
+                ]);
+            }
+        }
+
+        // 2. Menu chân trang (Footer)
+        $footerMenu = Menu::withoutGlobalScopes()
+            ->where('project_id', $projectId)
+            ->where(function ($q) {
+                $q->where('location', 'footer')->orWhere('slug', 'footer-menu');
+            })
+            ->first();
+
+        if (! $footerMenu) {
+            $footerMenu = Menu::create([
+                'project_id' => $projectId,
+                'tenant_id' => $tenantId,
+                'name' => $isIb ? 'Footer Menu' : 'Menu chân trang',
+                'slug' => 'footer-menu',
+                'location' => 'footer',
                 'is_active' => true,
             ]);
         }
 
-        // 2. Menu chân trang (Footer)
-        $footerMenu = Menu::create([
-            'project_id' => $projectId,
-            'tenant_id' => $tenantId,
-            'name' => 'Menu chân trang',
-            'slug' => 'footer-menu',
-            'location' => 'footer',
-            'is_active' => true,
-        ]);
+        // Nếu footer menu chưa có item nào, khởi tạo các item mặc định
+        $hasFooterItems = MenuItem::withoutGlobalScopes()->where('menu_id', $footerMenu->id)->exists();
+        if (! $hasFooterItems) {
+            $footerItems = $isIb ? [
+                ['title' => 'About Us', 'url' => '#inbetween-hero', 'order' => 1],
+                ['title' => 'Media', 'url' => '#inbetween-business', 'order' => 2],
+                ['title' => 'Beyond Business', 'url' => '#inbetween-business', 'order' => 3],
+                ['title' => 'Contact', 'url' => '#inbetween-footer', 'order' => 4],
+            ] : [
+                ['title' => 'Giới thiệu', 'url' => '/gioi-thieu', 'order' => 1],
+                ['title' => 'Chính sách bảo mật', 'url' => '/chinh-sach-bao-mat', 'order' => 2],
+                ['title' => 'Điều khoản sử dụng', 'url' => '/dieu-khoan-su-dung', 'order' => 3],
+                ['title' => 'Câu hỏi thường gặp', 'url' => '/faq', 'order' => 4],
+            ];
 
-        $footerItems = $isIb ? [
-            ['title' => 'About Us', 'url' => '#inbetween-hero', 'order' => 1],
-            ['title' => 'Media', 'url' => '#inbetween-business', 'order' => 2],
-            ['title' => 'Beyond Business', 'url' => '#inbetween-business', 'order' => 3],
-            ['title' => 'Contact', 'url' => '#inbetween-footer', 'order' => 4],
-        ] : [
-            ['title' => 'Giới thiệu', 'url' => '/gioi-thieu', 'order' => 1],
-            ['title' => 'Chính sách bảo mật', 'url' => '/chinh-sach-bao-mat', 'order' => 2],
-            ['title' => 'Điều khoản sử dụng', 'url' => '/dieu-khoan-su-dung', 'order' => 3],
-            ['title' => 'Câu hỏi thường gặp', 'url' => '/faq', 'order' => 4],
-        ];
-
-        foreach ($footerItems as $fItem) {
-            MenuItem::create([
-                'menu_id' => $footerMenu->id,
-                'project_id' => $projectId,
-                'tenant_id' => $tenantId,
-                'title' => $fItem['title'],
-                'url' => $fItem['url'],
-                'order' => $fItem['order'],
-                'target' => '_self',
-                'is_active' => true,
-            ]);
+            foreach ($footerItems as $fItem) {
+                MenuItem::create([
+                    'menu_id' => $footerMenu->id,
+                    'project_id' => $projectId,
+                    'tenant_id' => $tenantId,
+                    'title' => $fItem['title'],
+                    'url' => $fItem['url'],
+                    'order' => $fItem['order'],
+                    'target' => '_self',
+                    'is_active' => true,
+                ]);
+            }
         }
     }
 }

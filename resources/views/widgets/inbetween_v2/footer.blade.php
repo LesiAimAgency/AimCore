@@ -197,12 +197,33 @@
           <div class="text-xs text-neutral-400 font-normal mb-2.5 tracking-wide">Quick links</div>
           <div class="grid grid-cols-2 text-[13.5px] text-white font-normal" style="row-gap:2px; column-gap: 36px;">
             @php
+              $currentProj = function_exists('current_project') ? current_project() : (request()->attributes->get('project') ?? session('current_project'));
+              $projId = (isset($widget) && is_object($widget) && !empty($widget->project_id))
+                  ? $widget->project_id
+                  : (is_object($currentProj) ? $currentProj->id : (session('current_project_id') ?? 7));
+
               $footerMenu = \App\Models\Menu::withoutGlobalScopes()
-                  ->where('project_id', 7)
-                  ->where('location', 'footer')
+                  ->where(function ($q) use ($projId) {
+                      $q->where('project_id', $projId);
+                      if ($projId != 7) {
+                          $q->orWhere('project_id', 7);
+                      }
+                  })
+                  ->where(function ($q) {
+                      $q->where('location', 'footer')->orWhere('slug', 'footer-menu');
+                  })
                   ->where('is_active', true)
                   ->with(['items' => fn($q) => $q->withoutGlobalScopes()->where('is_active', true)->whereNull('parent_id')->orderBy('order')])
                   ->first();
+
+              if (! $footerMenu) {
+                  $footerMenu = \App\Models\Menu::withoutGlobalScopes()
+                      ->where('slug', 'footer-menu')
+                      ->where('is_active', true)
+                      ->with(['items' => fn($q) => $q->withoutGlobalScopes()->where('is_active', true)->whereNull('parent_id')->orderBy('order')])
+                      ->first();
+              }
+
               $fItems = $footerMenu && $footerMenu->items->isNotEmpty() ? $footerMenu->items : null;
             @endphp
             @if($fItems)
