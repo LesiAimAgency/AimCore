@@ -33,6 +33,11 @@
     $poweredBy = $settings['powered_by_text'] ?? 'Powered by AIM AGENCY';
     $topConnectText = $settings['top_connect_text'] ?? "LET'S CONNECT";
     $topConnectLink = $settings['top_connect_link'] ?? '#contact-modal';
+    $communityTitle = $settings['community_title'] ?? 'Join the NOPA Zalo group';
+    $communityDesc = $settings['community_desc'] ?? "Next Day Club, new perks, and what's happening around Saigon.";
+    $communityLinkText = $settings['community_link_text'] ?? 'Join the group';
+    $communityLinkUrl = $settings['community_link_url'] ?? '#';
+    $communityTarget = (!empty($communityLinkUrl) && str_starts_with($communityLinkUrl, 'http')) ? '_blank' : '_self';
 @endphp
 
 <section class="inbetween-onepage-section relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#131313] text-[#F6F4F4] flex flex-col justify-between py-6 sm:py-8 lg:py-10 px-6 sm:px-10 lg:px-16" id="inbetween-footer" aria-label="in • between Footer">

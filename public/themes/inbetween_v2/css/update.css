@@ -633,6 +633,15 @@
     z-index: 40 !important;
 }
 
+#inbetween-business .business-slider-track-wrap {
+    width: var(--track-width, 217px);
+    max-width: calc(100vw - 32px);
+}
+
+#inbetween-business .business-slider-line {
+    width: 100% !important;
+}
+
 @media (min-width: 1024px) {
     #inbetween-business {
         justify-content: flex-start !important;

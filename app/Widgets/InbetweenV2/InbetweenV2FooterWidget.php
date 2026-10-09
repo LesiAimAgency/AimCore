@@ -117,6 +117,30 @@ class InbetweenV2FooterWidget extends BaseWidget
                     'default' => 'inbetween.asia@gmail.com',
                 ],
                 [
+                    'name' => 'community_title',
+                    'label' => 'Tiêu đề nhóm/Cộng đồng (Cột mới kế bên Explore)',
+                    'type' => 'text',
+                    'default' => 'Join the NOPA Zalo group',
+                ],
+                [
+                    'name' => 'community_desc',
+                    'label' => 'Mô tả nhóm/Cộng đồng (Cột mới)',
+                    'type' => 'textarea',
+                    'default' => "Next Day Club, new perks, and what's happening around Saigon.",
+                ],
+                [
+                    'name' => 'community_link_text',
+                    'label' => 'Chữ nút link nhóm/Cộng đồng (Cột mới)',
+                    'type' => 'text',
+                    'default' => 'Join the group',
+                ],
+                [
+                    'name' => 'community_link_url',
+                    'label' => 'Đường dẫn link nhóm/Cộng đồng (Có thể link ngoài https://...)',
+                    'type' => 'text',
+                    'default' => '#',
+                ],
+                [
                     'name' => 'copyright_text',
                     'label' => 'Copyright Text',
                     'type' => 'text',
