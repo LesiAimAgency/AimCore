@@ -61,17 +61,11 @@
                                     if (!$th) {
                                         $thUrl = asset('theme/images/blog/01.jpg');
                                     } elseif (str_starts_with($th, 'http')) {
-                                        if (preg_match('#/storage/(media/.+)$#', $th, $m)) {
-                                            $thUrl = asset('storage/' . $m[1]);
-                                        } elseif (preg_match('#/public/(storage/media/.+)$#', $th, $m)) {
-                                            $thUrl = asset($m[1]);
-                                        } else {
-                                            $thUrl = $th;
-                                        }
-                                    } elseif (str_starts_with($th, 'storage/') || str_starts_with($th, 'media/')) {
-                                        $thUrl = asset(ltrim($th, '/'));
+                                        $thUrl = clean_asset_url($th);
+                                    } elseif (str_starts_with(ltrim($th, '/'), 'storage/')) {
+                                        $thUrl = clean_asset_url(asset(ltrim($th, '/')));
                                     } else {
-                                        $thUrl = asset('storage/' . ltrim($th, '/'));
+                                        $thUrl = clean_asset_url(media_url($th));
                                     }
                                 @endphp
                                 <div class="img-placeholder" style="aspect-ratio: 16/9; width: 100%;">
@@ -173,13 +167,11 @@
                                         if (!$rth) {
                                             $rthUrl = asset('theme/images/blog/11.jpg');
                                         } elseif (str_starts_with($rth, 'http')) {
-                                            if (preg_match('#/storage/(media/.+)$#', $rth, $m)) {
-                                                $rthUrl = asset('storage/' . $m[1]);
-                                            } else {
-                                                $rthUrl = $rth;
-                                            }
+                                            $rthUrl = clean_asset_url($rth);
+                                        } elseif (str_starts_with(ltrim($rth, '/'), 'storage/')) {
+                                            $rthUrl = clean_asset_url(asset(ltrim($rth, '/')));
                                         } else {
-                                            $rthUrl = asset('storage/' . ltrim($rth, '/'));
+                                            $rthUrl = clean_asset_url(media_url($rth));
                                         }
                                     @endphp
                                     <img src="{{ $rthUrl }}" alt="recent-post" loading="{{ config('performance.lazy_load') ? 'lazy' : 'eager' }}" decoding="async" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">

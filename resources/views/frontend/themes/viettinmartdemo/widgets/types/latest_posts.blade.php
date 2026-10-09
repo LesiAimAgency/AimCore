@@ -1,4 +1,4 @@
-﻿@php
+@php
     $columns = $config['columns'] ?? 4;
     $gridClass = match($columns) {
         '2' => 'col-lg-6 col-md-6 col-sm-12',
@@ -53,18 +53,11 @@
                             if (!$thumb) {
                                 $thumbUrl = asset('theme/images/blog/blog-01.jpg');
                             } elseif (str_starts_with($thumb, 'http')) {
-                                // Full URL stored in DB — extract relative path (media/...) and rebuild
-                                if (preg_match('#/storage/(media/.+)$#', $thumb, $m)) {
-                                    $thumbUrl = asset('storage/' . $m[1]);
-                                } elseif (preg_match('#/public/(storage/media/.+)$#', $thumb, $m)) {
-                                    $thumbUrl = asset($m[1]);
-                                } else {
-                                    $thumbUrl = $thumb; // fallback: use as-is
-                                }
-                            } elseif (str_starts_with($thumb, 'storage/') || str_starts_with($thumb, 'media/')) {
-                                $thumbUrl = asset(ltrim($thumb, '/'));
+                                $thumbUrl = clean_asset_url($thumb);
+                            } elseif (str_starts_with(ltrim($thumb, '/'), 'storage/')) {
+                                $thumbUrl = clean_asset_url(asset(ltrim($thumb, '/')));
                             } else {
-                                $thumbUrl = asset('storage/' . ltrim($thumb, '/'));
+                                $thumbUrl = clean_asset_url(media_url($thumb));
                             }
                         @endphp
                         <x-theme-image :name="$thumbUrl" :alt="$post->title" class="post-thumbnail" style="width:100%;height:200px;object-fit:cover;" />

@@ -414,7 +414,18 @@ if (! function_exists('clean_asset_url')) {
             return '';
         }
 
-        return preg_replace('#(?<!:)//+#', '/', $url);
+        // 1. Remove duplicate slashes (except protocol ://)
+        $url = preg_replace('#(?<!:)//+#', '/', $url);
+
+        // 2. Normalize repeated storage prefixes
+        while (str_contains($url, '/storage/storage/')) {
+            $url = str_replace('/storage/storage/', '/storage/', $url);
+        }
+        if (str_starts_with($url, 'storage/storage/')) {
+            $url = preg_replace('#^(storage/)+#', 'storage/', $url);
+        }
+
+        return $url;
     }
 }
 
@@ -427,11 +438,20 @@ if (! function_exists('resolve_image')) {
         if (Str::contains($name, '://')) {
             return clean_asset_url($name);
         }
-        if (str_starts_with($name, 'media/')) {
-            return clean_asset_url(Storage::disk('public')->url($name));
+
+        $cleanName = ltrim($name, '/');
+        while (str_contains($cleanName, 'storage/storage/')) {
+            $cleanName = str_replace('storage/storage/', 'storage/', $cleanName);
         }
-        if (str_starts_with($name, 'theme/') || str_starts_with($name, 'storage/') || str_starts_with($name, 'assets/')) {
-            return clean_asset_url(asset($name));
+
+        if (str_starts_with($cleanName, 'media/')) {
+            return clean_asset_url(Storage::disk('public')->url($cleanName));
+        }
+        if (str_starts_with($cleanName, 'storage/')) {
+            return clean_asset_url(asset($cleanName));
+        }
+        if (str_starts_with($cleanName, 'theme/') || str_starts_with($cleanName, 'themes/') || str_starts_with($cleanName, 'assets/')) {
+            return clean_asset_url(asset($cleanName));
         }
 
         $dbKey = match ($name) {
@@ -444,21 +464,35 @@ if (! function_exists('resolve_image')) {
             if (Str::contains($dbValue, '://')) {
                 return clean_asset_url($dbValue);
             }
-            if (str_starts_with($dbValue, 'media/')) {
-                return clean_asset_url(Storage::disk('public')->url($dbValue));
+            $cleanDbValue = ltrim($dbValue, '/');
+            while (str_contains($cleanDbValue, 'storage/storage/')) {
+                $cleanDbValue = str_replace('storage/storage/', 'storage/', $cleanDbValue);
+            }
+            if (str_starts_with($cleanDbValue, 'media/')) {
+                return clean_asset_url(Storage::disk('public')->url($cleanDbValue));
+            }
+            if (str_starts_with($cleanDbValue, 'storage/')) {
+                return clean_asset_url(asset($cleanDbValue));
             }
 
-            return clean_asset_url(asset($dbValue));
+            return clean_asset_url(asset($cleanDbValue));
         }
         if ($default) {
-            if (Str::contains($default, '://') || str_starts_with($default, 'theme/') || str_starts_with($default, 'assets/') || str_starts_with($default, 'storage/')) {
-                return clean_asset_url(asset($default));
+            if (Str::contains($default, '://')) {
+                return clean_asset_url($default);
             }
-            if (str_starts_with($default, 'media/')) {
-                return clean_asset_url(Storage::disk('public')->url($default));
+            $cleanDefault = ltrim($default, '/');
+            while (str_contains($cleanDefault, 'storage/storage/')) {
+                $cleanDefault = str_replace('storage/storage/', 'storage/', $cleanDefault);
+            }
+            if (str_starts_with($cleanDefault, 'theme/') || str_starts_with($cleanDefault, 'themes/') || str_starts_with($cleanDefault, 'assets/') || str_starts_with($cleanDefault, 'storage/')) {
+                return clean_asset_url(asset($cleanDefault));
+            }
+            if (str_starts_with($cleanDefault, 'media/')) {
+                return clean_asset_url(Storage::disk('public')->url($cleanDefault));
             }
 
-            return clean_asset_url(asset("frontend/themes/viettinmartdemo/assets/images/$default"));
+            return clean_asset_url(asset("frontend/themes/viettinmartdemo/assets/images/{$cleanDefault}"));
         }
 
         return clean_asset_url(asset('theme/images/logo/logo-01.svg'));
@@ -472,22 +506,33 @@ if (! function_exists('resolve_icon')) {
             if (Str::contains($dbValue, '://')) {
                 return clean_asset_url($dbValue);
             }
-            if (str_starts_with($dbValue, 'media/')) {
-                return clean_asset_url(Storage::disk('public')->url($dbValue));
+            $cleanDbValue = ltrim($dbValue, '/');
+            while (str_contains($cleanDbValue, 'storage/storage/')) {
+                $cleanDbValue = str_replace('storage/storage/', 'storage/', $cleanDbValue);
+            }
+            if (str_starts_with($cleanDbValue, 'media/')) {
+                return clean_asset_url(Storage::disk('public')->url($cleanDbValue));
             }
             if (str_contains($dbValue, 'fa-') && ! str_contains($dbValue, '/')) {
                 return $dbValue;
             }
 
-            return clean_asset_url(asset($dbValue));
+            return clean_asset_url(asset($cleanDbValue));
         }
 
         if ($default) {
-            if (Str::contains($default, '://') || str_starts_with($default, 'theme/') || str_starts_with($default, 'assets/') || str_starts_with($default, 'storage/')) {
-                return clean_asset_url(asset($default));
+            if (Str::contains($default, '://')) {
+                return clean_asset_url($default);
             }
-            if (str_starts_with($default, 'media/')) {
-                return clean_asset_url(Storage::disk('public')->url($default));
+            $cleanDefault = ltrim($default, '/');
+            while (str_contains($cleanDefault, 'storage/storage/')) {
+                $cleanDefault = str_replace('storage/storage/', 'storage/', $cleanDefault);
+            }
+            if (str_starts_with($cleanDefault, 'theme/') || str_starts_with($cleanDefault, 'themes/') || str_starts_with($cleanDefault, 'assets/') || str_starts_with($cleanDefault, 'storage/')) {
+                return clean_asset_url(asset($cleanDefault));
+            }
+            if (str_starts_with($cleanDefault, 'media/')) {
+                return clean_asset_url(Storage::disk('public')->url($cleanDefault));
             }
             if (str_contains($default, 'fa-') && ! str_contains($default, '/')) {
                 return $default;
@@ -525,6 +570,12 @@ if (! function_exists('media_url')) {
             if (Str::contains($path, '127.0.0.1:8000') || Str::contains($path, 'localhost:8000') || Str::contains($path, 'viettinmart.vnglobaltech.com')) {
                 $path = preg_replace('#^https?://[^/]+#', '', $path);
             }
+            while (str_contains($path, '/storage/storage/')) {
+                $path = str_replace('/storage/storage/', '/storage/', $path);
+            }
+            while (str_contains($path, 'storage/storage/')) {
+                $path = str_replace('storage/storage/', 'storage/', $path);
+            }
         }
 
         if (Str::contains($path, '://')) {
@@ -532,6 +583,9 @@ if (! function_exists('media_url')) {
         }
 
         $cleanPath = ltrim($path, '/');
+        while (str_contains($cleanPath, 'storage/storage/')) {
+            $cleanPath = str_replace('storage/storage/', 'storage/', $cleanPath);
+        }
 
         // 2. Direct existence check in public_path
         if (file_exists(public_path($cleanPath))) {

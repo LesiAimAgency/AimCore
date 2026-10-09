@@ -72,11 +72,11 @@
       <div class="business-ellipse-stage relative w-full h-[500px] flex items-start justify-center overflow-visible pointer-events-auto select-none">
         @php
           $defaultCarousel = [
-            ['image' => '/storage/media/project-DA005/hero-person-left-outer.png', 'alt' => 'Person Left Outer'],
-            ['image' => '/storage/media/project-DA005/hero-person-left-inner.png', 'alt' => 'Person Left Inner'],
-            ['image' => '/storage/media/project-DA005/hero-person-center.png', 'alt' => 'Person Center'],
-            ['image' => '/storage/media/project-DA005/hero-person-right-inner.png', 'alt' => 'Person Right Inner'],
-            ['image' => '/storage/media/project-DA005/hero-person-right-outer.png', 'alt' => 'Person Right Outer'],
+            ['image' => 'themes/inbetween_v2/images/hero-person-left-outer.png', 'alt' => 'Person Left Outer'],
+            ['image' => 'themes/inbetween_v2/images/hero-person-left-inner.png', 'alt' => 'Person Left Inner'],
+            ['image' => 'themes/inbetween_v2/images/hero-person-center.png', 'alt' => 'Person Center'],
+            ['image' => 'themes/inbetween_v2/images/hero-person-right-inner.png', 'alt' => 'Person Right Inner'],
+            ['image' => 'themes/inbetween_v2/images/hero-person-right-outer.png', 'alt' => 'Person Right Outer'],
           ];
           $carouselList = !empty($settings['carousel_images']) && is_array($settings['carousel_images']) ? array_values($settings['carousel_images']) : $defaultCarousel;
           $totalCards = count($carouselList);
@@ -90,7 +90,7 @@
             @php
               $cImgRaw = is_array($cImgItem) ? ($cImgItem['image'] ?? '') : (string)$cImgItem;
               $cImgSrc = is_array($cImgRaw) ? ($cImgRaw['url'] ?? '') : (string)$cImgRaw;
-              $cImgUrl = !empty($cImgSrc) ? (str_starts_with($cImgSrc, 'http') || str_starts_with($cImgSrc, '/') ? $cImgSrc : asset($cImgSrc)) : '';
+              $cImgUrl = !empty($cImgSrc) ? clean_asset_url(str_starts_with($cImgSrc, 'http') || str_starts_with($cImgSrc, '/') ? $cImgSrc : asset($cImgSrc)) : '';
               $cImgAlt = is_array($cImgItem) ? ($cImgItem['alt'] ?? '') : '';
               $slot = $imgIndex;
               $diffFromCenter = abs($slot - $centerCardIndex);

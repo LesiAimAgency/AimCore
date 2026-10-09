@@ -125,16 +125,34 @@ try {
                     $replaceUrls($val);
                 }
             } elseif (is_string($data)) {
-                if (str_contains($data, 'themes/inbetween_v2/images/')) {
-                    $data = str_replace('themes/inbetween_v2/images/', '/storage/themes/inbetween_v2/images/', $data);
-                    if (! str_starts_with($data, 'http') && ! str_starts_with($data, '/')) {
-                        $data = '/'.ltrim($data, '/');
-                    }
-                } elseif (str_contains($data, 'storage/media/project-DA005/')) {
+                // 1. Convert any media/project-DA005 to themes path
+                if (str_contains($data, 'storage/media/project-DA005/')) {
                     $data = str_replace('storage/media/project-DA005/', 'storage/themes/inbetween_v2/images/', $data);
-                    if (! str_starts_with($data, 'http') && ! str_starts_with($data, '/')) {
-                        $data = '/'.ltrim($data, '/');
+                }
+                if (str_contains($data, 'media/project-DA005/')) {
+                    $data = str_replace('media/project-DA005/', 'themes/inbetween_v2/images/', $data);
+                }
+
+                // 2. Ensure themes path has /storage/ prefix
+                if (str_contains($data, 'themes/inbetween_v2/images/')) {
+                    if (! str_contains($data, 'storage/themes/inbetween_v2/images/')) {
+                        $data = str_replace('themes/inbetween_v2/images/', '/storage/themes/inbetween_v2/images/', $data);
                     }
+                }
+
+                // 3. Clean any duplicate storage prefixes or double slashes
+                while (str_contains($data, '/storage//storage/')) {
+                    $data = str_replace('/storage//storage/', '/storage/', $data);
+                }
+                while (str_contains($data, '/storage/storage/')) {
+                    $data = str_replace('/storage/storage/', '/storage/', $data);
+                }
+                while (str_contains($data, 'storage/storage/')) {
+                    $data = str_replace('storage/storage/', 'storage/', $data);
+                }
+
+                if (! str_starts_with($data, 'http') && (str_starts_with($data, 'storage/') || str_starts_with($data, 'themes/'))) {
+                    $data = '/'.ltrim($data, '/');
                 }
             }
         };

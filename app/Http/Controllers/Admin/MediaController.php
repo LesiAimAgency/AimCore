@@ -124,12 +124,13 @@ class MediaController extends Controller
         })->unique(function ($file) {
             return basename($file);
         })->map(function ($file) {
-            $encodedPath = implode('/', array_map('rawurlencode', explode('/', $file)));
+            $cleanFile = preg_replace('#^(storage/|/storage/)+#', '', ltrim($file, '/'));
+            $encodedPath = implode('/', array_map('rawurlencode', explode('/', $cleanFile)));
 
             return [
                 'id' => $file,
                 'name' => basename($file),
-                'url' => asset('storage/'.$encodedPath),
+                'url' => clean_asset_url(asset('storage/'.$encodedPath)),
                 'path' => $file,
             ];
         })->values();
@@ -325,11 +326,12 @@ class MediaController extends Controller
                                     $this->applyWatermark($absolutePath);
                                 }
 
-                                $encodedZipFilePath = implode('/', array_map('rawurlencode', explode('/', $finalFilePath)));
+                                $cleanZipFilePath = preg_replace('#^(storage/|/storage/)+#', '', ltrim($finalFilePath, '/'));
+                                $encodedZipFilePath = implode('/', array_map('rawurlencode', explode('/', $cleanZipFilePath)));
                                 $uploaded[] = [
                                     'id' => $finalFilePath,
                                     'name' => basename($finalFilePath),
-                                    'url' => asset('storage/'.$encodedZipFilePath),
+                                    'url' => clean_asset_url(asset('storage/'.$encodedZipFilePath)),
                                     'path' => $finalFilePath,
                                 ];
                             }
@@ -351,11 +353,12 @@ class MediaController extends Controller
                         $this->applyWatermark($absolutePath);
                     }
 
-                    $encodedNormalFilePath = implode('/', array_map('rawurlencode', explode('/', $filePath)));
+                    $cleanNormalFilePath = preg_replace('#^(storage/|/storage/)+#', '', ltrim($filePath, '/'));
+                    $encodedNormalFilePath = implode('/', array_map('rawurlencode', explode('/', $cleanNormalFilePath)));
                     $uploaded[] = [
                         'id' => $filePath,
                         'name' => basename($filePath),
-                        'url' => asset('storage/'.$encodedNormalFilePath),
+                        'url' => clean_asset_url(asset('storage/'.$encodedNormalFilePath)),
                         'path' => $filePath,
                     ];
                 }
