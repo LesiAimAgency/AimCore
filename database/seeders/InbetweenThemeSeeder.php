@@ -42,7 +42,9 @@ class InbetweenThemeSeeder extends Seeder
         }
 
         foreach ($allProjectIds as $pId) {
-            $this->seedForProject($pId, $pId);
+            $proj = Project::find($pId);
+            $tId = $proj?->tenant_id ?? $pId;
+            $this->seedForProject($pId, $tId);
         }
     }
 
