@@ -58,13 +58,13 @@
     </div>
     
     <!-- Cột 2: Chọn lựa nguồn dữ liệu -->
-    <div class="col-span-12 lg:col-span-4 bg-white rounded-lg shadow-sm p-4">
+    <!-- <div class="col-span-12 lg:col-span-4 bg-white rounded-lg shadow-sm p-4">
         <h3 class="font-semibold text-base mb-3 flex items-center justify-between text-gray-800">
             <span>Chọn lựa nguồn dữ liệu</span>
             <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-medium">8 Nguồn</span>
         </h3>
        
-    </div>
+    </div> -->
 
     <!-- Cột 3: Cấu trúc menu & Sắp xếp -->
     <div class="col-span-12 lg:col-span-5 bg-white rounded-lg shadow-sm p-4">
