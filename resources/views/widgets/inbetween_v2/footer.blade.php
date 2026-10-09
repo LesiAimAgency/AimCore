@@ -232,9 +232,10 @@
               @endforeach
             @else
               <a href="#inbetween-hero" class="hover:text-[#EC460B] transition-colors whitespace-nowrap">About Us</a>
-              <a href="#inbetween-business" class="hover:text-[#EC460B] transition-colors whitespace-nowrap">Media</a>
+              <a href="#inbetween-what-we-do" class="hover:text-[#EC460B] transition-colors whitespace-nowrap">What We Do</a>
+              <a href="#inbetween-where-we-focus" class="hover:text-[#EC460B] transition-colors whitespace-nowrap">Where We Focus</a>
+              <a href="#inbetween-our-clients" class="hover:text-[#EC460B] transition-colors whitespace-nowrap">Our Clients</a>
               <a href="#inbetween-business" class="hover:text-[#EC460B] transition-colors whitespace-nowrap">Beyond Business</a>
-              <a href="#inbetween-footer" class="hover:text-[#EC460B] transition-colors whitespace-nowrap">Contact</a>
             @endif
           </div>
         </div>

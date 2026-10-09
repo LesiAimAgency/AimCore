@@ -647,9 +647,10 @@ class MenuController extends Controller
         if (! $hasFooterItems) {
             $footerItems = $isIb ? [
                 ['title' => 'About Us', 'url' => '#inbetween-hero', 'order' => 1],
-                ['title' => 'Media', 'url' => '#inbetween-business', 'order' => 2],
-                ['title' => 'Beyond Business', 'url' => '#inbetween-business', 'order' => 3],
-                ['title' => 'Contact', 'url' => '#inbetween-footer', 'order' => 4],
+                ['title' => 'What We Do', 'url' => '#inbetween-what-we-do', 'order' => 2],
+                ['title' => 'Where We Focus', 'url' => '#inbetween-where-we-focus', 'order' => 3],
+                ['title' => 'Our Clients', 'url' => '#inbetween-our-clients', 'order' => 4],
+                ['title' => 'Beyond Business', 'url' => '#inbetween-business', 'order' => 5],
             ] : [
                 ['title' => 'Giới thiệu', 'url' => '/gioi-thieu', 'order' => 1],
                 ['title' => 'Chính sách bảo mật', 'url' => '/chinh-sach-bao-mat', 'order' => 2],

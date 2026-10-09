@@ -197,9 +197,10 @@ class InbetweenThemeSeeder extends Seeder
         $footerMenu->allItems()->delete();
         $footerMenuItems = [
             ['title' => 'About Us', 'url' => '#inbetween-hero', 'order' => 1],
-            ['title' => 'Media', 'url' => '#inbetween-business', 'order' => 2],
-            ['title' => 'Beyond Business', 'url' => '#inbetween-business', 'order' => 3],
-            ['title' => 'Contact', 'url' => '#inbetween-footer', 'order' => 4],
+            ['title' => 'What We Do', 'url' => '#inbetween-what-we-do', 'order' => 2],
+            ['title' => 'Where We Focus', 'url' => '#inbetween-where-we-focus', 'order' => 3],
+            ['title' => 'Our Clients', 'url' => '#inbetween-our-clients', 'order' => 4],
+            ['title' => 'Beyond Business', 'url' => '#inbetween-business', 'order' => 5],
         ];
         foreach ($footerMenuItems as $item) {
             MenuItem::create([
