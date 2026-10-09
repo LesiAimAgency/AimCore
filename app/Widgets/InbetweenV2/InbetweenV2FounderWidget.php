@@ -27,7 +27,7 @@ class InbetweenV2FounderWidget extends BaseWidget
                     'name' => 'founder_portrait',
                     'label' => 'Ảnh chân dung Founder',
                     'type' => 'image',
-                    'default' => '/storage/media/project-DA005/founder-airu-portrait.png',
+                    'default' => 'themes/inbetween_v2/images/founder-airu-portrait.png',
                 ],
                 [
                     'name' => 'founder_name',
@@ -81,7 +81,7 @@ class InbetweenV2FounderWidget extends BaseWidget
                     'name' => 'detail_exp_image',
                     'label' => 'Drawer Section 1: Hình ảnh sân khấu',
                     'type' => 'image',
-                    'default' => '/storage/media/project-DA005/founder-airu-stage.png',
+                    'default' => 'themes/inbetween_v2/images/founder-airu-stage.png',
                 ],
                 [
                     'name' => 'languages_title',
@@ -126,7 +126,7 @@ class InbetweenV2FounderWidget extends BaseWidget
                     'name' => 'media_image',
                     'label' => 'Drawer Section 3: Hình ảnh Podcast / Media',
                     'type' => 'image',
-                    'default' => '/storage/media/project-DA005/image 13.png',
+                    'default' => 'themes/inbetween_v2/images/image 13.png',
                 ],
                 [
                     'name' => 'regions_title',
@@ -198,7 +198,7 @@ class InbetweenV2FounderWidget extends BaseWidget
     public function render(): string
     {
         $settings = array_merge([
-            'founder_portrait' => '/storage/media/project-DA005/founder-airu-portrait.png',
+            'founder_portrait' => 'themes/inbetween_v2/images/founder-airu-portrait.png',
             'founder_name' => 'AIRU',
             'founder_role' => 'Founder of INBETWEEN',
             'quote_line1' => 'Built between cultures.',
@@ -207,7 +207,7 @@ class InbetweenV2FounderWidget extends BaseWidget
             'experience_label' => 'Years of experience across Europe, the Arab region, Africa and Asia',
             'detail_exp_title' => '14 YEARS OF EXPERIENCE',
             'detail_exp_desc' => 'AiRu is a driven international professional with <strong class="font-semibold text-[#131313]">14 years of experience across Europe, the Arab region, Africa and Asia</strong>, specializing in <strong class="font-semibold text-[#131313]">cross-border partnerships and business development</strong>. She navigates nuanced intercultural environments to build high-trust commercial pathways between emerging and developed ecosystems.',
-            'detail_exp_image' => '/storage/media/project-DA005/founder-airu-stage.png',
+            'detail_exp_image' => 'themes/inbetween_v2/images/founder-airu-stage.png',
             'languages_title' => 'FLUENCY IN 3 LANGUAGES',
             'languages' => [
                 ['name' => 'Vietnamese', 'proficiency' => 'Native / Bilingual'],
@@ -216,7 +216,7 @@ class InbetweenV2FounderWidget extends BaseWidget
             ],
             'media_title' => 'OWN MEDIA PLATFORM WITH 35K+ FOLLOWERS',
             'media_desc' => 'Host and curator of leading cross-border business discussions, podcasts, and intercultural networking series with an engaged executive community of over 35,000 global founders, investors, and industry decision-makers.',
-            'media_image' => '/storage/media/project-DA005/image 13.png',
+            'media_image' => 'themes/inbetween_v2/images/image 13.png',
             'regions_title' => 'CROSS-BORDER EXPERTISE & REGIONS',
             'regions' => [
                 ['title' => 'Europe', 'desc' => 'Facilitating bilateral enterprise cooperation, multilateral trade dialogs, and specialized technology exchange between EU innovation hubs and Southeast Asia.'],

@@ -27,7 +27,7 @@ class InbetweenV2FooterWidget extends BaseWidget
                     'name' => 'logo_white',
                     'label' => 'Logo White SVG/Image',
                     'type' => 'image',
-                    'default' => '/storage/media/project-DA005/Logo-white.svg',
+                    'default' => 'themes/inbetween_v2/images/Logo-white.svg',
                 ],
                 [
                     'name' => 'lang_en_label',

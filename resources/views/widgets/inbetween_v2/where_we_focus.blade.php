@@ -14,25 +14,25 @@
           'title_line1' => 'INDUSTRIAL &',
           'title_line2' => 'MANUFACTURING',
           'tags' => 'Machinery, Equipment, Components, Factory Solutions, Materials, Materials',
-          'image' => '/storage/media/project-DA005/sector-robot-arm.png',
+          'image' => 'themes/inbetween_v2/images/sector-robot-arm.png',
         ],
         [
           'title_line1' => 'ELECTRONICS, AUTOMATION',
           'title_line2' => '& TECHNOLOGY',
           'tags' => 'Testing & Inspection, Electronics, Industrial Technology, Automation, Digital Solutions',
-          'image' => '/storage/media/project-DA005/sector-chipset-ai.png',
+          'image' => 'themes/inbetween_v2/images/sector-chipset-ai.png',
         ],
         [
           'title_line1' => 'BIOTECHNOLOGY &',
           'title_line2' => 'HEALTHCARE',
           'tags' => 'Healthcare solutions, Biotech, Medical Technology, Pharma, Laboratory, Diagnostics',
-          'image' => '/storage/media/project-DA005/sector-dna-helix.png',
+          'image' => 'themes/inbetween_v2/images/sector-dna-helix.png',
         ],
         [
           'title_line1' => 'ENERGY, ENVIRONMENT',
           'title_line2' => '& SUSTAINABILITY',
           'tags' => 'Sustainability Technology, Energy Technology, Environmental Solutions, Water & Waste, Renewable Energy, Materials',
-          'image' => '/storage/media/project-DA005/sector-lightning-bolt.png',
+          'image' => 'themes/inbetween_v2/images/sector-lightning-bolt.png',
         ],
       ];
       $sectors = !empty($settings['sectors']) && is_array($settings['sectors']) ? array_values($settings['sectors']) : $defaultSectors;
@@ -80,6 +80,6 @@
         </div>
       @endforeach
     </div>
-    
+    <div class="relative z-20 w-full shrink-0 flex justify-center pb-1"><a class="inline-flex flex-col items-center gap-0.5 text-neutral-400 hover:text-[#EC460B] transition-colors duration-200 group text-[12px] font-light uppercase tracking-widest" href="#inbetween-founder" title="Scroll to Founder Profile"><span class="w-3.5 h-6 sm:w-4 sm:h-7 rounded-full border border-neutral-300 flex items-start justify-center p-0.5 group-hover:border-[#EC460B]"><span class="w-1 h-1.5 rounded-full bg-neutral-400 group-hover:bg-[#EC460B] animate-bounce"></span></span></a></div>
   </div>
 </section>

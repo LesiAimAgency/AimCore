@@ -69,6 +69,15 @@ class MediaController extends Controller
             Storage::disk('public')->makeDirectory($basePath);
         }
 
+        // Auto-seed project media from theme images if project directory is empty
+        if ($projectCode === 'DA005' && empty(Storage::disk('public')->files($basePath))) {
+            $themeImagesPath = public_path('themes/inbetween_v2/images');
+            if (File::isDirectory($themeImagesPath)) {
+                $targetDir = Storage::disk('public')->path($basePath);
+                File::copyDirectory($themeImagesPath, $targetDir);
+            }
+        }
+
         // Get folders: collect from project directory
         $dirList = collect(Storage::disk('public')->exists($fullPath) ? Storage::disk('public')->directories($fullPath) : []);
 

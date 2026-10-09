@@ -99,13 +99,13 @@ class InbetweenV2IntroWidget extends BaseWidget
                     'name' => 'logo_white',
                     'label' => 'Header Logo White',
                     'type' => 'image',
-                    'default' => '/storage/media/project-DA005/Logo-white.svg',
+                    'default' => 'themes/inbetween_v2/images/Logo-white.svg',
                 ],
                 [
                     'name' => 'logo_dark',
                     'label' => 'Header Logo Dark',
                     'type' => 'image',
-                    'default' => '/storage/media/project-DA005/Logo.svg',
+                    'default' => 'themes/inbetween_v2/images/Logo.svg',
                 ],
                 [
                     'name' => 'connect_text',
@@ -126,8 +126,8 @@ class InbetweenV2IntroWidget extends BaseWidget
     public function render(): string
     {
         $settings = array_merge([
-            'logo_white' => '/storage/media/project-DA005/Logo-white.svg',
-            'logo_dark' => '/storage/media/project-DA005/Logo.svg',
+            'logo_white' => 'themes/inbetween_v2/images/Logo-white.svg',
+            'logo_dark' => 'themes/inbetween_v2/images/Logo.svg',
             'connect_text' => "LET'S CONNECT",
             'connect_link' => '#contact-modal',
             'intro_subtitle' => 'Your business is',

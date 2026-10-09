@@ -93,7 +93,7 @@ class InbetweenV2BusinessWidget extends BaseWidget
                             'name' => 'image',
                             'label' => 'Hình ảnh thẻ',
                             'type' => 'image',
-                            'default' => '/storage/media/project-DA005/hero-person-center.png',
+                            'default' => 'themes/inbetween_v2/images/hero-person-center.png',
                         ],
                         [
                             'name' => 'alt',
@@ -121,11 +121,11 @@ class InbetweenV2BusinessWidget extends BaseWidget
             'cta_text' => 'Talk to us',
             'cta_link' => '#contact-modal',
             'carousel_images' => [
-                ['image' => '/storage/media/project-DA005/hero-person-left-outer.png', 'alt' => 'Person Left Outer'],
-                ['image' => '/storage/media/project-DA005/hero-person-left-inner.png', 'alt' => 'Person Left Inner'],
-                ['image' => '/storage/media/project-DA005/hero-person-center.png', 'alt' => 'Person Center'],
-                ['image' => '/storage/media/project-DA005/hero-person-right-inner.png', 'alt' => 'Person Right Inner'],
-                ['image' => '/storage/media/project-DA005/hero-person-right-outer.png', 'alt' => 'Person Right Outer'],
+                ['image' => 'themes/inbetween_v2/images/hero-person-left-outer.png', 'alt' => 'Person Left Outer'],
+                ['image' => 'themes/inbetween_v2/images/hero-person-left-inner.png', 'alt' => 'Person Left Inner'],
+                ['image' => 'themes/inbetween_v2/images/hero-person-center.png', 'alt' => 'Person Center'],
+                ['image' => 'themes/inbetween_v2/images/hero-person-right-inner.png', 'alt' => 'Person Right Inner'],
+                ['image' => 'themes/inbetween_v2/images/hero-person-right-outer.png', 'alt' => 'Person Right Outer'],
             ],
         ], $this->settings);
 

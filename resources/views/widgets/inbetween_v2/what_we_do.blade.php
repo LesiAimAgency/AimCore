@@ -23,32 +23,32 @@
           'badge' => 'FIND',
           'title' => 'Market & Opportunity Development',
           'description' => 'Identify priority sectors, companies, decision-makers, distributors and commercial opportunities.',
-          'active_image' => '/storage/media/project-DA005/what-we-do-magnifier.png',
-          'sand_image' => '/storage/media/project-DA005/what-we-do-sand-waves.jpg',
+          'active_image' => 'themes/inbetween_v2/images/what-we-do-magnifier.png',
+          'sand_image' => 'themes/inbetween_v2/images/what-we-do-sand-waves.jpg',
         ],
         [
           'card_id' => 'connect',
           'badge' => 'CONNECT',
           'title' => 'Strategic Partnerships & Networking',
           'description' => 'Connect directly with local key stakeholders, industry associations, and verified commercial partners.',
-          'active_image' => '/storage/media/project-DA005/what-we-do-chain.png',
-          'sand_image' => '/storage/media/project-DA005/what-we-do-sand-waves.jpg',
+          'active_image' => 'themes/inbetween_v2/images/what-we-do-chain.png',
+          'sand_image' => 'themes/inbetween_v2/images/what-we-do-sand-waves.jpg',
         ],
         [
           'card_id' => 'execute',
           'badge' => 'EXECUTE',
           'title' => 'Market Entry & Operational Setup',
           'description' => 'End-to-end execution of operational roadmaps, pilot testing, and localized compliance support.',
-          'active_image' => '/storage/media/project-DA005/what-we-do-gears.png',
-          'sand_image' => '/storage/media/project-DA005/what-we-do-sand-waves.jpg',
+          'active_image' => 'themes/inbetween_v2/images/what-we-do-gears.png',
+          'sand_image' => 'themes/inbetween_v2/images/what-we-do-sand-waves.jpg',
         ],
         [
           'card_id' => 'grow',
           'badge' => 'GROW',
           'title' => 'Scale & Long-term Expansion',
           'description' => 'Accelerate revenue pipelines, expand regional presence, and build sustainable local capabilities.',
-          'active_image' => '/storage/media/project-DA005/what-we-do-arrow.png',
-          'sand_image' => '/storage/media/project-DA005/what-we-do-sand-waves.jpg',
+          'active_image' => 'themes/inbetween_v2/images/what-we-do-arrow.png',
+          'sand_image' => 'themes/inbetween_v2/images/what-we-do-sand-waves.jpg',
         ],
       ];
       $cards = !empty($settings['cards']) && is_array($settings['cards']) ? array_values($settings['cards']) : $defaultCards;
@@ -60,9 +60,9 @@
           if (empty($cardSlug)) { $cardSlug = 'item-'.$index; }
           $isActive = ($index === 0);
           $sandRaw = is_array($card['sand_image'] ?? null) ? ($card['sand_image']['url'] ?? '') : ($card['sand_image'] ?? '');
-          $sandImgUrl = !empty($sandRaw) ? (str_starts_with($sandRaw, 'http') || str_starts_with($sandRaw, '/') ? $sandRaw : asset($sandRaw)) : asset('storage/media/project-DA005/what-we-do-sand-waves.jpg');
+          $sandImgUrl = !empty($sandRaw) ? (str_starts_with($sandRaw, 'http') || str_starts_with($sandRaw, '/') ? $sandRaw : asset($sandRaw)) : asset('themes/inbetween_v2/images/what-we-do-sand-waves.jpg');
           $activeRaw = is_array($card['active_image'] ?? null) ? ($card['active_image']['url'] ?? '') : ($card['active_image'] ?? '');
-          $activeImgUrl = !empty($activeRaw) ? (str_starts_with($activeRaw, 'http') || str_starts_with($activeRaw, '/') ? $activeRaw : asset($activeRaw)) : asset('storage/media/project-DA005/what-we-do-magnifier.png');
+          $activeImgUrl = !empty($activeRaw) ? (str_starts_with($activeRaw, 'http') || str_starts_with($activeRaw, '/') ? $activeRaw : asset($activeRaw)) : asset('themes/inbetween_v2/images/what-we-do-magnifier.png');
           $badge = $card['badge'] ?? strtoupper($cardSlug);
           $title = $card['title'] ?? '';
           $desc = $card['description'] ?? '';
