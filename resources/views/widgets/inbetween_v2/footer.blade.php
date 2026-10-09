@@ -186,7 +186,7 @@
       <div class="md:col-span-4 flex flex-col items-start md:items-center">
         <div class="inline-flex flex-col items-start text-left">
           <div class="text-xs text-neutral-400 font-normal mb-2.5 tracking-wide">Quick links</div>
-          <div class="grid grid-cols-2 text-[13.5px] text-white font-normal gap-30" style="row-gap:8px; column-gap: 42px;">
+          <div class="grid grid-cols-2 text-[13.5px] text-white font-normal gap-30" style="row-gap:2px; column-gap: 44px;">
             @php
               $footerMenu = \App\Models\Menu::withoutGlobalScopes()
                   ->where('project_id', 7)
@@ -212,7 +212,7 @@
 
       <!-- Col 3: Explore more on, Social Icons & Copyright -->
       <div class="md:col-span-4 flex flex-col md:items-end">
-        <div class="inline-flex flex-col items-start text-left">
+        <div class="inline-flex flex-col items-start text-left " style="gap:8px">
           
           <!-- Explore More On -->
           <div class="text-[12px] text-neutral-400 font-normal mb-[8px] tracking-normal">
@@ -243,7 +243,7 @@
 
         </div>
       </div>
-
+      
     </div>
   </div>
 
