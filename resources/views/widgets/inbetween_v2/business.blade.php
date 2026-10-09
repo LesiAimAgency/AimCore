@@ -72,17 +72,18 @@
       <div class="business-ellipse-stage relative w-full h-[500px] flex items-start justify-center overflow-visible pointer-events-auto select-none">
         @php
           $defaultCarousel = [
-            ['image' => 'themes/inbetween_v2/images/hero-person-left-outer.png', 'alt' => 'Person Left Outer'],
-            ['image' => 'themes/inbetween_v2/images/hero-person-left-inner.png', 'alt' => 'Person Left Inner'],
-            ['image' => 'themes/inbetween_v2/images/hero-person-center.png', 'alt' => 'Person Center'],
-            ['image' => 'themes/inbetween_v2/images/hero-person-right-inner.png', 'alt' => 'Person Right Inner'],
-            ['image' => 'themes/inbetween_v2/images/hero-person-right-outer.png', 'alt' => 'Person Right Outer'],
+            ['image' => '/storage/media/project-DA005/hero-person-left-outer.png', 'alt' => 'Person Left Outer'],
+            ['image' => '/storage/media/project-DA005/hero-person-left-inner.png', 'alt' => 'Person Left Inner'],
+            ['image' => '/storage/media/project-DA005/hero-person-center.png', 'alt' => 'Person Center'],
+            ['image' => '/storage/media/project-DA005/hero-person-right-inner.png', 'alt' => 'Person Right Inner'],
+            ['image' => '/storage/media/project-DA005/hero-person-right-outer.png', 'alt' => 'Person Right Outer'],
           ];
           $carouselList = !empty($settings['carousel_images']) && is_array($settings['carousel_images']) ? array_values($settings['carousel_images']) : $defaultCarousel;
           $totalCards = count($carouselList);
           $centerCardIndex = (int) floor($totalCards / 2);
           $trackWidth = 217;
-          $initialThumbX = $totalCards > 1 ? round(18 + ($centerCardIndex / ($totalCards - 1)) * ($trackWidth - 48)) : round($trackWidth / 2 - 6);
+          $thumbWidth = 12;
+          $initialThumbX = $totalCards > 1 ? round(($centerCardIndex / ($totalCards - 1)) * ($trackWidth - $thumbWidth), 1) : round(($trackWidth - $thumbWidth) / 2, 1);
         @endphp
         <div class="business-panels-container relative w-full h-full flex items-start justify-center overflow-visible pointer-events-auto">
           @foreach($carouselList as $imgIndex => $cImgItem)
@@ -106,7 +107,7 @@
           @endforeach
         </div>
         <div class="business-slider-container absolute left-1/2 top-[432px] -translate-x-1/2 flex flex-col items-center justify-center z-30 pointer-events-auto select-none opacity-100 transition-opacity duration-300">
-          <div class="business-slider-track-wrap relative h-[24px] flex items-center justify-center cursor-pointer group max-w-[calc(100vw-32px)]" style="width: {{ $trackWidth }}px; --track-width: {{ $trackWidth }}px;" aria-label="Image slider track">
+          <div class="business-slider-track-wrap relative h-[24px] flex items-center justify-center cursor-pointer group max-w-[calc(100vw-32px)] touch-none select-none" style="width: {{ $trackWidth }}px; --track-width: {{ $trackWidth }}px;" aria-label="Image slider track">
             <div class="business-slider-line h-[1.5px] bg-[#3E3939] rounded-full w-full" style="width: 100%;"></div>
             <div class="business-slider-thumb absolute left-0 top-1/2 -translate-y-1/2 w-[12px] h-[12px] rounded-full bg-[#EC460B] shadow-sm cursor-grab active:cursor-grabbing hover:scale-125 transition-transform duration-150" style="left: {{ $initialThumbX }}px; --thumb-x: {{ $initialThumbX }}px;"></div>
           </div>
