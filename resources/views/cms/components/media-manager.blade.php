@@ -1,5 +1,15 @@
 @php
     $isInline = $inline ?? false;
+    $sessProj = session('current_project');
+    $pCode = request()->route('projectCode') 
+        ?? request()->get('projectCode') 
+        ?? (is_array($sessProj) ? ($sessProj['code'] ?? null) : ($sessProj->code ?? null)) 
+        ?? request()->cookie('last_project_code') 
+        ?? 'DA005';
+    if ($pCode === 'inbetween_v2') {
+        $pCode = 'DA005';
+    }
+    $managerBaseUrl = $pCode ? url("{$pCode}/admin") : url('admin');
 @endphp
 <!-- Media Manager Modal -->
 <div x-data="mediaManager({{ $isInline ? 'true' : 'false' }})" x-cloak @submit.prevent @keydown.window.delete="handleGlobalDelete($event)">
@@ -273,7 +283,7 @@ function mediaManager(isInline = false) {
         showCreateFolder: false,
         isDraggingOver: false,
         newFolderName: '',
-        baseUrl: '{{ request()->route("projectCode") ? url(request()->route("projectCode") . "/admin") : (session("current_project")?->code ? url(session("current_project")->code . "/admin") : url("admin")) }}',
+        baseUrl: '{{ $managerBaseUrl }}',
         notification: { show: false, message: '', type: 'success' },
         showConfirmDelete: false,
         deleteType: 'file', // 'file' or 'folder'

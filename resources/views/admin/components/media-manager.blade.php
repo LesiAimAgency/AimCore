@@ -1,3 +1,15 @@
+@php
+    $sessProj = session('current_project');
+    $pCode = request()->route('projectCode') 
+        ?? request()->get('projectCode') 
+        ?? (is_array($sessProj) ? ($sessProj['code'] ?? null) : ($sessProj->code ?? null)) 
+        ?? request()->cookie('last_project_code') 
+        ?? 'DA005';
+    if ($pCode === 'inbetween_v2') {
+        $pCode = 'DA005';
+    }
+    $managerBaseUrl = $pCode ? url("{$pCode}/admin") : url('admin');
+@endphp
 <!-- Media Manager Modal -->
 <div x-data="mediaManager()" x-cloak @keydown.window.delete="handleGlobalDelete($event)">
     <!-- Trigger Button -->
@@ -160,7 +172,7 @@ function mediaManager() {
         searchQuery: '',
         showCreateFolder: false,
         newFolderName: '',
-        baseUrl: '{{ request()->route("projectCode") ? url(request()->route("projectCode") . "/admin") : (session("current_project")?->code ? url(session("current_project")->code . "/admin") : url("admin")) }}',
+        baseUrl: '{{ $managerBaseUrl }}',
         
         handleGlobalDelete(event) {
             if (!this.isOpen) return;
