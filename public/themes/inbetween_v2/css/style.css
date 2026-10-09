@@ -6916,7 +6916,7 @@ html {
 #inbetween-business.inbetween-section-business .business-slider-container {
     position: absolute;
     left: 50%;
-    top: 440px;
+    top: 440px !important;
     transform: translate(-50%);
     z-index: 30;
     will-change: opacity, transform
