@@ -179,7 +179,7 @@
       </nav>
     </div>
   </div>
-  <button class="menu-toggle-btn inbetween-menu-toggle group focus:outline-none fixed left-0 top-1/2 -translate-y-1/2 z-50 flex items-center cursor-pointer select-none" type="button" data-menu-toggle aria-label="Mở trình đơn điều hướng" aria-expanded="false">
+  <button class="menu-toggle-btn inbetween-menu-toggle group focus:outline-none fixed left-0 top-1/2 -translate-y-1/2 z-50 flex items-center cursor-pointer select-none" type="button" data-menu-toggle aria-label="Open navigation menu" aria-expanded="false">
     <span class="menu-toggle-track flex items-center">
       <span class="menu-icon-wrap flex items-center justify-center shrink-0 w-6 h-6">
         <svg class="menu-icon-svg w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -5,10 +5,9 @@
 .intro-title-gradient {
     color: #FFFFFF !important;
     background-image: linear-gradient(180deg,
-        #FFFFFF var(--grad-top, 100%),
-        #EC310B var(--grad-bottom, 100%),
-        #F1791C 100%
-    ) !important;
+            #FFFFFF var(--grad-top, 100%),
+            #EC310B var(--grad-bottom, 100%),
+            #F1791C 100%) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
@@ -422,7 +421,7 @@
     #inbetween-app #inbetween-founder:has(.founder-stage.state-expanded) .inbetween-container-1440,
     #inbetween-app #inbetween-founder:has(.inbetween-btn-plus.active) .inbetween-container-1440,
     #inbetween-app #inbetween-founder .inbetween-container-1440:has(.founder-stage.state-expanded) {
-        padding-top: 90px !important;
+        padding-top: 120px !important;
     }
 
     #inbetween-app #inbetween-founder .founder-stage.state-expanded .founder-portrait-card {

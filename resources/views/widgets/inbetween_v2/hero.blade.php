@@ -149,7 +149,7 @@
       </nav>
     </div>
   </div>
-  <button class="menu-toggle-btn inbetween-menu-toggle group focus:outline-none fixed left-0 top-1/2 -translate-y-1/2 z-50 flex items-center cursor-pointer select-none" type="button" data-menu-toggle aria-label="Mở trình đơn điều hướng" aria-expanded="false">
+  <button class="menu-toggle-btn inbetween-menu-toggle group focus:outline-none fixed left-0 top-1/2 -translate-y-1/2 z-50 flex items-center cursor-pointer select-none" type="button" data-menu-toggle aria-label="Open navigation menu" aria-expanded="false">
     <span class="menu-toggle-track flex items-center">
       <span class="menu-icon-wrap flex items-center justify-center shrink-0 w-6 h-6">
         <svg class="menu-icon-svg w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -227,7 +227,7 @@
       </div>
       <!-- Mouse scroll indicator pointing to #inbetween-what-we-do -->
       <div class="w-full shrink-0 flex justify-center pb-1 pointer-events-auto">
-        <a class="inline-flex flex-col items-center gap-0.5 text-white/60 hover:text-white transition-colors duration-200 group text-[12px] font-light uppercase tracking-widest cursor-pointer relative z-30" href="#inbetween-what-we-do" title="Cuộn sang What We Do" style="pointer-events: auto !important; cursor: pointer !important;">
+        <a class="inline-flex flex-col items-center gap-0.5 text-white/60 hover:text-white transition-colors duration-200 group text-[12px] font-light uppercase tracking-widest cursor-pointer relative z-30" href="#inbetween-what-we-do" title="Scroll to What We Do" style="pointer-events: auto !important; cursor: pointer !important;">
           <span class="w-3.5 h-6 sm:w-4 sm:h-7 rounded-full border border-white/40 flex items-start justify-center p-0.5 group-hover:border-white">
             <span class="w-1 h-1.5 rounded-full bg-white animate-bounce"></span>
           </span>

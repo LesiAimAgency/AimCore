@@ -17,11 +17,11 @@
         </div>
         <div class="founder-col-right lg:col-span-7 xl:col-span-7 h-full flex flex-col justify-center lg:pl-6">
           <div class="founder-header-block space-y-1.5 w-full max-w-[460px] mb-4 sm:mb-8" data-flip-id="founder-header">
-            <button class="founder-name-trigger group text-left inline-flex items-center gap-3 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#EC460B] rounded-lg p-0.5" type="button" aria-expanded="false" aria-controls="founder-scroll-detail" aria-label="Xem chi tiết hồ sơ Founder {{ $founderName }}" title="Nhấn để xem chi tiết / thu gọn hồ sơ {{ $founderName }}">
+            <button class="founder-name-trigger group text-left inline-flex items-center gap-3 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#EC460B] rounded-lg p-0.5" type="button" aria-expanded="false" aria-controls="founder-scroll-detail" aria-label="View founder profile details - {{ $founderName }}" title="Click to view details / collapse profile - {{ $founderName }}">
               <h2 class="founder-name text-[48px] sm:text-[64px] lg:text-[86.86px] font-semibold text-[#EC460B] tracking-tight leading-none transition-transform duration-300 group-hover:translate-x-1">{{ $founderName }}</h2>
             </button>
             <div class="flex items-center gap-6 sm:gap-12 pt-1.5"><span class="founder-role text-[16px] sm:text-[20px] font-light text-[#131313] tracking-normal">{{ $founderRole }}</span>
-              <button class="inbetween-btn-plus text-[#EC460B] text-[22px] sm:text-[25px] font-light leading-none inline-flex items-center justify-center cursor-pointer select-none transition-all hover:opacity-80 focus:outline-none tracking-wider" type="button" aria-label="Xem thêm thông tin Founder" title="Chi tiết Founder" data-action="toggle-founder"><span>[+]</span></button>
+              <button class="inbetween-btn-plus text-[#EC460B] text-[22px] sm:text-[25px] font-light leading-none inline-flex items-center justify-center cursor-pointer select-none transition-all hover:opacity-80 focus:outline-none tracking-wider" type="button" aria-label="View founder details" title="Founder details" data-action="toggle-founder"><span>[+]</span></button>
             </div>
           </div>
           <div class="founder-quote-block flex items-start gap-3.5 sm:gap-4 lg:gap-[38px]" data-flip-id="founder-quote"><img class="founder-quote-icon w-[26px] sm:w-[34px] lg:w-[36px] h-auto shrink-0 select-none pointer-events-none mt-1 sm:mt-1.5" src="data:image/svg+xml,%3csvg%20width='36'%20height='26'%20viewBox='0%200%2036%2026'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M15.6%2018.1294C15%2022.3295%2011.28%2025.5695%207.2%2025.5695C3.36%2025.5695%200%2022.6895%200%2018.6094C0%2010.6895%206.6%202.88945%2013.32%200.129451C14.28%20-0.230552%2014.4%200.249449%2013.68%200.489453C8.64%202.40945%205.16%209.48945%205.28%2011.8894C6.6%2010.9294%208.28%2010.6895%209.24%2010.6895C13.44%2010.6895%2016.32%2013.9295%2015.6%2018.1294ZM35.28%2018.1294C34.68%2022.3295%2030.96%2025.5695%2026.88%2025.5695C23.04%2025.5695%2019.68%2022.6895%2019.68%2018.6094C19.68%2010.6895%2026.28%202.88945%2033%200.129451C33.96%20-0.230552%2034.08%200.249449%2033.36%200.489453C28.32%202.40945%2024.84%209.48945%2024.96%2011.8894C26.28%2010.9294%2027.96%2010.6895%2028.92%2010.6895C33.12%2010.6895%2036%2013.9295%2035.28%2018.1294Z'%20fill='%23EC460B'/%3e%3c/svg%3e" alt="Quote">
@@ -39,7 +39,7 @@
             </div>
           </div>
           <div class="founder-top-line w-full h-[0.5px] bg-[#323232]/80 my-3 hidden"></div>
-          <div class="founder-scroll-detail hidden space-y-4 overflow-y-auto pr-3 sm:pr-4 custom-founder-scrollbar" id="founder-scroll-detail" tabindex="0" role="region" aria-label="Nội dung chi tiết hồ sơ Founder {{ $founderName }}">
+          <div class="founder-scroll-detail hidden space-y-4 overflow-y-auto pr-3 sm:pr-4 custom-founder-scrollbar" id="founder-scroll-detail" tabindex="0" role="region" aria-label="Founder profile detail content - {{ $founderName }}">
             <div class="founder-detail-section space-y-3 pt-1">
               <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-6">
                 <h3 class="text-[15px] sm:text-[16px] font-medium text-[#EC460B] uppercase tracking-wider shrink-0">{{ $settings['detail_exp_title'] ?? '14 YEARS OF EXPERIENCE' }}
@@ -122,4 +122,74 @@
       </div>
     </div>
   </div>
+  <script>
+    (function () {
+      function initFounderToggle() {
+        var section = document.getElementById('inbetween-founder');
+        if (!section || section.__founderToggleBound) return;
+        section.__founderToggleBound = true;
+
+        var stage = document.getElementById('founder-stage');
+        var scrollDetail = document.getElementById('founder-scroll-detail');
+        var quoteBlock = section.querySelector('.founder-quote-block');
+        var statBlock = section.querySelector('.founder-stat-block');
+        var topLine = section.querySelector('.founder-top-line');
+        var bottomLine = section.querySelector('.founder-bottom-line');
+        var btnPlus = section.querySelector('.inbetween-btn-plus');
+        var nameTrigger = section.querySelector('.founder-name-trigger');
+
+        function toggleFounder(forceState) {
+          if (!stage) return;
+          var isCurrentlyExpanded = stage.classList.contains('state-expanded');
+          var expand = typeof forceState === 'boolean' ? forceState : !isCurrentlyExpanded;
+
+          if (expand) {
+            stage.classList.remove('state-overview');
+            stage.classList.add('state-expanded');
+            section.classList.add('state-expanded', 'founder-active');
+            if (scrollDetail) scrollDetail.classList.remove('hidden');
+            if (topLine) topLine.classList.remove('hidden');
+            if (bottomLine) bottomLine.classList.remove('hidden');
+            if (quoteBlock) quoteBlock.classList.add('hidden');
+            if (statBlock) statBlock.classList.add('hidden');
+            if (btnPlus) {
+              btnPlus.classList.add('active');
+              var span = btnPlus.querySelector('span');
+              if (span) span.textContent = '[-]';
+            }
+            if (nameTrigger) nameTrigger.setAttribute('aria-expanded', 'true');
+          } else {
+            stage.classList.remove('state-expanded');
+            stage.classList.add('state-overview');
+            section.classList.remove('state-expanded', 'founder-active');
+            if (scrollDetail) scrollDetail.classList.add('hidden');
+            if (topLine) topLine.classList.add('hidden');
+            if (bottomLine) bottomLine.classList.add('hidden');
+            if (quoteBlock) quoteBlock.classList.remove('hidden');
+            if (statBlock) statBlock.classList.remove('hidden');
+            if (btnPlus) {
+              btnPlus.classList.remove('active');
+              var span = btnPlus.querySelector('span');
+              if (span) span.textContent = '[+]';
+            }
+            if (nameTrigger) nameTrigger.setAttribute('aria-expanded', 'false');
+          }
+        }
+
+        section.addEventListener('click', function (e) {
+          var trigger = e.target.closest('[data-action="toggle-founder"], .founder-name-trigger, .inbetween-btn-plus');
+          if (trigger) {
+            e.preventDefault();
+            toggleFounder();
+          }
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initFounderToggle);
+      } else {
+        initFounderToggle();
+      }
+    })();
+  </script>
 </section>

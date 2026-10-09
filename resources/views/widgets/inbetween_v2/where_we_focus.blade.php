@@ -80,6 +80,6 @@
         </div>
       @endforeach
     </div>
-    <div class="relative z-20 w-full shrink-0 flex justify-center pb-1"><a class="inline-flex flex-col items-center gap-0.5 text-neutral-400 hover:text-[#EC460B] transition-colors duration-200 group text-[12px] font-light uppercase tracking-widest" href="#inbetween-founder" title="Cuộn sang Founder Profile"><span class="w-3.5 h-6 sm:w-4 sm:h-7 rounded-full border border-neutral-300 flex items-start justify-center p-0.5 group-hover:border-[#EC460B]"><span class="w-1 h-1.5 rounded-full bg-neutral-400 group-hover:bg-[#EC460B] animate-bounce"></span></span></a></div>
+    <div class="relative z-20 w-full shrink-0 flex justify-center pb-1"><a class="inline-flex flex-col items-center gap-0.5 text-neutral-400 hover:text-[#EC460B] transition-colors duration-200 group text-[12px] font-light uppercase tracking-widest" href="#inbetween-founder" title="Scroll to Founder Profile"><span class="w-3.5 h-6 sm:w-4 sm:h-7 rounded-full border border-neutral-300 flex items-start justify-center p-0.5 group-hover:border-[#EC460B]"><span class="w-1 h-1.5 rounded-full bg-neutral-400 group-hover:bg-[#EC460B] animate-bounce"></span></span></a></div>
   </div>
 </section>

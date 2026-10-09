@@ -1,4 +1,4 @@
-<section class="inbetween-onepage-section relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#131313] text-white" id="inbetween-our-clients" aria-label="Khách Hàng Của Inbetween - Our Clients">
+<section class="inbetween-onepage-section relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#131313] text-white" id="inbetween-our-clients" aria-label="Inbetween Clients - Our Clients">
   <div class="inbetween-container-1440 our-clients-stage w-full h-full relative z-10">
     @php
       $defaultCards = [

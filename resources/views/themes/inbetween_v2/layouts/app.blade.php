@@ -28,7 +28,7 @@
     <div class="mobile-nav-overlay theme-inbetween-overlay" id="mobile-nav-overlay" aria-hidden="true"></div>
     <nav class="mobile-nav-drawer theme-inbetween-drawer" id="mobile-nav-drawer" aria-label="Inbetween Navigation Menu" role="dialog" aria-modal="true">
       <div class="flex items-center justify-between pb-6 sm:pb-8">
-        <button class="inline-flex items-center gap-3 text-xs uppercase font-bold text-neutral-800 hover:text-[#EC460B] transition-colors cursor-pointer py-1 group focus:outline-none" id="close-drawer-btn" type="button" aria-label="Đóng menu"><span class="w-6 h-[1.5px] bg-neutral-800 group-hover:w-8 group-hover:bg-[#EC460B] transition-all"></span><span class="tracking-wider">Close</span></button>
+        <button class="inline-flex items-center gap-3 text-xs uppercase font-bold text-neutral-800 hover:text-[#EC460B] transition-colors cursor-pointer py-1 group focus:outline-none" id="close-drawer-btn" type="button" aria-label="Close menu"><span class="w-6 h-[1.5px] bg-neutral-800 group-hover:w-8 group-hover:bg-[#EC460B] transition-all"></span><span class="tracking-wider">Close</span></button>
         <div class="flex items-center gap-1.5 text-xs font-semibold tracking-wider uppercase inbetween-drawer-lang">
           <span class="inbetween-lang-btn inbetween-lang-en active cursor-pointer text-[#131313] hover:text-[#EC460B] transition-colors" data-lang="en">EN</span>
           <span class="text-neutral-400">|</span>

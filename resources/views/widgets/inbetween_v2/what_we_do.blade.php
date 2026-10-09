@@ -89,7 +89,7 @@
             </div>
             <div class="lg:hidden flex items-center justify-between w-full p-4">
               <span class="text-[20px] font-semibold uppercase tracking-wider text-white">{{ $badge }}</span>
-              <span class="text-[12px] font-light text-white/80">Nhấn để mở rộng &rsaquo;</span>
+              <span class="text-[12px] font-light text-white/80">Click to expand &rsaquo;</span>
             </div>
           </div>
         </div>
