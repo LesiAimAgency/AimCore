@@ -57,7 +57,7 @@ class InbetweenV2WhatWeDoWidget extends BaseWidget
                     'name' => 'cta_link',
                     'label' => 'CTA Button Link',
                     'type' => 'text',
-                    'default' => '#inbetween-founder',
+                    'default' => '#contact-modal',
                 ],
                 [
                     'name' => 'cards',
@@ -116,7 +116,7 @@ class InbetweenV2WhatWeDoWidget extends BaseWidget
             'title_line2' => 'built around what you need.',
             'description' => '<strong class="font-semibold text-[#131313]">Tell us what you want to achieve.</strong> We\'ll help you identify the right next steps and level of local support.',
             'cta_text' => 'Talk to us',
-            'cta_link' => '#inbetween-founder',
+            'cta_link' => '#contact-modal',
             'cards' => [
                 [
                     'card_id' => 'find',

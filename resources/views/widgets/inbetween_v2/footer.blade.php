@@ -159,7 +159,8 @@
   <div class="inbetween-container-1440 mx-auto pt-6 sm:pt-8 z-10 shrink-0" style="padding-left:30px; padding-right:30px">
     
     <!-- Top Row: Big Logo (Left) & LET'S CONNECT (Right) -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-12">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-12" style="display: flex;
+    align-items: flex-end;">
       <a href="#inbetween-intro" class="inline-block transition-opacity hover:opacity-80" aria-label="in • between Logo">
         <img class="w-[220px] xs:w-[260px] sm:w-[310px] md:w-[350px] lg:w-[362px] max-w-full h-auto object-contain" src="{{ $logoWhite }}" alt="in • between Logo">
       </a>

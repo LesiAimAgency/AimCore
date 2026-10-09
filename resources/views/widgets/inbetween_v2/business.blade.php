@@ -65,7 +65,7 @@
   </div>
   <div class="business-pull-stage relative w-full flex flex-col items-center justify-start z-20 will-change-transform pointer-events-auto pt-3 sm:pt-4 lg:pt-4">
     <div class="business-stage-wrap relative w-full flex flex-col items-center justify-start">
-      <div class="w-full flex justify-center mb-3 sm:mb-4 lg:mb-4 pointer-events-auto"><a class="business-btn-talk inline-flex items-center justify-between w-[295px] h-[48px] pl-7 pr-2 rounded-full bg-[#131313] text-white text-[16px] font-medium tracking-normal hover:bg-[#2B2B2B] transition-colors duration-300 shadow-sm group shrink-0 select-none whitespace-nowrap cursor-pointer pointer-events-auto" href="{{ $settings['cta_link'] ?? '#inbetween-founder' }}"><span class="text-[16px] font-medium text-[#F6F4F4] whitespace-nowrap">{{ $settings['cta_text'] ?? 'Talk to us' }}</span><span class="w-[48px] h-[32px] rounded-[16px] bg-[#F6F4F4] text-[#131313] flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1 shrink-0">
+      <div class="w-full flex justify-center mb-3 sm:mb-4 lg:mb-4 pointer-events-auto"><a class="business-btn-talk inline-flex items-center justify-between w-[295px] max-w-full h-[48px] pl-7 pr-2 rounded-full bg-[#131313] text-white text-[16px] font-medium tracking-normal hover:bg-[#2B2B2B] transition-colors duration-300 shadow-sm group shrink-0 select-none whitespace-nowrap cursor-pointer pointer-events-auto" href="{{ (!empty($settings['cta_link']) && $settings['cta_link'] !== '#inbetween-founder') ? $settings['cta_link'] : '#contact-modal' }}" data-contact-modal-toggle><span class="text-[16px] font-medium text-[#F6F4F4] whitespace-nowrap">{{ $settings['cta_text'] ?? 'Talk to us' }}</span><span class="w-[48px] h-[32px] rounded-[16px] bg-[#F6F4F4] text-[#131313] flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1 shrink-0">
             <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M3.33334 8H12.6667M12.6667 8L8.66668 4M12.6667 8L8.66668 12" stroke="#131313" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg></span></a></div>
@@ -83,7 +83,8 @@
         <div class="business-panels-container relative w-full h-full flex items-start justify-center overflow-visible pointer-events-auto">
           @foreach($carouselList as $imgIndex => $cImgItem)
             @php
-              $cImgSrc = is_array($cImgItem) ? ($cImgItem['image'] ?? '') : (string)$cImgItem;
+              $cImgRaw = is_array($cImgItem) ? ($cImgItem['image'] ?? '') : (string)$cImgItem;
+              $cImgSrc = is_array($cImgRaw) ? ($cImgRaw['url'] ?? '') : (string)$cImgRaw;
               $cImgUrl = !empty($cImgSrc) ? (str_starts_with($cImgSrc, 'http') || str_starts_with($cImgSrc, '/') ? $cImgSrc : asset($cImgSrc)) : '';
               $cImgAlt = is_array($cImgItem) ? ($cImgItem['alt'] ?? '') : '';
               $slot = $imgIndex;

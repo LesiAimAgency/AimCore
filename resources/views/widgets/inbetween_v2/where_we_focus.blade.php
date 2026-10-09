@@ -50,7 +50,8 @@
           @foreach($rowSectors as $colIdx => $sector)
             @php
               $globalIdx = $rowIdx * 2 + $colIdx;
-              $imgUrl = !empty($sector['image']) ? (str_starts_with($sector['image'], 'http') || str_starts_with($sector['image'], '/') ? $sector['image'] : asset($sector['image'])) : '';
+              $imgRaw = is_array($sector['image'] ?? null) ? ($sector['image']['url'] ?? '') : ($sector['image'] ?? '');
+              $imgUrl = !empty($imgRaw) ? (str_starts_with($imgRaw, 'http') || str_starts_with($imgRaw, '/') ? $imgRaw : asset($imgRaw)) : '';
               $tagsRaw = $sector['tags'] ?? '';
               $tagList = is_array($tagsRaw) ? $tagsRaw : array_filter(array_map('trim', explode(',', (string)$tagsRaw)));
               

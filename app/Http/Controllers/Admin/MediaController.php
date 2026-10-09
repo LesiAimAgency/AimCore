@@ -16,7 +16,12 @@ class MediaController extends Controller
     private function getMediaPath(?Request $request = null)
     {
         // Check for project code from route parameter or session/default
-        $projectCode = $request?->route('projectCode') ?? session('current_project')?->code ?? request()->cookie('last_project_code') ?? 'DA005';
+        $sessionProject = session('current_project');
+        $sessionCode = is_array($sessionProject) ? ($sessionProject['code'] ?? null) : ($sessionProject->code ?? null);
+        $projectCode = $request?->route('projectCode') ?? $request?->get('projectCode') ?? $sessionCode ?? request()->cookie('last_project_code') ?? 'DA005';
+        if ($projectCode === 'inbetween_v2') {
+            $projectCode = 'DA005';
+        }
         if ($projectCode) {
             return "media/project-{$projectCode}";
         }
@@ -41,14 +46,19 @@ class MediaController extends Controller
     public function list(Request $request)
     {
         $projectCode = $request->route('projectCode');
+        $sessionProject = session('current_project');
+        $sessionCode = is_array($sessionProject) ? ($sessionProject['code'] ?? null) : ($sessionProject->code ?? null);
         if (! $projectCode && ! $request->wantsJson() && ! $request->ajax()) {
-            $targetProject = session('current_project')?->code ?? request()->cookie('last_project_code') ?? 'DA005';
+            $targetProject = $sessionCode ?? request()->cookie('last_project_code') ?? 'DA005';
 
             return redirect()->route('project.admin.media.list', ['projectCode' => $targetProject]);
         }
 
         $basePath = $this->getMediaPath($request);
-        $projectCode = $projectCode ?: (session('current_project')?->code ?? 'DA005');
+        $projectCode = $projectCode ?: ($request->get('projectCode') ?? $sessionCode ?? 'DA005');
+        if ($projectCode === 'inbetween_v2') {
+            $projectCode = 'DA005';
+        }
         $path = $request->get('path', '');
         $path = ltrim(str_replace('\\', '/', $path), '/');
 
@@ -105,10 +115,12 @@ class MediaController extends Controller
         })->unique(function ($file) {
             return basename($file);
         })->map(function ($file) {
+            $encodedPath = implode('/', array_map('rawurlencode', explode('/', $file)));
+
             return [
                 'id' => $file,
                 'name' => basename($file),
-                'url' => Storage::disk('public')->url($file),
+                'url' => asset('storage/'.$encodedPath),
                 'path' => $file,
             ];
         })->values();
@@ -304,10 +316,11 @@ class MediaController extends Controller
                                     $this->applyWatermark($absolutePath);
                                 }
 
+                                $encodedZipFilePath = implode('/', array_map('rawurlencode', explode('/', $finalFilePath)));
                                 $uploaded[] = [
                                     'id' => $finalFilePath,
                                     'name' => basename($finalFilePath),
-                                    'url' => asset(Storage::url($finalFilePath)),
+                                    'url' => asset('storage/'.$encodedZipFilePath),
                                     'path' => $finalFilePath,
                                 ];
                             }
@@ -329,10 +342,11 @@ class MediaController extends Controller
                         $this->applyWatermark($absolutePath);
                     }
 
+                    $encodedNormalFilePath = implode('/', array_map('rawurlencode', explode('/', $filePath)));
                     $uploaded[] = [
                         'id' => $filePath,
                         'name' => basename($filePath),
-                        'url' => asset(Storage::url($filePath)),
+                        'url' => asset('storage/'.$encodedNormalFilePath),
                         'path' => $filePath,
                     ];
                 }

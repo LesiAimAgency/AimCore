@@ -8,9 +8,9 @@
         </div>
         <div class="max-w-[460px] space-y-3 sm:space-y-3.5 pt-1">
           <p class="text-[14px] sm:text-[15px] lg:text-[16px] font-light text-[#3E3939] leading-relaxed tracking-normal">{!! $settings['description'] ?? '<strong class="font-semibold text-[#131313]">Tell us what you want to achieve.</strong> We\'ll help you identify the right next steps and level of local support.' !!}</p>
-          <div class="pt-0.5"><a class="inbetween-btn-pill inline-flex items-center justify-between gap-4 pl-6 pr-2 py-2 rounded-full bg-[#131313] text-white text-[16px] font-medium tracking-normal hover:bg-[#3E3939] transition-all duration-300 shadow-md group shrink-0 cursor-pointer" href="{{ $settings['cta_link'] ?? '#inbetween-founder' }}" title="{{ $settings['cta_text'] ?? 'Talk to us' }}"><span class="font-medium">{{ $settings['cta_text'] ?? 'Talk to us' }}</span><span class="w-8 h-8 rounded-full bg-white text-[#131313] flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1 shrink-0">
-                <svg class="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M3.33334 8H12.6667M12.6667 8L8.66668 4M12.6667 8L8.66668 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          <div class="pt-0.5"><a class="business-btn-talk inline-flex items-center justify-between w-[295px] max-w-full h-[48px] pl-7 pr-2 rounded-full bg-[#131313] text-white text-[16px] font-medium tracking-normal hover:bg-[#2B2B2B] transition-colors duration-300 shadow-sm group shrink-0 select-none whitespace-nowrap cursor-pointer pointer-events-auto" href="{{ (!empty($settings['cta_link']) && $settings['cta_link'] !== '#inbetween-founder') ? $settings['cta_link'] : '#contact-modal' }}" data-contact-modal-toggle title="{{ $settings['cta_text'] ?? 'Talk to us' }}"><span class="text-[16px] font-medium text-[#F6F4F4] whitespace-nowrap">{{ $settings['cta_text'] ?? 'Talk to us' }}</span><span class="w-[48px] h-[32px] rounded-[16px] bg-[#F6F4F4] text-[#131313] flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1 shrink-0">
+                <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3.33334 8H12.6667M12.6667 8L8.66668 4M12.6667 8L8.66668 12" stroke="#131313" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                 </svg></span></a>
           </div>
         </div>
@@ -59,8 +59,10 @@
           $cardSlug = !empty($card['card_id']) ? \Illuminate\Support\Str::slug($card['card_id']) : \Illuminate\Support\Str::slug($card['badge'] ?? 'item-'.$index);
           if (empty($cardSlug)) { $cardSlug = 'item-'.$index; }
           $isActive = ($index === 0);
-          $sandImgUrl = !empty($card['sand_image']) ? (str_starts_with($card['sand_image'], 'http') || str_starts_with($card['sand_image'], '/') ? $card['sand_image'] : asset($card['sand_image'])) : asset('themes/inbetween_v2/images/what-we-do-sand-waves.jpg');
-          $activeImgUrl = !empty($card['active_image']) ? (str_starts_with($card['active_image'], 'http') || str_starts_with($card['active_image'], '/') ? $card['active_image'] : asset($card['active_image'])) : asset('themes/inbetween_v2/images/what-we-do-magnifier.png');
+          $sandRaw = is_array($card['sand_image'] ?? null) ? ($card['sand_image']['url'] ?? '') : ($card['sand_image'] ?? '');
+          $sandImgUrl = !empty($sandRaw) ? (str_starts_with($sandRaw, 'http') || str_starts_with($sandRaw, '/') ? $sandRaw : asset($sandRaw)) : asset('themes/inbetween_v2/images/what-we-do-sand-waves.jpg');
+          $activeRaw = is_array($card['active_image'] ?? null) ? ($card['active_image']['url'] ?? '') : ($card['active_image'] ?? '');
+          $activeImgUrl = !empty($activeRaw) ? (str_starts_with($activeRaw, 'http') || str_starts_with($activeRaw, '/') ? $activeRaw : asset($activeRaw)) : asset('themes/inbetween_v2/images/what-we-do-magnifier.png');
           $badge = $card['badge'] ?? strtoupper($cardSlug);
           $title = $card['title'] ?? '';
           $desc = $card['description'] ?? '';

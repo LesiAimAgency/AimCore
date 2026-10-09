@@ -273,7 +273,7 @@ function mediaManager(isInline = false) {
         showCreateFolder: false,
         isDraggingOver: false,
         newFolderName: '',
-        baseUrl: '{{ request()->route("projectCode") ? "/" . request()->route("projectCode") . "/admin" : "/admin" }}',
+        baseUrl: '{{ request()->route("projectCode") ? url(request()->route("projectCode") . "/admin") : (session("current_project")?->code ? url(session("current_project")->code . "/admin") : url("admin")) }}',
         notification: { show: false, message: '', type: 'success' },
         showConfirmDelete: false,
         deleteType: 'file', // 'file' or 'folder'

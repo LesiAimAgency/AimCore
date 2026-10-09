@@ -81,7 +81,7 @@ class InbetweenV2BusinessWidget extends BaseWidget
                     'name' => 'cta_link',
                     'label' => 'CTA Button Link',
                     'type' => 'text',
-                    'default' => '#inbetween-founder',
+                    'default' => '#contact-modal',
                 ],
                 [
                     'name' => 'carousel_images',
@@ -120,7 +120,7 @@ class InbetweenV2BusinessWidget extends BaseWidget
             'heading_suffix' => 'more than a service.',
             'description' => 'In Between Asia is also building a <strong class="font-semibold text-[#131313]">growing media platform, business network </strong>connecting people, ideas and opportunities across Asia.',
             'cta_text' => 'Talk to us',
-            'cta_link' => '#inbetween-founder',
+            'cta_link' => '#contact-modal',
             'carousel_images' => [
                 ['image' => 'themes/inbetween_v2/images/hero-person-left-outer.png', 'alt' => 'Person Left Outer'],
                 ['image' => 'themes/inbetween_v2/images/hero-person-left-inner.png', 'alt' => 'Person Left Inner'],

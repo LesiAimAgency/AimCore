@@ -640,7 +640,7 @@ function quillMediaManagerGlobal() {
     showCreateFolder: false,
     newFolderName: '',
     mediaType: 'image',
-    baseUrl: '{{ request()->route("projectCode") ? "/" . request()->route("projectCode") . "/admin" : "/admin" }}',
+    baseUrl: '{{ request()->route("projectCode") ? url(request()->route("projectCode") . "/admin") : (session("current_project")?->code ? url(session("current_project")->code . "/admin") : url("admin")) }}',
     
     init() {
       // Listen for open media manager event from Quill

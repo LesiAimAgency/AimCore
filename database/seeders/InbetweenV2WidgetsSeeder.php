@@ -46,7 +46,7 @@ class InbetweenV2WidgetsSeeder extends Seeder
                     'services' => 'Sales & BD, Market Validation, Market Entry Execution, Local Business Support',
                     'description' => 'We help <strong class="font-semibold text-white">Asian SMEs, founders and entrepreneurs</strong> enter and grow in Vietnam.',
                     'cta_text' => 'Talk to us',
-                    'cta_link' => '#inbetween-founder',
+                    'cta_link' => '#contact-modal',
                     'logo_white' => 'themes/inbetween_v2/images/Logo-white.svg',
                     'logo_dark' => 'themes/inbetween_v2/images/Logo.svg',
                     'connect_text' => "LET'S CONNECT",
@@ -62,7 +62,7 @@ class InbetweenV2WidgetsSeeder extends Seeder
                     'title_line2' => 'built around what you need.',
                     'description' => '<strong class="font-semibold text-[#131313]">Tell us what you want to achieve.</strong> We\'ll help you identify the right next steps and level of local support.',
                     'cta_text' => 'Talk to us',
-                    'cta_link' => '#inbetween-founder',
+                    'cta_link' => '#contact-modal',
                     'cards' => [
                         [
                             'card_id' => 'find',
@@ -213,7 +213,7 @@ class InbetweenV2WidgetsSeeder extends Seeder
                     'heading_suffix' => 'more than a service.',
                     'description' => 'In Between Asia is also building a <strong class="font-semibold text-[#131313]">growing media platform, business network </strong>connecting people, ideas and opportunities across Asia.',
                     'cta_text' => 'Talk to us',
-                    'cta_link' => '#inbetween-founder',
+                    'cta_link' => '#contact-modal',
                     'carousel_images' => [
                         ['image' => 'themes/inbetween_v2/images/hero-person-left-outer.png', 'alt' => 'Person Left Outer'],
                         ['image' => 'themes/inbetween_v2/images/hero-person-left-inner.png', 'alt' => 'Person Left Inner'],

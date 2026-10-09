@@ -80,7 +80,10 @@
 
       <div class="mt-auto pt-4 space-y-5 font-sans inbetween-drawer-footer !border-t-0" style="border-top: none !important;">
         <div>
-          <a class="btn-drawer-outline btn-drawer-inbetween inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-[#131313] text-[#131313] hover:bg-[#EC460B] hover:border-[#EC460B] hover:text-white transition-all text-xs font-bold uppercase tracking-wider cursor-pointer" href="#contact-modal" data-contact-modal-toggle><span>LET'S CONNECT</span><span>&rarr;</span></a>
+          <a class="business-btn-talk inline-flex items-center justify-between w-[295px] max-w-full h-[48px] pl-7 pr-2 rounded-full bg-[#131313] text-white text-[16px] font-medium tracking-normal hover:bg-[#2B2B2B] transition-colors duration-300 shadow-sm group shrink-0 select-none whitespace-nowrap cursor-pointer pointer-events-auto" href="#contact-modal" data-contact-modal-toggle><span class="text-[16px] font-medium text-[#F6F4F4] whitespace-nowrap">Talk to us</span><span class="w-[48px] h-[32px] rounded-[16px] bg-[#F6F4F4] text-[#131313] flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1 shrink-0">
+            <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3.33334 8H12.6667M12.6667 8L8.66668 4M12.6667 8L8.66668 12" stroke="#131313" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg></span></a>
         </div>
         <div class="space-y-3.5">
           <div class="text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-neutral-400 contact-label">CONTACT INFORMATION</div>
@@ -190,6 +193,30 @@
             });
           }, true);
         }
+
+        // Ensure all buttons targeting #contact-modal reliably open the dialog
+        document.addEventListener('click', function (e) {
+          var trigger = e.target.closest('a[href="#contact-modal"], [data-contact-modal-toggle]');
+          if (trigger) {
+            e.preventDefault();
+            e.stopPropagation();
+            var overlay = document.getElementById('contact-modal-overlay');
+            if (overlay) {
+              overlay.classList.add('active');
+              document.body.classList.add('modal-open');
+              document.body.style.overflow = 'hidden';
+
+              // Close drawer if open
+              var drawer = document.getElementById('mobile-nav-drawer');
+              var drawerOverlay = document.getElementById('mobile-nav-overlay');
+              if (drawer && drawer.classList.contains('active')) {
+                drawer.classList.remove('active');
+                if (drawerOverlay) drawerOverlay.classList.remove('active');
+                document.body.classList.remove('menu-open');
+              }
+            }
+          }
+        });
       });
     </script>
     @stack('scripts')

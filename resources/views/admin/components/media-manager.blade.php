@@ -160,7 +160,7 @@ function mediaManager() {
         searchQuery: '',
         showCreateFolder: false,
         newFolderName: '',
-        baseUrl: '{{ request()->route("projectCode") ? "/" . request()->route("projectCode") . "/admin" : "/admin" }}',
+        baseUrl: '{{ request()->route("projectCode") ? url(request()->route("projectCode") . "/admin") : (session("current_project")?->code ? url(session("current_project")->code . "/admin") : url("admin")) }}',
         
         handleGlobalDelete(event) {
             if (!this.isOpen) return;

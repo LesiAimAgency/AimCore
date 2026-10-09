@@ -513,6 +513,7 @@
     -webkit-user-select: text !important;
 }
 
+#inbetween-hero .business-btn-talk,
 #inbetween-hero .inbetween-btn-pill,
 #inbetween-hero a,
 #inbetween-hero button {
@@ -740,4 +741,34 @@
 
 #inbetween-footer .footer-checkbox:focus-visible {
     box-shadow: 0 0 0 3px rgba(236, 70, 11, 0.4);
+}
+
+/* Universal business-btn-talk button styles */
+.business-btn-talk {
+    width: 295px !important;
+    max-width: 100% !important;
+    height: 48px !important;
+    border-radius: 9999px !important;
+    background-color: #131313 !important;
+    color: #ffffff !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding-left: 1.75rem !important;
+    padding-right: 0.5rem !important;
+    box-sizing: border-box !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    transition: background-color 0.3s ease, transform 0.2s ease !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.business-btn-talk:hover {
+    background-color: #2B2B2B !important;
+}
+
+.business-btn-talk:hover span:last-child {
+    transform: translateX(4px);
 }

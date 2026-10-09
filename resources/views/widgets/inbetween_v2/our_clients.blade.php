@@ -30,7 +30,8 @@
       @foreach($clientCards as $cIndex => $card)
         @php
           $cardSlug = !empty($card['card_id']) ? \Illuminate\Support\Str::slug($card['card_id']) : 'card-'.$cIndex;
-          $cImg = !empty($card['image']) ? (str_starts_with($card['image'], 'http') || str_starts_with($card['image'], '/') ? $card['image'] : asset($card['image'])) : '';
+          $cardImgRaw = is_array($card['image'] ?? null) ? ($card['image']['url'] ?? '') : ($card['image'] ?? '');
+          $cImg = !empty($cardImgRaw) ? (str_starts_with($cardImgRaw, 'http') || str_starts_with($cardImgRaw, '/') ? $cardImgRaw : asset($cardImgRaw)) : '';
           $cTitle = $card['title'] ?? '';
           $cDesc = $card['description'] ?? '';
         @endphp

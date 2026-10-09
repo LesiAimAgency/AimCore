@@ -55,7 +55,7 @@ class InbetweenV2HeroWidget extends BaseWidget
                     'name' => 'cta_link',
                     'label' => 'CTA Button Link',
                     'type' => 'text',
-                    'default' => '#inbetween-founder',
+                    'default' => '#contact-modal',
                 ],
                 [
                     'name' => 'logo_white',
@@ -96,7 +96,7 @@ class InbetweenV2HeroWidget extends BaseWidget
             'services' => 'Sales & BD, Market Validation, Market Entry Execution, Local Business Support',
             'description' => 'We help <strong class="font-semibold text-white">Asian SMEs, founders and entrepreneurs</strong> enter and grow in Vietnam.',
             'cta_text' => 'Talk to us',
-            'cta_link' => '#inbetween-founder',
+            'cta_link' => '#contact-modal',
         ], $this->settings);
 
         return view('widgets.inbetween_v2.hero', [

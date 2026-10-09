@@ -8,8 +8,8 @@ class ImageField extends BaseFieldType
     {
         $fieldId = $this->getFieldId($config);
         $name = $config['name'] ?? '';
-        // Escape value for data attribute
-        $escapedValue = htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
+        $strValue = is_array($value) ? ($value['url'] ?? (is_string(reset($value)) ? reset($value) : '')) : (string) ($value ?? '');
+        $escapedValue = htmlspecialchars($strValue, ENT_QUOTES, 'UTF-8');
         $assetBase = rtrim(asset('/'), '/');
 
         // Use data attribute and x-init to safely pass the value

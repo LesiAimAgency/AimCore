@@ -766,10 +766,7 @@
   function openMediaManager(fieldKey) {
     currentMediaField = fieldKey;
     
-    // Get project code from URL
-    const pathParts = window.location.pathname.split('/');
-    const projectCode = pathParts[1]; // HD005
-    const mediaUrl = `/${projectCode}/admin/media/list`;
+    const mediaUrl = '{{ request()->route("projectCode") ? url(request()->route("projectCode") . "/admin/media/list") : (session("current_project")?->code ? url(session("current_project")->code . "/admin/media/list") : url("admin/media/list")) }}';
     
     // Create media manager modal
     const modal = document.getElementById('mediaManagerModal');
