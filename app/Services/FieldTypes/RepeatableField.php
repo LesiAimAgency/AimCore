@@ -13,9 +13,28 @@ class RepeatableField extends BaseFieldType
         $maxItems = $config['max_items'] ?? 10;
         $minItems = $config['min_items'] ?? 0;
         $subFields = $config['fields'] ?? [];
+        $allowAdd = $config['allow_add'] ?? true;
+        $allowDelete = $config['allow_delete'] ?? true;
+
+        // If items are empty and default is provided, use default
+        if (empty($items) && ! empty($config['default']) && \is_array($config['default'])) {
+            $items = $config['default'];
+        } elseif (! $allowAdd && ! empty($config['default']) && \is_array($config['default'])) {
+            // When add is disabled and default exists, enforce fixed items structure
+            $defaultItems = array_values($config['default']);
+            $currentValues = array_values($items);
+            $merged = [];
+            $count = max(\count($defaultItems), (int) $minItems);
+            for ($i = 0; $i < $count; $i++) {
+                $def = $defaultItems[$i] ?? [];
+                $cur = $currentValues[$i] ?? [];
+                $merged[] = array_merge($def, \is_array($cur) ? $cur : []);
+            }
+            $items = $merged;
+        }
 
         // Generate template for JavaScript
-        $templateHtml = $this->renderRepeatableItem($config['name'], '__INDEX__', [], $subFields);
+        $templateHtml = $allowAdd ? $this->renderRepeatableItem($config['name'], '__INDEX__', [], $subFields, $allowDelete) : '';
         $templateHtml = str_replace(["\n", "\r"], ['', ''], $templateHtml);
         $templateEncoded = htmlspecialchars($templateHtml, ENT_QUOTES, 'UTF-8');
 
@@ -25,30 +44,32 @@ class RepeatableField extends BaseFieldType
         $fieldHtml .= "<div id=\"{$fieldId}_container\" class=\"space-y-4 mb-4\" data-template=\"{$templateEncoded}\">";
 
         foreach ($items as $index => $item) {
-            $fieldHtml .= $this->renderRepeatableItem($config['name'], $index, $item, $subFields);
+            $fieldHtml .= $this->renderRepeatableItem($config['name'], $index, $item, $subFields, $allowDelete);
         }
 
         // Add empty item if no items exist and min_items > 0
         if (empty($items) && $minItems > 0) {
             for ($i = 0; $i < $minItems; $i++) {
-                $fieldHtml .= $this->renderRepeatableItem($config['name'], $i, [], $subFields);
+                $fieldHtml .= $this->renderRepeatableItem($config['name'], $i, [], $subFields, $allowDelete);
             }
         }
 
         $fieldHtml .= '</div>';
 
-        // Add button - uses global function defined in layout
-        $fieldHtml .= "<button type=\"button\" onclick=\"addRepeatableItem('{$fieldId}', '{$config['name']}')\" class=\"inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors\">";
-        $fieldHtml .= '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>';
-        $fieldHtml .= 'Thêm mục';
-        $fieldHtml .= '</button>';
+        // Add button - only if allow_add is true
+        if ($allowAdd) {
+            $fieldHtml .= "<button type=\"button\" onclick=\"addRepeatableItem('{$fieldId}', '{$config['name']}')\" class=\"inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors\">";
+            $fieldHtml .= '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>';
+            $fieldHtml .= 'Thêm mục';
+            $fieldHtml .= '</button>';
+        }
 
         $fieldHtml .= '</div>';
 
         return $this->renderFieldWrapper($config, $fieldHtml);
     }
 
-    protected function renderRepeatableItem(string $fieldName, int|string $index, array $item, array $subFields): string
+    protected function renderRepeatableItem(string $fieldName, int|string $index, array $item, array $subFields, bool $allowDelete = true): string
     {
         $displayIndex = \is_int($index) ? $index + 1 : $index;
         $isExpanded = ($index === 0 || $index === '0') ? 'true' : 'false';
@@ -59,12 +80,20 @@ class RepeatableField extends BaseFieldType
         $html .= '<div class="flex justify-between items-center p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors" @click="expanded = !expanded">';
         $html .= '<h4 class="font-semibold text-gray-700 flex items-center gap-2">';
         $html .= '<svg class="w-4 h-4 transition-transform duration-200" :class="expanded ? \'rotate-180\' : \'\'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>';
-        $html .= "Mục {$displayIndex}</h4>";
+        $itemLabel = "Mục {$displayIndex}";
+        if (! empty($item['text'])) {
+            $itemLabel .= ' <span class="text-xs font-normal text-gray-500">('.htmlspecialchars((string) $item['text'], ENT_QUOTES, 'UTF-8').')</span>';
+        } elseif (! empty($item['title'])) {
+            $itemLabel .= ' <span class="text-xs font-normal text-gray-500">('.htmlspecialchars((string) $item['title'], ENT_QUOTES, 'UTF-8').')</span>';
+        }
+        $html .= "{$itemLabel}</h4>";
 
-        $html .= '<button type="button" onclick="removeRepeatableItem(this)" @click.stop class="inline-flex items-center gap-1 text-red-600 hover:text-red-800 text-sm font-medium transition-colors bg-white px-2 py-1 rounded border border-red-200 shadow-sm">';
-        $html .= '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>';
-        $html .= 'Xoá';
-        $html .= '</button>';
+        if ($allowDelete) {
+            $html .= '<button type="button" onclick="removeRepeatableItem(this)" @click.stop class="inline-flex items-center gap-1 text-red-600 hover:text-red-800 text-sm font-medium transition-colors bg-white px-2 py-1 rounded border border-red-200 shadow-sm">';
+            $html .= '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>';
+            $html .= 'Xoá';
+            $html .= '</button>';
+        }
         $html .= '</div>';
 
         // Body (Collapsible)

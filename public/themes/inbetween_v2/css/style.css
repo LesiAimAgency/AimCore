@@ -7026,14 +7026,18 @@ html {
 
 #inbetween-hero .intro-title-gradient,
 #inbetween-intro .intro-title-gradient {
-    color: #EC310B;
-    background-image: linear-gradient(180deg, #EC310B 0%, #F1791C 100%);
+    color: #FFFFFF;
+    background-image: linear-gradient(180deg,
+        #FFFFFF var(--grad-top, 100%),
+        #EC310B var(--grad-bottom, 100%),
+        #F1791C 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     display: inline-block;
     transition: filter .35s ease;
-    will-change: letter-spacing, filter
+    will-change: --grad-top, --grad-bottom, letter-spacing, filter
 }
 
 #inbetween-hero #hero-bg-layer,

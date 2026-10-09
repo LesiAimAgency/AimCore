@@ -15,13 +15,17 @@
   #inbetween-hero .intro-title-gradient,
   #inbetween-intro .intro-title-gradient,
   .intro-title-gradient {
-    color: #EC310B !important;
-    background-image: linear-gradient(180deg, #EC310B 0%, #F1791C 100%) !important;
+    color: #FFFFFF !important;
+    background-image: linear-gradient(180deg,
+      #FFFFFF var(--grad-top, 100%),
+      #EC310B var(--grad-bottom, 100%),
+      #F1791C 100%
+    ) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
     display: inline-block;
-    will-change: letter-spacing;
+    will-change: --grad-top, --grad-bottom, letter-spacing;
     filter: none !important;
     text-shadow: none !important;
     box-shadow: none !important;

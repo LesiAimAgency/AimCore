@@ -60,7 +60,7 @@
 
             $drawerItems = $headerMenu && $headerMenu->items->isNotEmpty() ? $headerMenu->items : null;
         @endphp
-        <ul class="flex flex-col items-start justify-start text-left pt-2 space-y-1.5 sm:space-y-2">
+        <ul class="flex flex-col items-start justify-start text-left pt-2 space-y-1.5 sm:space-y-2 h-[700px] " style="justify-content:center;">
           @if($drawerItems)
             @foreach($drawerItems as $dItem)
               <li class="w-full text-left"><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all text-left" href="{{ $dItem->url }}" target="{{ $dItem->target ?? '_self' }}" data-nav-link>{{ strtoupper($dItem->title) }}</a></li>

@@ -538,6 +538,8 @@
                 $subFields = $field['fields'] ?? [];
                 $buttonLabel = $field['button_label'] ?? 'Thêm mục';
                 $layout = $field['layout'] ?? 'block';
+                $allowAdd = $field['allow_add'] ?? true;
+                $allowDelete = $field['allow_delete'] ?? true;
             @endphp
             <div class="border border-gray-200 rounded-lg overflow-hidden">
                 {{-- Items --}}
@@ -625,6 +627,7 @@
                                 </div>
                                 
                                 {{-- Remove Button --}}
+                                @if($allowDelete)
                                 <button type="button" 
                                     wire:click="removeRepeaterItem('{{ $fieldName }}', {{ $itemIndex }})"
                                     class="p-2 text-red-500 hover:bg-red-100 rounded-lg transition">
@@ -632,12 +635,14 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                     </svg>
                                 </button>
+                                @endif
                             </div>
                         </div>
                     @endforeach
                 </div>
                 
                 {{-- Add Button --}}
+                @if($allowAdd)
                 <button type="button" 
                     wire:click="addRepeaterItem('{{ $fieldName }}')"
                     class="w-full py-3 bg-white border-t border-gray-200 text-blue-600 hover:bg-blue-50 transition flex items-center justify-center gap-2">
@@ -646,6 +651,7 @@
                     </svg>
                     {{ $buttonLabel }}
                 </button>
+                @endif
             </div>
             @break
 
