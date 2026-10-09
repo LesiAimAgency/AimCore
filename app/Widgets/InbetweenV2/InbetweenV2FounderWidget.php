@@ -74,7 +74,7 @@ class InbetweenV2FounderWidget extends BaseWidget
                 [
                     'name' => 'detail_exp_desc',
                     'label' => 'Drawer Section 1: Nội dung kinh nghiệm (HTML)',
-                    'type' => 'textarea',
+                    'type' => 'ckeditor',
                     'default' => 'AiRu is a driven international professional with <strong class="font-semibold text-[#131313]">14 years of experience across Europe, the Arab region, Africa and Asia</strong>, specializing in <strong class="font-semibold text-[#131313]">cross-border partnerships and business development</strong>. She navigates nuanced intercultural environments to build high-trust commercial pathways between emerging and developed ecosystems.',
                 ],
                 [

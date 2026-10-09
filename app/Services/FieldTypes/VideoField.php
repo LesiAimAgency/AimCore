@@ -14,7 +14,9 @@ class VideoField extends BaseFieldType
 
         $previewHtml = '';
         if (! empty($value)) {
-            $previewHtml = "<div class=\"mb-3\"><video src=\"{$currentValue}\" class=\"w-full max-w-md h-auto rounded-lg border-2 border-gray-200 shadow-sm\" controls></video></div>";
+            $videoSrc = (str_starts_with($value, 'http') || str_starts_with($value, '//') || str_starts_with($value, 'data:')) ? $value : asset($value);
+            $videoSrcEscaped = htmlspecialchars($videoSrc, ENT_QUOTES, 'UTF-8');
+            $previewHtml = "<div class=\"mb-3\"><video src=\"{$videoSrcEscaped}\" class=\"w-full max-w-md h-auto rounded-lg border-2 border-gray-200 shadow-sm\" controls></video></div>";
         }
 
         $fieldHtml = '<div class="space-y-3" x-data>';

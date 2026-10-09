@@ -1,6 +1,8 @@
 @php
-  $logoWhite = !empty($settings['logo_white']) ? (str_starts_with($settings['logo_white'], 'http') || str_starts_with($settings['logo_white'], '/') ? $settings['logo_white'] : asset($settings['logo_white'])) : asset('themes/inbetween_v2/images/Logo-white.svg');
-  $logoDark = !empty($settings['logo_dark']) ? (str_starts_with($settings['logo_dark'], 'http') || str_starts_with($settings['logo_dark'], '/') ? $settings['logo_dark'] : asset($settings['logo_dark'])) : asset('themes/inbetween_v2/images/Logo.svg');
+  $rawLogoWhite = is_array($settings['logo_white'] ?? null) ? ($settings['logo_white']['url'] ?? $settings['logo_white'][0] ?? '') : ($settings['logo_white'] ?? '');
+  $logoWhite = !empty($rawLogoWhite) ? (str_starts_with($rawLogoWhite, 'http') || str_starts_with($rawLogoWhite, '/') ? $rawLogoWhite : asset($rawLogoWhite)) : asset('themes/inbetween_v2/images/Logo-white.svg');
+  $rawLogoDark = is_array($settings['logo_dark'] ?? null) ? ($settings['logo_dark']['url'] ?? $settings['logo_dark'][0] ?? '') : ($settings['logo_dark'] ?? '');
+  $logoDark = !empty($rawLogoDark) ? (str_starts_with($rawLogoDark, 'http') || str_starts_with($rawLogoDark, '/') ? $rawLogoDark : asset($rawLogoDark)) : asset('themes/inbetween_v2/images/Logo.svg');
   $connectText = $settings['connect_text'] ?? "LET'S CONNECT";
   $connectLink = $settings['connect_link'] ?? '#contact-modal';
   $langEn = $settings['lang_en_label'] ?? 'EN';
@@ -14,14 +16,15 @@
   #inbetween-intro .intro-title-gradient,
   .intro-title-gradient {
     color: #fff !important;
-    background-image: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF var(--grad-top, 100%), #EC460B var(--grad-bottom, 100%), #EC460B 100%) !important;
+    background-image: linear-gradient(180deg, #FFFFFF 0%, #EC310B 51%, #F1791C 97%) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
     display: inline-block;
-    transition: filter .35s ease;
-    will-change: --grad-top, --grad-bottom, letter-spacing, filter;
-    filter: drop-shadow(0 0 var(--grad-glow, 0px) rgba(236, 70, 11, var(--grad-glow-alpha, 0)));
+    will-change: letter-spacing;
+    filter: none !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
   }
   #wecanhelp-text {
     font-size: 52px !important;

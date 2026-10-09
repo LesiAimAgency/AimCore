@@ -10,20 +10,21 @@ class GalleryField extends BaseFieldType
         $name = $config['name'] ?? '';
         $images = \is_array($value) ? $value : [];
         $maxItems = $config['max_items'] ?? 10;
+        $assetBase = rtrim(asset('/'), '/');
 
         // Properly escape JSON for HTML attribute - use htmlspecialchars on the JSON string
         $imagesJson = htmlspecialchars(json_encode($images, JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
 
         // Use x-init to parse the JSON data instead of inline in x-data
-        $fieldHtml = "<div class=\"gallery-field\" data-max-items=\"{$maxItems}\" data-images=\"{$imagesJson}\" x-data=\"{ images: [], maxItems: {$maxItems}, fieldName: '{$name}' }\" x-init=\"images = JSON.parse(\$el.dataset.images || '[]')\" @media-selected.window=\"if (\$event.detail.field === fieldName) { const urls = Array.isArray(\$event.detail.urls) ? \$event.detail.urls : [\$event.detail.urls]; urls.forEach(url => { if (images.length < maxItems) images.push(url); }); }\">";
+        $fieldHtml = "<div class=\"gallery-field\" data-max-items=\"{$maxItems}\" data-images=\"{$imagesJson}\" x-data=\"{ images: [], maxItems: {$maxItems}, fieldName: '{$name}', formatUrl(url) { if (!url) return ''; url = url.toString().trim(); if (!url) return ''; if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//') || url.startsWith('data:') || url.startsWith('blob:')) return url; return '{$assetBase}/' + url.replace(/^\/+/,''); } }\" x-init=\"images = JSON.parse(\$el.dataset.images || '[]')\" @media-selected.window=\"if (\$event.detail.field === fieldName) { const urls = Array.isArray(\$event.detail.urls) ? \$event.detail.urls : [\$event.detail.urls]; urls.forEach(url => { if (images.length < maxItems) images.push(url); }); }\">";
 
         // Image container
         $fieldHtml .= '<div class="grid grid-cols-5 gap-3 mb-4">';
         $fieldHtml .= '<template x-for="(image, index) in images" :key="index">';
         $fieldHtml .= '<div class="relative group aspect-square">';
-        $fieldHtml .= '<img :src="image" class="w-full h-full object-cover rounded-lg border-2 border-gray-200">';
+        $fieldHtml .= '<img :src="formatUrl(image)" class="w-full h-full object-cover rounded-lg border-2 border-gray-200">';
         $fieldHtml .= '<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-lg flex items-center justify-center gap-1">';
-        $fieldHtml .= '<a :href="image" target="_blank" class="p-1.5 bg-white rounded-full hover:bg-gray-100">';
+        $fieldHtml .= '<a :href="formatUrl(image)" target="_blank" class="p-1.5 bg-white rounded-full hover:bg-gray-100">';
         $fieldHtml .= '<svg class="w-3 h-3 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>';
         $fieldHtml .= '</a>';
         $fieldHtml .= '<button type="button" @click="images.splice(index, 1)" class="p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600">';

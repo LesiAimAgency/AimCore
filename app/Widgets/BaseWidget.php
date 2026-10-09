@@ -282,7 +282,7 @@ abstract class BaseWidget
             'fields' => 'required|array',
             'fields.*.name' => 'required|string',
             'fields.*.label' => 'required|string',
-            'fields.*.type' => 'required|string|in:text,textarea,wysiwyg,image,gallery,video,select,checkbox,repeatable,nested,url,number,email,date,color,range,relationship,post_object,taxonomy',
+            'fields.*.type' => 'required|string|in:text,textarea,wysiwyg,ckeditor,image,gallery,video,select,checkbox,repeatable,nested,url,number,email,date,color,range,relationship,post_object,taxonomy',
             'fields.*.required' => 'boolean',
             'fields.*.default' => 'nullable',
             'fields.*.validation' => 'string',

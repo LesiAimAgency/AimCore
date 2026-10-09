@@ -41,8 +41,8 @@ class InbetweenV2HeroWidget extends BaseWidget
                 [
                     'name' => 'description',
                     'label' => 'Description (HTML allowed)',
-                    'type' => 'textarea',
-                    'rows' => 3,
+                    'type' => 'ckeditor',
+                    'rows' => 4,
                     'default' => 'We help <strong class="font-semibold text-white">Asian SMEs, founders and entrepreneurs</strong> enter and grow in Vietnam.',
                 ],
                 [
@@ -60,13 +60,13 @@ class InbetweenV2HeroWidget extends BaseWidget
                 [
                     'name' => 'logo_white',
                     'label' => 'Header Logo White (Fallback)',
-                    'type' => 'text',
+                    'type' => 'image',
                     'default' => 'themes/inbetween_v2/images/Logo-white.svg',
                 ],
                 [
                     'name' => 'logo_dark',
                     'label' => 'Header Logo Dark (Fallback)',
-                    'type' => 'text',
+                    'type' => 'image',
                     'default' => 'themes/inbetween_v2/images/Logo.svg',
                 ],
                 [

@@ -27,8 +27,13 @@
 
     <div class="mobile-nav-overlay theme-inbetween-overlay" id="mobile-nav-overlay" aria-hidden="true"></div>
     <nav class="mobile-nav-drawer theme-inbetween-drawer" id="mobile-nav-drawer" aria-label="Inbetween Navigation Menu" role="dialog" aria-modal="true">
-      <div class="flex items-center justify-start pb-8">
+      <div class="flex items-center justify-between pb-6 sm:pb-8">
         <button class="inline-flex items-center gap-3 text-xs uppercase font-bold text-neutral-800 hover:text-[#EC460B] transition-colors cursor-pointer py-1 group focus:outline-none" id="close-drawer-btn" type="button" aria-label="Đóng menu"><span class="w-6 h-[1.5px] bg-neutral-800 group-hover:w-8 group-hover:bg-[#EC460B] transition-all"></span><span class="tracking-wider">Close</span></button>
+        <div class="flex items-center gap-1.5 text-xs font-semibold tracking-wider uppercase inbetween-drawer-lang">
+          <span class="inbetween-lang-btn inbetween-lang-en active cursor-pointer text-[#131313] hover:text-[#EC460B] transition-colors" data-lang="en">EN</span>
+          <span class="text-neutral-400">|</span>
+          <span class="inbetween-lang-btn inbetween-lang-zh cursor-pointer text-neutral-400 hover:text-[#EC460B] transition-colors" data-lang="zh">汉语</span>
+        </div>
       </div>
         @php
             $currentProj = function_exists('current_project') ? current_project() : (request()->attributes->get('project') ?? session('current_project'));
@@ -55,38 +60,35 @@
 
             $drawerItems = $headerMenu && $headerMenu->items->isNotEmpty() ? $headerMenu->items : null;
         @endphp
-        <ul class="space-y-5 pt-2">
+        <ul class="flex flex-col items-start justify-start text-left pt-2 space-y-1.5 sm:space-y-2">
           @if($drawerItems)
             @foreach($drawerItems as $dItem)
-              <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="{{ $dItem->url }}" target="{{ $dItem->target ?? '_self' }}" data-nav-link>{{ strtoupper($dItem->title) }}</a></li>
+              <li class="w-full text-left"><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all text-left" href="{{ $dItem->url }}" target="{{ $dItem->target ?? '_self' }}" data-nav-link>{{ strtoupper($dItem->title) }}</a></li>
             @endforeach
           @else
-            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-intro" data-nav-link>HOME</a></li>
-            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-hero" data-nav-link>ABOUT</a></li>
-            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-what-we-do" data-nav-link>WHAT WE DO</a></li>
-            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-where-we-focus" data-nav-link>WHERE WE FOCUS</a></li>
-            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-founder" data-nav-link>FOUNDER</a></li>
-            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-our-clients" data-nav-link>OUR CLIENTS</a></li>
-            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-business" data-nav-link>BEYOND BUSINESS</a></li>
-            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-business" data-nav-link>MEDIA</a></li>
-            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-footer" data-nav-link>CONTACT</a></li>
+            <li class="w-full text-left"><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all text-left" href="#inbetween-intro" data-nav-link>HOME</a></li>
+            <li class="w-full text-left"><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all text-left" href="#inbetween-hero" data-nav-link>ABOUT</a></li>
+            <li class="w-full text-left"><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all text-left" href="#inbetween-what-we-do" data-nav-link>WHAT WE DO</a></li>
+            <li class="w-full text-left"><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all text-left" href="#inbetween-where-we-focus" data-nav-link>WHERE WE FOCUS</a></li>
+            <li class="w-full text-left"><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all text-left" href="#inbetween-founder" data-nav-link>FOUNDER</a></li>
+            <li class="w-full text-left"><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all text-left" href="#inbetween-our-clients" data-nav-link>OUR CLIENTS</a></li>
+            <li class="w-full text-left"><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all text-left" href="#inbetween-business" data-nav-link>BEYOND BUSINESS</a></li>
+            <li class="w-full text-left"><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all text-left" href="#inbetween-business" data-nav-link>MEDIA</a></li>
+            <li class="w-full text-left"><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all text-left" href="#inbetween-footer" data-nav-link>CONTACT</a></li>
           @endif
         </ul>
-        <div class="pt-3 flex items-center justify-between gap-4">
+
+      <div class="mt-auto pt-4 space-y-5 font-sans inbetween-drawer-footer !border-t-0" style="border-top: none !important;">
+        <div>
           <a class="btn-drawer-outline btn-drawer-inbetween inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-[#131313] text-[#131313] hover:bg-[#EC460B] hover:border-[#EC460B] hover:text-white transition-all text-xs font-bold uppercase tracking-wider cursor-pointer" href="#contact-modal" data-contact-modal-toggle><span>LET'S CONNECT</span><span>&rarr;</span></a>
-          <div class="flex items-center gap-1.5 text-xs font-semibold tracking-wider uppercase inbetween-drawer-lang">
-            <span class="inbetween-lang-btn inbetween-lang-en active cursor-pointer text-[#131313] hover:text-[#EC460B] transition-colors" data-lang="en">EN</span>
-            <span class="text-neutral-400">|</span>
-            <span class="inbetween-lang-btn inbetween-lang-zh cursor-pointer text-neutral-400 hover:text-[#EC460B] transition-colors" data-lang="zh">汉语</span>
-          </div>
         </div>
-      </div>
-      <div class="pt-8 mt-auto border-t border-neutral-200/80 space-y-3.5 font-sans inbetween-drawer-footer">
-        <div class="text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-neutral-400 contact-label">CONTACT INFORMATION</div>
-        <div class="space-y-2.5 text-xs sm:text-sm text-neutral-700 contact-list">
-          <div class="flex items-center gap-3 contact-item"><i class="fa-regular fa-envelope text-neutral-800 text-sm shrink-0"></i><a class="hover:text-[#EC460B] transition-colors" href="mailto:contact@inbetween.vn">contact@inbetween.vn</a></div>
-          <div class="flex items-center gap-3 contact-item"><i class="fa-solid fa-phone text-neutral-800 text-xs shrink-0"></i><a class="hover:text-[#EC460B] transition-colors" href="tel:+84900000000">+84 90 xxx xxxx</a></div>
-          <div class="flex items-start gap-3 contact-item"><i class="fa-solid fa-location-dot text-neutral-800 text-xs shrink-0 mt-0.5"></i><span>Ho Chi Minh City, Vietnam</span></div>
+        <div class="space-y-3.5">
+          <div class="text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-neutral-400 contact-label">CONTACT INFORMATION</div>
+          <div class="space-y-2.5 text-xs sm:text-sm text-neutral-700 contact-list">
+            <div class="flex items-center gap-3 contact-item"><i class="fa-regular fa-envelope text-neutral-800 text-sm shrink-0"></i><a class="hover:text-[#EC460B] transition-colors" href="mailto:contact@inbetween.vn">contact@inbetween.vn</a></div>
+            <div class="flex items-center gap-3 contact-item"><i class="fa-solid fa-phone text-neutral-800 text-xs shrink-0"></i><a class="hover:text-[#EC460B] transition-colors" href="tel:+84900000000">+84 90 xxx xxxx</a></div>
+            <div class="flex items-start gap-3 contact-item"><i class="fa-solid fa-location-dot text-neutral-800 text-xs shrink-0 mt-0.5"></i><span>Ho Chi Minh City, Vietnam</span></div>
+          </div>
         </div>
       </div>
     </nav>

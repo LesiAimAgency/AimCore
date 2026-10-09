@@ -68,7 +68,7 @@ class InbetweenV2BusinessWidget extends BaseWidget
                 [
                     'name' => 'description',
                     'label' => 'Description (HTML allowed)',
-                    'type' => 'textarea',
+                    'type' => 'ckeditor',
                     'default' => 'In Between Asia is also building a <strong class="font-semibold text-[#131313]">growing media platform, business network </strong>connecting people, ideas and opportunities across Asia.',
                 ],
                 [

@@ -3,7 +3,8 @@
     <div class="founder-stage state-overview w-full h-full" id="founder-stage">
       <div class="founder-grid grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
         @php
-          $portraitUrl = !empty($settings['founder_portrait']) ? (str_starts_with($settings['founder_portrait'], 'http') || str_starts_with($settings['founder_portrait'], '/') ? $settings['founder_portrait'] : asset($settings['founder_portrait'])) : asset('themes/inbetween_v2/images/founder-airu-portrait.png');
+          $rawPortrait = is_array($settings['founder_portrait'] ?? null) ? ($settings['founder_portrait']['url'] ?? $settings['founder_portrait'][0] ?? '') : ($settings['founder_portrait'] ?? '');
+          $portraitUrl = !empty($rawPortrait) ? (str_starts_with($rawPortrait, 'http') || str_starts_with($rawPortrait, '/') ? $rawPortrait : asset($rawPortrait)) : asset('themes/inbetween_v2/images/founder-airu-portrait.png');
           $founderName = $settings['founder_name'] ?? 'AIRU';
           $founderRole = $settings['founder_role'] ?? 'Founder of INBETWEEN';
           $quote1 = $settings['quote_line1'] ?? 'Built between cultures.';
@@ -47,7 +48,8 @@
                 </p>
               </div>
               @php
-                $stageImgUrl = !empty($settings['detail_exp_image']) ? (str_starts_with($settings['detail_exp_image'], 'http') || str_starts_with($settings['detail_exp_image'], '/') ? $settings['detail_exp_image'] : asset($settings['detail_exp_image'])) : asset('themes/inbetween_v2/images/founder-airu-stage.png');
+                $rawStageImg = is_array($settings['detail_exp_image'] ?? null) ? ($settings['detail_exp_image']['url'] ?? $settings['detail_exp_image'][0] ?? '') : ($settings['detail_exp_image'] ?? '');
+                $stageImgUrl = !empty($rawStageImg) ? (str_starts_with($rawStageImg, 'http') || str_starts_with($rawStageImg, '/') ? $rawStageImg : asset($rawStageImg)) : asset('themes/inbetween_v2/images/founder-airu-stage.png');
               @endphp
               <div class="founder-stage-img relative w-full max-w-[600px] overflow-hidden rounded-xl shadow-xs mt-3"><img class="w-full h-auto aspect-[600/346] object-cover object-center block" src="{{ $stageImgUrl }}" alt="{{ $founderName }} - Stage"></div>
             </div>
@@ -74,7 +76,8 @@
             </div>
             <div class="founder-divider w-full h-[0.5px] bg-[#323232]/20 my-4"></div>
             @php
-              $mediaImgUrl = !empty($settings['media_image']) ? (str_starts_with($settings['media_image'], 'http') || str_starts_with($settings['media_image'], '/') ? $settings['media_image'] : asset($settings['media_image'])) : asset('themes/inbetween_v2/images/image 13.png');
+              $rawMediaImg = is_array($settings['media_image'] ?? null) ? ($settings['media_image']['url'] ?? $settings['media_image'][0] ?? '') : ($settings['media_image'] ?? '');
+              $mediaImgUrl = !empty($rawMediaImg) ? (str_starts_with($rawMediaImg, 'http') || str_starts_with($rawMediaImg, '/') ? $rawMediaImg : asset($rawMediaImg)) : asset('themes/inbetween_v2/images/image 13.png');
             @endphp
             <div class="founder-detail-section space-y-3">
               <h3 class="text-[15px] sm:text-[16px] font-medium text-[#EC460B] uppercase tracking-wider">{{ $settings['media_title'] ?? 'OWN MEDIA PLATFORM WITH 35K+ FOLLOWERS' }}

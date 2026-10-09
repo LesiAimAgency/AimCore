@@ -143,12 +143,16 @@
 
         {{-- IMAGE --}}
         @case('image')
+            @php
+                $imgRaw = $settings[$fieldName] ?? '';
+                $imgSrc = $imgRaw ? ((str_starts_with($imgRaw, 'http') || str_starts_with($imgRaw, '//') || str_starts_with($imgRaw, 'data:')) ? $imgRaw : asset($imgRaw)) : '';
+            @endphp
             <div class="space-y-3">
-                @if(!empty($settings[$fieldName]))
+                @if(!empty($imgRaw))
                     <div class="relative inline-block group">
-                        <img src="{{ $settings[$fieldName] }}" class="w-40 h-40 object-cover rounded-lg border-2 border-gray-200 shadow-sm">
+                        <img src="{{ $imgSrc }}" class="w-40 h-40 object-cover rounded-lg border-2 border-gray-200 shadow-sm">
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-lg flex items-center justify-center gap-2">
-                            <a href="{{ $settings[$fieldName] }}" target="_blank" class="p-2 bg-white rounded-full hover:bg-gray-100">
+                            <a href="{{ $imgSrc }}" target="_blank" class="p-2 bg-white rounded-full hover:bg-gray-100">
                                 <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             </a>
                             <button type="button" 
@@ -559,10 +563,14 @@
                                                     rows="2"
                                                     class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
                                             @elseif($subField['type'] === 'image')
+                                                @php
+                                                    $repImgRaw = $settings[$fieldName][$itemIndex][$subField['name']] ?? '';
+                                                    $repImgSrc = $repImgRaw ? ((str_starts_with($repImgRaw, 'http') || str_starts_with($repImgRaw, '//') || str_starts_with($repImgRaw, 'data:')) ? $repImgRaw : asset($repImgRaw)) : '';
+                                                @endphp
                                                 <div class="space-y-2">
-                                                    @if(!empty($settings[$fieldName][$itemIndex][$subField['name']]))
+                                                    @if(!empty($repImgRaw))
                                                         <div class="relative w-24 h-24 bg-gray-100 rounded-lg border border-gray-200 overflow-hidden">
-                                                            <img src="{{ $settings[$fieldName][$itemIndex][$subField['name']] }}" class="w-full h-full object-cover">
+                                                            <img src="{{ $repImgSrc }}" class="w-full h-full object-cover">
                                                             <button type="button" 
                                                                 wire:click="$set('settings.{{ $fieldName }}.{{ $itemIndex }}.{{ $subField['name'] }}', '')"
                                                                 class="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition">

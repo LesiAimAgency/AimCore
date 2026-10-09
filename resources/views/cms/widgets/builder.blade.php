@@ -360,7 +360,80 @@
 </div>
 @endsection
 
+@push('styles')
+<link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css">
+<style>
+    .ck-editor__editable {
+        min-height: 140px;
+        max-height: 380px;
+        font-size: 14px;
+        color: #1f2937;
+        background-color: #ffffff;
+    }
+    .ck-editor__editable:focus {
+        border-color: #3b82f6 !important;
+    }
+    /* Ensure CKEditor balloon panel & dropdown popups appear above modal drawer (z-index 100) */
+    .ck.ck-balloon-panel,
+    .ck.ck-dropdown__panel,
+    .ck-body-wrapper {
+        z-index: 99999 !important;
+    }
+</style>
+@endpush
+
 @push('scripts')
+<script type="importmap">
+{
+    "imports": {
+        "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.js",
+        "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/43.3.1/"
+    }
+}
+</script>
+<script type="module">
+import {
+    ClassicEditor,
+    Essentials,
+    Bold,
+    Italic,
+    Font,
+    Paragraph,
+    Heading,
+    Link,
+    List,
+    BlockQuote,
+    Image,
+    ImageToolbar,
+    ImageUpload,
+    ImageCaption,
+    ImageStyle,
+    ImageResize,
+    Table,
+    TableToolbar,
+    MediaEmbed,
+    Alignment,
+    Indent,
+    Underline,
+    Strikethrough,
+    Code,
+    Subscript,
+    Superscript,
+    RemoveFormat,
+    SourceEditing,
+    GeneralHtmlSupport
+} from 'ckeditor5';
+
+window.ClassicEditor = ClassicEditor;
+window.CKEditorPlugins = [
+    Essentials, Bold, Italic, Font, Paragraph, Heading, Link, List, BlockQuote,
+    Image, ImageToolbar, ImageUpload, ImageCaption, ImageStyle, ImageResize,
+    Table, TableToolbar, MediaEmbed, Alignment, Indent,
+    Underline, Strikethrough, Code, Subscript, Superscript, RemoveFormat,
+    SourceEditing, GeneralHtmlSupport
+];
+window.dispatchEvent(new CustomEvent('ckeditor-module-ready'));
+</script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <script>
 (function () {
@@ -395,6 +468,116 @@
     let drawerWidgetId   = null;
     let drawerWidgetType = null;
     let drawerWidgetArea = null;
+
+    // ── CKEDITOR INTEGRATION ─────────────────────────────────────────
+    window.activeCKEditors = window.activeCKEditors || {};
+
+    window.destroyCKEditors = function () {
+        if (window.activeCKEditors) {
+            Object.keys(window.activeCKEditors).forEach(function (key) {
+                try {
+                    if (window.activeCKEditors[key]) {
+                        window.activeCKEditors[key].destroy();
+                    }
+                } catch (e) {}
+                delete window.activeCKEditors[key];
+            });
+        }
+    };
+
+    window.syncCKEditors = function () {
+        if (window.activeCKEditors) {
+            Object.keys(window.activeCKEditors).forEach(function (key) {
+                try {
+                    var inst = window.activeCKEditors[key];
+                    var textarea = document.getElementById(key);
+                    if (inst && textarea) {
+                        textarea.value = inst.getData();
+                    }
+                } catch (e) {}
+            });
+        }
+    };
+
+    window.initCKEditor = function (container, attempts) {
+        attempts = attempts || 0;
+        container = container || document.getElementById('drawer-body') || document;
+
+        if (!window.ClassicEditor || !window.CKEditorPlugins) {
+            if (attempts < 25) {
+                setTimeout(function () {
+                    window.initCKEditor(container, attempts + 1);
+                }, 150);
+            }
+            return;
+        }
+
+        var targets = container.querySelectorAll('.ckeditor-editor, textarea.ckeditor, [data-editor="ckeditor"]');
+        targets.forEach(function (el) {
+            if (!el.id) {
+                el.id = 'ckeditor_' + Math.random().toString(36).substring(2, 9);
+            }
+            if (window.activeCKEditors[el.id]) {
+                return;
+            }
+
+            var minHeight = el.getAttribute('data-height') || '140px';
+
+            window.ClassicEditor
+                .create(el, {
+                    plugins: window.CKEditorPlugins,
+                    toolbar: {
+                        items: [
+                            'undo', 'redo', '|',
+                            'sourceEditing', '|',
+                            'heading', '|',
+                            'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+                            'bold', 'italic', 'underline', 'strikethrough', '|',
+                            'alignment', '|',
+                            'bulletedList', 'numberedList', '|',
+                            'link', 'insertTable', 'blockQuote', '|',
+                            'removeFormat'
+                        ],
+                        shouldNotGroupWhenFull: true
+                    },
+                    heading: {
+                        options: [
+                            { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                            { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                            { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                            { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
+                        ]
+                    },
+                    htmlSupport: {
+                        allow: [
+                            {
+                                name: /.*/,
+                                attributes: true,
+                                classes: true,
+                                styles: true
+                            }
+                        ]
+                    }
+                })
+                .then(function (editor) {
+                    window.activeCKEditors[el.id] = editor;
+
+                    var editable = editor.ui.view.editable.element;
+                    if (editable) {
+                        editable.style.minHeight = minHeight;
+                    }
+
+                    editor.model.document.on('change:data', function () {
+                        el.value = editor.getData();
+                        el.dispatchEvent(new Event('input', { bubbles: true }));
+                        el.dispatchEvent(new Event('change', { bubbles: true }));
+                    });
+                })
+                .catch(function (err) {
+                    console.error('CKEditor init error on #' + el.id, err);
+                });
+        });
+    };
     let modalPreviewTimer = null;
 
     // ── TOAST ──────────────────────────────────────────────────────
@@ -712,6 +895,9 @@
             if (typeof window.initTinyMCE === 'function') {
                 window.initTinyMCE();
             }
+            if (typeof window.initCKEditor === 'function') {
+                window.initCKEditor(drawerContainer);
+            }
             document.dispatchEvent(new CustomEvent('widget-form-loaded'));
             // Init conditional fields
             initConditionalFields();
@@ -728,6 +914,9 @@
     }
 
     function closeDrawer() {
+        if (typeof window.destroyCKEditors === 'function') {
+            window.destroyCKEditors();
+        }
         var drawer = document.getElementById('config-drawer');
         drawer.classList.add('hidden');
         drawer.classList.remove('flex');
@@ -755,6 +944,10 @@
         var settings = {};
         var drawerBody = document.getElementById('drawer-body');
         if (!drawerBody) return settings;
+
+        if (typeof window.syncCKEditors === 'function') {
+            window.syncCKEditors();
+        }
 
         if (typeof tinymce !== 'undefined') {
             tinymce.triggerSave();

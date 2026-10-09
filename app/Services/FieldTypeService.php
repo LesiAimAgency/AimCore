@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Contracts\FieldTypeInterface;
 use App\Services\FieldTypes\CheckboxField;
+use App\Services\FieldTypes\CkeditorField;
 use App\Services\FieldTypes\ColorField;
 use App\Services\FieldTypes\DateField;
 use App\Services\FieldTypes\DateTimeField;
@@ -42,6 +43,7 @@ class FieldTypeService
         $this->register(new TextField);
         $this->register(new TextareaField);
         $this->register(new WysiwygField);
+        $this->register(new CkeditorField);
         $this->register(new NumberField);
         $this->register(new EmailField);
         $this->register(new UrlField);

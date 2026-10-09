@@ -84,13 +84,13 @@ class InbetweenV2IntroWidget extends BaseWidget
                 [
                     'name' => 'logo_white',
                     'label' => 'Header Logo White',
-                    'type' => 'text',
+                    'type' => 'image',
                     'default' => 'themes/inbetween_v2/images/Logo-white.svg',
                 ],
                 [
                     'name' => 'logo_dark',
                     'label' => 'Header Logo Dark',
-                    'type' => 'text',
+                    'type' => 'image',
                     'default' => 'themes/inbetween_v2/images/Logo.svg',
                 ],
                 [

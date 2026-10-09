@@ -623,6 +623,18 @@ document.querySelectorAll('.dropdown-parent').forEach(parent => {
     });
 });
 
+// Global Media URL Formatter
+window.formatMediaUrl = function(url) {
+    if (!url) return '';
+    url = url.toString().trim();
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//') || url.startsWith('data:') || url.startsWith('blob:')) {
+        return url;
+    }
+    const base = '{{ rtrim(asset('/'), '/') }}';
+    return base + '/' + url.replace(/^\/+/, '');
+};
+
 // Global Repeatable Field Functions (for widget field rendering)
 function addRepeatableItem(fieldId, fieldName) {
     const container = document.getElementById(fieldId + '_container');
@@ -679,6 +691,9 @@ function addRepeatableItem(fieldId, fieldName) {
     // Initialize any new TinyMCE editors
     if (typeof window.initTinyMCE === 'function') {
         window.initTinyMCE();
+    }
+    if (typeof window.initCKEditor === 'function') {
+        window.initCKEditor(newItem);
     }
 
     // Initialize Alpine.js on new content if available

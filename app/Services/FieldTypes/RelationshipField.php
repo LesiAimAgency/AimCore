@@ -31,6 +31,7 @@ class RelationshipField implements FieldTypeInterface
         $currentProject = session('current_project');
         $projectCode = \is_array($currentProject) ? ($currentProject['code'] ?? null) : ($currentProject->code ?? null);
         $apiBase = $projectCode ? "/{$projectCode}/api" : '/api';
+        $assetBase = rtrim(asset('/'), '/');
 
         // Labels based on post type
         $typeLabels = [
@@ -93,7 +94,7 @@ class RelationshipField implements FieldTypeInterface
                             <!-- Thumbnail -->
                             <div class="shrink-0">
                                 <template x-if="item.image">
-                                    <img :src="item.image" class="w-12 h-12 object-cover rounded-lg border">
+                                    <img :src="formatUrl(item.image)" class="w-12 h-12 object-cover rounded-lg border">
                                 </template>
                                 <template x-if="!item.image">
                                     <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center border">
@@ -167,7 +168,7 @@ class RelationshipField implements FieldTypeInterface
                                 </div>
                                 <!-- Thumbnail -->
                                 <template x-if="item.image">
-                                    <img :src="item.image" class="w-10 h-10 object-cover rounded border">
+                                    <img :src="formatUrl(item.image)" class="w-10 h-10 object-cover rounded border">
                                 </template>
                                 <template x-if="!item.image">
                                     <div class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center">
@@ -237,6 +238,14 @@ class RelationshipField implements FieldTypeInterface
                         init() {
                             this.loadInitialItems();
                             this.searchItems();
+                        },
+                        
+                        formatUrl(url) {
+                            if (!url) return '';
+                            url = url.toString().trim();
+                            if (!url) return '';
+                            if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//') || url.startsWith('data:') || url.startsWith('blob:')) return url;
+                            return '{$assetBase}/' + url.replace(/^\/+/,'');
                         },
                         
                         formatPrice(price) {

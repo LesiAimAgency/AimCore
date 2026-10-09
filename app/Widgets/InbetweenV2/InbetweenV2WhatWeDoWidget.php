@@ -44,7 +44,7 @@ class InbetweenV2WhatWeDoWidget extends BaseWidget
                 [
                     'name' => 'description',
                     'label' => 'Description (HTML allowed)',
-                    'type' => 'textarea',
+                    'type' => 'ckeditor',
                     'default' => '<strong class="font-semibold text-[#131313]">Tell us what you want to achieve.</strong> We\'ll help you identify the right next steps and level of local support.',
                 ],
                 [

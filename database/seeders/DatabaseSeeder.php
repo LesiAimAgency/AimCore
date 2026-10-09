@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
             InbetweenThemeSeeder::class,
             InbetweenHomepageMainSeeder::class,
             InbetweenV2WidgetsSeeder::class,
-            InbetweenV2MenuSeeder::class,
             ViettinmartMasterSeeder::class,
             WkcomputerMasterSeeder::class,
             EhenhoMasterSeeder::class,

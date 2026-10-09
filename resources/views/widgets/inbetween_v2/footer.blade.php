@@ -1,5 +1,6 @@
 @php
-    $logoWhite = !empty($settings['logo_white']) ? (str_starts_with($settings['logo_white'], 'http') || str_starts_with($settings['logo_white'], '/') ? $settings['logo_white'] : asset($settings['logo_white'])) : asset('themes/inbetween_v2/images/Logo-white.svg');
+    $rawLogoWhite = is_array($settings['logo_white'] ?? null) ? ($settings['logo_white']['url'] ?? $settings['logo_white'][0] ?? '') : ($settings['logo_white'] ?? '');
+    $logoWhite = !empty($rawLogoWhite) ? (str_starts_with($rawLogoWhite, 'http') || str_starts_with($rawLogoWhite, '/') ? $rawLogoWhite : asset($rawLogoWhite)) : asset('themes/inbetween_v2/images/Logo-white.svg');
     $defaultRotatingWords = [
         ['text' => 'CONNECTIONS'],
         ['text' => 'OPPORTUNITIES'],
@@ -154,76 +155,91 @@
 
   </div>
 
-  <!-- 3. Sub-footer (3 Columns) -->
-  <div class="inbetween-container-1440  mx-auto pt-6 sm:pt-8 z-10 shrink-0" style="padding-left:30px; padding-right:30px">
+  <!-- 3. Sub-footer (Logo & Let's Connect Top Bar, 48px gap to 3 Columns) -->
+  <div class="inbetween-container-1440 mx-auto pt-6 sm:pt-8 z-10 shrink-0" style="padding-left:30px; padding-right:30px">
+    
+    <!-- Top Row: Big Logo (Left) & LET'S CONNECT (Right) -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-12">
+      <a href="#inbetween-intro" class="inline-block transition-opacity hover:opacity-80" aria-label="in • between Logo">
+        <img class="w-[220px] xs:w-[260px] sm:w-[310px] md:w-[350px] lg:w-[362px] max-w-full h-auto object-contain" src="{{ $logoWhite }}" alt="in • between Logo">
+      </a>
+      <a href="{{ $topConnectLink }}"
+         class="inline-flex items-center gap-2.5 text-[13px] font-normal uppercase tracking-wider text-white hover:text-[#EC460B] transition-colors group cursor-pointer border-b border-white hover:border-[#EC460B] pb-1 self-end sm:self-auto"
+         data-contact-modal-toggle>
+        <span>{{ $topConnectText }}</span>
+        <span class="text-[14px] leading-none transition-transform group-hover:translate-x-1">&rarr;</span>
+      </a>
+    </div>
+
+    <!-- Bottom Row: 3 Columns Grid -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
       
-      <!-- Col 1: Logo & Contact For Work -->
-      <div class="md:col-span-4 flex flex-col items-start space-y-2.5">
-        <a href="#inbetween-intro" class="inline-block transition-opacity hover:opacity-80" aria-label="in • between Logo">
-          <img class="h-7 sm:h-8 w-auto object-contain" src="{{ $logoWhite }}" alt="in • between Logo">
-        </a>
-        <div class="pt-1.5 text-xs text-neutral-400 space-y-1">
-          <div class="text-neutral-400 font-normal">Contact for work</div>
-          <div class="text-[13.5px] text-white font-medium">P: {{ $phone }}</div>
-          <div class="text-[13.5px] text-white font-medium">E: <a href="mailto:{{ $email }}" class="hover:text-[#EC460B] transition-colors">{{ $email }}</a></div>
-        </div>
+      <!-- Col 1: Contact For Work -->
+      <div class="md:col-span-4 flex flex-col items-start space-y-1 text-xs text-neutral-400">
+        <div class="font-normal text-neutral-400">Contact for work</div>
+        <div class="text-[13.5px] text-white font-medium">P: {{ $phone }}</div>
+        <div class="text-[13.5px] text-white font-medium">E: <a href="mailto:{{ $email }}" class="hover:text-[#EC460B] transition-colors">{{ $email }}</a></div>
       </div>
 
-      <!-- Col 2: Quick Links -->
-      <div class="md:col-span-4 flex flex-col items-start">
-        <div class="text-xs text-neutral-400 font-normal mb-2.5 tracking-wide">Quick links</div>
-        <div class="grid grid-cols-2 gap-x-10 sm:gap-x-12 gap-y-2 text-[13.5px] text-white font-normal">
-          @php
-            $footerMenu = \App\Models\Menu::withoutGlobalScopes()
-                ->where('project_id', 7)
-                ->where('location', 'footer')
-                ->where('is_active', true)
-                ->with(['items' => fn($q) => $q->withoutGlobalScopes()->where('is_active', true)->whereNull('parent_id')->orderBy('order')])
-                ->first();
-            $fItems = $footerMenu && $footerMenu->items->isNotEmpty() ? $footerMenu->items : null;
-          @endphp
-          @if($fItems)
-            @foreach($fItems as $fi)
-              <a href="{{ $fi->url }}" target="{{ $fi->target ?? '_self' }}" class="hover:text-[#EC460B] transition-colors">{{ $fi->title }}</a>
-            @endforeach
-          @else
-            <a href="#inbetween-hero" class="hover:text-[#EC460B] transition-colors">About Us</a>
-            <a href="#inbetween-business" class="hover:text-[#EC460B] transition-colors">Media</a>
-            <a href="#inbetween-business" class="hover:text-[#EC460B] transition-colors">Beyond Business</a>
-            <a href="#inbetween-footer" class="hover:text-[#EC460B] transition-colors">Contact</a>
-          @endif
-        </div>
-      </div>
-
-      <!-- Col 3: Let's Connect Link, Social Icons & Copyright -->
-      <div class="md:col-span-4 flex flex-col md:items-end text-left md:text-right space-y-3">
-        <a href="{{ $topConnectLink }}" class="inline-flex items-center gap-2 text-[13px] font-medium uppercase tracking-wider text-white hover:text-[#EC460B] transition-colors group cursor-pointer border-b border-white/60 hover:border-[#EC460B] pb-0.5" data-contact-modal-toggle>
-          <span>{{ $topConnectText }}</span>
-          <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
-        </a>
-        
-        <div class="pt-1 flex flex-col md:items-end">
-          <div class="text-xs text-neutral-400 font-normal mb-2 tracking-wide">Explore more on</div>
-          <div class="flex items-center gap-3 text-white">
-            <a href="https://facebook.com" target="_blank" rel="noopener" class="w-7 h-7 rounded-full border border-neutral-700 flex items-center justify-center hover:border-[#EC460B] hover:text-[#EC460B] transition-colors" aria-label="Facebook">
-              <i class="fa-brands fa-facebook-f text-xs"></i>
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener" class="w-7 h-7 rounded-full border border-neutral-700 flex items-center justify-center hover:border-[#EC460B] hover:text-[#EC460B] transition-colors" aria-label="Instagram">
-              <i class="fa-brands fa-instagram text-xs"></i>
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener" class="w-7 h-7 rounded-full border border-neutral-700 flex items-center justify-center hover:border-[#EC460B] hover:text-[#EC460B] transition-colors" aria-label="LinkedIn">
-              <i class="fa-brands fa-linkedin-in text-xs"></i>
-            </a>
-            <a href="https://tiktok.com" target="_blank" rel="noopener" class="w-7 h-7 rounded-full border border-neutral-700 flex items-center justify-center hover:border-[#EC460B] hover:text-[#EC460B] transition-colors" aria-label="TikTok">
-              <i class="fa-brands fa-tiktok text-xs"></i>
-            </a>
+      <!-- Col 2: Quick Links (Centered) -->
+      <div class="md:col-span-4 flex flex-col items-start md:items-center">
+        <div class="inline-flex flex-col items-start text-left">
+          <div class="text-xs text-neutral-400 font-normal mb-2.5 tracking-wide">Quick links</div>
+          <div class="grid grid-cols-2 gap-x-[48px] gap-y-[12px] text-[13.5px] text-white font-normal">
+            @php
+              $footerMenu = \App\Models\Menu::withoutGlobalScopes()
+                  ->where('project_id', 7)
+                  ->where('location', 'footer')
+                  ->where('is_active', true)
+                  ->with(['items' => fn($q) => $q->withoutGlobalScopes()->where('is_active', true)->whereNull('parent_id')->orderBy('order')])
+                  ->first();
+              $fItems = $footerMenu && $footerMenu->items->isNotEmpty() ? $footerMenu->items : null;
+            @endphp
+            @if($fItems)
+              @foreach($fItems as $fi)
+                <a href="{{ $fi->url }}" target="{{ $fi->target ?? '_self' }}" class="hover:text-[#EC460B] transition-colors whitespace-nowrap">{{ $fi->title }}</a>
+              @endforeach
+            @else
+              <a href="#inbetween-hero" class="hover:text-[#EC460B] transition-colors whitespace-nowrap">About Us</a>
+              <a href="#inbetween-business" class="hover:text-[#EC460B] transition-colors whitespace-nowrap">Media</a>
+              <a href="#inbetween-business" class="hover:text-[#EC460B] transition-colors whitespace-nowrap">Beyond Business</a>
+              <a href="#inbetween-footer" class="hover:text-[#EC460B] transition-colors whitespace-nowrap">Contact</a>
+            @endif
           </div>
         </div>
+      </div>
 
-        <div class="text-[11.5px] sm:text-xs text-neutral-400 font-light pt-1 leading-snug">
-          <div>{{ $copyright }}</div>
-          <div>{{ $poweredBy }}</div>
+      <!-- Col 3: Explore more on, Social Icons & Copyright -->
+      <div class="md:col-span-4 flex flex-col md:items-end">
+        <div class="inline-flex flex-col items-start text-left">
+          
+          <!-- Explore More On -->
+          <div class="text-[12px] text-neutral-400 font-normal mb-[8px] tracking-normal">
+            Explore more on
+          </div>
+
+          <!-- Social Icons (Glyphs with no border circle, font-size 24px) -->
+          <div class="flex items-center gap-3 text-white text-[24px] leading-none">
+            <a href="https://facebook.com" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="Facebook">
+              <i class="fa-brands fa-facebook"></i>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="Instagram">
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="LinkedIn">
+              <i class="fa-brands fa-linkedin"></i>
+            </a>
+            <a href="https://tiktok.com" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="TikTok">
+              <i class="fa-brands fa-tiktok"></i>
+            </a>
+          </div>
+
+          <!-- Copyright & Powered By (16px gap from icons) -->
+          <div class="mt-[16px] text-[11px] text-neutral-400 font-light leading-normal text-left">
+            <div>{{ $copyright }}</div>
+            <div>{{ $poweredBy }}</div>
+          </div>
+
         </div>
       </div>
 

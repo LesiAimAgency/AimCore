@@ -4,11 +4,11 @@ namespace App\Services\FieldTypes;
 
 use App\Contracts\FieldTypeInterface;
 
-class WysiwygField implements FieldTypeInterface
+class CkeditorField implements FieldTypeInterface
 {
     public static function getTypeName(): string
     {
-        return 'wysiwyg';
+        return 'ckeditor';
     }
 
     public function render(array $config, mixed $value = null): string
@@ -16,12 +16,13 @@ class WysiwygField implements FieldTypeInterface
         $name = $config['name'] ?? '';
         $label = $config['label'] ?? $name;
         $required = $config['required'] ?? false;
-        $help = $config['help'] ?? '';
-        $rows = $config['rows'] ?? 10;
+        $help = $config['help'] ?? ($config['description'] ?? '');
+        $rows = $config['rows'] ?? 4;
+        $height = $config['height'] ?? '160px';
 
         $value = htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
         $requiredAttr = $required ? 'required' : '';
-        $uniqueId = 'wysiwyg_'.preg_replace('/[^a-zA-Z0-9_]/', '_', $name).'_'.uniqid();
+        $uniqueId = 'ckeditor_'.preg_replace('/[^a-zA-Z0-9_]/', '_', $name).'_'.uniqid();
 
         return <<<HTML
         <div class="mb-4">
@@ -29,12 +30,13 @@ class WysiwygField implements FieldTypeInterface
                 {$label} {$this->renderRequiredBadge($required)}
             </label>
             
-            <div class="ckeditor-field-wrapper">
+            <div class="ckeditor-field-wrapper" style="min-height: {$height};">
                 <textarea id="{$uniqueId}" 
                           name="{$name}" 
                           rows="{$rows}"
                           data-editor="ckeditor"
-                          class="w-full px-3 py-2 border border-gray-300 rounded-lg tinymce-editor ckeditor-editor"
+                          data-height="{$height}"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg ckeditor-editor"
                           {$requiredAttr}>{$value}</textarea>
             </div>
             

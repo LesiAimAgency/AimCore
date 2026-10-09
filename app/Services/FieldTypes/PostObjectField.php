@@ -25,6 +25,7 @@ class PostObjectField implements FieldTypeInterface
         // Determine API base URL based on context
         $projectCode = session('current_project')['code'] ?? null;
         $apiBase = $projectCode ? "/{$projectCode}/api" : '/api';
+        $assetBase = rtrim(asset('/'), '/');
 
         return <<<HTML
         <div class="mb-4" x-data="postObjectField_{$name}()" x-init="init()">
@@ -37,7 +38,7 @@ class PostObjectField implements FieldTypeInterface
                     <!-- Selected Item Display -->
                     <div x-show="selectedItem" class="flex items-center gap-3 p-3 bg-blue-50">
                         <template x-if="selectedItem && selectedItem.image">
-                            <img :src="selectedItem.image" class="w-12 h-12 object-cover rounded">
+                            <img :src="formatUrl(selectedItem.image)" class="w-12 h-12 object-cover rounded">
                         </template>
                         <div class="flex-1">
                             <p class="font-medium" x-text="selectedItem?.title"></p>
@@ -72,7 +73,7 @@ class PostObjectField implements FieldTypeInterface
                         <div @click="selectItem(item)" 
                              class="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0">
                             <template x-if="item.image">
-                                <img :src="item.image" class="w-10 h-10 object-cover rounded">
+                                <img :src="formatUrl(item.image)" class="w-10 h-10 object-cover rounded">
                             </template>
                             <div class="flex-1">
                                 <p class="font-medium text-sm" x-text="item.title"></p>
@@ -101,6 +102,13 @@ class PostObjectField implements FieldTypeInterface
                         postType: '{$postType}',
                         initialId: '{$selectedId}',
                         apiBase: '{$apiBase}',
+                        formatUrl(url) {
+                            if (!url) return '';
+                            url = url.toString().trim();
+                            if (!url) return '';
+                            if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//') || url.startsWith('data:') || url.startsWith('blob:')) return url;
+                            return '{$assetBase}/' + url.replace(/^\/+/,'');
+                        },
                         
                         init() {
                             if (this.initialId) {
