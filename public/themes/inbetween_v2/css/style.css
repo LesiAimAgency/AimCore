@@ -1919,7 +1919,7 @@ p {
     padding: 0 1rem;
     border-radius: 9999px;
     border: 1px solid rgba(0, 0, 0, .12);
-
+    background-color: #f8f3ec00;
     color: #212121;
     font-size: .875rem;
     outline: none;
@@ -1945,7 +1945,7 @@ p {
     padding: .875rem 1rem;
     border-radius: 12px;
     border: 1px solid rgba(0, 0, 0, .12);
-
+    background-color: #f8f3ec00;
     color: #212121;
     font-size: .875rem;
     outline: none;
@@ -1968,7 +1968,7 @@ p {
     height: 44px;
     padding: 0 1rem;
     border-radius: 8px;
-
+    background-color: #f8f3ec00;
     border: 1px solid rgba(5, 22, 80, .35);
     display: flex;
     align-items: center;
@@ -2034,7 +2034,7 @@ p {
     top: 100%;
     left: 0;
     width: 100%;
-
+    background-color: #f8f3ec00;
     border-radius: 0 0 8px 8px;
     border: 1px solid rgba(5, 22, 80, .35);
     border-top: none;
@@ -2774,7 +2774,7 @@ p {
     max-height: 92vh;
     max-height: 92dvh;
     overflow-y: auto;
-
+    background-color: #f8f3ec00;
     border-radius: 12px;
     border: 1px solid rgba(5, 22, 80, .18);
     box-shadow: 0 25px 70px #00000059;
@@ -2982,7 +2982,7 @@ p {
     top: 100%;
     left: 0;
     width: 100%;
-
+    background-color: #f8f3ec00;
     border-radius: 0 0 6px 6px;
     border: 1px solid rgba(5, 22, 80, .35);
     border-top: none;
@@ -3033,7 +3033,7 @@ p {
     border-bottom-right-radius: 0;
     border-bottom: none;
     border-color: #05165059;
-
+    background-color: #f8f3ec00;
     box-shadow: none
 }
 
@@ -5770,7 +5770,7 @@ html {
 
 .mobile-nav-drawer.theme-inbetween-drawer {
     font-family: SVN-Gilroy, Inter, sans-serif;
-
+    background-color: #f8f3ec00;
     color: #131313;
     width: 380px;
     max-width: 90vw;
