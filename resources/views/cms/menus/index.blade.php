@@ -59,7 +59,7 @@
 
 
     <!-- Cột 3: Cấu trúc menu & Sắp xếp -->
-    <div class="col-span-12 lg:col-span-5 bg-white rounded-lg shadow-sm p-4">
+    <div class="col-span-12 lg:col-span-9 bg-white rounded-lg shadow-sm p-4">
         @if($selectedMenu)
         <div class="flex flex-wrap justify-between items-center gap-2 mb-4 pb-3 border-b">
             <div>
@@ -511,9 +511,14 @@ function addMenuItem(data) {
         },
         body: JSON.stringify(data)
     })
-    .then(res => res.json())
-    .then(result => {
-        if (result.success) {
+    .then(async res => {
+        let result = {};
+        try {
+            result = await res.json();
+        } catch(e) {
+            result = { success: false, message: 'Lỗi phản hồi từ máy chủ (' + res.status + ')' };
+        }
+        if (res.ok && result.success) {
             showAlert('Đã thêm mục menu thành công!', 'success');
             setTimeout(() => location.reload(), 400);
         } else {
@@ -521,7 +526,7 @@ function addMenuItem(data) {
         }
     })
     .catch(err => {
-        showAlert('Lỗi kết nối khi thêm mục menu', 'error');
+        showAlert('Lỗi kết nối khi thêm mục menu: ' + err.message, 'error');
     });
     @else
     showAlert('Vui lòng chọn hoặc tạo menu trước', 'warning');

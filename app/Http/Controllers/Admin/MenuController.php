@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class MenuController extends Controller
 {
@@ -262,22 +263,36 @@ class MenuController extends Controller
         return $this->show($projectCode, $menu);
     }
 
-    public function storeItem(Request $request, $projectCode = null, $menuId = null)
+    public function storeItem(Request $request, $projectCode = null, $menu = null)
     {
-        if ($menuId === null) {
-            $menuId = $projectCode;
-        }
-
-        $menu = Menu::withoutGlobalScopes()->findOrFail($menuId);
-
         try {
-            $data = $request->validate([
+            $resolvedMenuId = $menu
+                ?? $request->route('menu')
+                ?? $request->route('menuId')
+                ?? (is_numeric($projectCode) ? $projectCode : null);
+
+            if (! $resolvedMenuId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không tìm thấy ID menu hợp lệ.',
+                ], 400);
+            }
+
+            $menuModel = Menu::withoutGlobalScopes()->find($resolvedMenuId);
+            if (! $menuModel) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Menu với ID {$resolvedMenuId} không tồn tại.",
+                ], 404);
+            }
+
+            $validated = $request->validate([
                 'title' => 'required|string|max:255',
                 'url' => 'nullable|string|max:1000',
-                'target' => 'required|in:_self,_blank',
+                'target' => 'nullable|in:_self,_blank',
                 'linkable_type' => 'nullable|string|max:255',
                 'linkable_id' => 'nullable|integer',
-                'parent_id' => 'nullable|exists:menu_items,id',
+                'parent_id' => 'nullable',
                 'icon' => 'nullable|string|max:255',
                 'css_class' => 'nullable|string|max:255',
                 'image' => 'nullable|string|max:500',
@@ -286,115 +301,195 @@ class MenuController extends Controller
                 'is_active' => 'nullable|boolean',
             ]);
 
-            $data['menu_id'] = $menu->id;
-            $data['project_id'] = $menu->project_id;
-            $data['tenant_id'] = $menu->tenant_id;
-            $data['is_active'] = $request->has('is_active') ? (bool) $request->input('is_active') : true;
-            $data['order'] = MenuItem::withoutGlobalScopes()
-                ->where('menu_id', $menu->id)
-                ->where(function ($query) use ($data) {
-                    if (isset($data['parent_id'])) {
-                        $query->where('parent_id', $data['parent_id']);
+            $parentId = ! empty($request->input('parent_id')) ? (int) $request->input('parent_id') : null;
+            if ($parentId && ! MenuItem::withoutGlobalScopes()->where('id', $parentId)->exists()) {
+                $parentId = null;
+            }
+
+            $maxOrder = MenuItem::withoutGlobalScopes()
+                ->where('menu_id', $menuModel->id)
+                ->where(function ($query) use ($parentId) {
+                    if ($parentId) {
+                        $query->where('parent_id', $parentId);
                     } else {
                         $query->whereNull('parent_id');
                     }
                 })
-                ->max('order') + 1;
+                ->max('order');
 
-            $menuItem = MenuItem::create($data);
+            $order = ((int) $maxOrder) + 1;
 
-            MenuService::clearMenuCache($menu->project_id);
+            $data = [
+                'menu_id' => $menuModel->id,
+                'project_id' => $menuModel->project_id,
+                'tenant_id' => $menuModel->tenant_id,
+                'title' => trim($validated['title']),
+                'url' => $validated['url'] ?? '#',
+                'target' => ! empty($validated['target']) ? $validated['target'] : '_self',
+                'linkable_type' => $validated['linkable_type'] ?? null,
+                'linkable_id' => $validated['linkable_id'] ?? null,
+                'parent_id' => $parentId,
+                'icon' => $validated['icon'] ?? null,
+                'css_class' => $validated['css_class'] ?? null,
+                'image' => $validated['image'] ?? null,
+                'badge' => $validated['badge'] ?? null,
+                'badge_color' => $validated['badge_color'] ?? null,
+                'is_active' => $request->has('is_active') ? (bool) $request->input('is_active') : true,
+                'order' => $order,
+                '_lft' => 0,
+                '_rgt' => 0,
+            ];
+
+            $menuItem = MenuItem::withoutGlobalScopes()->create($data);
+
+            MenuService::clearMenuCache($menuModel->project_id);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Mục menu đã được thêm!',
+                'message' => 'Mục menu đã được thêm thành công!',
                 'item' => $menuItem,
             ]);
-        } catch (\Exception $e) {
-            Log::error('Menu item creation failed: '.$e->getMessage());
-
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
-    }
-
-    public function updateItem(Request $request, $projectCode = null, $itemId = null)
-    {
-        if ($itemId === null) {
-            $itemId = $projectCode;
-        }
-
-        $item = MenuItem::withoutGlobalScopes()->findOrFail($itemId);
-        $data = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'url' => 'nullable|string|max:1000',
-            'target' => 'sometimes|required|in:_self,_blank',
-            'icon' => 'nullable|string|max:255',
-            'css_class' => 'nullable|string|max:255',
-            'image' => 'nullable|string|max:500',
-            'badge' => 'nullable|string|max:100',
-            'badge_color' => 'nullable|string|max:50',
-            'is_active' => 'nullable|boolean',
-            'order' => 'nullable|integer',
-            'parent_id' => 'nullable',
-        ]);
-
-        if ($request->has('is_active')) {
-            $data['is_active'] = (bool) $request->input('is_active');
-        }
-
-        $item->update($data);
-
-        MenuService::clearMenuCache($item->project_id);
-
-        if ($request->expectsJson() || $request->ajax()) {
+        } catch (ValidationException $ve) {
             return response()->json([
-                'success' => true,
-                'message' => 'Đã cập nhật mục menu thành công!',
-                'item' => $item->fresh(),
-            ]);
-        }
+                'success' => false,
+                'message' => collect($ve->errors())->flatten()->first() ?? 'Dữ liệu không hợp lệ.',
+                'errors' => $ve->errors(),
+            ], 422);
+        } catch (\Throwable $e) {
+            Log::error('Menu item creation failed: '.$e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
-        return back()->with('success', 'Đã cập nhật!');
-    }
-
-    public function destroyItem($projectCode = null, $itemId = null)
-    {
-        if ($itemId === null) {
-            $itemId = $projectCode;
-        }
-
-        $item = MenuItem::withoutGlobalScopes()->findOrFail($itemId);
-        $projectId = $item->project_id;
-        $item->delete();
-
-        MenuService::clearMenuCache($projectId);
-
-        if (request()->expectsJson() || request()->ajax()) {
             return response()->json([
-                'success' => true,
-                'message' => 'Đã xóa mục menu!',
-            ]);
+                'success' => false,
+                'message' => 'Lỗi tạo mục menu: '.$e->getMessage(),
+            ], 500);
         }
-
-        return back()->with('success', 'Đã xóa mục menu!');
     }
 
-    public function updateTree(Request $request, $projectCode = null, $menuId = null)
+    public function updateItem(Request $request, $projectCode = null, $item = null)
     {
-        if ($menuId === null) {
-            $menuId = $projectCode;
-        }
-
-        $menu = Menu::withoutGlobalScopes()->findOrFail($menuId);
-
         try {
+            $resolvedItemId = $item
+                ?? $request->route('item')
+                ?? $request->route('itemId')
+                ?? (is_numeric($projectCode) ? $projectCode : null);
+
+            $menuItem = MenuItem::withoutGlobalScopes()->find($resolvedItemId);
+            if (! $menuItem) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Mục menu không tồn tại.',
+                ], 404);
+            }
+
+            $data = $request->validate([
+                'title' => 'sometimes|required|string|max:255',
+                'url' => 'nullable|string|max:1000',
+                'target' => 'sometimes|required|in:_self,_blank',
+                'icon' => 'nullable|string|max:255',
+                'css_class' => 'nullable|string|max:255',
+                'image' => 'nullable|string|max:500',
+                'badge' => 'nullable|string|max:100',
+                'badge_color' => 'nullable|string|max:50',
+                'is_active' => 'nullable|boolean',
+                'order' => 'nullable|integer',
+                'parent_id' => 'nullable',
+            ]);
+
+            if ($request->has('is_active')) {
+                $data['is_active'] = (bool) $request->input('is_active');
+            }
+
+            $menuItem->update($data);
+
+            MenuService::clearMenuCache($menuItem->project_id);
+
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Đã cập nhật mục menu thành công!',
+                    'item' => $menuItem->fresh(),
+                ]);
+            }
+
+            return back()->with('success', 'Đã cập nhật!');
+        } catch (ValidationException $ve) {
+            return response()->json([
+                'success' => false,
+                'message' => collect($ve->errors())->flatten()->first() ?? 'Dữ liệu không hợp lệ.',
+                'errors' => $ve->errors(),
+            ], 422);
+        } catch (\Throwable $e) {
+            Log::error('Menu item update failed: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi cập nhật: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function destroyItem($projectCode = null, $item = null)
+    {
+        try {
+            $resolvedItemId = $item
+                ?? request()->route('item')
+                ?? request()->route('itemId')
+                ?? (is_numeric($projectCode) ? $projectCode : null);
+
+            $menuItem = MenuItem::withoutGlobalScopes()->find($resolvedItemId);
+            if (! $menuItem) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Mục menu không tồn tại.',
+                ], 404);
+            }
+
+            $projectId = $menuItem->project_id;
+            $menuItem->delete();
+
+            MenuService::clearMenuCache($projectId);
+
+            if (request()->expectsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Đã xóa mục menu!',
+                ]);
+            }
+
+            return back()->with('success', 'Đã xóa mục menu!');
+        } catch (\Throwable $e) {
+            Log::error('Menu item delete failed: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi khi xóa mục menu: '.$e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function updateTree(Request $request, $projectCode = null, $menu = null)
+    {
+        try {
+            $resolvedMenuId = $menu
+                ?? $request->route('menu')
+                ?? $request->route('menuId')
+                ?? (is_numeric($projectCode) ? $projectCode : null);
+
+            $menuModel = Menu::withoutGlobalScopes()->find($resolvedMenuId);
+            if (! $menuModel) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Menu không tồn tại.',
+                ], 404);
+            }
+
             $tree = $request->input('tree', []);
 
             // Check if tree is already a flat array [{id, parent_id, order, depth}]
             $isFlat = ! empty($tree) && isset($tree[0]['id']) && array_key_exists('parent_id', $tree[0]);
             $flatItems = $isFlat ? $tree : $this->flattenTree($tree);
 
-            DB::transaction(function () use ($flatItems, $menu) {
+            DB::transaction(function () use ($flatItems, $menuModel) {
                 foreach ($flatItems as $index => $item) {
                     $parentId = ! empty($item['parent_id']) ? (int) $item['parent_id'] : null;
                     // Prevent circular reference
@@ -403,7 +498,7 @@ class MenuController extends Controller
                     }
 
                     MenuItem::withoutGlobalScopes()
-                        ->where('menu_id', $menu->id)
+                        ->where('menu_id', $menuModel->id)
                         ->where('id', $item['id'])
                         ->update([
                             'parent_id' => $parentId,
@@ -412,13 +507,13 @@ class MenuController extends Controller
                 }
             });
 
-            MenuService::clearMenuCache($menu->project_id);
+            MenuService::clearMenuCache($menuModel->project_id);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Cấu trúc menu đã được cập nhật thành công!',
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('Menu tree update failed: '.$e->getMessage());
 
             return response()->json([

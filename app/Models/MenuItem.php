@@ -29,9 +29,26 @@ class MenuItem extends Model
         'linkable_type',
         'linkable_id',
         'order',
+        '_lft',
+        '_rgt',
         'tenant_id',
         'project_id',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function ($item) {
+            if ($item->_lft === null) {
+                $item->_lft = 0;
+            }
+            if ($item->_rgt === null) {
+                $item->_rgt = 0;
+            }
+            if ($item->target === null) {
+                $item->target = '_self';
+            }
+        });
+    }
 
     protected function casts(): array
     {
