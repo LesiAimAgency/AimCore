@@ -310,6 +310,9 @@ class InbetweenV2WidgetsSeeder extends Seeder
                     'settings' => $widget['settings'],
                 ]);
             }
+
+            // Seed header and footer menus for this Inbetween V2 project
+            $this->call(InbetweenV2MenuSeeder::class, false, ['projectId' => $targetProjId, 'tenantId' => $targetTenantId]);
         }
 
         $this->command?->info('INBETWEEN V2 widgets seeded successfully for projects: '.$targetProjects->pluck('code')->implode(', '));

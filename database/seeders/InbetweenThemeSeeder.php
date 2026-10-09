@@ -164,9 +164,15 @@ class InbetweenThemeSeeder extends Seeder
         );
         $mainMenu->allItems()->delete();
         $mainMenuItems = [
-            ['title' => 'About us', 'url' => '#about', 'order' => 1],
-            ['title' => 'Media', 'url' => '#media', 'order' => 2],
-            ['title' => 'Community', 'url' => '#community', 'order' => 3],
+            ['title' => 'HOME', 'url' => '#inbetween-intro', 'order' => 1],
+            ['title' => 'ABOUT', 'url' => '#inbetween-hero', 'order' => 2],
+            ['title' => 'WHAT WE DO', 'url' => '#inbetween-what-we-do', 'order' => 3],
+            ['title' => 'WHERE WE FOCUS', 'url' => '#inbetween-where-we-focus', 'order' => 4],
+            ['title' => 'FOUNDER', 'url' => '#inbetween-founder', 'order' => 5],
+            ['title' => 'OUR CLIENTS', 'url' => '#inbetween-our-clients', 'order' => 6],
+            ['title' => 'BEYOND BUSINESS', 'url' => '#inbetween-business', 'order' => 7],
+            ['title' => 'MEDIA', 'url' => '#inbetween-business', 'order' => 8],
+            ['title' => 'CONTACT', 'url' => '#inbetween-footer', 'order' => 9],
         ];
         foreach ($mainMenuItems as $item) {
             MenuItem::create([
@@ -175,7 +181,9 @@ class InbetweenThemeSeeder extends Seeder
                 'tenant_id' => $tenantId,
                 'title' => $item['title'],
                 'url' => $item['url'],
+                'target' => '_self',
                 'order' => $item['order'],
+                'is_active' => true,
             ]);
         }
 
@@ -186,10 +194,10 @@ class InbetweenThemeSeeder extends Seeder
         );
         $footerMenu->allItems()->delete();
         $footerMenuItems = [
-            ['title' => 'About Us', 'url' => '#about', 'order' => 1],
-            ['title' => 'Media', 'url' => '#media', 'order' => 2],
-            ['title' => 'Events', 'url' => '#events', 'order' => 3],
-            ['title' => 'Community', 'url' => '#packages', 'order' => 4],
+            ['title' => 'About Us', 'url' => '#inbetween-hero', 'order' => 1],
+            ['title' => 'Media', 'url' => '#inbetween-business', 'order' => 2],
+            ['title' => 'Beyond Business', 'url' => '#inbetween-business', 'order' => 3],
+            ['title' => 'Contact', 'url' => '#inbetween-footer', 'order' => 4],
         ];
         foreach ($footerMenuItems as $item) {
             MenuItem::create([
@@ -198,7 +206,9 @@ class InbetweenThemeSeeder extends Seeder
                 'tenant_id' => $tenantId,
                 'title' => $item['title'],
                 'url' => $item['url'],
+                'target' => '_self',
                 'order' => $item['order'],
+                'is_active' => true,
             ]);
         }
 
