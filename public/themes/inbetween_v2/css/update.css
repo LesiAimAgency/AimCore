@@ -680,3 +680,59 @@
         bottom: 12px !important;
     }
 }
+
+.footer-select-option {
+    background: #131313 !important;
+}
+
+/* Footer Circular Checkbox Input Styling */
+#inbetween-footer .footer-checkbox {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid #a3a3a3;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    background-color: transparent;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+#inbetween-footer .footer-checkbox:after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease;
+}
+
+#inbetween-footer .footer-checkbox:checked {
+    border-color: #ffffff;
+}
+
+#inbetween-footer .footer-checkbox:checked:after {
+    transform: scale(1);
+    opacity: 1;
+}
+
+#inbetween-footer label:hover .footer-checkbox,
+#inbetween-footer .footer-checkbox:hover {
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+#inbetween-footer .footer-checkbox:focus-visible {
+    box-shadow: 0 0 0 3px rgba(236, 70, 11, 0.4);
+}

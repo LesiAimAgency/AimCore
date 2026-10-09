@@ -111,7 +111,7 @@
                   </svg>
                 </span>
               </button>
-              <ul class="footer-select-options absolute top-full left-0 right-0 mt-1 bg-[#1A1A1A] border border-neutral-700 rounded-[4px] shadow-2xl overflow-hidden z-40 hidden" role="listbox">
+              <ul class="footer-select-options absolute top-full left-0 right-0 mt-1 bg-[#1A1A1A] border border-neutral-700 rounded-[4px] shadow-2xl overflow-hidden z-40 hidden bg-[#131313] role="listbox">
                 <li class="px-3.5 py-2 text-[13px] text-neutral-300 hover:bg-[#EC460B] hover:text-white cursor-pointer transition-colors" data-value="sales-bd" role="option">Sales & BD</li>
                 <li class="px-3.5 py-2 text-[13px] text-neutral-300 hover:bg-[#EC460B] hover:text-white cursor-pointer transition-colors" data-value="market-validation" role="option">Market Validation</li>
                 <li class="px-3.5 py-2 text-[13px] text-neutral-300 hover:bg-[#EC460B] hover:text-white cursor-pointer transition-colors" data-value="market-entry" role="option">Market Entry Execution</li>
@@ -120,26 +120,19 @@
             </div>
           </div>
         </div>
-        <!-- Divider Line -->
-        <div class="border-t border-neutral-800/80 pt-1.5"></div>
+      
 
-        <!-- Custom Circular Checkboxes -->
+        <!-- Checkbox Inputs -->
         <div class="space-y-2 pt-0.5">
           <label class="flex items-center gap-3 cursor-pointer select-none group">
-            <input type="checkbox" name="privacy_consent" class="hidden footer-circular-cb" required checked>
-            <span class="w-[15px] h-[15px] rounded-full border border-neutral-400 group-hover:border-white transition-colors flex items-center justify-center shrink-0 footer-cb-circle bg-transparent">
-              <span class="w-[7px] h-[7px] rounded-full bg-white transition-opacity footer-cb-dot opacity-100" style="opacity: 1;"></span>
-            </span>
+            <input type="checkbox" name="privacy_consent" id="footer_privacy_consent" class="footer-checkbox" required checked>
             <span class="text-neutral-300 text-[12.5px] sm:text-[13px] font-light group-hover:text-white transition-colors leading-snug">
               {!! $formPrivacy !!}
             </span>
           </label>
 
           <label class="flex items-center gap-3 cursor-pointer select-none group">
-            <input type="checkbox" name="newsletter" class="hidden footer-circular-cb">
-            <span class="w-[15px] h-[15px] rounded-full border border-neutral-400 group-hover:border-white transition-colors flex items-center justify-center shrink-0 footer-cb-circle bg-transparent">
-              <span class="w-[7px] h-[7px] rounded-full bg-white transition-opacity footer-cb-dot opacity-0" style="opacity: 0;"></span>
-            </span>
+            <input type="checkbox" name="newsletter" id="footer_newsletter" class="footer-checkbox">
             <span class="text-neutral-300 text-[12.5px] sm:text-[13px] font-light group-hover:text-white transition-colors leading-snug">
               {{ $formNewsletter }}
             </span>
@@ -162,7 +155,7 @@
   </div>
 
   <!-- 3. Sub-footer (3 Columns) -->
-  <div class="inbetween-container-1440  mx-auto pt-6 sm:pt-8 border-t border-neutral-800/90 z-10 shrink-0" style="padding-left:30px; padding-right:30px">
+  <div class="inbetween-container-1440  mx-auto pt-6 sm:pt-8 z-10 shrink-0" style="padding-left:30px; padding-right:30px">
     <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
       
       <!-- Col 1: Logo & Contact For Work -->
@@ -271,7 +264,7 @@
     overflow: hidden;
     height: 1.15em;
     vertical-align: top;
-    width: 50
+    width: 400px;
   }
 
   .inbetween-word-current,
@@ -362,6 +355,58 @@
 
   .footer-submit-btn:hover .submit-btn-text {
     color: #ffffff;
+  }
+
+  /* Footer Circular Checkbox Input Styling */
+  #inbetween-footer .footer-checkbox {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid #a3a3a3;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    background-color: transparent;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+  }
+
+  #inbetween-footer .footer-checkbox:after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease;
+  }
+
+  #inbetween-footer .footer-checkbox:checked {
+    border-color: #ffffff;
+  }
+
+  #inbetween-footer .footer-checkbox:checked:after {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  #inbetween-footer label:hover .footer-checkbox,
+  #inbetween-footer .footer-checkbox:hover {
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+  }
+
+  #inbetween-footer .footer-checkbox:focus-visible {
+    box-shadow: 0 0 0 3px rgba(236, 70, 11, 0.4);
   }
 </style>
 
@@ -479,25 +524,9 @@
       });
     }
 
-    // 3. Circular Checkboxes Interactive Toggle
+    // 3. Circular Checkboxes (handled natively via CSS on input[type=checkbox])
     function initCircularCheckboxes() {
-      var form = document.getElementById('inbetween-footer-contact-form');
-      if (!form || form.__cbAttached) return;
-      form.__cbAttached = true;
-
-      form.querySelectorAll('.footer-circular-cb').forEach(function (cb) {
-        var parent = cb.closest('label');
-        if (!parent) return;
-        var dot = parent.querySelector('.footer-cb-dot');
-
-        function sync() {
-          if (dot) {
-            dot.style.opacity = cb.checked ? '1' : '0';
-          }
-        }
-        cb.addEventListener('change', sync);
-        sync();
-      });
+      // Native CSS handles .footer-checkbox :checked:after directly on the input element
     }
 
     // 4. Form AJAX Submission
