@@ -460,7 +460,7 @@
             </div>
 
             <!-- Quick Management Links -->
-            <div class="mt-6 pt-4 border-t border-slate-100">
+            <!-- <div class="mt-6 pt-4 border-t border-slate-100">
                 <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-3">Lối tắt quản lý nội dung</span>
                 <div class="grid grid-cols-2 gap-2 text-xs">
                     @if(Route::has('project.admin.pages.index'))
@@ -476,7 +476,7 @@
                     </a>
                     @endif
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <!-- Recent Visitors Activity (Col 7) -->
