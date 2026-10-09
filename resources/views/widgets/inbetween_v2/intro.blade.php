@@ -15,8 +15,8 @@
   #inbetween-hero .intro-title-gradient,
   #inbetween-intro .intro-title-gradient,
   .intro-title-gradient {
-    color: #fff !important;
-    background-image: linear-gradient(180deg, #FFFFFF 0%, #EC310B 51%, #F1791C 97%) !important;
+    color: #EC310B !important;
+    background-image: linear-gradient(180deg, #EC310B 0%, #F1791C 100%) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
