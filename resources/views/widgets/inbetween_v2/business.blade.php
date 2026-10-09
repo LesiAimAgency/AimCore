@@ -79,6 +79,10 @@
             ['image' => 'themes/inbetween_v2/images/hero-person-right-outer.png', 'alt' => 'Person Right Outer'],
           ];
           $carouselList = !empty($settings['carousel_images']) && is_array($settings['carousel_images']) ? array_values($settings['carousel_images']) : $defaultCarousel;
+          $totalCards = count($carouselList);
+          $centerCardIndex = (int) floor($totalCards / 2);
+          $trackWidth = max(160, round(48 + max(0, $totalCards - 1) * 42.25));
+          $initialThumbX = $totalCards > 1 ? round(18 + ($centerCardIndex / ($totalCards - 1)) * ($trackWidth - 48)) : round($trackWidth / 2 - 6);
         @endphp
         <div class="business-panels-container relative w-full h-full flex items-start justify-center overflow-visible pointer-events-auto">
           @foreach($carouselList as $imgIndex => $cImgItem)
@@ -88,13 +92,13 @@
               $cImgUrl = !empty($cImgSrc) ? (str_starts_with($cImgSrc, 'http') || str_starts_with($cImgSrc, '/') ? $cImgSrc : asset($cImgSrc)) : '';
               $cImgAlt = is_array($cImgItem) ? ($cImgItem['alt'] ?? '') : '';
               $slot = $imgIndex;
-              $overlayClass = match($slot) {
-                0, 4 => 'bg-white/40',
-                1, 3 => 'bg-white/30',
-                2 => 'bg-white/0',
+              $diffFromCenter = abs($slot - $centerCardIndex);
+              $overlayClass = match($diffFromCenter) {
+                0 => 'bg-white/0',
+                1 => 'bg-white/30',
                 default => 'bg-white/40',
               };
-              $extraCardClass = ($slot === 2) ? 'shadow-2xl bg-black' : 'shadow-lg';
+              $extraCardClass = ($slot === $centerCardIndex) ? 'shadow-2xl bg-black' : 'shadow-lg';
             @endphp
             <div class="business-ellipse-card business-panel-card absolute left-1/2 top-[2px] w-[400px] h-[400px] rounded-[24px] overflow-hidden cursor-pointer {{ $extraCardClass }} will-change-transform" data-index="{{ $imgIndex }}" data-slot="{{ $slot }}"><img class="w-full h-full object-cover object-center pointer-events-none" src="{{ $cImgUrl }}" alt="{{ $cImgAlt }}">
               <div class="business-card-overlay absolute inset-0 {{ $overlayClass }} pointer-events-none transition-opacity duration-300"></div>
@@ -102,9 +106,9 @@
           @endforeach
         </div>
         <div class="business-slider-container absolute left-1/2 top-[432px] -translate-x-1/2 flex flex-col items-center justify-center z-30 pointer-events-auto select-none opacity-100 transition-opacity duration-300">
-          <div class="business-slider-track-wrap relative w-[217px] h-[24px] flex items-center justify-center cursor-pointer group" aria-label="Image slider track">
-            <div class="business-slider-line w-[217px] h-[1.5px] bg-[#3E3939] rounded-full"></div>
-            <div class="business-slider-thumb absolute left-0 top-1/2 -translate-y-1/2 w-[12px] h-[12px] rounded-full bg-[#EC460B] shadow-sm cursor-grab active:cursor-grabbing hover:scale-125 transition-transform duration-150"></div>
+          <div class="business-slider-track-wrap relative h-[24px] flex items-center justify-center cursor-pointer group max-w-[calc(100vw-32px)]" style="width: {{ $trackWidth }}px; --track-width: {{ $trackWidth }}px;" aria-label="Image slider track">
+            <div class="business-slider-line h-[1.5px] bg-[#3E3939] rounded-full w-full" style="width: 100%;"></div>
+            <div class="business-slider-thumb absolute left-0 top-1/2 -translate-y-1/2 w-[12px] h-[12px] rounded-full bg-[#EC460B] shadow-sm cursor-grab active:cursor-grabbing hover:scale-125 transition-transform duration-150" style="left: {{ $initialThumbX }}px; --thumb-x: {{ $initialThumbX }}px;"></div>
           </div>
         </div>
       </div>

@@ -643,10 +643,11 @@ function addRepeatableItem(fieldId, fieldName) {
         return;
     }
     
-    const maxItems = parseInt(container.parentElement?.dataset?.maxItems || 10);
+    const maxItemsAttr = container.parentElement?.dataset?.maxItems;
+    const maxItems = (maxItemsAttr !== undefined && maxItemsAttr !== '' && maxItemsAttr !== null) ? parseInt(maxItemsAttr, 10) : 0;
     const currentItems = container.children.length;
 
-    if (currentItems >= maxItems) {
+    if (maxItems > 0 && currentItems >= maxItems) {
         alert('Tối đa ' + maxItems + ' mục');
         return;
     }
