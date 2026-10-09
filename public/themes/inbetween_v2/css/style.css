@@ -5770,7 +5770,7 @@ html {
 
 .mobile-nav-drawer.theme-inbetween-drawer {
     font-family: SVN-Gilroy, Inter, sans-serif;
-    background-color: #f8f3ec00;
+    background-color: #f8f3ec;
     color: #131313;
     width: 380px;
     max-width: 90vw;
@@ -5796,7 +5796,7 @@ html {
 }
 
 .mobile-nav-drawer.theme-inbetween-drawer .nav-drawer-link {
-    color: #131313;
+    color: #fff;
     font-family: SVN-Gilroy, Inter, sans-serif;
     font-weight: 400;
     letter-spacing: .04em;
