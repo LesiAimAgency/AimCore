@@ -1,4 +1,4 @@
-<section class="inbetween-onepage-section inbetween-section-business relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#F6F4F4] text-[#131313] flex flex-col justify-start items-center pt-8 sm:pt-10 lg:pt-12 pb-3 sm:pb-4 px-4 sm:px-6" id="inbetween-business" aria-label="INBETWEEN Beyond Business">
+<section class="inbetween-onepage-section inbetween-section-business relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#F6F4F4] text-[#131313] flex flex-col justify-start items-center pt-16 sm:pt-20 lg:pt-[96px] pb-3 sm:pb-4 px-4 sm:px-6" id="inbetween-business" aria-label="INBETWEEN Beyond Business">
   <div class="business-intro-text relative w-full max-w-[1296px] mx-auto px-4 sm:px-8 lg:px-12 flex flex-col items-center text-center z-20 pointer-events-auto shrink-0">
     <div class="w-full flex items-center justify-between mb-2 sm:mb-3 pointer-events-auto relative z-30">
       <!-- Media Badge Toggle -->
@@ -100,7 +100,7 @@
             </div>
           @endforeach
         </div>
-        <div class="business-slider-container absolute left-1/2 top-[440px] -translate-x-1/2 flex flex-col items-center justify-center z-30 pointer-events-auto select-none opacity-0 pointer-events-none transition-opacity duration-500">
+        <div class="business-slider-container absolute left-1/2 top-[432px] -translate-x-1/2 flex flex-col items-center justify-center z-30 pointer-events-auto select-none opacity-100 transition-opacity duration-300">
           <div class="business-slider-track-wrap relative w-[217px] h-[24px] flex items-center justify-center cursor-pointer group" aria-label="Thanh trượt chuyển ảnh">
             <div class="business-slider-line w-[217px] h-[1.5px] bg-[#3E3939] rounded-full"></div>
             <div class="business-slider-thumb absolute left-0 top-1/2 -translate-y-1/2 w-[12px] h-[12px] rounded-full bg-[#EC460B] shadow-sm cursor-grab active:cursor-grabbing hover:scale-125 transition-transform duration-150"></div>
