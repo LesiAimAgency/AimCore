@@ -88,7 +88,6 @@ class InbetweenV2BusinessWidget extends BaseWidget
                     'label' => 'Danh sách ảnh Carousel 3D (Repeatable Images)',
                     'type' => 'repeatable',
                     'min_items' => 1,
-                    'max_items' => 10,
                     'fields' => [
                         [
                             'name' => 'image',

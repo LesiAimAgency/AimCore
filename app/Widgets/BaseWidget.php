@@ -290,7 +290,7 @@ abstract class BaseWidget
             'fields.*.placeholder' => 'string',
             'fields.*.show_if' => 'array',
             'fields.*.options' => 'array',
-            'fields.*.max_items' => 'integer|min:1',
+            'fields.*.max_items' => 'nullable|integer|min:0',
             'fields.*.fields' => 'array',
             'settings' => 'array',
             'settings.cacheable' => 'boolean',

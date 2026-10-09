@@ -186,7 +186,7 @@
       <div class="md:col-span-4 flex flex-col items-start md:items-center">
         <div class="inline-flex flex-col items-start text-left">
           <div class="text-xs text-neutral-400 font-normal mb-2.5 tracking-wide">Quick links</div>
-          <div class="grid grid-cols-2 gap-x-[48px] gap-y-[12px] text-[13.5px] text-white font-normal">
+          <div class="grid grid-cols-2 text-[13.5px] text-white font-normal gap-30" style="row-gap:8px; column-gap: 42px;">
             @php
               $footerMenu = \App\Models\Menu::withoutGlobalScopes()
                   ->where('project_id', 7)
