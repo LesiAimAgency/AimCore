@@ -226,13 +226,13 @@
         </div>
       </div>
       <!-- Mouse scroll indicator pointing to #inbetween-what-we-do -->
-      <div class="w-full shrink-0 flex justify-center pb-1 pointer-events-auto">
+      <!-- <div class="w-full shrink-0 flex justify-center pb-1 pointer-events-auto">
         <a class="inline-flex flex-col items-center gap-0.5 text-white/60 hover:text-white transition-colors duration-200 group text-[12px] font-light uppercase tracking-widest cursor-pointer relative z-30" href="#inbetween-what-we-do" title="Scroll to What We Do" style="pointer-events: auto !important; cursor: pointer !important;">
           <span class="w-3.5 h-6 sm:w-4 sm:h-7 rounded-full border border-white/40 flex items-start justify-center p-0.5 group-hover:border-white">
             <span class="w-1 h-1.5 rounded-full bg-white animate-bounce"></span>
           </span>
         </a>
-      </div>
+      </div> -->
     </div>
   </div>
 </section>
