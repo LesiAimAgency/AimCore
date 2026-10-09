@@ -37,7 +37,7 @@
 <section class="inbetween-onepage-section relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#131313] text-[#F6F4F4] flex flex-col justify-between py-6 sm:py-8 lg:py-10 px-6 sm:px-10 lg:px-16" id="inbetween-footer" aria-label="in • between Footer">
 
   <!-- 2. Main Middle Section: More Connections & Contact Form -->
-  <div class="w-full max-w-[1312px] mx-auto my-auto py-8 lg:py-6 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center z-10">
+  <div class="inbetween-container-1440 mx-auto my-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center z-10" style="padding-left:30px; padding-right:30px">
     
     <!-- Left Column: MORE CONNECTIONS (Text rotates 1s top-to-bottom) -->
     <div class="lg:col-span-6 flex flex-col justify-center">
@@ -162,7 +162,7 @@
   </div>
 
   <!-- 3. Sub-footer (3 Columns) -->
-  <div class="w-full max-w-[1312px] mx-auto pt-6 sm:pt-8 border-t border-neutral-800/90 z-10 shrink-0">
+  <div class="inbetween-container-1440  mx-auto pt-6 sm:pt-8 border-t border-neutral-800/90 z-10 shrink-0" style="padding-left:30px; padding-right:30px">
     <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
       
       <!-- Col 1: Logo & Contact For Work -->
