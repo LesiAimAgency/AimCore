@@ -10,7 +10,7 @@ class RepeatableField extends BaseFieldType
     {
         $fieldId = $this->getFieldId($config);
         $items = \is_array($value) ? $value : [];
-        $maxItems = $config['max_items'] ?? 10;
+        $maxItems = isset($config['max_items']) ? (int) $config['max_items'] : 0;
         $minItems = $config['min_items'] ?? 0;
         $subFields = $config['fields'] ?? [];
         $allowAdd = $config['allow_add'] ?? true;
