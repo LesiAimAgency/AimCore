@@ -152,7 +152,7 @@
   }
 </style>
 <header class="inbetween-header fixed top-0 left-0 w-full z-50 select-none transition-colors duration-300 pointer-events-auto theme-dark text-white" id="inbetween-header">
-  <div class="inbetween-container-1440 pt-4 sm:pt-6 pb-2 sm:pb-3 transition-all duration-300">
+  <div class="inbetween-container-1440 pt-4 sm:pt-6 pb-2 sm:pb-3 transition-all duration-300" style="padding-bottom: 40px;padding-top: 40px;">
     <a class="inbetween-logo inline-flex items-center w-[140px] xs:w-[170px] sm:w-[190px] lg:w-[210px] h-auto max-h-[32px] shrink-0 select-none transition-opacity hover:opacity-85" href="#inbetween-intro" title="in • between">
       <img class="inbetween-logo-white w-full h-auto max-h-[26px] sm:max-h-[30px] lg:max-h-[32px] object-contain object-left" src="{{ $logoWhite }}" alt="in • between Logo" width="210" height="32"/>
       <img class="inbetween-logo-dark w-full h-auto max-h-[26px] sm:max-h-[30px] lg:max-h-[32px] object-contain object-left" src="{{ $logoDark }}" alt="in • between Logo" width="210" height="32"/>
