@@ -1,6 +1,6 @@
-<section class="inbetween-onepage-section relative w-full h-screen min-h-screen max-h-screen overflow-hidden select-none bg-[#F6F4F4] text-[#131313]" id="inbetween-what-we-do">
-  <div class="inbetween-container-1440 relative z-10 pb-2 sm:pb-3">
-    <div class="w-full shrink-0 pt-[52px] sm:pt-[56px] lg:pt-[62px]">
+<section class="inbetween-onepage-section relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#F6F4F4] text-[#131313] py-8 sm:py-10 lg:py-0" id="inbetween-what-we-do">
+  <div class="inbetween-container-1440 relative z-10 pb-4 sm:pb-6 lg:pb-3">
+    <div class="w-full shrink-0 pt-4 sm:pt-6 lg:pt-[62px]">
       <div class="text-[14px] font-light text-[#3E3939] uppercase tracking-widest mb-2 sm:mb-2.5">{{ $settings['badge_text'] ?? '[ WHAT WE DO ]' }}</div>
       <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4 lg:gap-12">
         <div class="w-full max-w-[650px]">

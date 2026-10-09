@@ -1,7 +1,7 @@
-<section class="inbetween-onepage-section relative w-full h-screen min-h-screen max-h-screen overflow-hidden select-none bg-[#131313] text-white" id="inbetween-our-clients" aria-label="Khách Hàng Của Inbetween - Our Clients">
+<section class="inbetween-onepage-section relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#131313] text-white" id="inbetween-our-clients" aria-label="Khách Hàng Của Inbetween - Our Clients">
   <div class="our-clients-stage w-full h-full flex flex-col lg:flex-row relative z-10">
-    <div class="our-clients-col-title w-full lg:w-[405px] lg:min-w-[405px] h-auto lg:h-full flex flex-col justify-center pl-6 sm:pl-10 lg:pl-[72px] pr-4 pt-[72px] lg:pt-0 pb-4 lg:pb-0 z-20 shrink-0 bg-[#131313]">
-      <h2 class="our-clients-heading flex flex-col select-none"><span class="our-clients-word-our text-[40px] sm:text-[48px] lg:text-[61px] font-semibold text-[#F6F4F4] leading-none tracking-normal">{{ $settings['heading_word1'] ?? 'OUR' }}</span><span class="our-clients-word-clients text-[40px] sm:text-[48px] lg:text-[61px] font-semibold text-[#EC460B] leading-none tracking-normal pt-2 sm:pt-3 lg:pt-[19px]">{{ $settings['heading_word2'] ?? 'CLIENTS.' }}</span></h2>
+    <div class="our-clients-col-title w-full lg:w-[405px] lg:min-w-[405px] h-auto lg:h-full flex flex-col justify-center pl-6 sm:pl-10 lg:pl-[96px] pr-[10px] pt-[95px] sm:pt-[72px] lg:pt-0 pb-4 lg:pb-0 z-20 shrink-0 bg-[#131313]">
+      <h2 class="our-clients-heading flex flex-col select-none"><span class="our-clients-word-our text-[36px] sm:text-[48px] lg:text-[61px] font-semibold text-[#F6F4F4] leading-none tracking-normal">{{ $settings['heading_word1'] ?? 'OUR' }}</span><span class="our-clients-word-clients text-[36px] sm:text-[48px] lg:text-[61px] font-semibold text-[#EC460B] leading-none tracking-normal pt-2 sm:pt-3 lg:pt-[19px]">{{ $settings['heading_word2'] ?? 'CLIENTS.' }}</span></h2>
     </div>
     @php
       $defaultCards = [
@@ -13,7 +13,7 @@
         ],
         [
           'card_id' => 'founders',
-          'title' => "Founders &\nEntrepreneurs",
+          'title' => "Founders &\nEntrepreneurs",``7687
           'description' => "Building, testing or launching\ntheir business in the market.",
           'image' => 'themes/inbetween_v2/images/client-founders.png',
         ],
@@ -26,7 +26,7 @@
       ];
       $clientCards = !empty($settings['client_cards']) && is_array($settings['client_cards']) ? array_values($settings['client_cards']) : $defaultCards;
     @endphp
-    <div class="our-clients-grid flex-1 w-full h-full flex flex-col lg:flex-row items-stretch">
+    <div class="our-clients-grid flex-1 w-full h-full flex flex-col md:flex-row items-stretch">
       @foreach($clientCards as $cIndex => $card)
         @php
           $cardSlug = !empty($card['card_id']) ? \Illuminate\Support\Str::slug($card['card_id']) : 'card-'.$cIndex;

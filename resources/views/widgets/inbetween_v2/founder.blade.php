@@ -1,5 +1,5 @@
-<section class="inbetween-onepage-section relative w-full h-screen min-h-screen max-h-screen overflow-hidden select-none bg-[#F6F4F4] text-[#131313]" id="inbetween-founder">
-  <div class="inbetween-container-1440 relative z-10 pt-[52px] sm:pt-[56px] lg:pt-[54px] pb-0">
+<section class="inbetween-onepage-section relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#F6F4F4] text-[#131313] py-8 sm:py-10 lg:py-0" id="inbetween-founder">
+  <div class="inbetween-container-1440 relative z-10 pt-4 sm:pt-6 lg:pt-[54px] pb-4 sm:pb-6 lg:pb-0">
     <div class="founder-stage state-overview w-full h-full" id="founder-stage">
       <div class="founder-grid grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
         @php
@@ -15,19 +15,19 @@
           <div class="founder-portrait-card founder-portrait-card" data-flip-id="founder-portrait"><img class="founder-portrait-img w-full h-full object-cover object-top" src="{{ $portraitUrl }}" alt="{{ $founderName }} - {{ $founderRole }}"></div>
         </div>
         <div class="founder-col-right lg:col-span-7 xl:col-span-7 h-full flex flex-col justify-center lg:pl-6">
-          <div class="founder-header-block space-y-1.5 w-full max-w-[460px] mb-6 sm:mb-8" data-flip-id="founder-header">
+          <div class="founder-header-block space-y-1.5 w-full max-w-[460px] mb-4 sm:mb-8" data-flip-id="founder-header">
             <button class="founder-name-trigger group text-left inline-flex items-center gap-3 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#EC460B] rounded-lg p-0.5" type="button" aria-expanded="false" aria-controls="founder-scroll-detail" aria-label="Xem chi tiết hồ sơ Founder {{ $founderName }}" title="Nhấn để xem chi tiết / thu gọn hồ sơ {{ $founderName }}">
-              <h2 class="founder-name text-[86.86px] font-semibold text-[#EC460B] tracking-tight leading-none transition-transform duration-300 group-hover:translate-x-1">{{ $founderName }}</h2>
+              <h2 class="founder-name text-[48px] sm:text-[64px] lg:text-[86.86px] font-semibold text-[#EC460B] tracking-tight leading-none transition-transform duration-300 group-hover:translate-x-1">{{ $founderName }}</h2>
             </button>
-            <div class="flex items-center gap-8 sm:gap-12 pt-1.5"><span class="founder-role text-[18px] sm:text-[20px] font-light text-[#131313] tracking-normal">{{ $founderRole }}</span>
+            <div class="flex items-center gap-6 sm:gap-12 pt-1.5"><span class="founder-role text-[16px] sm:text-[20px] font-light text-[#131313] tracking-normal">{{ $founderRole }}</span>
               <button class="inbetween-btn-plus text-[#EC460B] text-[22px] sm:text-[25px] font-light leading-none inline-flex items-center justify-center cursor-pointer select-none transition-all hover:opacity-80 focus:outline-none tracking-wider" type="button" aria-label="Xem thêm thông tin Founder" title="Chi tiết Founder" data-action="toggle-founder"><span>[+]</span></button>
             </div>
           </div>
-          <div class="founder-quote-block flex items-start gap-4 lg:gap-[38px]" data-flip-id="founder-quote"><img class="founder-quote-icon w-[30px] sm:w-[34px] lg:w-[36px] h-auto shrink-0 select-none pointer-events-none mt-1 sm:mt-1.5" src="data:image/svg+xml,%3csvg%20width='36'%20height='26'%20viewBox='0%200%2036%2026'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M15.6%2018.1294C15%2022.3295%2011.28%2025.5695%207.2%2025.5695C3.36%2025.5695%200%2022.6895%200%2018.6094C0%2010.6895%206.6%202.88945%2013.32%200.129451C14.28%20-0.230552%2014.4%200.249449%2013.68%200.489453C8.64%202.40945%205.16%209.48945%205.28%2011.8894C6.6%2010.9294%208.28%2010.6895%209.24%2010.6895C13.44%2010.6895%2016.32%2013.9295%2015.6%2018.1294ZM35.28%2018.1294C34.68%2022.3295%2030.96%2025.5695%2026.88%2025.5695C23.04%2025.5695%2019.68%2022.6895%2019.68%2018.6094C19.68%2010.6895%2026.28%202.88945%2033%200.129451C33.96%20-0.230552%2034.08%200.249449%2033.36%200.489453C28.32%202.40945%2024.84%209.48945%2024.96%2011.8894C26.28%2010.9294%2027.96%2010.6895%2028.92%2010.6895C33.12%2010.6895%2036%2013.9295%2035.28%2018.1294Z'%20fill='%23EC460B'/%3e%3c/svg%3e" alt="Quote">
+          <div class="founder-quote-block flex items-start gap-3.5 sm:gap-4 lg:gap-[38px]" data-flip-id="founder-quote"><img class="founder-quote-icon w-[26px] sm:w-[34px] lg:w-[36px] h-auto shrink-0 select-none pointer-events-none mt-1 sm:mt-1.5" src="data:image/svg+xml,%3csvg%20width='36'%20height='26'%20viewBox='0%200%2036%2026'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M15.6%2018.1294C15%2022.3295%2011.28%2025.5695%207.2%2025.5695C3.36%2025.5695%200%2022.6895%200%2018.6094C0%2010.6895%206.6%202.88945%2013.32%200.129451C14.28%20-0.230552%2014.4%200.249449%2013.68%200.489453C8.64%202.40945%205.16%209.48945%205.28%2011.8894C6.6%2010.9294%208.28%2010.6895%209.24%2010.6895C13.44%2010.6895%2016.32%2013.9295%2015.6%2018.1294ZM35.28%2018.1294C34.68%2022.3295%2030.96%2025.5695%2026.88%2025.5695C23.04%2025.5695%2019.68%2022.6895%2019.68%2018.6094C19.68%2010.6895%2026.28%202.88945%2033%200.129451C33.96%20-0.230552%2034.08%200.249449%2033.36%200.489453C28.32%202.40945%2024.84%209.48945%2024.96%2011.8894C26.28%2010.9294%2027.96%2010.6895%2028.92%2010.6895C33.12%2010.6895%2036%2013.9295%2035.28%2018.1294Z'%20fill='%23EC460B'/%3e%3c/svg%3e" alt="Quote">
             <div class="space-y-1 sm:space-y-1.5">
-              <p class="text-[28px] sm:text-[34px] lg:text-[39px] font-medium text-[#131313] leading-[1.18] tracking-tight">{{ $quote1 }}
+              <p class="text-[20px] sm:text-[28px] lg:text-[39px] font-medium text-[#131313] leading-[1.18] tracking-tight">{{ $quote1 }}
               </p>
-              <p class="text-[28px] sm:text-[34px] lg:text-[39px] font-medium text-[#EC460B] leading-[1.18] tracking-tight">{{ $quote2 }}
+              <p class="text-[20px] sm:text-[28px] lg:text-[39px] font-medium text-[#EC460B] leading-[1.18] tracking-tight">{{ $quote2 }}
               </p>
             </div>
           </div>

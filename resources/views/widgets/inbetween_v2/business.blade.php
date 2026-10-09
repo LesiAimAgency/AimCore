@@ -1,6 +1,6 @@
-<section class="inbetween-onepage-section inbetween-section-business relative w-full h-screen min-h-screen max-h-screen overflow-hidden select-none bg-[#F6F4F4] text-[#131313]" id="inbetween-business" aria-label="INBETWEEN Beyond Business">
-  <div class="business-intro-text absolute left-0 right-0 top-[60px] lg:top-[90px] w-full max-w-[1296px] mx-auto px-6 sm:px-12 flex flex-col items-center text-center z-10 transition-all duration-500 pointer-events-auto">
-    <div class="w-full flex items-center justify-between mb-4 pointer-events-auto">
+<section class="inbetween-onepage-section inbetween-section-business relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#F6F4F4] text-[#131313] pb-10 lg:pb-0" id="inbetween-business" aria-label="INBETWEEN Beyond Business">
+  <div class="business-intro-text absolute left-0 right-0 top-6 sm:top-10 lg:top-[90px] w-full max-w-[1296px] mx-auto px-6 sm:px-12 flex flex-col items-center text-center z-10 transition-all duration-500 pointer-events-auto">
+    <div class="w-full flex items-center justify-between mb-3 sm:mb-4 pointer-events-auto">
       <div class="business-badge-media hidden xl:flex items-start gap-3 w-[210px] text-left">
         <div class="w-6 h-6 shrink-0 text-[#EC460B] mt-0.5">
           <svg class="w-5 h-5" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -26,10 +26,10 @@
         </div>
       </div>
     </div>
-    <h2 class="text-[32px] sm:text-[38px] lg:text-[42px] font-semibold text-[#131313] leading-[1.15] tracking-tight mb-3"><span class="text-[#EC460B]">{{ $settings['heading_prefix'] ?? 'Building ' }}</span><span>{{ $settings['heading_suffix'] ?? 'more than a service.' }}</span></h2>
+    <h2 class="text-[26px] sm:text-[34px] lg:text-[42px] font-semibold text-[#131313] leading-[1.15] tracking-tight mb-2 sm:mb-3"><span class="text-[#EC460B]">{{ $settings['heading_prefix'] ?? 'Building ' }}</span><span>{{ $settings['heading_suffix'] ?? 'more than a service.' }}</span></h2>
     <p class="text-[13.5px] sm:text-[14.5px] font-light text-[#131313] leading-relaxed max-w-[620px] mx-auto">{!! $settings['description'] ?? 'In Between Asia is also building a <strong class="font-semibold text-[#131313]">growing media platform, business network </strong>connecting people, ideas and opportunities across Asia.' !!}</p>
   </div>
-  <div class="business-pull-stage relative w-full flex flex-col items-center justify-start z-20 will-change-transform pointer-events-auto pt-[369px]">
+  <div class="business-pull-stage relative w-full flex flex-col items-center justify-start z-20 will-change-transform pointer-events-auto pt-[170px] sm:pt-[220px] lg:pt-[369px]">
     <div class="business-stage-wrap relative w-full flex flex-col items-center justify-start">
       <div class="w-full flex justify-center mb-[33px] pointer-events-auto"><a class="business-btn-talk inline-flex items-center justify-between w-[295px] h-[48px] pl-7 pr-2 rounded-full bg-[#131313] text-white text-[16px] font-medium tracking-normal hover:bg-[#2B2B2B] transition-colors duration-300 shadow-sm group shrink-0 select-none whitespace-nowrap" href="{{ $settings['cta_link'] ?? '#inbetween-founder' }}"><span class="text-[16px] font-medium text-[#F6F4F4] whitespace-nowrap">{{ $settings['cta_text'] ?? 'Talk to us' }}</span><span class="w-[48px] h-[32px] rounded-[16px] bg-[#F6F4F4] text-[#131313] flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1 shrink-0">
             <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

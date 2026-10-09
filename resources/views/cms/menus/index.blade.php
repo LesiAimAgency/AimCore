@@ -61,7 +61,7 @@
     <div class="col-span-12 lg:col-span-4 bg-white rounded-lg shadow-sm p-4">
         <h3 class="font-semibold text-base mb-3 flex items-center justify-between text-gray-800">
             <span>Chọn lựa nguồn dữ liệu</span>
-            <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-medium">7 Nguồn</span>
+            <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-medium">8 Nguồn</span>
         </h3>
         
         @if($selectedMenu)
@@ -244,6 +244,30 @@
                         </div>
                         <button type="submit" class="w-full px-3 py-2 bg-indigo-600 text-white text-xs font-semibold rounded-lg hover:bg-indigo-700 shadow-xs">Thêm liên kết tùy chỉnh</button>
                     </form>
+                </div>
+            </div>
+
+            <!-- 8. Thư Viện Media (Media Files) -->
+            <div class="border rounded-lg shadow-xs overflow-hidden">
+                <button onclick="toggleSection('media')" class="w-full p-3 flex justify-between items-center bg-gray-50 hover:bg-gray-100 text-left font-medium text-gray-800 text-sm">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        Thư Viện Media (Media Files)
+                    </span>
+                    <span class="text-xs text-gray-500 font-normal">({{ count($mediaFiles ?? []) }}) ▼</span>
+                </button>
+                <div id="media-section" class="hidden p-3 border-t max-h-56 overflow-y-auto space-y-1">
+                    @forelse($mediaFiles ?? [] as $mFile)
+                    <label class="flex items-center p-2 hover:bg-pink-50/50 rounded cursor-pointer transition">
+                        <input type="checkbox" class="mr-2 rounded border-gray-300 text-pink-600" data-type="media" data-id="{{ $mFile['name'] }}" data-title="{{ $mFile['name'] }}" data-url="{{ $mFile['url'] }}">
+                        <span class="text-sm text-gray-700 truncate">{{ $mFile['name'] }}</span>
+                    </label>
+                    @empty
+                    <p class="text-gray-400 text-xs text-center py-2">Chưa có tập tin media</p>
+                    @endforelse
+                    @if(!empty($mediaFiles) && count($mediaFiles) > 0)
+                    <button onclick="addSelectedItems('media')" class="mt-2 w-full px-3 py-2 bg-pink-600 text-white text-xs font-semibold rounded-lg hover:bg-pink-700 shadow-xs">Thêm Media vào menu</button>
+                    @endif
                 </div>
             </div>
 
@@ -575,12 +599,13 @@ function addSelectedItems(type) {
         else if (type === 'postcategory') modelName = 'Taxonomy';
         else if (type === 'product') modelName = 'Product';
         else if (type === 'brand') modelName = 'Brand';
+        else if (type === 'media') modelName = null;
 
         const itemPayload = {
             title: cb.dataset.title,
             url: cb.dataset.url || null,
-            linkable_type: 'App\\Models\\' + modelName,
-            linkable_id: cb.dataset.id,
+            linkable_type: modelName ? ('App\\Models\\' + modelName) : null,
+            linkable_id: modelName ? cb.dataset.id : null,
             target: '_self'
         };
 

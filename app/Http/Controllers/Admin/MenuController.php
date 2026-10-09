@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 
 class MenuController extends Controller
 {
@@ -541,7 +542,23 @@ class MenuController extends Controller
                 ->get()
             : collect();
 
-        return compact('pages', 'posts', 'postCategories', 'productCategories', 'products', 'brands');
+        $projectCode = $project?->code;
+        $mediaPath = $projectCode ? "media/project-{$projectCode}" : 'media';
+        $mediaFiles = collect();
+        if (Storage::disk('public')->exists($mediaPath)) {
+            $files = Storage::disk('public')->files($mediaPath);
+            $mediaFiles = collect($files)->filter(function ($f) {
+                return in_array(strtolower(pathinfo($f, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'mp4', 'pdf']);
+            })->map(function ($f) {
+                return [
+                    'name' => basename($f),
+                    'url' => Storage::disk('public')->url($f),
+                    'path' => $f,
+                ];
+            })->values();
+        }
+
+        return compact('pages', 'posts', 'postCategories', 'productCategories', 'products', 'brands', 'mediaFiles');
     }
 
     private function autoInitializeProjectMenus($project): void
@@ -559,17 +576,29 @@ class MenuController extends Controller
             return;
         }
 
+        $isIb = ($project->code === 'DA005' || $project->code === 'inbetween_v2' || ($project->features['theme'] ?? '') === 'inbetween_v2');
+
         // 1. Menu chính (Header)
         $mainMenu = Menu::create([
             'project_id' => $projectId,
             'tenant_id' => $tenantId,
-            'name' => 'Menu chính',
-            'slug' => 'main-menu',
+            'name' => $isIb ? 'Inbetween V2 Header Navigation' : 'Menu chính',
+            'slug' => $isIb ? 'inbetween-v2-header' : 'main-menu',
             'location' => 'header',
             'is_active' => true,
         ]);
 
-        $mainItems = [
+        $mainItems = $isIb ? [
+            ['title' => 'HOME', 'url' => '#inbetween-intro', 'order' => 1],
+            ['title' => 'ABOUT', 'url' => '#inbetween-hero', 'order' => 2],
+            ['title' => 'WHAT WE DO', 'url' => '#inbetween-what-we-do', 'order' => 3],
+            ['title' => 'WHERE WE FOCUS', 'url' => '#inbetween-where-we-focus', 'order' => 4],
+            ['title' => 'FOUNDER', 'url' => '#inbetween-founder', 'order' => 5],
+            ['title' => 'OUR CLIENTS', 'url' => '#inbetween-our-clients', 'order' => 6],
+            ['title' => 'BEYOND BUSINESS', 'url' => '#inbetween-business', 'order' => 7],
+            ['title' => 'MEDIA', 'url' => '#inbetween-business', 'order' => 8],
+            ['title' => 'CONTACT', 'url' => '#inbetween-footer', 'order' => 9],
+        ] : [
             ['title' => 'Trang chủ', 'url' => '/', 'order' => 1],
             ['title' => 'Cửa hàng', 'url' => '/cua-hang', 'order' => 2],
             ['title' => 'Tin tức', 'url' => '/blog', 'order' => 3],
@@ -585,6 +614,7 @@ class MenuController extends Controller
                 'url' => $mItem['url'],
                 'order' => $mItem['order'],
                 'target' => '_self',
+                'is_active' => true,
             ]);
         }
 
@@ -598,7 +628,12 @@ class MenuController extends Controller
             'is_active' => true,
         ]);
 
-        $footerItems = [
+        $footerItems = $isIb ? [
+            ['title' => 'About Us', 'url' => '#inbetween-hero', 'order' => 1],
+            ['title' => 'Media', 'url' => '#inbetween-business', 'order' => 2],
+            ['title' => 'Beyond Business', 'url' => '#inbetween-business', 'order' => 3],
+            ['title' => 'Contact', 'url' => '#inbetween-footer', 'order' => 4],
+        ] : [
             ['title' => 'Giới thiệu', 'url' => '/gioi-thieu', 'order' => 1],
             ['title' => 'Chính sách bảo mật', 'url' => '/chinh-sach-bao-mat', 'order' => 2],
             ['title' => 'Điều khoản sử dụng', 'url' => '/dieu-khoan-su-dung', 'order' => 3],
@@ -614,6 +649,7 @@ class MenuController extends Controller
                 'url' => $fItem['url'],
                 'order' => $fItem['order'],
                 'target' => '_self',
+                'is_active' => true,
             ]);
         }
     }

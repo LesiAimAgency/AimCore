@@ -15,8 +15,8 @@ class MediaController extends Controller
      */
     private function getMediaPath(?Request $request = null)
     {
-        // Check for project code from route parameter (multi-site)
-        $projectCode = $request?->route('projectCode');
+        // Check for project code from route parameter or session/default
+        $projectCode = $request?->route('projectCode') ?? session('current_project')?->code ?? request()->cookie('last_project_code') ?? 'DA005';
         if ($projectCode) {
             return "media/project-{$projectCode}";
         }
@@ -40,8 +40,15 @@ class MediaController extends Controller
 
     public function list(Request $request)
     {
-        $basePath = $this->getMediaPath($request);
         $projectCode = $request->route('projectCode');
+        if (! $projectCode && ! $request->wantsJson() && ! $request->ajax()) {
+            $targetProject = session('current_project')?->code ?? request()->cookie('last_project_code') ?? 'DA005';
+
+            return redirect()->route('project.admin.media.list', ['projectCode' => $targetProject]);
+        }
+
+        $basePath = $this->getMediaPath($request);
+        $projectCode = $projectCode ?: (session('current_project')?->code ?? 'DA005');
         $path = $request->get('path', '');
         $path = ltrim(str_replace('\\', '/', $path), '/');
 

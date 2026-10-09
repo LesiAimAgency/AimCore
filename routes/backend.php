@@ -55,18 +55,30 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::get('fake-notifications', fn () => view('cms.settings.fake-notifications'))->name('fake-notifications');
     });
 
-    // Global Media Management (if needed) - TODO: Check if MediaController exists
-    // Route::get('media/list', [\App\Http\Controllers\Admin\MediaController::class, 'list'])->name('media.list');
-    // Route::post('media/upload', [\App\Http\Controllers\Admin\MediaController::class, 'upload'])->name('media.upload');
-    // Route::post('media/folder', [\App\Http\Controllers\Admin\MediaController::class, 'createFolder'])->name('media.folder.create');
-    // Route::delete('media/folder', [\App\Http\Controllers\Admin\MediaController::class, 'deleteFolder'])->name('media.folder.delete');
-    // Route::post('media/move', [\App\Http\Controllers\Admin\MediaController::class, 'move'])->name('media.move');
-    // Route::delete('media/{id}', [\App\Http\Controllers\Admin\MediaController::class, 'destroy'])->name('media.destroy');
+    // Content Management Redirections to Active Project (Pages, Posts, Menus, Media)
+    Route::get('pages', function () {
+        $projectCode = strtoupper(request('project') ?? session('current_project')?->code ?? request()->cookie('last_project_code') ?? 'DA005');
 
-    // System Logs & Backups (Super Admin only) - TODO: Create SystemController
-    // Route::get('logs', [\App\Http\Controllers\Admin\SystemController::class, 'logs'])->name('logs.index');
-    // Route::get('backups', [\App\Http\Controllers\Admin\SystemController::class, 'backups'])->name('backups.index');
-    // Route::post('backups/create', [\App\Http\Controllers\Admin\SystemController::class, 'createBackup'])->name('backups.create');
+        return redirect()->route('project.admin.pages.index', ['projectCode' => $projectCode]);
+    })->name('pages.index');
+
+    Route::get('posts', function () {
+        $projectCode = strtoupper(request('project') ?? session('current_project')?->code ?? request()->cookie('last_project_code') ?? 'DA005');
+
+        return redirect()->route('project.admin.posts.index', ['projectCode' => $projectCode]);
+    })->name('posts.index');
+
+    Route::get('menus', function () {
+        $projectCode = strtoupper(request('project') ?? session('current_project')?->code ?? request()->cookie('last_project_code') ?? 'DA005');
+
+        return redirect()->route('project.admin.menus.index', ['projectCode' => $projectCode]);
+    })->name('menus.index');
+
+    Route::get('media/list', function () {
+        $projectCode = strtoupper(request('project') ?? session('current_project')?->code ?? request()->cookie('last_project_code') ?? 'DA005');
+
+        return redirect()->route('project.admin.media.list', ['projectCode' => $projectCode]);
+    })->name('media.list');
 });
 
 // NOTE: All content management (products, categories, orders, etc.)

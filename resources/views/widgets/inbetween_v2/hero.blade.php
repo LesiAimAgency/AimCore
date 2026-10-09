@@ -10,6 +10,19 @@
 <!-- Fixed Header across sections -->
 @once('inbetween-header')
 <style>
+  #wecanhelp-text {
+    font-size: clamp(52px, 8.5vw, 132px) !important;
+    line-height: 1.05 !important;
+    font-family: 'SVN-Gilroy', 'Inter', sans-serif !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: -0.02em;
+    will-change: transform, letter-spacing, opacity;
+    transform-origin: 50% 50%;
+  }
+  @media (min-width: 640px) { #wecanhelp-text { font-size: 84px !important; } }
+  @media (min-width: 1024px) { #wecanhelp-text { font-size: 116px !important; } }
+  @media (min-width: 1280px) { #wecanhelp-text { font-size: 132px !important; } }
   /* Fixed hit-area & stable hover for inbetween menu toggle */
   .inbetween-header .inbetween-menu-toggle {
     position: fixed;
@@ -114,12 +127,12 @@
   }
 </style>
 <header class="inbetween-header fixed top-0 left-0 w-full z-50 select-none transition-colors duration-300 pointer-events-auto theme-dark text-white" id="inbetween-header">
-  <div class="inbetween-container-1440 pt-5 sm:pt-6 pb-2 sm:pb-3 transition-all duration-300">
-    <a class="inbetween-logo inline-flex items-center w-[210px] h-[32px] shrink-0 select-none transition-opacity hover:opacity-85" href="#inbetween-intro" title="in • between">
-      <img class="inbetween-logo-white w-[210px] h-[32px] object-contain" src="{{ $logoWhite }}" alt="in • between Logo" width="210" height="32"/>
-      <img class="inbetween-logo-dark w-[210px] h-[32px] object-contain" src="{{ $logoDark }}" alt="in • between Logo" width="210" height="32"/>
+  <div class="inbetween-container-1440 pt-4 sm:pt-6 pb-2 sm:pb-3 transition-all duration-300">
+    <a class="inbetween-logo inline-flex items-center w-[140px] xs:w-[170px] sm:w-[190px] lg:w-[210px] h-auto max-h-[32px] shrink-0 select-none transition-opacity hover:opacity-85" href="#inbetween-intro" title="in • between">
+      <img class="inbetween-logo-white w-full h-auto max-h-[26px] sm:max-h-[30px] lg:max-h-[32px] object-contain object-left" src="{{ $logoWhite }}" alt="in • between Logo" width="210" height="32"/>
+      <img class="inbetween-logo-dark w-full h-auto max-h-[26px] sm:max-h-[30px] lg:max-h-[32px] object-contain object-left" src="{{ $logoDark }}" alt="in • between Logo" width="210" height="32"/>
     </a>
-    <div class="flex items-center gap-5 sm:gap-7">
+    <div class="flex items-center gap-3 sm:gap-5 lg:gap-7">
       <!-- Language Switcher -->
       <div class="flex items-center gap-1.5 text-xs sm:text-[13px] tracking-wider uppercase font-medium inbetween-header-lang">
         <span class="inbetween-lang-btn inbetween-lang-en active cursor-pointer font-semibold text-current hover:text-[#EC460B] transition-colors" data-lang="en">{{ $langEn }}</span>
@@ -127,7 +140,7 @@
         <span class="inbetween-lang-btn inbetween-lang-zh cursor-pointer opacity-70 hover:opacity-100 hover:text-[#EC460B] transition-all" data-lang="zh">{{ $langZh }}</span>
       </div>
       <nav>
-        <a class="inbetween-connect-link inline-flex items-center gap-3 text-pc-h6 text-[15px] sm:text-[16px] font-normal uppercase tracking-normal transition-all duration-200 group border-b border-transparent hover:border-current pb-0.5 text-current cursor-pointer" href="{{ $connectLink }}" data-contact-modal-toggle="" title="{{ $connectText }}">
+        <a class="inbetween-connect-link inline-flex items-center gap-1.5 sm:gap-3 text-pc-h6 text-[13px] sm:text-[15px] lg:text-[16px] font-normal uppercase tracking-normal transition-all duration-200 group border-b border-transparent hover:border-current pb-0.5 text-current cursor-pointer whitespace-nowrap" href="{{ $connectLink }}" data-contact-modal-toggle="" title="{{ $connectText }}">
           <span>{{ $connectText }}</span>
           <span class="transition-transform duration-200 group-hover:translate-x-1 inline-block">&rarr;</span>
         </a>

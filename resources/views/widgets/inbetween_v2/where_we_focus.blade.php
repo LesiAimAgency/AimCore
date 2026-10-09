@@ -1,10 +1,10 @@
-<section class="inbetween-onepage-section relative w-full h-screen min-h-screen max-h-screen overflow-hidden select-none bg-[#F6F4F4] text-[#131313]" id="inbetween-where-we-focus">
-  <div class="inbetween-container-1440 relative z-10">
-    <div class="w-full shrink-0 pt-8 sm:pt-10 lg:pt-12 pb-1 sm:pb-2 lg:pb-[24px]">
+<section class="inbetween-onepage-section relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#F6F4F4] text-[#131313] py-8 sm:py-10 lg:py-0" id="inbetween-where-we-focus">
+  <div class="inbetween-container-1440 relative z-10 pb-4 sm:pb-6 lg:pb-2">
+    <div class="w-full shrink-0 pt-4 sm:pt-6 lg:pt-8 pb-1 sm:pb-2 lg:pb-3">
       <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5 sm:gap-4">
         <div class="text-[14px] font-light text-[#3E3939] uppercase tracking-widest">{{ $settings['badge_text'] ?? '[ WHERE WE FOCUS ]' }}</div>
         <div class="text-left sm:text-right">
-          <h2 class="text-[26px] sm:text-[36px] lg:text-[49px] font-semibold tracking-normal leading-[1.2]"><span class="text-[#EC460B] block">{{ $settings['heading_line1'] ?? 'Our core business sectors' }}</span><span class="text-[#131313] block">{{ $settings['heading_line2'] ?? 'Where we create values' }}</span></h2>
+          <h2 class="text-[26px] sm:text-[34px] lg:text-[46px] xl:text-[49px] font-semibold tracking-normal leading-[1.2]"><span class="text-[#EC460B] block">{{ $settings['heading_line1'] ?? 'Our core business sectors' }}</span><span class="text-[#131313] block">{{ $settings['heading_line2'] ?? 'Where we create values' }}</span></h2>
         </div>
       </div>
     </div>
@@ -38,13 +38,13 @@
       $sectors = !empty($settings['sectors']) && is_array($settings['sectors']) ? array_values($settings['sectors']) : $defaultSectors;
       $chunked = array_chunk($sectors, 2);
     @endphp
-    <div class="sectors-grid-wrap w-full my-auto flex flex-col gap-3 sm:gap-4 lg:gap-[32px]">
+    <div class="sectors-grid-wrap w-full my-auto flex flex-col gap-3 sm:gap-4 lg:gap-[24px] xl:gap-[32px]">
       @foreach($chunked as $rowIdx => $rowSectors)
         @php
           $isRow1 = ($rowIdx % 2 === 0);
           $rowClass = $isRow1 
-            ? 'sectors-row-1 grid grid-cols-1 lg:grid-cols-[519fr_741fr] gap-3 sm:gap-4 lg:gap-[clamp(35px,2.7vw,40px)]' 
-            : 'sectors-row-2 grid grid-cols-1 lg:grid-cols-[741fr_519fr] gap-3 sm:gap-4 lg:gap-[clamp(16px,2.5vw,40px)]';
+            ? 'sectors-row-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[519fr_741fr] gap-3 sm:gap-4 lg:gap-[clamp(24px,2.7vw,40px)]' 
+            : 'sectors-row-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[741fr_519fr] gap-3 sm:gap-4 lg:gap-[clamp(16px,2.5vw,40px)]';
         @endphp
         <div class="{{ $rowClass }}">
           @foreach($rowSectors as $colIdx => $sector)

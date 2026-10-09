@@ -41,10 +41,10 @@
     
     <!-- Left Column: MORE CONNECTIONS (Text rotates 1s top-to-bottom) -->
     <div class="lg:col-span-6 flex flex-col justify-center">
-      <h2 class="gap-[20px] text-[38px] sm:text-[46px] md:text-[52px] lg:text-[58px] xl:text-[64px] font-bold text-white tracking-tight uppercase leading-[1.1] select-none flex flex-wrap items-center">
-        <span class="mr-4 sm:mr-5 lg:mr-6">{{ $headingPrefix }}</span>
+      <h2 class="gap-2 sm:gap-4 lg:gap-[20px] text-[26px] xs:text-[32px] sm:text-[42px] md:text-[52px] lg:text-[58px] xl:text-[64px] font-bold text-white tracking-tight uppercase leading-[1.1] select-none flex flex-wrap items-center">
+        <span class="mr-2 sm:mr-4 lg:mr-6">{{ $headingPrefix }}</span>
         <!-- Rotating Text Viewport Wrapper -->
-        <span class="inbetween-rotating-wrapper relative inline-flex items-center overflow-hidden h-[1.18em] align-top text-[#EC460B] min-w-[280px] sm:min-w-[340px] lg:min-w-[420px]"
+        <span class="inbetween-rotating-wrapper relative inline-flex items-center overflow-hidden h-[1.18em] align-top text-[#EC460B] min-w-0 sm:min-w-[280px] lg:min-w-[420px]"
               id="inbetween-rotating-wrapper"
               data-words='@json($wordTexts)'
               aria-live="polite">
@@ -181,10 +181,25 @@
       <div class="md:col-span-4 flex flex-col items-start">
         <div class="text-xs text-neutral-400 font-normal mb-2.5 tracking-wide">Quick links</div>
         <div class="grid grid-cols-2 gap-x-10 sm:gap-x-12 gap-y-2 text-[13.5px] text-white font-normal">
-          <a href="#inbetween-hero" class="hover:text-[#EC460B] transition-colors">About Us</a>
-          <a href="#inbetween-business" class="hover:text-[#EC460B] transition-colors">Media</a>
-          <a href="#" class="hover:text-[#EC460B] transition-colors">Events</a>
-          <a href="#" class="hover:text-[#EC460B] transition-colors">Community</a>
+          @php
+            $footerMenu = \App\Models\Menu::withoutGlobalScopes()
+                ->where('project_id', 7)
+                ->where('location', 'footer')
+                ->where('is_active', true)
+                ->with(['items' => fn($q) => $q->withoutGlobalScopes()->where('is_active', true)->whereNull('parent_id')->orderBy('order')])
+                ->first();
+            $fItems = $footerMenu && $footerMenu->items->isNotEmpty() ? $footerMenu->items : null;
+          @endphp
+          @if($fItems)
+            @foreach($fItems as $fi)
+              <a href="{{ $fi->url }}" target="{{ $fi->target ?? '_self' }}" class="hover:text-[#EC460B] transition-colors">{{ $fi->title }}</a>
+            @endforeach
+          @else
+            <a href="#inbetween-hero" class="hover:text-[#EC460B] transition-colors">About Us</a>
+            <a href="#inbetween-business" class="hover:text-[#EC460B] transition-colors">Media</a>
+            <a href="#inbetween-business" class="hover:text-[#EC460B] transition-colors">Beyond Business</a>
+            <a href="#inbetween-footer" class="hover:text-[#EC460B] transition-colors">Contact</a>
+          @endif
         </div>
       </div>
 

@@ -67,12 +67,37 @@ if (config('app.standalone_mode') || env('STANDALONE_MODE')) {
     return;
 }
 
+// ========================================================
+// CANONICAL PROJECT CODE NORMALIZATION (CASE-INSENSITIVE ROUTE SYNC)
+// Normalizes /da005, /da010, /da... & /hd... to canonical /DA005, /DA010
+// Avoids two separate routers or mismatching controllers
+// ========================================================
+Route::any('{canonicalProjectCode}/{any?}', function ($canonicalProjectCode, $any = null) {
+    $upper = strtoupper($canonicalProjectCode);
+    $queryString = request()->getQueryString();
+    $target = '/'.$upper.($any ? '/'.$any : '').($queryString ? '?'.$queryString : '');
+
+    if (request()->isMethod('post') && in_array($any, ['contact', 'form-submit'])) {
+        if ($upper === 'DA005') {
+            return app(InbetweenV2Controller::class)->contact(request());
+        }
+    }
+
+    return redirect($target, 301);
+})->where('canonicalProjectCode', '(da|hd|Da|Hd|dA|hD)\d{3}')->where('any', '.*');
+
 // ============================================
 // EHENHO DATING & SOCIAL NETWORK (100% ISOLATED)
-// Supports: DA010 (Sole Primary Route)
+// Supports: DA010 & da010 (Canonical & Alias)
 // ============================================
 Route::prefix('DA010')
     ->name('ehenho.')
+    ->middleware([
+        ResolveProjectContext::class,
+    ])
+    ->group(base_path('routes/ehenho.php'));
+
+Route::prefix('da010')
     ->middleware([
         ResolveProjectContext::class,
     ])
@@ -116,6 +141,18 @@ Route::prefix('DA005')
         Route::get('/', [InbetweenV2Controller::class, 'index'])->name('home');
         Route::post('/contact', [InbetweenV2Controller::class, 'contact'])->name('contact');
         Route::post('/form-submit', [InbetweenV2Controller::class, 'contact'])->name('form.submit');
+    });
+
+Route::prefix('da005')
+    ->middleware([
+        ResolveProjectContext::class,
+        ProjectSubdomainMiddleware::class,
+        SetProjectDatabase::class,
+    ])
+    ->group(function () {
+        Route::get('/', [InbetweenV2Controller::class, 'index']);
+        Route::post('/contact', [InbetweenV2Controller::class, 'contact']);
+        Route::post('/form-submit', [InbetweenV2Controller::class, 'contact']);
     });
 
 // 301 Permanent Redirects: /inbetween_v2, /inbetween, /inbetwen -> /DA005

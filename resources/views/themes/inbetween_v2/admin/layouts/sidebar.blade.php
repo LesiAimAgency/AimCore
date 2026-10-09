@@ -181,23 +181,30 @@
         </a>
 
         <!-- Trang Tĩnh (Pages) -->
-        @if(Route::has('project.admin.pages.index'))
+        <!-- @if(Route::has('project.admin.pages.index'))
         <a href="{{ route('project.admin.pages.index', $projectCode) }}"
            class="nav-item {{ request()->routeIs('project.admin.pages.*') ? 'active' : '' }}">
             <span class="nav-icon"><i class="fa-solid fa-file-lines"></i></span>
             <span>Trang Tĩnh</span>
         </a>
-        @endif
+        @endif -->
 
         <!-- Bài Viết (Posts) -->
-        @if(Route::has('project.admin.posts.index'))
+        <!-- @if(Route::has('project.admin.posts.index'))
         <a href="{{ route('project.admin.posts.index', $projectCode) }}"
            class="nav-item {{ request()->routeIs('project.admin.posts.*') ? 'active' : '' }}">
             <span class="nav-icon"><i class="fa-solid fa-newspaper"></i></span>
             <span>Bài Viết / Tin Tức</span>
         </a>
+        @endif -->
+        <!-- Menus -->
+        @if(Route::has('project.admin.menus.index'))
+        <a href="{{ route('project.admin.menus.index', $projectCode) }}"
+           class="nav-item {{ request()->routeIs('project.admin.menus.*') ? 'active' : '' }}">
+            <span class="nav-icon"><i class="fa-solid fa-bars"></i></span>
+            <span>Menu Điều Hướng</span>
+        </a>
         @endif
-
         <!-- Thư Viện Media -->
         @if(Route::has('project.admin.media.list'))
         <a href="{{ route('project.admin.media.list', $projectCode) }}"
@@ -207,14 +214,7 @@
         </a>
         @endif
 
-        <!-- Menus -->
-        @if(Route::has('project.admin.menus.index'))
-        <a href="{{ route('project.admin.menus.index', $projectCode) }}"
-           class="nav-item {{ request()->routeIs('project.admin.menus.*') ? 'active' : '' }}">
-            <span class="nav-icon"><i class="fa-solid fa-bars"></i></span>
-            <span>Menu Điều Hướng</span>
-        </a>
-        @endif
+       
 
         <!-- 3. HỆ THỐNG -->
         <p class="nav-label mt-2">HỆ THỐNG</p>

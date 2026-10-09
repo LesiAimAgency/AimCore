@@ -29,16 +29,47 @@
       <div class="flex items-center justify-start pb-8">
         <button class="inline-flex items-center gap-3 text-xs uppercase font-bold text-neutral-800 hover:text-[#EC460B] transition-colors cursor-pointer py-1 group focus:outline-none" id="close-drawer-btn" type="button" aria-label="Đóng menu"><span class="w-6 h-[1.5px] bg-neutral-800 group-hover:w-8 group-hover:bg-[#EC460B] transition-all"></span><span class="tracking-wider">Close</span></button>
       </div>
-      <div class="flex-1 flex flex-col justify-start gap-8 font-sans">
+        @php
+            $currentProj = function_exists('current_project') ? current_project() : (request()->attributes->get('project') ?? session('current_project'));
+            $projId = is_object($currentProj) ? $currentProj->id : 7;
+
+            $headerMenu = \App\Models\Menu::withoutGlobalScopes()
+                ->where('project_id', $projId)
+                ->where('location', 'header')
+                ->where('is_active', true)
+                ->with(['items' => function($q) {
+                    $q->withoutGlobalScopes()->where('is_active', true)->whereNull('parent_id')->orderBy('order');
+                }])
+                ->first();
+
+            if (! $headerMenu) {
+                $headerMenu = \App\Models\Menu::withoutGlobalScopes()
+                    ->where('slug', 'inbetween-v2-header')
+                    ->where('is_active', true)
+                    ->with(['items' => function($q) {
+                        $q->withoutGlobalScopes()->where('is_active', true)->whereNull('parent_id')->orderBy('order');
+                    }])
+                    ->first();
+            }
+
+            $drawerItems = $headerMenu && $headerMenu->items->isNotEmpty() ? $headerMenu->items : null;
+        @endphp
         <ul class="space-y-5 pt-2">
-          <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-intro" data-nav-link>HOME</a></li>
-          <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-hero" data-nav-link>ABOUT</a></li>
-          <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-what-we-do" data-nav-link>WHAT WE DO</a></li>
-          <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-where-we-focus" data-nav-link>WHERE WE FOCUS</a></li>
-          <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-founder" data-nav-link>FOUNDER</a></li>
-          <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-our-clients" data-nav-link>OUR CLIENTS</a></li>
-          <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-business" data-nav-link>BEYOND BUSINESS</a></li>
-          <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-footer" data-nav-link>CONTACT</a></li>
+          @if($drawerItems)
+            @foreach($drawerItems as $dItem)
+              <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="{{ $dItem->url }}" target="{{ $dItem->target ?? '_self' }}" data-nav-link>{{ strtoupper($dItem->title) }}</a></li>
+            @endforeach
+          @else
+            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-intro" data-nav-link>HOME</a></li>
+            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-hero" data-nav-link>ABOUT</a></li>
+            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-what-we-do" data-nav-link>WHAT WE DO</a></li>
+            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-where-we-focus" data-nav-link>WHERE WE FOCUS</a></li>
+            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-founder" data-nav-link>FOUNDER</a></li>
+            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-our-clients" data-nav-link>OUR CLIENTS</a></li>
+            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-business" data-nav-link>BEYOND BUSINESS</a></li>
+            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-business" data-nav-link>MEDIA</a></li>
+            <li><a class="nav-drawer-link block text-[22px] sm:text-[24px] font-medium text-[#131313] hover:text-[#EC460B] uppercase tracking-tight hover:translate-x-1.5 transition-all" href="#inbetween-footer" data-nav-link>CONTACT</a></li>
+          @endif
         </ul>
         <div class="pt-3 flex items-center justify-between gap-4">
           <a class="btn-drawer-outline btn-drawer-inbetween inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-[#131313] text-[#131313] hover:bg-[#EC460B] hover:border-[#EC460B] hover:text-white transition-all text-xs font-bold uppercase tracking-wider cursor-pointer" href="#contact-modal" data-contact-modal-toggle><span>LET'S CONNECT</span><span>&rarr;</span></a>
@@ -62,22 +93,22 @@
       <div class="contact-modal-box">
         <button class="contact-modal-close-btn" id="close-contact-modal-btn" type="button" aria-label="Close contact dialog"><span class="close-line"></span><span>Close</span></button>
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
-          <div class="lg:col-span-5 flex flex-col justify-between h-full min-h-[460px]">
-            <div class="space-y-5">
-              <div class="flex items-center gap-3"><img class="h-8 sm:h-9 w-auto object-contain" src="{{ asset('themes/inbetween_v2/images/Logo.svg') }}" alt="in • between Logo"></div>
-              <div class="space-y-2 pt-2">
-                <h2 class="text-[24px] sm:text-[28px] lg:text-[34px] font-semibold text-[#131313] leading-[1.2] tracking-normal uppercase font-sans"><span class="block">LET'S <span class="text-[#EC460B]">CONNECT</span></span><span class="block">WITH IN <span class="text-[#EC460B]">•</span> BETWEEN</span></h2>
-                <p class="text-[14px] text-[#3E3939] font-light leading-relaxed font-sans">We help Asian SMEs, founders and entrepreneurs enter and grow in Vietnam. Leave your information and our team will get back to you promptly.</p>
+          <div class="lg:col-span-5 flex flex-col justify-between h-auto lg:h-full min-h-0 lg:min-h-[460px]">
+            <div class="space-y-4 sm:space-y-5">
+              <div class="flex items-center gap-3"><img class="h-7 sm:h-9 w-auto object-contain" src="{{ asset('themes/inbetween_v2/images/Logo.svg') }}" alt="in • between Logo"></div>
+              <div class="space-y-2 pt-1 sm:pt-2">
+                <h2 class="text-[22px] sm:text-[28px] lg:text-[34px] font-semibold text-[#131313] leading-[1.2] tracking-normal uppercase font-sans"><span class="block">LET'S <span class="text-[#EC460B]">CONNECT</span></span><span class="block">WITH IN <span class="text-[#EC460B]">•</span> BETWEEN</span></h2>
+                <p class="text-[13.5px] sm:text-[14px] text-[#3E3939] font-light leading-relaxed font-sans">We help Asian SMEs, founders and entrepreneurs enter and grow in Vietnam. Leave your information and our team will get back to you promptly.</p>
               </div>
             </div>
-            <div class="mt-auto pt-6 flex justify-start items-end">
-              <div class="relative w-[190px] sm:w-[210px] md:w-[220px] aspect-[297/165] rounded-[8px] overflow-hidden border border-neutral-300/80 shadow-xs bg-neutral-200" id="modal-image-slider"><img class="modal-slide-img active absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out" src="{{ asset('themes/inbetween_v2/images/founder-airu-portrait.png') }}" alt="in • between - Founder AiRu" loading="lazy"><img class="modal-slide-img absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out" src="{{ asset('themes/inbetween_v2/images/client-asian-smes.png') }}" alt="in • between - Asian SMEs" loading="lazy"><img class="modal-slide-img absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out" src="{{ asset('themes/inbetween_v2/images/client-founders.png') }}" alt="in • between - Founders &amp; Entrepreneurs" loading="lazy"><img class="modal-slide-img absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out" src="{{ asset('themes/inbetween_v2/images/client-regional-teams.png') }}" alt="in • between - Regional Teams" loading="lazy">
+            <div class="mt-4 lg:mt-auto pt-2 lg:pt-6 flex justify-start items-end">
+              <div class="relative w-[160px] sm:w-[210px] md:w-[220px] aspect-[297/165] rounded-[8px] overflow-hidden border border-neutral-300/80 shadow-xs bg-neutral-200" id="modal-image-slider"><img class="modal-slide-img active absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out" src="{{ asset('themes/inbetween_v2/images/founder-airu-portrait.png') }}" alt="in • between - Founder AiRu" loading="lazy"><img class="modal-slide-img absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out" src="{{ asset('themes/inbetween_v2/images/client-asian-smes.png') }}" alt="in • between - Asian SMEs" loading="lazy"><img class="modal-slide-img absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out" src="{{ asset('themes/inbetween_v2/images/client-founders.png') }}" alt="in • between - Founders &amp; Entrepreneurs" loading="lazy"><img class="modal-slide-img absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 ease-in-out" src="{{ asset('themes/inbetween_v2/images/client-regional-teams.png') }}" alt="in • between - Regional Teams" loading="lazy">
               </div>
             </div>
           </div>
-          <div class="lg:col-span-7 space-y-5">
-            <form class="space-y-4" id="modal-contact-form" novalidate>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="lg:col-span-7 space-y-4 sm:space-y-5">
+            <form class="space-y-3.5 sm:space-y-4" id="modal-contact-form" novalidate>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label class="block text-xs font-bold text-neutral-800 uppercase mb-1.5">FULL NAME
                   </label>
@@ -89,7 +120,7 @@
                   <input class="contact-input" type="tel" name="phone" required placeholder="">
                 </div>
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label class="block text-xs font-bold text-neutral-800 uppercase mb-1.5">EMAIL
                   </label>
@@ -113,7 +144,7 @@
               <div>
                 <label class="block text-xs font-bold text-neutral-800 uppercase mb-1.5">MESSAGE / INQUIRY
                 </label>
-                <textarea class="contact-textarea" name="message" placeholder="" style="resize: none; height: 110px; min-height: 110px; max-height: 110px;"></textarea>
+                <textarea class="contact-textarea" name="message" placeholder="" style="resize: none; min-height: 80px; max-height: 120px;" rows="3"></textarea>
               </div>
               <div class="w-full h-[1px] bg-neutral-300/80 my-2"></div>
               <div class="space-y-3 pt-1 text-[13px] text-neutral-700">

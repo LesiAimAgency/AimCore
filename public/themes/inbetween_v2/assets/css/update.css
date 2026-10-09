@@ -15,8 +15,32 @@
 }
 
 #wecanhelp-text {
+    font-size: 52px !important;
+    line-height: 1.05 !important;
+    font-family: 'SVN-Gilroy', 'Inter', sans-serif !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: -0.02em;
     will-change: transform, letter-spacing, opacity;
     transform-origin: 50% 50%;
+}
+
+@media (min-width: 640px) {
+    #wecanhelp-text {
+        font-size: 84px !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    #wecanhelp-text {
+        font-size: 116px !important;
+    }
+}
+
+@media (min-width: 1280px) {
+    #wecanhelp-text {
+        font-size: 132px !important;
+    }
 }
 
 .floating-word {
@@ -36,6 +60,19 @@
 
 .inbetween-container-1440 {
     padding-top: 60px !important;
+}
+
+@media (max-width: 1023px) {
+    .inbetween-container-1440 {
+        padding-top: 24px !important;
+    }
+}
+
+@media (max-width: 639px) {
+    .inbetween-header .inbetween-container-1440 {
+        padding-top: 14px !important;
+        padding-bottom: 8px !important;
+    }
 }
 
 /* Header container smooth transition */
@@ -181,3 +218,164 @@
     transform: translateX(0);
     color: #ec460b !important;
 }
+
+/* ========================================================
+   RESPONSIVE ENHANCEMENTS FOR INBETWEEN V2 (MOBILE & TABLET)
+   ======================================================== */
+@media (max-width: 1023px) {
+    /* What We Do */
+    #inbetween-what-we-do {
+        height: auto !important;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+        max-height: none !important;
+        overflow-y: auto !important;
+    }
+    #inbetween-what-we-do .what-we-do-accordion {
+        height: auto !important;
+        min-height: auto !important;
+    }
+    #inbetween-what-we-do .what-we-do-card {
+        min-height: 68px;
+    }
+    #inbetween-what-we-do .what-we-do-card.is-active {
+        min-height: 280px;
+    }
+    #inbetween-what-we-do .what-we-do-card-content {
+        max-height: 260px;
+        overflow-y: auto;
+    }
+
+    /* Where We Focus */
+    #inbetween-where-we-focus {
+        height: auto !important;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+        max-height: none !important;
+        overflow-y: auto !important;
+    }
+    #inbetween-where-we-focus .focus-card {
+        height: auto !important;
+        min-height: 130px;
+    }
+
+    /* Founder */
+    #inbetween-founder {
+        height: auto !important;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+        max-height: none !important;
+        overflow-y: auto !important;
+    }
+    #inbetween-founder .founder-drawer-content {
+        max-height: 55vh;
+        overflow-y: auto;
+    }
+
+    /* Our Clients */
+    #inbetween-our-clients {
+        height: auto !important;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+        max-height: none !important;
+        overflow-y: auto !important;
+    }
+    #inbetween-our-clients .client-card {
+        min-height: 200px;
+    }
+
+    /* Beyond Business */
+    #inbetween-business {
+        height: auto !important;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+        max-height: none !important;
+        overflow-y: auto !important;
+    }
+    #inbetween-business .business-slider-stage {
+        height: 420px !important;
+        min-height: 380px !important;
+    }
+    #inbetween-business .business-panels-container {
+        height: 360px !important;
+    }
+    #inbetween-business .business-ellipse-card {
+        width: 300px !important;
+        height: 380px !important;
+    }
+
+    /* Footer */
+    #inbetween-footer {
+        height: auto !important;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+        max-height: none !important;
+        overflow-y: auto !important;
+    }
+}
+
+@media (max-width: 639px) {
+    /* What We Do Mobile */
+    #inbetween-what-we-do .what-we-do-card {
+        min-height: 60px;
+    }
+    #inbetween-what-we-do .what-we-do-card.is-active {
+        min-height: 250px;
+    }
+    #inbetween-what-we-do .what-we-do-card-content {
+        max-height: 220px;
+    }
+
+    /* Beyond Business Mobile */
+    #inbetween-business .business-slider-stage {
+        height: 360px !important;
+        min-height: 320px !important;
+    }
+    #inbetween-business .business-panels-container {
+        height: 320px !important;
+    }
+    #inbetween-business .business-ellipse-card {
+        width: 250px !important;
+        height: 330px !important;
+    }
+
+    /* Menu toggle on small mobile */
+    .inbetween-header .inbetween-menu-toggle {
+        padding: 10px 16px 10px 0 !important;
+    }
+    .inbetween-header .inbetween-menu-toggle .menu-toggle-track {
+        transform: translateX(-4px) !important;
+    }
+    .inbetween-header .inbetween-menu-toggle:hover .menu-toggle-track,
+    .inbetween-header .inbetween-menu-toggle.is-active .menu-toggle-track,
+    .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] .menu-toggle-track {
+        transform: translateX(12px) !important;
+    }
+
+    /* Contact modal on mobile */
+    .contact-modal-overlay {
+        padding: 0.75rem !important;
+    }
+    .contact-modal-overlay .contact-modal-box {
+        padding: 1.5rem 1rem !important;
+        max-height: 94vh !important;
+        max-height: 94dvh !important;
+    }
+}
+
+/* ===== DESKTOP ONEPAGE SCROLL STABILITY (PREVENTS SCROLL-SNAP CONFLICTS) ===== */
+@media (min-width: 1024px) {
+    html {
+        scroll-snap-type: none !important;
+        scroll-behavior: auto !important;
+    }
+    .inbetween-scroll-container {
+        scroll-snap-type: none !important;
+        scroll-behavior: auto !important;
+    }
+    .inbetween-onepage-section {
+        scroll-snap-align: none !important;
+        scroll-snap-stop: normal !important;
+    }
+}
+
