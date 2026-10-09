@@ -213,13 +213,20 @@
                       $q->where('location', 'footer')->orWhere('slug', 'footer-menu');
                   })
                   ->where('is_active', true)
+                  ->orderByRaw("CASE WHEN project_id = ? THEN 0 ELSE 1 END", [$projId])
+                  ->orderBy('updated_at', 'desc')
+                  ->orderBy('id', 'desc')
                   ->with(['items' => fn($q) => $q->withoutGlobalScopes()->where('is_active', true)->whereNull('parent_id')->orderBy('order')])
                   ->first();
 
               if (! $footerMenu) {
                   $footerMenu = \App\Models\Menu::withoutGlobalScopes()
-                      ->where('slug', 'footer-menu')
+                      ->where(function ($q) {
+                          $q->where('location', 'footer')->orWhere('slug', 'footer-menu');
+                      })
                       ->where('is_active', true)
+                      ->orderBy('updated_at', 'desc')
+                      ->orderBy('id', 'desc')
                       ->with(['items' => fn($q) => $q->withoutGlobalScopes()->where('is_active', true)->whereNull('parent_id')->orderBy('order')])
                       ->first();
               }

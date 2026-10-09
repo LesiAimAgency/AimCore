@@ -44,6 +44,8 @@
                 ->where('project_id', $projId)
                 ->where('location', 'header')
                 ->where('is_active', true)
+                ->orderBy('updated_at', 'desc')
+                ->orderBy('id', 'desc')
                 ->with(['items' => function($q) {
                     $q->withoutGlobalScopes()->where('is_active', true)->whereNull('parent_id')->orderBy('order');
                 }])
@@ -53,6 +55,8 @@
                 $headerMenu = \App\Models\Menu::withoutGlobalScopes()
                     ->where('slug', 'inbetween-v2-header')
                     ->where('is_active', true)
+                    ->orderBy('updated_at', 'desc')
+                    ->orderBy('id', 'desc')
                     ->with(['items' => function($q) {
                         $q->withoutGlobalScopes()->where('is_active', true)->whereNull('parent_id')->orderBy('order');
                     }])

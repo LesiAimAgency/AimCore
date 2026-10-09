@@ -13,6 +13,7 @@ use App\Models\Project;
 use App\Models\Taxonomy;
 use App\Services\MenuService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
@@ -187,6 +188,10 @@ class MenuController extends Controller
             ]);
 
             MenuService::clearMenuCache($projectId);
+            if (function_exists('clear_widget_cache')) {
+                clear_widget_cache();
+            }
+            Cache::flush();
 
             if ($request->expectsJson() || $request->ajax()) {
                 return response()->json([
@@ -239,8 +244,13 @@ class MenuController extends Controller
         }
 
         $menu->update($updateData);
+        $menu->touch();
 
         MenuService::clearMenuCache($menu->project_id);
+        if (function_exists('clear_widget_cache')) {
+            clear_widget_cache();
+        }
+        Cache::flush();
 
         if ($request->expectsJson() || $request->ajax()) {
             return response()->json([
@@ -342,7 +352,12 @@ class MenuController extends Controller
 
             $menuItem = MenuItem::withoutGlobalScopes()->create($data);
 
+            $menuModel->touch();
             MenuService::clearMenuCache($menuModel->project_id);
+            if (function_exists('clear_widget_cache')) {
+                clear_widget_cache();
+            }
+            Cache::flush();
 
             return response()->json([
                 'success' => true,
@@ -400,8 +415,13 @@ class MenuController extends Controller
             }
 
             $menuItem->update($data);
+            $menuItem->menu?->touch();
 
             MenuService::clearMenuCache($menuItem->project_id);
+            if (function_exists('clear_widget_cache')) {
+                clear_widget_cache();
+            }
+            Cache::flush();
 
             if ($request->expectsJson() || $request->ajax()) {
                 return response()->json([
@@ -445,9 +465,15 @@ class MenuController extends Controller
             }
 
             $projectId = $menuItem->project_id;
+            $parentMenu = $menuItem->menu;
             $menuItem->delete();
+            $parentMenu?->touch();
 
             MenuService::clearMenuCache($projectId);
+            if (function_exists('clear_widget_cache')) {
+                clear_widget_cache();
+            }
+            Cache::flush();
 
             if (request()->expectsJson() || request()->ajax()) {
                 return response()->json([
@@ -507,7 +533,12 @@ class MenuController extends Controller
                 }
             });
 
+            $menuModel->touch();
             MenuService::clearMenuCache($menuModel->project_id);
+            if (function_exists('clear_widget_cache')) {
+                clear_widget_cache();
+            }
+            Cache::flush();
 
             return response()->json([
                 'success' => true,
@@ -553,6 +584,10 @@ class MenuController extends Controller
         $menu->delete();
 
         MenuService::clearMenuCache($projectId);
+        if (function_exists('clear_widget_cache')) {
+            clear_widget_cache();
+        }
+        Cache::flush();
 
         if (request()->expectsJson() || request()->ajax()) {
             return response()->json([
