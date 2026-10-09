@@ -6,19 +6,19 @@
           'card_id' => 'asian-smes',
           'title' => 'Asian SMEs',
           'description' => "Established businesses looking\nfor customers, distributors or\npartners in Vietnam.",
-          'image' => 'themes/inbetween_v2/images/client-asian-smes.png',
+          'image' => '/storage/media/project-DA005/client-asian-smes.png',
         ],
         [
           'card_id' => 'founders',
           'title' => "Founders &\nEntrepreneurs",
           'description' => "Building, testing or launching\ntheir business in the market.",
-          'image' => 'themes/inbetween_v2/images/client-founders.png',
+          'image' => '/storage/media/project-DA005/client-founders.png',
         ],
         [
           'card_id' => 'regional-teams',
           'title' => 'Regional Teams',
           'description' => "Companies operating across\nAsia that need additional\nVietnam capacity.",
-          'image' => 'themes/inbetween_v2/images/client-regional-teams.png',
+          'image' => '/storage/media/project-DA005/client-regional-teams.png',
         ],
       ];
       $clientCards = !empty($settings['client_cards']) && is_array($settings['client_cards']) ? array_values($settings['client_cards']) : $defaultCards;

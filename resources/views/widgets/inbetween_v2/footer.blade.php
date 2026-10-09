@@ -1,6 +1,6 @@
 @php
     $rawLogoWhite = is_array($settings['logo_white'] ?? null) ? ($settings['logo_white']['url'] ?? $settings['logo_white'][0] ?? '') : ($settings['logo_white'] ?? '');
-    $logoWhite = !empty($rawLogoWhite) ? (str_starts_with($rawLogoWhite, 'http') || str_starts_with($rawLogoWhite, '/') ? $rawLogoWhite : asset($rawLogoWhite)) : asset('themes/inbetween_v2/images/Logo-white.svg');
+    $logoWhite = !empty($rawLogoWhite) ? (str_starts_with($rawLogoWhite, 'http') || str_starts_with($rawLogoWhite, '/') ? $rawLogoWhite : asset($rawLogoWhite)) : asset('storage/media/project-DA005/Logo-white.svg');
     $defaultRotatingWords = [
         ['text' => 'CONNECTIONS'],
         ['text' => 'OPPORTUNITIES'],

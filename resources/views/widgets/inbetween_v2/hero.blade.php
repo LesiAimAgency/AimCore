@@ -1,8 +1,8 @@
 @php
   $rawLogoWhite = is_array($settings['logo_white'] ?? null) ? ($settings['logo_white']['url'] ?? $settings['logo_white'][0] ?? '') : ($settings['logo_white'] ?? '');
-  $logoWhite = !empty($rawLogoWhite) ? (str_starts_with($rawLogoWhite, 'http') || str_starts_with($rawLogoWhite, '/') ? $rawLogoWhite : asset($rawLogoWhite)) : asset('themes/inbetween_v2/images/Logo-white.svg');
+  $logoWhite = !empty($rawLogoWhite) ? (str_starts_with($rawLogoWhite, 'http') || str_starts_with($rawLogoWhite, '/') ? $rawLogoWhite : asset($rawLogoWhite)) : asset('storage/media/project-DA005/Logo-white.svg');
   $rawLogoDark = is_array($settings['logo_dark'] ?? null) ? ($settings['logo_dark']['url'] ?? $settings['logo_dark'][0] ?? '') : ($settings['logo_dark'] ?? '');
-  $logoDark = !empty($rawLogoDark) ? (str_starts_with($rawLogoDark, 'http') || str_starts_with($rawLogoDark, '/') ? $rawLogoDark : asset($rawLogoDark)) : asset('themes/inbetween_v2/images/Logo.svg');
+  $logoDark = !empty($rawLogoDark) ? (str_starts_with($rawLogoDark, 'http') || str_starts_with($rawLogoDark, '/') ? $rawLogoDark : asset($rawLogoDark)) : asset('storage/media/project-DA005/Logo.svg');
   $connectText = $settings['connect_text'] ?? "LET'S CONNECT";
   $connectLink = $settings['connect_link'] ?? '#contact-modal';
   $langEn = $settings['lang_en_label'] ?? 'EN';
@@ -176,7 +176,7 @@
 <section class="inbetween-onepage-section relative w-full h-screen min-h-screen max-h-screen overflow-hidden bg-[#131313] text-white flex flex-col justify-between items-center cursor-default" id="inbetween-hero" aria-label="INBETWEEN Hero - Your Local Team Before You're Ready To Hire One">
   <!-- Glowing Hands Radiant Background Image Layer -->
   <div class="absolute inset-0 z-0 pointer-events-none" id="hero-bg-layer" style="pointer-events: none !important;">
-    <img class="w-full h-full object-cover object-center filter brightness-105 pointer-events-none" src="{{ asset('themes/inbetween_v2/images/hero-hands-glow.png') }}" alt="inbetween Hero Radiant Touch">
+    <img class="w-full h-full object-cover object-center filter brightness-105 pointer-events-none" src="{{ asset('storage/media/project-DA005/hero-hands-glow.png') }}" alt="inbetween Hero Radiant Touch">
     <div class="absolute inset-0 bg-radial-[circle_at_center,_transparent_40%,_rgba(15,4,0,0.65)_100%] pointer-events-none"></div>
   </div>
 

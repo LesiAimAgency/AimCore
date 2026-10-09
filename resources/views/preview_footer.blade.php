@@ -4,7 +4,7 @@
 <main class="w-full min-h-screen bg-[#131313]">
   @include('widgets.inbetween_v2.footer', [
     'settings' => [
-      'logo_white' => 'themes/inbetween_v2/images/Logo-white.svg',
+      'logo_white' => '/storage/media/project-DA005/Logo-white.svg',
       'lang_en_label' => 'EN',
       'lang_zh_label' => '汉语',
       'top_connect_text' => "LET'S CONNECT",

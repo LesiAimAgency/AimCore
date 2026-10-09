@@ -14,25 +14,25 @@
           'title_line1' => 'INDUSTRIAL &',
           'title_line2' => 'MANUFACTURING',
           'tags' => 'Machinery, Equipment, Components, Factory Solutions, Materials, Materials',
-          'image' => 'themes/inbetween_v2/images/sector-robot-arm.png',
+          'image' => '/storage/media/project-DA005/sector-robot-arm.png',
         ],
         [
           'title_line1' => 'ELECTRONICS, AUTOMATION',
           'title_line2' => '& TECHNOLOGY',
           'tags' => 'Testing & Inspection, Electronics, Industrial Technology, Automation, Digital Solutions',
-          'image' => 'themes/inbetween_v2/images/sector-chipset-ai.png',
+          'image' => '/storage/media/project-DA005/sector-chipset-ai.png',
         ],
         [
           'title_line1' => 'BIOTECHNOLOGY &',
           'title_line2' => 'HEALTHCARE',
           'tags' => 'Healthcare solutions, Biotech, Medical Technology, Pharma, Laboratory, Diagnostics',
-          'image' => 'themes/inbetween_v2/images/sector-dna-helix.png',
+          'image' => '/storage/media/project-DA005/sector-dna-helix.png',
         ],
         [
           'title_line1' => 'ENERGY, ENVIRONMENT',
           'title_line2' => '& SUSTAINABILITY',
           'tags' => 'Sustainability Technology, Energy Technology, Environmental Solutions, Water & Waste, Renewable Energy, Materials',
-          'image' => 'themes/inbetween_v2/images/sector-lightning-bolt.png',
+          'image' => '/storage/media/project-DA005/sector-lightning-bolt.png',
         ],
       ];
       $sectors = !empty($settings['sectors']) && is_array($settings['sectors']) ? array_values($settings['sectors']) : $defaultSectors;
