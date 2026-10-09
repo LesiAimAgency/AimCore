@@ -17,9 +17,9 @@ class MediaController extends Controller
     {
         // Check for project code from route parameter or session/default
         $sessionProject = session('current_project');
-        $sessionCode = is_array($sessionProject) ? ($sessionProject['code'] ?? null) : ($sessionProject->code ?? null);
+        $sessionCode = is_object($sessionProject) ? ($sessionProject->code ?? null) : (is_array($sessionProject) ? ($sessionProject['code'] ?? null) : (is_string($sessionProject) ? $sessionProject : null));
         $projectCode = $request?->route('projectCode') ?? $request?->get('projectCode') ?? $sessionCode ?? request()->cookie('last_project_code') ?? 'DA005';
-        if ($projectCode === 'inbetween_v2') {
+        if ($projectCode === 'inbetween_v2' || $projectCode === 'inbetween') {
             $projectCode = 'DA005';
         }
         if ($projectCode) {
@@ -47,7 +47,7 @@ class MediaController extends Controller
     {
         $projectCode = $request->route('projectCode');
         $sessionProject = session('current_project');
-        $sessionCode = is_array($sessionProject) ? ($sessionProject['code'] ?? null) : ($sessionProject->code ?? null);
+        $sessionCode = is_object($sessionProject) ? ($sessionProject->code ?? null) : (is_array($sessionProject) ? ($sessionProject['code'] ?? null) : (is_string($sessionProject) ? $sessionProject : null));
         if (! $projectCode && ! $request->wantsJson() && ! $request->ajax()) {
             $targetProject = $sessionCode ?? request()->cookie('last_project_code') ?? 'DA005';
 
@@ -56,7 +56,7 @@ class MediaController extends Controller
 
         $basePath = $this->getMediaPath($request);
         $projectCode = $projectCode ?: ($request->get('projectCode') ?? $sessionCode ?? 'DA005');
-        if ($projectCode === 'inbetween_v2') {
+        if ($projectCode === 'inbetween_v2' || $projectCode === 'inbetween') {
             $projectCode = 'DA005';
         }
         $path = $request->get('path', '');
