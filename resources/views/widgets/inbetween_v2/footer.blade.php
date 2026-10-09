@@ -177,21 +177,21 @@
       </a>
     </div>
 
-    <!-- Bottom Row: 3 Columns Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
+    <!-- Bottom Row: 4 Columns Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-8 items-start">
       
       <!-- Col 1: Contact For Work -->
-      <div class="md:col-span-4 flex flex-col items-start space-y-1 text-xs text-neutral-400">
+      <div class="lg:col-span-3 flex flex-col items-start space-y-1 text-xs text-neutral-400">
         <div class="font-normal text-neutral-400">Contact for work</div>
         <div class="text-[13.5px] text-white font-medium">P: {{ $phone }}</div>
         <div class="text-[13.5px] text-white font-medium">E: <a href="mailto:{{ $email }}" class="hover:text-[#EC460B] transition-colors">{{ $email }}</a></div>
       </div>
 
-      <!-- Col 2: Quick Links (Centered) -->
-      <div class="md:col-span-4 flex flex-col items-start md:items-center">
+      <!-- Col 2: Quick Links (Centered on lg) -->
+      <div class="lg:col-span-3 flex flex-col items-start lg:items-center">
         <div class="inline-flex flex-col items-start text-left">
           <div class="text-xs text-neutral-400 font-normal mb-2.5 tracking-wide">Quick links</div>
-          <div class="grid grid-cols-2 text-[13.5px] text-white font-normal gap-30" style="row-gap:2px; column-gap: 44px;">
+          <div class="grid grid-cols-2 text-[13.5px] text-white font-normal" style="row-gap:2px; column-gap: 36px;">
             @php
               $footerMenu = \App\Models\Menu::withoutGlobalScopes()
                   ->where('project_id', 7)
@@ -215,9 +215,33 @@
         </div>
       </div>
 
-      <!-- Col 3: Explore more on, Social Icons & Copyright -->
-      <div class="md:col-span-4 flex flex-col md:items-end">
-        <div class="inline-flex flex-col items-start text-left " style="gap:8px">
+      <!-- Col 3: Community / Zalo Group (Kế bên Explore more on) -->
+      <div class="lg:col-span-3 flex flex-col items-start text-left">
+        <div class="inline-flex flex-col items-start text-left" style="gap:8px">
+          @if(!empty($communityTitle))
+            <div class="text-xs text-neutral-400 font-normal tracking-wide">
+              {{ $communityTitle }}
+            </div>
+          @endif
+          @if(!empty($communityDesc))
+            <p class="text-[13.5px] text-white font-normal leading-relaxed max-w-[280px]">
+              {{ $communityDesc }}
+            </p>
+          @endif
+          @if(!empty($communityLinkText))
+            <div class="mt-1">
+              <a href="{{ $communityLinkUrl ?: '#' }}" target="{{ $communityTarget }}" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-[13.5px] text-white hover:text-[#EC460B] transition-colors group cursor-pointer">
+                <span>{{ $communityLinkText }}</span>
+                <span class="text-[14px] leading-none transition-transform group-hover:translate-x-1">&rarr;</span>
+              </a>
+            </div>
+          @endif
+        </div>
+      </div>
+
+      <!-- Col 4: Explore more on, Social Icons & Copyright -->
+      <div class="lg:col-span-3 flex flex-col items-start lg:items-end">
+        <div class="inline-flex flex-col items-start text-left" style="gap:8px">
           
           <!-- Explore More On -->
           <div class="text-[12px] text-neutral-400 font-normal mb-[8px] tracking-normal">
