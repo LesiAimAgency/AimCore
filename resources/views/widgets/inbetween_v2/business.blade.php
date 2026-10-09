@@ -102,7 +102,7 @@
           @endforeach
         </div>
         <div class="business-slider-container absolute left-1/2 top-[432px] -translate-x-1/2 flex flex-col items-center justify-center z-30 pointer-events-auto select-none opacity-100 transition-opacity duration-300">
-          <div class="business-slider-track-wrap relative w-[217px] h-[24px] flex items-center justify-center cursor-pointer group" aria-label="Thanh trượt chuyển ảnh">
+          <div class="business-slider-track-wrap relative w-[217px] h-[24px] flex items-center justify-center cursor-pointer group" aria-label="Image slider track">
             <div class="business-slider-line w-[217px] h-[1.5px] bg-[#3E3939] rounded-full"></div>
             <div class="business-slider-thumb absolute left-0 top-1/2 -translate-y-1/2 w-[12px] h-[12px] rounded-full bg-[#EC460B] shadow-sm cursor-grab active:cursor-grabbing hover:scale-125 transition-transform duration-150"></div>
           </div>
