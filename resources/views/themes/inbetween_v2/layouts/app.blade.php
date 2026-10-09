@@ -12,13 +12,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     @php
       $themeJsTime = file_exists(public_path('themes/inbetween_v2/js/inbetween.js')) ? filemtime(public_path('themes/inbetween_v2/js/inbetween.js')) : time();
-      $themeCssTime = file_exists(public_path('themes/inbetween_v2/css/update.css')) ? filemtime(public_path('themes/inbetween_v2/css/update.css')) : time();
+      $themeStyleCssTime = file_exists(public_path('themes/inbetween_v2/css/style.css')) ? filemtime(public_path('themes/inbetween_v2/css/style.css')) : time();
+      $themeUpdateCssTime = file_exists(public_path('themes/inbetween_v2/css/update.css')) ? filemtime(public_path('themes/inbetween_v2/css/update.css')) : time();
     @endphp
     <script type="module" crossorigin src="{{ asset('themes/inbetween_v2/js/main.js') }}?v={{ $themeJsTime }}"></script>
     <script type="module" crossorigin src="{{ asset('themes/inbetween_v2/js/Observer.js') }}?v={{ $themeJsTime }}"></script>
     <script type="module" crossorigin src="{{ asset('themes/inbetween_v2/js/inbetween.js') }}?v={{ $themeJsTime }}"></script>
-    <link rel="stylesheet" crossorigin href="{{ asset('themes/inbetween_v2/css/style.css') }}?v={{ $themeCssTime }}">
-    <link rel="stylesheet" crossorigin href="{{ asset('themes/inbetween_v2/css/update.css') }}?v={{ $themeCssTime }}">
+    <link rel="stylesheet" crossorigin href="{{ asset('themes/inbetween_v2/css/style.css') }}?v={{ $themeStyleCssTime }}">
+    <link rel="stylesheet" crossorigin href="{{ asset('themes/inbetween_v2/css/update.css') }}?v={{ $themeUpdateCssTime }}">
     @stack('styles')
   </head>
   <body class="bg-[#131313] text-[#131313] font-sans antialiased overflow-hidden selection:bg-[#EC460B] selection:text-white">

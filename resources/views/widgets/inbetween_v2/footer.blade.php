@@ -271,6 +271,7 @@
     overflow: hidden;
     height: 1.15em;
     vertical-align: top;
+    width: 50
   }
 
   .inbetween-word-current,

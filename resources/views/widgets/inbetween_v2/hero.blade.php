@@ -171,20 +171,20 @@
 @endonce
 
 <!-- SECTION 2: HERO (Your Local Team Before You're Ready To Hire One) -->
-<section class="inbetween-onepage-section relative w-full h-screen min-h-screen max-h-screen overflow-hidden select-none bg-[#131313] text-white flex flex-col justify-between items-center cursor-default" id="inbetween-hero" aria-label="INBETWEEN Hero - Your Local Team Before You're Ready To Hire One">
+<section class="inbetween-onepage-section relative w-full h-screen min-h-screen max-h-screen overflow-hidden bg-[#131313] text-white flex flex-col justify-between items-center cursor-default" id="inbetween-hero" aria-label="INBETWEEN Hero - Your Local Team Before You're Ready To Hire One">
   <!-- Glowing Hands Radiant Background Image Layer -->
-  <div class="absolute inset-0 z-0 pointer-events-none" id="hero-bg-layer">
-    <img class="w-full h-full object-cover object-center filter brightness-105" src="{{ asset('themes/inbetween_v2/images/hero-hands-glow.png') }}" alt="inbetween Hero Radiant Touch">
-    <div class="absolute inset-0 bg-radial-[circle_at_center,_transparent_40%,_rgba(15,4,0,0.65)_100%]"></div>
+  <div class="absolute inset-0 z-0 pointer-events-none" id="hero-bg-layer" style="pointer-events: none !important;">
+    <img class="w-full h-full object-cover object-center filter brightness-105 pointer-events-none" src="{{ asset('themes/inbetween_v2/images/hero-hands-glow.png') }}" alt="inbetween Hero Radiant Touch">
+    <div class="absolute inset-0 bg-radial-[circle_at_center,_transparent_40%,_rgba(15,4,0,0.65)_100%] pointer-events-none"></div>
   </div>
 
   <!-- Hero Content Stage -->
-  <div class="relative z-20 w-full h-full flex flex-col justify-between pt-16 sm:pt-24 pb-2 sm:pb-3" id="hero-content-stage">
-    <div class="inbetween-container-1440 relative z-10 w-full flex-1 flex flex-col justify-between my-auto">
-      <div class="w-full my-auto" style="margin-top:0">
+  <div class="relative z-20 w-full h-full flex flex-col justify-between pt-16 sm:pt-24 pb-2 sm:pb-3 stage-active select-text pointer-events-auto" id="hero-content-stage" style="pointer-events: auto !important;">
+    <div class="inbetween-container-1440 relative z-10 w-full flex-1 flex flex-col justify-between my-auto pointer-events-auto">
+      <div class="w-full my-auto pointer-events-auto" style="margin-top:0">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          <div class="lg:col-span-8 xl:col-span-7 space-y-4 sm:space-y-7">
-            <h1 class="text-[23px] sm:text-[34px] lg:text-[49px] font-semibold uppercase tracking-normal text-[#F6F4F4] leading-[1.15] drop-shadow-md max-w-[648px]" id="hero-headline-text">{{ $settings['headline_text'] ?? "YOUR LOCAL TEAM BEFORE YOU'RE READY TO HIRE ONE." }}
+          <div class="lg:col-span-8 xl:col-span-7 space-y-4 sm:space-y-7 pointer-events-auto">
+            <h1 class="text-[23px] sm:text-[34px] lg:text-[49px] font-semibold uppercase tracking-normal text-[#F6F4F4] leading-[1.15] drop-shadow-md max-w-[648px] select-text" id="hero-headline-text">{{ $settings['headline_text'] ?? "YOUR LOCAL TEAM BEFORE YOU'RE READY TO HIRE ONE." }}
             </h1>
             @php
               $rawServices = $settings['services'] ?? 'Sales & BD, Market Validation, Market Entry Execution, Local Business Support';
@@ -202,20 +202,20 @@
                 $serviceList = ['Sales & BD', 'Market Validation', 'Market Entry Execution', 'Local Business Support'];
               }
             @endphp
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 sm:gap-y-3.5 gap-x-6 pt-1 max-w-[600px]" id="hero-services-list">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 sm:gap-y-3.5 gap-x-6 pt-1 max-w-[600px] select-text" id="hero-services-list">
               @foreach($serviceList as $svcTitle)
-                <div class="hero-svc-item flex items-center gap-2.5 text-[13.5px] sm:text-[16px] lg:text-[20px] font-medium text-[#F6F4F4] tracking-normal drop-shadow-sm"><span class="font-medium text-[17px] sm:text-[20px] leading-none text-[#F6F4F4]">+</span><span>{{ $svcTitle }}</span></div>
+                <div class="hero-svc-item flex items-center gap-2.5 text-[13.5px] sm:text-[16px] lg:text-[20px] font-medium text-[#F6F4F4] tracking-normal drop-shadow-sm select-text"><span class="font-medium text-[17px] sm:text-[20px] leading-none text-[#F6F4F4]">+</span><span>{{ $svcTitle }}</span></div>
               @endforeach
             </div>
           </div>
         </div>
       </div>
-      <div class="w-full pb-3 sm:pb-6">
+      <div class="w-full pb-3 sm:pb-6 pointer-events-auto">
         <div class="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-4 sm:gap-6">
           <div class="hidden lg:block lg:col-span-6"></div>
-          <div class="max-w-[440px] space-y-2.5 sm:space-y-3.5 text-left ml-auto">
-            <p class="text-[13.5px] sm:text-[15px] lg:text-[16px] font-light text-[#F6F4F4]/90 leading-relaxed tracking-normal drop-shadow-sm">{!! $settings['description'] ?? 'We help <strong class="font-semibold text-white">Asian SMEs, founders and entrepreneurs</strong> enter and grow in Vietnam.' !!}</p>
-            <div class="pt-0.5"><a class="inbetween-btn-pill inline-flex items-center justify-between gap-4 pl-5 sm:pl-6 pr-2 py-1.5 sm:py-2 rounded-full bg-[#131313] text-white text-[15px] sm:text-[16px] font-medium tracking-normal hover:bg-[#3E3939] transition-all duration-300 shadow-md group shrink-0 cursor-pointer" href="{{ $settings['cta_link'] ?? '#inbetween-founder' }}" title="{{ $settings['cta_text'] ?? 'Talk to us' }}"><span class="font-medium">{{ $settings['cta_text'] ?? 'Talk to us' }}</span><span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white text-[#131313] flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1 shrink-0">
+          <div class="max-w-[440px] space-y-2.5 sm:space-y-3.5 text-left ml-auto pointer-events-auto">
+            <p class="text-[13.5px] sm:text-[15px] lg:text-[16px] font-light text-[#F6F4F4]/90 leading-relaxed tracking-normal drop-shadow-sm select-text">{!! $settings['description'] ?? 'We help <strong class="font-semibold text-white">Asian SMEs, founders and entrepreneurs</strong> enter and grow in Vietnam.' !!}</p>
+            <div class="pt-0.5"><a class="inbetween-btn-pill inline-flex items-center justify-between gap-4 pl-5 sm:pl-6 pr-2 py-1.5 sm:py-2 rounded-full bg-[#131313] text-white text-[15px] sm:text-[16px] font-medium tracking-normal hover:bg-[#3E3939] transition-all duration-300 shadow-md group shrink-0 cursor-pointer relative z-30 pointer-events-auto" href="{{ $settings['cta_link'] ?? '#inbetween-founder' }}" title="{{ $settings['cta_text'] ?? 'Talk to us' }}" style="pointer-events: auto !important; cursor: pointer !important;"><span class="font-medium">{{ $settings['cta_text'] ?? 'Talk to us' }}</span><span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white text-[#131313] flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1 shrink-0">
                   <svg class="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3.33334 8H12.6667M12.6667 8L8.66668 4M12.6667 8L8.66668 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                   </svg></span></a>
@@ -224,8 +224,8 @@
         </div>
       </div>
       <!-- Mouse scroll indicator pointing to #inbetween-what-we-do -->
-      <div class="w-full shrink-0 flex justify-center pb-1">
-        <a class="inline-flex flex-col items-center gap-0.5 text-white/60 hover:text-white transition-colors duration-200 group text-[12px] font-light uppercase tracking-widest cursor-pointer" href="#inbetween-what-we-do" title="Cuộn sang What We Do">
+      <div class="w-full shrink-0 flex justify-center pb-1 pointer-events-auto">
+        <a class="inline-flex flex-col items-center gap-0.5 text-white/60 hover:text-white transition-colors duration-200 group text-[12px] font-light uppercase tracking-widest cursor-pointer relative z-30" href="#inbetween-what-we-do" title="Cuộn sang What We Do" style="pointer-events: auto !important; cursor: pointer !important;">
           <span class="w-3.5 h-6 sm:w-4 sm:h-7 rounded-full border border-white/40 flex items-start justify-center p-0.5 group-hover:border-white">
             <span class="w-1 h-1.5 rounded-full bg-white animate-bounce"></span>
           </span>

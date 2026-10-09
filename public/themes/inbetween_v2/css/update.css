@@ -402,3 +402,179 @@
         scroll-snap-stop: normal !important;
     }
 }
+
+/* ===== FOUNDER DETAIL PADDING: Push down when expanded to clear top fixed header ===== */
+#inbetween-app #inbetween-founder .inbetween-container-1440 {
+    transition: padding-top .35s ease;
+}
+
+@media (min-width: 1024px) {
+
+    #inbetween-app #inbetween-founder.founder-active .inbetween-container-1440,
+    #inbetween-app #inbetween-founder.state-expanded .inbetween-container-1440,
+    #inbetween-app #inbetween-founder .inbetween-container-1440.founder-detail-active,
+    #inbetween-app #inbetween-founder .inbetween-container-1440.state-expanded,
+    #inbetween-app #inbetween-founder:has(.founder-stage.state-expanded) .inbetween-container-1440,
+    #inbetween-app #inbetween-founder:has(.inbetween-btn-plus.active) .inbetween-container-1440,
+    #inbetween-app #inbetween-founder .inbetween-container-1440:has(.founder-stage.state-expanded) {
+        padding-top: 90px !important;
+    }
+
+    #inbetween-app #inbetween-founder .founder-stage.state-expanded .founder-portrait-card {
+        max-height: calc(100vh - 240px);
+    }
+
+    #inbetween-app #inbetween-founder .founder-stage.state-expanded .founder-scroll-detail {
+        max-height: calc(100vh - 240px);
+    }
+
+    #inbetween-app #inbetween-founder .founder-name,
+    #inbetween-app #inbetween-founder .founder-name-trigger .founder-name,
+    .lg\:text-\[86\.86px\],
+    .lg\:text-\[86px\] {
+        font-size: 86px !important;
+        line-height: 0.95;
+    }
+}
+
+#inbetween-app #inbetween-founder .founder-name {
+    font-size: 48px;
+    line-height: 0.95;
+}
+
+@media (min-width: 640px) {
+    #inbetween-app #inbetween-founder .founder-name {
+        font-size: 64px;
+    }
+}
+
+/* ===== OUR CLIENTS: 4-COLUMN UNIFIED GRID LAYOUT ===== */
+#inbetween-our-clients .our-clients-stage {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 10;
+}
+
+#inbetween-our-clients .our-clients-grid {
+    width: 100%;
+    height: 100%;
+    display: grid !important;
+    grid-template-columns: 1fr;
+}
+
+@media(min-width: 1024px) {
+    #inbetween-our-clients .our-clients-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    }
+}
+
+#inbetween-our-clients .our-clients-col-title {
+    background-color: #131313;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 96px;
+}
+
+#inbetween-our-clients .our-clients-grid:has(.our-clients-card:hover) .our-clients-card:not(:hover) .clients-card-bg {
+    filter: brightness(.85);
+}
+
+#inbetween-our-clients .our-clients-grid:has(.our-clients-card:hover) .our-clients-card:not(:hover) .clients-card-overlay {
+    background-color: #13131340;
+}
+
+/* ===== HERO SECTION (SECTION 2): ACCESSIBILITY & CLICK REPAIR ===== */
+#inbetween-hero {
+    user-select: auto;
+    -webkit-user-select: auto;
+}
+
+#inbetween-hero #hero-bg-layer {
+    pointer-events: none !important;
+}
+
+#inbetween-hero #hero-content-stage,
+#inbetween-hero #hero-content-stage.stage-active,
+#inbetween-hero #hero-content-stage * {
+    pointer-events: auto !important;
+}
+
+#inbetween-hero #hero-content-stage {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+}
+
+#inbetween-hero .inbetween-btn-pill,
+#inbetween-hero a,
+#inbetween-hero button {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    position: relative;
+    z-index: 30 !important;
+}
+
+#hero-white-transition,
+#act-wecanhelp-container {
+    pointer-events: none !important;
+}
+
+/* Ensure the fixed header does not cover hero content outside its elements */
+.inbetween-header {
+    pointer-events: none !important;
+}
+
+.inbetween-header .inbetween-container-1440,
+.inbetween-header .inbetween-menu-toggle,
+.inbetween-header a,
+.inbetween-header button,
+.inbetween-header .inbetween-lang-btn {
+    pointer-events: auto !important;
+}
+
+/* ===== BEYOND BUSINESS: BADGE CLICK POPOVER ===== */
+#inbetween-business .business-badge-item {
+    position: relative !important;
+}
+
+#inbetween-business .business-badge-trigger {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    user-select: none !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#inbetween-business .business-badge-trigger:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+}
+
+#inbetween-business .business-badge-item.is-open .business-badge-trigger {
+    background-color: #ffffff !important;
+    border-color: rgba(236, 70, 11, 0.4) !important;
+    box-shadow: 0 4px 16px rgba(236, 70, 11, 0.18) !important;
+}
+
+#inbetween-business .business-badge-item.is-open .badge-toggle-icon {
+    transform: rotate(45deg) !important;
+}
+
+#inbetween-business .business-badge-popover {
+    position: absolute !important;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s ease !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translateY(-8px) scale(0.97) !important;
+    transform-origin: top center !important;
+    box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.06) !important;
+}
+
+#inbetween-business .business-badge-item.is-open .business-badge-popover {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translateY(0) scale(1) !important;
+}

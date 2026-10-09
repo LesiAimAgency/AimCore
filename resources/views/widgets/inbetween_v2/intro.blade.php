@@ -290,7 +290,6 @@
     </div>
   </div>
 
-<<<<<<< HEAD
   <!-- Act 2: Big WE CAN HELP! Container (Frames 12 - 21) -->
   <style>
     #wecanhelp-text {
@@ -325,11 +324,6 @@
         style="font-size: clamp(52px, 8.5vw, 132px) !important; line-height: 1.05 !important; font-weight: 700 !important; font-family: 'SVN-Gilroy', 'Inter', sans-serif !important; will-change: transform, letter-spacing, opacity; transform-origin: 50% 50%;">
       {{ $settings['wecanhelp_text'] ?? 'WE CAN HELP!' }}
     </h2>
-=======
-  <!-- Act 2: Big WE CAN HELP! Container (Frame 12) -->
-  <div class="absolute inset-0 z-[30] flex items-center justify-center opacity-0 pointer-events-none select-none overflow-hidden px-4" id="act-wecanhelp-container" style="display: none; opacity: 0; z-index: 30;">
-    <h2 class="text-[34px] sm:text-[62px] md:text-[88px] lg:text-[112px] xl:text-[128px] font-bold uppercase tracking-tight text-white whitespace-nowrap will-change-transform font-sans text-center max-w-full drop-shadow-md" id="wecanhelp-text">{{ $settings['wecanhelp_text'] ?? 'WE CAN HELP!' }}</h2>
->>>>>>> e3989e4c6a6a5f283edcc6fe534e7812a9d2b17e
   </div>
 
   <!-- Act 3: White Transition Flash Screen -->

@@ -123,10 +123,6 @@ class ProjectExportService
         ];
     }
 
-    // =========================================================================
-    // SOURCE CODE EXPORT
-    // =========================================================================
-
     private function exportEssentialFiles(Project $project, string $exportPath, bool $includeVendor = false): void
     {
         $basePath = base_path();
