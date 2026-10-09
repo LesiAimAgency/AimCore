@@ -150,15 +150,7 @@
         </div>
 
         <!-- Submit Button: Matching Modal Box LET'S CONNECT pill with arrow animation -->
-        <div class="pt-1.5 sm:pt-2">
-          <button type="submit" class="footer-submit-btn group cursor-pointer" aria-label="Submit Inquiry">
-            <span class="submit-arrow-box">
-              <span class="arrow-primary">&rarr;</span>
-              <span class="arrow-secondary">&rarr;</span>
-            </span>
-            <span class="submit-btn-text">LET'S CONNECT</span>
-          </button>
-        </div>
+        
       </form>
     </div>
 

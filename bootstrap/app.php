@@ -31,6 +31,37 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+// Ensure finfo class exists even if PHP fileinfo extension is disabled on host server
+if (! defined('FILEINFO_MIME_TYPE')) {
+    define('FILEINFO_MIME_TYPE', 16);
+}
+if (! class_exists('finfo')) {
+    class finfo
+    {
+        public function __construct(int $flags = 16, ?string $magicFile = null) {}
+
+        public function file(string $filename, int $flags = 16, $context = null): string|false
+        {
+            $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+            $mimes = [
+                'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png',
+                'gif' => 'image/gif', 'webp' => 'image/webp', 'svg' => 'image/svg+xml',
+                'mp4' => 'video/mp4', 'webm' => 'video/webm', 'mov' => 'video/quicktime',
+                'avi' => 'video/x-msvideo', 'mkv' => 'video/x-matroska',
+                'pdf' => 'application/pdf', 'txt' => 'text/plain', 'json' => 'application/json',
+                'css' => 'text/css', 'js' => 'application/javascript',
+            ];
+
+            return $mimes[$ext] ?? 'application/octet-stream';
+        }
+
+        public function buffer(string $string, int $flags = 16, $context = null): string|false
+        {
+            return 'application/octet-stream';
+        }
+    }
+}
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
