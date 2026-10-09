@@ -137,10 +137,10 @@ class RepeatableField extends BaseFieldType
             return false;
         }
 
-        $maxItems = $this->config['max_items'] ?? 10;
+        $maxItems = isset($this->config['max_items']) ? (int) $this->config['max_items'] : 0;
         $minItems = $this->config['min_items'] ?? 0;
 
-        if (\count($value) > $maxItems || \count($value) < $minItems) {
+        if (($maxItems > 0 && \count($value) > $maxItems) || \count($value) < $minItems) {
             return false;
         }
 
