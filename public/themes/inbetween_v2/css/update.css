@@ -578,3 +578,36 @@
     pointer-events: auto !important;
     transform: translateY(0) scale(1) !important;
 }
+
+/* ===== BEYOND BUSINESS: SPACING & DOWNWARD POSITIONING ===== */
+@media (min-width: 1024px) {
+    #inbetween-business {
+        justify-content: space-between !important;
+        padding-bottom: clamp(24px, 4vh, 48px) !important;
+    }
+
+    #inbetween-business .business-intro-text {
+        flex-shrink: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    #inbetween-business .business-pull-stage {
+        padding-top: 0 !important;
+        margin-top: auto !important;
+        margin-bottom: 0 !important;
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+    }
+
+    #inbetween-business .business-stage-wrap {
+        margin-top: clamp(16px, 3vh, 36px) !important;
+        transform-origin: center bottom !important;
+    }
+
+    #inbetween-business .business-stage-wrap > div:first-child {
+        margin-bottom: clamp(38px, 5vh, 56px) !important;
+    }
+}
