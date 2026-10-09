@@ -81,7 +81,7 @@
           $carouselList = !empty($settings['carousel_images']) && is_array($settings['carousel_images']) ? array_values($settings['carousel_images']) : $defaultCarousel;
           $totalCards = count($carouselList);
           $centerCardIndex = (int) floor($totalCards / 2);
-          $trackWidth = max(160, round(48 + max(0, $totalCards - 1) * 42.25));
+          $trackWidth = 217;
           $initialThumbX = $totalCards > 1 ? round(18 + ($centerCardIndex / ($totalCards - 1)) * ($trackWidth - 48)) : round($trackWidth / 2 - 6);
         @endphp
         <div class="business-panels-container relative w-full h-full flex items-start justify-center overflow-visible pointer-events-auto">
