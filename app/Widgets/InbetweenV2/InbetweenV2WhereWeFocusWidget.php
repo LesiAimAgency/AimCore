@@ -78,9 +78,9 @@ class InbetweenV2WhereWeFocusWidget extends BaseWidget
         ];
     }
 
-    public function render(): string
+    public function getMergedSettings(): array
     {
-        $settings = array_merge([
+        return array_merge([
             'badge_text' => '[ WHERE WE FOCUS ]',
             'heading_line1' => 'Our core business sectors',
             'heading_line2' => 'Where we create values',
@@ -111,6 +111,11 @@ class InbetweenV2WhereWeFocusWidget extends BaseWidget
                 ],
             ],
         ], $this->settings);
+    }
+
+    public function render(): string
+    {
+        $settings = $this->getMergedSettings();
 
         return view('widgets.inbetween_v2.where_we_focus', [
             'widget' => $this,

@@ -58,6 +58,48 @@ class InbetweenV2HeroWidget extends BaseWidget
                     'default' => '#contact-modal',
                 ],
                 [
+                    'name' => 'bg_type',
+                    'label' => 'Loại Background Hero (Desktop & Mobile)',
+                    'type' => 'select',
+                    'options' => [
+                        'video' => 'Video Background (MP4 / WebM)',
+                        'image' => 'Hình ảnh Background (Image)',
+                        'none' => 'Chỉ dùng màu nền (No media)',
+                    ],
+                    'default' => 'video',
+                    'description' => 'Chọn hiển thị Video hoặc Hình ảnh làm background cho Hero Section',
+                ],
+                [
+                    'name' => 'bg_video',
+                    'label' => 'Video Background (Desktop & Chung)',
+                    'type' => 'video',
+                    'default' => 'themes/inbetween_v2/videos/section_video.mp4',
+                    'placeholder' => 'Đường dẫn file video hoặc chọn từ thư viện',
+                    'description' => 'Video nền tự động chạy loop muted (MP4 / WebM)',
+                ],
+                [
+                    'name' => 'bg_image',
+                    'label' => 'Hình ảnh Background (Desktop & Chung)',
+                    'type' => 'image',
+                    'default' => 'themes/inbetween_v2/images/hero-hands-glow.png',
+                    'description' => 'Ảnh nền hiển thị (hoặc làm ảnh chờ poster khi phát video)',
+                ],
+                [
+                    'name' => 'bg_video_mobile',
+                    'label' => 'Video Background riêng cho Mobile (Tùy chọn)',
+                    'type' => 'video',
+                    'default' => '',
+                    'placeholder' => 'Để trống sẽ dùng chung Video Background ở trên',
+                    'description' => 'Video tối ưu riêng cho màn hình điện thoại (nếu có)',
+                ],
+                [
+                    'name' => 'bg_image_mobile',
+                    'label' => 'Hình ảnh Background riêng cho Mobile (Tùy chọn)',
+                    'type' => 'image',
+                    'default' => '',
+                    'description' => 'Để trống sẽ dùng chung Hình ảnh Background ở trên',
+                ],
+                [
                     'name' => 'logo_white',
                     'label' => 'Header Logo White (Fallback)',
                     'type' => 'image',
@@ -85,11 +127,18 @@ class InbetweenV2HeroWidget extends BaseWidget
         ];
     }
 
-    public function render(): string
+    public function getMergedSettings(): array
     {
-        $settings = array_merge([
+        return array_merge([
+            'bg_type' => 'video',
+            'bg_video' => 'themes/inbetween_v2/videos/section_video.mp4',
+            'bg_image' => 'themes/inbetween_v2/images/hero-hands-glow.png',
+            'bg_video_mobile' => '',
+            'bg_image_mobile' => '',
             'logo_white' => 'themes/inbetween_v2/images/Logo-white.svg',
             'logo_dark' => 'themes/inbetween_v2/images/Logo.svg',
+            'lang_en_label' => 'EN',
+            'lang_zh_label' => '汉语',
             'connect_text' => "LET'S CONNECT",
             'connect_link' => '#contact-modal',
             'headline_text' => "YOUR LOCAL TEAM BEFORE YOU'RE READY TO HIRE ONE.",
@@ -98,6 +147,11 @@ class InbetweenV2HeroWidget extends BaseWidget
             'cta_text' => 'Talk to us',
             'cta_link' => '#contact-modal',
         ], $this->settings);
+    }
+
+    public function render(): string
+    {
+        $settings = $this->getMergedSettings();
 
         return view('widgets.inbetween_v2.hero', [
             'widget' => $this,

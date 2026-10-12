@@ -123,13 +123,15 @@ class InbetweenV2IntroWidget extends BaseWidget
         ];
     }
 
-    public function render(): string
+    public function getMergedSettings(): array
     {
-        $settings = array_merge([
+        return array_merge([
             'logo_white' => 'themes/inbetween_v2/images/Logo-white.svg',
             'logo_dark' => 'themes/inbetween_v2/images/Logo.svg',
             'connect_text' => "LET'S CONNECT",
             'connect_link' => '#contact-modal',
+            'lang_en_label' => 'EN',
+            'lang_zh_label' => '汉语',
             'intro_subtitle' => 'Your business is',
             'intro_title' => 'ENTERING VIETNAM?',
             'wecanhelp_text' => 'WE CAN HELP!',
@@ -146,6 +148,11 @@ class InbetweenV2IntroWidget extends BaseWidget
                 ['text' => 'Build Relationships', 'position' => '10'],
             ],
         ], $this->settings);
+    }
+
+    public function render(): string
+    {
+        $settings = $this->getMergedSettings();
 
         return view('widgets.inbetween_v2.intro', [
             'widget' => $this,

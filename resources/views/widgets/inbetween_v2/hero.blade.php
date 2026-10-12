@@ -176,9 +176,19 @@
 <section class="inbetween-onepage-section relative w-full h-screen min-h-screen max-h-screen overflow-hidden bg-[#131313] text-white flex flex-col justify-between items-center cursor-default" id="inbetween-hero" aria-label="INBETWEEN Hero - Your Local Team Before You're Ready To Hire One">
   <!-- Glowing Hands Radiant Background Image Layer -->
   <div class="absolute inset-0 z-0 pointer-events-none" id="hero-bg-layer" style="pointer-events: none !important;">
-    <img class="w-full h-full object-cover object-center filter brightness-105 pointer-events-none" src="{{ asset('themes/inbetween_v2/images/hero-hands-glow.png') }}" alt="inbetween Hero Radiant Touch">
+    <video
+        class="w-full h-full object-cover object-center brightness-105 pointer-events-none"
+        autoplay
+        muted
+        playsinline
+        preload="auto"
+        aria-hidden="true"
+    >
+        <source src="{{ asset('themes/inbetween_v2/videos/section_video.mp4') }}" type="video/mp4">
+    </video>
+
     <div class="absolute inset-0 bg-radial-[circle_at_center,_transparent_40%,_rgba(15,4,0,0.65)_100%] pointer-events-none"></div>
-  </div>
+</div>
 
   <!-- Hero Content Stage -->
   <div class="relative z-20 w-full h-full flex flex-col justify-between pt-16 sm:pt-24 pb-2 sm:pb-3 stage-active select-text pointer-events-auto" id="hero-content-stage" style="pointer-events: auto !important;">
@@ -225,14 +235,7 @@
           </div>
         </div>
       </div>
-      <!-- Mouse scroll indicator pointing to #inbetween-what-we-do -->
-      <!-- <div class="w-full shrink-0 flex justify-center pb-1 pointer-events-auto">
-        <a class="inline-flex flex-col items-center gap-0.5 text-white/60 hover:text-white transition-colors duration-200 group text-[12px] font-light uppercase tracking-widest cursor-pointer relative z-30" href="#inbetween-what-we-do" title="Scroll to What We Do" style="pointer-events: auto !important; cursor: pointer !important;">
-          <span class="w-3.5 h-6 sm:w-4 sm:h-7 rounded-full border border-white/40 flex items-start justify-center p-0.5 group-hover:border-white">
-            <span class="w-1 h-1.5 rounded-full bg-white animate-bounce"></span>
-          </span>
-        </a>
-      </div> -->
+    
     </div>
   </div>
 </section>

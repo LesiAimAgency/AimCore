@@ -72,9 +72,9 @@ class InbetweenV2OurClientsWidget extends BaseWidget
         ];
     }
 
-    public function render(): string
+    public function getMergedSettings(): array
     {
-        $settings = array_merge([
+        return array_merge([
             'heading_word1' => 'OUR',
             'heading_word2' => 'CLIENTS.',
             'client_cards' => [
@@ -98,6 +98,11 @@ class InbetweenV2OurClientsWidget extends BaseWidget
                 ],
             ],
         ], $this->settings);
+    }
+
+    public function render(): string
+    {
+        $settings = $this->getMergedSettings();
 
         return view('widgets.inbetween_v2.our_clients', [
             'widget' => $this,

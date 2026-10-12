@@ -108,9 +108,9 @@ class InbetweenV2WhatWeDoWidget extends BaseWidget
         ];
     }
 
-    public function render(): string
+    public function getMergedSettings(): array
     {
-        $settings = array_merge([
+        return array_merge([
             'badge_text' => '[ WHAT WE DO ]',
             'title_line1' => 'Flexible local support,',
             'title_line2' => 'built around what you need.',
@@ -152,6 +152,11 @@ class InbetweenV2WhatWeDoWidget extends BaseWidget
                 ],
             ],
         ], $this->settings);
+    }
+
+    public function render(): string
+    {
+        $settings = $this->getMergedSettings();
 
         return view('widgets.inbetween_v2.what_we_do', [
             'widget' => $this,

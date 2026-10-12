@@ -3,47 +3,54 @@
 #inbetween-hero .intro-title-gradient,
 #inbetween-intro .intro-title-gradient,
 .intro-title-gradient {
-    color: #FFFFFF !important;
+    color: #FFFFFF;
     background-image: linear-gradient(180deg,
             #FFFFFF var(--grad-top, 100%),
             #EC310B var(--grad-bottom, 100%),
-            #F1791C 100%) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    background-clip: text !important;
+            #F1791C 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     display: inline-block;
     will-change: --grad-top, --grad-bottom, letter-spacing;
-    filter: none !important;
-    text-shadow: none !important;
-    box-shadow: none !important;
+    filter: none;
+    text-shadow: none;
+    box-shadow: none;
 }
 
-#wecanhelp-text {
-    font-size: 52px !important;
-    line-height: 1.05 !important;
-    font-family: 'SVN-Gilroy', 'Inter', sans-serif !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
+html body #inbetween-app #inbetween-intro #wecanhelp-text,
+#inbetween-intro #wecanhelp-text {
+    font-size: clamp(32px, 9vw, 40px);
+    line-height: 1.05;
+    font-family: 'SVN-Gilroy', 'Inter', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
     letter-spacing: -0.02em;
     will-change: transform, letter-spacing, opacity;
     transform-origin: 50% 50%;
 }
 
 @media (min-width: 640px) {
-    #wecanhelp-text {
-        font-size: 84px !important;
+
+    html body #inbetween-app #inbetween-intro #wecanhelp-text,
+    #inbetween-intro #wecanhelp-text {
+        font-size: 84px;
     }
 }
 
 @media (min-width: 1024px) {
-    #wecanhelp-text {
-        font-size: 116px !important;
+
+    html body #inbetween-app #inbetween-intro #wecanhelp-text,
+    #inbetween-intro #wecanhelp-text {
+        font-size: 116px;
     }
 }
 
 @media (min-width: 1280px) {
-    #wecanhelp-text {
-        font-size: 132px !important;
+
+    html body #inbetween-app #inbetween-intro #wecanhelp-text,
+    #inbetween-intro #wecanhelp-text {
+        font-size: 132px;
     }
 }
 
@@ -52,9 +59,9 @@
 }
 
 .floating-word.word-sucking {
-    color: #ec460b !important;
-    text-shadow: 0 0 14px rgba(236, 70, 11, .85) !important;
-    pointer-events: none !important;
+    color: #ec460b;
+    text-shadow: 0 0 14px rgba(236, 70, 11, .85);
+    pointer-events: none;
 }
 
 #white-transition-screen,
@@ -63,42 +70,47 @@
 }
 
 /* .inbetween-container-1440 {
-    padding-top: 60px !important;
+    padding-top: 60px ;
 } */
 
 @media (max-width: 1023px) {
     .inbetween-container-1440 {
-        padding-top: 24px !important;
+        padding-top: 24px;
     }
 }
 
 @media (max-width: 639px) {
-    .inbetween-header .inbetween-container-1440 {
-        padding-top: 14px !important;
-        padding-bottom: 8px !important;
+    html body header.inbetween-header .inbetween-container-1440 {
+        padding-top: 14px;
+        padding-bottom: 8px;
+    }
+
+    html body header.inbetween-header nav,
+    html body header.inbetween-header .inbetween-connect-link {
+        display: none;
     }
 }
 
 /* Header container smooth transition */
 .inbetween-header .inbetween-container-1440 {
-    transition: opacity .35s cubic-bezier(0.16, 1, 0.3, 1), transform .35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    transition: opacity .35s cubic-bezier(0.16, 1, 0.3, 1), transform .35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Logo White vs Dark toggle based on header theme */
 .inbetween-header.theme-dark .inbetween-logo-white {
-    display: block !important;
+    display: block;
 }
 
 .inbetween-header.theme-dark .inbetween-logo-dark {
-    display: none !important;
+    display: none;
 }
 
 .inbetween-header.theme-light .inbetween-logo-white {
-    display: none !important;
+    display: none;
 }
 
 .inbetween-header.theme-light .inbetween-logo-dark {
-    display: block !important;
+    display: block;
 }
 
 .inbetween-header-lang .inbetween-lang-btn {
@@ -107,8 +119,8 @@
 }
 
 .inbetween-header-lang .inbetween-lang-btn.active {
-    color: #EC460B !important;
-    opacity: 1 !important;
+    color: #EC460B;
+    opacity: 1;
 }
 
 /* ===== FIXED HIT-AREA & STABLE HOVER FOR INBETWEEN MENU TOGGLE ===== */
@@ -116,13 +128,13 @@
     position: fixed;
     left: 0;
     top: 50%;
-    transform: translateY(-50%) !important;
+    transform: translateY(-50%);
     z-index: 50;
     cursor: pointer;
     font-family: 'SVN-Gilroy', 'Inter', sans-serif;
     -webkit-user-select: none;
     user-select: none;
-    padding: 16px 28px 16px 0 !important;
+    padding: 16px 28px 16px 0;
     min-height: 56px;
     min-width: 48px;
     display: inline-flex;
@@ -160,7 +172,7 @@
 .inbetween-header .inbetween-menu-toggle.is-active .menu-toggle-track,
 .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] .menu-toggle-track {
     transform: translateX(16px);
-    color: #ec460b !important;
+    color: #ec460b;
 }
 
 @media (min-width: 640px) {
@@ -223,7 +235,7 @@
     opacity: 1;
     visibility: visible;
     transform: translateX(0);
-    color: #ec460b !important;
+    color: #ec460b;
 }
 
 /* ========================================================
@@ -233,16 +245,16 @@
 
     /* What We Do */
     #inbetween-what-we-do {
-        height: auto !important;
-        min-height: 100vh !important;
-        min-height: 100dvh !important;
-        max-height: none !important;
-        overflow-y: auto !important;
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-height: none;
+        overflow-y: auto;
     }
 
     #inbetween-what-we-do .what-we-do-accordion {
-        height: auto !important;
-        min-height: auto !important;
+        height: auto;
+        min-height: auto;
     }
 
     #inbetween-what-we-do .what-we-do-card {
@@ -260,25 +272,25 @@
 
     /* Where We Focus */
     #inbetween-where-we-focus {
-        height: auto !important;
-        min-height: 100vh !important;
-        min-height: 100dvh !important;
-        max-height: none !important;
-        overflow-y: auto !important;
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-height: none;
+        overflow-y: auto;
     }
 
     #inbetween-where-we-focus .focus-card {
-        height: auto !important;
+        height: auto;
         min-height: 130px;
     }
 
     /* Founder */
     #inbetween-founder {
-        height: auto !important;
-        min-height: 100vh !important;
-        min-height: 100dvh !important;
-        max-height: none !important;
-        overflow-y: auto !important;
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-height: none;
+        overflow-y: auto;
     }
 
     #inbetween-founder .founder-drawer-content {
@@ -288,11 +300,11 @@
 
     /* Our Clients */
     #inbetween-our-clients {
-        height: auto !important;
-        min-height: 100vh !important;
-        min-height: 100dvh !important;
-        max-height: none !important;
-        overflow-y: auto !important;
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-height: none;
+        overflow-y: auto;
     }
 
     #inbetween-our-clients .client-card {
@@ -301,34 +313,34 @@
 
     /* Beyond Business */
     #inbetween-business {
-        height: auto !important;
-        min-height: 100vh !important;
-        min-height: 100dvh !important;
-        max-height: none !important;
-        overflow-y: auto !important;
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-height: none;
+        overflow-y: auto;
     }
 
     #inbetween-business .business-slider-stage {
-        height: 420px !important;
-        min-height: 380px !important;
+        height: 420px;
+        min-height: 380px;
     }
 
     #inbetween-business .business-panels-container {
-        height: 360px !important;
+        height: 360px;
     }
 
     #inbetween-business .business-ellipse-card {
-        width: 300px !important;
-        height: 380px !important;
+        width: 300px;
+        height: 380px;
     }
 
     /* Footer */
     #inbetween-footer {
-        height: auto !important;
-        min-height: 100vh !important;
-        min-height: 100dvh !important;
-        max-height: none !important;
-        overflow-y: auto !important;
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-height: none;
+        overflow-y: auto;
     }
 }
 
@@ -349,61 +361,61 @@
 
     /* Beyond Business Mobile */
     #inbetween-business .business-slider-stage {
-        height: 360px !important;
-        min-height: 320px !important;
+        height: 360px;
+        min-height: 320px;
     }
 
     #inbetween-business .business-panels-container {
-        height: 320px !important;
+        height: 320px;
     }
 
     #inbetween-business .business-ellipse-card {
-        width: 250px !important;
-        height: 330px !important;
+        width: 250px;
+        height: 330px;
     }
 
     /* Menu toggle on small mobile */
     .inbetween-header .inbetween-menu-toggle {
-        padding: 10px 16px 10px 0 !important;
+        padding: 10px 16px 10px 0;
     }
 
     .inbetween-header .inbetween-menu-toggle .menu-toggle-track {
-        transform: translateX(-4px) !important;
+        transform: translateX(-4px);
     }
 
     .inbetween-header .inbetween-menu-toggle:hover .menu-toggle-track,
     .inbetween-header .inbetween-menu-toggle.is-active .menu-toggle-track,
     .inbetween-header .inbetween-menu-toggle[aria-expanded="true"] .menu-toggle-track {
-        transform: translateX(12px) !important;
+        transform: translateX(12px);
     }
 
     /* Contact modal on mobile */
     .contact-modal-overlay {
-        padding: 0.75rem !important;
+        padding: 0.75rem;
     }
 
     .contact-modal-overlay .contact-modal-box {
-        padding: 1.5rem 1rem !important;
-        max-height: 94vh !important;
-        max-height: 94dvh !important;
+        padding: 1.5rem 1rem;
+        max-height: 94vh;
+        max-height: 94dvh;
     }
 }
 
 /* ===== DESKTOP ONEPAGE SCROLL STABILITY (PREVENTS SCROLL-SNAP CONFLICTS) ===== */
 @media (min-width: 1024px) {
     html {
-        scroll-snap-type: none !important;
-        scroll-behavior: auto !important;
+        scroll-snap-type: none;
+        scroll-behavior: auto;
     }
 
     .inbetween-scroll-container {
-        scroll-snap-type: none !important;
-        scroll-behavior: auto !important;
+        scroll-snap-type: none;
+        scroll-behavior: auto;
     }
 
     .inbetween-onepage-section {
-        scroll-snap-align: none !important;
-        scroll-snap-stop: normal !important;
+        scroll-snap-align: none;
+        scroll-snap-stop: normal;
     }
 }
 
@@ -421,7 +433,7 @@
     #inbetween-app #inbetween-founder:has(.founder-stage.state-expanded) .inbetween-container-1440,
     #inbetween-app #inbetween-founder:has(.inbetween-btn-plus.active) .inbetween-container-1440,
     #inbetween-app #inbetween-founder .inbetween-container-1440:has(.founder-stage.state-expanded) {
-        padding-top: 120px !important;
+        padding-top: 120px;
     }
 
     #inbetween-app #inbetween-founder .founder-stage.state-expanded .founder-portrait-card {
@@ -436,7 +448,7 @@
     #inbetween-app #inbetween-founder .founder-name-trigger .founder-name,
     .lg\:text-\[86\.86px\],
     .lg\:text-\[86px\] {
-        font-size: 86px !important;
+        font-size: 86px;
         line-height: 0.95;
     }
 }
@@ -463,13 +475,13 @@
 #inbetween-our-clients .our-clients-grid {
     width: 100%;
     height: 100%;
-    display: grid !important;
+    display: grid;
     grid-template-columns: 1fr;
 }
 
 @media(min-width: 1024px) {
     #inbetween-our-clients .our-clients-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 }
 
@@ -498,38 +510,38 @@
 }
 
 #inbetween-hero #hero-bg-layer {
-    pointer-events: none !important;
+    pointer-events: none;
 }
 
 #inbetween-hero #hero-content-stage,
 #inbetween-hero #hero-content-stage.stage-active,
 #inbetween-hero #hero-content-stage * {
-    pointer-events: auto !important;
+    pointer-events: auto;
 }
 
 #inbetween-hero #hero-content-stage {
-    user-select: text !important;
-    -webkit-user-select: text !important;
+    user-select: text;
+    -webkit-user-select: text;
 }
 
 #inbetween-hero .business-btn-talk,
 #inbetween-hero .inbetween-btn-pill,
 #inbetween-hero a,
 #inbetween-hero button {
-    pointer-events: auto !important;
-    cursor: pointer !important;
+    pointer-events: auto;
+    cursor: pointer;
     position: relative;
-    z-index: 30 !important;
+    z-index: 30;
 }
 
 #hero-white-transition,
 #act-wecanhelp-container {
-    pointer-events: none !important;
+    pointer-events: none;
 }
 
 /* Ensure the fixed header does not cover hero content outside its elements */
 .inbetween-header {
-    pointer-events: none !important;
+    pointer-events: none;
 }
 
 .inbetween-header .inbetween-container-1440,
@@ -537,7 +549,7 @@
 .inbetween-header a,
 .inbetween-header button,
 .inbetween-header .inbetween-lang-btn {
-    pointer-events: auto !important;
+    pointer-events: auto;
 }
 
 /* ===== BEYOND BUSINESS: BADGE CLICK POPOVER ===== */
@@ -626,11 +638,11 @@
 
 /* ===== BEYOND BUSINESS: SPACING & LIFTED POSITIONING ===== */
 #inbetween-business .business-slider-container {
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    display: flex !important;
-    z-index: 40 !important;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    display: flex;
+    z-index: 40;
 }
 
 #inbetween-business .business-slider-track-wrap {
@@ -639,64 +651,64 @@
 }
 
 #inbetween-business .business-slider-line {
-    width: 100% !important;
+    width: 100%;
 }
 
 @media (min-width: 1024px) {
     #inbetween-business {
-        justify-content: flex-start !important;
-        padding-top: clamp(88px, 10.5vh, 116px) !important;
-        padding-bottom: clamp(12px, 1.5vh, 24px) !important;
+        justify-content: flex-start;
+        padding-top: clamp(88px, 10.5vh, 116px);
+        padding-bottom: clamp(12px, 1.5vh, 24px);
     }
 
     #inbetween-business .business-intro-text {
-        flex-shrink: 0 !important;
-        margin-bottom: 0 !important;
+        flex-shrink: 0;
+        margin-bottom: 0;
     }
 
     #inbetween-business .business-pull-stage {
-        padding-top: 0 !important;
-        margin-top: clamp(8px, 1.4vh, 16px) !important;
-        margin-bottom: 0 !important;
-        width: 100% !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
+        padding-top: 0;
+        margin-top: clamp(8px, 1.4vh, 16px);
+        margin-bottom: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
     }
 
     #inbetween-business .business-stage-wrap {
-        margin-top: 0 !important;
-        transform-origin: center top !important;
+        margin-top: 0;
+        transform-origin: center top;
     }
 
     #inbetween-business .business-stage-wrap>div:first-child {
-        margin-bottom: 60px !important;
+        margin-bottom: 60px;
     }
 
     #inbetween-business .business-ellipse-stage {
-        height: 470px !important;
+        height: 470px;
     }
 
     #inbetween-business .business-slider-container {
-        top: 450px !important;
-        bottom: auto !important;
+        top: 450px;
+        bottom: auto;
     }
 }
 
 @media (max-width: 1023px) {
     #inbetween-business .business-ellipse-stage {
-        height: 440px !important;
+        height: 440px;
     }
 
     #inbetween-business .business-slider-container {
-        top: auto !important;
-        bottom: 12px !important;
+        top: auto;
+        bottom: 12px;
     }
 }
 
 .footer-select-option {
-    background: #131313 !important;
+    background: #131313;
 }
 
 /* Footer Circular Checkbox Input Styling */
@@ -752,31 +764,1431 @@
 }
 
 /* Universal business-btn-talk button styles */
-.business-btn-talk {
-    width: 295px !important;
-    max-width: 100% !important;
-    height: 48px !important;
-    border-radius: 9999px !important;
-    background-color: #131313 !important;
-    color: #ffffff !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding-left: 1.75rem !important;
-    padding-right: 0.5rem !important;
-    box-sizing: border-box !important;
-    text-decoration: none !important;
-    white-space: nowrap !important;
-    cursor: pointer !important;
-    pointer-events: auto !important;
-    transition: background-color 0.3s ease, transform 0.2s ease !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+html body #inbetween-app .business-btn-talk,
+#inbetween-business.inbetween-section-business .business-btn-talk,
+#inbetween-hero .business-btn-talk,
+#inbetween-what-we-do .business-btn-talk,
+a.business-btn-talk {
+    width: 295px;
+    max-width: 100%;
+    height: 48px;
+    border-radius: 9999px;
+    background-color: #131313;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 1.75rem;
+    padding-right: 0.5rem;
+    box-sizing: border-box;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.business-btn-talk:hover {
-    background-color: #2B2B2B !important;
+html body #inbetween-app .business-btn-talk:hover,
+#inbetween-business.inbetween-section-business .business-btn-talk:hover,
+#inbetween-hero .business-btn-talk:hover,
+#inbetween-what-we-do .business-btn-talk:hover,
+a.business-btn-talk:hover {
+    background-color: #2B2B2B;
 }
 
 .business-btn-talk:hover span:last-child {
     transform: translateX(4px);
+}
+
+/* ========================================================
+   FLOATING WORDS: DESKTOP / BASE POSITIONING BY SPECIFICITY
+   ======================================================== */
+html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="1"] {
+    top: 12%;
+    left: 9%;
+}
+
+html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="2"] {
+    top: 24%;
+    left: 26%;
+}
+
+html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="3"] {
+    top: 14%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="4"] {
+    top: 12%;
+    right: 9%;
+}
+
+html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="5"] {
+    top: 30%;
+    right: 12%;
+}
+
+html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="6"] {
+    top: 62%;
+    right: 7%;
+}
+
+html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="7"] {
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="8"] {
+    bottom: 27%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="9"] {
+    bottom: 18%;
+    left: 20%;
+}
+
+html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="10"] {
+    bottom: 30%;
+    left: 7%;
+}
+
+html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="11"] {
+    top: 26%;
+    right: 26%;
+}
+
+html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="12"] {
+    bottom: 19%;
+    right: 19%;
+}
+
+html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="13"] {
+    top: 45%;
+    left: 6%;
+}
+
+html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="14"] {
+    top: 45%;
+    right: 6%;
+}
+
+html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="15"] {
+    bottom: 10%;
+    right: 33%;
+}
+
+/* ========================================================
+   MOBILE REFINEMENTS: FLOATING WORDS & FULL IMAGE RESPONSIVENESS
+   ======================================================== */
+
+/* 1. Mobile Floating Words Group: Clean, compact, non-overlapping layout */
+@media (max-width: 639px) {
+    html body #inbetween-app #inbetween-intro #act-question-container {
+        padding-left: 14px;
+        padding-right: 14px;
+        width: 100%;
+    }
+
+    html body #inbetween-app #inbetween-intro #center-title-block {
+        position: relative;
+        z-index: 25;
+        max-width: calc(100vw - 28px);
+        padding: 0 4px;
+    }
+
+    html body #inbetween-app #inbetween-intro #intro-subtitle {
+        font-size: 15px;
+        margin-bottom: 4px;
+        line-height: 1.25;
+    }
+
+    html body #inbetween-app #inbetween-intro #intro-title-base {
+        font-size: clamp(22px, 6.8vw, 30px);
+        line-height: 1.12;
+        letter-spacing: -0.01em;
+    }
+
+    /* Exact mobile positioning: Frame top zone (11% - 32%) & bottom zone (68% - 90%), leaving center 100% free */
+    html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="1"] {
+        top: 11%;
+        left: 4%;
+        right: auto;
+        bottom: auto;
+    }
+
+    html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="4"] {
+        top: 11%;
+        right: 4%;
+        left: auto;
+        bottom: auto;
+    }
+
+    html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="3"] {
+        top: 14%;
+        left: 50%;
+        transform: translateX(-50%);
+        right: auto;
+        bottom: auto;
+    }
+
+    html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="2"] {
+        top: 22%;
+        left: 6%;
+        right: auto;
+        bottom: auto;
+    }
+
+    html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="5"] {
+        top: 22%;
+        right: 6%;
+        left: auto;
+        bottom: auto;
+    }
+
+    html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="13"] {
+        top: 31%;
+        left: 5%;
+        right: auto;
+        bottom: auto;
+    }
+
+    html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="11"] {
+        top: 31%;
+        right: 5%;
+        left: auto;
+        bottom: auto;
+    }
+
+    html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="10"] {
+        top: 67%;
+        left: 5%;
+        right: auto;
+        bottom: auto;
+    }
+
+    html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="6"] {
+        top: 67%;
+        right: 5%;
+        left: auto;
+        bottom: auto;
+    }
+
+    html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="9"] {
+        bottom: 20%;
+        left: 6%;
+        top: auto;
+        right: auto;
+    }
+
+    html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="12"] {
+        bottom: 20%;
+        right: 6%;
+        top: auto;
+        left: auto;
+    }
+
+    html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="8"] {
+        bottom: 22%;
+        left: 50%;
+        transform: translateX(-50%);
+        top: auto;
+        right: auto;
+    }
+
+    html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="7"] {
+        bottom: 11%;
+        left: 50%;
+        transform: translateX(-50%);
+        top: auto;
+        right: auto;
+    }
+
+    html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="14"] {
+        bottom: 11%;
+        left: 5%;
+        top: auto;
+        right: auto;
+    }
+
+    html body #inbetween-app #inbetween-intro .intro-floating-words .floating-word[data-word-pos="15"] {
+        bottom: 11%;
+        right: 5%;
+        top: auto;
+        left: auto;
+    }
+
+    /* Act 2 WE CAN HELP text container on mobile */
+    html body #inbetween-app #inbetween-intro #act-wecanhelp-container {
+        padding: 0 16px;
+        box-sizing: border-box;
+    }
+}
+
+/* 2. Responsive Hero Glowing Hands & Image Layer */
+@media (max-width: 1023px) {
+    html body #inbetween-app #inbetween-hero #hero-bg-layer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    html body #inbetween-app #inbetween-hero #hero-bg-layer img {
+        object-fit: contain;
+        object-position: center 38%;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        pointer-events: none;
+        filter: brightness(1.08);
+    }
+
+    html body #inbetween-app #inbetween-hero #hero-headline-text {
+        font-size: clamp(20px, 5.8vw, 28px);
+        line-height: 1.2;
+        max-width: 100%;
+    }
+
+    html body #inbetween-app #inbetween-hero #hero-services-list {
+        gap: 8px;
+    }
+
+    html body #inbetween-app #inbetween-hero .hero-svc-item {
+        font-size: 13.5px;
+    }
+}
+
+/* 3. Responsive Images: Where We Focus */
+@media (max-width: 767px) {
+    html body #inbetween-app #inbetween-where-we-focus .inbetween-sector-card {
+        min-height: 156px;
+        padding: 16px 14px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    html body #inbetween-app #inbetween-where-we-focus .inbetween-sector-card>div:first-child {
+        background-size: contain;
+        background-position: right 6px center;
+        background-repeat: no-repeat;
+        opacity: 0.38;
+    }
+
+    html body #inbetween-app #inbetween-where-we-focus .inbetween-sector-card .relative.z-10 {
+        max-width: 82%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    html body #inbetween-app #inbetween-where-we-focus .inbetween-tag-pill {
+        font-size: 11px;
+        padding: 2px 8px;
+    }
+}
+
+/* 4. Responsive Images: Founder Profile */
+@media (max-width: 639px) {
+
+    html body #inbetween-app #inbetween-founder .founder-portrait-card,
+    html body #inbetween-app #inbetween-founder .founder-stage .founder-portrait-card,
+    html body #inbetween-app #inbetween-founder .founder-stage.state-overview .founder-portrait-card,
+    html body #inbetween-app #inbetween-founder .founder-stage.state-expanded .founder-portrait-card {
+        width: 100%;
+        max-width: 300px;
+        height: 280px;
+        border-radius: 16px;
+        overflow: hidden;
+        margin: 0 auto 16px auto;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    html body #inbetween-app #inbetween-founder .founder-portrait-img,
+    html body #inbetween-app #inbetween-founder .founder-portrait-card img,
+    html body #inbetween-app #inbetween-founder .founder-stage.state-overview .founder-portrait-card img,
+    html body #inbetween-app #inbetween-founder .founder-stage.state-expanded .founder-portrait-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 12%;
+    }
+
+    html body #inbetween-app #inbetween-founder .founder-stage-img img,
+    html body #inbetween-app #inbetween-founder .founder-media-img img {
+        width: 100%;
+        height: auto;
+        max-height: 240px;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 12px;
+    }
+}
+
+/* 5. Responsive Images: What We Do Cards */
+@media (max-width: 639px) {
+    html body #inbetween-app #inbetween-what-we-do .inbetween-card {
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    html body #inbetween-app #inbetween-what-we-do .inbetween-card img.inbetween-card-bg-active,
+    html body #inbetween-app #inbetween-what-we-do .inbetween-card img.inbetween-card-bg-sand,
+    html body #inbetween-app #inbetween-what-we-do .inbetween-card.inbetween-card-active .inbetween-card-bg-active,
+    html body #inbetween-app #inbetween-what-we-do .inbetween-card.inbetween-card-collapsed .inbetween-card-bg-active {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+}
+
+/* 6. Responsive Images: Beyond Business Carousel */
+@media (max-width: 639px) {
+
+    html body #inbetween-app #inbetween-business .business-ellipse-stage,
+    #inbetween-business.inbetween-section-business .business-ellipse-stage {
+        height: 360px;
+    }
+
+    html body #inbetween-app #inbetween-business .business-ellipse-card,
+    #inbetween-business.inbetween-section-business .business-ellipse-card {
+        width: 240px;
+        height: 320px;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    html body #inbetween-app #inbetween-business .business-person-img,
+    #inbetween-business.inbetween-section-business .business-person-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+    }
+}
+
+/* ========================================================
+   INTRO SECTION: RIGID SCROLL LOCK ("FIX CỨNG") UNTIL ALL STEPS COMPLETE
+   ======================================================== */
+html body #inbetween-app #inbetween-intro,
+section#inbetween-intro {
+    touch-action: none;
+    overscroll-behavior: none;
+}
+
+html body main#inbetween-app.intro-locked,
+html body #inbetween-app.inbetween-scroll-container.intro-locked,
+main#inbetween-app.intro-locked {
+    overflow: hidden;
+    overflow-y: hidden;
+    touch-action: none;
+    overscroll-behavior: none;
+}
+
+/* ========================================================
+   MOBILE DEDICATED EXPERIENCE: STRICT SECTION BACKGROUNDS
+   ======================================================== */
+#mobile-intro-track,
+#mobile-intro-sticky {
+    background-color: #131313 !important;
+    background-color: rgb(19 19 19 / var(--tw-bg-opacity, 1)) !important;
+}
+
+#mobile-hero,
+.bg-\[\#f6f4f4\],
+.bg-\[\#F6F4F4\] {
+    --tw-bg-opacity: 1;
+    background-color: #F6F4F4 !important;
+    background-color: rgb(246 244 244 / var(--tw-bg-opacity, 1)) !important;
+}
+
+#mobile-business {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: hidden;
+}
+
+
+/* ========================================================
+   WHAT WE DO (PC / DESKTOP EXPERIENCE >= 1024px) RESPONSIVE
+   ======================================================== */
+@media (min-width: 1024px) {
+    html body #inbetween-app #inbetween-what-we-do {
+        height: 100vh !important;
+        height: 100dvh !important;
+        min-height: 100vh !important;
+        max-height: 100vh !important;
+        overflow: hidden !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    html body #inbetween-app #inbetween-what-we-do .inbetween-container-1440 {
+        height: 100% !important;
+        min-height: 100% !important;
+        max-height: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        padding-top: clamp(86px, 10vh, 110px) !important;
+        padding-bottom: clamp(20px, 3vh, 36px) !important;
+        padding-left: clamp(40px, 5vw, 72px) !important;
+        padding-right: clamp(40px, 5vw, 72px) !important;
+        box-sizing: border-box;
+    }
+
+    html body #inbetween-app #inbetween-what-we-do .inbetween-accordion-container {
+        flex: 1 1 auto !important;
+        height: clamp(280px, 50vh, 500px) !important;
+        max-height: 500px !important;
+        min-height: 260px !important;
+        margin-top: clamp(14px, 2.5vh, 28px) !important;
+        margin-bottom: 0 !important;
+    }
+
+    html body #inbetween-app #inbetween-what-we-do .inbetween-card {
+        border-radius: clamp(18px, 1.8vw, 28px);
+    }
+
+    html body #inbetween-app #inbetween-what-we-do .inbetween-card .inbetween-card-active-content {
+        padding: clamp(20px, 3vh, 38px) clamp(22px, 2.2vw, 42px);
+        overflow: hidden;
+    }
+
+    html body #inbetween-app #inbetween-what-we-do .inbetween-card .inbetween-card-collapsed-content .inbetween-vertical-title {
+        font-size: clamp(18px, 1.6vw, 28px);
+        letter-spacing: 0.18em;
+    }
+}
+
+/* Medium height laptops (height <= 850px) */
+@media (min-width: 1024px) and (max-height: 850px) {
+    html body #inbetween-app #inbetween-what-we-do .inbetween-container-1440 {
+        padding-top: clamp(78px, 9.5vh, 88px) !important;
+        padding-bottom: clamp(14px, 2vh, 22px) !important;
+    }
+
+    html body #inbetween-app #inbetween-what-we-do .inbetween-accordion-container {
+        height: clamp(260px, 47vh, 420px) !important;
+        margin-top: clamp(10px, 1.8vh, 18px) !important;
+    }
+
+    html body #inbetween-app #inbetween-what-we-do .inbetween-card .inbetween-card-active-content {
+        padding: 18px 22px;
+    }
+}
+
+/* Compact height laptops (height <= 740px) */
+@media (min-width: 1024px) and (max-height: 740px) {
+    html body #inbetween-app #inbetween-what-we-do .inbetween-container-1440 {
+        padding-top: 74px !important;
+        padding-bottom: 12px !important;
+    }
+
+    html body #inbetween-app #inbetween-what-we-do .inbetween-accordion-container {
+        height: clamp(240px, 45vh, 350px) !important;
+        margin-top: 8px !important;
+    }
+
+    html body #inbetween-app #inbetween-what-we-do .inbetween-card .inbetween-card-active-content {
+        padding: 14px 18px;
+    }
+}
+
+/* ========================================================
+   WHAT WE DO MOBILE ACCORDION (INTERACTIVE 4 PILLARS)
+   ======================================================== */
+#mobile-what-we-do .mobile-accordion-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    box-sizing: border-box;
+    transition: height 0.48s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+#mobile-what-we-do .mobile-accordion-card.is-collapsed {
+    height: 74px;
+}
+
+#mobile-what-we-do .mobile-accordion-card.is-active {
+    height: 390px;
+    cursor: default;
+}
+
+#mobile-what-we-do .mobile-accordion-card .mobile-card-bg-sand,
+#mobile-what-we-do .mobile-accordion-card .mobile-card-bg-active {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    pointer-events: none;
+    transition: opacity 0.45s cubic-bezier(0.25, 1, 0.5, 1), transform 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+#mobile-what-we-do .mobile-accordion-card.is-collapsed .mobile-card-bg-sand {
+    opacity: 1;
+    transform: scale(1);
+}
+
+#mobile-what-we-do .mobile-accordion-card.is-collapsed .mobile-card-bg-active {
+    opacity: 0;
+    transform: scale(1.05);
+}
+
+#mobile-what-we-do .mobile-accordion-card.is-active .mobile-card-bg-sand {
+    opacity: 0;
+    transform: scale(1.03);
+}
+
+#mobile-what-we-do .mobile-accordion-card.is-active .mobile-card-bg-active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+#mobile-what-we-do .mobile-accordion-card .mobile-card-collapsed-content {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    box-sizing: border-box;
+    transition: opacity 0.28s ease;
+}
+
+#mobile-what-we-do .mobile-accordion-card.is-collapsed .mobile-card-collapsed-content {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+#mobile-what-we-do .mobile-accordion-card.is-active .mobile-card-collapsed-content {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#mobile-what-we-do .mobile-accordion-card .mobile-card-active-content {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 26px 24px 24px 24px;
+    box-sizing: border-box;
+    transition: opacity 0.38s ease 0.08s;
+}
+
+#mobile-what-we-do .mobile-accordion-card.is-collapsed .mobile-card-active-content {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#mobile-what-we-do .mobile-accordion-card.is-active .mobile-card-active-content {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* ========================================================
+   MOBILE WHERE WE FOCUS SECTION (Matching focus.svg)
+   ======================================================== */
+#mobile-where-we-focus {
+    background-color: #F6F4F4;
+    padding: 20px 12px;
+}
+
+#mobile-where-we-focus .mobile-focus-container {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+#mobile-where-we-focus .mobile-focus-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+#mobile-where-we-focus .mobile-focus-badge {
+    font-family: 'SVN-Gilroy', 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #131313;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 6px;
+}
+
+#mobile-where-we-focus .mobile-focus-h1 {
+    font-family: 'SVN-Gilroy', 'Inter', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #EC460B;
+    line-height: 1.2;
+}
+
+#mobile-where-we-focus .mobile-focus-h2 {
+    font-family: 'SVN-Gilroy', 'Inter', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #131313;
+    line-height: 1.2;
+}
+
+#mobile-where-we-focus .mobile-focus-swiper {
+    width: 100%;
+    overflow: hidden;
+    padding-bottom: 6px;
+}
+
+#mobile-where-we-focus .mobile-focus-swiper .swiper-slide {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#mobile-where-we-focus .mobile-focus-card {
+    position: relative;
+    width: 100%;
+    height: 291px;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    margin-bottom: 0;
+    box-sizing: border-box;
+}
+
+#mobile-where-we-focus .mobile-focus-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 20px;
+    position: relative;
+    bottom: auto;
+    left: auto;
+}
+
+#mobile-where-we-focus .mobile-focus-pagination .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background-color: #D1D5DB;
+    opacity: 1;
+    border-radius: 9999px;
+    margin: 0 !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+}
+
+#mobile-where-we-focus .mobile-focus-pagination .swiper-pagination-bullet-active {
+    width: 24px;
+    background-color: #EC460B;
+    border-radius: 9999px;
+}
+
+#mobile-where-we-focus .mobile-focus-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* Card 1: Robot Arm - Base at bottom right, arm reaching top left */
+#mobile-where-we-focus .mobile-focus-bg-0 {
+    background-size: cover;
+    background-position: left bottom;
+    transform: scaleX(-1);
+}
+
+/* Card 2: Chipset - Flipped horizontally to right */
+#mobile-where-we-focus .mobile-focus-bg-1 {
+    background-size: cover;
+    background-position: left center;
+    transform: scaleX(-1);
+}
+
+/* Card 3: DNA Helix - Flipped to right */
+#mobile-where-we-focus .mobile-focus-bg-2 {
+    background-size: cover;
+    background-position: left bottom;
+    transform: scaleX(-1);
+}
+
+/* Card 4: Lightning Bolt - Already on right */
+#mobile-where-we-focus .mobile-focus-bg-3 {
+    background-size: cover;
+    background-position: right center;
+}
+
+#mobile-where-we-focus .mobile-focus-overlay {
+    position: absolute;
+    inset: 0;
+    width: 58%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.85) 65%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+}
+
+#mobile-where-we-focus .mobile-focus-content {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px 22px 28px 22px;
+    box-sizing: border-box;
+}
+
+#mobile-where-we-focus .mobile-focus-title {
+    font-family: 'SVN-Gilroy', 'Inter', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    color: #131313;
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin-bottom: 14px;
+}
+
+#mobile-where-we-focus .mobile-focus-tags-wrap {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+#mobile-where-we-focus .mobile-focus-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#mobile-where-we-focus .mobile-focus-tag-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 9999px;
+    border: 0.9px solid #131313;
+    background-color: #ffffff;
+    color: #131313;
+    font-family: 'SVN-Gilroy', 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    white-space: nowrap;
+    line-height: 1;
+    box-sizing: border-box;
+    width: fit-content;
+}
+
+/* ===== MOBILE FOUNDER PROFILE (FRAME 348.SVG MATCHING & SCROLL DETAIL) ===== */
+#mobile-founder {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #F6F4F4;
+}
+
+#mobile-founder #mobile-founder-frame {
+    height: 359px;
+    max-height: 359px;
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    border-radius: 0px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+@media (min-width: 480px) {
+    #mobile-founder #mobile-founder-frame {
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+}
+
+#mobile-founder .custom-founder-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(236, 70, 11, 0.4) transparent;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+#mobile-founder .custom-founder-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+
+#mobile-founder .custom-founder-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#mobile-founder .custom-founder-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(236, 70, 11, 0.35);
+    border-radius: 4px;
+}
+
+#mobile-founder .custom-founder-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(236, 70, 11, 0.7);
+}
+
+/* ===== MOBILE BEYOND BUSINESS / MEDIA SECTION (MEDIA.SVG EXACT REPLICA) ===== */
+#mobile-business {
+    position: relative !important;
+    width: 100% !important;
+    background-color: #F6F4F4 !important;
+    color: #131313 !important;
+    padding-top: 24px !important;
+    padding-bottom: 28px !important;
+    overflow: hidden !important;
+}
+
+#mobile-business .mobile-biz-container {
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#mobile-business .mobile-biz-badge-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    background: #ffffff;
+    border: 1px solid rgba(19, 19, 19, 0.12);
+    color: #131313;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#mobile-business .mobile-biz-badge-trigger:hover,
+#mobile-business .mobile-biz-badge-trigger:active {
+    border-color: rgba(236, 70, 11, 0.45);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+#mobile-business .business-badge-item.is-open .mobile-biz-badge-trigger {
+    border-color: #EC460B;
+    background: #FFF8F5;
+    box-shadow: 0 4px 14px rgba(236, 70, 11, 0.15);
+}
+
+#mobile-business .mobile-biz-badge-trigger .badge-toggle-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#mobile-business .business-badge-item.is-open .badge-toggle-icon {
+    transform: rotate(45deg);
+}
+
+#mobile-business .mobile-biz-popover {
+    position: absolute;
+    top: calc(100% + 8px);
+    width: 260px;
+    max-width: calc(100vw - 32px);
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 14px 32px -4px rgba(0, 0, 0, 0.14), 0 4px 12px -2px rgba(0, 0, 0, 0.06);
+    z-index: 50;
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s ease;
+}
+
+#mobile-business .business-badge-media .mobile-biz-popover {
+    left: 0;
+    right: auto;
+}
+
+#mobile-business .business-badge-connections .mobile-biz-popover {
+    right: 0;
+    left: auto;
+}
+
+#mobile-business .business-badge-item.is-open .mobile-biz-popover {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+#mobile-business .mobile-biz-btn-talk {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 174px !important;
+    height: 42px !important;
+    padding: 0 8px 0 18px !important;
+    border-radius: 9999px !important;
+    background-color: #131313 !important;
+    color: #ffffff !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+    transition: background-color 0.2s ease, transform 0.15s ease !important;
+    cursor: pointer;
+}
+
+#mobile-business .mobile-biz-btn-talk:hover {
+    background-color: #2B2B2B !important;
+}
+
+#mobile-business .mobile-biz-btn-talk:active {
+    transform: scale(0.98);
+}
+
+#mobile-business .mobile-biz-btn-talk .arrow-circle {
+    width: 26px !important;
+    height: 26px !important;
+    border-radius: 9999px !important;
+    background-color: #ffffff !important;
+    color: #131313 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+
+#mobile-business .mobile-biz-stage {
+    position: relative !important;
+    width: 100% !important;
+    height: 235px !important;
+    min-height: 235px !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    overflow: visible !important;
+    user-select: none !important;
+    touch-action: pan-y !important;
+}
+
+#mobile-business .mobile-biz-cards-container {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    overflow: visible !important;
+}
+
+#mobile-business .mobile-biz-card {
+    position: absolute !important;
+    left: 50% !important;
+    top: 0 !important;
+    width: 214px !important;
+    height: 214px !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    cursor: pointer !important;
+    will-change: transform !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    background-color: #171717 !important;
+    border: 1px solid rgba(229, 229, 229, 0.45) !important;
+    transform-origin: top center !important;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+
+#mobile-business .mobile-biz-card img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    display: block !important;
+    pointer-events: none !important;
+}
+
+#mobile-business .mobile-biz-card .mobile-biz-overlay {
+    position: absolute !important;
+    inset: 0 !important;
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    pointer-events: none !important;
+    transition: opacity 0.3s ease !important;
+}
+
+#mobile-business .mobile-biz-stage.is-dragging .mobile-biz-card {
+    transition: none !important;
+}
+
+#mobile-business .mobile-biz-dots-wrap {
+    position: relative !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    margin-top: 26px !important;
+    margin-bottom: 8px !important;
+    user-select: none !important;
+    z-index: 30 !important;
+}
+
+#mobile-business .mobile-biz-dot {
+    height: 8px !important;
+    border-radius: 9999px !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    cursor: pointer !important;
+    border: none !important;
+    padding: 0 !important;
+    outline: none !important;
+    background-color: rgba(62, 57, 57, 0.3) !important;
+    width: 8px !important;
+}
+
+#mobile-business .mobile-biz-dot:hover {
+    background-color: rgba(62, 57, 57, 0.5) !important;
+}
+
+#mobile-business .mobile-biz-dot.is-active {
+    width: 24px !important;
+    background-color: #EC460B !important;
+}
+
+
+/* ==========================================================================
+   Mobile Our Clients (Exact client.svg replica)
+   ========================================================================== */
+#mobile-our-clients {
+    position: relative !important;
+    width: 100% !important;
+    background-color: #131313 !important;
+    color: #ffffff !important;
+    padding: 30px 0 !important;
+    overflow: hidden !important;
+    user-select: text;
+    box-sizing: border-box;
+    scroll-margin-top: 60px;
+}
+
+#mobile-our-clients .mobile-clients-viewport {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 440px !important;
+    height: 370px;
+    margin: 0 auto !important;
+    overflow: hidden !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+}
+
+#mobile-clients-frame {
+    position: relative !important;
+    width: 440px !important;
+    height: 370px !important;
+    flex-shrink: 0 !important;
+    background-color: #131313 !important;
+    overflow: hidden !important;
+    user-select: none;
+    box-sizing: border-box;
+    transform-origin: top center !important;
+}
+
+#mobile-our-clients .mobile-client-active-card {
+    position: absolute !important;
+    top: 26px !important;
+    left: 34.73px !important;
+    width: 174px !important;
+    height: 318px !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
+    background-color: #1a1a1a !important;
+    box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.5) !important;
+    z-index: 10 !important;
+}
+
+#mobile-our-clients .mobile-client-active-card img {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    pointer-events: none;
+}
+
+#mobile-our-clients .mobile-client-info-wrap {
+    position: absolute !important;
+    top: 33px !important;
+    left: 231.73px !important;
+    width: 195px !important;
+    z-index: 10 !important;
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
+#mobile-our-clients .mobile-client-badge {
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    color: #F6F2EF !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.12em !important;
+    line-height: 1 !important;
+    margin-bottom: 14px !important;
+    font-family: inherit;
+}
+
+#mobile-our-clients .mobile-client-text-stack {
+    position: relative !important;
+    width: 100% !important;
+    min-height: 105px !important;
+}
+
+#mobile-our-clients .mobile-client-text-item {
+    transition: opacity 0.35s ease-out, transform 0.35s ease-out !important;
+}
+
+#mobile-our-clients .mobile-client-text-item.is-active {
+    position: relative !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+    z-index: 10 !important;
+}
+
+#mobile-our-clients .mobile-client-text-item.is-inactive {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    opacity: 0 !important;
+    transform: translateY(6px) !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+}
+
+#mobile-our-clients .mobile-client-title {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: #EC460B !important;
+    line-height: 1.15 !important;
+    text-transform: uppercase !important;
+    letter-spacing: -0.01em !important;
+    margin: 0 0 12px 0 !important;
+    padding: 0 !important;
+    font-family: inherit;
+}
+
+#mobile-our-clients .mobile-client-desc {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 11.5px !important;
+    font-weight: 400 !important;
+    color: #F6F2EF !important;
+    line-height: 1.45 !important;
+    max-width: 185px !important;
+    font-family: inherit;
+}
+
+#mobile-our-clients .mobile-client-peek-prev {
+    position: absolute !important;
+    top: 185px !important;
+    left: -85.27px !important;
+    width: 97px !important;
+    height: 159px !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
+    background-color: #1a1a1a !important;
+    cursor: pointer !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    outline: none !important;
+    z-index: 20 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
+    transition: transform 0.2s ease, opacity 0.2s ease !important;
+}
+
+#mobile-our-clients .mobile-client-peek-prev:hover {
+    transform: scale(1.02) !important;
+}
+
+#mobile-our-clients .mobile-client-peek-prev img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    opacity: 0.8 !important;
+    display: block !important;
+    pointer-events: none;
+}
+
+#mobile-our-clients .mobile-client-thumbs-row {
+    position: absolute !important;
+    top: 185px !important;
+    left: 231.73px !important;
+    height: 159px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 23px !important;
+    z-index: 20 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#mobile-our-clients .mobile-client-thumb-item {
+    position: relative !important;
+    width: 97px !important;
+    height: 159px !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
+    background-color: #1a1a1a !important;
+    cursor: pointer !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    outline: none !important;
+    flex-shrink: 0 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease !important;
+}
+
+#mobile-our-clients .mobile-client-thumb-item:hover {
+    transform: scale(1.03) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+#mobile-our-clients .mobile-client-thumb-item:active {
+    transform: scale(0.97) !important;
+}
+
+#mobile-our-clients .mobile-client-thumb-item img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    transition: transform 0.3s ease !important;
+    pointer-events: none;
+    display: block !important;
+}
+
+#mobile-our-clients .mobile-client-thumb-item:hover img {
+    transform: scale(1.05) !important;
+}
+
+#mobile-our-clients .mobile-client-thumb-overlay {
+    position: absolute !important;
+    inset: 0 !important;
+    background-color: rgba(0, 0, 0, 0.15) !important;
+    transition: background-color 0.2s ease !important;
+    pointer-events: none;
+}
+
+#mobile-our-clients .mobile-client-thumb-item:hover .mobile-client-thumb-overlay {
+    background-color: transparent !important;
+}
+
+/* ========================================================
+   MOBILE FOOTER: ROTATING TEXT ZERO-JITTER & STABLE LAYOUT
+   ======================================================== */
+#mobile-footer .mobile-footer-heading-wrap {
+    text-align: center !important;
+    width: 100% !important;
+    overflow: hidden !important;
+}
+
+#mobile-footer .mobile-footer-heading {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    font-size: clamp(23px, 6.8vw, 28px) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.2 !important;
+    max-width: 100% !important;
+}
+
+#mobile-footer .mobile-footer-prefix {
+    color: #FFFFFF !important;
+    flex-shrink: 0 !important;
+    display: inline-block !important;
+    line-height: 1.2 !important;
+}
+
+#mobile-footer .mobile-footer-rotating-box {
+    position: relative !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    overflow: hidden !important;
+    height: 1.25em !important;
+    line-height: 1.25em !important;
+    vertical-align: middle !important;
+    color: #EC460B !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+    min-width: 215px !important;
+    width: 215px;
+    max-width: calc(100vw - 120px) !important;
+    flex-shrink: 0 !important;
+}
+
+#mobile-footer .mobile-footer-word-active,
+#mobile-footer .mobile-footer-word-incoming {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    white-space: nowrap !important;
+    will-change: transform, opacity !important;
+    font-weight: 700 !important;
+    color: #EC460B !important;
+    line-height: 1 !important;
+    text-align: left !important;
+    pointer-events: none !important;
 }

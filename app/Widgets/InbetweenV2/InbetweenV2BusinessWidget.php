@@ -107,9 +107,9 @@ class InbetweenV2BusinessWidget extends BaseWidget
         ];
     }
 
-    public function render(): string
+    public function getMergedSettings(): array
     {
-        $settings = array_merge([
+        return array_merge([
             'badge_title' => '[ BEYOND BUSINESS ]',
             'media_title' => 'MEDIA',
             'media_desc' => 'Business, culture, society and perspectives from across Asia.',
@@ -128,6 +128,11 @@ class InbetweenV2BusinessWidget extends BaseWidget
                 ['image' => 'themes/inbetween_v2/images/hero-person-right-outer.png', 'alt' => 'Person Right Outer'],
             ],
         ], $this->settings);
+    }
+
+    public function render(): string
+    {
+        $settings = $this->getMergedSettings();
 
         return view('widgets.inbetween_v2.business', [
             'widget' => $this,

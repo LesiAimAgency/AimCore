@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/svn-gilroy">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     @php
       $themeJsTime = file_exists(public_path('themes/inbetween_v2/js/inbetween.js')) ? filemtime(public_path('themes/inbetween_v2/js/inbetween.js')) : time();
       $themeStyleCssTime = file_exists(public_path('themes/inbetween_v2/css/style.css')) ? filemtime(public_path('themes/inbetween_v2/css/style.css')) : time();
@@ -22,7 +24,7 @@
     <link rel="stylesheet" crossorigin href="{{ asset('themes/inbetween_v2/css/update.css') }}?v={{ $themeUpdateCssTime }}">
     @stack('styles')
   </head>
-  <body class="bg-[#131313] text-[#131313] font-sans antialiased overflow-hidden selection:bg-[#EC460B] selection:text-white">
+  <body class="bg-[#131313] text-[#131313] font-sans antialiased overflow-x-hidden overflow-y-auto lg:overflow-hidden selection:bg-[#EC460B] selection:text-white">
     @yield('content')
 
     <div class="mobile-nav-overlay theme-inbetween-overlay" id="mobile-nav-overlay" aria-hidden="true"></div>
@@ -217,6 +219,100 @@
             }
           }
         });
+
+        // Smooth scroll for mobile navigation links (< 1024px)
+        document.addEventListener('click', function (e) {
+          if (window.innerWidth >= 1024) return;
+          var link = e.target.closest('a[href^="#inbetween-"], a.nav-drawer-link');
+          if (!link) return;
+
+          var href = link.getAttribute('href');
+          if (!href || !href.startsWith('#')) return;
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          var targetId = href.replace('#', '');
+          var mobileRoot = document.getElementById('inbetween-mobile-container') || document.body;
+
+          // Find target element in mobile container
+          var target = mobileRoot.querySelector('#' + targetId) 
+                    || mobileRoot.querySelector('[data-section="' + targetId + '"]');
+
+          if (!target) {
+            var mobileIdMap = {
+              'inbetween-intro': '#mobile-intro-track',
+              'inbetween-hero': '#mobile-hero',
+              'inbetween-what-we-do': '#mobile-what-we-do',
+              'inbetween-where-we-focus': '#mobile-where-we-focus',
+              'inbetween-founder': '#mobile-founder',
+              'inbetween-our-clients': '#mobile-our-clients',
+              'inbetween-business': '#mobile-business',
+              'inbetween-footer': '#mobile-footer'
+            };
+            if (mobileIdMap[targetId]) {
+              target = document.querySelector(mobileIdMap[targetId]);
+            }
+          }
+
+          // Close mobile drawer if active
+          var drawer = document.getElementById('mobile-nav-drawer');
+          var drawerOverlay = document.getElementById('mobile-nav-overlay');
+          if (drawer && drawer.classList.contains('active')) {
+            drawer.classList.remove('active');
+            if (drawerOverlay) drawerOverlay.classList.remove('active');
+            document.body.classList.remove('menu-open');
+            document.body.style.overflow = '';
+            document.querySelectorAll('[data-menu-toggle]').forEach(function (toggle) {
+              toggle.setAttribute('aria-expanded', 'false');
+              toggle.classList.remove('is-active');
+              var text = toggle.querySelector('.menu-text');
+              if (text) text.textContent = 'Menu';
+            });
+          }
+
+          if (target) {
+            var headerOffset = targetId === 'inbetween-intro' ? 0 : 54;
+            var targetPos = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+            window.scrollTo({
+              top: Math.max(0, targetPos),
+              behavior: 'smooth'
+            });
+            if (history.replaceState) {
+              history.replaceState(null, '', href);
+            }
+          }
+        }, true);
+
+        // Check hash on mobile initial load
+        if (window.innerWidth < 1024 && window.location.hash && window.location.hash.startsWith('#inbetween-')) {
+          setTimeout(function () {
+            var hash = window.location.hash.replace('#', '');
+            var mobileRoot = document.getElementById('inbetween-mobile-container') || document.body;
+            var target = mobileRoot.querySelector('#' + hash) || mobileRoot.querySelector('[data-section="' + hash + '"]');
+            if (!target) {
+              var mobileIdMap = {
+                'inbetween-intro': '#mobile-intro-track',
+                'inbetween-hero': '#mobile-hero',
+                'inbetween-what-we-do': '#mobile-what-we-do',
+                'inbetween-where-we-focus': '#mobile-where-we-focus',
+                'inbetween-founder': '#mobile-founder',
+                'inbetween-our-clients': '#mobile-our-clients',
+                'inbetween-business': '#mobile-business',
+                'inbetween-footer': '#mobile-footer'
+              };
+              if (mobileIdMap[hash]) target = document.querySelector(mobileIdMap[hash]);
+            }
+            if (target) {
+              var headerOffset = hash === 'inbetween-intro' ? 0 : 54;
+              var targetPos = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+              window.scrollTo({
+                top: Math.max(0, targetPos),
+                behavior: 'smooth'
+              });
+            }
+          }, 200);
+        }
       });
     </script>
     @stack('scripts')

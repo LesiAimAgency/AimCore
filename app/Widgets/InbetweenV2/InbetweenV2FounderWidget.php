@@ -30,6 +30,12 @@ class InbetweenV2FounderWidget extends BaseWidget
                     'default' => 'themes/inbetween_v2/images/founder-airu-portrait.png',
                 ],
                 [
+                    'name' => 'badge_text',
+                    'label' => 'Badge Text (VD: [ MEET THE FOUNDER ])',
+                    'type' => 'text',
+                    'default' => '[ MEET THE FOUNDER ]',
+                ],
+                [
                     'name' => 'founder_name',
                     'label' => 'Founder Name',
                     'type' => 'text',
@@ -195,9 +201,9 @@ class InbetweenV2FounderWidget extends BaseWidget
         ];
     }
 
-    public function render(): string
+    public function getMergedSettings(): array
     {
-        $settings = array_merge([
+        return array_merge([
             'founder_portrait' => 'themes/inbetween_v2/images/founder-airu-portrait.png',
             'founder_name' => 'AIRU',
             'founder_role' => 'Founder of INBETWEEN',
@@ -231,6 +237,11 @@ class InbetweenV2FounderWidget extends BaseWidget
             'cta_card_btn_text' => "Let's Connect With AiRu",
             'cta_card_btn_link' => '#contact',
         ], $this->settings);
+    }
+
+    public function render(): string
+    {
+        $settings = $this->getMergedSettings();
 
         return view('widgets.inbetween_v2.founder', [
             'widget' => $this,

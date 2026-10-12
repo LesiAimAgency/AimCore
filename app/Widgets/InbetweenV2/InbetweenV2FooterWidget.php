@@ -183,11 +183,50 @@ class InbetweenV2FooterWidget extends BaseWidget
         ];
     }
 
+    public function getMergedSettings(): array
+    {
+        return array_merge([
+            'logo_white' => 'themes/inbetween_v2/images/Logo-white.svg',
+            'lang_en_label' => 'EN',
+            'lang_zh_label' => '汉语',
+            'top_connect_text' => "LET'S CONNECT",
+            'top_connect_link' => '#contact-modal',
+            'heading_prefix' => 'MORE',
+            'rotating_words' => [
+                ['text' => 'CONNECTIONS'],
+                ['text' => 'OPPORTUNITIES'],
+                ['text' => 'PARTNERSHIPS'],
+                ['text' => 'NETWORKS'],
+                ['text' => 'GROWTH'],
+                ['text' => 'SOLUTIONS'],
+            ],
+            'form_title_line1' => 'READY TO BUILD',
+            'form_title_highlight' => 'SOMETHING BOLD',
+            'form_title_line2' => 'IN VIETNAM?',
+            'form_privacy_text' => 'I have read and agree to the Data & Privacy Policy of in • between',
+            'form_newsletter_text' => 'Send me regular business updates and market insights',
+            'contact_phone' => '0909 999 999',
+            'contact_email' => 'inbetween.asia@gmail.com',
+            'community_title' => 'Join the NOPA Zalo group',
+            'community_desc' => "Next Day Club, new perks, and what's happening around Saigon.",
+            'community_link_text' => 'Join the group',
+            'community_link_url' => '#',
+            'facebook_url' => 'https://facebook.com',
+            'instagram_url' => 'https://instagram.com',
+            'linkedin_url' => 'https://linkedin.com',
+            'tiktok_url' => 'https://tiktok.com',
+            'copyright_text' => 'Copyright belong to INBETWEEN',
+            'powered_by_text' => 'Powered by AIM AGENCY',
+        ], $this->settings);
+    }
+
     public function render(): string
     {
+        $settings = $this->getMergedSettings();
+
         return view('widgets.inbetween_v2.footer', [
-            'widget' => $this->model,
-            'settings' => $this->settings,
+            'widget' => $this->model ?? $this,
+            'settings' => $settings,
         ])->render();
     }
 }
