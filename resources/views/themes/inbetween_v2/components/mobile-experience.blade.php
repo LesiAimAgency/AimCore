@@ -1,63 +1,73 @@
 @php
-  // 1. Resolve Project and Tenant context exactly like PC WidgetRenderingService
-  $project = function_exists('current_project') ? current_project() : null;
-  if (! $project && app()->bound('current_project_id')) {
-      $project = \App\Models\Project::find(app('current_project_id'));
-  }
-  if (! $project && session('current_project_id')) {
-      $project = \App\Models\Project::find(session('current_project_id'));
-  }
-  if (! $project) {
-      $sessionProj = session('current_project');
-      if ($sessionProj instanceof \App\Models\Project) {
-          $project = $sessionProj;
-      } elseif (is_array($sessionProj) && ! empty($sessionProj['id'])) {
-          $project = \App\Models\Project::find($sessionProj['id']);
-      } elseif (is_string($sessionProj)) {
-          $project = \App\Models\Project::where('code', $sessionProj)->first();
+  $projectId = null;
+  $tenantId = null;
+  $mobileWidgets = collect();
+
+  try {
+      // 1. Resolve Project and Tenant context exactly like PC WidgetRenderingService
+      $project = function_exists('current_project') ? current_project() : null;
+      if (! $project && app()->bound('current_project_id')) {
+          $project = \App\Models\Project::find(app('current_project_id'));
       }
-  }
-  if (! $project && request()->route('projectCode')) {
-      $project = \App\Models\Project::where('code', request()->route('projectCode'))->first();
-  }
-  if (! $project && request()->attributes->get('project')) {
-      $project = request()->attributes->get('project');
-  }
-  if (! $project) {
-      $project = \App\Models\Project::whereIn('code', ['DA005', 'inbetween_v2', 'inbetween'])->first() ?: \App\Models\Project::first();
-  }
-
-  $projectId = $project?->id;
-  $tenantId = $project?->tenant_id ?? session('current_tenant_id');
-
-  // 2. Query widgets matching PC areas (homepage-main or inbetween_v2)
-  $query = \App\Models\Widget::withoutGlobalScopes()
-      ->where('is_active', true)
-      ->whereIn('area', ['homepage-main', 'inbetween_v2'])
-      ->orderBy('sort_order');
-
-  if ($tenantId || $projectId) {
-      $query->where(function ($q) use ($tenantId, $projectId) {
-          if ($tenantId) {
-              $q->where('tenant_id', $tenantId);
+      if (! $project && session('current_project_id')) {
+          $project = \App\Models\Project::find(session('current_project_id'));
+      }
+      if (! $project) {
+          $sessionProj = session('current_project');
+          if ($sessionProj instanceof \App\Models\Project) {
+              $project = $sessionProj;
+          } elseif (is_array($sessionProj) && ! empty($sessionProj['id'])) {
+              $project = \App\Models\Project::find($sessionProj['id']);
+          } elseif (is_string($sessionProj)) {
+              $project = \App\Models\Project::where('code', $sessionProj)->first();
           }
-          if ($projectId) {
-              $q->orWhere('project_id', $projectId);
-          }
-      });
-  } else {
-      $query->whereNull('project_id');
-  }
+      }
+      if (! $project && request()->route('projectCode')) {
+          $project = \App\Models\Project::where('code', request()->route('projectCode'))->first();
+      }
+      if (! $project && request()->attributes->get('project')) {
+          $project = request()->attributes->get('project');
+      }
+      if (! $project && class_exists(\App\Models\Project::class)) {
+          $project = \App\Models\Project::whereIn('code', ['DA005', 'inbetween_v2', 'inbetween'])->first() ?: \App\Models\Project::first();
+      }
 
-  $widgetsList = $query->get();
-  if ($widgetsList->isEmpty()) {
-      $widgetsList = \App\Models\Widget::withoutGlobalScopes()
+      $projectId = $project?->id;
+      $tenantId = $project?->tenant_id ?? session('current_tenant_id');
+
+      // 2. Query widgets matching PC areas (homepage-main or inbetween_v2)
+      $query = \App\Models\Widget::withoutGlobalScopes()
           ->where('is_active', true)
           ->whereIn('area', ['homepage-main', 'inbetween_v2'])
-          ->orderBy('sort_order')
-          ->get();
+          ->orderBy('sort_order');
+
+      if ($tenantId || $projectId) {
+          $query->where(function ($q) use ($tenantId, $projectId) {
+              if ($tenantId) {
+                  $q->where('tenant_id', $tenantId);
+              }
+              if ($projectId) {
+                  $q->orWhere('project_id', $projectId);
+              }
+          });
+      } else {
+          $query->whereNull('project_id');
+      }
+
+      $widgetsList = $query->get();
+      if ($widgetsList->isEmpty()) {
+          $widgetsList = \App\Models\Widget::withoutGlobalScopes()
+              ->where('is_active', true)
+              ->whereIn('area', ['homepage-main', 'inbetween_v2'])
+              ->orderBy('sort_order')
+              ->get();
+      }
+      $mobileWidgets = $widgetsList->keyBy('type');
+  } catch (\Throwable $e) {
+      $projectId = null;
+      $tenantId = null;
+      $mobileWidgets = collect();
   }
-  $mobileWidgets = $widgetsList->keyBy('type');
 
   // 3. Resolve merged settings via Widget classes (incorporating all defaults & database overrides)
   $resolveSettings = function (string $type, string $widgetClass) use ($mobileWidgets, $projectId, $tenantId): array {

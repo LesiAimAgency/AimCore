@@ -23,29 +23,34 @@ class InbetweenV2Controller extends Controller
         $themeManager = app(ThemeManager::class);
         $themeManager->setActiveTheme('inbetween_v2');
 
-        $project = function_exists('current_project') ? current_project() : null;
-        if (! $project) {
-            $project = Project::where('code', 'DA005')->first() ?: Project::where('code', 'inbetween_v2')->first();
-            if ($project) {
-                $request->attributes->set('project', $project);
+        $project = null;
+        try {
+            $project = function_exists('current_project') ? current_project() : null;
+            if (! $project && class_exists(Project::class)) {
+                $project = Project::where('code', 'DA005')->first() ?: Project::where('code', 'inbetween_v2')->first();
+                if ($project) {
+                    $request->attributes->set('project', $project);
+                }
             }
-        }
 
-        // Auto-seed widgets for homepage-main/inbetween_v2 area if none exist yet
-        $projId = $project?->id ?? 7;
-        $tenantId = $project?->tenant_id ?? 6;
+            // Auto-seed widgets for homepage-main/inbetween_v2 area if none exist yet
+            $projId = $project?->id ?? 7;
+            $tenantId = $project?->tenant_id ?? 6;
 
-        $hasWidgets = Widget::withoutGlobalScope('tenant')
-            ->whereIn('area', ['homepage-main', 'inbetween_v2'])
-            ->where('project_id', $projId)
-            ->exists();
+            $hasWidgets = Widget::withoutGlobalScope('tenant')
+                ->whereIn('area', ['homepage-main', 'inbetween_v2'])
+                ->where('project_id', $projId)
+                ->exists();
 
-        if (! $hasWidgets && class_exists(InbetweenV2WidgetsSeeder::class)) {
-            try {
-                (new InbetweenV2WidgetsSeeder)->run($projId, $tenantId);
-            } catch (\Throwable $e) {
-                Log::warning('InbetweenV2WidgetsSeeder auto-seed failed: '.$e->getMessage());
+            if (! $hasWidgets && class_exists(InbetweenV2WidgetsSeeder::class)) {
+                try {
+                    (new InbetweenV2WidgetsSeeder)->run($projId, $tenantId);
+                } catch (\Throwable $e) {
+                    Log::warning('InbetweenV2WidgetsSeeder auto-seed failed: '.$e->getMessage());
+                }
             }
+        } catch (\Throwable $e) {
+            Log::warning('InbetweenV2Controller DB check skipped: '.$e->getMessage());
         }
 
         return view('themes.inbetween_v2.pages.home', [

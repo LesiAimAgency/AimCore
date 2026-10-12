@@ -39,23 +39,14 @@
         </div>
       </div>
         @php
-            $currentProj = function_exists('current_project') ? current_project() : (request()->attributes->get('project') ?? session('current_project'));
-            $projId = is_object($currentProj) ? $currentProj->id : 7;
+            $drawerItems = null;
+            try {
+                $currentProj = function_exists('current_project') ? current_project() : (request()->attributes->get('project') ?? session('current_project'));
+                $projId = is_object($currentProj) ? $currentProj->id : 7;
 
-            $headerMenu = \App\Models\Menu::withoutGlobalScopes()
-                ->where('project_id', $projId)
-                ->where('location', 'header')
-                ->where('is_active', true)
-                ->orderBy('updated_at', 'desc')
-                ->orderBy('id', 'desc')
-                ->with(['items' => function($q) {
-                    $q->withoutGlobalScopes()->where('is_active', true)->whereNull('parent_id')->orderBy('order');
-                }])
-                ->first();
-
-            if (! $headerMenu) {
                 $headerMenu = \App\Models\Menu::withoutGlobalScopes()
-                    ->where('slug', 'inbetween-v2-header')
+                    ->where('project_id', $projId)
+                    ->where('location', 'header')
                     ->where('is_active', true)
                     ->orderBy('updated_at', 'desc')
                     ->orderBy('id', 'desc')
@@ -63,9 +54,23 @@
                         $q->withoutGlobalScopes()->where('is_active', true)->whereNull('parent_id')->orderBy('order');
                     }])
                     ->first();
-            }
 
-            $drawerItems = $headerMenu && $headerMenu->items->isNotEmpty() ? $headerMenu->items : null;
+                if (! $headerMenu) {
+                    $headerMenu = \App\Models\Menu::withoutGlobalScopes()
+                        ->where('slug', 'inbetween-v2-header')
+                        ->where('is_active', true)
+                        ->orderBy('updated_at', 'desc')
+                        ->orderBy('id', 'desc')
+                        ->with(['items' => function($q) {
+                            $q->withoutGlobalScopes()->where('is_active', true)->whereNull('parent_id')->orderBy('order');
+                        }])
+                        ->first();
+                }
+
+                $drawerItems = $headerMenu && $headerMenu->items->isNotEmpty() ? $headerMenu->items : null;
+            } catch (\Throwable $e) {
+                $drawerItems = null;
+            }
         @endphp
         <ul class="flex flex-col items-start justify-start text-left pt-2 space-y-1.5 sm:space-y-2 h-[700px] " style=" height:700px;justify-content:center;">
           @if($drawerItems)
