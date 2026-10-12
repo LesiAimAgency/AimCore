@@ -252,21 +252,21 @@ class InbetweenV2FooterWidget extends BaseWidget
             'powered_by_text' => 'Powered by AIM AGENCY',
         ], $this->settings);
 
-        if (empty($merged['social_links']) || !is_array($merged['social_links'])) {
+        if (empty($merged['social_links']) || ! is_array($merged['social_links'])) {
             $legacyLinks = [];
-            if (!empty($merged['facebook_url'])) {
+            if (! empty($merged['facebook_url'])) {
                 $legacyLinks[] = ['name' => 'Facebook', 'url' => $merged['facebook_url'], 'image' => '', 'icon' => 'fa-brands fa-facebook'];
             }
-            if (!empty($merged['instagram_url'])) {
+            if (! empty($merged['instagram_url'])) {
                 $legacyLinks[] = ['name' => 'Instagram', 'url' => $merged['instagram_url'], 'image' => '', 'icon' => 'fa-brands fa-instagram'];
             }
-            if (!empty($merged['linkedin_url'])) {
+            if (! empty($merged['linkedin_url'])) {
                 $legacyLinks[] = ['name' => 'LinkedIn', 'url' => $merged['linkedin_url'], 'image' => '', 'icon' => 'fa-brands fa-linkedin'];
             }
-            if (!empty($merged['tiktok_url'])) {
+            if (! empty($merged['tiktok_url'])) {
                 $legacyLinks[] = ['name' => 'TikTok', 'url' => $merged['tiktok_url'], 'image' => '', 'icon' => 'fa-brands fa-tiktok'];
             }
-            $merged['social_links'] = !empty($legacyLinks) ? $legacyLinks : $defaultSocials;
+            $merged['social_links'] = ! empty($legacyLinks) ? $legacyLinks : $defaultSocials;
         }
 
         return $merged;
