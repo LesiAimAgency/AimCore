@@ -51,6 +51,7 @@ use App\Widgets\Wkcomputer\WkProductSectionWidget;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\View\Factory;
 
 class WidgetRegistry implements WidgetRegistryInterface
 {
@@ -474,12 +475,39 @@ class WidgetRegistry implements WidgetRegistryInterface
 
         // If code-based widget exists
         if ($class && class_exists($class)) {
+            $viewFactory = app('view');
+            $savedStack = null;
+            $savedSections = null;
+            $stackProp = null;
+            $sectionsProp = null;
+
+            if ($viewFactory instanceof Factory) {
+                $ref = new \ReflectionClass($viewFactory);
+                if ($ref->hasProperty('sectionStack')) {
+                    $stackProp = $ref->getProperty('sectionStack');
+                    $stackProp->setAccessible(true);
+                    $savedStack = $stackProp->getValue($viewFactory);
+                }
+                if ($ref->hasProperty('sections')) {
+                    $sectionsProp = $ref->getProperty('sections');
+                    $sectionsProp->setAccessible(true);
+                    $savedSections = $sectionsProp->getValue($viewFactory);
+                }
+            }
+
             try {
                 $widget = new $class($settings, $variant);
 
                 return $widget->css().$widget->render().$widget->js();
             } catch (\Throwable $e) {
                 \Log::error("Error rendering widget {$type}: ".$e->getMessage());
+
+                if ($stackProp && ! empty($savedStack) && empty($stackProp->getValue($viewFactory))) {
+                    $stackProp->setValue($viewFactory, $savedStack);
+                    if ($sectionsProp && ! empty($savedSections)) {
+                        $sectionsProp->setValue($viewFactory, $savedSections);
+                    }
+                }
 
                 return '<div class="widget-error">Widget rendering failed</div>';
             }

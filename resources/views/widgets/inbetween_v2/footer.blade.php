@@ -37,6 +37,7 @@
     $communityDesc = $settings['community_desc'] ?? "Next Day Club, new perks, and what's happening around Saigon.";
     $communityLinkText = $settings['community_link_text'] ?? 'Join the group';
     $communityLinkUrl = $settings['community_link_url'] ?? '#';
+    $communityTarget = (!empty($communityLinkUrl) && str_starts_with($communityLinkUrl, 'http')) ? '_blank' : '_self';
     $socialLinks = !empty($settings['social_links']) && is_array($settings['social_links']) ? array_values($settings['social_links']) : [];
     if (empty($socialLinks)) {
         if (!empty($settings['facebook_url'])) {

@@ -264,7 +264,7 @@
             @endif
           </a>
         @endforeach
-      </div>div>
+      </div>
     </div>
 
     <!-- 9. Copyright (Centered, 2 lines matching footer4.svg) -->
