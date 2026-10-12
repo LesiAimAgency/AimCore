@@ -229,7 +229,8 @@
       <div class="mobile-footer-social-text">
         <div>Explore more on</div>
         <div>our Social Media</div>
-      </d      <div class="mobile-footer-social-icons">
+      </div>
+      <div class="mobile-footer-social-icons">
         @foreach($socialLinks as $soc)
           @php
             $sName = $soc['name'] ?? 'Social';
