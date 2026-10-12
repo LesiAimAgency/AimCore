@@ -11,13 +11,17 @@ class WkcomputerMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $project = function_exists('current_project') ? current_project() : null;
-        if (! $project) {
-            $project = Project::where('code', 'wkcomputer')
-                ->orWhere('code', 'DA009')
-                ->orWhere('subdomain', 'wkcomputer')
-                ->orWhere('external_domain', 'like', '%wkcomputer%')
-                ->first();
+        try {
+            $project = function_exists('current_project') ? current_project() : null;
+            if (! $project && class_exists(Project::class)) {
+                $project = Project::where('code', 'wkcomputer')
+                    ->orWhere('code', 'DA009')
+                    ->orWhere('subdomain', 'wkcomputer')
+                    ->orWhere('external_domain', 'like', '%wkcomputer%')
+                    ->first();
+            }
+        } catch (\Throwable $e) {
+            $project = null;
         }
 
         if ($project) {

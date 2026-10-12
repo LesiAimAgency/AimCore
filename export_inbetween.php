@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 /**
  * Script Xuất Dự Án INBETWEEN V2 (DA005) Độc Lập
- * 
+ *
  * Cách chạy trên Host / VPS / Terminal cPanel / Local:
  *   php export_inbetween.php
- * 
+ *
  * Hoặc sử dụng lệnh Artisan chuẩn:
  *   php artisan project:export DA005
  */
 
-require __DIR__ . '/vendor/autoload.php';
-$app = require_once __DIR__ . '/bootstrap/app.php';
-$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+require __DIR__.'/vendor/autoload.php';
+$app = require_once __DIR__.'/bootstrap/app.php';
+$app->make(Kernel::class)->bootstrap();
 
+use App\Core\Theme\ThemeManager;
 use App\Models\Project;
 use App\Services\ProjectExportService;
-use Illuminate\Support\Facades\File;
+use Illuminate\Contracts\Console\Kernel;
 
 echo "\n=======================================================\n";
 echo "   TIẾN TRÌNH XUẤT DỰ ÁN INBETWEEN V2 (DA005) ĐỘC LẬP\n";
@@ -33,12 +34,12 @@ if (! $project) {
     exit(1);
 }
 
-echo "✓ Đã tìm thấy dự án: " . $project->name . " (ID: {$project->id}, Code: {$project->code})\n";
+echo '✓ Đã tìm thấy dự án: '.$project->name." (ID: {$project->id}, Code: {$project->code})\n";
 echo "✓ Bắt đầu tiến trình trích xuất database & source code...\n";
 
 $startTime = microtime(true);
 $exportService = app(ProjectExportService::class);
-$themeManager = app(\App\Core\Theme\ThemeManager::class);
+$themeManager = app(ThemeManager::class);
 $themeManager->setActiveTheme('inbetween_v2');
 
 $features = is_array($project->features) ? $project->features : [];
@@ -62,8 +63,8 @@ try {
     echo "💡 Bạn có thể tải file ZIP này về và giải nén vào thư mục web\n";
     echo "   (ví dụ: c:\\MAMP\\htdocs\\inbetween_v2) để chạy độc lập!\n\n";
 
-} catch (\Throwable $e) {
-    echo "\n❌ Lỗi trong quá trình xuất: " . $e->getMessage() . "\n";
-    echo $e->getTraceAsString() . "\n";
+} catch (Throwable $e) {
+    echo "\n❌ Lỗi trong quá trình xuất: ".$e->getMessage()."\n";
+    echo $e->getTraceAsString()."\n";
     exit(1);
 }

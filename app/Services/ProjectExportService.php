@@ -419,6 +419,17 @@ PHP;
             $content = preg_replace("/->where\s*\(\s*['\"]projectCode['\"]\s*,[^)]+\)/", '', $content);
             File::put($projectRoute, $content);
         }
+
+        // Remove unused standalone route files
+        if ($themeSlug !== 'wkcomputerdemo' && File::exists($routesDest.'/wkcomputer.php')) {
+            File::delete($routesDest.'/wkcomputer.php');
+        }
+        if ($themeSlug !== 'ehenho' && File::exists($routesDest.'/ehenho.php')) {
+            File::delete($routesDest.'/ehenho.php');
+        }
+        if ($themeSlug !== 'viettinmartdemo' && File::exists($routesDest.'/viettinmart.php')) {
+            File::delete($routesDest.'/viettinmart.php');
+        }
     }
 
     // =========================================================================
@@ -431,6 +442,8 @@ PHP;
     public function getCmsTableWhitelist(?Project $project = null): array
     {
         $tables = [
+            // Core System & Project Identity
+            'tenants', 'projects',
             // Content
             'posts', 'page_sections', 'taxonomies', 'term_relationships', 'translations',
             'archive_templates', 'form_submissions', 'form_templates', 'modal_forms',
@@ -524,7 +537,11 @@ PHP;
         }
 
         // Scope to CMS Data Plane
-        if ($table === 'users') {
+        if ($table === 'projects') {
+            $query->where('id', $project->id);
+        } elseif ($table === 'tenants') {
+            $query->where('id', $project->tenant_id ?: 6);
+        } elseif ($table === 'users') {
             // Include project admin/cms accounts only (never superadmin)
             $query->where(function ($q) {
                 $q->where('role', 'admin')

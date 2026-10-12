@@ -48,15 +48,8 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 
 // ============================================
-// WKCOMPUTER DEDICATED FRONTEND (100% ISOLATED)
+// STANDALONE MODE (ISOLATED STANDALONE DEPLOYMENT)
 // ============================================
-Route::prefix('wkcomputer')
-    ->middleware([
-        WkcomputerMiddleware::class,
-        SetProjectDatabase::class,
-    ])
-    ->group(base_path('routes/wkcomputer.php'));
-
 if (config('app.standalone_mode') || env('STANDALONE_MODE')) {
     $projectCode = strtoupper((string) env('PROJECT_CODE', 'DA005'));
     $standaloneTheme = strtolower((string) env('THEME', ''));
@@ -91,7 +84,19 @@ if (config('app.standalone_mode') || env('STANDALONE_MODE')) {
 
         return;
     }
+
+    return;
 }
+
+// ============================================
+// WKCOMPUTER DEDICATED FRONTEND (100% ISOLATED)
+// ============================================
+Route::prefix('wkcomputer')
+    ->middleware([
+        WkcomputerMiddleware::class,
+        SetProjectDatabase::class,
+    ])
+    ->group(base_path('routes/wkcomputer.php'));
 
 // ========================================================
 // CANONICAL PROJECT CODE NORMALIZATION (CASE-INSENSITIVE ROUTE SYNC)

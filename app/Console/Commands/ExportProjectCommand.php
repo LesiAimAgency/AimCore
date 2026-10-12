@@ -45,9 +45,17 @@ class ExportProjectCommand extends Command
                 ->first();
         }
 
+        if (! $project && (env('PROJECT_CODE') || env('DEFAULT_PROJECT_CODE'))) {
+            $defaultCode = env('PROJECT_CODE') ?: env('DEFAULT_PROJECT_CODE');
+            $project = Project::where('code', $defaultCode)
+                ->orWhere('code', strtoupper($defaultCode))
+                ->first();
+        }
+
         if (! $project) {
-            // Default to WKComputer (DA009)
-            $project = Project::where('code', 'DA009')
+            // Default to DA005 / inbetween_v2 or WKComputer (DA009)
+            $project = Project::where('code', 'DA005')
+                ->orWhere('code', 'DA009')
                 ->orWhere('code', 'wkcomputer')
                 ->orWhere('subdomain', 'wkcomputer')
                 ->first();
