@@ -103,43 +103,7 @@
         if (!section || section.__mobileBusinessInitialized) return;
         section.__mobileBusinessInitialized = true;
 
-        // 1. Badge Popovers Toggle
-        var badgeItems = section.querySelectorAll('.business-badge-item');
-        badgeItems.forEach(function (item) {
-          var btn = item.querySelector('.mobile-biz-badge-trigger');
-          if (!btn) return;
-          btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var isOpen = item.classList.contains('is-open');
-            badgeItems.forEach(function (other) {
-              if (other !== item) {
-                other.classList.remove('is-open');
-                var otherBtn = other.querySelector('.mobile-biz-badge-trigger');
-                if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
-              }
-            });
-            if (isOpen) {
-              item.classList.remove('is-open');
-              btn.setAttribute('aria-expanded', 'false');
-            } else {
-              item.classList.add('is-open');
-              btn.setAttribute('aria-expanded', 'true');
-            }
-          });
-        });
-
-        document.addEventListener('click', function (e) {
-          if (!e.target.closest('#mobile-business .business-badge-item')) {
-            badgeItems.forEach(function (item) {
-              item.classList.remove('is-open');
-              var btn = item.querySelector('.mobile-biz-badge-trigger');
-              if (btn) btn.setAttribute('aria-expanded', 'false');
-            });
-          }
-        });
-
-        // 2. 3D Ellipse Carousel & Dots Pagination (Thanh dots)
+        // 3D Ellipse Carousel & Dots Pagination (Thanh dots)
         var stage = section.querySelector('#mobile-biz-stage');
         var cards = Array.from(section.querySelectorAll('.mobile-biz-card'));
         var dotsWrap = section.querySelector('#mobile-biz-dots') || section.querySelector('.mobile-biz-dots-wrap');

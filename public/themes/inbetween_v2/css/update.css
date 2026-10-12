@@ -1756,10 +1756,12 @@ main#inbetween-app.intro-locked {
     transform: translateY(0);
 }
 
-#mobile-business .mobile-biz-btn-talk {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
+#mobile-hero .mobile-biz-btn-talk,
+#mobile-business .mobile-biz-btn-talk,
+.mobile-biz-btn-talk {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
     width: 174px !important;
     height: 42px !important;
     padding: 0 8px 0 18px !important;
@@ -1771,18 +1773,24 @@ main#inbetween-app.intro-locked {
     text-decoration: none !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
     transition: background-color 0.2s ease, transform 0.15s ease !important;
-    cursor: pointer;
+    cursor: pointer !important;
 }
 
-#mobile-business .mobile-biz-btn-talk:hover {
+#mobile-hero .mobile-biz-btn-talk:hover,
+#mobile-business .mobile-biz-btn-talk:hover,
+.mobile-biz-btn-talk:hover {
     background-color: #2B2B2B !important;
 }
 
-#mobile-business .mobile-biz-btn-talk:active {
-    transform: scale(0.98);
+#mobile-hero .mobile-biz-btn-talk:active,
+#mobile-business .mobile-biz-btn-talk:active,
+.mobile-biz-btn-talk:active {
+    transform: scale(0.98) !important;
 }
 
-#mobile-business .mobile-biz-btn-talk .arrow-circle {
+#mobile-hero .mobile-biz-btn-talk .arrow-circle,
+#mobile-business .mobile-biz-btn-talk .arrow-circle,
+.mobile-biz-btn-talk .arrow-circle {
     width: 26px !important;
     height: 26px !important;
     border-radius: 9999px !important;

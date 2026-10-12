@@ -36,6 +36,7 @@
   $formTitle1 = $settings['form_title_line1'] ?? 'READY TO BUILD';
   $formTitleHighlight = $settings['form_title_highlight'] ?? 'SOMETHING BOLD';
   $formTitle2 = $settings['form_title_line2'] ?? 'IN VIETNAM?';
+  $submitBtnText = $settings['submit_btn_text'] ?? $settings['top_connect_text'] ?? "LET'S CONNECT";
 @endphp
 
 <!-- Mobile Footer - 100% Identical to footer4.svg -->
@@ -137,6 +138,17 @@
             <li class="mobile-footer-dropdown-item" data-value="Local Business Support" role="option">Local Business Support</li>
           </ul>
         </div>
+      </div>
+
+      <!-- Field 6: Action Submit Button -->
+      <div class="mobile-footer-submit-wrap">
+        <button type="submit" id="mobile-footer-submit-btn" class="mobile-footer-submit-btn" aria-label="Submit Contact Inquiry">
+          <span class="mobile-footer-submit-arrow-box" aria-hidden="true">
+            <span class="arrow-primary">&rarr;</span>
+            <span class="arrow-secondary">&rarr;</span>
+          </span>
+          <span class="mobile-footer-submit-btn-text" id="mobile-footer-submit-btn-text">{{ $submitBtnText }}</span>
+        </button>
       </div>
     </form>
 
@@ -529,9 +541,103 @@
     color: #FFFFFF !important;
   }
 
+  /* Action Button (Submit) matching signature in • between pill style */
+  #mobile-footer .mobile-footer-submit-wrap {
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  #mobile-footer .mobile-footer-submit-btn {
+    width: 100%;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 24px;
+    border-radius: 9999px;
+    background-color: #F6F4F4 !important;
+    color: #131313 !important;
+    border: none;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #mobile-footer .mobile-footer-submit-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  #mobile-footer .mobile-footer-submit-arrow-box {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+  }
+
+  #mobile-footer .mobile-footer-submit-arrow-box .arrow-primary,
+  #mobile-footer .mobile-footer-submit-arrow-box .arrow-secondary {
+    position: absolute;
+    font-size: 1.1rem;
+    line-height: 1;
+    color: #131313;
+    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s ease;
+  }
+
+  #mobile-footer .mobile-footer-submit-arrow-box .arrow-primary {
+    transform: translate(0);
+  }
+
+  #mobile-footer .mobile-footer-submit-arrow-box .arrow-secondary {
+    transform: translate(-24px);
+    color: #ffffff;
+  }
+
+  #mobile-footer .mobile-footer-submit-btn-text {
+    color: #131313;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: color 0.3s ease;
+  }
+
+  #mobile-footer .mobile-footer-submit-btn:hover,
+  #mobile-footer .mobile-footer-submit-btn:active {
+    background-color: #EC460B !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(236, 70, 11, 0.35);
+  }
+
+  #mobile-footer .mobile-footer-submit-btn:hover .mobile-footer-submit-arrow-box .arrow-primary,
+  #mobile-footer .mobile-footer-submit-btn:active .mobile-footer-submit-arrow-box .arrow-primary {
+    transform: translate(24px);
+  }
+
+  #mobile-footer .mobile-footer-submit-btn:hover .mobile-footer-submit-arrow-box .arrow-secondary,
+  #mobile-footer .mobile-footer-submit-btn:active .mobile-footer-submit-arrow-box .arrow-secondary {
+    transform: translate(0);
+    color: #ffffff;
+  }
+
+  #mobile-footer .mobile-footer-submit-btn:hover .mobile-footer-submit-btn-text,
+  #mobile-footer .mobile-footer-submit-btn:active .mobile-footer-submit-btn-text {
+    color: #ffffff !important;
+  }
+
   /* 4. Logo in • between */
   #mobile-footer .mobile-footer-logo-wrap {
-    margin-top: 60px;
+    margin-top: 48px;
     display: flex;
     justify-content: center;
   }
@@ -886,6 +992,22 @@
     if (form && !form.__ajaxAttached) {
       form.__ajaxAttached = true;
       var feedback = document.getElementById('mobile-footer-feedback');
+      var submitBtn = document.getElementById('mobile-footer-submit-btn');
+      var submitBtnText = document.getElementById('mobile-footer-submit-btn-text');
+      var originalBtnText = submitBtnText ? submitBtnText.textContent.trim() : "LET'S CONNECT";
+
+      var resetFormState = function () {
+        form.reset();
+        var serviceVal = document.getElementById('mobile-service-val');
+        var serviceLabel = document.getElementById('mobile-service-label');
+        if (serviceVal) serviceVal.value = 'Sale & BD';
+        if (serviceLabel) serviceLabel.textContent = 'Sale & BD';
+        var items = form.querySelectorAll('.mobile-footer-dropdown-item');
+        items.forEach(function (it, idx) {
+          if (idx === 0) it.classList.add('active');
+          else it.classList.remove('active');
+        });
+      };
 
       form.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -904,6 +1026,9 @@
           }
           return;
         }
+
+        if (submitBtn) submitBtn.disabled = true;
+        if (submitBtnText) submitBtnText.textContent = 'SENDING...';
 
         var formData = new FormData(form);
         fetch(form.action, {
@@ -933,7 +1058,7 @@
           } else {
             alert(msg);
           }
-          form.reset();
+          resetFormState();
         })
         .catch(function () {
           if (feedback) {
@@ -942,9 +1067,12 @@
             feedback.style.border = '1px solid rgba(16, 185, 129, 0.5)';
             feedback.style.color = '#a7f3d0';
             feedback.textContent = 'Thank you! Your inquiry has been sent successfully.';
-            feedback.classList.remove('hidden');
           }
-          form.reset();
+          resetFormState();
+        })
+        .finally(function () {
+          if (submitBtn) submitBtn.disabled = false;
+          if (submitBtnText) submitBtnText.textContent = originalBtnText;
         });
       });
     }

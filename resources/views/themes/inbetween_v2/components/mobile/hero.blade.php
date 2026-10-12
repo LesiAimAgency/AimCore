@@ -87,6 +87,28 @@
   #mobile-hero .mobile-hero-radial-overlay {
     background: radial-gradient(circle at center, transparent 40%, rgba(15, 4, 0, 0.65) 100%) !important;
   }
+  #mobile-hero .mobile-hero-card {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+  #mobile-hero .mobile-hero-bottom-content {
+    align-self: flex-end !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    width: 50% !important;
+    min-width: 185px !important;
+    max-width: 215px !important;
+    padding-right: 18px !important;
+    padding-left: 0 !important;
+    padding-bottom: 22px !important;
+    padding-top: 6px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    box-sizing: border-box !important;
+  }
 </style>
 
 <!-- Mobile Hero Section - Rebuilt from HERO.svg design with Rotating Text Viewport Wrapper -->
@@ -166,18 +188,18 @@
     <!-- Center Stage: The glowing hands visual is naturally framed here -->
     <div class="relative z-10 flex-1 min-h-[140px] pointer-events-none"></div>
 
-    <!-- Bottom Card Content: Value Proposition & Talk to us CTA -->
-    <div class="relative z-10 w-[240px]  px-6 pb-6 pt-2 flex flex-col items-end text-right">
-      <div class="w-full  space-y-3">
-        <!-- Value prop description -->
-        <p class="text-[11.5px] sm:text-[12px] text-[#F6F2EF] leading-[1.38] font-light text-left">
-          {!! $heroDesc !!}
-        </p>
+    <!-- Bottom Card Content: Value Proposition & Talk to us CTA (Aligned Right, 50% width) -->
+    <div class="mobile-hero-bottom-content relative z-10 select-text">
+      <!-- Value prop description -->
+      <p class="text-[11.5px] sm:text-[12px] text-[#F6F2EF] leading-[1.38] font-light text-left mb-3" style="font-size: 11.5px !important; line-height: 1.38 !important;">
+        {!! $heroDesc !!}
+      </p>
 
-        <!-- CTA Pill Button: Dark rounded pill with arrow container -->
-        <a href="#contact-modal" class="inline-flex items-center justify-between w-full sm:w-auto h-[48px] px-6 rounded-full bg-[#131313] text-white text-[15px] font-medium hover:bg-[#2B2B2B] active:scale-[0.98] transition-all shadow-sm">
+      <!-- CTA Pill Button: Sử dụng mobile-biz-btn-talk làm chuẩn -->
+      <div class="w-full flex justify-start pointer-events-auto">
+        <a href="#contact-modal" data-contact-modal-toggle class="mobile-biz-btn-talk inline-flex items-center justify-between rounded-full bg-[#131313] text-white text-[14px] font-medium hover:bg-[#2B2B2B] active:scale-[0.98] transition-all shadow-sm">
           <span>Talk to us</span>
-          <span class="w-7 h-7 rounded-full bg-white text-[#131313] flex items-center justify-center ml-4">
+          <span class="arrow-circle">
             <svg class="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none">
               <path d="M3.3 8h9.4M8.7 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
