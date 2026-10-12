@@ -58,13 +58,39 @@ Route::prefix('wkcomputer')
     ->group(base_path('routes/wkcomputer.php'));
 
 if (config('app.standalone_mode') || env('STANDALONE_MODE')) {
-    Route::middleware([
-        WkcomputerMiddleware::class,
-        SetProjectDatabase::class,
-    ])
-        ->group(base_path('routes/wkcomputer.php'));
+    $projectCode = strtoupper((string) env('PROJECT_CODE', 'DA005'));
+    $standaloneTheme = strtolower((string) env('THEME', ''));
 
-    return;
+    if ($projectCode === 'DA005' || $standaloneTheme === 'inbetween_v2' || str_contains($standaloneTheme, 'inbetween')) {
+        Route::get('/', [InbetweenV2Controller::class, 'index'])->name('home');
+        Route::post('/contact', [InbetweenV2Controller::class, 'contact'])->name('contact');
+        Route::post('/inbetween_v2/contact', [InbetweenV2Controller::class, 'contact'])->name('web.inbetween_v2.contact');
+        Route::post('/form-submit', [InbetweenV2Controller::class, 'contact'])->name('form.submit');
+
+        Route::any('DA005/{any?}', function ($any = null) {
+            $qs = request()->getQueryString();
+
+            return redirect('/'.($any ? ltrim($any, '/') : '').($qs ? '?'.$qs : ''), 301);
+        })->where('any', '.*');
+
+        Route::any('inbetween_v2/{any?}', function ($any = null) {
+            $qs = request()->getQueryString();
+
+            return redirect('/'.($any ? ltrim($any, '/') : '').($qs ? '?'.$qs : ''), 301);
+        })->where('any', '.*');
+
+        return;
+    }
+
+    if ($projectCode === 'DA009' || $projectCode === 'WKCOMPUTER' || $standaloneTheme === 'wkcomputerdemo') {
+        Route::middleware([
+            WkcomputerMiddleware::class,
+            SetProjectDatabase::class,
+        ])
+            ->group(base_path('routes/wkcomputer.php'));
+
+        return;
+    }
 }
 
 // ========================================================

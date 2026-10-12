@@ -80,7 +80,7 @@ class ProjectExportService
         Log::info('[Export] Database SQL generated ('.strlen($dbSqlContent).' bytes).');
 
         // 3. Generate .env template
-        $envContent = $this->generateEnvTemplate($project, $profile);
+        $envContent = $this->generateEnvTemplate($project, $profile, $activeTheme);
         File::put($exportSourceDir.'/.env', $envContent);
 
         // 4. Generate bootstrap installer script
@@ -610,7 +610,7 @@ PHP;
      * Generate a .env template with placeholder DB values.
      * The actual DB credentials are substituted by DeploymentService after DB creation.
      */
-    public function generateEnvTemplate(Project $project, ?HostingProfile $profile = null): string
+    public function generateEnvTemplate(Project $project, ?HostingProfile $profile = null, ?string $theme = null): string
     {
         if (empty($project->api_token)) {
             $project->update(['api_token' => bin2hex(random_bytes(32))]);
@@ -618,6 +618,8 @@ PHP;
         }
 
         $domain = $project->external_domain ?? ($profile?->domain ?? 'your-domain.com');
+        $themeManager = app(ThemeManager::class);
+        $resolvedTheme = $theme ?: $themeManager->resolveActiveTheme($project);
 
         return 'APP_NAME="'.$project->name.'"
 APP_ENV=production
@@ -655,6 +657,7 @@ MAIL_FROM_NAME="'.$project->name.'"
 # Project-specific settings
 PROJECT_CODE='.$project->code.'
 PROJECT_NAME="'.$project->name.'"
+THEME="'.$resolvedTheme.'"
 
 # Remote Sync API – token provided by SuperAdmin
 SYNC_API_TOKEN="'.$project->api_token.'"
