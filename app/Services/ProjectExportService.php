@@ -515,8 +515,13 @@ PHP;
 
         try {
             $createTable = DB::select("SHOW CREATE TABLE `{$table}`");
+            $createTableSql = $createTable[0]->{'Create Table'};
+
+            // Strip foreign key constraints so standalone database imports cleanly without external dependencies or missing table errors
+            $createTableSql = preg_replace('/,\s*CONSTRAINT\s+[`\w]+`?\s+FOREIGN KEY\s*\([^)]+\)\s*REFERENCES\s+[`\w]+`?\s*\([^)]+\)[^,\n]*/i', '', $createTableSql);
+
             $sql .= "DROP TABLE IF EXISTS `{$table}`;\n";
-            $sql .= $createTable[0]->{'Create Table'}.";\n\n";
+            $sql .= $createTableSql.";\n\n";
             $sql .= $this->getTableData($table, $project);
         } catch (\Exception $e) {
             $sql .= "-- Error exporting table {$table}: ".$e->getMessage()."\n\n";

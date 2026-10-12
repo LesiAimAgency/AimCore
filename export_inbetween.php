@@ -12,14 +12,14 @@ declare(strict_types=1);
  *   php artisan project:export DA005
  */
 
-require __DIR__.'/vendor/autoload.php';
-$app = require_once __DIR__.'/bootstrap/app.php';
-$app->make(Kernel::class)->bootstrap();
-
 use App\Core\Theme\ThemeManager;
 use App\Models\Project;
 use App\Services\ProjectExportService;
 use Illuminate\Contracts\Console\Kernel;
+
+require __DIR__.'/vendor/autoload.php';
+$app = require_once __DIR__.'/bootstrap/app.php';
+$app->make(Kernel::class)->bootstrap();
 
 echo "\n=======================================================\n";
 echo "   TIẾN TRÌNH XUẤT DỰ ÁN INBETWEEN V2 (DA005) ĐỘC LẬP\n";
