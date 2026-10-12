@@ -168,8 +168,8 @@ class ProjectExportService
         if (File::isDirectory($themesDir)) {
             foreach (File::directories($themesDir) as $themePath) {
                 $themeName = strtolower(basename($themePath));
-                $matchesTheme = str_contains($themeName, $activeTheme) || str_contains($activeTheme, $themeName);
-                $matchesProject = str_contains($themeName, $projectCode) || str_contains($projectCode, $themeName);
+                $matchesTheme = ($themeName === $activeTheme);
+                $matchesProject = ($themeName === $projectCode);
                 if (! $matchesTheme && ! $matchesProject) {
                     $publicExcludes[] = 'themes/'.basename($themePath);
                 }
@@ -370,8 +370,8 @@ PHP;
         $themeSlug = $project ? $themeManager->resolveActiveTheme($project) : 'inbetween';
 
         $destination = '/'.($project?->code ?: $themeSlug);
-        if ($themeSlug === 'inbetween') {
-            $destination = '/inbetween';
+        if ($themeSlug === 'inbetween_v2' || $themeSlug === 'inbetween') {
+            $destination = '/';
         } elseif ($themeSlug === 'ehenho') {
             $destination = '/ehenho';
         } elseif ($themeSlug === 'wkcomputerdemo') {
@@ -389,7 +389,11 @@ PHP;
                 '// SuperAdmin routes removed for standalone deployment',
                 $content
             );
-            $rootReplacement = "if (! file_exists(storage_path('installed.lock'))) {\n        return redirect('/install');\n    }\n\n    return redirect('{$destination}');";
+            if ($destination === '/') {
+                $rootReplacement = "if (! file_exists(storage_path('installed.lock'))) {\n        return redirect('/install');\n    }\n\n    return app(\\App\\Http\\Controllers\\Themes\\InbetweenV2\\InbetweenV2Controller::class)->index(request());";
+            } else {
+                $rootReplacement = "if (! file_exists(storage_path('installed.lock'))) {\n        return redirect('/install');\n    }\n\n    return redirect('{$destination}');";
+            }
             $content = str_replace(
                 "return view('coming-soon');",
                 $rootReplacement,
