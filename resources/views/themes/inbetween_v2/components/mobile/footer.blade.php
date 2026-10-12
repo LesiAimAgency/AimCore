@@ -10,10 +10,21 @@
   $communityLinkUrl = $settings['community_link_url'] ?? '#';
   $communityTarget = (!empty($communityLinkUrl) && str_starts_with($communityLinkUrl, 'http')) ? '_blank' : '_self';
 
-  $facebookUrl = $settings['facebook_url'] ?? $settings['social_facebook_url'] ?? 'https://facebook.com';
-  $instagramUrl = $settings['instagram_url'] ?? $settings['social_instagram_url'] ?? 'https://instagram.com';
-  $linkedinUrl = $settings['linkedin_url'] ?? $settings['social_linkedin_url'] ?? 'https://linkedin.com';
-  $tiktokUrl = $settings['tiktok_url'] ?? $settings['social_tiktok_url'] ?? 'https://tiktok.com';
+  $socialLinks = !empty($settings['social_links']) && is_array($settings['social_links']) ? array_values($settings['social_links']) : [];
+  if (empty($socialLinks)) {
+      if (!empty($settings['facebook_url'])) {
+          $socialLinks[] = ['name' => 'Facebook', 'url' => $settings['facebook_url'], 'image' => '', 'icon' => 'fa-brands fa-facebook'];
+      }
+      if (!empty($settings['instagram_url'])) {
+          $socialLinks[] = ['name' => 'Instagram', 'url' => $settings['instagram_url'], 'image' => '', 'icon' => 'fa-brands fa-instagram'];
+      }
+      if (!empty($settings['linkedin_url'])) {
+          $socialLinks[] = ['name' => 'LinkedIn', 'url' => $settings['linkedin_url'], 'image' => '', 'icon' => 'fa-brands fa-linkedin'];
+      }
+      if (!empty($settings['tiktok_url'])) {
+          $socialLinks[] = ['name' => 'TikTok', 'url' => $settings['tiktok_url'], 'image' => '', 'icon' => 'fa-brands fa-tiktok'];
+      }
+  }
 
   $headingPrefix = $settings['heading_prefix'] ?? 'MORE';
   $defaultRotatingWords = [

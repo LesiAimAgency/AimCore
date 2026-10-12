@@ -144,28 +144,37 @@ class InbetweenV2FooterWidget extends BaseWidget
                     'default' => '#',
                 ],
                 [
-                    'name' => 'facebook_url',
-                    'label' => 'Đường dẫn Facebook',
-                    'type' => 'text',
-                    'default' => 'https://facebook.com',
-                ],
-                [
-                    'name' => 'instagram_url',
-                    'label' => 'Đường dẫn Instagram',
-                    'type' => 'text',
-                    'default' => 'https://instagram.com',
-                ],
-                [
-                    'name' => 'linkedin_url',
-                    'label' => 'Đường dẫn LinkedIn',
-                    'type' => 'text',
-                    'default' => 'https://linkedin.com',
-                ],
-                [
-                    'name' => 'tiktok_url',
-                    'label' => 'Đường dẫn TikTok',
-                    'type' => 'text',
-                    'default' => 'https://tiktok.com',
+                    'name' => 'social_links',
+                    'label' => 'Danh sách Mạng xã hội (Social Media Links - Repeatable)',
+                    'type' => 'repeatable',
+                    'min_items' => 1,
+                    'max_items' => 12,
+                    'fields' => [
+                        [
+                            'name' => 'name',
+                            'label' => 'Tên mạng xã hội (VD: Facebook, Instagram, LinkedIn, TikTok...)',
+                            'type' => 'text',
+                            'default' => 'Facebook',
+                        ],
+                        [
+                            'name' => 'url',
+                            'label' => 'Đường dẫn liên kết (URL https://...)',
+                            'type' => 'text',
+                            'default' => 'https://facebook.com',
+                        ],
+                        [
+                            'name' => 'image',
+                            'label' => 'Hình ảnh / SVG Icon (Tùy chọn tải ảnh/SVG lên)',
+                            'type' => 'image',
+                            'default' => '',
+                        ],
+                        [
+                            'name' => 'icon',
+                            'label' => 'Icon class FontAwesome (Tùy chọn: fa-brands fa-facebook)',
+                            'type' => 'text',
+                            'default' => '',
+                        ],
+                    ],
                 ],
                 [
                     'name' => 'copyright_text',
@@ -185,7 +194,34 @@ class InbetweenV2FooterWidget extends BaseWidget
 
     public function getMergedSettings(): array
     {
-        return array_merge([
+        $defaultSocials = [
+            [
+                'name' => 'Facebook',
+                'url' => 'https://facebook.com',
+                'image' => '',
+                'icon' => 'fa-brands fa-facebook',
+            ],
+            [
+                'name' => 'Instagram',
+                'url' => 'https://instagram.com',
+                'image' => '',
+                'icon' => 'fa-brands fa-instagram',
+            ],
+            [
+                'name' => 'LinkedIn',
+                'url' => 'https://linkedin.com',
+                'image' => '',
+                'icon' => 'fa-brands fa-linkedin',
+            ],
+            [
+                'name' => 'TikTok',
+                'url' => 'https://tiktok.com',
+                'image' => '',
+                'icon' => 'fa-brands fa-tiktok',
+            ],
+        ];
+
+        $merged = array_merge([
             'logo_white' => 'themes/inbetween_v2/images/Logo-white.svg',
             'lang_en_label' => 'EN',
             'lang_zh_label' => '汉语',
@@ -211,13 +247,29 @@ class InbetweenV2FooterWidget extends BaseWidget
             'community_desc' => "Next Day Club, new perks, and what's happening around Saigon.",
             'community_link_text' => 'Join the group',
             'community_link_url' => '#',
-            'facebook_url' => 'https://facebook.com',
-            'instagram_url' => 'https://instagram.com',
-            'linkedin_url' => 'https://linkedin.com',
-            'tiktok_url' => 'https://tiktok.com',
+            'social_links' => $defaultSocials,
             'copyright_text' => 'Copyright belong to INBETWEEN',
             'powered_by_text' => 'Powered by AIM AGENCY',
         ], $this->settings);
+
+        if (empty($merged['social_links']) || !is_array($merged['social_links'])) {
+            $legacyLinks = [];
+            if (!empty($merged['facebook_url'])) {
+                $legacyLinks[] = ['name' => 'Facebook', 'url' => $merged['facebook_url'], 'image' => '', 'icon' => 'fa-brands fa-facebook'];
+            }
+            if (!empty($merged['instagram_url'])) {
+                $legacyLinks[] = ['name' => 'Instagram', 'url' => $merged['instagram_url'], 'image' => '', 'icon' => 'fa-brands fa-instagram'];
+            }
+            if (!empty($merged['linkedin_url'])) {
+                $legacyLinks[] = ['name' => 'LinkedIn', 'url' => $merged['linkedin_url'], 'image' => '', 'icon' => 'fa-brands fa-linkedin'];
+            }
+            if (!empty($merged['tiktok_url'])) {
+                $legacyLinks[] = ['name' => 'TikTok', 'url' => $merged['tiktok_url'], 'image' => '', 'icon' => 'fa-brands fa-tiktok'];
+            }
+            $merged['social_links'] = !empty($legacyLinks) ? $legacyLinks : $defaultSocials;
+        }
+
+        return $merged;
     }
 
     public function render(): string

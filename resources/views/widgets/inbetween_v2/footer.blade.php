@@ -37,11 +37,21 @@
     $communityDesc = $settings['community_desc'] ?? "Next Day Club, new perks, and what's happening around Saigon.";
     $communityLinkText = $settings['community_link_text'] ?? 'Join the group';
     $communityLinkUrl = $settings['community_link_url'] ?? '#';
-    $communityTarget = (!empty($communityLinkUrl) && str_starts_with($communityLinkUrl, 'http')) ? '_blank' : '_self';
-    $facebookUrl = $settings['facebook_url'] ?? $settings['social_facebook_url'] ?? 'https://facebook.com';
-    $instagramUrl = $settings['instagram_url'] ?? $settings['social_instagram_url'] ?? 'https://instagram.com';
-    $linkedinUrl = $settings['linkedin_url'] ?? $settings['social_linkedin_url'] ?? 'https://linkedin.com';
-    $tiktokUrl = $settings['tiktok_url'] ?? $settings['social_tiktok_url'] ?? 'https://tiktok.com';
+    $socialLinks = !empty($settings['social_links']) && is_array($settings['social_links']) ? array_values($settings['social_links']) : [];
+    if (empty($socialLinks)) {
+        if (!empty($settings['facebook_url'])) {
+            $socialLinks[] = ['name' => 'Facebook', 'url' => $settings['facebook_url'], 'image' => '', 'icon' => 'fa-brands fa-facebook'];
+        }
+        if (!empty($settings['instagram_url'])) {
+            $socialLinks[] = ['name' => 'Instagram', 'url' => $settings['instagram_url'], 'image' => '', 'icon' => 'fa-brands fa-instagram'];
+        }
+        if (!empty($settings['linkedin_url'])) {
+            $socialLinks[] = ['name' => 'LinkedIn', 'url' => $settings['linkedin_url'], 'image' => '', 'icon' => 'fa-brands fa-linkedin'];
+        }
+        if (!empty($settings['tiktok_url'])) {
+            $socialLinks[] = ['name' => 'TikTok', 'url' => $settings['tiktok_url'], 'image' => '', 'icon' => 'fa-brands fa-tiktok'];
+        }
+    }
 @endphp
 
 <section class="inbetween-onepage-section relative w-full h-auto min-h-screen lg:h-screen lg:min-h-screen lg:max-h-screen overflow-y-auto lg:overflow-hidden select-none bg-[#131313] text-[#F6F4F4] flex flex-col justify-between py-6 sm:py-8 lg:py-10 px-6 sm:px-10 lg:px-16" id="inbetween-footer" aria-label="in • between Footer">
@@ -256,28 +266,35 @@
             Explore more on
           </div>
 
-          <!-- Social Icons (Glyphs with no border circle, font-size 24px) -->
+          <!-- Social Icons (Glyphs / Images with no border circle, font-size 24px) -->
           <div class="flex items-center gap-3 text-white text-[24px] leading-none">
-            @if(!empty($facebookUrl))
-              <a href="{{ $facebookUrl }}" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="Facebook">
-                <i class="fa-brands fa-facebook"></i>
+            @foreach($socialLinks as $soc)
+              @php
+                $sName = $soc['name'] ?? 'Social';
+                $sUrl = !empty($soc['url']) ? $soc['url'] : '#';
+                $rawImg = is_array($soc['image'] ?? null) ? ($soc['image']['url'] ?? '') : ($soc['image'] ?? '');
+                $sImg = !empty($rawImg) ? (str_starts_with($rawImg, 'http') || str_starts_with($rawImg, '/') ? $rawImg : asset($rawImg)) : '';
+                $sIcon = !empty($soc['icon']) ? $soc['icon'] : null;
+                if (!$sIcon && !$sImg) {
+                    $lowerName = strtolower($sName);
+                    if (str_contains($lowerName, 'facebook')) $sIcon = 'fa-brands fa-facebook';
+                    elseif (str_contains($lowerName, 'instagram')) $sIcon = 'fa-brands fa-instagram';
+                    elseif (str_contains($lowerName, 'linkedin')) $sIcon = 'fa-brands fa-linkedin';
+                    elseif (str_contains($lowerName, 'tiktok')) $sIcon = 'fa-brands fa-tiktok';
+                    elseif (str_contains($lowerName, 'youtube')) $sIcon = 'fa-brands fa-youtube';
+                    elseif (str_contains($lowerName, 'twitter') || str_contains($lowerName, 'x')) $sIcon = 'fa-brands fa-x-twitter';
+                    elseif (str_contains($lowerName, 'zalo')) $sIcon = 'fa-solid fa-comment-dots';
+                    else $sIcon = 'fa-solid fa-arrow-up-right-from-square';
+                }
+              @endphp
+              <a href="{{ $sUrl }}" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-all inline-flex items-center justify-center hover:scale-110" aria-label="{{ $sName }}" title="{{ $sName }}">
+                @if(!empty($sImg))
+                  <img src="{{ $sImg }}" alt="{{ $sName }}" class="w-6 h-6 max-w-[24px] max-h-[24px] object-contain filter brightness-0 invert hover:brightness-100 hover:filter-none transition-all">
+                @else
+                  <i class="{{ $sIcon }}"></i>
+                @endif
               </a>
-            @endif
-            @if(!empty($instagramUrl))
-              <a href="{{ $instagramUrl }}" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="Instagram">
-                <i class="fa-brands fa-instagram"></i>
-              </a>
-            @endif
-            @if(!empty($linkedinUrl))
-              <a href="{{ $linkedinUrl }}" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="LinkedIn">
-                <i class="fa-brands fa-linkedin"></i>
-              </a>
-            @endif
-            @if(!empty($tiktokUrl))
-              <a href="{{ $tiktokUrl }}" target="_blank" rel="noopener" class="hover:text-[#EC460B] transition-colors inline-flex items-center justify-center" aria-label="TikTok">
-                <i class="fa-brands fa-tiktok"></i>
-              </a>
-            @endif
+            @endforeach
           </div>
 
           <!-- Copyright & Powered By (16px gap from icons) -->
