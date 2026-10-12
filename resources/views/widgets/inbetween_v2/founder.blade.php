@@ -6,6 +6,20 @@
           $rawPortrait = is_array($settings['founder_portrait'] ?? null) ? ($settings['founder_portrait']['url'] ?? $settings['founder_portrait'][0] ?? '') : ($settings['founder_portrait'] ?? '');
           $portraitUrl = !empty($rawPortrait) ? (str_starts_with($rawPortrait, 'http') || str_starts_with($rawPortrait, '/') ? $rawPortrait : asset($rawPortrait)) : asset('themes/inbetween_v2/images/founder-airu-portrait.png');
           $founderName = $settings['founder_name'] ?? 'AIRU';
+          $founderNameZh = $settings['founder_name_zh'] ?? $settings['founder_name_cn'] ?? '';
+          $founderNameEn = $settings['founder_name_en'] ?? '';
+
+          if (empty($founderNameZh) && empty($founderNameEn)) {
+            if (preg_match('/([\x{4e00}-\x{9fa5}\x{3400}-\x{4dbf}]+)/u', (string)$founderName, $m)) {
+              $founderNameZh = trim($m[1]);
+              $founderNameEn = trim(str_replace($m[1], '', (string)$founderName));
+            } else {
+              $founderNameZh = '爱茹';
+              $founderNameEn = (string)$founderName;
+            }
+          } elseif (empty($founderNameEn)) {
+            $founderNameEn = (string)$founderName;
+          }
           $founderRole = $settings['founder_role'] ?? 'Founder of INBETWEEN';
           $quote1 = $settings['quote_line1'] ?? 'Built between cultures.';
           $quote2 = $settings['quote_line2'] ?? 'Connected across borders.';
@@ -18,7 +32,12 @@
         <div class="founder-col-right lg:col-span-7 xl:col-span-7 h-full flex flex-col justify-center lg:pl-6">
           <div class="founder-header-block space-y-1.5 w-full max-w-[460px] mb-4 sm:mb-8" data-flip-id="founder-header">
             <button class="founder-name-trigger group text-left inline-flex items-center gap-3 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#EC460B] rounded-lg p-0.5" type="button" aria-expanded="false" aria-controls="founder-scroll-detail" aria-label="View founder profile details - {{ $founderName }}" title="Click to view details / collapse profile - {{ $founderName }}">
-              <h2 class="founder-name text-[48px] sm:text-[64px] lg:text-[86.86px] font-semibold text-[#EC460B] tracking-tight leading-none transition-transform duration-300 group-hover:translate-x-1">{{ $founderName }}</h2>
+              <h2 class="founder-name text-[48px] sm:text-[64px] lg:text-[86.86px] text-[#EC460B] tracking-tight leading-none transition-transform duration-300 group-hover:translate-x-1">
+                @if(!empty($founderNameZh))
+                  <span class="founder-name-zh inline font-normal mr-2 sm:mr-3">{!! $founderNameZh !!}</span>
+                @endif
+                <span class="founder-name-en inline font-semibold">{!! $founderNameEn !!}</span>
+              </h2>
             </button>
             <div class="flex items-center gap-6 sm:gap-12 pt-1.5"><span class="founder-role text-[16px] sm:text-[20px] font-light text-[#131313] tracking-normal">{{ $founderRole }}</span>
               <button class="inbetween-btn-plus text-[#EC460B] text-[22px] sm:text-[25px] font-light leading-none inline-flex items-center justify-center cursor-pointer select-none transition-all hover:opacity-80 focus:outline-none tracking-wider" type="button" aria-label="View founder details" title="Founder details" data-action="toggle-founder"><span>[+]</span></button>

@@ -3,6 +3,20 @@
   $badgeText = $settings['badge_text'] ?? '[ MEET THE FOUNDER ]';
   $portraitUrl = !empty($rawPortrait) ? (str_starts_with($rawPortrait, 'http') || str_starts_with($rawPortrait, '/') ? $rawPortrait : asset($rawPortrait)) : asset('themes/inbetween_v2/images/founder-airu-portrait.png');
   $founderName = $settings['founder_name'] ?? 'AIRU';
+  $founderNameZh = $settings['founder_name_zh'] ?? $settings['founder_name_cn'] ?? '';
+  $founderNameEn = $settings['founder_name_en'] ?? '';
+
+  if (empty($founderNameZh) && empty($founderNameEn)) {
+    if (preg_match('/([\x{4e00}-\x{9fa5}\x{3400}-\x{4dbf}]+)/u', (string)$founderName, $m)) {
+      $founderNameZh = trim($m[1]);
+      $founderNameEn = trim(str_replace($m[1], '', (string)$founderName));
+    } else {
+      $founderNameZh = '爱茹';
+      $founderNameEn = (string)$founderName;
+    }
+  } elseif (empty($founderNameEn)) {
+    $founderNameEn = (string)$founderName;
+  }
   $founderRole = $settings['founder_role'] ?? 'Founder of INBETWEEN';
   $quote1 = $settings['quote_line1'] ?? 'Built between cultures.';
   $quote2 = $settings['quote_line2'] ?? 'Connected across borders.';
@@ -38,25 +52,28 @@
     
     {{-- 1. OVERVIEW VIEW (Matches Frame 348.svg precisely, no gaps, perfect responsive fit on 360px-440px) --}}
     <div class="w-full h-full flex flex-row items-stretch" id="mobile-founder-overview">
-      {{-- Left Side: Portrait from Frame 348.svg touching top and bottom edges --}}
-      <div class="w-[46%] min-[375px]:w-[48%] h-full shrink-0 overflow-hidden relative select-none">
+      {{-- Left Side: Portrait 50% width --}}
+      <div class="w-1/2 h-full shrink-0 overflow-hidden relative select-none">
         <img class="w-full h-full object-cover object-top block" src="{{ $portraitUrl }}" alt="{{ $founderName }} - {{ $founderRole }}">
       </div>
 
-      {{-- Right Side: Info, Quotes & Stat matching Frame 348.svg --}}
-      <div class="w-[54%] min-[375px]:w-[52%] h-full flex flex-col justify-between pt-5 pb-7 pl-4 pr-3 min-[375px]:pl-5 min-[375px]:pr-4 select-none box-border">
+      {{-- Right Side: Info, Quotes & Stat 50% width --}}
+      <div class="w-1/2 h-full flex flex-col justify-between pt-4 pb-5 pl-3.5 pr-2.5 min-[375px]:pt-5 min-[375px]:pb-6 min-[375px]:pl-4 min-[375px]:pr-3.5 select-none box-border">
         {{-- Top Group --}}
         <div class="flex gap-2 flex-col">
-          <div class="text-[12px] min-[375px]:text-[10.5px] font-regular text-[#131313] uppercase tracking-[0.12em] min-[375px]:tracking-[0.14em] leading-none mb-2.5">
+          <div class="text-[10px] min-[375px]:text-[10.5px] font-normal text-[#131313] uppercase tracking-[0.1em] min-[375px]:tracking-[0.12em] leading-none mb-1.5 min-[375px]:mb-2">
             {{ $badgeText }}
           </div>
           <button type="button" class="mobile-founder-trigger text-left cursor-pointer focus:outline-none group block select-none" aria-expanded="false" aria-controls="mobile-founder-detail" title="Click to view founder details">
-            <h2 class="text-[31px] font-bold text-[#EC460B] tracking-tight leading-none transition-transform duration-200 group-hover:translate-x-0.5" style="font-size: 31px !important; line-height: 1 !important;">
-              {!! $founderName !!}
+            <h2 class="text-[28px] min-[375px]:text-[30px] text-[#EC460B] tracking-tight leading-none transition-transform duration-200 group-hover:translate-x-0.5">
+              @if(!empty($founderNameZh))
+                <span class="founder-name-zh inline font-normal mr-1.5">{!! $founderNameZh !!}</span>
+              @endif
+              <span class="founder-name-en inline font-bold">{!! $founderNameEn !!}</span>
             </h2>
           </button>
-          <div class="flex items-center justify-between gap-1">
-            <span class="text-[11px] min-[375px]:text-[12px] font-normal text-[#131313] leading-none tracking-normal truncate">{{ $founderRole }}</span>
+          <div class="flex items-center justify-between gap-1.5 pt-0.5">
+            <span class="text-[11px] min-[375px]:text-[11.5px] font-normal text-[#131313] leading-tight tracking-tight">{{ $founderRole }}</span>
             <button class="mobile-founder-toggle-btn inbetween-btn-plus text-[#EC460B] text-[16px] min-[375px]:text-[18px] font-light leading-none inline-flex items-center justify-center cursor-pointer select-none transition-all hover:opacity-80 p-0.5 shrink-0" type="button" aria-label="View founder details" title="View details" data-action="toggle-founder">
               <span>[+]</span>
             </button>
@@ -65,17 +82,17 @@
 
         {{-- Middle Group: Quote --}}
         <div class="my-auto py-1">
-          <svg class="w-[18px] h-auto select-none pointer-events-none mb-2 block" viewBox="0 0 36 26" fill="#EC460B" xmlns="http://www.w3.org/2000/svg" style="color: #EC460B; fill: #EC460B;">
+          <svg class="w-[16px] min-[375px]:w-[18px] h-auto select-none pointer-events-none mb-1.5 min-[375px]:mb-2 block" viewBox="0 0 36 26" fill="#EC460B" xmlns="http://www.w3.org/2000/svg" style="color: #EC460B; fill: #EC460B;">
             <path d="M15.6 18.1294C15 22.3295 11.28 25.5695 7.2 25.5695C3.36 25.5695 0 22.6895 0 18.6094C0 10.6895 6.6 2.88945 13.32 0.129451C14.28 -0.230552 14.4 0.249449 13.68 0.489453C8.64 2.40945 5.16 9.48945 5.28 11.8894C6.6 10.9294 8.28 10.6895 9.24 10.6895C13.44 10.6895 16.32 13.9295 15.6 18.1294ZM35.28 18.1294C34.68 22.3295 30.96 25.5695 26.88 25.5695C23.04 25.5695 19.68 22.6895 19.68 18.6094C19.68 10.6895 26.28 2.88945 33 0.129451C33.96 -0.230552 34.08 0.249449 33.36 0.489453C28.32 2.40945 24.84 9.48945 24.96 11.8894C26.28 10.9294 27.96 10.6895 28.92 10.6895C33.12 10.6895 36 13.9295 35.28 18.1294Z" fill="#EC460B"/>
           </svg>
-          <p class="text-[14px] min-[375px]:text-[13px] font-medium text-[#131313] leading-[1.3] tracking-tight">{{ $quote1 }}</p>
-          <p class="text-[14px] min-[375px]:text-[13px] font-medium text-[#EC460B] leading-[1.3] tracking-tight mt-1">{{ $quote2 }}</p>
+          <p class="text-[12.5px] min-[375px]:text-[13px] font-medium text-[#131313] leading-[1.3] tracking-tight">{{ $quote1 }}</p>
+          <p class="text-[12.5px] min-[375px]:text-[13px] font-medium text-[#EC460B] leading-[1.3] tracking-tight mt-1">{{ $quote2 }}</p>
         </div>
 
         {{-- Bottom Group: Stat --}}
-        <div class="flex items-center gap-2.5 pt-3.5 ">
-          <div class="text-[40px] min-[375px]:text-[32px] font-light text-[#EC460B] leading-none shrink-0 tracking-tight">{{ $expYears }}</div>
-          <div class="text-[10px] min-[375px]:text-[10px] font-light text-[#3E3939] leading-[1.25] max-w-[130px] min-[375px]:max-w-[150px]">{{ $expLabel }}</div>
+        <div class="flex items-center gap-2 min-[375px]:gap-2.5 pt-2 min-[375px]:pt-2.5">
+          <div class="text-[30px] min-[375px]:text-[32px] font-light text-[#EC460B] leading-none shrink-0 tracking-tight">{{ $expYears }}</div>
+          <div class="text-[9.5px] min-[375px]:text-[10px] font-light text-[#3E3939] leading-[1.25] flex-1">{{ $expLabel }}</div>
         </div>
       </div>
     </div>

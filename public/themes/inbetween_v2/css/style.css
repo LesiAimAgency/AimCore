@@ -6649,13 +6649,14 @@ html {
 #inbetween-our-clients .our-clients-grid {
     width: 100%;
     height: 100%;
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
 }
 
 @media(min-width:1024px) {
     #inbetween-our-clients .our-clients-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        flex-direction: row;
+        align-items: stretch;
     }
 }
 

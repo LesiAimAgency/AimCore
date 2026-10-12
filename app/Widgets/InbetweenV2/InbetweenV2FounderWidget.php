@@ -37,7 +37,19 @@ class InbetweenV2FounderWidget extends BaseWidget
                 ],
                 [
                     'name' => 'founder_name',
-                    'label' => 'Founder Name',
+                    'label' => 'Founder Name (Chung / Mặc định)',
+                    'type' => 'text',
+                    'default' => 'AIRU',
+                ],
+                [
+                    'name' => 'founder_name_zh',
+                    'label' => 'Founder Name (Tiếng Trung)',
+                    'type' => 'text',
+                    'default' => '爱茹',
+                ],
+                [
+                    'name' => 'founder_name_en',
+                    'label' => 'Founder Name (Tiếng Anh)',
                     'type' => 'text',
                     'default' => 'AIRU',
                 ],
@@ -206,6 +218,8 @@ class InbetweenV2FounderWidget extends BaseWidget
         return array_merge([
             'founder_portrait' => 'themes/inbetween_v2/images/founder-airu-portrait.png',
             'founder_name' => 'AIRU',
+            'founder_name_zh' => '爱茹',
+            'founder_name_en' => 'AIRU',
             'founder_role' => 'Founder of INBETWEEN',
             'quote_line1' => 'Built between cultures.',
             'quote_line2' => 'Connected across borders.',
