@@ -59,7 +59,11 @@ class ExportProjectCommand extends Command
             return self::FAILURE;
         }
 
-        $activeTheme = $themeManager->resolveActiveTheme($project);
+        $activeTheme = $themeArg ?: $themeManager->resolveActiveTheme($project);
+        if (strtoupper((string) $project->code) === 'DA005' && ! $themeArg) {
+            $activeTheme = 'inbetween_v2';
+        }
+        $themeManager->setActiveTheme($activeTheme);
 
         $this->newLine();
         $this->info('====================================================');
@@ -73,7 +77,7 @@ class ExportProjectCommand extends Command
         $this->info('3. Compressing full standalone package into ZIP archive...');
 
         $startTime = microtime(true);
-        $result = $exportService->buildExportPackage($project, null, (bool) $this->option('with-vendor'));
+        $result = $exportService->buildExportPackage($project, null, (bool) $this->option('with-vendor'), $activeTheme);
         $duration = round(microtime(true) - $startTime, 2);
 
         $zipPath = $result['zip_path'];

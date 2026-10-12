@@ -114,13 +114,33 @@ class ThemeManager
         $theme = null;
         if ($project) {
             $features = is_array($project->features) ? $project->features : (is_string($project->features) ? json_decode($project->features, true) : []);
-            $theme = $project->tenant?->settings['theme']
-                ?? ($features['theme'] ?? null)
+            $code = strtolower($project->code ?? '');
+            $name = strtolower($project->name ?? '');
+
+            // 1. Explicit project-level feature theme
+            $theme = ($features['theme'] ?? null)
                 ?? $project->theme
                 ?? null;
 
+            // 2. Specific Project Code / Name matching
             if (! $theme) {
-                $code = strtolower($project->code ?? '');
+                $theme = match (true) {
+                    str_contains($code, 'da005') || str_contains($code, 'inbetween_v2') || str_contains($code, 'inbetween-v2') || str_contains($name, 'inbetween') => 'inbetween_v2',
+                    str_contains($code, 'da010') || str_contains($code, 'ehenho') || str_contains($name, 'ehenho') || str_contains($name, 'hẹn hò') => 'ehenho',
+                    str_contains($code, 'da009') || str_contains($code, 'wkcomputer') || str_contains($name, 'wkcomputer') => 'wkcomputerdemo',
+                    str_contains($code, 'da008') || str_contains($code, 'viettinmart') || str_contains($name, 'viettinmart') => 'viettinmartdemo',
+                    str_contains($code, 'inbetween') => 'inbetween',
+                    default => null
+                };
+            }
+
+            // 3. Tenant settings fallback (only if project has no theme set)
+            if (! $theme && ! empty($project->tenant?->settings['theme'])) {
+                $theme = $project->tenant->settings['theme'];
+            }
+
+            // 4. Discover themes dynamically from directory matching code
+            if (! $theme) {
                 $discovered = $this->discoverThemes();
                 // Sort by length descending to match longest specific themes first (e.g. inbetween_v2 before inbetween)
                 usort($discovered, fn ($a, $b) => strlen($b) <=> strlen($a));
@@ -130,19 +150,11 @@ class ThemeManager
                         break;
                     }
                 }
+            }
 
-                if (! $theme) {
-                    $theme = match (true) {
-                        str_contains($code, 'inbetween_v2') || str_contains($code, 'inbetween-v2') => 'inbetween_v2',
-                        str_contains($code, 'inbetween') || str_contains($code, 'inbetwen') => 'inbetween',
-                        str_contains($code, 'wkcomputer') => 'wkcomputerdemo',
-                        str_contains($code, 'viettinmart') => 'viettinmartdemo',
-                        str_contains($code, 'ehenho') || str_contains($code, 'da010') => 'ehenho',
-                        str_contains($code, 'storefront') => 'storefront',
-                        str_contains($code, 'victorious') => 'victorious',
-                        default => 'ehenho'
-                    };
-                }
+            // 5. Fallback
+            if (! $theme) {
+                $theme = 'inbetween_v2';
             }
         }
 

@@ -38,10 +38,16 @@ echo "✓ Bắt đầu tiến trình trích xuất database & source code...\n";
 
 $startTime = microtime(true);
 $exportService = app(ProjectExportService::class);
+$themeManager = app(\App\Core\Theme\ThemeManager::class);
+$themeManager->setActiveTheme('inbetween_v2');
+
+$features = is_array($project->features) ? $project->features : [];
+$features['theme'] = 'inbetween_v2';
+$project->features = $features;
 
 try {
-    // Xuất gói ZIP chuẩn standalone
-    $result = $exportService->buildExportPackage($project, null, false);
+    // Xuất gói ZIP chuẩn standalone với theme bắt buộc inbetween_v2
+    $result = $exportService->buildExportPackage($project, null, false, 'inbetween_v2');
     $duration = round(microtime(true) - $startTime, 2);
     $zipPath = $result['zip_path'];
     $zipSize = round(filesize($zipPath) / 1024 / 1024, 2);

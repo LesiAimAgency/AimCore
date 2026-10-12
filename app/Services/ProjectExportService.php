@@ -39,10 +39,14 @@ class ProjectExportService
      *
      * @throws \Exception on any failure
      */
-    public function buildExportPackage(Project $project, ?HostingProfile $profile = null, bool $includeVendor = false): array
+    public function buildExportPackage(Project $project, ?HostingProfile $profile = null, bool $includeVendor = false, ?string $themeOverride = null): array
     {
         set_time_limit(0);
         ini_set('memory_limit', '1G');
+
+        $themeManager = app(ThemeManager::class);
+        $activeTheme = $themeOverride ?: $themeManager->resolveActiveTheme($project);
+        $themeManager->setActiveTheme($activeTheme);
 
         $exportBaseDir = storage_path("app/deployments/project_{$project->id}");
         $exportSourceDir = $exportBaseDir.'/source';
@@ -56,7 +60,7 @@ class ProjectExportService
             File::makeDirectory($exportSourceDir, 0755, true, true);
         }
 
-        Log::info("[Export] Starting export for project {$project->code}");
+        Log::info("[Export] Starting export for project {$project->code} with theme {$activeTheme}");
 
         // Pre-flight validation
         $validator = app(ExportValidationService::class);
@@ -66,11 +70,11 @@ class ProjectExportService
         }
 
         // 1. Copy source files (minus SuperAdmin)
-        $this->exportEssentialFiles($project, $exportSourceDir, $includeVendor);
+        $this->exportEssentialFiles($project, $exportSourceDir, $includeVendor, $activeTheme);
         Log::info('[Export] Source files copied.');
 
         // 2. Generate CMS-only database SQL
-        $dbSqlContent = $this->generateDatabaseSQL($project);
+        $dbSqlContent = $this->generateDatabaseSQL($project, $activeTheme);
         File::ensureDirectoryExists($exportSourceDir.'/database');
         File::put($exportSourceDir.'/database/database.sql', $dbSqlContent);
         Log::info('[Export] Database SQL generated ('.strlen($dbSqlContent).' bytes).');
@@ -84,9 +88,6 @@ class ProjectExportService
         File::put($exportSourceDir.'/deploy_setup.php', $bootstrapContent);
 
         // 5. Generate Phase 2 Package Manifest
-        $themeManager = app(ThemeManager::class);
-        $activeTheme = $themeManager->resolveActiveTheme($project);
-
         $manifestData = [
             'name' => 'website-package',
             'package_type' => 'standalone_website_application',
